@@ -11,6 +11,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 use function array_map;
 
@@ -33,6 +35,9 @@ class BlockRepository extends EntityRepository
 
     /**
      * Vrací poslední id.
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function findLastId() : int
     {

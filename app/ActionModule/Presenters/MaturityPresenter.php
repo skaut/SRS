@@ -22,6 +22,7 @@ use App\Services\ProgramService;
 use App\Services\SettingsService;
 use App\Utils\Helpers;
 use DateTime;
+use DateTimeImmutable;
 use Nette\Application\Responses\TextResponse;
 use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
@@ -111,7 +112,7 @@ class MaturityPresenter extends ActionBasePresenter
     {
         $cancelRegistration = $this->settingsService->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY);
         if ($cancelRegistration !== null) {
-            $cancelRegistrationDate = (new DateTime())->setTime(0, 0)->modify('-' . $cancelRegistration . ' days');
+            $cancelRegistrationDate = (new DateTimeImmutable())->setTime(0, 0)->modify('-' . $cancelRegistration . ' days');
         } else {
             return;
         }
@@ -169,7 +170,7 @@ class MaturityPresenter extends ActionBasePresenter
     {
         $maturityReminder = $this->settingsService->getIntValue(Settings::MATURITY_REMINDER);
         if ($maturityReminder !== null) {
-            $maturityReminderDate = (new DateTime())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');
+            $maturityReminderDate = (new DateTimeImmutable())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');
         } else {
             return;
         }

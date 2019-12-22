@@ -8,6 +8,7 @@ use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Utils\Helpers;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
@@ -99,8 +100,6 @@ class SettingsService
      * Nastaví hodnotu položky typu int.
      *
      * @throws SettingsException
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
     public function setIntValue(string $item, ?int $value) : void
@@ -132,8 +131,6 @@ class SettingsService
      * Nastaví hodnotu položky typu bool.
      *
      * @throws SettingsException
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
     public function setBoolValue(string $item, ?bool $value) : void
@@ -151,14 +148,14 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getDateTimeValue(string $item) : ?DateTime
+    public function getDateTimeValue(string $item) : ?DateTimeImmutable
     {
         $value = $this->getValue($item);
         if ($value === null) {
             return null;
         }
 
-        return new DateTime($value);
+        return new DateTimeImmutable($value);
     }
 
     /**
@@ -181,11 +178,9 @@ class SettingsService
      * Nastavení hodnoty položky typu datum a čas.
      *
      * @throws SettingsException
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function setDateTimeValue(string $item, ?DateTime $value) : void
+    public function setDateTimeValue(string $item, ?DateTimeImmutable $value) : void
     {
         if ($value === null) {
             $this->setValue($item, null);
@@ -200,14 +195,14 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getDateValue(string $item) : ?DateTime
+    public function getDateValue(string $item) : ?DateTimeImmutable
     {
         $value = $this->getValue($item);
         if ($value === null) {
             return null;
         }
 
-        return new DateTime($value);
+        return new DateTimeImmutable($value);
     }
 
     /**
@@ -230,11 +225,9 @@ class SettingsService
      * Nastavení hodnoty položky typu datum.
      *
      * @throws SettingsException
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function setDateValue(string $item, ?DateTime $value) : void
+    public function setDateValue(string $item, ?DateTimeImmutable $value) : void
     {
         if ($value === null) {
             $this->setValue($item, null);

@@ -6,6 +6,7 @@ namespace App\Services;
 
 use Contributte\Console\Application;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
 use Exception;
 use MySQLDump;
@@ -72,7 +73,7 @@ class DatabaseService
 
         $this->databaseCache->save('lock', function () {
             if ($this->databaseCache->load('updated') === null) {
-                $this->databaseCache->save('updated', new DateTime());
+                $this->databaseCache->save('updated', new DateTimeImmutable());
 
                 $this->backup();
 
@@ -105,7 +106,7 @@ class DatabaseService
 
         $dump = new MySQLDump(new mysqli($host, $user, $password, $dbname));
 
-        $timestamp = (new DateTime())->format('YmdHi');
+        $timestamp = (new DateTimeImmutable())->format('YmdHi');
 
         $dump->save($this->dir . '/backup/' . $dbname . '-' . $timestamp . '.sql.gz');
     }

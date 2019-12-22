@@ -102,7 +102,6 @@ class CustomInputsGridControl extends Control
      * Zpracuje odstranění vlastního pole.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function handleDelete(int $id) : void
@@ -119,7 +118,6 @@ class CustomInputsGridControl extends Control
      * Přesune vlastní pole s id $item_id mezi $prev_id a $next_id.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id) : void
@@ -144,7 +142,6 @@ class CustomInputsGridControl extends Control
      *
      * @throws NonUniqueResultException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function changeMandatory(int $id, bool $mandatory) : void

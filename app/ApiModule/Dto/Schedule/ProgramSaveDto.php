@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\ApiModule\Dto\Schedule;
 
 use DateTime;
+use DateTimeImmutable;
 use JMS\Serializer\Annotation as JMS;
 use Nette;
 
@@ -37,7 +38,7 @@ class ProgramSaveDto
 
     /**
      * @JMS\Type("DateTime<'Y-m-d\TH:i:s'>")
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     private $start;
 
@@ -71,12 +72,12 @@ class ProgramSaveDto
         $this->roomId = $roomId;
     }
 
-    public function getStart() : DateTime
+    public function getStart() : DateTimeImmutable
     {
         return $this->start;
     }
 
-    public function setStart(DateTime $start) : void
+    public function setStart(DateTimeImmutable $start) : void
     {
         $this->start = $start;
     }

@@ -6,6 +6,7 @@ namespace App\Model\Settings\CustomInput;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 use const PHP_INT_MAX;
 
@@ -40,6 +41,9 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Vrátí pozici posledního pole.
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function findLastPosition() : int
     {

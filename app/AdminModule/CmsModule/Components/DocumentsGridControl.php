@@ -10,6 +10,7 @@ use App\Model\Cms\Document\TagRepository;
 use App\Services\FilesService;
 use App\Utils\Helpers;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
@@ -160,7 +161,6 @@ class DocumentsGridControl extends Control
      * Zpracuje přidání dokumentu.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function add(stdClass $values) : void
@@ -175,7 +175,7 @@ class DocumentsGridControl extends Control
         $document->setTags($this->tagRepository->findTagsByIds($values->tags));
         $document->setFile($path);
         $document->setDescription($values->description);
-        $document->setTimestamp(new DateTime());
+        $document->setTimestamp(new DateTimeImmutable());
 
         $this->documentRepository->save($document);
 
@@ -188,7 +188,6 @@ class DocumentsGridControl extends Control
      * Zpracuje úpravu dokumentu.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function edit(int $id, stdClass $values) : void
@@ -202,7 +201,7 @@ class DocumentsGridControl extends Control
             $this->filesService->save($file, $path);
 
             $document->setFile($path);
-            $document->setTimestamp(new DateTime());
+            $document->setTimestamp(new DateTimeImmutable());
         }
 
         $document->setName($values->name);
@@ -220,7 +219,6 @@ class DocumentsGridControl extends Control
      * Zpracuje odstranění dokumentu.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function handleDelete(int $id) : void

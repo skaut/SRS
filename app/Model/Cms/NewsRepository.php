@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Model\Cms;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 
 /**
@@ -26,6 +28,9 @@ class NewsRepository extends EntityRepository
 
     /**
      * Vrací id poslední aktuality.
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function findLastId() : int
     {

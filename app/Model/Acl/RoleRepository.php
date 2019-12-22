@@ -6,6 +6,7 @@ namespace App\Model\Acl;
 
 use App\Model\User\User;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -250,7 +251,7 @@ class RoleRepository extends EntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function getRegistrationStart() : ?DateTime
+    public function getRegistrationStart() : ?DateTimeImmutable
     {
         $result = $this->createQueryBuilder('r')
             ->select('r.registerableFrom')
@@ -267,7 +268,7 @@ class RoleRepository extends EntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function getRegistrationEnd() : ?DateTime
+    public function getRegistrationEnd() : ?DateTimeImmutable
     {
         $result = $this->createQueryBuilder('r')
             ->select('r.registerableTo')

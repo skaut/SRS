@@ -10,6 +10,7 @@ use App\Model\Settings\SettingsException;
 use App\Services\BankService;
 use App\Services\SettingsService;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FioApi\Exceptions\InternalErrorException;
@@ -86,8 +87,6 @@ class BankFormFactory
      * Zpracuje formulář.
      *
      * @throws SettingsException
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values) : void
@@ -111,6 +110,6 @@ class BankFormFactory
      */
     public function validateBankDownloadFromDate(DateControl $field) : bool
     {
-        return $field->getValue() <= new DateTime();
+        return $field->getValue() <= new DateTimeImmutable();
     }
 }

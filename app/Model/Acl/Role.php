@@ -9,6 +9,7 @@ use App\Model\Cms\Page;
 use App\Model\Program\Category;
 use App\Model\User\User;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -161,7 +162,7 @@ class Role
      *
      * @ORM\Column(type="datetime", nullable=true)
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $registerableFrom;
 
@@ -170,7 +171,7 @@ class Role
      *
      * @ORM\Column(type="datetime", nullable=true)
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $registerableTo;
 
@@ -411,7 +412,7 @@ class Role
      */
     public function isRegisterableNow() : bool
     {
-        $now = new DateTime();
+        $now = new DateTimeImmutable();
 
         return $this->registerable &&
             ($this->registerableFrom === null || $this->registerableFrom <= $now) &&
@@ -428,22 +429,22 @@ class Role
         $this->approvedAfterRegistration = $approvedAfterRegistration;
     }
 
-    public function getRegisterableFrom() : ?DateTime
+    public function getRegisterableFrom() : ?DateTimeImmutable
     {
         return $this->registerableFrom;
     }
 
-    public function setRegisterableFrom(?DateTime $registerableFrom) : void
+    public function setRegisterableFrom(?DateTimeImmutable $registerableFrom) : void
     {
         $this->registerableFrom = $registerableFrom;
     }
 
-    public function getRegisterableTo() : ?DateTime
+    public function getRegisterableTo() : ?DateTimeImmutable
     {
         return $this->registerableTo;
     }
 
-    public function setRegisterableTo(?DateTime $registerableTo) : void
+    public function setRegisterableTo(?DateTimeImmutable $registerableTo) : void
     {
         $this->registerableTo = $registerableTo;
     }

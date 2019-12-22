@@ -10,6 +10,7 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\FilesService;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -114,7 +115,6 @@ class AddLectorFormFactory
      *
      * @throws Nette\Utils\UnknownImageFileException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Exception
      */
     public function processForm(Form $form, stdClass $values) : void
@@ -132,7 +132,7 @@ class AddLectorFormFactory
         $user->setDegreePre($values->degreePre);
         $user->setDegreePost($values->degreePost);
         $user->setEmail($values->email);
-        $user->setBirthdate($values->birthdate !== null ? new DateTime($values->birthdate) : null);
+        $user->setBirthdate($values->birthdate !== null ? new DateTimeImmutable($values->birthdate) : null);
         $user->setStreet($values->street);
         $user->setCity($values->city);
         $user->setPostcode($values->postcode);

@@ -32,6 +32,7 @@ use App\Services\SubeventService;
 use App\Services\UserService;
 use App\Utils\Helpers;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -472,7 +473,6 @@ class UsersGridControl extends Control
      * Zpracuje odstranění externího uživatele.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function handleDelete(int $id) : void
@@ -490,7 +490,6 @@ class UsersGridControl extends Control
      * Změní stav uživatele.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function changeApproved(int $id, bool $approved) : void
@@ -516,7 +515,6 @@ class UsersGridControl extends Control
      * Změní účast uživatele na semináři.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function changeAttended(int $id, bool $attended) : void
@@ -667,7 +665,7 @@ class UsersGridControl extends Control
                     $this->applicationService->updateApplicationPayment(
                         $application,
                         $paymentMethod,
-                        new DateTime(),
+                        new DateTimeImmutable(),
                         $application->getIncomeProofPrintedDate(),
                         $application->getMaturityDate(),
                         $loggedUser

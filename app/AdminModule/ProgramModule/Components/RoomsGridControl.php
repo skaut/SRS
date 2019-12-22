@@ -140,7 +140,6 @@ class RoomsGridControl extends Control
      * Zpracuje přidání místnosti.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function add(stdClass $values) : void
@@ -162,7 +161,6 @@ class RoomsGridControl extends Control
      * Zpracuje úpravu místnosti.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function edit(int $id, stdClass $values) : void
@@ -184,7 +182,6 @@ class RoomsGridControl extends Control
      * Odstraní místnost.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function handleDelete(int $id) : void

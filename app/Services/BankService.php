@@ -8,6 +8,7 @@ use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use DateTime;
+use DateTimeImmutable;
 use FioApi;
 use FioApi\Downloader;
 use FioApi\TransactionList;
@@ -54,7 +55,7 @@ class BankService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function downloadTransactions(DateTime $from, ?string $token = null) : void
+    public function downloadTransactions(DateTimeImmutable $from, ?string $token = null) : void
     {
         $token = $token ?: $this->settingsService->getValue(Settings::BANK_TOKEN);
         if ($token === null) {
@@ -80,8 +81,8 @@ class BankService
                     return;
                 }
 
-                $date = new DateTime();
-                $date->setTimestamp($transaction->getDate()->getTimestamp());
+                $date = new DateTimeImmutable();
+                $date = $date->setTimestamp($transaction->getDate()->getTimestamp());
 
                 $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
 
@@ -97,6 +98,6 @@ class BankService
             });
         }
 
-        $this->settingsService->setDateValue(Settings::BANK_DOWNLOAD_FROM, new DateTime());
+        $this->settingsService->setDateValue(Settings::BANK_DOWNLOAD_FROM, new DateTimeImmutable());
     }
 }

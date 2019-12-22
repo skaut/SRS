@@ -97,7 +97,6 @@ class FaqGridControl extends Control
      * Zpracuje odstranění otázky.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function handleDelete(int $id) : void
@@ -114,7 +113,6 @@ class FaqGridControl extends Control
      * Přesuene otázku $item_id mezi $prev_id a $next_id.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id) : void
@@ -139,7 +137,6 @@ class FaqGridControl extends Control
      *
      * @throws NonUniqueResultException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function changeStatus(int $id, bool $public) : void

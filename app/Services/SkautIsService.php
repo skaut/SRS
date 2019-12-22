@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use DateTime;
+use DateTimeImmutable;
 use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
@@ -57,7 +58,7 @@ class SkautIsService
     public function isLoggedIn() : bool
     {
         $logoutTime = clone($this->skautIs->getUser()->getLogoutDate());
-        $hardCheck  = $logoutTime->diff(new DateTime())->i < 25; //pokud od posledniho obnoveni prihlaseni ubehlo 5 minut
+        $hardCheck  = $logoutTime->diff(new DateTimeImmutable())->i < 25; //pokud od posledniho obnoveni prihlaseni ubehlo 5 minut
 
         return $this->skautIs->getUser()->isLoggedIn($hardCheck);
     }
@@ -155,7 +156,7 @@ class SkautIsService
     /**
      * Aktualizuje údaje o osobě.
      */
-    public function updatePersonBasic(int $personId, string $sex, DateTime $birthday, string $firstName, string $lastName, string $nickName) : void
+    public function updatePersonBasic(int $personId, string $sex, DateTimeImmutable $birthday, string $firstName, string $lastName, string $nickName) : void
     {
         $this->skautIs->org->PersonUpdateBasic([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),

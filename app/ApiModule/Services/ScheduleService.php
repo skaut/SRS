@@ -217,8 +217,7 @@ class ScheduleService
         $block     = $this->blockRepository->findById($programSaveDto->getBlockId());
         $room      = $programSaveDto->getRoomId() ? $this->roomRepository->findById($programSaveDto->getRoomId()) : null;
         $start     = $programSaveDto->getStart();
-        $end       = clone $start;
-        $end->add(new DateInterval('PT' . $block->getDuration() . 'M'));
+        $end       = $start->add(new DateInterval('PT' . $block->getDuration() . 'M'));
 
         if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             $responseDto->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));

@@ -62,6 +62,7 @@ class DocumentRepository extends EntityRepository
 
     /**
      * Odstraní dokument.
+     * @throws ORMException
      */
     public function remove(Document $document) : void
     {

@@ -17,6 +17,7 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\ProgramService;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Http\Session;
@@ -162,6 +163,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
     /**
      * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     protected function createComponentBlockForm() : Form
     {

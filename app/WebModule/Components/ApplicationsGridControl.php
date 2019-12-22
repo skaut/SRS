@@ -273,7 +273,6 @@ class ApplicationsGridControl extends Control
      * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
-     * @throws MailingException
      * @throws MailingMailCreationException
      */
     public function edit(int $id, stdClass $values) : void

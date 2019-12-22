@@ -9,6 +9,7 @@ use App\Model\Acl\RoleRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -68,7 +69,6 @@ class Authenticator implements IAuthenticator
      * @param string[] $credentials
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Exception
      */
     public function authenticate(array $credentials) : IIdentity
@@ -123,13 +123,13 @@ class Authenticator implements IAuthenticator
         $user->setLastName($skautISPerson->LastName);
         $user->setNickName($skautISPerson->NickName);
         $user->setSex($skautISPerson->ID_Sex);
-        $user->setBirthdate(new DateTime($skautISPerson->Birthday));
+        $user->setBirthdate(new DateTimeImmutable($skautISPerson->Birthday));
         $user->setSecurityCode($skautISUser->SecurityCode);
         $user->setStreet($skautISPerson->Street);
         $user->setCity($skautISPerson->City);
         $user->setPostcode($skautISPerson->Postcode);
         $user->setState($skautISPerson->State);
-        $user->setLastLogin(new DateTime());
+        $user->setLastLogin(new DateTimeImmutable());
         $user->setMember($skautISUser->HasMembership);
 
         $validMembership = $this->skautIsService->getValidMembership($user->getSkautISPersonId());
@@ -139,7 +139,7 @@ class Authenticator implements IAuthenticator
             $user->setUnit($validMembership->RegistrationNumber);
         }
 
-        $photoUpdate = new DateTime($skautISPerson->PhotoUpdate);
+        $photoUpdate = new DateTimeImmutable($skautISPerson->PhotoUpdate);
         if ($user->getPhotoUpdate() !== null && $photoUpdate->diff($user->getPhotoUpdate())->s < 1) {
             return;
         }

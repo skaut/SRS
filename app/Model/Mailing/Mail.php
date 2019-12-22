@@ -8,6 +8,7 @@ use App\Model\Acl\Role;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -76,7 +77,7 @@ class Mail
      *
      * @ORM\Column(type="datetime")
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $datetime;
 
@@ -208,12 +209,12 @@ class Mail
         $this->text = $text;
     }
 
-    public function getDatetime() : DateTime
+    public function getDatetime() : DateTimeImmutable
     {
         return $this->datetime;
     }
 
-    public function setDatetime(DateTime $datetime) : void
+    public function setDatetime(DateTimeImmutable $datetime) : void
     {
         $this->datetime = $datetime;
     }

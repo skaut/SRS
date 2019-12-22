@@ -8,6 +8,7 @@ use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
@@ -151,7 +152,7 @@ class ProgramRepository extends EntityRepository
     /**
      * Překrývá se program s jiným programem?
      */
-    public function hasOverlappingProgram(?int $programId, DateTime $start, DateTime $end) : bool
+    public function hasOverlappingProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')
@@ -175,7 +176,7 @@ class ProgramRepository extends EntityRepository
     /**
      * Překrývá se s jiným programem, který je automaticky zapisovaný.
      */
-    public function hasOverlappingAutoRegisteredProgram(?int $programId, DateTime $start, DateTime $end) : bool
+    public function hasOverlappingAutoRegisteredProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p.id')

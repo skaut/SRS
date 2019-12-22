@@ -244,10 +244,10 @@ class ApplicationService
                         $newApplication->setFee($this->countRolesFee($roles));
                         $newApplication->setState($this->getApplicationState($newApplication));
                         $newApplication->setCreatedBy($createdBy);
-                        $newApplication->setValidFrom(new DateTime());
+                        $newApplication->setValidFrom(new DateTimeImmutable());
                         $this->applicationRepository->save($newApplication);
 
-                        $application->setValidTo(new DateTime());
+                        $application->setValidTo(new DateTimeImmutable());
                         $this->applicationRepository->save($application);
                     } else {
                         $fee = $this->countSubeventsFee($roles, $application->getSubevents());
@@ -257,10 +257,10 @@ class ApplicationService
                             $newApplication->setFee($fee);
                             $newApplication->setState($this->getApplicationState($newApplication));
                             $newApplication->setCreatedBy($createdBy);
-                            $newApplication->setValidFrom(new DateTime());
+                            $newApplication->setValidFrom(new DateTimeImmutable());
                             $this->applicationRepository->save($newApplication);
 
-                            $application->setValidTo(new DateTime());
+                            $application->setValidTo(new DateTimeImmutable());
                             $this->applicationRepository->save($application);
                         }
                     }
@@ -303,7 +303,7 @@ class ApplicationService
                 $newApplication = clone $application;
                 $newApplication->setState($state);
                 $newApplication->setCreatedBy($createdBy);
-                $newApplication->setValidFrom(new DateTime());
+                $newApplication->setValidFrom(new DateTimeImmutable());
 
                 if ($newApplication->getPayment() !== null) {
                     if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
@@ -314,7 +314,7 @@ class ApplicationService
 
                 $this->applicationRepository->save($newApplication);
 
-                $application->setValidTo(new DateTime());
+                $application->setValidTo(new DateTimeImmutable());
                 $this->applicationRepository->save($application);
 
                 if ($application instanceof RolesApplication) {
@@ -400,10 +400,10 @@ class ApplicationService
             $newApplication->setFee($this->countSubeventsFee($user->getRoles(), $subevents));
             $newApplication->setState($this->getApplicationState($newApplication));
             $newApplication->setCreatedBy($createdBy);
-            $newApplication->setValidFrom(new DateTime());
+            $newApplication->setValidFrom(new DateTimeImmutable());
             $this->applicationRepository->save($newApplication);
 
-            $application->setValidTo(new DateTime());
+            $application->setValidTo(new DateTimeImmutable());
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
@@ -437,7 +437,7 @@ class ApplicationService
             $newApplication = clone $application;
             $newApplication->setState($state);
             $newApplication->setCreatedBy($createdBy);
-            $newApplication->setValidFrom(new DateTime());
+            $newApplication->setValidFrom(new DateTimeImmutable());
 
             if ($newApplication->getPayment() !== null) {
                 if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
@@ -448,7 +448,7 @@ class ApplicationService
 
             $this->applicationRepository->save($newApplication);
 
-            $application->setValidTo(new DateTime());
+            $application->setValidTo(new DateTimeImmutable());
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
@@ -471,9 +471,9 @@ class ApplicationService
     public function updateApplicationPayment(
         Application $application,
         ?string $paymentMethod,
-        ?DateTime $paymentDate,
-        ?DateTime $incomeProofPrintedDate,
-        ?DateTime $maturityDate,
+        ?DateTimeImmutable $paymentDate,
+        ?DateTimeImmutable $incomeProofPrintedDate,
+        ?DateTimeImmutable $maturityDate,
         ?User $createdBy
     ) : void {
         $oldPaymentMethod          = $application->getPaymentMethod();
@@ -506,10 +506,10 @@ class ApplicationService
 
             $newApplication->setState($this->getApplicationState($newApplication));
             $newApplication->setCreatedBy($createdBy);
-            $newApplication->setValidFrom(new DateTime());
+            $newApplication->setValidFrom(new DateTimeImmutable());
             $this->applicationRepository->save($newApplication);
 
-            $application->setValidTo(new DateTime());
+            $application->setValidTo(new DateTimeImmutable());
             $this->applicationRepository->save($application);
 
             $this->programService->updateUserPrograms($user);
@@ -577,7 +577,7 @@ class ApplicationService
      *
      * @throws Throwable
      */
-    public function updatePayment(Payment $payment, ?DateTime $date, ?float $amount, ?string $variableSymbol, Collection $pairedApplications, User $createdBy) : void
+    public function updatePayment(Payment $payment, ?DateTimeImmutable $date, ?float $amount, ?string $variableSymbol, Collection $pairedApplications, User $createdBy) : void
     {
         $this->em->transactional(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy) : void {
             if ($date !== null) {
@@ -662,7 +662,7 @@ class ApplicationService
     {
         return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
             && ! $user->hasPaidAnyApplication()
-            && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTime())->setTime(0, 0);
+            && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTimeImmutable())->setTime(0, 0);
     }
 
     /**
@@ -675,7 +675,7 @@ class ApplicationService
     {
         return $application->getType() === Application::SUBEVENTS && ! $application->isCanceled()
             && $application->getState() !== ApplicationState::PAID
-            && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTime())->setTime(0, 0);
+            && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTimeImmutable())->setTime(0, 0);
     }
 
     /**
@@ -689,7 +689,7 @@ class ApplicationService
         return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
             && $user->hasPaidEveryApplication()
             && $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
-            && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTime())->setTime(0, 0);
+            && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTimeImmutable())->setTime(0, 0);
     }
 
     /**
@@ -700,7 +700,7 @@ class ApplicationService
      */
     public function isAllowedEditCustomInputs() : bool
     {
-        return $this->settingsService->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new DateTime())->setTime(0, 0);
+        return $this->settingsService->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new DateTimeImmutable())->setTime(0, 0);
     }
 
     /**
@@ -728,19 +728,19 @@ class ApplicationService
         }
 
         $user->setRoles($roles);
-        $user->setRolesApplicationDate(new DateTime());
+        $user->setRolesApplicationDate(new DateTimeImmutable());
         $this->userRepository->save($user);
 
         $application = new RolesApplication();
         $application->setUser($user);
         $application->setRoles($roles);
-        $application->setApplicationDate(new DateTime());
+        $application->setApplicationDate(new DateTimeImmutable());
         $application->setFee($this->countRolesFee($roles));
         $application->setMaturityDate($this->countMaturityDate());
         $application->setState($this->getApplicationState($application));
         $application->setVariableSymbol($this->generateVariableSymbol());
         $application->setCreatedBy($createdBy);
-        $application->setValidFrom(new DateTime());
+        $application->setValidFrom(new DateTimeImmutable());
         $this->applicationRepository->save($application);
 
         $application->setApplicationId($application->getId());
@@ -768,13 +768,13 @@ class ApplicationService
         $application = new SubeventsApplication();
         $application->setUser($user);
         $application->setSubevents($subevents);
-        $application->setApplicationDate(new DateTime());
+        $application->setApplicationDate(new DateTimeImmutable());
         $application->setFee($this->countSubeventsFee($user->getRoles(), $subevents));
         $application->setMaturityDate($this->countMaturityDate());
         $application->setState($this->getApplicationState($application));
         $application->setVariableSymbol($this->generateVariableSymbol());
         $application->setCreatedBy($createdBy);
-        $application->setValidFrom(new DateTime());
+        $application->setValidFrom(new DateTimeImmutable());
         $this->applicationRepository->save($application);
 
         $application->setApplicationId($application->getId());
@@ -809,19 +809,19 @@ class ApplicationService
      * @throws ReflectionException
      * @throws Throwable
      */
-    private function countMaturityDate() : ?DateTime
+    private function countMaturityDate() : ?DateTimeImmutable
     {
         switch ($this->settingsService->getValue(Settings::MATURITY_TYPE)) {
             case MaturityType::DATE:
                 return $this->settingsService->getDateValue(Settings::MATURITY_DATE);
             case MaturityType::DAYS:
-                return (new DateTime())->modify('+' . $this->settingsService->getIntValue(Settings::MATURITY_DAYS) . ' days');
+                return (new DateTimeImmutable())->modify('+' . $this->settingsService->getIntValue(Settings::MATURITY_DAYS) . ' days');
             case MaturityType::WORK_DAYS:
                 $workDays = $this->settingsService->getIntValue(Settings::MATURITY_WORK_DAYS);
-                $date     = new DateTime();
+                $date     = new DateTimeImmutable();
 
                 for ($i = 0; $i < $workDays;) {
-                    $date->modify('+1 days');
+                    $date = $date->modify('+1 days');
                     $holidays = Yasumi::create('CzechRepublic', (int) $date->format('Y'));
 
                     if (! $holidays->isWorkingDay($date)) {
@@ -973,7 +973,6 @@ class ApplicationService
 
     /**
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     private function updateUserPaymentInfo(User $user) : void
     {

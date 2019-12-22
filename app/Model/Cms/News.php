@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Cms;
 
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
 
@@ -35,7 +36,7 @@ class News
      *
      * @ORM\Column(type="datetime")
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $published;
 
@@ -63,12 +64,12 @@ class News
         $this->text = $text;
     }
 
-    public function getPublished() : DateTime
+    public function getPublished() : DateTimeImmutable
     {
         return $this->published;
     }
 
-    public function setPublished(DateTime $published) : void
+    public function setPublished(DateTimeImmutable $published) : void
     {
         $this->published = $published;
     }

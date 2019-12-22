@@ -60,7 +60,7 @@ class UsersContent extends Content implements IContent
 
     public function injectAclService(AclService $aclService) : void
     {
-        $this->AclService = $aclService;
+        $this->aclService = $aclService;
     }
 
     /**

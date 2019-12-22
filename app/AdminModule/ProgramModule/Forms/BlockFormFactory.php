@@ -20,6 +20,7 @@ use App\Services\SettingsService;
 use App\Services\SubeventService;
 use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -111,6 +112,7 @@ class BlockFormFactory
      * Vytvoří formulář.
      *
      * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function create(int $id, int $userId) : Form
     {

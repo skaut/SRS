@@ -11,6 +11,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Utils\ImageException;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use function getimagesizefromstring;
@@ -132,7 +133,7 @@ class EditUserPersonalDetailsFormFactory
      *
      * @throws Nette\Utils\UnknownImageFileException
      * @throws ORMException
-     * @throws OptimisticLockException
+     * @throws ImageException
      */
     public function processForm(Form $form, stdClass $values) : void
     {

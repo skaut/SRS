@@ -6,6 +6,7 @@ namespace App\Model\Cms;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 use const PHP_INT_MAX;
 
@@ -28,6 +29,9 @@ class FaqRepository extends EntityRepository
 
     /**
      * Vrací id poslední otázky.
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function findLastId() : int
     {
@@ -39,6 +43,9 @@ class FaqRepository extends EntityRepository
 
     /**
      * Vrací poslední pozici.
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function findLastPosition() : int
     {

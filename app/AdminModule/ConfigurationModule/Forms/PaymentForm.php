@@ -10,6 +10,7 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
@@ -140,8 +141,6 @@ class PaymentForm extends UI\Control
      * Zpracuje formulář.
      *
      * @throws SettingsException
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values) : void
@@ -151,7 +150,7 @@ class PaymentForm extends UI\Control
         $this->settingsService->setValue(Settings::MATURITY_TYPE, $values->maturityType);
 
         if (property_exists($values, 'maturityDate')) {
-            $this->settingsService->setDateValue(Settings::MATURITY_DATE, $values->maturityDate ?: (new DateTime())->setTime(0, 0));
+            $this->settingsService->setDateValue(Settings::MATURITY_DATE, $values->maturityDate ?: (new DateTimeImmutable())->setTime(0, 0));
         }
 
         if (property_exists($values, 'maturityDays')) {

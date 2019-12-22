@@ -14,6 +14,7 @@ use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Structure\Subevent;
 use App\Model\User\CustomInputValue\CustomInputValue;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -178,7 +179,7 @@ class User
      *
      * @ORM\Column(type="date", nullable=true)
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $birthdate;
 
@@ -205,7 +206,7 @@ class User
      *
      * @ORM\Column(type="datetime", nullable=true)
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $lastLogin;
 
@@ -268,7 +269,7 @@ class User
      *
      * @ORM\Column(type="datetime", nullable=true)
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $arrival;
 
@@ -277,7 +278,7 @@ class User
      *
      * @ORM\Column(type="datetime", nullable=true)
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $departure;
 
@@ -350,7 +351,7 @@ class User
      *
      * @ORM\Column(type="date", nullable=true)
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $lastPaymentDate;
 
@@ -359,7 +360,7 @@ class User
      *
      * @ORM\Column(type="datetime", nullable=true)
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $rolesApplicationDate;
 
@@ -413,7 +414,7 @@ class User
      *
      * @ORM\Column(type="datetime", nullable=true)
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $photoUpdate;
 
@@ -620,19 +621,19 @@ class User
         $this->sex = $sex;
     }
 
-    public function getBirthdate() : ?DateTime
+    public function getBirthdate() : ?DateTimeImmutable
     {
         return $this->birthdate;
     }
 
-    public function setBirthdate(?DateTime $birthdate) : void
+    public function setBirthdate(?DateTimeImmutable $birthdate) : void
     {
         $this->birthdate = $birthdate;
     }
 
     public function getAge() : ?int
     {
-        return $this->birthdate !== null ? (new DateTime())->diff($this->birthdate)->y : null;
+        return $this->birthdate !== null ? (new DateTimeImmutable())->diff($this->birthdate)->y : null;
     }
 
     public function getSkautISUserId() : ?int
@@ -655,12 +656,12 @@ class User
         $this->skautISPersonId = $skautISPersonId;
     }
 
-    public function getLastLogin() : ?DateTime
+    public function getLastLogin() : ?DateTimeImmutable
     {
         return $this->lastLogin;
     }
 
-    public function setLastLogin(?DateTime $lastLogin) : void
+    public function setLastLogin(?DateTimeImmutable $lastLogin) : void
     {
         $this->lastLogin = $lastLogin;
     }
@@ -737,22 +738,22 @@ class User
         $this->attended = $attended;
     }
 
-    public function getArrival() : ?DateTime
+    public function getArrival() : ?DateTimeImmutable
     {
         return $this->arrival;
     }
 
-    public function setArrival(?DateTime $arrival) : void
+    public function setArrival(?DateTimeImmutable $arrival) : void
     {
         $this->arrival = $arrival;
     }
 
-    public function getDeparture() : ?DateTime
+    public function getDeparture() : ?DateTimeImmutable
     {
         return $this->departure;
     }
 
-    public function setDeparture(?DateTime $departure) : void
+    public function setDeparture(?DateTimeImmutable $departure) : void
     {
         $this->departure = $departure;
     }
@@ -1105,22 +1106,22 @@ class User
         $this->paymentMethod = $paymentMethod;
     }
 
-    public function getLastPaymentDate() : ?DateTime
+    public function getLastPaymentDate() : ?DateTimeImmutable
     {
         return $this->lastPaymentDate;
     }
 
-    public function setLastPaymentDate(?DateTime $lastPaymentDate) : void
+    public function setLastPaymentDate(?DateTimeImmutable $lastPaymentDate) : void
     {
         $this->lastPaymentDate = $lastPaymentDate;
     }
 
-    public function getRolesApplicationDate() : ?DateTime
+    public function getRolesApplicationDate() : ?DateTimeImmutable
     {
         return $this->rolesApplicationDate;
     }
 
-    public function setRolesApplicationDate(?DateTime $rolesApplicationDate) : void
+    public function setRolesApplicationDate(?DateTimeImmutable $rolesApplicationDate) : void
     {
         $this->rolesApplicationDate = $rolesApplicationDate;
     }
@@ -1201,12 +1202,12 @@ class User
         $this->photo = $photo;
     }
 
-    public function getPhotoUpdate() : ?DateTime
+    public function getPhotoUpdate() : ?DateTimeImmutable
     {
         return $this->photoUpdate;
     }
 
-    public function setPhotoUpdate(?DateTime $photoUpdate) : void
+    public function setPhotoUpdate(?DateTimeImmutable $photoUpdate) : void
     {
         $this->photoUpdate = $photoUpdate;
     }

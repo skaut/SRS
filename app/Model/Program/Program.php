@@ -7,6 +7,7 @@ namespace App\Model\Program;
 use App\Model\User\User;
 use DateInterval;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -67,7 +68,7 @@ class Program
      *
      * @ORM\Column(type="datetime")
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $start;
 
@@ -134,12 +135,12 @@ class Program
         $this->room = $room;
     }
 
-    public function getStart() : DateTime
+    public function getStart() : DateTimeImmutable
     {
         return $this->start;
     }
 
-    public function setStart(DateTime $start) : void
+    public function setStart(DateTimeImmutable $start) : void
     {
         $this->start = $start;
     }
@@ -149,11 +150,8 @@ class Program
      *
      * @throws Exception
      */
-    public function getEnd() : DateTime
+    public function getEnd() : DateTimeImmutable
     {
-        $end = clone$this->start;
-        $end->add(new DateInterval('PT' . $this->block->getDuration() . 'M'));
-
-        return $end;
+        return $this->start->add(new DateInterval('PT' . $this->block->getDuration() . 'M'));
     }
 }

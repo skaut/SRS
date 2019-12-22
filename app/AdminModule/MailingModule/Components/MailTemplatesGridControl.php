@@ -90,7 +90,6 @@ class MailTemplatesGridControl extends Control
      * Aktivuje/deaktivuje automatický e-mail.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function changeActive(int $id, bool $active) : void

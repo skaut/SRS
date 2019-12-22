@@ -12,6 +12,7 @@ use App\Model\User\Application;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Exception;
 use Nette;
@@ -37,7 +38,7 @@ class PdfExportService
     /** @var Fpdi */
     private $fpdi;
 
-    /** @var int */
+    /** @var string */
     private $template;
 
     /** @var SettingsService */
@@ -107,7 +108,7 @@ class PdfExportService
             $application,
             $application->getPaymentMethod(),
             $application->getPaymentDate(),
-            new DateTime(),
+            new DateTimeImmutable(),
             $application->getMaturityDate(),
             $createdBy
         );

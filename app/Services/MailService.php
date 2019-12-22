@@ -18,6 +18,7 @@ use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Nette;
@@ -134,7 +135,7 @@ class MailService
         $mailLog->setRecipientUsers($recipientsUsers);
         $mailLog->setSubject($subject);
         $mailLog->setText($text);
-        $mailLog->setDatetime(new DateTime());
+        $mailLog->setDatetime(new DateTimeImmutable());
         $mailLog->setAutomatic($automatic);
         $this->mailRepository->save($mailLog);
     }

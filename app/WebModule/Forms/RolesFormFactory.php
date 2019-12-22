@@ -16,6 +16,7 @@ use App\Services\ApplicationService;
 use App\Services\SettingsService;
 use App\Utils\Validators;
 use DateTime;
+use DateTimeImmutable;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -163,7 +164,7 @@ class RolesFormFactory
 
             if ($this->user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
                 || ! $this->user->hasPaidEveryApplication()
-                || $ticketDownloadFrom > new DateTime()) {
+                || $ticketDownloadFrom > new DateTimeImmutable()) {
                 $downloadTicketButton
                     ->setDisabled()
                     ->setHtmlAttribute('data-toggle', 'tooltip')

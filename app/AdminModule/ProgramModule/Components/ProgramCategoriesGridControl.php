@@ -130,7 +130,6 @@ class ProgramCategoriesGridControl extends Control
      * Zpracuje přidání kategorie.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function add(stdClass $values) : void

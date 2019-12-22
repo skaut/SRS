@@ -24,6 +24,7 @@ use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
@@ -205,10 +206,8 @@ class ProgramService
 
     /**
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws SettingsException
      * @throws Throwable
-     * @throws MailingException
      * @throws MailingMailCreationException
      */
     private function updateBlockMandatoryImpl(Block $block, string $mandatory) : void
@@ -280,7 +279,6 @@ class ProgramService
      * @param Collection|Role[] $registerableRoles
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function createCategory(string $name, Collection $registerableRoles) : void
     {
@@ -316,7 +314,7 @@ class ProgramService
      *
      * @throws Throwable
      */
-    public function createProgram(Block $block, ?Room $room, DateTime $start) : Program
+    public function createProgram(Block $block, ?Room $room, DateTimeImmutable $start) : Program
     {
         $program = new Program($block);
 
@@ -343,9 +341,8 @@ class ProgramService
      * Aktualizuje program v harmonogramu.
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      */
-    public function updateProgram(Program $program, ?Room $room, DateTime $start) : void
+    public function updateProgram(Program $program, ?Room $room, DateTimeImmutable $start) : void
     {
         $program->setRoom($room);
         $program->setStart($start);
@@ -384,7 +381,6 @@ class ProgramService
 
     /**
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws SettingsException
      * @throws Throwable
      * @throws MailingMailCreationException
@@ -430,7 +426,6 @@ class ProgramService
 
     /**
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws SettingsException
      * @throws Throwable
      * @throws MailingMailCreationException
@@ -472,9 +467,9 @@ class ProgramService
             || (
                 $this->settingsService->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED_FROM_TO
                 && ($this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) === null
-                    || $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) <= new DateTime())
+                    || $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM) <= new DateTimeImmutable())
                 && ($this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) === null
-                    || $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) >= new DateTime()
+                    || $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) >= new DateTimeImmutable()
                 )
             );
     }
@@ -482,10 +477,8 @@ class ProgramService
     /**
      * Aktualizuje programy uživatele (odhlásí nepovolené a přihlásí automaticky přihlašované).
      *
-     * @throws MailingException
      * @throws MailingMailCreationException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws SettingsException
      * @throws Throwable
      */
@@ -518,7 +511,6 @@ class ProgramService
      *
      * @param Collection|User[] $users
      *
-     * @throws MailingException
      * @throws MailingMailCreationException
      * @throws ORMException
      * @throws OptimisticLockException

@@ -42,7 +42,7 @@ class Payment
      *
      * @ORM\Column(type="date")
      *
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     protected $date;
 
@@ -129,7 +129,7 @@ class Payment
         $this->transactionId = $transactionId;
     }
 
-    public function getDate() : DateTime
+    public function getDate() : DateTimeImmutable
     {
         return $this->date;
     }

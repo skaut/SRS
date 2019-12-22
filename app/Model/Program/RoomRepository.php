@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Program;
 
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
@@ -104,7 +105,7 @@ class RoomRepository extends EntityRepository
     /**
      * Je v místnosti jiný program ve stejnou dobu?
      */
-    public function hasOverlappingProgram(Room $room, ?int $programId, DateTime $start, DateTime $end) : bool
+    public function hasOverlappingProgram(Room $room, ?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool
     {
         $qb = $this->createQueryBuilder('r')
             ->select('r.id')
