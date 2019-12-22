@@ -33,7 +33,7 @@ class News
     /**
      * Datum publikování aktuality.
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      *
      * @var DateTimeImmutable
      */

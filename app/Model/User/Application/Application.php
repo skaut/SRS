@@ -109,7 +109,7 @@ abstract class Application
     /**
      * Datum podání přihlášky.
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      *
      * @var DateTimeImmutable
      */
@@ -118,7 +118,7 @@ abstract class Application
     /**
      * Datum splatnosti.
      *
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="date_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */
@@ -136,7 +136,7 @@ abstract class Application
     /**
      * Datum zaplacení.
      *
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="date_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */
@@ -154,7 +154,7 @@ abstract class Application
     /**
      * Datum vytištění dokladu o zaplacení.
      *
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="date_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */
@@ -179,7 +179,7 @@ abstract class Application
     /**
      * Platnost záznamu od.
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      *
      * @var DateTimeImmutable
      */
@@ -188,7 +188,7 @@ abstract class Application
     /**
      * Platnost záznamu do.
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */

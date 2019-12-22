@@ -176,7 +176,7 @@ class User
     /**
      * Datum narození.
      *
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="date_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */
@@ -203,7 +203,7 @@ class User
     /**
      * Datum posledního přihlášení.
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */
@@ -266,7 +266,7 @@ class User
     /**
      * Příjezd.
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */
@@ -275,7 +275,7 @@ class User
     /**
      * Odjezd.
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */
@@ -348,7 +348,7 @@ class User
     /**
      * Datum poslední platby.
      *
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="date_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */
@@ -357,7 +357,7 @@ class User
     /**
      * Datum a čas vytvoření přihlášky rolí.
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */
@@ -411,7 +411,7 @@ class User
     /**
      * Datum aktualizace fotky.
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */

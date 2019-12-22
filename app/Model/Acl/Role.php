@@ -159,7 +159,7 @@ class Role
     /**
      * Registrovatelná od.
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */
@@ -168,7 +168,7 @@ class Role
     /**
      * Registrovatelná do.
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      *
      * @var DateTimeImmutable
      */

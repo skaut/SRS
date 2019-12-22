@@ -74,7 +74,7 @@ class Mail
     /**
      * Datum a čas odeslání.
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      *
      * @var DateTimeImmutable
      */
