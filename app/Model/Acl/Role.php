@@ -8,7 +8,6 @@ use App\Model\Cms\Document\Tag;
 use App\Model\Cms\Page;
 use App\Model\Program\Category;
 use App\Model\User\User;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

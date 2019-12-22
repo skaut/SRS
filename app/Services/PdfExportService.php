@@ -11,7 +11,6 @@ use App\Model\Settings\SettingsException;
 use App\Model\User\Application;
 use App\Model\User\User;
 use App\Utils\Helpers;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Exception;
@@ -288,7 +287,7 @@ class PdfExportService
      */
     private function writeToday() : string
     {
-        $today = new DateTime('now');
+        $today = new DateTimeImmutable('now');
 
         return $today->format(Helpers::DATE_FORMAT);
     }

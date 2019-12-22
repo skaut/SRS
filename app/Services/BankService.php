@@ -7,7 +7,6 @@ namespace App\Services;
 use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use DateTime;
 use DateTimeImmutable;
 use FioApi;
 use FioApi\Downloader;

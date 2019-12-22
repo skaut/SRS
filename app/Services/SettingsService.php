@@ -7,7 +7,6 @@ namespace App\Services;
 use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Utils\Helpers;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -171,7 +170,7 @@ class SettingsService
             return null;
         }
 
-        return (new DateTime($value))->format(Helpers::DATETIME_FORMAT);
+        return (new DateTimeImmutable($value))->format(Helpers::DATETIME_FORMAT);
     }
 
     /**
@@ -185,7 +184,7 @@ class SettingsService
         if ($value === null) {
             $this->setValue($item, null);
         } else {
-            $this->setValue($item, $value->format(DateTime::ISO8601));
+            $this->setValue($item, $value->format(DateTimeImmutable::ISO8601));
         }
     }
 
@@ -218,7 +217,7 @@ class SettingsService
             return null;
         }
 
-        return (new DateTime($value))->format(Helpers::DATE_FORMAT);
+        return (new DateTimeImmutable($value))->format(Helpers::DATE_FORMAT);
     }
 
     /**

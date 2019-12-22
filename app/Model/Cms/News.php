@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\Cms;
 
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;

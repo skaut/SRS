@@ -9,7 +9,6 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Payment\Payment;
 use App\Model\Structure\Subevent;
 use App\Utils\Helpers;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

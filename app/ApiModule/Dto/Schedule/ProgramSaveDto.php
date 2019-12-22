@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\ApiModule\Dto\Schedule;
 
-use DateTime;
 use DateTimeImmutable;
 use JMS\Serializer\Annotation as JMS;
 use Nette;

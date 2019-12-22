@@ -9,7 +9,6 @@ use App\Model\Cms\Document\DocumentRepository;
 use App\Model\Cms\Document\TagRepository;
 use App\Services\FilesService;
 use App\Utils\Helpers;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;

@@ -27,7 +27,6 @@ use App\Model\User\UserRepository;
 use App\Model\User\VariableSymbol;
 use App\Model\User\VariableSymbolRepository;
 use App\Utils\Helpers;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

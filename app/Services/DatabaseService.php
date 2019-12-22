@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services;
 
 use Contributte\Console\Application;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
 use Exception;

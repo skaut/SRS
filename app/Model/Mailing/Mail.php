@@ -7,7 +7,6 @@ namespace App\Model\Mailing;
 use App\Model\Acl\Role;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

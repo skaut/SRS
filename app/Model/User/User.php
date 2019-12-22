@@ -13,7 +13,6 @@ use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Structure\Subevent;
 use App\Model\User\CustomInputValue\CustomInputValue;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

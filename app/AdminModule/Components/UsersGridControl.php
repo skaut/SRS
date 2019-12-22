@@ -31,7 +31,6 @@ use App\Services\SkautIsEventGeneralService;
 use App\Services\SubeventService;
 use App\Services\UserService;
 use App\Utils\Helpers;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;

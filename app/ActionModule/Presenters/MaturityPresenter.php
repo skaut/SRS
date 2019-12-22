@@ -21,7 +21,6 @@ use App\Services\MailService;
 use App\Services\ProgramService;
 use App\Services\SettingsService;
 use App\Utils\Helpers;
-use DateTime;
 use DateTimeImmutable;
 use Nette\Application\Responses\TextResponse;
 use Nettrine\ORM\EntityManagerDecorator;

@@ -6,7 +6,6 @@ namespace App\Model\Program;
 
 use App\Model\User\User;
 use DateInterval;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

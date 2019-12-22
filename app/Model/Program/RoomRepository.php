@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\Program;
 
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;

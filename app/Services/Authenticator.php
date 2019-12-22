@@ -8,7 +8,6 @@ use App\Model\Acl\Role;
 use App\Model\Acl\RoleRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;

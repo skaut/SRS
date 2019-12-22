@@ -7,7 +7,6 @@ namespace App\AdminModule\CmsModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\News;
 use App\Model\Cms\NewsRepository;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
