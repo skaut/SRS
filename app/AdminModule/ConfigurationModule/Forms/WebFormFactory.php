@@ -102,8 +102,7 @@ class WebFormFactory
     {
         $logo = $values->logo;
         if ($logo->size > 0) {
-            $this->filesService->delete('/logo/' . $this->settingsService->getValue(Settings::LOGO));
-
+//            $this->filesService->delete('/logo/' . $this->settingsService->getValue(Settings::LOGO));
             $logoName = Strings::webalize($logo->name, '.');
             $this->filesService->save($logo, '/logo/' . $logoName);
             $this->filesService->resizeImage('/logo/' . $logoName, null, 100);

@@ -82,7 +82,8 @@ class FilesService
     public function resizeImage(string $path, ?int $width, ?int $height) : void
     {
         $image = Image::fromFile($this->dir . $path);
-        $image->resize($width, $height);
+        $dimensions = Image::calculateSize($image->getWidth(), $image->getHeight(), $width, $height);
+        $image->resize($dimensions[0], $dimensions[1]);
         $image->sharpen();
         $image->save($this->dir . $path);
     }
@@ -98,9 +99,11 @@ class FilesService
         $image = Image::fromFile($this->dir . $path);
 
         if ($image->getWidth() / $width > $image->getHeight() / $height) {
-            $image->resize(null, $height);
+            $dimensions = Image::calculateSize($image->getWidth(), $image->getHeight(), null, $height);
+            $image->resize($dimensions[0], $dimensions[1]);
         } else {
-            $image->resize($width, null);
+            $dimensions = Image::calculateSize($image->getWidth(), $image->getHeight(), $width, null);
+            $image->resize($dimensions[0], $dimensions[1]);
         }
 
         $image->sharpen();
