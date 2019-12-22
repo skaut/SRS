@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\Cms;
 
-use App\Model\Cms\PageException;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;

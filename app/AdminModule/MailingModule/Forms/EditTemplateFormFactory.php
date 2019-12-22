@@ -7,7 +7,6 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateRepository;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;

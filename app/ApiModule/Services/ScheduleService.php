@@ -36,6 +36,7 @@ use function array_intersect;
 use function count;
 use function floor;
 use function in_array;
+use function spl_object_id;
 
 /**
  * Služba pro zpracování požadavků z API pro správu harmonogramu a zapisování programů.

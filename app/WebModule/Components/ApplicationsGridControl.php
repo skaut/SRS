@@ -29,7 +29,6 @@ use stdClass;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
-use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**

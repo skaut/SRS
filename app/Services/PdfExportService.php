@@ -59,7 +59,7 @@ class PdfExportService
         $this->settingsService    = $settingsService;
         $this->applicationService = $applicationService;
 
-        $this->fpdi = new FPDI();
+        $this->fpdi = new Fpdi();
 
         $refFpdi         = new ReflectionObject($this->fpdi);
         $refFpdiFontpath = $refFpdi->getProperty('fontpath');

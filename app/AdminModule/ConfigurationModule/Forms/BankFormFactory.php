@@ -10,8 +10,6 @@ use App\Model\Settings\SettingsException;
 use App\Services\BankService;
 use App\Services\SettingsService;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use FioApi\Exceptions\InternalErrorException;
 use Nette;
 use Nette\Application\UI\Form;

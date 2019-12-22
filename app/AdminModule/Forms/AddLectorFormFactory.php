@@ -10,7 +10,6 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\FilesService;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;

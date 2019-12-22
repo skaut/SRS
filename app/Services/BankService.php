@@ -8,7 +8,6 @@ use App\Model\Payment\PaymentRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use DateTimeImmutable;
-use FioApi;
 use FioApi\Downloader;
 use FioApi\TransactionList;
 use InvalidArgumentException;

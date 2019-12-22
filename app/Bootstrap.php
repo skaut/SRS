@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App;
 
 use Nette\Configurator;
-
+use function getenv;
 
 class Bootstrap
 {
-    public static function boot(): Configurator
+    public static function boot() : Configurator
     {
-        $configurator = new Configurator;
+        $configurator = new Configurator();
 
         //$configurator->setDebugMode('23.75.345.200'); // enable for your remote IP
         $configurator->setDebugMode(getenv('DEVELOPMENT_MACHINE') === 'true');

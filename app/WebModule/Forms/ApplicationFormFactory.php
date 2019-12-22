@@ -169,7 +169,7 @@ class ApplicationFormFactory
         $form->addHidden('id');
 
         $inputSex = $form->addRadioList('sex', 'web.application_content.sex', Sex::getSexOptions());
-        $inputSex->getSeparatorPrototype()->setName("");
+        $inputSex->getSeparatorPrototype()->setName('');
 
         $inputFirstName = $form->addText('firstName', 'web.application_content.firstname')
             ->addRule(Form::FILLED, 'web.application_content.firstname_empty');

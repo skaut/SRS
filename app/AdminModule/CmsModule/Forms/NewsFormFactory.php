@@ -8,7 +8,6 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\News;
 use App\Model\Cms\NewsRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;

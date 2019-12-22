@@ -20,6 +20,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
 use function implode;
+use function spl_object_id;
 
 /**
  * Entita uživatele.

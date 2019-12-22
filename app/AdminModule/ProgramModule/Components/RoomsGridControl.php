@@ -7,7 +7,6 @@ namespace App\AdminModule\ProgramModule\Components;
 use App\Model\Program\Room;
 use App\Model\Program\RoomRepository;
 use App\Services\ExcelExportService;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use Nette\Application\AbortException;

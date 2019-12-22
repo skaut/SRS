@@ -12,7 +12,6 @@ use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;

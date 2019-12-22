@@ -10,7 +10,6 @@ use App\Model\Cms\Document\TagRepository;
 use App\Services\FilesService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;

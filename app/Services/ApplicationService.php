@@ -820,7 +820,7 @@ class ApplicationService
                 $date     = new DateTimeImmutable();
 
                 for ($i = 0; $i < $workDays;) {
-                    $date = $date->modify('+1 days');
+                    $date     = $date->modify('+1 days');
                     $holidays = Yasumi::create('CzechRepublic', (int) $date->format('Y'));
 
                     if (! $holidays->isWorkingDay($date)) {
@@ -912,6 +912,7 @@ class ApplicationService
      * Zvýší obsazenost rolí.
      *
      * @param Collection|Role[] $roles
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -927,6 +928,7 @@ class ApplicationService
      * Sníží obsazenost rolí.
      *
      * @param Collection|Role[] $roles
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

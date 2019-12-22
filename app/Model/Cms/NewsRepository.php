@@ -58,6 +58,7 @@ class NewsRepository extends EntityRepository
 
     /**
      * Uloží aktualitu.
+     *
      * @throws ORMException
      */
     public function save(News $news) : void
@@ -68,6 +69,7 @@ class NewsRepository extends EntityRepository
 
     /**
      * Odstraní aktualitu.
+     *
      * @throws ORMException
      */
     public function remove(News $document) : void

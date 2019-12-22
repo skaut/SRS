@@ -6,7 +6,6 @@ namespace App\Model\Cms;
 
 use App\Model\Acl\Role;
 use App\Model\Cms\Content\Content;
-use App\Model\Cms\PageException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;

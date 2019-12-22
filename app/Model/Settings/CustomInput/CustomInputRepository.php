@@ -71,6 +71,7 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Odstraní pole.
+     *
      * @throws ORMException
      */
     public function remove(CustomInput $input) : void
@@ -85,6 +86,7 @@ class CustomInputRepository extends EntityRepository
 
     /**
      * Přesune pole mezi pole s id prevId a nextId.
+     *
      * @throws ORMException
      */
     public function sort(int $itemId, int $prevId, int $nextId) : void

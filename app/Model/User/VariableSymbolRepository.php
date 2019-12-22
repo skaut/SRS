@@ -17,6 +17,7 @@ class VariableSymbolRepository extends EntityRepository
 {
     /**
      * Uloží variabilní symbol.
+     *
      * @throws ORMException
      */
     public function save(VariableSymbol $variableSymbol) : void

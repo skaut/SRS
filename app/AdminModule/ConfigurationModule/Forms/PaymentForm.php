@@ -10,8 +10,6 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use Nextras\FormComponents\Controls\DateControl;

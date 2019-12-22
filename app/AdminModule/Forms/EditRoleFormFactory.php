@@ -296,6 +296,7 @@ class EditRoleFormFactory
      * Ověří kolize mezi vyžadovanými a nekompatibilními rolemi.
      *
      * @param int[][] $args
+     *
      * @throws ConnectionException
      */
     public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args) : bool

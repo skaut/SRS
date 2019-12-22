@@ -31,8 +31,8 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
-use Ublaboo\Mailing\Exception\MailingException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
+use function spl_object_id;
 
 /**
  * Služba pro správu programů.

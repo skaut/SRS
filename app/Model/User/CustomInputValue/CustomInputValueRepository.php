@@ -25,6 +25,7 @@ class CustomInputValueRepository extends EntityRepository
 
     /**
      * Uloží hodnotu vlastního pole přihlášky.
+     *
      * @throws ORMException
      */
     public function save(CustomInputValue $value) : void
@@ -35,6 +36,7 @@ class CustomInputValueRepository extends EntityRepository
 
     /**
      * Odstraní hodnotu vlastního pole přihlášky.
+     *
      * @throws ORMException
      */
     public function remove(CustomInputValue $value) : void

@@ -8,8 +8,6 @@ use App\Model\Settings\SettingsException;
 use App\Model\Settings\SettingsRepository;
 use App\Utils\Helpers;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;

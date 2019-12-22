@@ -25,6 +25,7 @@ class DiscountRepository extends EntityRepository
 
     /**
      * Uloží slevu.
+     *
      * @throws ORMException
      */
     public function save(Discount $discount) : void
@@ -35,6 +36,7 @@ class DiscountRepository extends EntityRepository
 
     /**
      * Odstraní slevu.
+     *
      * @throws ORMException
      */
     public function remove(Discount $discount) : void

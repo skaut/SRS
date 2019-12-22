@@ -280,6 +280,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Uloží uživatele.
+     *
      * @throws ORMException
      */
     public function save(User $user) : void
@@ -290,6 +291,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Odstraní externího uživatele.
+     *
      * @throws ORMException
      */
     public function remove(User $user) : void

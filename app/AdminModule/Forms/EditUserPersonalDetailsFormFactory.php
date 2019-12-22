@@ -7,7 +7,6 @@ namespace App\AdminModule\Forms;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\FilesService;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;

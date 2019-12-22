@@ -10,7 +10,6 @@ use App\Model\Program\Category;
 use App\Model\Program\CategoryRepository;
 use App\Services\AclService;
 use App\Services\ProgramService;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;

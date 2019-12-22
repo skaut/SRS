@@ -52,6 +52,7 @@ class DocumentRepository extends EntityRepository
 
     /**
      * Uloží dokument.
+     *
      * @throws ORMException
      */
     public function save(Document $document) : void
@@ -62,6 +63,7 @@ class DocumentRepository extends EntityRepository
 
     /**
      * Odstraní dokument.
+     *
      * @throws ORMException
      */
     public function remove(Document $document) : void

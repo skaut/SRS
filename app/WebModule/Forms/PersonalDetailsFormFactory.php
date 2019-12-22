@@ -8,7 +8,6 @@ use App\Model\Enums\Sex;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\SkautIsService;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
@@ -68,7 +67,7 @@ class PersonalDetailsFormFactory
         $form->addHidden('id');
 
         $inputSex = $form->addRadioList('sex', 'web.profile.sex', Sex::getSexOptions());
-        $inputSex->getSeparatorPrototype()->setName("");
+        $inputSex->getSeparatorPrototype()->setName('');
 
         $inputFirstName = $form->addText('firstName', 'web.profile.firstname')
             ->addRule(Form::FILLED, 'web.profile.firstname_empty');

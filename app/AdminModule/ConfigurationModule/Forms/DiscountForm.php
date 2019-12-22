@@ -9,7 +9,6 @@ use App\Model\Structure\Discount;
 use App\Model\Structure\DiscountRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Services\DiscountService;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;

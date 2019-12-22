@@ -10,7 +10,6 @@ use App\Model\Cms\FaqRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;

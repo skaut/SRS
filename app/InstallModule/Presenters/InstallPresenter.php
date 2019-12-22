@@ -19,14 +19,9 @@ use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
 use Exception;
 use Nette\Application\AbortException;
 use Nettrine\ORM\EntityManagerDecorator;
-use Skautis\Config;
 use Skautis\Skautis;
-use Skautis\User;
-use Skautis\Wsdl\WebServiceFactory;
 use Skautis\Wsdl\WsdlException;
-use Skautis\Wsdl\WsdlManager;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Throwable;
 
 /**
@@ -119,7 +114,7 @@ class InstallPresenter extends InstallBasePresenter
         $this->consoleApplication->add(new MigrateCommand());
         $this->consoleApplication->setAutoExit(false);
 
-        $input  = new ArrayInput([
+        $input = new ArrayInput([
             'command' => 'migrations:migrate',
             '--no-interaction' => true,
         ]);

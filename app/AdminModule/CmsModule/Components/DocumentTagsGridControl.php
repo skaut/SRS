@@ -8,7 +8,6 @@ use App\Model\Acl\RoleRepository;
 use App\Model\Cms\Document\Tag;
 use App\Model\Cms\Document\TagRepository;
 use App\Services\AclService;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;

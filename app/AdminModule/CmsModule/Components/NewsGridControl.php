@@ -6,7 +6,6 @@ namespace App\AdminModule\CmsModule\Components;
 
 use App\Model\Cms\NewsRepository;
 use App\Utils\Helpers;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;

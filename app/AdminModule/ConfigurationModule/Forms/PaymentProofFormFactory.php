@@ -8,8 +8,6 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
