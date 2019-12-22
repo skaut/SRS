@@ -69,6 +69,7 @@ class PlacePointFormFactory
                     'lng' => $this->placePoint->getGpsLon(),
                 ],
             ]);
+            $gpsPicker->setZoom(13);
         }
 
         $form->onSuccess[] = [$this, 'processForm'];

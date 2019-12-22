@@ -68,7 +68,7 @@ class AuthPresenter extends BasePresenter
         }
 
         $this->skautIsService->setLoginData($_POST);
-        $this->user->login(null);
+        $this->user->login('');
         $this->user->setExpiration('+30 minutes');
 
         /** @var Identity $userIdentity */
