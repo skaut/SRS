@@ -50,10 +50,6 @@ build:
             name: run database migrations
             code: php www/index.php migrations:migrate --no-interaction
 
-        - script:
-            name: upload code coverage to codecov.io
-            code: mv tests/_output/coverage.xml clover.xml && bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
-
 deploy:
     steps:
         - script:
