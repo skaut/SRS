@@ -28,6 +28,7 @@ use App\Model\User\VariableSymbol;
 use App\Model\User\VariableSymbolRepository;
 use App\Utils\Helpers;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
@@ -528,7 +529,7 @@ class ApplicationService
     /**
      * @throws Throwable
      */
-    public function createPayment(DateTime $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
+    public function createPayment(DateTimeImmutable $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
     {
         $this->em->transactional(function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
             $payment = new Payment();
@@ -566,7 +567,7 @@ class ApplicationService
     /**
      * @throws Throwable
      */
-    public function createPaymentManual(DateTime $date, float $amount, string $variableSymbol, User $createdBy) : void
+    public function createPaymentManual(DateTimeImmutable $date, float $amount, string $variableSymbol, User $createdBy) : void
     {
         $this->createPayment($date, $amount, $variableSymbol, null, null, null, null, $createdBy);
     }
@@ -912,6 +913,8 @@ class ApplicationService
      * Zvýší obsazenost rolí.
      *
      * @param Collection|Role[] $roles
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     private function incrementRolesOccupancy(Collection $roles) : void
     {
@@ -925,6 +928,8 @@ class ApplicationService
      * Sníží obsazenost rolí.
      *
      * @param Collection|Role[] $roles
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     private function decrementRolesOccupancy(Collection $roles) : void
     {

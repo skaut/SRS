@@ -84,8 +84,6 @@ class ProgramBlocksGridControl extends Control
         SubeventService $subeventService,
         Session $session
     ) {
-        parent::__construct();
-
         $this->translator         = $translator;
         $this->blockRepository    = $blockRepository;
         $this->settingsService    = $settingsService;

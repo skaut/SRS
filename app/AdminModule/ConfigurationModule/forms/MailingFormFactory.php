@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
@@ -64,7 +63,7 @@ class MailingFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -96,7 +95,7 @@ class MailingFormFactory
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($this->settingsService->getValue(Settings::SEMINAR_EMAIL) === $values->seminarEmail) {
             return;

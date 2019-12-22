@@ -127,8 +127,6 @@ class UsersGridControl extends Control
         SkautIsEventGeneralService $skautIsEventGeneralService,
         SubeventService $subeventService
     ) {
-        parent::__construct();
-
         $this->translator                   = $translator;
         $this->em                           = $em;
         $this->userRepository               = $userRepository;

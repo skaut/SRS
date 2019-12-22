@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\Forms;
 
 use Nette;
+use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 
@@ -28,9 +29,9 @@ class BaseFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
-        $form = new BaseForm();
+        $form = new Form();
         $form->setTranslator($this->translator);
 
         $renderer                                   = new Bs3FormRenderer();

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Place\PlacePoint;
 use App\Model\Settings\Place\PlacePointRepository;
@@ -42,7 +41,7 @@ class PlacePointFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $this->placePoint = $this->placePointRepository->findById($id);
 
@@ -59,7 +58,7 @@ class PlacePointFormFactory
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         if ($this->placePoint) {
             $form->setDefaults([
@@ -82,7 +81,7 @@ class PlacePointFormFactory
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

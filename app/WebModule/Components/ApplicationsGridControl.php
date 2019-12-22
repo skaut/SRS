@@ -84,8 +84,6 @@ class ApplicationsGridControl extends Control
         SubeventsApplicationRepository $subeventsApplicationRepository,
         SubeventService $subeventService
     ) {
-        parent::__construct();
-
         $this->translator                     = $translator;
         $this->applicationRepository          = $applicationRepository;
         $this->userRepository                 = $userRepository;

@@ -50,8 +50,6 @@ class DocumentsGridControl extends Control
         TagRepository $tagRepository,
         FilesService $filesService
     ) {
-        parent::__construct();
-
         $this->translator         = $translator;
         $this->documentRepository = $documentRepository;
         $this->tagRepository      = $tagRepository;
@@ -118,10 +116,10 @@ class DocumentsGridControl extends Control
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
-            $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('tags', '', $tagsOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
 
-            $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload')
+            $container->addUpload('file', '')->setHtmlAttribute('class', 'datagrid-upload')
                 ->addRule(Form::FILLED, 'admin.cms.documents_file_empty');
 
             $container->addText('description', '');
@@ -132,10 +130,10 @@ class DocumentsGridControl extends Control
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
-            $container->addMultiSelect('tags', '', $tagsOptions)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('tags', '', $tagsOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
 
-            $container->addUpload('file', '')->setAttribute('class', 'datagrid-upload');
+            $container->addUpload('file', '')->setHtmlAttribute('class', 'datagrid-upload');
 
             $container->addText('description', '');
         };

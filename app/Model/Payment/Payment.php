@@ -6,6 +6,7 @@ namespace App\Model\Payment;
 
 use App\Model\User\Application;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -133,7 +134,7 @@ class Payment
         return $this->date;
     }
 
-    public function setDate(DateTime $date) : void
+    public function setDate(DateTimeImmutable $date) : void
     {
         $this->date = $date;
     }

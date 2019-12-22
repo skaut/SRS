@@ -8,9 +8,9 @@ use App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactor
 use App\AdminModule\ConfigurationModule\Components\PlacePointsGridControl;
 use App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\PlacePointFormFactory;
-use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Place\PlacePointRepository;
 use App\Model\Settings\SettingsException;
+use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -55,11 +55,11 @@ class PlacePresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentPlaceDescriptionForm() : BaseForm
+    protected function createComponentPlaceDescriptionForm() : Form
     {
         $form = $this->placeDescriptionFormFactory->create();
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
@@ -68,11 +68,11 @@ class PlacePresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentPlacePointForm() : BaseForm
+    protected function createComponentPlacePointForm() : Form
     {
         $form = $this->placePointFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Place:default');
             }

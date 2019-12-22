@@ -9,6 +9,8 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use DateTime;
 use FioApi;
+use FioApi\Downloader;
+use FioApi\TransactionList;
 use InvalidArgumentException;
 use Nette;
 use Nettrine\ORM\EntityManagerDecorator;
@@ -59,7 +61,7 @@ class BankService
             throw new InvalidArgumentException('Token is not set.');
         }
 
-        $downloader      = new FioApi\Downloader($token);
+        $downloader      = new Downloader($token);
         $transactionList = $downloader->downloadSince($from);
 
         $this->createPayments($transactionList);
@@ -68,7 +70,7 @@ class BankService
     /**
      * @throws Throwable
      */
-    private function createPayments(FioApi\TransactionList $transactionList) : void
+    private function createPayments(TransactionList $transactionList) : void
     {
         foreach ($transactionList->getTransactions() as $transaction) {
             $this->em->transactional(function () use ($transaction) : void {

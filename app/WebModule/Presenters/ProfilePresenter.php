@@ -15,12 +15,12 @@ use App\Services\PdfExportService;
 use App\WebModule\Components\ApplicationsGridControl;
 use App\WebModule\Components\IApplicationsGridControlFactory;
 use App\WebModule\Forms\AdditionalInformationForm;
-use App\WebModule\Forms\BaseForm;
 use App\WebModule\Forms\IAdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesFormFactory;
+use Exception;
 use Nette\Application\AbortException;
-use PhpOffice\PhpSpreadsheet\Exception;
+use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -132,11 +132,11 @@ class ProfilePresenter extends WebBasePresenter
         $this->sendResponse($response);
     }
 
-    protected function createComponentPersonalDetailsForm() : BaseForm
+    protected function createComponentPersonalDetailsForm() : Form
     {
         $form = $this->personalDetailsFormFactory->create($this->user->id);
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('web.profile.personal_details_update_successful', 'success');
 
             $this->redirect('this#collapsePersonalDetails');
@@ -165,11 +165,11 @@ class ProfilePresenter extends WebBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentRolesForm() : BaseForm
+    protected function createComponentRolesForm() : Form
     {
         $form = $this->rolesFormFactory->create($this->user->id);
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['submit']) {
                 $this->flashMessage('web.profile.roles_changed', 'success');
             } elseif ($form->isSubmitted() === $form['cancelRegistration']) {

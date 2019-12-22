@@ -236,6 +236,8 @@ console:
 dbal:
     debug:
         panel: %debugMode%
+    connection:
+        charset: UTF8
 
 orm.annotations:
     debug: %debugMode%

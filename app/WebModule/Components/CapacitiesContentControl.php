@@ -20,8 +20,6 @@ class CapacitiesContentControl extends Control
 
     public function __construct(RoleRepository $roleRepository)
     {
-        parent::__construct();
-
         $this->roleRepository = $roleRepository;
     }
 

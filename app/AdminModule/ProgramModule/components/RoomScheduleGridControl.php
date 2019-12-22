@@ -49,8 +49,6 @@ class RoomScheduleGridControl extends Control
         ProgramRepository $programRepository,
         ExcelExportService $excelExportService
     ) {
-        parent::__construct();
-
         $this->translator         = $translator;
         $this->roomRepository     = $roomRepository;
         $this->programRepository  = $programRepository;

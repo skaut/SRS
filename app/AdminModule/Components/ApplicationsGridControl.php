@@ -27,6 +27,7 @@ use Nette\Forms\Container;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 use Nettrine\ORM\EntityManagerDecorator;
+use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
@@ -81,8 +82,6 @@ class ApplicationsGridControl extends Control
         SubeventService $subeventService,
         Validators $validators
     ) {
-        parent::__construct();
-
         $this->translator            = $translator;
         $this->em                    = $em;
         $this->applicationRepository = $applicationRepository;
@@ -169,7 +168,7 @@ class ApplicationsGridControl extends Control
                     '',
                     $this->subeventService->getNonRegisteredSubeventsOptionsWithCapacity($this->user)
                 )
-                    ->setAttribute('class', 'datagrid-multiselect')
+                    ->setHtmlAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'admin.users.users_applications_subevents_empty');
             };
             $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
@@ -181,23 +180,26 @@ class ApplicationsGridControl extends Control
                 '',
                 $this->subeventService->getSubeventsOptionsWithCapacity()
             )
-                ->setAttribute('class', 'datagrid-multiselect');
+                ->setHtmlAttribute('class', 'datagrid-multiselect');
 
             $paymentMethodSelect = $container->addSelect(
                 'paymentMethod',
-                'admin.users.users_payment_method',
+                '',
                 $this->preparePaymentMethodOptions()
             );
 
-            $paymentDateText = $container->addDatePicker('paymentDate', 'admin.users.users_payment_date');
+            $paymentDateDate = new DateControl('');
+            $container->addComponent($paymentDateDate, 'paymentDate');
 
             $paymentMethodSelect
-                ->addConditionOn($paymentDateText, Form::FILLED)
+                ->addConditionOn($paymentDateDate, Form::FILLED)
                 ->addRule(Form::FILLED, 'admin.users.users_applications_payment_method_empty');
 
-            $container->addDatePicker('incomeProofPrintedDate', 'admin.users.users_income_proof_printed_date');
+            $incomeProofPrintedDateDate = new DateControl('');
+            $container->addComponent($incomeProofPrintedDateDate, 'incomeProofPrintedDate');
 
-            $container->addDatePicker('maturityDate', 'admin.users.users_maturity_date');
+            $maturityDateDate = new DateControl('');
+            $container->addComponent($maturityDateDate, 'maturityDate');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Application $item) : void {
             $container->setDefaults([

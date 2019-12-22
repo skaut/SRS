@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
@@ -113,7 +112,7 @@ class BlockFormFactory
      *
      * @throws NonUniqueResultException
      */
-    public function create(int $id, int $userId) : BaseForm
+    public function create(int $id, int $userId) : Form
     {
         $this->block = $this->blockRepository->findById($id);
         $this->user  = $this->userRepository->findById($userId);
@@ -157,8 +156,8 @@ class BlockFormFactory
             ->addRule(Form::NUMERIC, 'admin.program.blocks_duration_format');
 
         $form->addText('capacity', 'admin.program.blocks_capacity')
-            ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_capacity_note'))
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks_capacity_note'))
             ->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.program.blocks_capacity_format');
 
@@ -168,8 +167,8 @@ class BlockFormFactory
 
         $form->addCheckbox('autoRegistered', 'admin.program.blocks_auto_registered')
             ->setOption('id', 'autoRegisteredCheckbox')
-            ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_registered_note'))
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_registered_note'))
             ->addCondition(Form::FILLED)
             ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_registered_not_allowed');
 
@@ -178,7 +177,7 @@ class BlockFormFactory
             ->addRule(Form::MAX_LENGTH, 'admin.program.blocks_perex_length', 160);
 
         $form->addTextArea('description', 'admin.program.blocks_description')
-            ->setAttribute('class', 'tinymce-paragraph');
+            ->setHtmlAttribute('class', 'tinymce-paragraph');
 
         $form->addText('tools', 'admin.program.blocks_tools');
 
@@ -188,7 +187,7 @@ class BlockFormFactory
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         /** @var TextInput $nameText */
         $nameText = $form['name'];
@@ -236,7 +235,7 @@ class BlockFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

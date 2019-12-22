@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Settings;
@@ -20,6 +19,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
+use Nette\Application\UI\Form;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
@@ -75,7 +75,7 @@ class SkautIsEventFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -128,7 +128,7 @@ class SkautIsEventFormFactory
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $eventId   = null;
         $eventName = null;

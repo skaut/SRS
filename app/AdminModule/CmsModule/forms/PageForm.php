@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\CmsModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Acl\RoleRepository;
 use App\Model\Cms\Content\CapacitiesContent;
@@ -15,13 +14,14 @@ use App\Model\Cms\Content\UsersContent;
 use App\Model\Cms\Document\TagRepository;
 use App\Model\Cms\Page;
 use App\Model\Cms\PageRepository;
-use App\Model\Page\PageException;
+use App\Model\Cms\PageException;
 use App\Services\AclService;
 use App\Services\CmsService;
 use App\Services\FilesService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
+use Nette\Application\UI\Form;
 use stdClass;
 use function get_class;
 use function ucfirst;
@@ -102,8 +102,6 @@ class PageForm extends UI\Control
         TagRepository $tagRepository,
         FilesService $filesService
     ) {
-        parent::__construct();
-
         $this->id   = $id;
         $this->area = $area;
 
@@ -138,7 +136,7 @@ class PageForm extends UI\Control
      *
      * @throws PageException
      */
-    public function createComponentForm() : BaseForm
+    public function createComponentForm() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -170,9 +168,9 @@ class PageForm extends UI\Control
         $form->addSubmit('submitAndContinue', 'admin.common.save_and_continue');
         $form->addSubmit('submitAdd', 'admin.common.add');
         $form->addSubmit('submitMain', 'common.area.main')
-            ->setAttribute('class', 'btn-link');
+            ->setHtmlAttribute('class', 'btn-link');
         $form->addSubmit('submitSidebar', 'common.area.sidebar')
-            ->setAttribute('class', 'btn-link');
+            ->setHtmlAttribute('class', 'btn-link');
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];
@@ -191,7 +189,7 @@ class PageForm extends UI\Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $page = $this->pageRepository->findById((int) $values->id);
 

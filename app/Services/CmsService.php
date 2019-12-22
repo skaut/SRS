@@ -9,7 +9,7 @@ use App\Model\Cms\Content\ContentRepository;
 use App\Model\Cms\Page;
 use App\Model\Cms\PageDto;
 use App\Model\Cms\PageRepository;
-use App\Model\Page\PageException;
+use App\Model\Cms\PageException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;

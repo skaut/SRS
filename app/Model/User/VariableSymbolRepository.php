@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\User;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující variabilní symboly.
@@ -16,6 +17,7 @@ class VariableSymbolRepository extends EntityRepository
 {
     /**
      * Uloží variabilní symbol.
+     * @throws ORMException
      */
     public function save(VariableSymbol $variableSymbol) : void
     {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -13,6 +12,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use Throwable;
 
@@ -43,15 +43,16 @@ class ApplicationFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
         $form->addTextArea('applicationAgreement', 'admin.configuration.application_agreement')
-            ->setAttribute('rows', 5);
+            ->setHtmlAttribute('rows', 5);
 
-        $form->addDatePicker('editCustomInputsTo', 'admin.configuration.application_edit_custom_inputs_to')
-            ->addRule(Form::FILLED, 'admin.configuration.application_edit_custom_inputs_to_empty');
+        $editCustomInputsToDate = new DateControl('admin.configuration.application_edit_custom_inputs_to');
+        $editCustomInputsToDate->addRule(Form::FILLED, 'admin.configuration.application_edit_custom_inputs_to_empty');
+        $form->addComponent($editCustomInputsToDate, 'editCustomInputsTo');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -73,7 +74,7 @@ class ApplicationFormFactory
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $this->settingsService->setValue(Settings::APPLICATION_AGREEMENT, $values->applicationAgreement);
         $this->settingsService->setValue(Settings::EDIT_CUSTOM_INPUTS_TO, (string) $values->editCustomInputsTo);

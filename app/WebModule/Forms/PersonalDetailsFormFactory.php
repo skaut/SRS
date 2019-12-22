@@ -12,6 +12,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nextras\FormComponents\Controls\DateControl;
 use Skautis\Wsdl\WsdlException;
 use stdClass;
 use Tracy\Debugger;
@@ -58,7 +59,7 @@ class PersonalDetailsFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -77,15 +78,16 @@ class PersonalDetailsFormFactory
 
         $inputNickName = $form->addText('nickName', 'web.profile.nickname');
 
-        $inputBirthdate = $form->addDatePicker('birthdate', 'web.profile.birthdate')
-            ->addRule(Form::FILLED, 'web.profile.birthdate_empty');
+        $inputBirthdateDate = new DateControl('web.profile.birthdate');
+        $inputBirthdateDate->addRule(Form::FILLED, 'web.profile.birthdate_empty');
+        $form->addComponent($inputBirthdateDate, 'birthdate');
 
         if ($this->user->isMember()) {
             $inputSex->setDisabled();
             $inputFirstName->setDisabled();
             $inputLastName->setDisabled();
             $inputNickName->setDisabled();
-            $inputBirthdate->setDisabled();
+            $inputBirthdateDate->setDisabled();
         }
 
         $form->addText('email', 'web.application_content.email')
@@ -133,7 +135,7 @@ class PersonalDetailsFormFactory
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if (property_exists($values, 'sex')) {
             $this->user->setSex($values->sex);

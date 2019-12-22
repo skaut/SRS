@@ -31,6 +31,7 @@ use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
+use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
 use function array_slice;
@@ -99,8 +100,6 @@ class AdditionalInformationForm extends UI\Control
         MailService $mailService,
         SettingsService $settingsService
     ) {
-        parent::__construct();
-
         $this->baseFormFactory            = $baseFormFactory;
         $this->em                         = $em;
         $this->userRepository             = $userRepository;
@@ -127,7 +126,7 @@ class AdditionalInformationForm extends UI\Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function createComponentForm() : BaseForm
+    public function createComponentForm() : Form
     {
         $this->user                = $this->userRepository->findById($this->presenter->user->getId());
         $isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
@@ -167,8 +166,8 @@ class AdditionalInformationForm extends UI\Control
                 /** @var ?CustomFileValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue && $customInputValue->getValue()) {
-                    $custom->setAttribute('data-current-file-link', $customInputValue->getValue())
-                        ->setAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
+                    $custom->setHtmlAttribute('data-current-file-link', $customInputValue->getValue())
+                        ->setHtmlAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
                 }
             }
 
@@ -180,8 +179,10 @@ class AdditionalInformationForm extends UI\Control
         $form->addTextArea('about', 'web.profile.about_me');
 
         if ($this->user->hasDisplayArrivalDepartureRole()) {
-            $form->addDateTimePicker('arrival', 'web.profile.arrival');
-            $form->addDateTimePicker('departure', 'web.profile.departure');
+            $arrivalDateTime = new DateTimeControl('web.profile.arrival');
+            $form->addComponent($arrivalDateTime, 'arrival');
+            $departureDateTime = new DateTimeControl('web.profile.departure');
+            $form->addComponent($departureDateTime, 'departure');
         }
 
         $form->addSubmit('submit', 'web.profile.update_additional_information');
@@ -202,7 +203,7 @@ class AdditionalInformationForm extends UI\Control
      *
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $this->em->transactional(function () use ($values) : void {
             $customInputValueChanged = false;

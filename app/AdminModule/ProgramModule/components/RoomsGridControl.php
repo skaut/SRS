@@ -50,8 +50,6 @@ class RoomsGridControl extends Control
         ExcelExportService $excelExportService,
         Session $session
     ) {
-        parent::__construct();
-
         $this->translator         = $translator;
         $this->roomRepository     = $roomRepository;
         $this->excelExportService = $excelExportService;

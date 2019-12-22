@@ -39,8 +39,6 @@ class MailHistoryGridControl extends Control
         AclService $aclService,
         SubeventService $subeventService
     ) {
-        parent::__construct();
-
         $this->translator      = $translator;
         $this->mailRepository  = $mailRepository;
         $this->aclService      = $aclService;

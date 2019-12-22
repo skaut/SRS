@@ -29,8 +29,6 @@ class SubeventsGridControl extends Control
 
     public function __construct(ITranslator $translator, SubeventRepository $subeventRepository)
     {
-        parent::__construct();
-
         $this->translator         = $translator;
         $this->subeventRepository = $subeventRepository;
     }

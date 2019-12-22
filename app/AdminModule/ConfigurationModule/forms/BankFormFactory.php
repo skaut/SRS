@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -16,6 +15,7 @@ use Doctrine\ORM\ORMException;
 use FioApi\Exceptions\InternalErrorException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
@@ -55,7 +55,7 @@ class BankFormFactory
      *
      * @throws Throwable
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -68,9 +68,12 @@ class BankFormFactory
         $form->addText('bankToken', 'admin.configuration.payment.bank.token')
             ->addRule(Form::FILLED, 'admin.configuration.payment.bank.token_empty')
             ->addRule(Form::LENGTH, 'admin.configuration.payment.bank.token_length', 64);
-        $form->addDatePicker('bankDownloadFrom', 'admin.configuration.payment.bank.download_from')
+
+        $bankDownloadFromDate = new DateControl('admin.configuration.payment.bank.download_from');
+        $bankDownloadFromDate
             ->addRule(Form::FILLED, 'admin.configuration.payment.bank.download_from_empty')
             ->addRule([$this, 'validateBankDownloadFromDate'], 'admin.configuration.payment.bank.download_from_future');
+        $form->addComponent($bankDownloadFromDate, 'bankDownloadFrom');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -87,7 +90,7 @@ class BankFormFactory
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $token = $values->bankToken;
         $from  = $values->bankDownloadFrom;
@@ -106,7 +109,7 @@ class BankFormFactory
     /**
      * Ověří, že datum počátku stahování transakcí je v minulosti.
      */
-    public function validateBankDownloadFromDate(DatePicker $field) : bool
+    public function validateBankDownloadFromDate(DateControl $field) : bool
     {
         return $field->getValue() <= new DateTime();
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomFile;
@@ -53,7 +52,7 @@ class CustomInputFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $this->customInput = $this->customInputRepository->findById($id);
 
@@ -76,7 +75,7 @@ class CustomInputFormFactory
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         if ($this->customInput) {
             $typeSelect->setDisabled();
@@ -107,7 +106,7 @@ class CustomInputFormFactory
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

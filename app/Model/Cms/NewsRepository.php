@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Cms;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující aktuality.
@@ -52,6 +53,7 @@ class NewsRepository extends EntityRepository
 
     /**
      * Uloží aktualitu.
+     * @throws ORMException
      */
     public function save(News $news) : void
     {
@@ -61,6 +63,7 @@ class NewsRepository extends EntityRepository
 
     /**
      * Odstraní aktualitu.
+     * @throws ORMException
      */
     public function remove(News $document) : void
     {

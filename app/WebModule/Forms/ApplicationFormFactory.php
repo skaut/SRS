@@ -43,6 +43,8 @@ use Nette\Localization\ITranslator;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
+use Nextras\FormComponents\Controls\DateControl;
+use Nextras\FormComponents\Controls\DateTimeControl;
 use Skautis\Wsdl\WsdlException;
 use stdClass;
 use Throwable;
@@ -158,7 +160,7 @@ class ApplicationFormFactory
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -177,15 +179,16 @@ class ApplicationFormFactory
 
         $inputNickName = $form->addText('nickName', 'web.application_content.nickname');
 
-        $inputBirthdate = $form->addDatePicker('birthdate', 'web.application_content.birthdate')
-            ->addRule(Form::FILLED, 'web.application_content.birthdate_empty');
+        $inputBirthdateDate = new DateControl('web.application_content.birthdate');
+        $inputBirthdateDate->addRule(Form::FILLED, 'web.application_content.birthdate_empty');
+        $form->addComponent($inputBirthdateDate, 'birthdate');
 
         if ($this->user->isMember()) {
             $inputSex->setDisabled();
             $inputFirstName->setDisabled();
             $inputLastName->setDisabled();
             $inputNickName->setDisabled();
-            $inputBirthdate->setDisabled();
+            $inputBirthdateDate->setDisabled();
         }
 
         $form->addText('email', 'web.application_content.email')
@@ -243,7 +246,7 @@ class ApplicationFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $this->em->transactional(function () use ($values) : void {
             if (property_exists($values, 'sex')) {
@@ -352,7 +355,7 @@ class ApplicationFormFactory
     /**
      * Přidá vlastní pole přihlášky.
      */
-    private function addCustomInputs(BaseForm $form) : void
+    private function addCustomInputs(Form $form) : void
     {
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             switch (true) {
@@ -390,7 +393,7 @@ class ApplicationFormFactory
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    private function addSubeventsSelect(BaseForm $form) : void
+    private function addSubeventsSelect(Form $form) : void
     {
         if (! $this->subeventRepository->explicitSubeventsExists()) {
             return;
@@ -445,7 +448,7 @@ class ApplicationFormFactory
     /**
      * Přidá select pro výběr rolí.
      */
-    private function addRolesSelect(BaseForm $form) : void
+    private function addRolesSelect(Form $form) : void
     {
         $registerableOptions = $this->aclService->getRegisterableNowOptionsWithCapacity();
 
@@ -505,13 +508,15 @@ class ApplicationFormFactory
     /**
      * Přidá pole pro zadání příjezdu a odjezdu.
      */
-    private function addArrivalDeparture(BaseForm $form) : void
+    private function addArrivalDeparture(Form $form) : void
     {
-        $form->addDateTimePicker('arrival', 'web.application_content.arrival')
-            ->setOption('id', 'arrivalInput');
+        $arrivalDateTime = new DateTimeControl('web.application_content.arrival');
+        $arrivalDateTime->setOption('id', 'arrivalInput');
+        $form->addComponent($arrivalDateTime, 'arrival');
 
-        $form->addDateTimePicker('departure', 'web.application_content.departure')
-            ->setOption('id', 'departureInput');
+        $departureDateTime = new DateTimeControl('web.application_content.departure');
+        $departureDateTime->setOption('id', 'departureInput');
+        $form->addComponent($departureDateTime, 'departure');
     }
 
     /**

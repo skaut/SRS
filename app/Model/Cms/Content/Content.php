@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Model\Cms\Content;
 
-use App\AdminModule\Forms\BaseForm;
 use App\Model\Cms\Page;
-use App\Model\Page\PageException;
+use App\Model\Cms\PageException;
 use Doctrine\ORM\Mapping as ORM;
+use Nette\Application\UI\Form;
 use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 use stdClass;
 
@@ -261,19 +261,19 @@ abstract class Content implements IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
-    public function addContentForm(BaseForm $form) : BaseForm
+    public function addContentForm(Form $form) : Form
     {
         $formName      = $this->getContentFormName();
         $formContainer = $form->addContainer($form->$formName);
 
         $formContainer->addHidden('id')
-            ->setAttribute('class', 'id');
+            ->setHtmlAttribute('class', 'id');
 
         $formContainer->addHidden('position')
-            ->setAttribute('class', 'position');
+            ->setHtmlAttribute('class', 'position');
 
         $formContainer->addHidden('delete')
-            ->setAttribute('class', 'delete');
+            ->setHtmlAttribute('class', 'delete');
 
         $formContainer->addText('heading', 'admin.cms.pages_content_heading');
 
@@ -295,7 +295,7 @@ abstract class Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(BaseForm $form, stdClass $values) : void
+    public function contentFormSucceeded(Form $form, stdClass $values) : void
     {
         $formName       = $this->getContentFormName();
         $values         = $values->$formName;

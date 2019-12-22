@@ -20,8 +20,6 @@ class UsersContentControl extends Control
 
     public function __construct(UserRepository $userRepository)
     {
-        parent::__construct();
-
         $this->userRepository = $userRepository;
     }
 

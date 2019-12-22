@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -12,6 +11,7 @@ use App\Services\SettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
+use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -42,7 +42,7 @@ class SubeventsFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -67,7 +67,7 @@ class SubeventsFormFactory
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT, $values->isAllowedAddSubeventsAfterPayment);
     }

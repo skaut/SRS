@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\CmsModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\News;
 use App\Model\Cms\NewsRepository;
@@ -13,6 +12,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 
 /**
@@ -47,7 +47,7 @@ class NewsFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(?int $id) : BaseForm
+    public function create(?int $id) : Form
     {
         $this->news = $this->newsRepository->findById($id);
 
@@ -55,14 +55,15 @@ class NewsFormFactory
 
         $form->addHidden('id');
 
-        $form->addDateTimePicker('published', 'admin.cms.news_published')
-            ->addRule(Form::FILLED, 'admin.cms.news_published_empty');
+        $publishedDateTime = new DateTimeControl('admin.cms.news_published');
+        $publishedDateTime->addRule(Form::FILLED, 'admin.cms.news_published_empty');
+        $form->addComponent($publishedDateTime, 'published');
 
         $form->addCheckbox('pinned', 'admin.cms.news_edit_pinned');
 
         $form->addTextArea('text', 'admin.cms.news_text')
             ->addRule(Form::FILLED, 'admin.cms.news_text_empty')
-            ->setAttribute('class', 'tinymce-paragraph');
+            ->setHtmlAttribute('class', 'tinymce-paragraph');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -70,7 +71,7 @@ class NewsFormFactory
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         if ($this->news) {
             $form->setDefaults([
@@ -97,7 +98,7 @@ class NewsFormFactory
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

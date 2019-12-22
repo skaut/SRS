@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -45,7 +44,7 @@ class PaymentProofFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -89,7 +88,7 @@ class PaymentProofFormFactory
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $this->settingsService->setValue(Settings::COMPANY, $values->company);
         $this->settingsService->setValue(Settings::ICO, $values->ico);

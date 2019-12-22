@@ -7,6 +7,7 @@ namespace App\Model\Cms\Document;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující dokumenty.
@@ -51,6 +52,7 @@ class DocumentRepository extends EntityRepository
 
     /**
      * Uloží dokument.
+     * @throws ORMException
      */
     public function save(Document $document) : void
     {

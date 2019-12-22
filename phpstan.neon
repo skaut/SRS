@@ -7,7 +7,6 @@ parameters:
     checkMissingIterableValueType: false
 
     ignoreErrors:
-        - '#Call to an undefined method Nette\\Forms\\Container::addDatePicker\(\)\.#'
         - '#Parameter \#1 \$x of method Doctrine\\Common\\Collections\\ExpressionBuilder::(or|and)X\(\) expects array<int, mixed>\|null, Doctrine\\Common\\Collections\\Expr\\Comparison given\.#'
 
 includes:

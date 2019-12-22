@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Services\SubeventService;
+use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
@@ -64,7 +64,7 @@ class SubeventFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $this->subevent = $this->subeventRepository->findById($id);
 
@@ -76,8 +76,8 @@ class SubeventFormFactory
             ->addRule(Form::FILLED, 'admin.configuration.subevents_name_empty');
 
         $capacityText = $form->addText('capacity', 'admin.configuration.subevents_capacity')
-            ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.configuration.subevents_capacity_note'));
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.configuration.subevents_capacity_note'));
 
         $form->addText('fee', 'admin.configuration.subevents_fee')
             ->addRule(Form::FILLED, 'admin.configuration.subevents_fee_empty')
@@ -125,7 +125,7 @@ class SubeventFormFactory
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         if ($this->subevent) {
             $form->setDefaults([
@@ -149,7 +149,7 @@ class SubeventFormFactory
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;
@@ -177,6 +177,7 @@ class SubeventFormFactory
      *
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws ConnectionException
      */
     public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args) : bool
     {

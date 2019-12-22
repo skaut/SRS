@@ -29,8 +29,6 @@ class MailTemplatesGridControl extends Control
 
     public function __construct(ITranslator $translator, TemplateRepository $templateRepository)
     {
-        parent::__construct();
-
         $this->translator         = $translator;
         $this->templateRepository = $templateRepository;
     }

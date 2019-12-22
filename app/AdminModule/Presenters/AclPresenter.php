@@ -7,7 +7,6 @@ namespace App\AdminModule\Presenters;
 use App\AdminModule\Components\IRolesGridControlFactory;
 use App\AdminModule\Components\RolesGridControl;
 use App\AdminModule\Forms\AddRoleFormFactory;
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\EditRoleFormFactory;
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
@@ -15,7 +14,9 @@ use App\Services\Authenticator;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
+use Nette\Application\UI\Form;
 use stdClass;
+use Throwable;
 
 /**
  * Presenter obsluhující správu rolí.
@@ -88,11 +89,14 @@ class AclPresenter extends AdminBasePresenter
         return $this->rolesGridControlFactory->create();
     }
 
-    protected function createComponentAddRoleForm() : BaseForm
+    /**
+     * @throws Throwable
+     */
+    protected function createComponentAddRoleForm() : Form
     {
         $form = $this->addRoleFormFactory->create();
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Acl:default');
             }
@@ -110,11 +114,11 @@ class AclPresenter extends AdminBasePresenter
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    protected function createComponentEditRoleForm() : BaseForm
+    protected function createComponentEditRoleForm() : Form
     {
         $form = $this->editRoleFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Acl:default');
             }

@@ -7,12 +7,12 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\ConfigurationModule\Components\ISkautIsEventEducationGridControlFactory;
 use App\AdminModule\ConfigurationModule\Components\SkautIsEventEducationGridControl;
 use App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory;
-use App\AdminModule\Forms\BaseForm;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\SkautIs\SkautIsCourseRepository;
 use Nette\Application\AbortException;
+use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -83,11 +83,11 @@ class SkautIsPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentSkautIsEventForm() : BaseForm
+    protected function createComponentSkautIsEventForm() : Form
     {
         $form = $this->skautIsEventFormFactory->create();
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.skautis_event_connect_successful', 'success');
 
             $this->redirect('this');

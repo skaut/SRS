@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\CmsModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\Faq;
 use App\Model\Cms\FaqRepository;
@@ -60,7 +59,7 @@ class FaqFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(?int $id, int $userId) : BaseForm
+    public function create(?int $id, int $userId) : Form
     {
         $this->faq  = $id === null ? null : $this->faqRepository->findById($id);
         $this->user = $this->userRepository->findById($userId);
@@ -73,7 +72,7 @@ class FaqFormFactory
             ->addRule(Form::FILLED, 'admin.cms.faq_question_empty');
 
         $form->addTextArea('answer', 'admin.cms.faq_answer')
-            ->setAttribute('class', 'tinymce-paragraph');
+            ->setHtmlAttribute('class', 'tinymce-paragraph');
 
         $form->addCheckbox('public', 'admin.cms.faq_public_form');
 
@@ -83,7 +82,7 @@ class FaqFormFactory
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         if ($this->faq) {
             $form->setDefaults([
@@ -109,7 +108,7 @@ class FaqFormFactory
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

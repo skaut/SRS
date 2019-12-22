@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\User\CustomInputValue;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující hodnoty vlastních polí přihlášky.
@@ -24,6 +25,7 @@ class CustomInputValueRepository extends EntityRepository
 
     /**
      * Uloží hodnotu vlastního pole přihlášky.
+     * @throws ORMException
      */
     public function save(CustomInputValue $value) : void
     {
@@ -33,6 +35,7 @@ class CustomInputValueRepository extends EntityRepository
 
     /**
      * Odstraní hodnotu vlastního pole přihlášky.
+     * @throws ORMException
      */
     public function remove(CustomInputValue $value) : void
     {

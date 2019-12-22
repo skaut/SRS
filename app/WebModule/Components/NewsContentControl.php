@@ -21,8 +21,6 @@ class NewsContentControl extends Control
 
     public function __construct(NewsRepository $newsRepository)
     {
-        parent::__construct();
-
         $this->newsRepository = $newsRepository;
     }
 

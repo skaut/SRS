@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -15,6 +14,7 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
+use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
@@ -54,7 +54,7 @@ class SeminarFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -66,14 +66,17 @@ class SeminarFormFactory
         $form->addText('seminarName', 'admin.configuration.seminar_name')
             ->addRule(Form::FILLED, 'admin.configuration.seminar_name_empty');
 
-        $seminarFromDate = $form->addDatePicker('seminarFromDate', 'admin.configuration.seminar_from_date')
-            ->addRule(Form::FILLED, 'admin.configuration.seminar_from_date_empty');
+        $seminarFromDate = new DateControl('admin.configuration.seminar_from_date');
+        $seminarFromDate->addRule(Form::FILLED, 'admin.configuration.seminar_from_date_empty');
+        $form->addComponent($seminarFromDate, 'seminarFromDate');
 
-        $seminarToDate = $form->addDatePicker('seminarToDate', 'admin.configuration.seminar_to_date')
-            ->addRule(Form::FILLED, 'admin.configuration.seminar_to_date_empty');
+        $seminarToDate = new DateControl('admin.configuration.seminar_to_date');
+        $seminarToDate->addRule(Form::FILLED, 'admin.configuration.seminar_to_date_empty');
+        $form->addComponent($seminarToDate, 'seminarToDate');
 
-        $editRegistrationTo = $form->addDatePicker('editRegistrationTo', 'admin.configuration.edit_registration_to')
-            ->addRule(Form::FILLED, 'admin.configuration.edit_registration_to_empty');
+        $editRegistrationTo = new DateControl('admin.configuration.edit_registration_to');
+        $editRegistrationTo->addRule(Form::FILLED, 'admin.configuration.edit_registration_to_empty');
+        $form->addComponent($editRegistrationTo, 'editRegistrationTo');
 
         $seminarFromDate->addRule([$this, 'validateSeminarFromDate'], 'admin.configuration.seminar_from_date_after_to', [$seminarFromDate, $seminarToDate]);
         $seminarToDate->addRule([$this, 'validateSeminarToDate'], 'admin.configuration.seminar_to_date_before_from', [$seminarToDate, $seminarFromDate]);
@@ -101,7 +104,7 @@ class SeminarFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $this->settingsService->setValue(Settings::SEMINAR_NAME, $values->seminarName);
         $implicitSubevent = $this->subeventRepository->findImplicit();
@@ -118,7 +121,7 @@ class SeminarFormFactory
      *
      * @param DateTime[] $args
      */
-    public function validateSeminarFromDate(DatePicker $field, array $args) : bool
+    public function validateSeminarFromDate(DateControl $field, array $args) : bool
     {
         return $args[0] <= $args[1];
     }
@@ -128,7 +131,7 @@ class SeminarFormFactory
      *
      * @param DateTime[] $args
      */
-    public function validateSeminarToDate(DatePicker $field, array $args) : bool
+    public function validateSeminarToDate(DateControl $field, array $args) : bool
     {
         return $args[0] >= $args[1];
     }
@@ -138,7 +141,7 @@ class SeminarFormFactory
      *
      * @param DateTime[] $args
      */
-    public function validateEditRegistrationTo(DatePicker $field, array $args) : bool
+    public function validateEditRegistrationTo(DateControl $field, array $args) : bool
     {
         return $args[0] < $args[1];
     }

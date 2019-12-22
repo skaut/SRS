@@ -47,8 +47,6 @@ class DocumentTagsGridControl extends Control
         AclService $aclService,
         TagRepository $tagRepository
     ) {
-        parent::__construct();
-
         $this->translator     = $translator;
         $this->roleRepository = $roleRepository;
         $this->aclService     = $aclService;
@@ -92,7 +90,7 @@ class DocumentTagsGridControl extends Control
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.tags_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
-            $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('roles', '', $rolesOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
                 ->setDefaultValue(array_keys($rolesOptions))
                 ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
@@ -101,7 +99,7 @@ class DocumentTagsGridControl extends Control
         $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($rolesOptions) : void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.tags_name_empty');
-            $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('roles', '', $rolesOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Tag $item) : void {

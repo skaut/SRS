@@ -23,8 +23,6 @@ class DocumentContentControl extends Control
 
     public function __construct(DocumentRepository $documentRepository)
     {
-        parent::__construct();
-
         $this->documentRepository = $documentRepository;
     }
 

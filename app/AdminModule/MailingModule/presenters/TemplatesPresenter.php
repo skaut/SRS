@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Presenters;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory;
 use App\AdminModule\MailingModule\Components\MailTemplatesGridControl;
 use App\AdminModule\MailingModule\Forms\EditTemplateFormFactory;
 use App\Model\Mailing\TemplateRepository;
+use Nette\Application\UI\Form;
 use stdClass;
 
 /**
@@ -49,11 +49,11 @@ class TemplatesPresenter extends MailingBasePresenter
         return $this->mailTemplatesGridControlFactory->create();
     }
 
-    protected function createComponentEditTemplateForm() : BaseForm
+    protected function createComponentEditTemplateForm() : Form
     {
         $form = $this->editTemplateFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Templates:default');
             }

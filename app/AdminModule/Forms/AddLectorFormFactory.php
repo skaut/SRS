@@ -15,6 +15,7 @@ use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;
 use Nette\Application\UI\Form;
+use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use function getimagesizefromstring;
 use function image_type_to_extension;
@@ -55,12 +56,12 @@ class AddLectorFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
         $form->addUpload('photo', 'admin.users.users_photo')
-            ->setAttribute('accept', 'image/*')
+            ->setHtmlAttribute('accept', 'image/*')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.users.users_photo_format');
 
@@ -80,7 +81,8 @@ class AddLectorFormFactory
             ->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, 'admin.users.users_email_format');
 
-        $form->addDatePicker('birthdate', 'admin.users.users_birthdate');
+        $birthdateDate = new DateControl('admin.users.users_birthdate');
+        $form->addComponent($birthdateDate, 'birthdate');
 
         $form->addText('street', 'admin.users.users_street')
             ->addCondition(Form::FILLED)
@@ -100,7 +102,7 @@ class AddLectorFormFactory
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -115,7 +117,7 @@ class AddLectorFormFactory
      * @throws OptimisticLockException
      * @throws Exception
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

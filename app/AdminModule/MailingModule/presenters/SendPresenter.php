@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Presenters;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\MailingModule\Forms\SendFormFactory;
+use Nette\Application\UI\Form;
 use stdClass;
 
 /**
@@ -22,11 +22,11 @@ class SendPresenter extends MailingBasePresenter
      */
     public $sendFormFactory;
 
-    protected function createComponentSendForm() : BaseForm
+    protected function createComponentSendForm() : Form
     {
         $form = $this->sendFormFactory->create();
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($this->sendFormFactory->mailSuccess) {
                 $this->flashMessage('admin.mailing.send.sent', 'success');
             } else {

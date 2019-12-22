@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Acl\Role;
 use App\Model\Acl\RoleRepository;
@@ -82,7 +81,7 @@ class SendFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -103,7 +102,7 @@ class SendFormFactory
             'admin.mailing.send.recipient_users',
             $this->userRepository->getUsersOptions()
         )
-            ->setAttribute('data-live-search', 'true');
+            ->setHtmlAttribute('data-live-search', 'true');
 
         $recipientRolesMultiSelect
             ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
@@ -129,7 +128,7 @@ class SendFormFactory
 
         $form->addTextArea('text', 'admin.mailing.send.text')
             ->addRule(Form::FILLED, 'admin.mailing.send.text_empty')
-            ->setAttribute('class', 'tinymce-paragraph');
+            ->setHtmlAttribute('class', 'tinymce-paragraph');
 
         $form->addSubmit('submit', 'admin.mailing.send.send');
 
@@ -146,7 +145,7 @@ class SendFormFactory
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         try {
             $recipientsRoles     = $this->roleRepository->findRolesByIds($values->recipientRoles);

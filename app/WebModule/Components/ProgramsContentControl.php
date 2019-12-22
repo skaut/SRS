@@ -44,8 +44,6 @@ class ProgramsContentControl extends Control
         SettingsService $settingsService,
         ProgramService $programService
     ) {
-        parent::__construct();
-
         $this->userRepository  = $userRepository;
         $this->roleRepository  = $roleRepository;
         $this->settingsService = $settingsService;

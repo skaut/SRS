@@ -32,8 +32,6 @@ class CustomInputsGridControl extends Control
 
     public function __construct(ITranslator $translator, CustomInputRepository $customInputRepository)
     {
-        parent::__construct();
-
         $this->translator            = $translator;
         $this->customInputRepository = $customInputRepository;
     }

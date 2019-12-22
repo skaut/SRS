@@ -14,9 +14,9 @@ use App\Model\User\UserRepository;
 use App\Services\Authenticator;
 use App\Services\SettingsService;
 use App\WebModule\Forms\ApplicationFormFactory;
-use App\WebModule\Forms\BaseForm;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 use function json_encode;
@@ -55,8 +55,6 @@ class ApplicationContentControl extends Control
         SettingsService $settingsService,
         SubeventRepository $subeventRepository
     ) {
-        parent::__construct();
-
         $this->applicationFormFactory = $applicationFormFactory;
         $this->authenticator          = $authenticator;
         $this->userRepository         = $userRepository;
@@ -117,11 +115,11 @@ class ApplicationContentControl extends Control
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    protected function createComponentApplicationForm() : BaseForm
+    protected function createComponentApplicationForm() : Form
     {
         $form = $this->applicationFormFactory->create($this->getPresenter()->user->id);
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->getPresenter()->flashMessage('web.application_content.register_successful', 'success');
 
             $this->authenticator->updateRoles($this->getPresenter()->user);

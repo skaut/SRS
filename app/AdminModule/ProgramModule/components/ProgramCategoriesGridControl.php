@@ -52,8 +52,6 @@ class ProgramCategoriesGridControl extends Control
         ProgramService $programService,
         AclService $aclService
     ) {
-        parent::__construct();
-
         $this->translator         = $translator;
         $this->categoryRepository = $categoryRepository;
         $this->roleRepository     = $roleRepository;
@@ -94,7 +92,7 @@ class ProgramCategoriesGridControl extends Control
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());
 
-            $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
@@ -103,7 +101,7 @@ class ProgramCategoriesGridControl extends Control
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty');
 
-            $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Category $item) : void {

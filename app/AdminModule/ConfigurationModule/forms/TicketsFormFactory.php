@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Nette\Application\UI\Form;
+use Nextras\FormComponents\Controls\DateTimeControl;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
@@ -40,7 +41,7 @@ class TicketsFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -53,8 +54,9 @@ class TicketsFormFactory
         $ticketsAllowedCheckbox->addCondition($form::EQUAL, true)
             ->toggle('tickets-from');
 
-        $form->addDateTimePicker('ticketsFrom', 'admin.configuration.payment.tickets.from')
-            ->setOption('id', 'tickets-from');
+        $ticketsFromDateTime = new DateTimeControl('admin.configuration.payment.tickets.from');
+        $ticketsFromDateTime->setOption('id', 'tickets-from');
+        $form->addComponent($ticketsFromDateTime, 'ticketsFrom');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -78,7 +80,7 @@ class TicketsFormFactory
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($values->ticketsAllowed) {
             $this->settingsService->setDateTimeValue(Settings::TICKETS_FROM, $values->ticketsFrom);

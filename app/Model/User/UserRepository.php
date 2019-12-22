@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\ORMException;
 use function array_map;
 
 /**
@@ -279,6 +280,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Uloží uživatele.
+     * @throws ORMException
      */
     public function save(User $user) : void
     {
@@ -288,6 +290,7 @@ class UserRepository extends EntityRepository
 
     /**
      * Odstraní externího uživatele.
+     * @throws ORMException
      */
     public function remove(User $user) : void
     {

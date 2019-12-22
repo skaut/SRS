@@ -9,7 +9,6 @@ use App\AdminModule\Components\IApplicationsGridControlFactory;
 use App\AdminModule\Components\IUsersGridControlFactory;
 use App\AdminModule\Components\UsersGridControl;
 use App\AdminModule\Forms\AddLectorFormFactory;
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\EditUserPersonalDetailsFormFactory;
 use App\AdminModule\Forms\EditUserSeminarFormFactory;
 use App\Model\Acl\Permission;
@@ -23,6 +22,7 @@ use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\PdfExportService;
 use Nette\Application\AbortException;
+use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -204,11 +204,11 @@ class UsersPresenter extends AdminBasePresenter
         return $this->usersGridControlFactory->create();
     }
 
-    protected function createComponentAddLectorForm() : BaseForm
+    protected function createComponentAddLectorForm() : Form
     {
         $form = $this->addLectorFormFactory->create();
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Users:default');
             } else {
@@ -220,11 +220,11 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentEditUserPersonalDetailsForm() : BaseForm
+    protected function createComponentEditUserPersonalDetailsForm() : Form
     {
         $form = $this->editUserPersonalDetailsFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('this');
             } else {
@@ -236,11 +236,11 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentEditUserSeminarForm() : BaseForm
+    protected function createComponentEditUserSeminarForm() : Form
     {
         $form = $this->editUserSeminarFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onError[] = function (BaseForm $form) : void {
+        $form->onError[] = function (Form $form) : void {
             foreach ($form->errors as $error) {
                 $this->flashMessage($error, 'danger');
             }
@@ -248,7 +248,7 @@ class UsersPresenter extends AdminBasePresenter
             $this->redirect('this');
         };
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.users.users_saved', 'success');
             }

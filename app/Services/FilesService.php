@@ -7,6 +7,8 @@ namespace App\Services;
 use Nette;
 use Nette\Http\FileUpload;
 use Nette\Utils\Image;
+use Nette\Utils\ImageException;
+use Nette\Utils\UnknownImageFileException;
 use function dirname;
 use function fclose;
 use function file_exists;
@@ -74,7 +76,8 @@ class FilesService
     /**
      * Změní velikost obrázku.
      *
-     * @throws Nette\Utils\UnknownImageFileException
+     * @throws ImageException
+     * @throws UnknownImageFileException
      */
     public function resizeImage(string $path, ?int $width, ?int $height) : void
     {
@@ -87,7 +90,8 @@ class FilesService
     /**
      * Změní velikost a ořízne obrázek.
      *
-     * @throws Nette\Utils\UnknownImageFileException
+     * @throws UnknownImageFileException
+     * @throws ImageException
      */
     public function resizeAndCropImage(string $path, ?int $width, ?int $height) : void
     {

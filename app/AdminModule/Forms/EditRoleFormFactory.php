@@ -12,6 +12,7 @@ use App\Model\Acl\SrsResource;
 use App\Model\Cms\PageRepository;
 use App\Services\AclService;
 use App\Services\ProgramService;
+use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette;
@@ -19,6 +20,7 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Forms\Controls\SelectBox;
 use Nettrine\ORM\EntityManagerDecorator;
+use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
 use function in_array;
@@ -86,7 +88,7 @@ class EditRoleFormFactory
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $this->role = $this->roleRepository->findById($id);
 
@@ -101,17 +103,21 @@ class EditRoleFormFactory
 
         $form->addCheckbox('registerable', 'admin.acl.roles_registerable_form');
 
-        $form->addDateTimePicker('registerableFrom', 'admin.acl.roles_registerable_from')
-            ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.acl.roles_registerable_from_note'));
+        $registerableFromDateTime = new DateTimeControl('admin.acl.roles_registerable_from');
+        $registerableFromDateTime
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.acl.roles_registerable_from_note'));
+        $form->addComponent($registerableFromDateTime, 'registerableFrom');
 
-        $form->addDateTimePicker('registerableTo', 'admin.acl.roles_registerable_to')
-            ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.acl.roles_registerable_to_note'));
+        $registerableToDateTime = new DateTimeControl('admin.acl.roles_registerable_to');
+        $registerableToDateTime
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.acl.roles_registerable_to_note'));
+        $form->addComponent($registerableToDateTime, 'registerableTo');
 
         $form->addText('capacity', 'admin.acl.roles_capacity')
-            ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.acl.roles_capacity_note'))
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.acl.roles_capacity_note'))
             ->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.acl.roles_capacity_format')
             ->addRule(Form::MIN, 'admin.acl.roles_capacity_low', $this->role->countUsers());
@@ -139,7 +145,7 @@ class EditRoleFormFactory
 
         $form->addSelect('redirectAfterLogin', 'admin.acl.roles_redirect_after_login', $pagesOptions)
             ->setPrompt('')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.acl.roles_redirect_after_login_note'))
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.acl.roles_redirect_after_login_note'))
             ->addCondition(Form::FILLED)
             ->addRule([$this, 'validateRedirectAllowed'], 'admin.acl.roles_redirect_after_login_restricted', [$allowedPages]);
 
@@ -171,7 +177,7 @@ class EditRoleFormFactory
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->setDefaults([
             'id' => $id,
@@ -202,7 +208,7 @@ class EditRoleFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;
@@ -290,6 +296,7 @@ class EditRoleFormFactory
      * Ověří kolize mezi vyžadovanými a nekompatibilními rolemi.
      *
      * @param int[][] $args
+     * @throws ConnectionException
      */
     public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args) : bool
     {

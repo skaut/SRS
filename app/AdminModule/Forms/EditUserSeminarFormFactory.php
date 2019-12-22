@@ -34,6 +34,7 @@ use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
+use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
 use function property_exists;
@@ -123,7 +124,7 @@ class EditUserSeminarFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -145,8 +146,10 @@ class EditUserSeminarFormFactory
         $form->addCheckbox('attended', 'admin.users.users_attended_form');
 
         if ($this->user->hasDisplayArrivalDepartureRole()) {
-            $form->addDateTimePicker('arrival', 'admin.users.users_arrival');
-            $form->addDateTimePicker('departure', 'admin.users.users_departure');
+            $arrivalDateTime = new DateTimeControl('admin.users.users_arrival');
+            $form->addComponent($arrivalDateTime, 'arrival');
+            $departureDateTime = new DateTimeControl('admin.users.users_departure');
+            $form->addComponent($departureDateTime, 'departure');
         }
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
@@ -184,7 +187,7 @@ class EditUserSeminarFormFactory
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->setDefaults([
             'id' => $id,
@@ -207,7 +210,7 @@ class EditUserSeminarFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

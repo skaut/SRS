@@ -7,7 +7,7 @@ namespace App\AdminModule\CmsModule\Components;
 use App\Model\Acl\RoleRepository;
 use App\Model\Cms\Page;
 use App\Model\Cms\PageRepository;
-use App\Model\Page\PageException;
+use App\Model\Cms\PageException;
 use App\Services\AclService;
 use App\Services\CmsService;
 use Doctrine\ORM\NonUniqueResultException;
@@ -55,8 +55,6 @@ class PagesGridControl extends Control
         RoleRepository $roleRepository,
         AclService $aclService
     ) {
-        parent::__construct();
-
         $this->translator     = $translator;
         $this->cmsService     = $cmsService;
         $this->pageRepository = $pageRepository;
@@ -123,7 +121,7 @@ class PagesGridControl extends Control
                 ->addRule(Form::PATTERN, 'admin.cms.pages_slug_format', '^[a-z0-9-]*$')
                 ->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findAllSlugs());
 
-            $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('roles', '', $rolesOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
                 ->setDefaultValue(array_keys($rolesOptions))
                 ->addRule(Form::FILLED, 'admin.cms.pages_roles_empty');
 
@@ -139,7 +137,7 @@ class PagesGridControl extends Control
                 ->addRule(Form::FILLED, 'admin.cms.pages_slug_empty')
                 ->addRule(Form::PATTERN, 'admin.cms.pages_slug_format', '^([a-z0-9-]*)|/$');
 
-            $container->addMultiSelect('roles', '', $rolesOptions)->setAttribute('class', 'datagrid-multiselect')
+            $container->addMultiSelect('roles', '', $rolesOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.cms.pages_roles_empty');
 
             $container->addSelect('public', '', $publicOptions);

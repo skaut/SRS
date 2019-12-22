@@ -24,8 +24,6 @@ class BlocksContentControl extends Control
 
     public function __construct(BlockRepository $blockRepository, CategoryRepository $categoryRepository)
     {
-        parent::__construct();
-
         $this->blockRepository    = $blockRepository;
         $this->categoryRepository = $categoryRepository;
     }

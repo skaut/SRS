@@ -9,9 +9,9 @@ use App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\PaymentForm;
 use App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\TicketsFormFactory;
-use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
+use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -91,11 +91,11 @@ class PaymentPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentPaymentProofForm() : BaseForm
+    protected function createComponentPaymentProofForm() : Form
     {
         $form = $this->paymentProofFormFactory->create();
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };
@@ -106,11 +106,11 @@ class PaymentPresenter extends ConfigurationBasePresenter
     /**
      * @throws Throwable
      */
-    protected function createComponentBankForm() : BaseForm
+    protected function createComponentBankForm() : Form
     {
         $form = $this->bankFormFactory->create();
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };
@@ -122,11 +122,11 @@ class PaymentPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentTicketsForm() : BaseForm
+    protected function createComponentTicketsForm() : Form
     {
         $form = $this->ticketsFormFactory->create();
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };

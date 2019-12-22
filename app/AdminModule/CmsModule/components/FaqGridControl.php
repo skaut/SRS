@@ -30,8 +30,6 @@ class FaqGridControl extends Control
 
     public function __construct(ITranslator $translator, FaqRepository $faqRepository)
     {
-        parent::__construct();
-
         $this->translator    = $translator;
         $this->faqRepository = $faqRepository;
     }

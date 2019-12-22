@@ -30,8 +30,6 @@ class NewsGridControl extends Control
 
     public function __construct(ITranslator $translator, NewsRepository $newsRepository)
     {
-        parent::__construct();
-
         $this->translator     = $translator;
         $this->newsRepository = $newsRepository;
     }

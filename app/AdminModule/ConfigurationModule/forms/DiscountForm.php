@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Structure\Discount;
 use App\Model\Structure\DiscountRepository;
@@ -71,8 +70,6 @@ class DiscountForm extends UI\Control
         SubeventRepository $subeventRepository,
         DiscountService $discountService
     ) {
-        parent::__construct();
-
         $this->baseFormFactory    = $baseFormFactory;
         $this->discountRepository = $discountRepository;
         $this->subeventRepository = $subeventRepository;
@@ -97,7 +94,7 @@ class DiscountForm extends UI\Control
     /**
      * Vytvoří formulář.
      */
-    public function createComponentForm() : BaseForm
+    public function createComponentForm() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -106,7 +103,7 @@ class DiscountForm extends UI\Control
         $form->addHidden('condition');
 
         $form->addTextArea('conditionText', 'admin.configuration.discounts_condition')
-            ->setAttribute('readonly', true);
+            ->setHtmlAttribute('readonly', true);
 
         $form->addText('discount', 'admin.configuration.discounts_discount')
             ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
@@ -116,7 +113,7 @@ class DiscountForm extends UI\Control
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         if ($this->discount) {
             $form->setDefaults([
@@ -138,7 +135,7 @@ class DiscountForm extends UI\Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $this->id = (int) $values->id;
 

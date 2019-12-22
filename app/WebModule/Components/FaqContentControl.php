@@ -8,9 +8,9 @@ use App\Model\Acl\Role;
 use App\Model\Acl\RoleRepository;
 use App\Model\Cms\Content\ContentDto;
 use App\Model\Cms\FaqRepository;
-use App\WebModule\Forms\BaseForm;
 use App\WebModule\Forms\FaqFormFactory;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
 use stdClass;
 
 /**
@@ -32,8 +32,6 @@ class FaqContentControl extends Control
 
     public function __construct(FaqFormFactory $faqFormFactory, FaqRepository $faqRepository, RoleRepository $roleRepository)
     {
-        parent::__construct();
-
         $this->faqFormFactory = $faqFormFactory;
         $this->faqRepository  = $faqRepository;
         $this->roleRepository = $roleRepository;
@@ -55,11 +53,11 @@ class FaqContentControl extends Control
         $template->render();
     }
 
-    public function createComponentFaqForm() : BaseForm
+    public function createComponentFaqForm() : Form
     {
         $form = $this->faqFormFactory->create($this->getPresenter()->getUser()->id);
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->getPresenter()->flashMessage('web.faq_content.add_question_successful', 'success');
 
             $this->getPresenter()->redirect('this');

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Settings;
@@ -15,6 +14,7 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
+use Nextras\FormComponents\Controls\DateTimeControl;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
@@ -47,7 +47,7 @@ class ProgramFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -66,21 +66,23 @@ class ProgramFormFactory
             ->toggle('register-programs-from')
             ->toggle('register-programs-to');
 
-        $registerProgramsFrom = $form->addDateTimePicker('registerProgramsFrom', 'admin.configuration.register_programs_from')
-            ->setOption('id', 'register-programs-from');
+        $registerProgramsFromDateTime = new DateTimeControl('admin.configuration.register_programs_from');
+        $registerProgramsFromDateTime->setOption('id', 'register-programs-from');
+        $form->addComponent($registerProgramsFromDateTime, 'registerProgramsFrom');
 
-        $registerProgramsTo = $form->addDateTimePicker('registerProgramsTo', 'admin.configuration.register_programs_to')
-            ->setOption('id', 'register-programs-to');
+        $registerProgramsToDateTime = new DateTimeControl('admin.configuration.register_programs_to');
+        $registerProgramsToDateTime->setOption('id', 'register-programs-to');
+        $form->addComponent($registerProgramsToDateTime, 'registerProgramsTo');
 
         $form->addCheckbox('isAllowedRegisterProgramsBeforePayment', 'admin.configuration.is_allowed_register_programs_before_payment');
 
-        $registerProgramsFrom
+        $registerProgramsFromDateTime
             ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateRegisterProgramsFrom'], 'admin.configuration.register_programs_from_after_to', [$registerProgramsFrom, $registerProgramsTo]);
+            ->addRule([$this, 'validateRegisterProgramsFrom'], 'admin.configuration.register_programs_from_after_to', [$registerProgramsFromDateTime, $registerProgramsToDateTime]);
 
-        $registerProgramsTo
+        $registerProgramsToDateTime
             ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateRegisterProgramsTo'], 'admin.configuration.register_programs_to_before_from', [$registerProgramsTo, $registerProgramsFrom]);
+            ->addRule([$this, 'validateRegisterProgramsTo'], 'admin.configuration.register_programs_to_before_from', [$registerProgramsToDateTime, $registerProgramsFromDateTime]);
 
         $form->addCheckbox('isAllowedAddBlock', 'admin.configuration.is_allowed_add_block');
         $form->addCheckbox('isAllowedModifySchedule', 'admin.configuration.is_allowed_modify_schedule');
@@ -109,7 +111,7 @@ class ProgramFormFactory
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values->isAllowedAddBlock);
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values->isAllowedModifySchedule);
@@ -124,7 +126,7 @@ class ProgramFormFactory
      *
      * @param DateTime[]|null[] $args
      */
-    public function validateRegisterProgramsFrom(DateTimePicker $field, array $args) : bool
+    public function validateRegisterProgramsFrom(DateTimeControl $field, array $args) : bool
     {
         if ($args[0] === null || $args[1] === null) {
             return true;
@@ -138,7 +140,7 @@ class ProgramFormFactory
      *
      * @param DateTime[]|null[] $args
      */
-    public function validateRegisterProgramsTo(DateTimePicker $field, array $args) : bool
+    public function validateRegisterProgramsTo(DateTimeControl $field, array $args) : bool
     {
         if ($args[0] === null || $args[1] === null) {
             return true;

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Model\Cms\Content;
 
-use App\AdminModule\Forms\BaseForm;
 use App\Model\Cms\Document\Tag;
 use App\Model\Cms\Document\TagRepository;
 use App\Model\Cms\Page;
-use App\Model\Page\PageException;
+use App\Model\Cms\PageException;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Nette\Application\UI\Form;
 use stdClass;
 
 /**
@@ -77,7 +77,7 @@ class DocumentContent extends Content implements IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
-    public function addContentForm(BaseForm $form) : BaseForm
+    public function addContentForm(Form $form) : Form
     {
         parent::addContentForm($form);
 
@@ -93,7 +93,7 @@ class DocumentContent extends Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(BaseForm $form, stdClass $values) : void
+    public function contentFormSucceeded(Form $form, stdClass $values) : void
     {
         parent::contentFormSucceeded($form, $values);
         $formName   = $this->getContentFormName();

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\MaturityType;
 use App\Model\Settings\Settings;
@@ -15,6 +14,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
+use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
@@ -44,8 +44,6 @@ class PaymentForm extends UI\Control
 
     public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
     {
-        parent::__construct();
-
         $this->baseFormFactory = $baseForm;
         $this->settingsService = $settingsService;
     }
@@ -65,7 +63,7 @@ class PaymentForm extends UI\Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function createComponentForm() : BaseForm
+    public function createComponentForm() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -96,8 +94,9 @@ class PaymentForm extends UI\Control
             ->toggle('maturity-reminder')
             ->toggle('cancel-registration-after-maturity');
 
-        $form->addDatePicker('maturityDate', 'admin.configuration.maturity_date')
-            ->setOption('id', 'maturity-date');
+        $maturityDateDate = new DateControl('admin.configuration.maturity_date');
+        $maturityDateDate->setOption('id', 'maturity-date');
+        $form->addComponent($maturityDateDate, 'maturityDate');
 
         $form->addText('maturityDays', 'admin.configuration.maturity_days')
             ->setOption('id', 'maturity-days')
@@ -145,7 +144,7 @@ class PaymentForm extends UI\Control
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $this->settingsService->setValue(Settings::ACCOUNT_NUMBER, $values->accountNumber);
         $this->settingsService->setValue(Settings::VARIABLE_SYMBOL_CODE, $values->variableSymbolCode);

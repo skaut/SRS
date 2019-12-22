@@ -7,8 +7,8 @@ namespace App\AdminModule\CmsModule\Presenters;
 use App\AdminModule\CmsModule\Components\INewsGridControlFactory;
 use App\AdminModule\CmsModule\Components\NewsGridControl;
 use App\AdminModule\CmsModule\Forms\NewsFormFactory;
-use App\AdminModule\Forms\BaseForm;
 use App\Model\Cms\NewsRepository;
+use Nette\Application\UI\Form;
 use stdClass;
 
 /**
@@ -46,11 +46,11 @@ class NewsPresenter extends CmsBasePresenter
         return $this->newsGridControlFactory->create();
     }
 
-    protected function createComponentNewsForm() : BaseForm
+    protected function createComponentNewsForm() : Form
     {
         $form = $this->newsFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('News:default');
             }

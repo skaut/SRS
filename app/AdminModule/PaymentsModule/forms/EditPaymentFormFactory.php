@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\PaymentsModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
@@ -13,6 +12,7 @@ use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use Nette;
 use Nette\Application\UI\Form;
+use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use Throwable;
 
@@ -64,7 +64,7 @@ class EditPaymentFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $this->payment = $this->paymentRepository->findById($id);
 
@@ -72,21 +72,22 @@ class EditPaymentFormFactory
 
         $form->addHidden('id');
 
-        $inputDate = $form->addDatePicker('date', 'admin.payments.payments.date');
+        $inputDate = new DateControl('admin.payments.payments.date');
+        $form->addComponent($inputDate, 'date');
 
         $inputAmount = $form->addInteger('amount', 'admin.payments.payments.amount');
 
         $inputVariableSymbol = $form->addText('variableSymbol', 'admin.payments.payments.variable_symbol');
 
         $inputPairedApplication = $form->addMultiSelect('pairedApplications', 'admin.payments.payments.paired_applications', $this->applicationRepository->getApplicationsVariableSymbolsOptions())
-            ->setAttribute('class', 'datagrid-multiselect')
-            ->setAttribute('data-live-search', 'true');
+            ->setHtmlAttribute('class', 'datagrid-multiselect')
+            ->setHtmlAttribute('data-live-search', 'true');
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         if ($this->payment->getTransactionId() === null) {
             $inputDate
@@ -128,7 +129,7 @@ class EditPaymentFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() !== $form['cancel']) {
             $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);

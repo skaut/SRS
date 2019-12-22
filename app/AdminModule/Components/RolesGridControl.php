@@ -8,6 +8,8 @@ use App\Model\Acl\Role;
 use App\Model\Acl\RoleRepository;
 use App\Services\AclService;
 use App\Utils\Helpers;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
@@ -34,8 +36,6 @@ class RolesGridControl extends Control
 
     public function __construct(ITranslator $translator, AclService $aclService, RoleRepository $roleRepository)
     {
-        parent::__construct();
-
         $this->translator     = $translator;
         $this->aclService     = $aclService;
         $this->roleRepository = $roleRepository;
@@ -142,6 +142,8 @@ class RolesGridControl extends Control
      * Změní registrovatelnost role.
      *
      * @throws AbortException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function changeRegisterable(int $id, bool $registerable) : void
     {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\PageRepository;
 use App\Model\Settings\Settings;
@@ -58,7 +57,7 @@ class WebFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -68,7 +67,7 @@ class WebFormFactory
         $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
 
         $form->addUpload('logo', 'admin.configuration.web_new_logo')
-            ->setAttribute('accept', 'image/*')
+            ->setHtmlAttribute('accept', 'image/*')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.configuration.web_new_logo_format');
 
@@ -99,7 +98,7 @@ class WebFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $logo = $values->logo;
         if ($logo->size > 0) {

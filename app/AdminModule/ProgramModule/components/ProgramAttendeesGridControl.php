@@ -65,8 +65,6 @@ class ProgramAttendeesGridControl extends Control
         ProgramService $programService,
         Session $session
     ) {
-        parent::__construct();
-
         $this->translator        = $translator;
         $this->programRepository = $programRepository;
         $this->userRepository    = $userRepository;

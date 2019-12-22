@@ -11,6 +11,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use function getimagesizefromstring;
 use function image_type_to_extension;
@@ -51,7 +52,7 @@ class EditUserPersonalDetailsFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -60,7 +61,7 @@ class EditUserPersonalDetailsFormFactory
         $form->addHidden('id');
 
         $form->addUpload('newPhoto', 'admin.users.users_new_photo')
-            ->setAttribute('accept', 'image/*')
+            ->setHtmlAttribute('accept', 'image/*')
             ->setOption('id', 'new-photo')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.users.users_photo_format')
@@ -88,7 +89,8 @@ class EditUserPersonalDetailsFormFactory
             ->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, 'admin.users.users_email_format');
 
-        $form->addDatePicker('birthdate', 'admin.users.users_birthdate');
+        $birthdateDate = new DateControl('admin.users.users_birthdate');
+        $form->addComponent($birthdateDate, 'birthdate');
 
         $form->addText('street', 'admin.users.users_street')
             ->addCondition(Form::FILLED)
@@ -104,7 +106,7 @@ class EditUserPersonalDetailsFormFactory
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->setDefaults([
             'id' => $id,
@@ -132,7 +134,7 @@ class EditUserPersonalDetailsFormFactory
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

@@ -51,7 +51,7 @@ class FaqFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -74,7 +74,7 @@ class FaqFormFactory
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         $faq = new Faq();
 

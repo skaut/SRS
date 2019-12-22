@@ -20,6 +20,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Localization\ITranslator;
+use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
@@ -62,8 +63,6 @@ class PaymentsGridControl extends Control
         PdfExportService $pdfExportService,
         BankService $bankService
     ) {
-        parent::__construct();
-
         $this->translator         = $translator;
         $this->paymentRepository  = $paymentRepository;
         $this->userRepository     = $userRepository;
@@ -128,8 +127,9 @@ class PaymentsGridControl extends Control
             ->setTranslateOptions();
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = static function (Container $container) : void {
-            $container->addDatePicker('date', '')
-                ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
+            $dateDate = new DateControl('');
+            $dateDate->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
+            $container->addComponent($dateDate, 'date');
 
             $container->addInteger('amount', '')
                 ->addRule(Form::FILLED, 'admin.payments.payments.amount_empty')

@@ -37,8 +37,6 @@ class DiscountsGridControl extends Control
         DiscountRepository $discountRepository,
         DiscountService $discountService
     ) {
-        parent::__construct();
-
         $this->translator         = $translator;
         $this->discountRepository = $discountRepository;
         $this->discountService    = $discountService;

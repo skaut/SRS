@@ -90,7 +90,7 @@ class RolesFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -136,38 +136,38 @@ class RolesFormFactory
         $submitButton = $form->addSubmit('submit', 'web.profile.change_roles');
 
         $cancelRegistrationButton = $form->addSubmit('cancelRegistration', 'web.profile.cancel_registration')
-            ->setAttribute('class', 'btn-danger');
+            ->setHtmlAttribute('class', 'btn-danger');
 
         if ($this->applicationService->isAllowedEditRegistration($this->user)) {
             $submitButton
-                ->setAttribute('data-toggle', 'confirmation')
-                ->setAttribute('data-content', $form->getTranslator()->translate('web.profile.change_roles_confirm'));
+                ->setHtmlAttribute('data-toggle', 'confirmation')
+                ->setHtmlAttribute('data-content', $form->getTranslator()->translate('web.profile.change_roles_confirm'));
             $cancelRegistrationButton
-                ->setAttribute('data-toggle', 'confirmation')
-                ->setAttribute('data-content', $form->getTranslator()->translate('web.profile.cancel_registration_confirm'));
+                ->setHtmlAttribute('data-toggle', 'confirmation')
+                ->setHtmlAttribute('data-content', $form->getTranslator()->translate('web.profile.cancel_registration_confirm'));
         } else {
             $submitButton
                 ->setDisabled()
-                ->setAttribute('data-toggle', 'tooltip')
-                ->setAttribute('title', $form->getTranslator()->translate('web.profile.change_roles_disabled'));
+                ->setHtmlAttribute('data-toggle', 'tooltip')
+                ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.change_roles_disabled'));
             $cancelRegistrationButton
                 ->setDisabled()
-                ->setAttribute('data-toggle', 'tooltip')
-                ->setAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
+                ->setHtmlAttribute('data-toggle', 'tooltip')
+                ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
         }
 
         $ticketDownloadFrom = $this->settingsService->getDateTimeValue(Settings::TICKETS_FROM);
         if ($ticketDownloadFrom !== null) {
             $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.download_ticket')
-                ->setAttribute('class', 'btn-success');
+                ->setHtmlAttribute('class', 'btn-success');
 
             if ($this->user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
                 || ! $this->user->hasPaidEveryApplication()
                 || $ticketDownloadFrom > new DateTime()) {
                 $downloadTicketButton
                     ->setDisabled()
-                    ->setAttribute('data-toggle', 'tooltip')
-                    ->setAttribute('title', $form->getTranslator()->translate('web.profile.download_ticket_disabled'));
+                    ->setHtmlAttribute('data-toggle', 'tooltip')
+                    ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.download_ticket_disabled'));
             }
         }
 
@@ -185,7 +185,7 @@ class RolesFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['submit']) {
             $selectedRoles = $this->roleRepository->findRolesByIds($values->roles);

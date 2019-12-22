@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Forms;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateRepository;
@@ -46,7 +45,7 @@ class EditTemplateFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : BaseForm
+    public function create(int $id) : Form
     {
         $this->template = $this->templateRepository->findById($id);
 
@@ -66,13 +65,13 @@ class EditTemplateFormFactory
 
         $form->addTextArea('text', 'admin.mailing.templates.text')
             ->addRule(Form::FILLED, 'admin.mailing.templates.text_empty')
-            ->setAttribute('class', 'tinymce-paragraph');
+            ->setHtmlAttribute('class', 'tinymce-paragraph');
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         $selectedRecipients = [];
         if ($this->template->isSendToOrganizer()) {
@@ -102,7 +101,7 @@ class EditTemplateFormFactory
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

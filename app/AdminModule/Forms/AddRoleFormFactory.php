@@ -45,7 +45,7 @@ class AddRoleFormFactory
      *
      * @throws Throwable
      */
-    public function create() : BaseForm
+    public function create() : Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -56,13 +56,13 @@ class AddRoleFormFactory
 
         $form->addSelect('parent', 'admin.acl.roles_parent', $this->aclService->getRolesWithoutRolesOptions([]))
             ->setPrompt('')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.acl.roles_parent_note'));
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.acl.roles_parent_note'));
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
-            ->setAttribute('class', 'btn btn-warning');
+            ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -75,7 +75,7 @@ class AddRoleFormFactory
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(BaseForm $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values) : void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

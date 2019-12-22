@@ -36,8 +36,6 @@ class SkautIsEventEducationGridControl extends Control
         SubeventRepository $subeventRepository,
         SkautIsCourseRepository $skautIsCourseRepository
     ) {
-        parent::__construct();
-
         $this->translator              = $translator;
         $this->subeventRepository      = $subeventRepository;
         $this->skautIsCourseRepository = $skautIsCourseRepository;
@@ -73,7 +71,7 @@ class SkautIsEventEducationGridControl extends Control
                 '',
                 $this->skautIsCourseRepository->getSkautIsCoursesOptions()
             )
-                ->setAttribute('class', 'datagrid-multiselect');
+                ->setHtmlAttribute('class', 'datagrid-multiselect');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Subevent $subevent) : void {
             $container->setDefaults([

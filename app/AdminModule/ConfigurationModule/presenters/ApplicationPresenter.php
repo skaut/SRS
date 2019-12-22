@@ -8,9 +8,9 @@ use App\AdminModule\ConfigurationModule\Components\CustomInputsGridControl;
 use App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Forms\ApplicationFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\CustomInputFormFactory;
-use App\AdminModule\Forms\BaseForm;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\SettingsException;
+use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
@@ -59,11 +59,11 @@ class ApplicationPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentApplicationForm() : BaseForm
+    protected function createComponentApplicationForm() : Form
     {
         $form = $this->applicationFormFactory->create();
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
@@ -72,11 +72,11 @@ class ApplicationPresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentCustomInputForm() : BaseForm
+    protected function createComponentCustomInputForm() : Form
     {
         $form = $this->customInputFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.configuration.custom_inputs_saved', 'success');
             }

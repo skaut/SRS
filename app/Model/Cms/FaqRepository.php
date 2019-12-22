@@ -76,6 +76,7 @@ class FaqRepository extends EntityRepository
 
     /**
      * Odstraní otázku.
+     * @throws ORMException
      */
     public function remove(Faq $faq) : void
     {
@@ -85,6 +86,7 @@ class FaqRepository extends EntityRepository
 
     /**
      * Přesune otázku mezi otázky s id prevId a nextId.
+     * @throws ORMException
      */
     public function sort(int $itemId, int $prevId, int $nextId) : void
     {

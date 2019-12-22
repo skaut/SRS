@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
-use App\AdminModule\Forms\BaseForm;
 use App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory;
 use App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory;
 use App\AdminModule\ProgramModule\Components\ProgramAttendeesGridControl;
@@ -19,6 +18,7 @@ use App\Model\Settings\SettingsException;
 use App\Services\ProgramService;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\AbortException;
+use Nette\Application\UI\Form;
 use Nette\Http\Session;
 use stdClass;
 use Throwable;
@@ -163,11 +163,11 @@ class BlocksPresenter extends ProgramBasePresenter
     /**
      * @throws NonUniqueResultException
      */
-    protected function createComponentBlockForm() : BaseForm
+    protected function createComponentBlockForm() : Form
     {
         $form = $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getUser()->getId());
 
-        $form->onSuccess[] = function (BaseForm $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Blocks:default');
             }

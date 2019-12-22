@@ -14,10 +14,10 @@ use App\Utils\Helpers;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Exception;
-use FPDI;
 use Nette;
 use ReflectionException;
 use ReflectionObject;
+use setasign\Fpdi\Fpdi;
 use Throwable;
 use function iconv;
 
@@ -34,7 +34,7 @@ class PdfExportService
     /** @var string */
     private $dir;
 
-    /** @var FPDI */
+    /** @var Fpdi */
     private $fpdi;
 
     /** @var int */
