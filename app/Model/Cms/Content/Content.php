@@ -264,7 +264,7 @@ abstract class Content implements IContent
     public function addContentForm(Form $form) : Form
     {
         $formName      = $this->getContentFormName();
-        $formContainer = $form->addContainer($form->$formName);
+        $formContainer = $form->addContainer($formName);
 
         $formContainer->addHidden('id')
             ->setHtmlAttribute('class', 'id');

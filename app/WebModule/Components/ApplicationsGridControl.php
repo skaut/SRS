@@ -24,6 +24,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 use Nette\Localization\ITranslator;
 use stdClass;
 use Throwable;
@@ -165,24 +166,24 @@ class ApplicationsGridControl extends Control
 
         if ($explicitSubeventsExists) {
             if ($this->applicationService->isAllowedAddApplication($this->user)) {
-                $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function ($container) : void {
+                $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) : void {
                     $options = $this->subeventService->getNonRegisteredExplicitOptionsWithCapacity($this->user);
                     $container->addMultiSelect('subevents', '', $options)
-                        ->setAttribute('class', 'datagrid-multiselect')
+                        ->setHtmlAttribute('class', 'datagrid-multiselect')
                         ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
                 };
                 $grid->getInlineAdd()->setText($this->translator->translate('web.profile.applications_add_subevents'));
                 $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
             }
 
-            $grid->addInlineEdit()->onControlAdd[] = function ($container) : void {
+            $grid->addInlineEdit()->onControlAdd[] = function (Container $container) : void {
                 $options = $this->subeventService->getExplicitOptionsWithCapacity();
                 $container->addMultiSelect('subevents', '', $options)
-                    ->setAttribute('class', 'datagrid-multiselect')
+                    ->setHtmlAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
             };
             $grid->getInlineEdit()->setText($this->translator->translate('web.profile.applications_edit'));
-            $grid->getInlineEdit()->onSetDefaults[] = function ($container, SubeventsApplication $item) : void {
+            $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, SubeventsApplication $item) : void {
                 $container->setDefaults([
                     'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
                 ]);

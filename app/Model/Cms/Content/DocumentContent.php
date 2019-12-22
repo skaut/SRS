@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 use stdClass;
 
 /**
@@ -81,9 +82,8 @@ class DocumentContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formName      = $this->getContentFormName();
-        $formContainer = $form->$formName;
-
+        /** @var Container $formContainer */
+        $formContainer = $form[$this->getContentFormName()];
         $formContainer->addMultiSelect('tags', 'admin.cms.pages_content_tags', $this->tagRepository->getTagsOptions())
             ->setDefaultValue($this->tagRepository->findTagsIds($this->tags));
 

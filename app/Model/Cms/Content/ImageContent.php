@@ -7,6 +7,7 @@ namespace App\Model\Cms\Content;
 use App\Services\FilesService;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 use Nette\Http\FileUpload;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
@@ -158,30 +159,30 @@ class ImageContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formName      = $this->getContentFormName();
-        $formContainer = $form->$formName;
+        /** @var Container $formContainer */
+        $formContainer = $form[$this->getContentFormName()];
 
         $formContainer->addText('currentImage', 'admin.cms.pages_content_image_current_file')
-            ->setAttribute('data-type', 'image')
-            ->setAttribute('data-image', $this->image)
-            ->setAttribute('data-width', $this->width)
-            ->setAttribute('data-height', $this->height);
+            ->setHtmlAttribute('data-type', 'image')
+            ->setHtmlAttribute('data-image', $this->image)
+            ->setHtmlAttribute('data-width', $this->width)
+            ->setHtmlAttribute('data-height', $this->height);
 
         $formContainer->addUpload('image', 'admin.cms.pages_content_image_new_file')
-            ->setAttribute('accept', 'image/*')
+            ->setHtmlAttribute('accept', 'image/*')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.cms.pages_content_image_new_file_format');
 
         $formContainer->addSelect('align', 'admin.cms.pages_content_image_align', $this->prepareAlignOptions());
 
         $formContainer->addText('width', 'admin.cms.pages_content_image_width')
-            ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
             ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.cms.pages_content_image_width_format');
 
         $formContainer->addText('height', 'admin.cms.pages_content_image_height')
-            ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
             ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.cms.pages_content_image_height_format');
 
         $formContainer->setDefaults([
@@ -204,6 +205,7 @@ class ImageContent extends Content implements IContent
 
         $formName = $this->getContentFormName();
         $values   = $values->$formName;
+        /** @var FileUpload $file */
         $file     = $values->image;
         $width    = $values->width !== '' ? $values->width : null;
         $height   = $values->height !== '' ? $values->height : null;
@@ -212,7 +214,7 @@ class ImageContent extends Content implements IContent
 
         $exists = false;
 
-        if ($file->size > 0) {
+        if ($file->getError() == UPLOAD_ERR_OK) {
             $path        = $this->generatePath($file);
             $this->image = $path;
             $this->filesService->save($file, $path);

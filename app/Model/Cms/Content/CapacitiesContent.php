@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 use stdClass;
 
 /**
@@ -89,9 +90,8 @@ class CapacitiesContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formName      = $this->getContentFormName();
-        $formContainer = $form->$formName;
-
+        /** @var Container $formContainer */
+        $formContainer = $form[$this->getContentFormName()];
         $formContainer->addMultiSelect(
             'roles',
             'admin.cms.pages_content_capacities_roles',

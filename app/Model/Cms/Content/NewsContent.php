@@ -6,6 +6,7 @@ namespace App\Model\Cms\Content;
 
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 use stdClass;
 
 /**
@@ -48,13 +49,12 @@ class NewsContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        $formName      = $this->getContentFormName();
-        $formContainer = $form->$formName;
-
+        /** @var Container $formContainer */
+        $formContainer = $form[$this->getContentFormName()];
         $formContainer->addText('count', 'admin.cms.pages_content_news_count')
             ->setDefaultValue($this->count)
-            ->setAttribute('data-toggle', 'tooltip')
-            ->setAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_news_count_note'))
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_news_count_note'))
             ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.cms.pages_content_news_count_format');
 
         return $form;
