@@ -7,12 +7,12 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Place\PlacePoint;
 use App\Model\Settings\Place\PlacePointRepository;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
 use VojtechDobes\NetteForms\GpsPicker;
+use VojtechDobes\NetteForms\GpsPositionPicker;
 
 /**
  * Formulář pro úpravu mapového bodu.
@@ -50,9 +50,10 @@ class PlacePointFormFactory
         $form->addText('name', 'admin.configuration.place_points_name')
             ->addRule(Form::FILLED, 'admin.configuration.place_points_name_empty');
 
-        $gpsPicker = $form->addGpsPicker('gps', 'admin.configuration.place_points_place');
+        $gpsPicker = new GpsPositionPicker('admin.configuration.place_points_place');
         $gpsPicker->setDriver(GpsPicker::DRIVER_SEZNAM);
         $gpsPicker->setSize('100%', 400);
+        $form->addComponent($gpsPicker, 'gps');
 
         $form->addSubmit('submit', 'admin.common.save');
 

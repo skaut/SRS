@@ -5,6 +5,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/Gappa/WebLoader"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/pecan987/nette-forms-gpspicker.git"
         }
     ],
 
@@ -59,7 +63,7 @@
         "twbs/bootstrap": "^3.3",
         "snapappointments/bootstrap-select": "~1.12.0",
         "kartik-v/bootstrap-fileinput": "^4.5",
-        "occ2/nette-mapy-cz": "^1.1",
+        "vojtys/nette-forms-gpspicker": "dev-master",
 
         "pear/numbers_words": "^0.18",
         "azuyalabs/yasumi": "^1.8",
