@@ -128,6 +128,7 @@ class CustomInputFormFactory
                     foreach ($options as $option) {
                         $optionsTrimmed[] = trim($option);
                     }
+
                     $this->customInput->setOptions(implode(', ', $optionsTrimmed));
 
                     break;

@@ -32,6 +32,7 @@ final class ErrorPresenter implements Nette\Application\IPresenter
 
             return new Responses\ForwardResponse($request->setPresenterName($errorPresenter));
         }
+
         $this->logger->log($e, ILogger::EXCEPTION);
 
         return new Responses\CallbackResponse(static function (Http\IRequest $httpRequest, Http\IResponse $httpResponse) : void {

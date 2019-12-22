@@ -300,6 +300,7 @@ class Block
                     break;
                 }
             }
+
             if (! $tmp) {
                 $result = false;
             }
@@ -312,6 +313,7 @@ class Block
                 break;
             }
         }
+
         if (! $tmp) {
             $result = false;
         }

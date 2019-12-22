@@ -256,6 +256,7 @@ class BlockFormFactory
         } else {
             $subevent = $this->subeventRepository->findImplicit();
         }
+
         $category  = $values->category !== '' ? $this->categoryRepository->findById($values->category) : null;
         $lectors   = $this->userRepository->findUsersByIds($values->lectors);
         $capacity  = $values->capacity !== '' ? $values->capacity : null;

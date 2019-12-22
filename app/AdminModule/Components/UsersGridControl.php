@@ -708,6 +708,7 @@ class UsersGridControl extends Control
                     $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_subevent_not_connected', 'danger');
                     $this->redirect('this');
                 }
+
                 break;
 
             default:
@@ -905,6 +906,7 @@ class UsersGridControl extends Control
         foreach (PaymentType::$types as $type) {
             $options[$type] = 'common.payment.' . $type;
         }
+
         $options[PaymentType::MIXED] = 'common.payment.' . PaymentType::MIXED;
 
         return $options;

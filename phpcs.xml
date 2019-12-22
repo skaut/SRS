@@ -17,6 +17,7 @@
 
         <!-- Chybejici typehints zatim nelze doplnit u funkcí volaných z AJAX nebo pretizenych funkci -->
         <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint"/>
 
         <!-- Zneprehlednuje kod -->
         <exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit"/>
@@ -30,6 +31,12 @@
 
         <!-- Docasne ignorovano - problem ve foreach, pokud je potreba jen key -->
         <exclude name="SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable"/>
+
+        <!-- Rozpor s phpstan -->
+        <exclude name="SlevomatCodingStandard.PHP.RequireExplicitAssertion.RequiredExplicitAssertion"/>
+
+        <!-- skautIS property -->
+        <exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
     </rule>
     <rule ref="SlevomatCodingStandard.Variables.UnusedVariable"/>
     <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements">

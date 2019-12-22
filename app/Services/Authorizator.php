@@ -28,9 +28,11 @@ class Authorizator extends Nette\Security\Permission
             foreach ($aclService->findAllResourceNames() as $resourceName) {
                 $this->addResource($resourceName);
             }
+
             foreach ($aclService->findAllRoleNames() as $roleName) {
                 $this->addRole($roleName);
             }
+
             foreach ($aclService->findAllPermissionNames() as $permission) {
                 $this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);
             }

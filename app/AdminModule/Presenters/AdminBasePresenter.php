@@ -101,6 +101,7 @@ abstract class AdminBasePresenter extends BasePresenter
         if (! $this->user->isLoggedIn()) {
             $this->redirect(':Auth:login', ['backlink' => $this->getHttpRequest()->getUrl()->getPath()]);
         }
+
         if (! $this->user->isAllowed(SrsResource::ADMIN, Permission::ACCESS)) {
             $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
             $this->redirect(':Web:Page:default');

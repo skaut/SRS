@@ -161,6 +161,7 @@ class PageForm extends UI\Control
                     $content->injectAclService($this->aclService);
                     break;
             }
+
             $form = $content->addContentForm($form);
         }
 

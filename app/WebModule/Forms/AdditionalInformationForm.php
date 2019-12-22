@@ -260,6 +260,7 @@ class AdditionalInformationForm extends UI\Control
             if (property_exists($values, 'arrival')) {
                 $this->user->setArrival($values->arrival);
             }
+
             if (property_exists($values, 'departure')) {
                 $this->user->setDeparture($values->departure);
             }

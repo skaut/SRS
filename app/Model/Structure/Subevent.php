@@ -230,6 +230,7 @@ class Subevent
 
             $subevent->getIncompatibleSubevents()->removeElement($this);
         }
+
         foreach ($incompatibleSubevents as $subevent) {
             if ($subevent->getIncompatibleSubevents()->contains($this)) {
                 continue;

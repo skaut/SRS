@@ -248,6 +248,7 @@ class ApplicationsGridControl extends Control
             if (! $application->isCanceled()) {
                 return;
             }
+
             $tr->addClass('disabled');
         });
     }
@@ -324,6 +325,7 @@ class ApplicationsGridControl extends Control
             if ($application instanceof SubeventsApplication) {
                 $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $loggedUser);
             }
+
             $this->applicationService->updateApplicationPayment(
                 $application,
                 $values->paymentMethod ?: null,

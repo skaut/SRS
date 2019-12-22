@@ -151,6 +151,7 @@ class Authenticator implements IAuthenticator
         } else {
             $user->setPhoto(null);
         }
+
         $user->setPhotoUpdate($photoUpdate);
     }
 

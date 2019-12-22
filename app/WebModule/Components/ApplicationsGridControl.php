@@ -247,6 +247,7 @@ class ApplicationsGridControl extends Control
                 $p->flashMessage($message, 'danger');
                 $this->redirect('this');
             }
+
             if ($this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
                 continue;
             }
@@ -284,6 +285,7 @@ class ApplicationsGridControl extends Control
             foreach ($selectedSubevents as $subevent) {
                 $selectedAndUsersSubevents->add($subevent);
             }
+
             foreach ($application->getSubevents() as $subevent) {
                 $selectedAndUsersSubevents->removeElement($subevent);
             }
@@ -305,6 +307,7 @@ class ApplicationsGridControl extends Control
                     $p->flashMessage($message, 'danger');
                     $this->redirect('this');
                 }
+
                 if ($this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
                     continue;
                 }

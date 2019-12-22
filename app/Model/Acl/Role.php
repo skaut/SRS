@@ -368,6 +368,7 @@ class Role
 
             $page->getRoles()->removeElement($this);
         }
+
         foreach ($pages as $page) {
             if ($page->getRoles()->contains($this)) {
                 continue;
@@ -375,6 +376,7 @@ class Role
 
             $page->getRoles()->add($this);
         }
+
         $this->pages = $pages;
     }
 
@@ -519,6 +521,7 @@ class Role
 
             $role->getIncompatibleRoles()->removeElement($this);
         }
+
         foreach ($incompatibleRoles as $role) {
             if ($role->getIncompatibleRoles()->contains($this)) {
                 continue;

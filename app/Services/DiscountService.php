@@ -139,6 +139,7 @@ class DiscountService
                     } else {
                         $text .= '"' . $subevent->getName() . '"';
                     }
+
                     break;
             }
         }

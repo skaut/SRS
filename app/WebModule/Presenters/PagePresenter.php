@@ -138,12 +138,14 @@ class PagePresenter extends WebBasePresenter
             if ($page === null) {
                 $this->error($this->translator->translate('web.common.homepage_not_found'), 404);
             }
+
             $this->template->bodyClass = 'body-homepage';
         } else {
             $page = $this->cmsService->findPublishedBySlugDto($slug);
             if ($page === null) {
                 $this->error($this->translator->translate('web.common.page_not_found'), 404);
             }
+
             $this->template->bodyClass = 'body-' . $slug;
         }
 

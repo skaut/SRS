@@ -52,10 +52,12 @@ class UserService
             if (! $currentPaymentMethod) {
                 continue;
             }
+
             if (! $paymentMethod) {
                 $paymentMethod = $currentPaymentMethod;
                 continue;
             }
+
             if ($paymentMethod !== $currentPaymentMethod) {
                 return PaymentType::MIXED;
             }

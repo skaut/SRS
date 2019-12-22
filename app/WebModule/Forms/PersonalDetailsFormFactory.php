@@ -138,15 +138,19 @@ class PersonalDetailsFormFactory
         if (property_exists($values, 'sex')) {
             $this->user->setSex($values->sex);
         }
+
         if (property_exists($values, 'firstName')) {
             $this->user->setFirstName($values->firstName);
         }
+
         if (property_exists($values, 'lastName')) {
             $this->user->setLastName($values->lastName);
         }
+
         if (property_exists($values, 'nickName')) {
             $this->user->setNickName($values->nickName);
         }
+
         if (property_exists($values, 'birthdate')) {
             $this->user->setBirthdate($values->birthdate);
         }

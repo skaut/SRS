@@ -97,6 +97,7 @@ class InstallPresenter extends InstallBasePresenter
             if ($this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
                 $this->redirect('installed');
             }
+
             $this->flashMessage('install.schema.schema_already_created', 'info');
             $this->redirect('admin');
         } catch (TableNotFoundException $ex) {
@@ -188,6 +189,7 @@ class InstallPresenter extends InstallBasePresenter
 
             return;
         }
+
         $this->redirect(':Auth:login', ['backlink' => ':Install:Install:admin']);
     }
 

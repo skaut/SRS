@@ -40,12 +40,12 @@ use ReflectionException;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
-use const STR_PAD_LEFT;
 use function abs;
 use function array_diff;
 use function implode;
 use function str_pad;
 use function strval;
+use const STR_PAD_LEFT;
 
 /**
  * Služba pro správu přihlašování na akci.
@@ -160,18 +160,21 @@ class ApplicationService
             if ($rolesApplication->getMaturityDate()) {
                 $applicatonMaturity = $rolesApplication->getMaturityDateText();
             }
+
             $applicationFee            = $rolesApplication->getFee() . ', ' . $subeventsApplication->getFee();
             $applicationVariableSymbol = $rolesApplication->getVariableSymbolText() . ', ' . $subeventsApplication->getVariableSymbolText();
         } elseif ($rolesApplication->getFee() > 0) {
             if ($rolesApplication->getMaturityDate()) {
                 $applicatonMaturity = $rolesApplication->getMaturityDateText();
             }
+
             $applicationFee            = $rolesApplication->getFee();
             $applicationVariableSymbol = $rolesApplication->getVariableSymbolText();
         } elseif ($subeventsApplication->getFee() > 0) {
             if ($subeventsApplication->getMaturityDate()) {
                 $applicatonMaturity = $subeventsApplication->getMaturityDateText();
             }
+
             $applicationFee            = $subeventsApplication->getFee();
             $applicationVariableSymbol = $subeventsApplication->getVariableSymbolText();
         }
@@ -308,6 +311,7 @@ class ApplicationService
                     if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
                         $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
                     }
+
                     $newApplication->setPayment(null);
                 }
 
@@ -442,6 +446,7 @@ class ApplicationService
                 if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
                     $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
                 }
+
                 $newApplication->setPayment(null);
             }
 
@@ -582,9 +587,11 @@ class ApplicationService
             if ($date !== null) {
                 $payment->setDate($date);
             }
+
             if ($amount !== null) {
                 $payment->setAmount($amount);
             }
+
             if ($variableSymbol !== null) {
                 $payment->setVariableSymbol($variableSymbol);
             }
@@ -598,14 +605,17 @@ class ApplicationService
                 if ($newPairedApplications->contains($pairedApplication)) {
                     continue;
                 }
+
                 $pairedApplication->setPayment(null);
                 $this->updateApplicationPayment($pairedApplication, null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
                 $pairedApplicationsModified = true;
             }
+
             foreach ($newPairedApplications as $pairedApplication) {
                 if ($oldPairedApplications->contains($pairedApplication)) {
                     continue;
                 }
+
                 $pairedApplication->setPayment($payment);
                 $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $payment->getDate(), null, $pairedApplication->getMaturityDate(), $createdBy);
                 $pairedApplicationsModified = true;
@@ -875,6 +885,7 @@ class ApplicationService
                 foreach ($subevents as $subevent) {
                     $fee += $subevent->getFee();
                 }
+
                 break;
             }
         }
@@ -981,12 +992,14 @@ class ApplicationService
         foreach ($user->getNotCanceledApplications() as $application) {
             $fee += $application->getFee();
         }
+
         $user->setFee($fee);
 
         $feeRemaining = 0;
         foreach ($user->getWaitingForPaymentApplications() as $application) {
             $feeRemaining += $application->getFee();
         }
+
         $user->setFeeRemaining($feeRemaining);
 
         $user->setPaymentMethod($this->userService->getPaymentMethod($user));
@@ -996,8 +1009,10 @@ class ApplicationService
             if ($maxDate >= $application->getPaymentDate()) {
                 continue;
             }
+
             $maxDate = $application->getPaymentDate();
         }
+
         $user->setLastPaymentDate($maxDate);
 
         $this->userRepository->save($user);

@@ -76,6 +76,7 @@ class EditTemplateFormFactory
         if ($this->template->isSendToOrganizer()) {
             $selectedRecipients[] = 'organizer';
         }
+
         if ($this->template->isSendToUser()) {
             $selectedRecipients[] = 'user';
         }

@@ -58,6 +58,7 @@ class SkautIsCourseRepository extends EntityRepository
         foreach ($this->findAll() as $skautIsCourse) {
             $this->_em->remove($skautIsCourse);
         }
+
         $this->_em->flush();
     }
 

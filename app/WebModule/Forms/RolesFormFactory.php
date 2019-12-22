@@ -118,6 +118,7 @@ class RolesFormFactory
                     [$role]
                 );
             }
+
             if ($role->getRequiredRolesTransitive()->isEmpty()) {
                 continue;
             }

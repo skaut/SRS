@@ -206,6 +206,7 @@ class SubeventFormFactory
                     break;
                 }
             }
+
             if (! $valid) {
                 break;
             }

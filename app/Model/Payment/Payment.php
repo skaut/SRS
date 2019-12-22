@@ -218,6 +218,7 @@ class Payment
                 $usersVS[$userId]    = [];
                 $usersNames[$userId] = $pairedApplication->getUser()->getLastName() . ' ' . $pairedApplication->getUser()->getFirstName();
             }
+
             $usersVS[$userId][] = $pairedApplication->getVariableSymbolText();
         }
 

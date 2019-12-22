@@ -330,6 +330,7 @@ class ProgramService
             foreach ($this->userRepository->findBlockAllowed($block) as $user) {
                 $this->registerProgramImpl($user, $program);
             }
+
             $this->programRepository->save($program);
         });
 

@@ -179,9 +179,11 @@ class Page
         if ($area === null) {
             return $this->contents;
         }
+
         if (! in_array($area, Content::$areas)) {
             throw new PageException('Area ' . $area . ' not defined.');
         }
+
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('area', $area))
             ->orderBy(['position' => 'ASC']);

@@ -100,6 +100,7 @@ class MailService
             if (in_array($user, $recipients)) {
                 continue;
             }
+
             $recipients[] = $user;
         }
 
@@ -107,6 +108,7 @@ class MailService
             if (in_array($user, $recipients)) {
                 continue;
             }
+
             $recipients[] = $user;
         }
 
@@ -114,6 +116,7 @@ class MailService
             if (in_array($user, $recipients)) {
                 continue;
             }
+
             $recipients[] = $user;
         }
 

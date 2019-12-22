@@ -318,6 +318,7 @@ class EditRoleFormFactory
                     break;
                 }
             }
+
             if (! $valid) {
                 break;
             }

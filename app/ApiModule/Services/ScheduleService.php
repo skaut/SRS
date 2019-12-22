@@ -31,12 +31,12 @@ use Exception;
 use Nette;
 use Nette\Localization\ITranslator;
 use Throwable;
-use const DATE_ISO8601;
 use function array_intersect;
 use function count;
 use function floor;
 use function in_array;
 use function spl_object_id;
+use const DATE_ISO8601;
 
 /**
  * Služba pro zpracování požadavků z API pro správu harmonogramu a zapisování programů.
