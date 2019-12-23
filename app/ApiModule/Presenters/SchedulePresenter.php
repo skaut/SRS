@@ -9,8 +9,8 @@ use App\ApiModule\Dto\Schedule\ResponseDto;
 use App\ApiModule\Services\ScheduleService;
 use App\Model\Settings\SettingsException;
 use Exception;
-use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializerInterface;
 use Nette\Application\AbortException;
 use Nette\Application\Responses\TextResponse;
 use Throwable;
@@ -29,7 +29,7 @@ class SchedulePresenter extends ApiBasePresenter
      */
     public $scheduleService;
 
-    /** @var Serializer */
+    /** @var SerializerInterface */
     private $serializer;
 
     /**

@@ -50,7 +50,7 @@
         "ublaboo/mailing": "^1.2",
 
         "janmarek/webloader": "dev-master",
-        "jms/serializer": "^1.13",
+        "jms/serializer": "^3.4",
 
         "skautis/skautis": "^2.1",
         "skautis/nette": "3.x-dev",

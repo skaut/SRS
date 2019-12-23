@@ -258,6 +258,10 @@ translation:
     dirs:
         - %appDir%/lang
 
+latte:
+    macros:
+        - Nextras\FormsRendering\LatteMacros\Bs3InputMacros::install
+
 webloader:
     css:
         web:

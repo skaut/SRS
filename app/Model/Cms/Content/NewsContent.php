@@ -55,7 +55,7 @@ class NewsContent extends Content implements IContent
             ->setDefaultValue($this->count)
             ->setHtmlAttribute('data-toggle', 'tooltip')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_news_count_note'))
-            ->addCondition(Form::FILLED)->addRule(Form::NUMERIC, 'admin.cms.pages_content_news_count_format');
+            ->addCondition(Form::FILLED)->addRule(Form::INTEGER, 'admin.cms.pages_content_news_count_format');
 
         return $form;
     }

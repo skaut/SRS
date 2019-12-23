@@ -153,9 +153,9 @@ class BlockFormFactory
 
         $form->addMultiSelect('lectors', 'admin.program.blocks_lectors', $lectorsOptions);
 
-        $form->addText('duration', 'admin.program.blocks_duration_form')
+        $form->addInteger('duration', 'admin.program.blocks_duration_form')
             ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty')
-            ->addRule(Form::NUMERIC, 'admin.program.blocks_duration_format');
+            ->addRule(Form::INTEGER, 'admin.program.blocks_duration_format');
 
         $form->addText('capacity', 'admin.program.blocks_capacity')
             ->setHtmlAttribute('data-toggle', 'tooltip')

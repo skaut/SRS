@@ -79,7 +79,7 @@ class SubeventFormFactory
             ->setHtmlAttribute('data-toggle', 'tooltip')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.configuration.subevents_capacity_note'));
 
-        $form->addText('fee', 'admin.configuration.subevents_fee')
+        $form->addInteger('fee', 'admin.configuration.subevents_fee')
             ->addRule(Form::FILLED, 'admin.configuration.subevents_fee_empty')
             ->addRule(Form::INTEGER, 'admin.configuration.subevents_fee_format');
 

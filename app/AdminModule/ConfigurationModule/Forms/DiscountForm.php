@@ -104,7 +104,7 @@ class DiscountForm extends UI\Control
         $form->addTextArea('conditionText', 'admin.configuration.discounts_condition')
             ->setHtmlAttribute('readonly', true);
 
-        $form->addText('discount', 'admin.configuration.discounts_discount')
+        $form->addInteger('discount', 'admin.configuration.discounts_discount')
             ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')
             ->addRule(Form::INTEGER, 'admin.configuration.discounts_discount_format');
 
