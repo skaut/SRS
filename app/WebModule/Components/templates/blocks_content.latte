@@ -1,81 +1,66 @@
-<div class="blocks-content">
+<div class="blocks-content clearfix">
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col">
             <h3 n:ifcontent>{$heading}</h3>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-3 col-xs-3">
+    <div class="row mb-3">
+        <div class="col-md-3">
             <h4>{_web.blocks_content.categories}</h4>
-            <div class="panel-group" id="accordion">
-                {if !empty($uncategorizedBlocks)}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a role="button" data-toggle="collapse" data-parent="#accordion"
-                                   href="#uncategorized">
-                                    {_web.blocks_content.uncategorized}
+            <div id="accordion">
+                <div class="card mb-1" n:if="!empty($uncategorizedBlocks)">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#uncategorized">
+                                {_web.blocks_content.uncategorized}
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="uncategorized" class="collapse {if $selectedCategoryId == 'uncategorized'}show{/if}" data-parent="#accordion">
+                        <div class="list-group list-group-flush">
+                            {foreach $uncategorizedBlocks as $block}
+                                <a href="?blockId={$block->getId()}" n:class="list-group-item, list-group-item-action, $block->getId() == $selectedBlockId ? active">
+                                    {$block->getName()}
                                 </a>
-                            </h4>
-                        </div>
-                        <div id="uncategorized"
-                             class="panel-collapse collapse {if $selectedCategoryId == 'uncategorized'}in{/if}">
-                            <ul class="list-group">
-                                {foreach $uncategorizedBlocks as $block}
-                                    <a href="?blockId={$block->getId()}"
-                                            n:class="list-group-item, $block->getId() == $selectedBlockId ? active">
-                                        {$block->getName()}
-                                    </a>
-                                {/foreach}
-                            </ul>
+                            {/foreach}
                         </div>
                     </div>
-                {/if}
-
-                {foreach $categories as $category}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a role="button" data-toggle="collapse" data-parent="#accordion"
-                                   href="#category-{$category->getId()}">
-                                    {$category->getName()}
+                </div>
+                <div class="card mb-1" n:foreach="$categories as $category">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#category-{$category->getId()}">
+                                {$category->getName()}
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="category-{$category->getId()}" class="collapse {if $selectedCategoryId == $category->getId()}show{/if}" data-parent="#accordion">
+                        <div class="list-group list-group-flush">
+                            {foreach $category->getBlocks() as $block}
+                                <a href="?blockId={$block->getId()}" n:class="list-group-item, list-group-item-action, $block->getId() == $selectedBlockId ? active">
+                                    {$block->getName()}
                                 </a>
-                            </h4>
-                        </div>
-                        <div id="category-{$category->getId()}"
-                             class="panel-collapse collapse {if $selectedCategoryId == $category->getId()}in{/if}">
-                            <ul class="list-group">
-                                {foreach $category->getBlocks() as $block}
-                                    <a href="?blockId={$block->getId()}"
-                                            n:class="list-group-item, $block->getId() == $selectedBlockId ? active">
-                                        {$block->getName()}
-                                    </a>
-                                {/foreach}
-                            </ul>
+                            {/foreach}
                         </div>
                     </div>
-                {/foreach}
+                </div>
             </div>
         </div>
 
-        <div class="col-sm-9 col-xs-9">
+        <div class="col-md-9">
             {ifset $selectedBlock}
                 <h4>{$selectedBlock->getName()}</h4>
-                <div class="well">
-                    <ul class="no-bullets no-margin">
-                        {if $selectedBlock->getCategory()}
-                            <li>
-                                <strong>{_web.blocks_content.category}</strong>
-                                {$selectedBlock->getCategory()->getName()}
-                            </li>
-                        {/if}
-
+                <div class="card card-body bg-light pb-1">
+                    <ul class="list-unstyled">
+                        <li n:if="$selectedBlock->getCategory()">
+                            <strong>{_web.blocks_content.category}</strong>
+                            {$selectedBlock->getCategory()->getName()}
+                        </li>
                         <li>
                             <strong>{_web.blocks_content.duration}</strong>
                             {_web.common.minutes, $selectedBlock->getDuration()}
                         </li>
-
                         <li>
                             <strong>{_web.blocks_content.capacity}</strong>
                             {if $selectedBlock->getCapacity() !== null}
@@ -87,9 +72,9 @@
                     </ul>
 
                     {if !$selectedBlock->getLectors()->isEmpty()}
-                        <h5><strong>{_web.blocks_content.lectors}</strong></h5>
+                        <h5>{_web.blocks_content.lectors}</h5>
                         {foreach $selectedBlock->getLectors() as $lector}
-                            <h5>{$lector->getLectorName()}</h5>
+                            <h6>{$lector->getLectorName()}</h6>
                             <p>
                                 {if $lector->getPhoto()}
                                     <img src="{$basePath}/files/user_photos/{$lector->getPhoto()}"
@@ -101,14 +86,14 @@
                         {/foreach}
                     {/if}
 
-                    <h5><strong>{_web.blocks_content.about_block}</strong></h5>
-                    <p>{$selectedBlock->getPerex()}</p>
-                    <p>{$selectedBlock->getDescription()|noescape}</p>
+                    <h5>{_web.blocks_content.about_block}</h5>
+                    <p n:ifcontent>{$selectedBlock->getPerex()}</p>
+                    {$selectedBlock->getDescription()|noescape}
                 </div>
             {else}
                 <h4>{_web.blocks_content.all_blocks}</h4>
-                <div class="well">
-                    <ul class="no-bullets no-margin">
+                <div class="card card-body bg-light">
+                    <ul class="list-unstyled mb-0">
                         {foreach $allBlocks as $block}
                             <li>
                                 <a href="?blockId={$block->getId()}"><strong>{$block->getName()}</strong></a>

@@ -8,6 +8,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
+use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
 
 /**
  * BaseFormFactory pro WebModule.
@@ -34,9 +35,9 @@ class BaseFormFactory
         $form = new Form();
         $form->setTranslator($this->translator);
 
-        $renderer                                   = new Bs3FormRenderer();
-        $renderer->wrappers['control']['container'] = 'div class="col-sm-9 col-xs-9"';
-        $renderer->wrappers['label']['container']   = 'div class="col-sm-3 col-xs-3 control-label"';
+        $renderer                                   = new Bs4FormRenderer();
+        $renderer->wrappers['control']['container'] = 'div class="col-md-9"';
+        $renderer->wrappers['label']['container']   = 'div class="col-md-3 col-form-label"';
 
         $form->setRenderer($renderer);
 

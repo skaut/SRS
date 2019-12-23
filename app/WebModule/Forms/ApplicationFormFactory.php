@@ -294,8 +294,9 @@ class ApplicationFormFactory
                 } elseif ($customInput instanceof CustomFile) {
                     /** @var CustomFileValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomFileValue();
+                    /** @var FileUpload $file */
                     $file             = $values->$customInputName;
-                    if ($file->size > 0) {
+                    if ($file->getError() == UPLOAD_ERR_OK) {
                         $path = $this->generatePath($file);
                         $this->filesService->save($file, $path);
                         $customInputValue->setValue($path);

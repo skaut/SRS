@@ -206,7 +206,7 @@ faq_content:
 
     question: "Otázka"
     question_empty: "Zadejte otázku."
-    add_question: "Položit dotaz."
+    add_question: "Položit dotaz"
     add_question_successful: "Otázka byla úspěšně přidána. Dle uvážení organizátorů bude odpověď zveřejněna."
 
 programs_content:

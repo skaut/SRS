@@ -14,6 +14,7 @@ use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Http\FileUpload;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use function getimagesizefromstring;
@@ -141,8 +142,9 @@ class AddLectorFormFactory
 
         $this->userRepository->save($user);
 
+        /** @var FileUpload $photo */
         $photo = $values->photo;
-        if ($photo->size > 0) {
+        if ($photo->getError() == UPLOAD_ERR_OK) {
             $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
             $photoName      = 'ext_' . $user->getId() . $photoExtension;
 

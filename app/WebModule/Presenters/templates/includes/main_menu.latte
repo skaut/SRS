@@ -1,16 +1,20 @@
 {define main-menu}
-    <nav class="navbar navbar-default">
-        <div class="container">
-            <ul class="nav navbar-nav">
+    <nav class="navbar navbar-expand-md navbar-light bg-light rounded">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="main-navbar">
+            <ul class="navbar-nav mr-auto">
                 {foreach $pages as $item}
                     {if $item->getSlug() == '/'}
-                        <li n:class="$presenter->isLinkCurrent(':Web:Page:default', ['slug' => null]) ? active">
-                            <a href="{plink :Web:Page:default}">{$item->getName()}</a>
+                        <li n:class="nav-item, $presenter->isLinkCurrent(':Web:Page:default', ['slug' => null]) ? active">
+                            <a class="nav-link" href="{plink :Web:Page:default}">{$item->getName()}</a>
                         </li>
                     {else}
                         {if $item->isAllowedForRoles($user->roles)}
-                            <li n:class="$presenter->isLinkCurrent(':Web:Page:default', ['slug' => $item->getSlug()]) ? active">
-                                <a href="{plink :Web:Page:default, 'slug' => $item->getSlug()}">{$item->getName()}</a>
+                            <li n:class="nav-item, $presenter->isLinkCurrent(':Web:Page:default', ['slug' => $item->getSlug()]) ? active">
+                                <a class="nav-link" href="{plink :Web:Page:default, 'slug' => $item->getSlug()}">{$item->getName()}</a>
                             </li>
                         {/if}
                     {/if}

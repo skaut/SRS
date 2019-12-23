@@ -10,6 +10,7 @@ use App\Services\FilesService;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Http\FileUpload;
 use Nette\Utils\ImageException;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
@@ -154,8 +155,9 @@ class EditUserPersonalDetailsFormFactory
         if (property_exists($values, 'removePhoto') && $values->removePhoto) {
             $this->user->setPhoto(null);
         } elseif (property_exists($values, 'newPhoto')) {
+            /** @var FileUpload $photo */
             $photo = $values->newPhoto;
-            if ($photo->size > 0) {
+            if ($photo->getError() == UPLOAD_ERR_OK) {
                 $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
                 $photoName      = 'ext_' . $this->user->getId() . $photoExtension;
 

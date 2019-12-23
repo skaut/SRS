@@ -12,6 +12,7 @@ use App\Services\FilesService;
 use App\Services\SettingsService;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Http\FileUpload;
 use Nette\Utils\Strings;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
@@ -100,8 +101,9 @@ class WebFormFactory
      */
     public function processForm(Form $form, stdClass $values) : void
     {
+        /** @var FileUpload $logo */
         $logo = $values->logo;
-        if ($logo->size > 0) {
+        if ($logo->getError() == UPLOAD_ERR_OK) {
 //            $this->filesService->delete('/logo/' . $this->settingsService->getValue(Settings::LOGO));
             $logoName = Strings::webalize($logo->name, '.');
             $this->filesService->save($logo, '/logo/' . $logoName);

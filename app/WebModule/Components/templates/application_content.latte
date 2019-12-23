@@ -9,15 +9,15 @@
     </script>
 {/block}
 
-<div class="application-content">
+<div class="application-content clearfix">
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col">
             <h3 n:ifcontent>{$heading}</h3>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col">
             {if $guestRole}
                 <div class="alert alert-warning alert-forever">
                     {_web.application_content.login_required_begin}

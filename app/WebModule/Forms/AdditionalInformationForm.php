@@ -237,8 +237,9 @@ class AdditionalInformationForm extends UI\Control
                         /** @var CustomFileValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomFileValue();
                         $oldValue         = $customInputValue->getValue();
+                        /** @var FileUpload $newValue */
                         $newValue         = $values->$customInputName;
-                        if ($newValue->size > 0) {
+                        if ($newValue->getError() == UPLOAD_ERR_OK) {
                             $path = $this->generatePath($newValue);
                             $this->filesService->save($newValue, $path);
                             $customInputValue->setValue($path);

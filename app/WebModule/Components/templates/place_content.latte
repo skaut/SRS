@@ -3,23 +3,22 @@
     <script>Loader.load()</script>
 {/block}
 
-<div class="place-content">
+<div class="place-content clearfix">
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col">
             <h3 n:ifcontent>{$heading}</h3>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-sm-12" n:ifcontent>
+        <div class="col" n:ifcontent>
             {$description|noescape}
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-12">
+    <div class="row mb-3">
+        <div class="col">
             <div id="m" style="height:400px"></div>
-
             <script>
                 var m = new SMap(JAK.gel("m"), SMap.Coords.fromWGS84(14.41790, 50.12655), 13);
                 m.addDefaultLayer(SMap.DEF_BASE).enable();

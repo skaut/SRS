@@ -1,61 +1,40 @@
 {define user-menu}
-    <div id="user-menu">
-        <ul>
-            {if $user->isLoggedIn()}
-                <li>
-                    {_web.common.logged_in_user}
-                    <strong>
-                        {$dbuser->getUsername()}
-                    </strong>
-                    {_web.common.logged_in_roles, count($user->roles)}
-                    <strong>
-                        {foreach $user->roles as $role}{if $role != $testRole}{$role}{sep}, {/sep}{/if}{/foreach}
-                    </strong>
-                </li>
+    <div class="row" n:if="$user->isLoggedIn()">
+        <div class="col">
+            {_web.common.logged_in_user}
+            <strong>
+                {$dbuser->getUsername()}
+            </strong>
+            {_web.common.logged_in_roles, count($user->roles)}
+            <strong>
+                {foreach $user->roles as $role}{if $role != $testRole}{$role}{sep}, {/sep}{/if}{/foreach}
+            </strong>
+            <strong n:if="!$dbuser->isMember()"><a href="{plink :Web:Member:default}" style="color: red">{_web.member.name}</a></strong>
+        </div>
+    </div>
 
-                {if !$dbuser->isMember()}
-                    <li>
-                        <strong><a href="{plink :Web:Member:default}" style="color: red">{_web.member.name}</a></strong>
-                    </li>
-                {/if}
-            {/if}
-        </ul>
-
-        <div class="clearfix"></div>
-
-        <ul>
+    <div class="row">
+        <div class="col">
             {if !$user->isLoggedIn()}
-                <li>
-                    {var $currentBacklink = $presenter->getParameter('slug') ? $backlink : null}
-                    <a href="{plink :Auth:login, 'backlink' => $currentBacklink}" class="btn btn-default">
-                        <span class="fa fa-sign-in"></span>
-                        {_web.common.login}
-                    </a>
-                </li>
+                {var $currentBacklink = $presenter->getParameter('slug') ? $backlink : null}
+                <a href="{plink :Auth:login, 'backlink' => $currentBacklink}" class="btn btn-sm btn-secondary">
+                    <span class="fa fa-sign-in"></span>
+                    {_web.common.login}
+                </a>
             {else}
-                <li>
-                    <a href="{plink :Web:Profile:default}" class="btn btn-default">
-                        <span class="fa fa-user"></span>
-                        {_web.profile.name}
-                    </a>
-                </li>
-
-                {if $adminAccess}
-                    <li>
-                        <a href="{plink :Admin:Dashboard:default}" class="btn btn-default">
-                            <span class="fa fa-cog"></span>
-                            {_web.common.admin}
-                        </a>
-                    </li>
-                {/if}
-
-                <li>
-                    <a href="{plink :Auth:logout}" class="btn btn-default">
-                        <span class="fa fa-sign-out"></span>
-                        {_web.common.logout}
-                    </a>
-                </li>
+                <a href="{plink :Web:Profile:default}" class="btn btn-sm btn-secondary">
+                    <span class="fa fa-user"></span>
+                    {_web.profile.name}
+                </a>
+                <a href="{plink :Admin:Dashboard:default}" class="btn btn-sm btn-secondary" n:if="$adminAccess">
+                    <span class="fa fa-cog"></span>
+                    {_web.common.admin}
+                </a>
+                <a href="{plink :Auth:logout}" class="btn btn-sm btn-secondary">
+                    <span class="fa fa-sign-out"></span>
+                    {_web.common.logout}
+                </a>
             {/if}
-        </ul>
+        </div>
     </div>
 {/define}
