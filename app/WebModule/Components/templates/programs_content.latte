@@ -30,31 +30,31 @@
                     <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.programs_content.login_required_link}</a>{_web.programs_content.login_required_end}
                 </div>
             {else}
-            {if !$userHasPermission}
-                <div class="alert alert-warning alert-forever">
-                    {_web.programs_content.unapproved_register_programs}
-                </div>
-            {elseif !$registerProgramsAllowed}
-                <div class="alert alert-warning alert-forever">
-                    {if $registerProgramsNotAllowed}
-                        {_web.programs_content.register_programs_not_allowed}
-                    {else}
-                        {if $registerProgramsFrom !== null && $registerProgramsTo !== null}
-                            {_web.programs_content.register_programs_allowed_from_to, ['from' => $registerProgramsFrom->format('j. n. Y G:i'), 'to' => $registerProgramsTo->format('j. n. Y G:i')]}
-                        {elseif $registerProgramsFrom === null && $registerProgramsTo !== null}
-                            {_web.programs_content.register_programs_was_allowed_to, ['to' => $registerProgramsTo->format('j. n. Y G:i')]}
-                        {elseif $registerProgramsFrom !== null && $registerProgramsTo === null}
-                            {_web.programs_content.register_programs_is_allowed_from, ['from' => $registerProgramsFrom->format('j. n. Y G:i')]}
+                {if !$userHasPermission}
+                    <div class="alert alert-warning alert-forever">
+                        {_web.programs_content.unapproved_register_programs}
+                    </div>
+                {elseif !$registerProgramsAllowed}
+                    <div class="alert alert-warning alert-forever">
+                        {if $registerProgramsNotAllowed}
+                            {_web.programs_content.register_programs_not_allowed}
+                        {else}
+                            {if $registerProgramsFrom !== null && $registerProgramsTo !== null}
+                                {_web.programs_content.register_programs_allowed_from_to, ['from' => $registerProgramsFrom->format('j. n. Y G:i'), 'to' => $registerProgramsTo->format('j. n. Y G:i')]}
+                            {elseif $registerProgramsFrom === null && $registerProgramsTo !== null}
+                                {_web.programs_content.register_programs_was_allowed_to, ['to' => $registerProgramsTo->format('j. n. Y G:i')]}
+                            {elseif $registerProgramsFrom !== null && $registerProgramsTo === null}
+                                {_web.programs_content.register_programs_is_allowed_from, ['from' => $registerProgramsFrom->format('j. n. Y G:i')]}
+                            {/if}
                         {/if}
-                    {/if}
-                </div>
-            {elseif $userWaitingForPayment}
-                <div class="alert alert-warning alert-forever">
-                    {_web.programs_content.register_programs_allowed_after_payment}
-                </div>
-            {/if}
+                    </div>
+                {elseif $userWaitingForPayment}
+                    <div class="alert alert-warning alert-forever">
+                        {_web.programs_content.register_programs_allowed_after_payment}
+                    </div>
+                {/if}
 
-            {var $userAllowedRegisterPrograms = $registerProgramsAllowed && $userHasPermission}
+                {var $userAllowedRegisterPrograms = $registerProgramsAllowed && $userHasPermission}
 
                 <script>
                     var userAllowedRegisterPrograms = {$userAllowedRegisterPrograms};
@@ -63,8 +63,7 @@
                 <div id="app" ng-app="scheduleApp" ng-controller="WebScheduleCtrl">
                     <div class="row">
                         <div class="col-md-4">
-                            <button data-toggle="modal" data-target="#help-modal" class="btn btn-default"
-                                    style="margin-bottom: 20px">
+                            <button data-toggle="modal" data-target="#help-modal" class="btn btn-secondary" style="margin-bottom: 20px">
                                 <i class="fa fa-info"></i> {_web.programs_content.help}
                             </button>
                         </div>
@@ -75,8 +74,7 @@
                                     <img src="{$basePath}/img/spin.gif" height="34"/>
                                 </div>
 
-                                <div ng-model="message" ng-show="message.text"
-                                     class="alert alert-{{ message.type }} pull-left" style="margin-left: 15px">
+                                <div ng-model="message" ng-show="message.text" class="alert alert-{{ message.type }} pull-left" style="margin-left: 15px">
                                     {{ message.text }}
                                 </div>
                             </div>
@@ -87,15 +85,14 @@
                         {_web.programs_content.mandatory_programs_not_registered}
                     </div>
 
-                    <div ui-calendar="uiConfig.calendar" id="calendar" ng-model="eventSources"
-                         style="visibility: hidden"></div>
+                    <div ui-calendar="uiConfig.calendar" id="calendar" ng-model="eventSources" style="visibility: hidden"></div>
 
                     <div id="program-modal" class="modal fade" ng-model="event">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
+                                    <h5 class="modal-title">{{ event.block.name }}</h5>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">{{ event.block.name }}</h4>
                                 </div>
                                 <div class="modal-body">
                                     <ul class="list-unstyled">
@@ -119,33 +116,28 @@
                                     </ul>
 
                                     <div ng-if="event.block.lectors">
-                                        <h5><strong>{_web.programs_content.lectors}</strong></h5>
+                                        <h6>{_web.programs_content.lectors}</h6>
                                         <div ng-repeat="lector in event.block.lectors">
-                                            <h5>{{ lector.name }}</h5>
+                                            <h7>{{ lector.name }}</h7>
                                             <p>
-                                                <img ng-src="{$basePath}/files/user_photos/{{ lector.photo }}"
-                                                     ng-if="lector.photo" style="float: left; margin: 0 10px 10px 0;"/>
+                                                <img ng-src="{$basePath}/files/user_photos/{{ lector.photo }}" ng-if="lector.photo" style="float: left; margin: 0 10px 10px 0;"/>
                                                 {{ lector.about }}
                                             </p>
                                             <div class="clearfix"></div>
                                         </div>
                                     </div>
 
-                                    <h5><strong>{_web.programs_content.about_program}</strong></h5>
+                                    <h6>{_web.programs_content.about_program}</h6>
                                     <p>{{ event.block.perex }}</p>
-                                    <p ng-bind-html="event.block.description"></p>
+                                    <div ng-bind-html="event.block.description"></div>
                                 </div>
 
                                 <div class="modal-footer">
                                     {if $userAllowedRegisterPrograms}
-                                        <button ng-hide="event.user_attends || event.blocked || event.occupied || !event.paid"
-                                                ng-click="attend(event)"
-                                                class="btn btn-success pull-left">
+                                        <button ng-hide="event.user_attends || event.blocked || event.occupied || !event.paid" ng-click="attend(event)" class="btn btn-success pull-left">
                                             {_web.programs_content.register}
                                         </button>
-                                        <button ng-show="event.user_attends && !event.block.auto_registered"
-                                                ng-click="unattend(event)" style="margin-left: 0"
-                                                class="btn btn-danger pull-left">
+                                        <button ng-show="event.user_attends && !event.block.auto_registered" ng-click="unattend(event)" style="margin-left: 0" class="btn btn-danger pull-left">
                                             {_web.programs_content.unregister}
                                         </button>
                                     {/if}
@@ -158,13 +150,13 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
+                                    <h5 class="modal-title">{_web.programs_content.help}</h5>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">{_web.programs_content.help}</h4>
                                 </div>
                                 <div class="modal-body">
-                                    {_web.programs_content.help_text}
+                                    <p>{_web.programs_content.help_text}</p>
 
-                                    <h5><strong>{_web.programs_content.help_legend}</strong></h5>
+                                    <h6>{_web.programs_content.help_legend}</h6>
                                     <ul class="list-group">
                                         <li class="list-group-item list-group-item-success">{_web.programs_content.help_legend_attends}</li>
                                         <li class="list-group-item list-group-item-info">{_web.programs_content.help_legend_optional}</li>
