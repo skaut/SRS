@@ -139,7 +139,7 @@ class ProfilePresenter extends WebBasePresenter
         $form->onSuccess[] = function (Form $form, stdClass $values) : void {
             $this->flashMessage('web.profile.personal_details_update_successful', 'success');
 
-            $this->redirect('this#collapsePersonalDetails');
+            $this->redirect('this#personal-details');
         };
 
         $this->personalDetailsFormFactory->onSkautIsError[] = function () : void {
@@ -155,7 +155,7 @@ class ProfilePresenter extends WebBasePresenter
 
         $control->onSave[] = function () : void {
             $this->flashMessage('web.profile.additional_information_update_successfull', 'success');
-            $this->redirect('this#collapseAdditionalInformation');
+            $this->redirect('this#additional-information');
         };
 
         return $control;
@@ -179,7 +179,7 @@ class ProfilePresenter extends WebBasePresenter
             }
 
             $this->authenticator->updateRoles($this->user);
-            $this->redirect('this#collapseSeminar');
+            $this->redirect('this#seminar');
         };
 
         return $form;

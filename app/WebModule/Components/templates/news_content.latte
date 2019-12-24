@@ -10,9 +10,7 @@
             <div class="card">
                 <div class="card-body pb-1">{$n->getText()|noescape}</div>
                 <div class="card-footer">
-                    {if $n->isPinned()}
-                        <i class="fa fa-thumb-tack"></i>
-                    {/if}
+                    <i class="fa fa-thumb-tack" n:if="$n->isPinned()"></i>
                     {$n->getPublished()|date:'j. n. Y'}
                 </div>
             </div>

@@ -110,10 +110,10 @@ class NewsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function changePinned(int $id, bool $pinned) : void
+    public function changePinned(string $id, string $pinned) : void
     {
-        $news = $this->newsRepository->findById($id);
-        $news->setPinned($pinned);
+        $news = $this->newsRepository->findById((int) $id);
+        $news->setPinned((bool) $pinned);
         $this->newsRepository->save($news);
 
         $p = $this->getPresenter();

@@ -10,12 +10,9 @@
             <h4>{_web.blocks_content.categories}</h4>
             <div id="accordion">
                 <div class="card mb-1" n:if="!empty($uncategorizedBlocks)">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#uncategorized">
-                                {_web.blocks_content.uncategorized}
-                            </button>
-                        </h5>
+                    <div class="card-header" style="transform: rotate(0);">
+                        {_web.blocks_content.uncategorized}
+                        <a href="#" class="stretched-link" data-toggle="collapse" data-target="#uncategorized"></a>
                     </div>
                     <div id="uncategorized" class="collapse {if $selectedCategoryId == 'uncategorized'}show{/if}" data-parent="#accordion">
                         <div class="list-group list-group-flush">
@@ -28,12 +25,9 @@
                     </div>
                 </div>
                 <div class="card mb-1" n:foreach="$categories as $category">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#category-{$category->getId()}">
-                                {$category->getName()}
-                            </button>
-                        </h5>
+                    <div class="card-header" style="transform: rotate(0);">
+                        {$category->getName()}
+                        <a href="#" class="stretched-link" data-toggle="collapse" data-target="#category-{$category->getId()}"></a>
                     </div>
                     <div id="category-{$category->getId()}" class="collapse {if $selectedCategoryId == $category->getId()}show{/if}" data-parent="#accordion">
                         <div class="list-group list-group-flush">
@@ -76,10 +70,7 @@
                         {foreach $selectedBlock->getLectors() as $lector}
                             <h6>{$lector->getLectorName()}</h6>
                             <p>
-                                {if $lector->getPhoto()}
-                                    <img src="{$basePath}/files/user_photos/{$lector->getPhoto()}"
-                                         style="float: left; margin: 0 10px 10px 0;"/>
-                                {/if}
+                                <img src="{$basePath}/files/user_photos/{$lector->getPhoto()}" style="float: left; margin: 0 10px 10px 0;" n:if="$lector->getPhoto()"/>
                                 {$lector->getAbout()}
                             </p>
                             <div class="clearfix"></div>

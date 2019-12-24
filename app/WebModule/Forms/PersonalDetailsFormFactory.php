@@ -67,7 +67,6 @@ class PersonalDetailsFormFactory
         $form->addHidden('id');
 
         $inputSex = $form->addRadioList('sex', 'web.profile.sex', Sex::getSexOptions());
-        $inputSex->getSeparatorPrototype()->setName('');
 
         $inputFirstName = $form->addText('firstName', 'web.profile.firstname')
             ->addRule(Form::FILLED, 'web.profile.firstname_empty');
