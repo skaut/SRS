@@ -50,21 +50,23 @@ function initSelects() {
             selectedTextFormat: 'count > 3',
             actionsBox: true,
             iconBase: 'fa',
-            tickIcon: 'fa-check'
+            tickIcon: 'fa-check',
+            style: 'btn-secondary',
+            mobile: true
         });
 }
 
 function initFileInputs() {
     $('input[type="file"]').fileinput({
-        language: "cs",
-        theme: "fa",
-        browseLabel: "Vybrat",
-        msgPlaceholder: "Vybrat soubor...",
+        language: 'cs',
+        theme: 'fa',
+        browseLabel: 'Vybrat',
+        msgPlaceholder: 'Vybrat soubor...',
         showPreview: false,
         showRemove: false,
         showUpload: false,
         showCancel: false,
-        browseClass: "btn btn-secondary"
+        browseClass: 'btn btn-secondary'
     });
 }
 
@@ -77,7 +79,7 @@ function initConfirms() {
         btnOkClass: 'btn btn-primary',
         btnOkIcon: 'fa fa-check',
         btnOkLabel: 'Ano',
-        btnCancelClass: 'btn btn-default',
+        btnCancelClass: 'btn btn-light',
         btnCancelIcon: 'fa fa-times',
         btnCancelLabel: 'Ne'
     });
