@@ -1,4 +1,6 @@
-<div class="document-content clearfix">
+<div class="clearfix"></div>
+
+<div class="document-content">
     <div class="row">
         <div class="col">
             <h3 n:ifcontent>{$heading}</h3>
@@ -11,14 +13,12 @@
                 {_web.document_content.list_empty}
             {else}
                 <ul class="fa-ul">
-                    {foreach $documents as $document}
-                        <li>
-                            <i class="fa-li fa fa-file"></i>
-                            <a href="{$basePath}/files{$document->getFile()}" target="_blank">{$document->getName()}</a>
-                            <span n:if="$document->getDescription()">- {$document->getDescription()}</span>
-                            (upraveno: {$document->getTimestamp()|date:'j. n. Y'})
-                        </li>
-                    {/foreach}
+                    <li n:foreach="$documents as $document">
+                        <i class="fa-li fa fa-file"></i>
+                        <a href="{$basePath}/files{$document->getFile()}" target="_blank">{$document->getName()}</a>
+                        <span n:if="$document->getDescription()">- {$document->getDescription()}</span>
+                        (upraveno: {$document->getTimestamp()|date:'j. n. Y'})
+                    </li>
                 </ul>
             {/if}
         </div>

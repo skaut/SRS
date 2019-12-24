@@ -1,4 +1,6 @@
-<div class="capacities-content clearfix">
+<div class="clearfix"></div>
+
+<div class="capacities-content">
     <div class="row">
         <div class="col">
             <h3 n:ifcontent>{$heading}</h3>
@@ -10,15 +12,18 @@
             {if empty($roles)}
                 {_web.capacities_content.list_empty}
             {else}
-                {foreach $roles as $role}
-                    <strong>{$role['name']}</strong><br>
-                    {if  $role['capacity'] !== null}
-                        {_web.capacities_content.occupied_limited, [occupied => $role['usersCount'], total => $role['capacity']]}
-                    {else}
-                        {_web.capacities_content.occupied_unlimited, [occupied => $role['usersCount']]}
-                    {/if}
-                    {sep}<br><br>{/sep}
-                {/foreach}
+                <ul class="list-unstyled mb-0">
+                    <ul class="list-unstyled mb-0">
+                        <li n:foreach="$roles as $role">
+                            <strong>{$role['name']}</strong>
+                            {if  $role['capacity'] !== null}
+                                {_web.capacities_content.occupied_limited, [occupied => $role['usersCount'], total => $role['capacity']]}
+                            {else}
+                                {_web.capacities_content.occupied_unlimited, [occupied => $role['usersCount']]}
+                            {/if}
+                        </li>
+                    </ul>
+                </ul>
             {/if}
         </div>
     </div>
