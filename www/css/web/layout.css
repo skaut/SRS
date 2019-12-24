@@ -61,6 +61,7 @@
 
 body {
     font-family: themix, sans-serif;
+    font-size: 14px;
 }
 
 h1 {
@@ -73,59 +74,17 @@ p {
     font-style: normal;
 }
 
-ul.no-bullets > li {
-    list-style-type: none !important;
-    margin-left: 0 !important;
-}
-
-ul.no-margin {
-    padding-left: 0 !important;
-    margin-left: 0 !important;
-}
-
 #flashes .alert {
     margin-top: 10px;
 }
 
-#header {
-    margin-top: 20px;
-}
-
-#logo {
-    float: left;
-}
-
 #user-menu {
-    float: right;
-    margin-top: 5px;
-    width: auto;
-}
-
-#user-menu ul {
-    float: right;
-    margin: 0;
-    padding: 0;
-}
-
-#user-menu li {
-    font-size: 12px;
-    line-height: 2em;
-    float: left;
-    display: block;
-    margin-left: 5px;
-}
-
-#main-menu {
-    margin-top: 15px;
-}
-
-#main-menu nav {
-    margin-bottom: 0;
+    line-height: 2.5em;
 }
 
 /* application content */
 .application-content .control-label .required::after {
-    content:" *";
+    content: " *";
     color: red;
 }
 
@@ -148,99 +107,61 @@ ul.no-margin {
     margin: 10px auto;
 }
 
-/* news content */
-.news-content .panel-body {
-    word-wrap: break-word;
-}
-
 /* programs content */
 .programs-content .notifications .alert {
     padding: 6px 15px;
 }
 
-/* tabulka bez ramecku */
-.table-borderless tbody tr td,
-.table-borderless tbody tr th,
-.table-borderless thead tr th,
-.table-borderless thead tr td,
-.table-borderless tfoot tr th,
-.table-borderless tfoot tr td {
-    border: none;
-}
+/*!* tabulka bez ramecku a okraju, pro kombinaci s formulari *!*/
+/*.table-form {*/
+/*    margin-bottom: 0;*/
+/*}*/
 
-/* tabulka bez ramecku a okraju, pro kombinaci s formulari */
-.table-form {
-    margin-bottom: 0;
-}
+/*.table-form tbody tr td,*/
+/*.table-form tbody tr th,*/
+/*.table-form thead tr th,*/
+/*.table-form thead tr td,*/
+/*.table-form tfoot tr th,*/
+/*.table-form tfoot tr td {*/
+/*    border: none;*/
+/*}*/
 
-.table-form tbody tr td,
-.table-form tbody tr th,
-.table-form thead tr th,
-.table-form thead tr td,
-.table-form tfoot tr th,
-.table-form tfoot tr td {
-    border: none;
-}
+/*.table-form tbody tr th,*/
+/*.table-form thead tr th,*/
+/*.table-form tfoot tr th {*/
+/*    padding-left: 0;*/
+/*}*/
 
-.table-form tbody tr th,
-.table-form thead tr th,
-.table-form tfoot tr th {
-    padding-left: 0;
-}
+/*!* odebrani ramecku kolem datagridu *!*/
+/*.datagrid {*/
+/*    padding: 0 !important;*/
+/*}*/
 
-/* popisky ve formularich vlevo */
-.control-label {
-    text-align: left !important;
-}
+/*!* oprava select a multiselect v inline editaci *!*/
+/*.datagrid-inline-edit .bootstrap-select {*/
+/*    padding-bottom: 0 !important;*/
+/*    padding-top: 0 !important;*/
+/*}*/
 
-/* vypnuti responzivity*/
-body {
-    min-width: 768px;
-}
+/*.datagrid-inline-edit .bootstrap-select .btn {*/
+/*    font-size: 12px !important;*/
+/*    padding: 4px 12px 4px 12px !important;*/
+/*}*/
 
-#main-menu .navbar-nav {
-    float: left;
-    margin: 0;
-}
+/*.datagrid-inline-edit .bootstrap-select li {*/
+/*    font-size: 12px !important;*/
+/*}*/
 
-#main-menu .navbar-nav > li {
-    float: left;
-}
+/*.datagrid-multiselect .btn {*/
+/*    font-size: 12px !important;*/
+/*    padding: 4px 12px 5px 12px !important;*/
+/*}*/
 
-#main-menu .navbar-nav > li > a {
-    padding: 15px;
-}
+/*.datagrid-multiselect li {*/
+/*    font-size: 12px !important;*/
+/*}*/
 
-/* odebrani ramecku kolem datagridu */
-.datagrid {
-    padding: 0 !important;
-}
-
-/* oprava select a multiselect v inline editaci */
-.datagrid-inline-edit .bootstrap-select {
-    padding-bottom: 0 !important;
-    padding-top: 0 !important;
-}
-
-.datagrid-inline-edit .bootstrap-select .btn {
-    font-size: 12px !important;
-    padding: 4px 12px 4px 12px !important;
-}
-
-.datagrid-inline-edit .bootstrap-select li {
-    font-size: 12px !important;
-}
-
-.datagrid-multiselect .btn {
-    font-size: 12px !important;
-    padding: 4px 12px 5px 12px !important;
-}
-
-.datagrid-multiselect li {
-    font-size: 12px !important;
-}
-
-/* oprava barvy chybove hlasky u poli v datagridu */
-.datagrid .text-danger {
-    color: #a94442 !important;
-}
+/*!* oprava barvy chybove hlasky u poli v datagridu *!*/
+/*.datagrid .text-danger {*/
+/*    color: #a94442 !important;*/
+/*}*/
