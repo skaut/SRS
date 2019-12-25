@@ -140,8 +140,6 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->footer      = $this->settingsService->getValue(Settings::FOOTER);
         $this->template->seminarName = $this->settingsService->getValue(Settings::SEMINAR_NAME);
 
-        $this->template->sidebarVisible = false;
-
         $this->template->settings = $this->settingsService;
 
         $this->template->containerAttributes = '';

@@ -10,7 +10,7 @@
 
 {block main}
     <h2>{_admin.configuration.skautis_event_heading}</h2>
-    <div class="well">
+    <div class="card card-body bg-light">
         {if !$connected}
             <div class="alert alert-info alert-forever">{_admin.configuration.skautis_event_note}</div>
         {control skautIsEventForm}

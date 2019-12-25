@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="cs">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,57 +16,55 @@
 </head>
 
 <body>
-<div id="main-menu">
-    {import 'includes/main_menu.latte'}
-    {include main-menu}
-</div>
-
-<div class="container-fluid" {$containerAttributes|noescape}>
-    <div id="content" class="row">
-        {if $sidebarVisible}
-            <div id="sidebar" class="col-sm-3 col-xs-3">
-                {include #sidebar}
-            </div>
-        {/if}
-
-        <div id="main" class="{if $sidebarVisible}col-sm-9 col-xs-9{else}col-sm-12{/if}">
-            {snippet flashes}
-                <div id="flashes" class="row">
-                    <div class="col-sm-12">
-                        <div n:foreach="$flashes as $flash" n:class="alert, alert-dismissable, 'alert-' . $flash->type">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            {$flash->message|noescape}
-                        </div>
-                    </div>
-                </div>
-            {/snippet}
-
-            {include #main}
-        </div>
+    <div id="main-menu">
+        {import 'includes/main_menu.latte'}
+        {include main-menu}
     </div>
 
-    <hr>
+    <div class="container-fluid" {$containerAttributes|noescape}>
+        <div id="content" class="row">
+            <div id="sidebar" class="col-3" n:ifcontent>
+                {ifset #sidebar}
+                    {include #sidebar}
+                {/ifset}
+            </div>
+            <div id="main" class="col">
+                {snippet flashes}
+                    <div id="flashes" class="row">
+                        <div class="col-12">
+                            <div n:foreach="$flashes as $flash" n:class="alert, alert-dismissable, 'alert-' . $flash->type">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {$flash->message|noescape}
+                            </div>
+                        </div>
+                    </div>
+                {/snippet}
 
-    <footer>
-        <p>{$footer|noescape}</p>
-    </footer>
-</div>
+                {include #main}
+            </div>
+        </div>
 
-<script type="text/javascript">
-    window._urq = window._urq || [];
-    _urq.push(['initSite', 'ff3bbb84-740e-49e3-afd9-db722e8047b5']);
-    (function () {
-        var ur = document.createElement('script');
-        ur.type = 'text/javascript';
-        ur.async = true;
-        ur.src = ('https:' == document.location.protocol ?
-            'https://cdn.userreport.com/userreport.js' :
-            'http://cdn.userreport.com/userreport.js');
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(ur, s);
-    })();
-</script>
+        <hr>
 
+        <footer>
+            <p>{$footer|noescape}</p>
+        </footer>
+    </div>
+
+    <script type="text/javascript">
+        window._urq = window._urq || [];
+        _urq.push(['initSite', 'ff3bbb84-740e-49e3-afd9-db722e8047b5']);
+        (function () {
+            var ur = document.createElement('script');
+            ur.type = 'text/javascript';
+            ur.async = true;
+            ur.src = ('https:' == document.location.protocol ?
+                'https://cdn.userreport.com/userreport.js' :
+                'http://cdn.userreport.com/userreport.js');
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ur, s);
+        })();
+    </script>
 </body>
 </html>
 

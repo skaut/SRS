@@ -155,7 +155,6 @@ class PagePresenter extends WebBasePresenter
 
         $this->template->page           = $page;
         $this->template->pageName       = $page->getName();
-        $this->template->sidebarVisible = $page->hasSidebar();
     }
 
     protected function createComponentApplicationContent() : ApplicationContentControl

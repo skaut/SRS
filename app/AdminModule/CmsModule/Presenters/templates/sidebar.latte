@@ -1,21 +1,18 @@
 {block sidebar}
-    <div class="well">
-        <ul class="nav nav-pills nav-stacked">
-            <li {ifCurrent Pages:*}class="active"{/ifCurrent}>
-                <a href="{plink Pages:default}">{_admin.cms.menu_pages}</a>
-            </li>
-
-            <li {ifCurrent News:*}class="active"{/ifCurrent}>
-                <a href="{plink News:default}">{_admin.cms.menu_news}</a>
-            </li>
-
-            <li {ifCurrent Documents:*}class="active"{/ifCurrent}>
-                <a href="{plink Documents:default}">{_admin.cms.menu_documents}</a>
-            </li>
-
-            <li {ifCurrent Faq:*}class="active"{/ifCurrent}>
-                <a href="{plink Faq:default}">{_admin.cms.menu_faq}</a>
-            </li>
-        </ul>
+    <div class="card card-body bg-light mb-3">
+        <div class="nav flex-column nav-pills">
+            <a n:href="Pages:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Cms:Pages:*') ? active">
+                {_admin.cms.menu_pages}
+            </a>
+            <a n:href="News:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Cms:News:*') ? active">
+                {_admin.cms.menu_news}
+            </a>
+            <a n:href="Documents:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Cms:Documents:*') ? active">
+                {_admin.cms.menu_documents}
+            </a>
+            <a n:href="Faq:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Cms:Faq:*') ? active">
+                {_admin.cms.menu_faq}
+            </a>
+        </div>
     </div>
 {/block}

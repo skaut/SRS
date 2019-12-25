@@ -12,10 +12,9 @@
     {/foreach}
 {/block}
 
-{if $sidebar}
-    {block sidebar}
-        {foreach $page->getSidebarContents() as $content}
-            {control $content->getComponentName(), $content}
-        {/foreach}
-    {/block}
-{/if}
+{block sidebar}
+    {foreach $page->getSidebarContents() as $content}
+        {control $content->getComponentName(), $content}
+    {/foreach}
+{/block}
+

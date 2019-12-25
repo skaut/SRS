@@ -1,6 +1,6 @@
 {block main}
     <h2>{_admin.configuration.mailing_heading}</h2>
-    <div class="well">
+    <div class="card card-body bg-light">
         {if $waiting}
             <div class="alert alert-warning alert-forever">{_admin.configuration.mailing_email_verification_needed}</div>
         {/if}

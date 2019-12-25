@@ -30,15 +30,4 @@ abstract class CmsBasePresenter extends AdminBasePresenter
 
         $this->checkPermission(Permission::MANAGE);
     }
-
-    /**
-     * @throws SettingsException
-     * @throws Throwable
-     */
-    public function beforeRender() : void
-    {
-        parent::beforeRender();
-
-        $this->template->sidebarVisible = true;
-    }
 }

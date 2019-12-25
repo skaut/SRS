@@ -1,314 +1,200 @@
 {block main}
     <div class="dashboard">
-        {if $user->isAllowed($resourceCms, $permissionManage)}
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">{_admin.menu.cms}</div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Cms:Pages:default}" class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-file-text-o"></span>
-                                        <br>
-                                        {_admin.cms.menu_pages}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Cms:News:default}" class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-newspaper-o"></span>
-                                        <br>
-                                        {_admin.cms.menu_news}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Cms:Documents:default}" class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-files-o"></span>
-                                        <br>
-                                        {_admin.cms.menu_documents}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Cms:Faq:default}" class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-comment-o"></span>
-                                        <br>
-                                        {_admin.cms.menu_faq}
-                                    </a>
-                                </div>
+        <div class="row">
+            <div class="col-4 mb-4" n:if="$user->isAllowed($resourceCms, $permissionManage)">
+                <div class="card h-100">
+                    <div class="card-body pb-1">
+                        <h5 class="card-title">{_admin.menu.cms}</h5>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <a href="{plink Cms:Pages:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-file-text-o"></span><br>{_admin.cms.menu_pages}
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <a href="{plink Cms:News:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-newspaper-o"></span><br>{_admin.cms.menu_news}
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <a href="{plink Cms:Documents:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-files-o"></span><br>{_admin.cms.menu_documents}
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <a href="{plink Cms:Faq:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-comment-o"></span><br>{_admin.cms.menu_faq}
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        {/if}
 
-        {if $user->isAllowed($resourceProgram, $permissionAccess)}
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">{_admin.menu.program}</div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Program:Blocks:default}" class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-calendar-o"></span>
-                                        <br>
-                                        {_admin.program.menu_blocks}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Program:Schedule:default}" class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-calendar"></span>
-                                        <br>
-                                        {_admin.program.menu_schedule}
-                                    </a>
-                                </div>
-
-                                {if $user->isAllowed($resourceProgram, $permissionManageCategories)}
-                                    <div class="col-sm-2 col-xs-2">
-                                        <a href="{plink Program:Categories:default}"
-                                           class="btn btn-default btn-sm btn-block">
-                                            <span class="fa fa-2x fa-flag"></span>
-                                            <br>
-                                            {_admin.program.menu_categories}
-                                        </a>
-                                    </div>
-                                {/if}
-
-                                {if $user->isAllowed($resourceProgram, $permissionManageRooms)}
-                                    <div class="col-sm-2 col-xs-2">
-                                        <a href="{plink Program:Rooms:default}"
-                                           class="btn btn-default btn-sm btn-block">
-                                            <span class="fa fa-2x fa-home"></span>
-                                            <br>
-                                            {_admin.program.menu_rooms}
-                                        </a>
-                                    </div>
-                                {/if}
+            <div class="col-4 mb-4" n:if="$user->isAllowed($resourceProgram, $permissionAccess)">
+                <div class="card h-100">
+                    <div class="card-body pb-1">
+                        <h5 class="card-title">{_admin.menu.program}</h5>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <a href="{plink Program:Blocks:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-calendar-o"></span><br>{_admin.program.menu_blocks}
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <a href="{plink Program:Schedule:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-calendar"></span><br>{_admin.program.menu_schedule}
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3" n:if="$user->isAllowed($resourceProgram, $permissionManageCategories)">
+                                <a href="{plink Program:Categories:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-flag"></span><br>{_admin.program.menu_categories}
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3" n:if="$user->isAllowed($resourceProgram, $permissionManageRooms)">
+                                <a href="{plink Program:Rooms:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-home"></span><br>{_admin.program.menu_rooms}
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        {/if}
 
-        {if $user->isAllowed($resourceUsers, $permissionManage)}
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">{_admin.menu.users}</div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Users:default}" class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-users"></span>
-                                        <br>
-                                        {_admin.menu.users}
-                                    </a>
-                                </div>
+            <div class="col-4 mb-4" n:if="$user->isAllowed($resourceUsers, $permissionManage)">
+                <div class="card h-100">
+                    <div class="card-body pb-1">
+                        <h5 class="card-title">{_admin.menu.users}</h5>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <a href="{plink Users:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-users"></span><br>{_admin.menu.users}
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        {/if}
 
-        {if $user->isAllowed($resourcePayments, $permissionManage)}
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">{_admin.menu.payments}</div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Payments:Payments:default}" class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-money"></span>
-                                        <br>
-                                        {_admin.menu.payments}
-                                    </a>
-                                </div>
+            <div class="col-4 mb-4" n:if="$user->isAllowed($resourcePayments, $permissionManage)">
+                <div class="card h-100">
+                    <div class="card-body pb-1">
+                        <h5 class="card-title">{_admin.menu.payments}</h5>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <a href="{plink Payments:Payments:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-money"></span><br>{_admin.menu.payments}
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        {/if}
 
-        {if $user->isAllowed($resourceAcl, $permissionManage)}
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">{_admin.menu.acl}</div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Acl:default}" class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-user-circle-o"></span>
-                                        <br>
-                                        {_admin.menu.acl}
-                                    </a>
-                                </div>
+            <div class="col-4 mb-4" n:if="$user->isAllowed($resourceAcl, $permissionManage)">
+                <div class="card h-100">
+                    <div class="card-body pb-1">
+                        <h5 class="card-title">{_admin.menu.acl}</h5>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <a href="{plink Acl:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-user-circle-o"></span><br>{_admin.menu.acl}
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        {/if}
 
-        {if $user->isAllowed($resourceMailing, $permissionManage)}
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">{_admin.menu.mailing}</div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Mailing:Templates:default}"
-                                       class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-envelope-o"></span>
-                                        <br>
-                                        {_admin.mailing.menu.templates}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Mailing:Send:default}" class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-envelope-o"></span>
-                                        <br>
-                                        {_admin.mailing.menu.send}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Mailing:History:default}" class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-archive"></span>
-                                        <br>
-                                        {_admin.mailing.menu.history}
-                                    </a>
-                                </div>
+            <div class="col-4 mb-4" n:if="$user->isAllowed($resourceMailing, $permissionManage)">
+                <div class="card h-100">
+                    <div class="card-body pb-1">
+                        <h5 class="card-title">{_admin.menu.mailing}</h5>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <a href="{plink Mailing:Templates:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-envelope-o"></span><br>{_admin.mailing.menu.templates}
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <a href="{plink Mailing:Send:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-envelope-o"></span><br>{_admin.mailing.menu.send}
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <a href="{plink Mailing:History:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-archive"></span><br>{_admin.mailing.menu.history}
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        {/if}
 
-        {if $user->isAllowed($resourceConfiguration, $permissionManage)}
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">{_admin.menu.configuration}</div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Configuration:Seminar:default}"
-                                       class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-calendar-o"></span>
-                                        <br>
-                                        {_admin.configuration.menu_seminar}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Configuration:Program:default}"
-                                       class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-calendar"></span>
-                                        <br>
-                                        {_admin.configuration.menu_program}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Configuration:Subevents:default}"
-                                       class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-calendar"></span>
-                                        <br>
-                                        {_admin.configuration.menu_subevents}
-                                    </a>
-                                </div>
-
-                                {if $explicitSubeventsExists}
-                                    <div class="col-sm-2 col-xs-2">
-                                        <a href="{plink Configuration:Discounts:default}"
-                                           class="btn btn-default btn-sm btn-block">
-                                            <span class="fa fa-2x fa-money"></span>
-                                            <br>
-                                            {_admin.configuration.menu_discounts}
-                                        </a>
-                                    </div>
-                                {/if}
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Configuration:Payment:default}"
-                                       class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-money"></span>
-                                        <br>
-                                        {_admin.configuration.menu_payment}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Configuration:Application:default}"
-                                       class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-id-card-o"></span>
-                                        <br>
-                                        {_admin.configuration.menu_application}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Configuration:Place:default}"
-                                       class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-home"></span>
-                                        <br>
-                                        {_admin.configuration.menu_place}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Configuration:Mailing:default}"
-                                       class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-envelope-o"></span>
-                                        <br>
-                                        {_admin.configuration.menu_mailing}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Configuration:SkautIs:default}"
-                                       class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-refresh"></span>
-                                        <br>
-                                        {_admin.configuration.menu_skautis}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Configuration:Web:default}"
-                                       class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-file-text-o"></span>
-                                        <br>
-                                        {_admin.configuration.menu_web}
-                                    </a>
-                                </div>
-
-                                <div class="col-sm-2 col-xs-2">
-                                    <a href="{plink Configuration:System:default}"
-                                       class="btn btn-default btn-sm btn-block">
-                                        <span class="fa fa-2x fa-cog"></span>
-                                        <br>
-                                        {_admin.configuration.menu_system}
-                                    </a>
-                                </div>
+            <div class="col-12 mb-4" n:if="$user->isAllowed($resourceConfiguration, $permissionManage)">
+                <div class="card h-100">
+                    <div class="card-body pb-1">
+                        <h5 class="card-title">{_admin.menu.configuration}</h5>
+                        <div class="row">
+                            <div class="col-2 mb-3">
+                                <a href="{plink Configuration:Seminar:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-calendar-o"></span><br>{_admin.configuration.menu_seminar}
+                                </a>
+                            </div>
+                            <div class="col-2 mb-3">
+                                <a href="{plink Configuration:Program:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-calendar"></span><br>{_admin.configuration.menu_program}
+                                </a>
+                            </div>
+                            <div class="col-2 mb-3">
+                                <a href="{plink Configuration:Subevents:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-calendar"></span><br>{_admin.configuration.menu_subevents}
+                                </a>
+                            </div>
+                            <div class="col-2 mb-3" n:if="$explicitSubeventsExists">
+                                <a href="{plink Configuration:Discounts:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-money"></span><br>{_admin.configuration.menu_discounts}
+                                </a>
+                            </div>
+                            <div class="col-2 mb-3">
+                                <a href="{plink Configuration:Payment:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-money"></span><br>{_admin.configuration.menu_payment}
+                                </a>
+                            </div>
+                            <div class="col-2 mb-3">
+                                <a href="{plink Configuration:Application:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-id-card-o"></span><br>{_admin.configuration.menu_application}
+                                </a>
+                            </div>
+                            <div class="col-2 mb-3">
+                                <a href="{plink Configuration:Place:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-home"></span><br>{_admin.configuration.menu_place}
+                                </a>
+                            </div>
+                            <div class="col-2 mb-3">
+                                <a href="{plink Configuration:Mailing:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-envelope-o"></span><br>{_admin.configuration.menu_mailing}
+                                </a>
+                            </div>
+                            <div class="col-2 mb-3">
+                                <a href="{plink Configuration:SkautIs:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-refresh"></span><br>{_admin.configuration.menu_skautis}
+                                </a>
+                            </div>
+                            <div class="col-2 mb-3">
+                                <a href="{plink Configuration:Web:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-file-text-o"></span><br>{_admin.configuration.menu_web}
+                                </a>
+                            </div>
+                            <div class="col-2 mb-3">
+                                <a href="{plink Configuration:System:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-cog"></span><br>{_admin.configuration.menu_system}
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        {/if}
+        </div>
     </div>
 {/block}

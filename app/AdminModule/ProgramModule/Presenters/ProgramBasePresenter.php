@@ -30,15 +30,4 @@ abstract class ProgramBasePresenter extends AdminBasePresenter
 
         $this->checkPermission(Permission::ACCESS);
     }
-
-    /**
-     * @throws SettingsException
-     * @throws Throwable
-     */
-    public function beforeRender() : void
-    {
-        parent::beforeRender();
-
-        $this->template->sidebarVisible = true;
-    }
 }
