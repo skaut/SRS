@@ -169,9 +169,9 @@ class PageForm extends UI\Control
         $form->addSubmit('submitAndContinue', 'admin.common.save_and_continue');
         $form->addSubmit('submitAdd', 'admin.common.add');
         $form->addSubmit('submitMain', 'common.area.main')
-            ->setHtmlAttribute('class', 'btn-link');
+            ->setHtmlAttribute('class', 'nav-link');
         $form->addSubmit('submitSidebar', 'common.area.sidebar')
-            ->setHtmlAttribute('class', 'btn-link');
+            ->setHtmlAttribute('class', 'nav-link');
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];

@@ -4,7 +4,11 @@
 
     <script>
         $(function () {
-            $("#frm-pagesGrid-pagesGrid-filter-inline_add-slug").slugify("#frm-pagesGrid-pagesGrid-filter-inline_add-name");
+            $.nette.ext('slugify', {
+                complete: function () {
+                    $("#frm-pagesGrid-pagesGrid-filter-inline_add-slug").slugify("#frm-pagesGrid-pagesGrid-filter-inline_add-name");
+                }
+            });
         });
     </script>
 {/block}

@@ -51,8 +51,7 @@ function initSelects() {
             actionsBox: true,
             iconBase: 'fa',
             tickIcon: 'fa-check',
-            style: 'btn-secondary',
-            mobile: true
+            style: 'btn-light'
         });
 }
 
@@ -71,15 +70,15 @@ function initFileInputs() {
 }
 
 function initConfirms() {
-    $('[data-toggle=confirmation]').confirmation({
+    $('[data-toggle="confirmation"]').confirmation({
         rootSelector: '[data-toggle=confirmation]',
         title: '',
-        singleton: 'true',
-        popout: 'true',
-        btnOkClass: 'btn btn-primary',
+        singleton: true,
+        popout: true,
+        btnOkClass: 'btn btn-sm btn-primary',
         btnOkIcon: 'fa fa-check',
         btnOkLabel: 'Ano',
-        btnCancelClass: 'btn btn-light',
+        btnCancelClass: 'btn btn-sm btn-secondary',
         btnCancelIcon: 'fa fa-times',
         btnCancelLabel: 'Ne'
     });

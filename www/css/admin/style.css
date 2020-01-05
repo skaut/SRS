@@ -18,76 +18,69 @@ body {
     z-index: 1000;
 }
 
-/*!* popisky ve formularich vlevo *!*/
-/*.control-label {*/
-/*    text-align: left !important;*/
-/*}*/
+/* tabs s tlacitky */
+.card-tabs .nav-tabs button {
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
+    padding: 10px 15px;
+}
 
-/*!* tabs s tlacitky *!*/
-/*.well-tabs .nav-tabs {*/
-/*    text-align: center;*/
-/*}*/
+.card-tabs .nav-tabs:hover button {
+    background-color: #F8F9FA;
+}
 
-/*.well-tabs .nav-tabs button {*/
-/*    width: 100%;*/
-/*    border-bottom: 1px solid #ddd;*/
-/*    border-radius: 4px 4px 0 0;*/
-/*    text-decoration: none;*/
-/*    padding: 10px 15px;*/
-/*}*/
+.card-tabs .nav-tabs .active button {
+    background-color: #F8F9FA;
+    border: 1px solid #ddd;
+    border-bottom: 1px solid #F8F9FA;
+    color: #333;
+}
 
-/*.well-tabs .nav-tabs:hover button {*/
-/*    background-color: #F5F5F5;*/
-/*}*/
+.card-tabs .card-body {
+    border-top-width: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    box-shadow: inset 0 0 0 rgba(0,0,0,.05);
+}
 
-/*.well-tabs .nav-tabs .active button {*/
-/*    background-color: #F5F5F5;*/
-/*    border: 1px solid #ddd;*/
-/*    border-bottom: 1px solid #F5F5F5;*/
-/*    font-weight: bold;*/
-/*    color: #333;*/
-/*}*/
 
-/*.well-tabs .well {*/
-/*    border-top-width: 0 !important;*/
-/*    border-top-left-radius: 0 !important;*/
-/*    border-top-right-radius: 0 !important;*/
-/*    box-shadow: inset 0 0 0 rgba(0,0,0,.05);*/
-/*}*/
+
+.card-header .btn-sm {
+    padding: .25rem .4rem !important;
+    font-size: .875rem !important;
+    line-height: .5 !important;
+    border-radius: .2rem !important;
+}
+
+
+
+
+.bootstrap-select > .btn {
+    background-color: #ffffff;
+    border-color: #ced4da;
+    border-radius: 0.3rem;
+}
+
 
 /* odebrani ramecku kolem datagridu */
 .datagrid {
     padding: 0 !important;
 }
 
-/*!* oprava select a multiselect v inline editaci *!*/
-/*.datagrid-inline-edit .bootstrap-select {*/
-/*    padding-bottom: 0 !important;*/
-/*    padding-top: 0 !important;*/
-/*}*/
+/* oprava select a multiselect v inline editaci */
+.datagrid-inline-edit .bootstrap-select {
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+    font-size: 12px !important;
+}
 
-/*.datagrid-inline-edit .bootstrap-select .btn {*/
-/*    font-size: 12px !important;*/
-/*    padding: 4px 12px 4px 12px !important;*/
-/*}*/
-
-/*.datagrid-inline-edit .bootstrap-select li {*/
-/*    font-size: 12px !important;*/
-/*}*/
-
-/*.datagrid-multiselect .btn {*/
-/*    font-size: 12px !important;*/
-/*    padding: 4px 12px 5px 12px !important;*/
-/*}*/
-
-/*.datagrid-multiselect li {*/
-/*    font-size: 12px !important;*/
-/*}*/
-
-/*!* oprava barvy chybove hlasky u poli v datagridu *!*/
-/*.datagrid .text-danger {*/
-/*    color: #a94442 !important;*/
-/*}*/
+.datagrid-inline-edit .bootstrap-select > .btn {
+    padding: 4px 8px !important;
+    line-height: 18px !important;
+    margin-top: -1px !important;
+    font-size: 12px !important;
+}
 
 /*!* oprava file input v inline editaci *!*/
 /*.datagrid-inline-edit .kv-fileinput-caption {*/
@@ -113,16 +106,6 @@ body {
 /*    color: #8c8c8c;*/
 /*}*/
 
-/*!* tabulka bez ramecku *!*/
-/*.table-borderless tbody tr td,*/
-/*.table-borderless tbody tr th,*/
-/*.table-borderless thead tr th,*/
-/*.table-borderless thead tr td,*/
-/*.table-borderless tfoot tr th,*/
-/*.table-borderless tfoot tr td {*/
-/*    border: none;*/
-/*}*/
-
 /*!* tabulka bez ramecku a okraju, pro kombinaci s formulari *!*/
 /*.table-form {*/
 /*    margin-bottom: 0;*/
@@ -143,41 +126,16 @@ body {
 /*    padding-left: 0;*/
 /*}*/
 
-/*!* prekryti hlavicky ve fullscreen modu TinyMCE *!*/
-/*div.mce-fullscreen {*/
-/*    z-index: 1050;*/
-/*}*/
+/* prekryti hlavicky ve fullscreen modu TinyMCE */
+div.mce-fullscreen {
+    z-index: 1050;
+}
 
-/*!* zarovnani fullscreen tlacitka TinyMCE doprava *!*/
-/*.mce-btn-group:last-child {*/
-/*    float:right;*/
-/*    border-left: none !important;*/
-/*}*/
-
-/*.navbar .navbar-nav .open .dropdown-menu {*/
-/*    position: absolute;*/
-/*    float: left;*/
-/*    background-color: #fff;*/
-/*    border: 1px solid #ccc;*/
-/*    border: 1px solid rgba(0, 0, 0, .15);*/
-/*    border-width: 0 1px 1px;*/
-/*    border-radius: 0 0 4px 4px;*/
-/*    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);*/
-/*    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);*/
-/*}*/
-
-/*.navbar .navbar-nav .open .dropdown-menu > li > a {*/
-/*    color: #262626 !important;*/
-/*}*/
-
-/*.navbar .navbar-nav .open .dropdown-menu > li > a:hover,*/
-/*.navbar .navbar-nav .open .dropdown-menu > li > a:focus,*/
-/*.navbar .navbar-nav .open .dropdown-menu > .active > a,*/
-/*.navbar .navbar-nav .open .dropdown-menu > .active > a:hover,*/
-/*.navbar .navbar-nav .open .dropdown-menu > .active > a:focus {*/
-/*     color: #262626 !important;*/
-/*     background-color: #F5F5F5 !important;*/
-/*}*/
+/* zarovnani fullscreen tlacitka TinyMCE doprava */
+.mce-btn-group:last-child {
+    float:right;
+    border-left: none !important;
+}
 
 /*!* vyber role *!*/
 #role-menu-text {
@@ -188,3 +146,4 @@ body {
     overflow: hidden;
     vertical-align: bottom;
 }
+
