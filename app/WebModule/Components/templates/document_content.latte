@@ -12,10 +12,12 @@
             {if $documents->isEmpty()}
                 {_web.document_content.list_empty}
             {else}
-                <ul class="fa-ul">
-                    <li n:foreach="$documents as $document">
-                        <i class="fa-li fa fa-file"></i>
-                        <a href="{$basePath}/files{$document->getFile()}" target="_blank">{$document->getName()}</a>
+                <ul class="list-unstyled">
+                    <li class="mb-1" n:foreach="$documents as $document">
+                        <a class="btn btn-sm btn-secondary" href="{$basePath}/files{$document->getFile()}" target="_blank">
+                            <i class="fa fa-file"></i>
+                            {$document->getName()}
+                        </a>
                         <span n:if="$document->getDescription()">- {$document->getDescription()}</span>
                         (upraveno: {$document->getTimestamp()|date:'j. n. Y'})
                     </li>

@@ -269,7 +269,7 @@ webloader:
                 - libs/jquery/jquery-ui.min.css
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - libs/font-awesome.min.css
-                - libs/bootstrap-datetimepicker/tempusdominus-bootstrap-4.min.css
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css
                 - %appDir%/../vendor/snapappointments/bootstrap-select/dist/css/bootstrap-select.css
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/css/fileinput.min.css
                 - libs/ublaboo-datagrid/happy.min.css
@@ -283,7 +283,7 @@ webloader:
                 - libs/jquery/jquery-ui.min.css
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - libs/font-awesome.min.css
-                - libs/bootstrap-datetimepicker/tempusdominus-bootstrap-4.min.css
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css
                 - %appDir%/../vendor/snapappointments/bootstrap-select/dist/css/bootstrap-select.css
                 - %appDir%/../vendor/kartik-v/bootstrap-fileinput/css/fileinput.min.css
                 - libs/ublaboo-datagrid/happy.min.css
@@ -311,7 +311,8 @@ webloader:
                 - libs/jquery/jquery.mousewheel.min.js
                 - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js
                 - libs/moment/moment.js
-                - libs/bootstrap-datetimepicker/tempusdominus-bootstrap-4.min.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
                 - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/bootstrap-select.js
                 - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/i18n/defaults-cs_CZ.js
                 - libs/bootstrap-confirmation/bootstrap-confirmation.min.js
@@ -334,7 +335,8 @@ webloader:
                 - libs/jquery/jquery.mousewheel.min.js
                 - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js
                 - libs/moment/moment.js
-                - libs/bootstrap-datetimepicker/tempusdominus-bootstrap-4.min.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
                 - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/bootstrap-select.js
                 - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/i18n/defaults-cs_CZ.js
                 - libs/bootstrap-confirmation/bootstrap-confirmation.min.js

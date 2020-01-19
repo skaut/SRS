@@ -149,9 +149,9 @@ class DocumentTagsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function edit(int $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values) : void
     {
-        $tag = $this->tagRepository->findById($id);
+        $tag = $this->tagRepository->findById((int) $id);
 
         $tag->setName($values->name);
         $tag->setRoles($this->roleRepository->findRolesByIds($values->roles));

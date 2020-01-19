@@ -98,7 +98,7 @@ class DocumentsGridControl extends Control
                     ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath
                         . '/files' . $row->getFile())
                     ->setAttribute('target', '_blank')
-                    ->setAttribute('class', 'btn btn-xs btn-default')
+                    ->setAttribute('class', 'btn btn-xs btn-secondary')
                     ->addHtml(
                         Html::el('span')->setAttribute('class', 'fa fa-download')
                     );
@@ -188,14 +188,14 @@ class DocumentsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function edit(int $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values) : void
     {
-        $document = $this->documentRepository->findById($id);
+        $document = $this->documentRepository->findById((int) $id);
 
         /** @var FileUpload $file */
         $file = $values->file;
         if ($file->getError() == UPLOAD_ERR_OK) {
-            $this->filesService->delete($this->documentRepository->find($id)->getFile());
+            $this->filesService->delete($this->documentRepository->find((int) $id)->getFile());
             $path = $this->generatePath($file);
             $this->filesService->save($file, $path);
 

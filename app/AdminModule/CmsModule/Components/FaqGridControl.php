@@ -138,10 +138,10 @@ class FaqGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function changeStatus(int $id, bool $public) : void
+    public function changeStatus(string $id, string $public) : void
     {
-        $faq = $this->faqRepository->findById($id);
-        $faq->setPublic($public);
+        $faq = $this->faqRepository->findById((int) $id);
+        $faq->setPublic((bool) $public);
         $this->faqRepository->save($faq);
 
         $p = $this->getPresenter();

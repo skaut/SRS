@@ -162,9 +162,9 @@ class RoomsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function edit(int $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values) : void
     {
-        $room = $this->roomRepository->findById($id);
+        $room = $this->roomRepository->findById((int) $id);
 
         $room->setName($values->name);
         $room->setCapacity($values->capacity !== '' ? $values->capacity : null);

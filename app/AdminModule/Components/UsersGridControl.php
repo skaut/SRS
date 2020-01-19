@@ -380,7 +380,7 @@ class UsersGridControl extends Control
                                             . '/files' . $customInputValue->getValue())
                                         ->setAttribute('title', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0])
                                         ->setAttribute('target', '_blank')
-                                        ->setAttribute('class', 'btn btn-xs btn-default')
+                                        ->setAttribute('class', 'btn btn-xs btn-secondary')
                                         ->addHtml(
                                             Html::el('span')->setAttribute('class', 'fa fa-download')
                                         )

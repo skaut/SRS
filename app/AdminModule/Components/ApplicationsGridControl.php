@@ -289,9 +289,9 @@ class ApplicationsGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function edit(int $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values) : void
     {
-        $application = $this->applicationRepository->findById($id);
+        $application = $this->applicationRepository->findById((int) $id);
 
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values->subevents);
 

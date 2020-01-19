@@ -87,9 +87,9 @@ class SkautIsEventEducationGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function edit(int $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values) : void
     {
-        $subevent = $this->subeventRepository->findById($id);
+        $subevent = $this->subeventRepository->findById((int) $id);
 
         $subevent->setSkautIsCourses($this->skautIsCourseRepository->findSkautIsCoursesByIds($values->skautIsCourses));
 

@@ -276,9 +276,9 @@ class ApplicationsGridControl extends Control
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function edit(int $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values) : void
     {
-        $application = $this->applicationRepository->findById($id);
+        $application = $this->applicationRepository->findById((int) $id);
 
         if ($application instanceof SubeventsApplication) {
             $selectedSubevents         = $this->subeventRepository->findSubeventsByIds($values->subevents);

@@ -146,9 +146,9 @@ class ProgramCategoriesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function edit(int $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values) : void
     {
-        $category = $this->categoryRepository->findById($id);
+        $category = $this->categoryRepository->findById((int) $id);
 
         $this->programService->updateCategory($category, $values->name, $this->roleRepository->findRolesByIds($values->registerableRoles));
 

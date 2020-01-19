@@ -204,9 +204,9 @@ class PagesGridControl extends Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function edit(int $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values) : void
     {
-        $page = $this->pageRepository->findById($id);
+        $page = $this->pageRepository->findById((int) $id);
 
         $page->setName($values->name);
         $page->setSlug($values->slug);
@@ -271,16 +271,16 @@ class PagesGridControl extends Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function changeStatus(int $id, bool $public) : void
+    public function changeStatus(string $id, string $public) : void
     {
         $p = $this->getPresenter();
 
-        $page = $this->pageRepository->findById($id);
+        $page = $this->pageRepository->findById((int) $id);
 
         if ($page->getSlug() === '/' && ! $public) {
             $p->flashMessage('admin.cms.pages_change_public_denied', 'danger');
         } else {
-            $page->setPublic($public);
+            $page->setPublic((bool) $public);
             $this->cmsService->savePage($page);
 
             $p->flashMessage('admin.cms.pages_changed_public', 'success');
