@@ -43,8 +43,8 @@
                     <div class="modal-body">
                         <table class="table table-form">
                             <colgroup>
-                                <col class="col-sm-3 col-xs-3">
-                                <col class="col-sm-9 col-xs-9">
+                                <col class="col-3">
+                                <col class="col-9">
                             </colgroup>
 
                             <tr>
@@ -68,11 +68,11 @@
                         </table>
 
                         <form class="form-horizontal">
-                            <div class="form-group" style="margin-bottom: 0">
-                                <div class="col-sm-3 col-xs-3 control-label">
+                            <div class="form-group row" style="margin-bottom: 0">
+                                <div class="col-3 col-form-label">
                                     <label for="select-room">{_admin.program.schedule.room}</label>
                                 </div>
-                                <div class="col-sm-9 col-xs-9">
+                                <div class="col-9">
                                     <select id="select-room" class="form-control" ng-model="event['room']"
                                             ng-options="value.name for (key, value) in rooms">
                                         <option value=""></option>
@@ -83,8 +83,8 @@
 
                         <table class="table table-form">
                             <colgroup>
-                                <col class="col-sm-3 col-xs-3">
-                                <col class="col-sm-9 col-xs-9">
+                                <col class="col-3">
+                                <col class="col-9">
                             </colgroup>
 
                             <tr>

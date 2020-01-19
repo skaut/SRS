@@ -64,8 +64,8 @@ class WebFormFactory
 
         /** @var Bs3FormRenderer $renderer */
         $renderer                                   = $form->getRenderer();
-        $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
-        $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
+        $renderer->wrappers['control']['container'] = 'div class="col-7"';
+        $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 
         $form->addUpload('logo', 'admin.configuration.web_new_logo')
             ->setHtmlAttribute('accept', 'image/*')

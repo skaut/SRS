@@ -60,8 +60,8 @@ class SeminarFormFactory
 
         /** @var Bs3FormRenderer $renderer */
         $renderer                                   = $form->getRenderer();
-        $renderer->wrappers['control']['container'] = 'div class="col-sm-7 col-xs-7"';
-        $renderer->wrappers['label']['container']   = 'div class="col-sm-5 col-xs-5 control-label"';
+        $renderer->wrappers['control']['container'] = 'div class="col-7"';
+        $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 
         $form->addText('seminarName', 'admin.configuration.seminar_name')
             ->addRule(Form::FILLED, 'admin.configuration.seminar_name_empty');

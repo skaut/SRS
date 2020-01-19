@@ -5,11 +5,11 @@
 
     {snippet userDetail}
         <h3>{_admin.users.users_detail_personal_details}</h3>
-        <div class="card card-body bg-light">
+        <div class="card card-body bg-light pb-1">
             {if !$editPersonalDetails}
                 <table class="table table-form">
-                    <col class="col-sm-3 col-xs-3">
-                    <col class="col-sm-9 col-xs-9">
+                    <col class="col-3">
+                    <col class="col-9">
 
                     {if $detailUser->getPhoto()}
                         <tr>
@@ -95,11 +95,11 @@
         {control applicationsGrid}
 
         <h3>{_admin.users.users_detail_seminar}</h3>
-        <div class="card card-body bg-light">
+        <div class="card card-body bg-light pb-1">
             {if !$editSeminar}
                 <table class="table table-form">
-                    <col class="col-sm-3 col-xs-3">
-                    <col class="col-sm-9 col-xs-9">
+                    <col class="col-3">
+                    <col class="col-9">
 
                     <tr>
                         <th>{_admin.users.users_roles}</th>
@@ -202,11 +202,11 @@
         {if $detailUser->isAllowed($resourceProgram, $permissionChoosePrograms)}
             <h3>{_admin.users.users_detail_schedule}</h3>
             <table class="table table-bordered table-striped">
-                <col class="col-sm-2 col-xs-2">
-                <col class="col-sm-2 col-xs-2">
-                <col class="col-sm-3 col-xs-3">
-                <col class="col-sm-2 col-xs-2">
-                <col class="col-sm-3 col-xs-3">
+                <col class="col-2">
+                <col class="col-2">
+                <col class="col-3">
+                <col class="col-2">
+                <col class="col-3">
 
                 <thead>
                 <tr>

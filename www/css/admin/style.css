@@ -8,16 +8,9 @@ body {
     font-size: 14px;
 }
 
-#flashes {
+#flashes, .notifications {
     position: fixed;
     top: 62px;
-    right: 15px;
-    z-index: 1000;
-}
-
-.notifications {
-    position: fixed;
-    top: 65px;
     right: 15px;
     z-index: 1000;
 }
