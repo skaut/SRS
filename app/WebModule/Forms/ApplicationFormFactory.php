@@ -50,6 +50,7 @@ use stdClass;
 use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
+use const UPLOAD_ERR_OK;
 use function array_keys;
 use function count;
 use function in_array;
@@ -296,7 +297,7 @@ class ApplicationFormFactory
                     /** @var CustomFileValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomFileValue();
                     /** @var FileUpload $file */
-                    $file             = $values->$customInputName;
+                    $file = $values->$customInputName;
                     if ($file->getError() == UPLOAD_ERR_OK) {
                         $path = $this->generatePath($file);
                         $this->filesService->save($file, $path);

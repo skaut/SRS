@@ -7,9 +7,7 @@ namespace App\AdminModule\CmsModule\Presenters;
 use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
-use App\Model\Settings\SettingsException;
 use Nette\Application\AbortException;
-use Throwable;
 
 /**
  * BasePresenter pro CmsModule.

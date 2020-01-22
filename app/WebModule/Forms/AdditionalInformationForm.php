@@ -34,6 +34,7 @@ use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
+use const UPLOAD_ERR_OK;
 use function array_slice;
 use function array_values;
 use function explode;
@@ -238,7 +239,7 @@ class AdditionalInformationForm extends UI\Control
                         $customInputValue = $customInputValue ?: new CustomFileValue();
                         $oldValue         = $customInputValue->getValue();
                         /** @var FileUpload $newValue */
-                        $newValue         = $values->$customInputName;
+                        $newValue = $values->$customInputName;
                         if ($newValue->getError() == UPLOAD_ERR_OK) {
                             $path = $this->generatePath($newValue);
                             $this->filesService->save($newValue, $path);

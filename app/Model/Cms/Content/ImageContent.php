@@ -14,6 +14,7 @@ use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nette\Utils\UnknownImageFileException;
 use stdClass;
+use const UPLOAD_ERR_OK;
 use function file_exists;
 
 /**
@@ -206,9 +207,9 @@ class ImageContent extends Content implements IContent
         $formName = $this->getContentFormName();
         $values   = $values->$formName;
         /** @var FileUpload $file */
-        $file     = $values->image;
-        $width    = $values->width !== '' ? $values->width : null;
-        $height   = $values->height !== '' ? $values->height : null;
+        $file   = $values->image;
+        $width  = $values->width !== '' ? $values->width : null;
+        $height = $values->height !== '' ? $values->height : null;
 
         $image = null;
 

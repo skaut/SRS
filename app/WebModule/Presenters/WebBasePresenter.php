@@ -141,7 +141,7 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->template->adminAccess = $this->user->isAllowed(SrsResource::ADMIN, Permission::ACCESS);
 
-        $this->template->pages          = $this->cmsService->findPublishedOrderedByPositionDto();
+        $this->template->pages = $this->cmsService->findPublishedOrderedByPositionDto();
 
         $this->template->settings = $this->settingsService;
     }

@@ -23,6 +23,7 @@ use Nette\Utils\Strings;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use const UPLOAD_ERR_OK;
 
 /**
  * Komponenta pro správu dokumentů.

@@ -17,6 +17,7 @@ use Nette\Utils\Strings;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
+use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro nastavení webové prezentace.

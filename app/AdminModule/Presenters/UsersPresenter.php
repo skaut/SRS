@@ -110,7 +110,7 @@ class UsersPresenter extends AdminBasePresenter
     {
         $user = $this->userRepository->findById($id);
 
-        $this->template->detailUser     = $user;
+        $this->template->detailUser = $user;
 
         $this->template->customInputs            = $this->customInputRepository->findAllOrderedByPosition();
         $this->template->customInputTypeText     = CustomInput::TEXT;

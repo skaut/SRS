@@ -7,7 +7,6 @@ namespace App\AdminModule\Forms;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
-use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
 
 /**

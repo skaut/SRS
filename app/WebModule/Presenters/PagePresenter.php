@@ -153,8 +153,8 @@ class PagePresenter extends WebBasePresenter
             $this->error($this->translator->translate('web.common.page_access_denied'), 403);
         }
 
-        $this->template->page           = $page;
-        $this->template->pageName       = $page->getName();
+        $this->template->page     = $page;
+        $this->template->pageName = $page->getName();
     }
 
     protected function createComponentApplicationContent() : ApplicationContentControl
