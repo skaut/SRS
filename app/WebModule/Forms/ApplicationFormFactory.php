@@ -50,11 +50,11 @@ use stdClass;
 use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
-use const UPLOAD_ERR_OK;
 use function array_keys;
 use function count;
 use function in_array;
 use function property_exists;
+use const UPLOAD_ERR_OK;
 
 /**
  * Formulář přihlášky.

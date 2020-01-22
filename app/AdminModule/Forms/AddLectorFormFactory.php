@@ -17,9 +17,9 @@ use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
-use const UPLOAD_ERR_OK;
 use function getimagesizefromstring;
 use function image_type_to_extension;
+use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro vytvoření externího lektora.

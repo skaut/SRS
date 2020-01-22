@@ -14,10 +14,10 @@ use Nette\Http\FileUpload;
 use Nette\Utils\ImageException;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
-use const UPLOAD_ERR_OK;
 use function getimagesizefromstring;
 use function image_type_to_extension;
 use function property_exists;
+use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro úpravu osobních údajů externích lektorů.

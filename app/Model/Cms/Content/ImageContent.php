@@ -14,8 +14,8 @@ use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nette\Utils\UnknownImageFileException;
 use stdClass;
-use const UPLOAD_ERR_OK;
 use function file_exists;
+use const UPLOAD_ERR_OK;
 
 /**
  * Entita obsahu s obrázkem.

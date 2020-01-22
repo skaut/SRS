@@ -34,11 +34,11 @@ use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
-use const UPLOAD_ERR_OK;
 use function array_slice;
 use function array_values;
 use function explode;
 use function property_exists;
+use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro zadání doplňujících informací.
