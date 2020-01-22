@@ -4,6 +4,8 @@
         {control paymentForm}
     </div>
 
+    <br>
+
     <h2>{_admin.configuration.payment.bank.heading}</h2>
     <div class="card card-body bg-light pb-1">
         {if !$connected}
@@ -14,10 +16,14 @@
         {/if}
     </div>
 
+    <br>
+
     <h2>{_admin.configuration.payment_proof_heading}</h2>
     <div class="card card-body bg-light pb-1">
         {control paymentProofForm}
     </div>
+
+    <br>
 
     <h2>{_admin.configuration.payment.tickets.heading}</h2>
     <div class="card card-body bg-light pb-1">

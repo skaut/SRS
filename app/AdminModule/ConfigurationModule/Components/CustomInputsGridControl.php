@@ -143,10 +143,10 @@ class CustomInputsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function changeMandatory(int $id, bool $mandatory) : void
+    public function changeMandatory(string $id, string $mandatory) : void
     {
-        $customInput = $this->customInputRepository->findById($id);
-        $customInput->setMandatory($mandatory);
+        $customInput = $this->customInputRepository->findById((int) $id);
+        $customInput->setMandatory((bool) $mandatory);
         $this->customInputRepository->save($customInput);
 
         $p = $this->getPresenter();

@@ -131,16 +131,12 @@
                     <a href="#" id="button-subevent" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                         Podakce <span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu">
-                        {foreach $subevents as $subevent}
-                            <li>
-                                <a href="#" class="button-subevents" data-id="{$subevent->getId()}"
-                                   data-name="{$subevent->getName()}">
-                                    {$subevent->getName()}
-                                </a>
-                            </li>
-                        {/foreach}
-                    </ul>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item button-subevents" data-id="{$subevent->getId()}"
+                           data-name="{$subevent->getName()}" n:foreach="$subevents as $subevent">
+                            {$subevent->getName()}
+                        </a>
+                    </div>
                 </div>
 
                 <a href="#" id="button-and" class="btn btn-secondary">{_common.condition_operator.and}</a>

@@ -243,9 +243,9 @@ class ProgramBlocksGridControl extends Control
      *
      * @throws AbortException
      */
-    public function changeMandatory(int $id, string $mandatory) : void
+    public function changeMandatory(string $id, string $mandatory) : void
     {
-        $block = $this->blockRepository->findById($id);
+        $block = $this->blockRepository->findById((int) $id);
 
         $p = $this->getPresenter();
 
