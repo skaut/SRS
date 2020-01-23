@@ -38,10 +38,6 @@ build:
             name: wait for MySQL connection
             code: sleep 10
 
-        - script:
-            name: run unit & integration tests
-            code: phing tests-with-coverage
-
         - appnific/expandenv:
             input_file: app/config/ci.local.neon
             output_file: app/config/local.neon
