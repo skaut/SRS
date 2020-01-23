@@ -11,26 +11,25 @@
 
     <div class="row">
         <div class="col-8">
-            {control editTemplateForm}
+            <div class="card card-body bg-light pb-1">
+                {control editTemplateForm}
+            </div>
         </div>
 
         <div class="col-4">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{_admin.mailing.templates.variables}</h3>
+            <div class="card panel-info">
+                <div class="card-header">
+                    {_admin.mailing.templates.variables}
                 </div>
-                <ul class="list-group">
-                    {foreach $editedTemplate->getVariables() as $variable}
-                        {var $variableName = $variable->getName()}
-                        <li class="list-group-item">
-                            <strong>
-                                <a href="#" onClick="tinymce.activeEditor.execCommand('mceInsertContent', false, '%{_'common.mailing.variable_name.' . $variableName|noescape}%');">
-                                    %{_'common.mailing.variable_name.' . $variableName}%
-                                </a>
-                            </strong>
-                            - {_'common.mailing.variable_description.' . $variableName}
-                        </li>
-                    {/foreach}
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" n:foreach="$editedTemplate->getVariables() as $variable">
+                        <strong>
+                            <a href="#" onClick="tinymce.activeEditor.execCommand('mceInsertContent', false, '%{_'common.mailing.variable_name.' . $variable->getName()|noescape}%');">
+                                %{_'common.mailing.variable_name.' . $variable->getName()}%
+                            </a>
+                        </strong>
+                        - {_'common.mailing.variable_description.' . $variable->getName()}
+                    </li>
                 </ul>
             </div>
         </div>

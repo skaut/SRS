@@ -145,11 +145,11 @@ class RolesGridControl extends Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function changeRegisterable(int $id, bool $registerable) : void
+    public function changeRegisterable(string $id, string $registerable) : void
     {
-        $role = $this->roleRepository->findById($id);
+        $role = $this->roleRepository->findById((int) $id);
 
-        $role->setRegisterable($registerable);
+        $role->setRegisterable((bool) $registerable);
         $this->aclService->saveRole($role);
 
         $p = $this->getPresenter();

@@ -91,16 +91,16 @@ class MailTemplatesGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function changeActive(int $id, bool $active) : void
+    public function changeActive(string $id, string $active) : void
     {
         $p = $this->getPresenter();
 
-        $template = $this->templateRepository->findById($id);
+        $template = $this->templateRepository->findById((int) $id);
 
         if ($template->isSystem() && ! $active) {
             $p->flashMessage('admin.mailing.templates.change_active_denied', 'danger');
         } else {
-            $template->setActive($active);
+            $template->setActive((bool) $active);
             $this->templateRepository->save($template);
 
             $p->flashMessage('admin.mailing.templates.changed_active', 'success');
