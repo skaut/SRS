@@ -112,7 +112,7 @@ class RoomsGridControl extends Control
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Room $item) : void {
             /** @var TextInput $nameText */
-            $nameText = $container['slug'];
+            $nameText = $container['name'];
             $nameText->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findOthersNames($item->getId()));
 
             $container->setDefaults([

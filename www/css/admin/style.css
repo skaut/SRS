@@ -90,35 +90,15 @@ body {
     margin-left: -4px !important;
     height: 28px !important;
 }
-
+/* todo */
 /*.datagrid .row-item-detail {*/
 /*    background-color: #337ab7 !important;*/
 /*}*/
 
-/*!* neaktivni zaznamy *!*/
-/*.datagrid .disabled {*/
-/*    color: #8c8c8c;*/
-/*}*/
-
-/*!* tabulka bez ramecku a okraju, pro kombinaci s formulari *!*/
-/*.table-form {*/
-/*    margin-bottom: 0;*/
-/*}*/
-
-/*.table-form tbody tr td,*/
-/*.table-form tbody tr th,*/
-/*.table-form thead tr th,*/
-/*.table-form thead tr td,*/
-/*.table-form tfoot tr th,*/
-/*.table-form tfoot tr td {*/
-/*    border: none;*/
-/*}*/
-
-/*.table-form tbody tr th,*/
-/*.table-form thead tr th,*/
-/*.table-form tfoot tr th {*/
-/*    padding-left: 0;*/
-/*}*/
+/* neaktivni zaznamy */
+.datagrid .disabled {
+    color: #8c8c8c;
+}
 
 /* prekryti hlavicky ve fullscreen modu TinyMCE */
 div.mce-fullscreen {

@@ -1,70 +1,89 @@
 {block main}
     <h2>{_admin.program.blocks_detail_heading, ['name' => $block->getName()]}</h2>
     <div class="card card-body bg-light pb-1">
-        <table class="table table-form">
-            <col class="col-3">
-            <col class="col-9">
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_category}
+            </div>
+            <div class="col-9">
+                {if $block->getCategory()}
+                    {$block->getCategory()->getName()}
+                {/if}
+            </div>
+        </div>
 
-            <tr>
-                <th>{_admin.program.blocks_category}</th>
-                <td>
-                    {if $block->getCategory()}
-                        {$block->getCategory()->getName()}
-                    {/if}
-                </td>
-            </tr>
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_lectors}
+            </div>
+            <div class="col-9">
+                {$block->getLectorsText()}
+            </div>
+        </div>
 
-            <tr>
-                <th>{_admin.program.blocks_lectors}</th>
-                <td>
-                    {$block->getLectorsText()}
-                </td>
-            </tr>
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_duration}
+            </div>
+            <div class="col-9">
+                {_admin.common.minutes, ['count' => $block->getDuration()]}
+            </div>
+        </div>
 
-            <tr>
-                <th>{_admin.program.blocks_duration}</th>
-                <td>{_admin.common.minutes, ['count' => $block->getDuration()]}</td>
-            </tr>
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_capacity}
+            </div>
+            <div class="col-9">
+                {if $block->getCapacity() !== null}
+                    {$block->getCapacity()}
+                {else}
+                    {_admin.program.blocks_capacity_unlimited}
+                {/if}
+            </div>
+        </div>
 
-            <tr>
-                <th>{_admin.program.blocks_capacity}</th>
-                <td>
-                    {if $block->getCapacity() !== null}
-                        {$block->getCapacity()}
-                    {else}
-                        {_admin.program.blocks_capacity_unlimited}
-                    {/if}
-                </td>
-            </tr>
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_mandatory}
+            </div>
+            <div class="col-9">
+                {if $block->getMandatory() == 0}
+                    {_admin.program.blocks_mandatory_voluntary}
+                {elseif $block->getMandatory() == 1}
+                    {_admin.program.blocks_mandatory_mandatory}
+                {else}
+                    {_admin.program.blocks_mandatory_auto_registered}
+                {/if}
+            </div>
+        </div>
 
-            <tr>
-                <th>{_admin.program.blocks_mandatory}</th>
-                <td>
-                    {if $block->getMandatory() == 0}
-                        {_admin.program.blocks_mandatory_voluntary}
-                    {elseif $block->getMandatory() == 1}
-                        {_admin.program.blocks_mandatory_mandatory}
-                    {else}
-                        {_admin.program.blocks_mandatory_auto_registered}
-                    {/if}
-                </td>
-            </tr>
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_tools}
+            </div>
+            <div class="col-9">
+                {$block->getTools()}
+            </div>
+        </div>
 
-            <tr>
-                <th>{_admin.program.blocks_tools}</th>
-                <td>{$block->getTools()}</td>
-            </tr>
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_perex}
+            </div>
+            <div class="col-9">
+                {$block->getPerex()}
+            </div>
+        </div>
 
-            <tr>
-                <th>{_admin.program.blocks_perex}</th>
-                <td>{$block->getPerex()}</td>
-            </tr>
-
-            <tr>
-                <td colspan="2" style="padding-left: 0">{$block->getDescription()|noescape}</td>
-            </tr>
-        </table>
+        <div class="form-group row">
+            <div class="col-12">
+                {$block->getDescription()|noescape}
+            </div>
+        </div>
     </div>
+
+    <br>
 
     <h3>{_admin.program.blocks_schedule}</h3>
     {snippet programs}
