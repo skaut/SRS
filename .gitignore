@@ -8,5 +8,8 @@
 /app/config/local.neon
 /www/adminer.php
 /vendor
+/tests/_output/*
+/tests/_support/_generated/*
 !.gitignore
+
 

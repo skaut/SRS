@@ -578,7 +578,7 @@ class ExcelExportService
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth(40);
 
-            $criteria = Criteria::create()->orderBy(['displayName', 'ASC']);
+            $criteria = Criteria::create()->orderBy(['displayName' => 'ASC']);
 
             foreach ($block->getAttendees()->matching($criteria) as $attendee) {
                 $row++;
@@ -598,8 +598,11 @@ class ExcelExportService
      */
     private static function cleanSheetName(string $name) : string
     {
-        $name = preg_replace('[\\/\*\[\]:?]', '', $name);
+        $name = preg_replace('#[]]#', ')', $name);
+        $name = preg_replace('#[[]#', '(', $name);
+        $name = preg_replace('#[\\/:]#', '-', $name);
+        $name = preg_replace('#[*?]#', '', $name);
 
-        return Helpers::truncate($name, 28);
+        return Helpers::truncate($name, 27);
     }
 }

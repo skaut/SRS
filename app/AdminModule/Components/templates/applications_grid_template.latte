@@ -2,7 +2,7 @@
 
 {block detail}
     {var $applications = $applicationRepository->findByApplicationId($item->getApplicationId())}
-    <table class="table table-bordered">
+    <table class="table table-sm table-bordered table-striped">
         <thead>
             <tr>
                 <th>{_admin.users.users_applications_roles}</th>
