@@ -1,13 +1,11 @@
 {block main}
     <h2>{_admin.configuration.payment_heading}</h2>
-    <div class="card card-body bg-light pb-1">
+    <div class="card card-body bg-light pb-1 mb-3">
         {control paymentForm}
     </div>
 
-    <br>
-
     <h2>{_admin.configuration.payment.bank.heading}</h2>
-    <div class="card card-body bg-light pb-1">
+    <div class="card card-body bg-light pb-1 mb-3">
         {if !$connected}
             {control bankForm}
         {else}
@@ -16,17 +14,13 @@
         {/if}
     </div>
 
-    <br>
-
     <h2>{_admin.configuration.payment_proof_heading}</h2>
-    <div class="card card-body bg-light pb-1">
+    <div class="card card-body bg-light pb-1 mb-3">
         {control paymentProofForm}
     </div>
 
-    <br>
-
     <h2>{_admin.configuration.payment.tickets.heading}</h2>
-    <div class="card card-body bg-light pb-1">
+    <div class="card card-body bg-light pb-1 mb-3">
         {control ticketsForm}
     </div>
 {/block}

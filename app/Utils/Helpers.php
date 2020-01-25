@@ -22,19 +22,19 @@ class Helpers
     public const DATETIME_FORMAT = 'j. n. Y H:i';
 
     /**
-     * Zkrátí $text na $length znaků a doplní '...'.
+     * Zkrátí $text na maximálně $length znaků včetně '…'.
      */
     public static function truncate(string $text, int $length) : string
     {
         if (mb_strlen($text, 'UTF-8') > $length) {
-            $text = mb_substr($text, 0, $length + 1, 'UTF-8');
+            $text = mb_substr($text, 0, $length, 'UTF-8');
             if (mb_strrpos($text, ' ', 'UTF-8') !== false) {
                 $text = mb_substr($text, 0, mb_strrpos($text, ' ', 'UTF-8'), 'UTF-8');
             }
             else {
-                $text = mb_substr($text, 0, $length, 'UTF-8');
+                $text = mb_substr($text, 0, $length - 1, 'UTF-8');
             }
-            $text .= '...';
+            $text .= '…';
         }
 
         return $text;

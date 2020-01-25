@@ -1,6 +1,6 @@
 {block main}
     <h2>{_admin.program.blocks_detail_heading, ['name' => $block->getName()]}</h2>
-    <div class="card card-body bg-light pb-1">
+    <div class="card card-body bg-light pb-1 mb-3">
         <div class="form-group row">
             <div class="col-3">
                 {_admin.program.blocks_category}
@@ -82,8 +82,6 @@
             </div>
         </div>
     </div>
-
-    <br>
 
     <h3>{_admin.program.blocks_schedule}</h3>
     {snippet programs}

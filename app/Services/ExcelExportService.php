@@ -594,7 +594,8 @@ class ExcelExportService
     }
 
     /**
-     * Odstraní z názvu listu zakázané znaky a zkrátí jej na 31 znaků.
+     * Odstraní z názvu listu zakázané znaky a zkrátí jej.
+     * Excel podporuje 31 znaků, při duplicitních názvech doplní na poslední pozici číslo.
      */
     private static function cleanSheetName(string $name) : string
     {
@@ -603,6 +604,6 @@ class ExcelExportService
         $name = preg_replace('#[\\/:]#', '-', $name);
         $name = preg_replace('#[*?]#', '', $name);
 
-        return Helpers::truncate($name, 27);
+        return Helpers::truncate($name, 29);
     }
 }

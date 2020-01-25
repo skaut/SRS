@@ -13,9 +13,9 @@
     <h2>{_admin.program.schedule.heading}</h2>
     {if !$isAllowedModifySchedule}
         <div class="alert alert-warning alert-forever">
-            <a href="#" class="close" data-dismiss="alert">&times;</a>
-            {_admin.program.schedule.modify_schedule_is_not_allowed_begin}<a href="{plink :Admin:Configuration:Program:default}"
-                                                                             class="alert-link">{_admin.program.schedule.modify_schedule_is_not_allowed_link}</a>{_admin.program.schedule.modify_schedule_is_not_allowed_end}
+            {_admin.program.schedule.modify_schedule_is_not_allowed_begin}
+            <a href="{plink :Admin:Configuration:Program:default}"
+               class="alert-link">{_admin.program.schedule.modify_schedule_is_not_allowed_link}</a>{_admin.program.schedule.modify_schedule_is_not_allowed_end}
         </div>
     {/if}
     <div id="app">
@@ -36,35 +36,26 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
+                        <h5 class="modal-title">{_admin.program.schedule.program_settings}</h5>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">{_admin.program.schedule.program_settings}</h4>
                     </div>
                     <div class="modal-body">
-                        <table class="table table-form">
-                            <colgroup>
-                                <col class="col-3">
-                                <col class="col-9">
-                            </colgroup>
-
-                            <tr>
-                                <th>{_admin.program.schedule.name}</th>
-                                <td>
-                                    <a ng-href="../blocks/detail/{{ event.block.id }}" target="_blank">
-                                        {{ event.block.name }}
-                                    </a>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <th>{_admin.program.schedule.category}</th>
-                                <td>{{ event.block.category }}</td>
-                            </tr>
-
-                            <tr>
-                                <th>{_admin.program.schedule.lectors}</th>
-                                <td>{{ event.block.lectors_names }}</td>
-                            </tr>
-                        </table>
+                        <div class="form-group row">
+                            <div class="col-3">{_admin.program.schedule.name}</div>
+                            <div class="col-9">
+                                <a ng-href="../blocks/detail/{{ event.block.id }}" target="_blank">
+                                    {{ event.block.name }}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">{_admin.program.schedule.category}</div>
+                            <div class="col-9">{{ event.block.category }}</div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">{_admin.program.schedule.lectors}</div>
+                            <div class="col-9">{{ event.block.lectors_names }}</div>
+                        </div>
 
                         <form class="form-horizontal">
                             <div class="form-group row" style="margin-bottom: 0">
@@ -76,38 +67,23 @@
                                             ng-options="value.name for (key, value) in rooms">
                                         <option value=""></option>
                                     </select>
-                                </div>
-                            </div>
-                        </form>
-
-                        <table class="table table-form">
-                            <colgroup>
-                                <col class="col-3">
-                                <col class="col-9">
-                            </colgroup>
-
-                            <tr>
-                                <th></th>
-                                <td>
                                     <span ng-show="event.room.capacity < event.block.capacity" class="text-warning">
                                         <i class="fa fa-exclamation-triangle"></i>
                                         {_admin.program.schedule.room_capacity_warning}
                                     </span>
-                                </td>
-                            </tr>
+                                </div>
+                            </div>
+                        </form>
 
-                            <tr>
-                                <th>{_admin.program.schedule.capacity}</th>
-                                <td>{{ event.block.capacity }}</td>
-                            </tr>
-                        </table>
+                        <div class="form-group row">
+                            <div class="col-3">{_admin.program.schedule.capacity}</div>
+                            <div class="col-9">{{ event.block.capacity }}</div>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button ng-click="updateEvent(event, room)"
-                                class="btn btn-primary pull-left">{_admin.common.save}</button>
-                        <button ng-click="removeEvent(event)"
-                                class="btn btn-danger pull-right">{_admin.common.delete}</button>
+                        <button ng-click="updateEvent(event, room)" class="btn btn-primary pull-left">{_admin.common.save}</button>
+                        <button ng-click="removeEvent(event)" class="btn btn-danger pull-right">{_admin.common.delete}</button>
                     </div>
                 </div>
             </div>
@@ -120,30 +96,36 @@
 
     <h3>{_admin.program.schedule.blocks_heading}</h3>
     <div class="card card-body bg-light mb-3">
-        <div class="input-group">
+        <div class="input-group mb-2">
             <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fa fa-search fa-fw"></i></span>
             </div>
             <input id="textbox-search" class="form-control" type="text" ng-model="search">
         </div>
 
-        <div class="checkbox" style="text-align: center">
-            <label for="checkbox-unassigned">
-                <input type="checkbox" id="checkbox-unassigned" ng-model="unassignedOnly">
+        <div class="custom-control custom-checkbox text-center mb-3">
+            <input type="checkbox" id="checkbox-unassigned" class="custom-control-input" ng-model="unassignedOnly">
+            <label class="custom-control-label" for="checkbox-unassigned">
                 {_admin.program.schedule.blocks_unassigned_only}
             </label>
         </div>
 
         <div class="pre-scrollable">
-            <ul id="blocks-container" class="list-group" style="margin-top: 15px; margin-bottom: 0">
-                <li class="list-group-item block"
-                    ng-repeat="block in blocks | filterBlocks: search:unassignedOnly"
-                    ng-class="block.mandatory ? (block.auto_registered ? 'list-group-item-warning' : 'list-group-item-danger') : 'list-group-item-info'"
+            <ul id="blocks-container" class="list-group text-white">
+                <li class="list-group-item" ng-repeat="block in blocks | filterBlocks: search:unassignedOnly"
+                    ng-class="block.mandatory ? (block.auto_registered ? 'bg-warning' : 'bg-danger') : 'bg-primary'"
                     block="{{ block.id }}">
+
+                    <div class="row justify-content-between">
+                        <div class="col">
+                            <b>{{ block.name }}</b>
+                        </div>
+                        <div class="col-auto text-right">
+                            <span class="badge badge-dark badge-pill">{{ block.programs_count }}×</span>
+                        </div>
+                    </div>
+
                     <table>
-                        <tr>
-                            <th colspan="2">{{ block.name }}</th>
-                        </tr>
                         <tr>
                             <td style="padding-right: 15px">{_admin.program.schedule.category}</td>
                             <td>{{ block.category }}</td>
@@ -155,10 +137,6 @@
                         <tr>
                             <td style="padding-right: 15px">{_admin.program.schedule.capacity}</td>
                             <td>{{ block.capacity }}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding-right: 15px">{_admin.program.schedule.programs_count}</td>
-                            <td>{{ block.programs_count }}×</td>
                         </tr>
                     </table>
                 </li>

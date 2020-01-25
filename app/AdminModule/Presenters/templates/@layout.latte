@@ -34,7 +34,6 @@
                         <div class="col-12">
                             <div n:foreach="$flashes as $flash" n:class="alert, alert-dismissable, 'alert-' . $flash->type">
                                 {$flash->message|noescape}
-                                <i class="fa fa-times" data-dismiss="alert"></i>
                             </div>
                         </div>
                     </div>
