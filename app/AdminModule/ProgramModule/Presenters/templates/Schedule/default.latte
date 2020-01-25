@@ -20,12 +20,11 @@
     {/if}
     <div id="app">
         <div class="notifications">
-            <div class="spinner" ng-show="loading" style="float: left">
-                <img src="{$basePath}/img/spin.gif" height="52"/>
+            <div class="spinner pull-left" ng-show="loading">
+                <img src="{$basePath}/img/spin.gif" height="50"/>
             </div>
 
-            <div ng-model="message" ng-show="message.text" class="alert alert-{{ message.type }}"
-                 style="float: left; margin-left: 15px">
+            <div ng-model="message" ng-show="message.text" class="alert alert-{{ message.type }} pull-left ml-2">
                 {{ message.text }}
             </div>
         </div>
@@ -58,7 +57,7 @@
                         </div>
 
                         <form class="form-horizontal">
-                            <div class="form-group row" style="margin-bottom: 0">
+                            <div class="form-group row mb-1">
                                 <div class="col-3 col-form-label">
                                     <label for="select-room">{_admin.program.schedule.room}</label>
                                 </div>
@@ -127,15 +126,15 @@
 
                     <table>
                         <tr>
-                            <td style="padding-right: 15px">{_admin.program.schedule.category}</td>
+                            <td class="pr-3 align-top"">{_admin.program.schedule.category}</td>
                             <td>{{ block.category }}</td>
                         </tr>
                         <tr>
-                            <td style="padding-right: 15px; vertical-align: top">{_admin.program.schedule.lectors}</td>
+                            <td class="pr-3 align-top">{_admin.program.schedule.lectors}</td>
                             <td>{{ block.lectors_names }}</td>
                         </tr>
                         <tr>
-                            <td style="padding-right: 15px">{_admin.program.schedule.capacity}</td>
+                            <td class="pr-3">{_admin.program.schedule.capacity}</td>
                             <td>{{ block.capacity }}</td>
                         </tr>
                     </table>

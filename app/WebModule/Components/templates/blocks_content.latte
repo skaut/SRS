@@ -72,7 +72,7 @@
                         {foreach $selectedBlock->getLectors() as $lector}
                             <h6>{$lector->getLectorName()}</h6>
                             <p>
-                                <img src="{$basePath}/files/user_photos/{$lector->getPhoto()}" style="float: left; margin: 0 10px 10px 0;" n:if="$lector->getPhoto()"/>
+                                <img src="{$basePath}/files/user_photos/{$lector->getPhoto()}" class="pull-left mr-3 mb-3" n:if="$lector->getPhoto()"/>
                                 {$lector->getAbout()}
                             </p>
                             <div class="clearfix"></div>

@@ -87,7 +87,7 @@
     {snippet programs}
         <table class="table table-sm table-bordered table-striped">
             <thead>
-                <tr style="font-size: 90%">
+                <tr>
                     <th class="text-right">{_admin.program.blocks_program_start}</th>
                     <th class="text-right">{_admin.program.blocks_program_end}</th>
                     <th>{_admin.program.blocks_program_room}</th>
@@ -99,7 +99,7 @@
             <tbody>
                 {var $i = 1}
                 {foreach $block->getPrograms() as $program}
-                    {var $background = $i % 2 ? '#F9F9F9' : '#FFFFFF'}
+                    {var $background = $i % 2 ? '#F9F9F9' : '#FFFFFF'} {* todo nove barvy*}
                     <tr style="background-color: {$background|noescape}">
                         <td class="text-right">
                             {var $startDay = $program->getStart()->format('N')}
@@ -139,8 +139,8 @@
                         </td>
                     </tr>
                     {if $programId == $program->getId()}
-                        <tr style="background-color: #337AB7" class="program-attendees">
-                            <td colspan="5" style="padding: 8px">
+                        <tr style="background-color: #337ab7" class="program-attendees">
+                            <td colspan="5" style="padding: 5px">
                                 {control programAttendeesGrid}
                             </td>
                         </tr>

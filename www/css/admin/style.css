@@ -61,6 +61,7 @@ body {
 .datagrid {
     padding: 0;
     margin-bottom: 1rem;
+    overflow-x: auto;
 }
 
 /* oprava select a multiselect v inline editaci */
@@ -91,10 +92,10 @@ body {
     margin-left: -4px !important;
     height: 28px !important;
 }
-/* todo */
-/*.datagrid .row-item-detail {*/
-/*    background-color: #337ab7 !important;*/
-/*}*/
+
+.datagrid .row-item-detail {
+    background-color: #337ab7 !important;
+}
 
 /* neaktivni zaznamy */
 .datagrid .disabled {

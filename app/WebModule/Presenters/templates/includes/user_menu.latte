@@ -9,7 +9,9 @@
             <strong>
                 {foreach $user->roles as $role}{if $role != $testRole}{$role}{sep}, {/sep}{/if}{/foreach}
             </strong>
-            <strong n:if="!$dbuser->isMember()"><a href="{plink :Web:Member:default}" style="color: red">{_web.member.name}</a></strong>
+            <strong n:if="!$dbuser->isMember()">
+                <a href="{plink :Web:Member:default}" class="text-danger">{_web.member.name}</a>
+            </strong>
         </div>
     </div>
 
