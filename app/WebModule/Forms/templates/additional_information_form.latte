@@ -2,8 +2,7 @@
     {foreach $form->getControls() as $c}
         {if $c instanceof Nette\Forms\Controls\SubmitButton}
             <div class="form-group row">
-                <div class="col-md-3"></div>
-                <div class="col-md-9">
+                <div class="col-md-9 offset-md-3">
                     {input $c class => 'btn btn-primary button'}
                 </div>
             </div>
@@ -12,19 +11,20 @@
         {else}
             <div class="form-group row">
                 <div class="col-md-3 col-form-label">
-                    <label for="{$c->htmlId}">{_$c->caption}</label>
+                    <label for="{$c->htmlId}" n:if="!$c instanceof Nette\Forms\Controls\Checkbox">
+                        {_$c->caption}
+                    </label>
                 </div>
 
-                {if $c instanceof Nette\Forms\Controls\UploadControl}
-                    {if array_key_exists('data-current-file-link', $c->control->attrs)}
-                        <div class="col-md-9 mb-3">
-                            <a href="{$basePath}/files{$c->control->attrs['data-current-file-link']}" target="_blank" class="btn btn-secondary">
-                                <span class="fa fa-download"></span> {$c->control->attrs['data-current-file-name']}
-                            </a>
-                        </div>
-                        <div class="col-md-3 col-form-label"></div>
-                    {/if}
+                {if $c instanceof Nette\Forms\Controls\UploadControl && array_key_exists('data-current-file-link', $c->control->attrs)}
+                    <div class="col-md-9 mb-3">
+                        <a href="{$basePath}/files{$c->control->attrs['data-current-file-link']}" target="_blank" class="btn btn-secondary">
+                            <span class="fa fa-download"></span> {$c->control->attrs['data-current-file-name']}
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-form-label"></div>
                 {/if}
+
                 <div class="col-md-9">
                     {input $c}
                 </div>

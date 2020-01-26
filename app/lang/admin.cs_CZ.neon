@@ -396,6 +396,7 @@ users:
     users_detail_seminar: "Účast na semináři"
     users_detail_applications: "Role a platby"
     users_detail_schedule: "Harmonogram"
+    users_detail_birthdate_age: "%birthdate% (%age% let)"
 
 payments:
     payments:

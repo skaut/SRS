@@ -129,22 +129,17 @@
                                     {_admin.program.blocks_program_show_attendees_list}
                                 </a>
                             {/if}
-                            {if $userAllowedModifySchedule}
-                                <a class="btn btn-xs btn-danger" n:href="deleteProgram! $program->getId()"
-                                   data-toggle="confirmation"
-                                   data-content="{_admin.program.blocks_program_delete_confirm}">
-                                    <i class="fa fa-trash"></i>
-                                </a>
-                            {/if}
+                            <a class="btn btn-xs btn-danger" n:href="deleteProgram! $program->getId()" data-toggle="confirmation"
+                               data-content="{_admin.program.blocks_program_delete_confirm}" n:if="$userAllowedModifySchedule">
+                                <i class="fa fa-trash"></i>
+                            </a>
                         </td>
                     </tr>
-                    {if $programId == $program->getId()}
-                        <tr style="background-color: #337ab7" class="program-attendees">
-                            <td colspan="5" style="padding: 5px">
-                                {control programAttendeesGrid}
-                            </td>
-                        </tr>
-                    {/if}
+                    <tr style="background-color: #337ab7" class="program-attendees" n:if="$programId == $program->getId()">
+                        <td colspan="5" style="padding: 5px">
+                            {control programAttendeesGrid}
+                        </td>
+                    </tr>
                     {var $i = $i + 1}
                 {/foreach}
             </tbody>

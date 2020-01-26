@@ -27,6 +27,7 @@ use Nette;
 use Nette\Localization\ITranslator;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use function implode;
 use function preg_replace;
@@ -112,11 +113,10 @@ class ExcelExportService
 
             foreach ($roles as $role) {
                 $column++;
-                if (! $user->isInRole($role)) {
-                    continue;
+                if ($user->isInRole($role)) {
+                    $sheet->setCellValueByColumnAndRow($column, $row, 'X');
+                    $sheet->getStyleByColumnAndRow($column, $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 }
-
-                $sheet->setCellValueByColumnAndRow($column, $row, 'X');
             }
         }
 
@@ -350,10 +350,10 @@ class ExcelExportService
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.not_registared_mandatory_blocks'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
-        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
+//        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.not_registared_mandatory_blocks'));
+//        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+//        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+//        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $width = null;
@@ -431,7 +431,7 @@ class ExcelExportService
                 ? $this->translator->translate('common.export.common.yes')
                 : $this->translator->translate('common.export.common.no'));
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getNotRegisteredMandatoryBlocksText());
+//            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getNotRegisteredMandatoryBlocksText());
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $user->getCustomInputValue($customInput);

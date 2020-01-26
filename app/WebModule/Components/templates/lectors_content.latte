@@ -30,12 +30,10 @@
                             </div>
                             <div class="col-md-9">
                                 <ul class="list-unstyled mb-0">
-                                    {foreach $lector->getLecturersBlocks() as $block}
-                                        <li>
-                                            <strong>{$block->getName()}</strong>
-                                            <span n:if="$block->getPerex()">- {$block->getPerex()}</span>
-                                        </li>
-                                    {/foreach}
+                                    <li n:foreach="$lector->getLecturersBlocks() as $block">
+                                        <strong>{$block->getName()}</strong>
+                                        <span n:if="$block->getPerex()">- {$block->getPerex()}</span>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

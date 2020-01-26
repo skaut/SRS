@@ -25,7 +25,7 @@ class CustomCheckboxValue extends CustomInputValue
      */
     protected $value;
 
-    public function getValue() : bool
+    public function getValue() : ?bool
     {
         return $this->value;
     }

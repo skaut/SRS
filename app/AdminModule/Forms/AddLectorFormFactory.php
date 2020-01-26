@@ -132,7 +132,7 @@ class AddLectorFormFactory
         $user->setDegreePre($values->degreePre);
         $user->setDegreePost($values->degreePost);
         $user->setEmail($values->email);
-        $user->setBirthdate($values->birthdate !== null ? new DateTimeImmutable($values->birthdate) : null);
+        $user->setBirthdate($values->birthdate);
         $user->setStreet($values->street);
         $user->setCity($values->city);
         $user->setPostcode($values->postcode);

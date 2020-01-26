@@ -16,13 +16,11 @@
                         {_web.blocks_content.uncategorized}
                         <a href="#" class="stretched-link" data-toggle="collapse" data-target="#uncategorized"></a>
                     </div>
-                    <div id="uncategorized" class="collapse {if $selectedCategoryId == 'uncategorized'}show{/if}" data-parent="#accordion">
+                    <div id="uncategorized" n:class="collapse, $selectedCategoryId == 'uncategorized' ? show" data-parent="#accordion">
                         <div class="list-group list-group-flush">
-                            {foreach $uncategorizedBlocks as $block}
-                                <a href="?blockId={$block->getId()}" n:class="list-group-item, list-group-item-action, $block->getId() == $selectedBlockId ? active">
-                                    {$block->getName()}
-                                </a>
-                            {/foreach}
+                            <a href="?blockId={$block->getId()}" n:class="list-group-item, list-group-item-action, $block->getId() == $selectedBlockId ? active" n:foreach="$uncategorizedBlocks as $block">
+                                {$block->getName()}
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -31,13 +29,11 @@
                         {$category->getName()}
                         <a href="#" class="stretched-link" data-toggle="collapse" data-target="#category-{$category->getId()}"></a>
                     </div>
-                    <div id="category-{$category->getId()}" class="collapse {if $selectedCategoryId == $category->getId()}show{/if}" data-parent="#accordion">
+                    <div id="category-{$category->getId()}" n:class="collapse, $selectedCategoryId == $category->getId() ? show" data-parent="#accordion">
                         <div class="list-group list-group-flush">
-                            {foreach $category->getBlocks() as $block}
-                                <a href="?blockId={$block->getId()}" n:class="list-group-item, list-group-item-action, $block->getId() == $selectedBlockId ? active">
-                                    {$block->getName()}
-                                </a>
-                            {/foreach}
+                            <a href="?blockId={$block->getId()}" n:class="list-group-item, list-group-item-action, $block->getId() == $selectedBlockId ? active" n:foreach="$category->getBlocks() as $block">
+                                {$block->getName()}
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -87,11 +83,9 @@
                 <h4>{_web.blocks_content.all_blocks}</h4>
                 <div class="card card-body bg-light">
                     <ul class="list-unstyled mb-0">
-                        {foreach $allBlocks as $block}
-                            <li>
-                                <a href="?blockId={$block->getId()}"><strong>{$block->getName()}</strong></a>
-                            </li>
-                        {/foreach}
+                        <li n:foreach="$allBlocks as $block">
+                            <a href="?blockId={$block->getId()}"><strong>{$block->getName()}</strong></a>
+                        </li>
                     </ul>
                 </div>
             {/ifset}

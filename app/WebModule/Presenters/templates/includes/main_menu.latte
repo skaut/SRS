@@ -12,11 +12,9 @@
                             <a class="nav-link" href="{plink :Web:Page:default}">{$item->getName()}</a>
                         </li>
                     {else}
-                        {if $item->isAllowedForRoles($user->roles)}
-                            <li n:class="nav-item, $presenter->isLinkCurrent(':Web:Page:default', ['slug' => $item->getSlug()]) ? active">
-                                <a class="nav-link" href="{plink :Web:Page:default, 'slug' => $item->getSlug()}">{$item->getName()}</a>
-                            </li>
-                        {/if}
+                        <li n:class="nav-item, $presenter->isLinkCurrent(':Web:Page:default', ['slug' => $item->getSlug()]) ? active" n:if="$item->isAllowedForRoles($user->roles)">
+                            <a class="nav-link" href="{plink :Web:Page:default, 'slug' => $item->getSlug()}">{$item->getName()}</a>
+                        </li>
                     {/if}
                 {/foreach}
             </ul>

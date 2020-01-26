@@ -32,10 +32,10 @@
         </div>
 
         {snippet results}
-            <div id="results" class="list-group" n:if="$results" style="margin-top: 15px; margin-bottom: 0">
-                {foreach $results as $result}
-                    <a href="{$result['id']}" class="list-group-item">{$result['displayName']}</a>
-                {/foreach}
+            <div id="results" class="list-group mt-3" n:if="$results">
+                <a href="{$result['id']}" n:class="list-group-item, list-group-item-action, $result['id'] == $detailUser->getId() ? active" n:foreach="$results as $result">
+                    {$result['displayName']}
+                </a>
             </div>
         {/snippet}
     </div>

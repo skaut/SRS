@@ -266,7 +266,7 @@ class UsersGridControl extends Control
         $grid->addColumnText('unit', 'admin.users.users_membership')
             ->setRendererOnCondition(function (User $row) {
                 return Html::el('span')
-                    ->style('color: red')
+                    ->class('text-danger')
                     ->setText($this->userService->getMembershipText($row));
             }, static function (User $row) {
                 return $row->getUnit() === null;
@@ -348,14 +348,14 @@ class UsersGridControl extends Control
             ])
             ->setTranslateOptions();
 
-        $grid->addColumnText('notRegisteredMandatoryBlocksCount', 'admin.users.users_not_registered_mandatory_blocks')
-            ->setRenderer(static function (User $user) {
-                return Html::el('span')
-                    ->setAttribute('data-toggle', 'tooltip')
-                    ->setAttribute('title', $user->getNotRegisteredMandatoryBlocksText())
-                    ->setText($user->getNotRegisteredMandatoryBlocksCount());
-            })
-            ->setSortable();
+//        $grid->addColumnText('notRegisteredMandatoryBlocksCount', 'admin.users.users_not_registered_mandatory_blocks')
+//            ->setRenderer(static function (User $user) {
+//                return Html::el('span')
+//                    ->setAttribute('data-toggle', 'tooltip')
+//                    ->setAttribute('title', $user->getNotRegisteredMandatoryBlocksText())
+//                    ->setText($user->getNotRegisteredMandatoryBlocksCount());
+//            })
+//            ->setSortable();
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $columnCustomInputName = 'customInput' . $customInput->getId();
@@ -390,6 +390,8 @@ class UsersGridControl extends Control
 
                     return null;
                 });
+
+            $columnCustomInput->getElementPrototype('th')->setAttribute('title', $customInput->getName());
 
             switch (true) {
                 case $customInput instanceof CustomText:
@@ -490,10 +492,10 @@ class UsersGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function changeApproved(int $id, bool $approved) : void
+    public function changeApproved(string $id, string $approved) : void
     {
-        $user = $this->userRepository->findById($id);
-        $user->setApproved($approved);
+        $user = $this->userRepository->findById((int) $id);
+        $user->setApproved((bool) $approved);
         $this->userRepository->save($user);
 
         $p = $this->getPresenter();
@@ -515,10 +517,10 @@ class UsersGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function changeAttended(int $id, bool $attended) : void
+    public function changeAttended(string $id, string $attended) : void
     {
-        $user = $this->userRepository->findById($id);
-        $user->setAttended($attended);
+        $user = $this->userRepository->findById((int) $id);
+        $user->setAttended((bool) $attended);
         $this->userRepository->save($user);
 
         $p = $this->getPresenter();

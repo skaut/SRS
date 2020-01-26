@@ -99,7 +99,7 @@ body {
 
 /* neaktivni zaznamy */
 .datagrid .disabled {
-    color: #8c8c8c;
+    color: #70757D !important;
 }
 
 /* prekryti hlavicky ve fullscreen modu TinyMCE */
