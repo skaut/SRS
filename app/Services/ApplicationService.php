@@ -880,12 +880,13 @@ class ApplicationService
             if ($role->getFee() === 0) {
                 return 0;
             }
+        }
 
+        foreach ($roles as $role) {
             if ($role->getFee() === null) {
                 foreach ($subevents as $subevent) {
                     $fee += $subevent->getFee();
                 }
-
                 break;
             }
         }

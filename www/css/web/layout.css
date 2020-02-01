@@ -117,32 +117,43 @@ p {
     padding: 0 !important;
 }
 
-/*TODO*/
-/*!* oprava select a multiselect v inline editaci *!*/
-/*.datagrid-inline-edit .bootstrap-select {*/
-/*    padding-bottom: 0 !important;*/
-/*    padding-top: 0 !important;*/
-/*}*/
+/* bootstrap-select barva a zakulaceni */
+.bootstrap-select > .btn {
+    background-color: #ffffff;
+    border-color: #ced4da;
+    border-radius: 0.3rem;
+}
 
-/*.datagrid-inline-edit .bootstrap-select .btn {*/
-/*    font-size: 12px !important;*/
-/*    padding: 4px 12px 4px 12px !important;*/
-/*}*/
+/* oprava select a multiselect v inline editaci */
+.datagrid-inline-edit .bootstrap-select {
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+    font-size: 12px !important;
+}
 
-/*.datagrid-inline-edit .bootstrap-select li {*/
-/*    font-size: 12px !important;*/
-/*}*/
+.datagrid-inline-edit .bootstrap-select > .btn {
+    padding: 4px 8px 6px 8px !important;
+    line-height: 18px !important;
+    margin-top: -1px !important;
+    font-size: 12px !important;
+}
 
-/*.datagrid-multiselect .btn {*/
-/*    font-size: 12px !important;*/
-/*    padding: 4px 12px 5px 12px !important;*/
-/*}*/
+/* oprava file input v inline editaci */
+.datagrid-inline-edit .kv-fileinput-caption {
+    font-size: 12px !important;
+    padding: 4px 12px 5px 12px !important;
+    margin-top: 0 !important;
+    height: 28px !important;
+}
 
-/*.datagrid-multiselect li {*/
-/*    font-size: 12px !important;*/
-/*}*/
+.datagrid-inline-edit .btn-file {
+    font-size: 12px !important;
+    padding: 4px 12px 5px 12px !important;
+    margin-left: -4px !important;
+    height: 28px !important;
+}
 
-/*!* oprava barvy chybove hlasky u poli v datagridu *!*/
-/*.datagrid .text-danger {*/
-/*    color: #a94442 !important;*/
-/*}*/
+/* neaktivni zaznamy */
+.datagrid .disabled {
+    color: #70757D !important;
+}

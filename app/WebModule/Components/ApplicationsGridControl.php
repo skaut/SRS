@@ -26,6 +26,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Localization\ITranslator;
+use Nette\Utils\Html;
 use stdClass;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
@@ -214,6 +215,12 @@ class ApplicationsGridControl extends Control
 
         $grid->setColumnsSummary(['fee'], static function (Application $item, $column) {
             return $item->isCanceled() ? 0 : $item->getFee();
+        });
+
+        $grid->setRowCallback(static function (Application $application, Html $tr) : void {
+            if ($application->isCanceled()) {
+                $tr->addClass('disabled');
+            }
         });
     }
 

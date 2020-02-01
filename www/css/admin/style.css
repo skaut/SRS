@@ -50,13 +50,6 @@ body {
     border-radius: 3px;
 }
 
-/* bootstrap-select zakulaceni */
-.bootstrap-select > .btn {
-    background-color: #ffffff;
-    border-color: #ced4da;
-    border-radius: 0.3rem;
-}
-
 /* odebrani ramecku kolem datagridu */
 .datagrid {
     padding: 0;
@@ -65,6 +58,13 @@ body {
 
 div > .datagrid {
     margin-bottom: 1rem;
+}
+
+/* bootstrap-select barva a zakulaceni */
+.bootstrap-select > .btn {
+    background-color: #ffffff;
+    border-color: #ced4da;
+    border-radius: 0.3rem;
 }
 
 /* oprava select a multiselect v inline editaci */

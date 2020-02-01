@@ -10,7 +10,7 @@
     <div class="row mb-3">
         <div class="col">
             {if empty($users)}
-                {_web.users_content.list_empty}
+                <p>{_web.users_content.list_empty}</p>
             {else}
                 <ul class="list-unstyled mb-0">
                     <li n:foreach="$users as $u">{$u->getDisplayName()}</li>
