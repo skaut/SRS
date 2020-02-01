@@ -4,7 +4,7 @@
     {var $applications = $applicationRepository->findByApplicationId($item->getApplicationId())}
     <table class="table table-sm table-bordered table-striped">
         <thead>
-            <tr>
+            <tr class="bg-white">
                 <th>{_admin.users.users_applications_roles}</th>
                 <th>{_admin.users.users_applications_subevents}</th>
                 <th class="text-right">{_admin.users.users_applications_fee}</th>
@@ -19,27 +19,21 @@
                 <th>{_admin.users.users_applications_created_by}</th>
             </tr>
         </thead>
-
-        <tbody>
-            {var $i = 1} {* todo *}
-            {foreach $applications as $application}
-                {var $background = $i % 2 ? '#F9F9F9' : '#FFFFFF'}
-                <tr style="background-color: {$background|noescape}">
-                    <td>{$application->getRolesText()}</td>
-                    <td>{$application->getSubeventsText()}</td>
-                    <td class="text-right">{$application->getFee()}</td>
-                    <td>{$application->getVariableSymbolText()}</td>
-                    <td class="text-right">{$application->getMaturityDateText()}</td>
-                    <td>{if $application->getPaymentMethod()}{_'common.payment.' . $application->getPaymentMethod()}{/if}</td>
-                    <td class="text-right">{$application->getPaymentDateText()}</td>
-                    <td class="text-right">{$application->getIncomeProofPrintedDateText()}</td>
-                    <td>{_'common.application_state.' . $application->getState()}</td>
-                    <td class="text-right">{$application->getValidFrom()|date:'j. n. Y H:i'}</td>
-                    <td class="text-right">{$application->getValidTo()|date:'j. n. Y H:i'}</td>
-                    <td>{if $application->getCreatedBy()}{$application->getCreatedBy()->getDisplayName()}{/if}</td>
-                </tr>
-                {var $i = $i + 1}
-            {/foreach}
+        <tbody class="bg-white">
+            <tr n:foreach="$applications as $application">
+                <td>{$application->getRolesText()}</td>
+                <td>{$application->getSubeventsText()}</td>
+                <td class="text-right">{$application->getFee()}</td>
+                <td>{$application->getVariableSymbolText()}</td>
+                <td class="text-right">{$application->getMaturityDateText()}</td>
+                <td>{if $application->getPaymentMethod()}{_'common.payment.' . $application->getPaymentMethod()}{/if}</td>
+                <td class="text-right">{$application->getPaymentDateText()}</td>
+                <td class="text-right">{$application->getIncomeProofPrintedDateText()}</td>
+                <td>{_'common.application_state.' . $application->getState()}</td>
+                <td class="text-right">{$application->getValidFrom()|date:'j. n. Y H:i'}</td>
+                <td class="text-right">{$application->getValidTo()|date:'j. n. Y H:i'}</td>
+                <td>{if $application->getCreatedBy()}{$application->getCreatedBy()->getDisplayName()}{/if}</td>
+            </tr>
         </tbody>
     </table>
 {/block}

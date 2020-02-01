@@ -10,6 +10,7 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Http\FileUpload;
 use Nette\Utils\Image;
+use Nette\Utils\ImageException;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nette\Utils\UnknownImageFileException;
@@ -199,6 +200,7 @@ class ImageContent extends Content implements IContent
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      *
      * @throws UnknownImageFileException
+     * @throws ImageException
      */
     public function contentFormSucceeded(Form $form, stdClass $values) : void
     {

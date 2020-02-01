@@ -26,7 +26,6 @@ use App\Model\User\UserRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nettrine\ORM\EntityManagerDecorator;
@@ -513,7 +512,6 @@ class ProgramService
      *
      * @throws MailingMailCreationException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws SettingsException
      * @throws Throwable
      */

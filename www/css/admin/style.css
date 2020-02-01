@@ -60,8 +60,11 @@ body {
 /* odebrani ramecku kolem datagridu */
 .datagrid {
     padding: 0;
-    margin-bottom: 1rem;
     overflow-x: auto;
+}
+
+div > .datagrid {
+    margin-bottom: 1rem;
 }
 
 /* oprava select a multiselect v inline editaci */

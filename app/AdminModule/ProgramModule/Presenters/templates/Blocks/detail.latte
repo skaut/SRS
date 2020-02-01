@@ -99,7 +99,7 @@
             <tbody>
                 {var $i = 1}
                 {foreach $block->getPrograms() as $program}
-                    {var $background = $i % 2 ? '#F9F9F9' : '#FFFFFF'} {* todo nove barvy*}
+                    {var $background = $i % 2 ? '#F2F2F2' : '#FFFFFF'}
                     <tr style="background-color: {$background|noescape}">
                         <td class="text-right">
                             {var $startDay = $program->getStart()->format('N')}
