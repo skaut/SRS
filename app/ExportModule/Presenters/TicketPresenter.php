@@ -13,6 +13,7 @@ use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Http\Response;
 use Throwable;
 use function random_bytes;
 
@@ -67,9 +68,8 @@ class TicketPresenter extends ExportBasePresenter
 
         $pdf->documentTitle = 'ticket';
         $pdf->pageFormat    = 'A4';
-
         $pdf->getMPDF()->SetProtection(['copy', 'print', 'print-highres'], '', random_bytes(30));
-
+        $pdf->setSaveMode(PdfResponse::INLINE);
         $this->sendResponse($pdf);
     }
 }

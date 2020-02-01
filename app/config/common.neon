@@ -298,7 +298,6 @@ webloader:
 
         export:
             files:
-                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - export/style.css
 
     js:
