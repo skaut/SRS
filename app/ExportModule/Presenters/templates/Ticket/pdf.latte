@@ -1,54 +1,52 @@
 {block content}
-    <div class="row">
-        <div style="width: 50%; float: left">
+    <div class="row mb-4">
+        <div class="col-5">
             <img src="{$basePath}/files/logo/{$logo}"/>
         </div>
-        <div class="text-right" style="width: 50%; float:right">
+        <div class="col-7 text-right">
             <h1>{$seminarName}</h1>
         </div>
     </div>
-    <div class="row">
-        <div style="width: 75%; float: left">
-            <table class="table table-borderless" style="width: 100%" >
-                <tbody>
-                    <tr>
-                        <th style="width: 25%">{_export.ticket.first_name}</th>
-                        <td style="width: 75%">{$ticketUser->getFirstName()}</td>
-                    </tr>
-                    <tr>
-                        <th>{_export.ticket.last_name}</th>
-                        <td>{$ticketUser->getLastName()}</td>
-                    </tr>
-                    <tr n:if="$ticketUser->getNickname()">
-                        <th>{_export.ticket.nickname}</th>
-                        <td>{$ticketUser->getNickname()}</td>
-                    </tr>
-                    <tr>
-                        <th>{_export.ticket.roles}</th>
-                        <td>{$ticketUser->getRolesText()}</td>
-                    </tr>
-                    <tr n:if="$explicitSubeventsExists">
-                        <th>{_export.ticket.subevents}</th>
-                        <td>{$ticketUser->getSubeventsText()}</td>
-                    </tr>
-                </tbody>
-            </table>
+
+    <div class="row mb-4">
+        <div class="col-9">
+            <div class="row mb-1">
+                <div class="col-3"><b>{_export.ticket.first_name}</b></div>
+                <div class="col-9">{$ticketUser->getFirstName()}</div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-3"><b>{_export.ticket.last_name}</b></div>
+                <div class="col-9">{$ticketUser->getLastName()}</div>
+            </div>
+            <div class="row mb-1" n:if="$ticketUser->getNickname()">
+                <div class="col-3"><b>{_export.ticket.nickname}</b></div>
+                <div class="col-9">{$ticketUser->getNickname()}</div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-3"><b>{_export.ticket.roles}</b></div>
+                <div class="col-9">{$ticketUser->getRolesText()}</div>
+            </div>
+            <div class="row mb-1" n:if="$explicitSubeventsExists">
+                <div class="col-3"><b>{_export.ticket.subevents}</b></div>
+                <div class="col-9">{$ticketUser->getSubeventsText()}</div>
+            </div>
         </div>
-        <div class="text-right" style="width: 25%; float: right">
+        <div class="col-3 text-right">
             <barcode class="barcode" code="{$ticketUser->getId()}" type="QR" error="M" disableborder="1"/>
         </div>
     </div>
+
     <div class="row" n:if="!$ticketUser->getPrograms()->isEmpty()">
-        <div>
+        <div class="col-12">
             <h2>Harmonogram</h2>
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th class="text-right" style="width: 15%">{_export.ticket.from}</th>
-                        <th class="text-right" style="width: 15%">{_export.ticket.to}</th>
-                        <th style="width: 25%">{_export.ticket.program_name}</th>
+                        <th class="text-right" style="width: 10%">{_export.ticket.from}</th>
+                        <th class="text-right" style="width: 10%">{_export.ticket.to}</th>
+                        <th style="width: 30%">{_export.ticket.program_name}</th>
                         <th style="width: 20%">{_export.ticket.room}</th>
-                        <th style="width: 25%">{_export.ticket.lectors}</th>
+                        <th style="width: 30%">{_export.ticket.lectors}</th>
                     </tr>
                 </thead>
                 <tbody>
