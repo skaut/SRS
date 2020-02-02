@@ -115,11 +115,9 @@ class SkautIsService
             'ID' => $this->skautIs->getUser()->getLoginId(),
             'ID_UserRole' => $roleId,
         ]);
-        if (! $response) {
-            return;
+        if ($response) {
+            $this->skautIs->getUser()->updateLoginData(null, $roleId, $response->ID_Unit);
         }
-
-        $this->skautIs->getUser()->updateLoginData(null, $roleId, $response->ID_Unit);
     }
 
     /**

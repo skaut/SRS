@@ -75,24 +75,22 @@ class BankService
             $this->em->transactional(function () use ($transaction) : void {
                 $id = $transaction->getId();
 
-                if ($transaction->getAmount() <= 0 || $this->paymentRepository->findByTransactionId($id) !== null) {
-                    return;
+                if ($transaction->getAmount() > 0 && $this->paymentRepository->findByTransactionId($id) === null) {
+                    $date = new DateTimeImmutable();
+                    $date = $date->setTimestamp($transaction->getDate()->getTimestamp());
+
+                    $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
+
+                    $this->applicationService->createPayment(
+                        $date,
+                        $transaction->getAmount(),
+                        $transaction->getVariableSymbol(),
+                        $id,
+                        $accountNumber,
+                        $transaction->getSenderName(),
+                        $transaction->getUserMessage()
+                    );
                 }
-
-                $date = new DateTimeImmutable();
-                $date = $date->setTimestamp($transaction->getDate()->getTimestamp());
-
-                $accountNumber = $transaction->getSenderAccountNumber() . '/' . $transaction->getSenderBankCode();
-
-                $this->applicationService->createPayment(
-                    $date,
-                    $transaction->getAmount(),
-                    $transaction->getVariableSymbol(),
-                    $id,
-                    $accountNumber,
-                    $transaction->getSenderName(),
-                    $transaction->getUserMessage()
-                );
             });
         }
 

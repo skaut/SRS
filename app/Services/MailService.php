@@ -97,27 +97,21 @@ class MailService
         $recipients = [];
 
         foreach ($this->userRepository->findAllApprovedInRoles($this->roleRepository->findRolesIds($recipientsRoles)) as $user) {
-            if (in_array($user, $recipients)) {
-                continue;
+            if (! in_array($user, $recipients)) {
+                $recipients[] = $user;
             }
-
-            $recipients[] = $user;
         }
 
         foreach ($this->userRepository->findAllWithSubevents($this->subeventRepository->findSubeventsIds($recipientsSubevents)) as $user) {
-            if (in_array($user, $recipients)) {
-                continue;
+            if (! in_array($user, $recipients)) {
+                $recipients[] = $user;
             }
-
-            $recipients[] = $user;
         }
 
         foreach ($recipientsUsers as $user) {
-            if (in_array($user, $recipients)) {
-                continue;
+            if (! in_array($user, $recipients)) {
+                $recipients[] = $user;
             }
-
-            $recipients[] = $user;
         }
 
         $messageData = new SrsMailData(

@@ -66,29 +66,27 @@ class DatabaseService
      */
     public function update() : void
     {
-        if ($this->databaseCache->load('updated') !== null) {
-            return;
+        if ($this->databaseCache->load('updated') === null) {
+            $this->databaseCache->save('lock', function () {
+                if ($this->databaseCache->load('updated') === null) {
+                    $this->databaseCache->save('updated', new DateTimeImmutable());
+
+                    $this->backup();
+
+                    $input  = new ArrayInput([
+                        'command' => 'migrations:migrate',
+                        '--no-interaction' => true,
+                    ]);
+                    $output = new BufferedOutput();
+
+                    $this->consoleApplication->add(new MigrateCommand());
+                    $this->consoleApplication->setAutoExit(false);
+                    $this->consoleApplication->run($input, $output);
+                }
+
+                return true;
+            });
         }
-
-        $this->databaseCache->save('lock', function () {
-            if ($this->databaseCache->load('updated') === null) {
-                $this->databaseCache->save('updated', new DateTimeImmutable());
-
-                $this->backup();
-
-                $input  = new ArrayInput([
-                    'command' => 'migrations:migrate',
-                    '--no-interaction' => true,
-                ]);
-                $output = new BufferedOutput();
-
-                $this->consoleApplication->add(new MigrateCommand());
-                $this->consoleApplication->setAutoExit(false);
-                $this->consoleApplication->run($input, $output);
-            }
-
-            return true;
-        });
     }
 
     /**

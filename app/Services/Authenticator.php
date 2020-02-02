@@ -138,21 +138,19 @@ class Authenticator implements IAuthenticator
         }
 
         $photoUpdate = new DateTimeImmutable($skautISPerson->PhotoUpdate);
-        if ($user->getPhotoUpdate() !== null && $photoUpdate->diff($user->getPhotoUpdate())->s < 1) {
-            return;
-        }
+        if ($user->getPhotoUpdate() === null || $photoUpdate->diff($user->getPhotoUpdate())->s > 0) {
+            $photo = $this->skautIsService->getPersonPhoto($skautISUser->ID_Person, 'normal');
+            if ($photo->ID_PersonPhotoNormal) {
+                $fileName = $photo->ID . $photo->PhotoExtension;
+                $path     = User::PHOTO_PATH . '/' . $fileName;
+                $this->filesService->create($path, $photo->PhotoNormalContent);
+                $user->setPhoto($fileName);
+            } else {
+                $user->setPhoto(null);
+            }
 
-        $photo = $this->skautIsService->getPersonPhoto($skautISUser->ID_Person, 'normal');
-        if ($photo->ID_PersonPhotoNormal) {
-            $fileName = $photo->ID . $photo->PhotoExtension;
-            $path     = User::PHOTO_PATH . '/' . $fileName;
-            $this->filesService->create($path, $photo->PhotoNormalContent);
-            $user->setPhoto($fileName);
-        } else {
-            $user->setPhoto(null);
+            $user->setPhotoUpdate($photoUpdate);
         }
-
-        $user->setPhotoUpdate($photoUpdate);
     }
 
     /**

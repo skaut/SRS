@@ -386,11 +386,9 @@ class ApplicationFormFactory
                     throw new InvalidArgumentException();
             }
 
-            if (! $customInput->isMandatory()) {
-                continue;
+            if ($customInput->isMandatory()) {
+                $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
             }
-
-            $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
         }
     }
 
@@ -436,19 +434,17 @@ class ApplicationFormFactory
                 );
             }
 
-            if ($subevent->getRequiredSubeventsTransitive()->isEmpty()) {
-                continue;
+            if (! $subevent->getRequiredSubeventsTransitive()->isEmpty()) {
+                $subeventsSelect->addRule(
+                    [$this, 'validateSubeventsRequired'],
+                    $this->translator->translate(
+                        'web.application_content.required_subevents_not_selected',
+                        null,
+                        ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
+                    ),
+                    [$subevent]
+                );
             }
-
-            $subeventsSelect->addRule(
-                [$this, 'validateSubeventsRequired'],
-                $this->translator->translate(
-                    'web.application_content.required_subevents_not_selected',
-                    null,
-                    ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
-                ),
-                [$subevent]
-            );
         }
     }
 
@@ -480,19 +476,17 @@ class ApplicationFormFactory
                 );
             }
 
-            if ($role->getRequiredRolesTransitive()->isEmpty()) {
-                continue;
+            if (! $role->getRequiredRolesTransitive()->isEmpty()) {
+                $rolesSelect->addRule(
+                    [$this, 'validateRolesRequired'],
+                    $this->translator->translate(
+                        'web.application_content.required_roles_not_selected',
+                        null,
+                        ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()]
+                    ),
+                    [$role]
+                );
             }
-
-            $rolesSelect->addRule(
-                [$this, 'validateRolesRequired'],
-                $this->translator->translate(
-                    'web.application_content.required_roles_not_selected',
-                    null,
-                    ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()]
-                ),
-                [$role]
-            );
         }
 
         $ids = [];
@@ -505,12 +499,10 @@ class ApplicationFormFactory
             ->toggle('departureInput');
 
         //pokud je na vyber jen jedna role, je oznacena
-        if (count($registerableOptions) !== 1) {
-            return;
+        if (count($registerableOptions) === 1) {
+            $rolesSelect->setDisabled(true);
+            $rolesSelect->setDefaultValue(array_keys($registerableOptions));
         }
-
-        $rolesSelect->setDisabled(true);
-        $rolesSelect->setDefaultValue(array_keys($registerableOptions));
     }
 
     /**

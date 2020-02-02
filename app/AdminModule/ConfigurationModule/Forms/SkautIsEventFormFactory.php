@@ -165,11 +165,9 @@ class SkautIsEventFormFactory
 
         $this->settingsService->setValue(Settings::SKAUTIS_EVENT_TYPE, $eventType);
 
-        if ($eventId === null) {
-            return;
+        if ($eventId !== null) {
+            $this->settingsService->setIntValue(Settings::SKAUTIS_EVENT_ID, $eventId);
+            $this->settingsService->setValue(Settings::SKAUTIS_EVENT_NAME, $eventName);
         }
-
-        $this->settingsService->setIntValue(Settings::SKAUTIS_EVENT_ID, $eventId);
-        $this->settingsService->setValue(Settings::SKAUTIS_EVENT_NAME, $eventName);
     }
 }

@@ -108,10 +108,8 @@ class Tag
 
     public function addRole(Role $role) : void
     {
-        if ($this->roles->contains($role)) {
-            return;
+        if (! $this->roles->contains($role)) {
+            $this->roles->add($role);
         }
-
-        $this->roles->add($role);
     }
 }

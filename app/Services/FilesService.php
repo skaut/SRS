@@ -49,11 +49,9 @@ class FilesService
     public function delete(string $path) : void
     {
         $file = $this->dir . $path;
-        if (! file_exists($file)) {
-            return;
+        if (file_exists($file)) {
+            unlink($file);
         }
-
-        unlink($file);
     }
 
     /**

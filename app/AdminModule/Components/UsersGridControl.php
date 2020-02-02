@@ -593,11 +593,9 @@ class UsersGridControl extends Control
             }
 
             foreach ($users as $user) {
-                if (! $user->isInRole($role)) {
-                    continue;
+                if ($user->isInRole($role)) {
+                    $capacityNeeded--;
                 }
-
-                $capacityNeeded--;
             }
 
             return $capacityNeeded <= $role->getCapacity();

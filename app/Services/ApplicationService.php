@@ -520,14 +520,12 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
-        if ($paymentDate === null || $oldPaymentDate !== null) {
-            return;
+        if ($paymentDate !== null && $oldPaymentDate === null) {
+            $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::PAYMENT_CONFIRMED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText(),
+            ]);
         }
-
-        $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::PAYMENT_CONFIRMED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText(),
-        ]);
     }
 
     /**
@@ -602,23 +600,19 @@ class ApplicationService
             $pairedApplicationsModified = false;
 
             foreach ($oldPairedApplications as $pairedApplication) {
-                if ($newPairedApplications->contains($pairedApplication)) {
-                    continue;
+                if (! $newPairedApplications->contains($pairedApplication)) {
+                    $pairedApplication->setPayment(null);
+                    $this->updateApplicationPayment($pairedApplication, null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+                    $pairedApplicationsModified = true;
                 }
-
-                $pairedApplication->setPayment(null);
-                $this->updateApplicationPayment($pairedApplication, null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
-                $pairedApplicationsModified = true;
             }
 
             foreach ($newPairedApplications as $pairedApplication) {
-                if ($oldPairedApplications->contains($pairedApplication)) {
-                    continue;
+                if (! $oldPairedApplications->contains($pairedApplication)) {
+                    $pairedApplication->setPayment($payment);
+                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $payment->getDate(), null, $pairedApplication->getMaturityDate(), $createdBy);
+                    $pairedApplicationsModified = true;
                 }
-
-                $pairedApplication->setPayment($payment);
-                $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $payment->getDate(), null, $pairedApplication->getMaturityDate(), $createdBy);
-                $pairedApplicationsModified = true;
             }
 
             if ($pairedApplicationsModified) {
@@ -833,11 +827,9 @@ class ApplicationService
                     $date     = $date->modify('+1 days');
                     $holidays = Yasumi::create('CzechRepublic', (int) $date->format('Y'));
 
-                    if (! $holidays->isWorkingDay($date)) {
-                        continue;
+                    if ($holidays->isWorkingDay($date)) {
+                        $i++;
                     }
-
-                    $i++;
                 }
 
                 return $date;
@@ -1007,11 +999,9 @@ class ApplicationService
 
         $maxDate = null;
         foreach ($user->getValidApplications() as $application) {
-            if ($maxDate >= $application->getPaymentDate()) {
-                continue;
+            if ($maxDate < $application->getPaymentDate()) {
+                $maxDate = $application->getPaymentDate();
             }
-
-            $maxDate = $application->getPaymentDate();
         }
 
         $user->setLastPaymentDate($maxDate);

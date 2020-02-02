@@ -269,14 +269,12 @@ class AdditionalInformationForm extends UI\Control
 
             $this->userRepository->save($this->user);
 
-            if (! $customInputValueChanged) {
-                return;
+            if ($customInputValueChanged) {
+                $this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
+                    TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                    TemplateVariable::USER => $this->user->getDisplayName(),
+                ]);
             }
-
-            $this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::USER => $this->user->getDisplayName(),
-            ]);
         });
 
         $this->onSave($this);

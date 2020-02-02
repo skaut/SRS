@@ -83,11 +83,9 @@ class DiscountService
                 continue;
             }
 
-            if (! $result) {
-                continue;
+            if ($result) {
+                $totalDiscount += $discount->getDiscount();
             }
-
-            $totalDiscount += $discount->getDiscount();
         }
 
         return $totalDiscount;

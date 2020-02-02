@@ -119,19 +119,17 @@ class RolesFormFactory
                 );
             }
 
-            if ($role->getRequiredRolesTransitive()->isEmpty()) {
-                continue;
+            if (! $role->getRequiredRolesTransitive()->isEmpty()) {
+                $rolesSelect->addRule(
+                    [$this, 'validateRolesRequired'],
+                    $this->translator->translate(
+                        'web.profile.required_roles_not_selected',
+                        null,
+                        ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()]
+                    ),
+                    [$role]
+                );
             }
-
-            $rolesSelect->addRule(
-                [$this, 'validateRolesRequired'],
-                $this->translator->translate(
-                    'web.profile.required_roles_not_selected',
-                    null,
-                    ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()]
-                ),
-                [$role]
-            );
         }
 
         $submitButton = $form->addSubmit('submit', 'web.profile.change_roles');

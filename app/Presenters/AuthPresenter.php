@@ -124,17 +124,15 @@ class AuthPresenter extends BasePresenter
         $multipleRedirects = false;
 
         foreach ($user->getRoles() as $role) {
-            if (! $role->getRedirectAfterLogin()) {
-                continue;
-            }
+            if ($role->getRedirectAfterLogin()) {
+                $roleRedirect = $role->getRedirectAfterLogin();
 
-            $roleRedirect = $role->getRedirectAfterLogin();
-
-            if ($redirectByRole && $redirectByRole === $roleRedirect) {
-                $multipleRedirects = true;
-                break;
-            } else {
-                $redirectByRole = $roleRedirect;
+                if ($redirectByRole && $redirectByRole === $roleRedirect) {
+                    $multipleRedirects = true;
+                    break;
+                } else {
+                    $redirectByRole = $roleRedirect;
+                }
             }
         }
 

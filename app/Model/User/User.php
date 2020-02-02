@@ -532,11 +532,9 @@ class User
     {
         $this->displayName = $this->lastName . ' ' . $this->firstName;
 
-        if (empty($this->nickName)) {
-            return;
+        if (! empty($this->nickName)) {
+            $this->displayName .= ' (' . $this->nickName . ')';
         }
-
-        $this->displayName .= ' (' . $this->nickName . ')';
     }
 
     public function getLectorName() : ?string
@@ -561,11 +559,9 @@ class User
             $this->lectorName .= ', ' . $this->degreePost;
         }
 
-        if (empty($this->nickName)) {
-            return;
+        if (! empty($this->nickName)) {
+            $this->lectorName .= ' (' . $this->nickName . ')';
         }
-
-        $this->lectorName .= ' (' . $this->nickName . ')';
     }
 
     public function getSecurityCode() : ?string
@@ -779,11 +775,9 @@ class User
 
     public function addRole(Role $role) : void
     {
-        if ($this->isInRole($role)) {
-            return;
+        if (! $this->isInRole($role)) {
+            $this->roles->add($role);
         }
-
-        $this->roles->add($role);
     }
 
     /**

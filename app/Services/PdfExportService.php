@@ -99,18 +99,16 @@ class PdfExportService
             $this->addIncomeProofPage($application);
         }
 
-        if ($application->getIncomeProofPrintedDate()) {
-            return;
+        if (! $application->getIncomeProofPrintedDate()) {
+            $this->applicationService->updateApplicationPayment(
+                $application,
+                $application->getPaymentMethod(),
+                $application->getPaymentDate(),
+                new DateTimeImmutable(),
+                $application->getMaturityDate(),
+                $createdBy
+            );
         }
-
-        $this->applicationService->updateApplicationPayment(
-            $application,
-            $application->getPaymentMethod(),
-            $application->getPaymentDate(),
-            new DateTimeImmutable(),
-            $application->getMaturityDate(),
-            $createdBy
-        );
     }
 
     /**

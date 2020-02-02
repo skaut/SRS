@@ -49,17 +49,13 @@ class UserService
 
         foreach ($user->getNotCanceledApplications() as $application) {
             $currentPaymentMethod = $application->getPaymentMethod();
-            if (! $currentPaymentMethod) {
-                continue;
-            }
-
-            if (! $paymentMethod) {
-                $paymentMethod = $currentPaymentMethod;
-                continue;
-            }
-
-            if ($paymentMethod !== $currentPaymentMethod) {
-                return PaymentType::MIXED;
+            if ($currentPaymentMethod) {
+                if (! $paymentMethod) {
+                    $paymentMethod = $currentPaymentMethod;
+                }
+                elseif ($paymentMethod !== $currentPaymentMethod) {
+                    return PaymentType::MIXED;
+                }
             }
         }
 

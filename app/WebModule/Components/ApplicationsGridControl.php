@@ -256,17 +256,15 @@ class ApplicationsGridControl extends Control
                 $this->redirect('this');
             }
 
-            if ($this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
-                continue;
+            if (! $this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
+                $message = $this->translator->translate(
+                    'web.profile.applications_required_subevents_not_selected',
+                    null,
+                    ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
+                );
+                $p->flashMessage($message, 'danger');
+                $this->redirect('this');
             }
-
-            $message = $this->translator->translate(
-                'web.profile.applications_required_subevents_not_selected',
-                null,
-                ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
-            );
-            $p->flashMessage($message, 'danger');
-            $this->redirect('this');
         }
 
         $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $this->user);
@@ -316,17 +314,15 @@ class ApplicationsGridControl extends Control
                     $this->redirect('this');
                 }
 
-                if ($this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
-                    continue;
+                if (! $this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
+                    $message = $this->translator->translate(
+                        'web.profile.applications_required_subevents_not_selected',
+                        null,
+                        ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
+                    );
+                    $p->flashMessage($message, 'danger');
+                    $this->redirect('this');
                 }
-
-                $message = $this->translator->translate(
-                    'web.profile.applications_required_subevents_not_selected',
-                    null,
-                    ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
-                );
-                $p->flashMessage($message, 'danger');
-                $this->redirect('this');
             }
 
             $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $this->user);

@@ -122,13 +122,11 @@ class InstallPresenter extends InstallBasePresenter
 
         $result = $this->consoleApplication->run($input);
 
-        if ($result !== 0) {
-            $this->flashMessage('install.schema.schema_create_unsuccessful', 'danger');
-
-            return;
+        if ($result === 0) {
+            $this->redirect('admin');
         }
 
-        $this->redirect('admin');
+        $this->flashMessage('install.schema.schema_create_unsuccessful', 'danger');
     }
 
     /**
@@ -184,13 +182,11 @@ class InstallPresenter extends InstallBasePresenter
      */
     public function handleCreateAdmin() : void
     {
-        if (! $this->checkSkautISConnection()) {
-            $this->flashMessage('install.admin.skautis_access_denied', 'danger');
-
-            return;
+        if ($this->checkSkautISConnection()) {
+            $this->redirect(':Auth:login', ['backlink' => ':Install:Install:admin']);
         }
 
-        $this->redirect(':Auth:login', ['backlink' => ':Install:Install:admin']);
+        $this->flashMessage('install.admin.skautis_access_denied', 'danger');
     }
 
     /**

@@ -165,19 +165,15 @@ class ProgramService
 
                 foreach ($block->getPrograms() as $program) {
                     foreach ($program->getAttendees() as $user) {
-                        if ($allowedUsers->contains($user)) {
-                            continue;
+                        if (! $allowedUsers->contains($user)) {
+                            $this->unregisterProgramImpl($user, $program);
                         }
-
-                        $this->unregisterProgramImpl($user, $program);
                     }
 
-                    if ($mandatory !== ProgramMandatoryType::AUTO_REGISTERED) {
-                        continue;
-                    }
-
-                    foreach ($allowedUsers as $user) {
-                        $this->registerProgramImpl($user, $program);
+                    if ($mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
+                        foreach ($allowedUsers as $user) {
+                            $this->registerProgramImpl($user, $program);
+                        }
                     }
                 }
 
@@ -322,15 +318,13 @@ class ProgramService
         $this->em->transactional(function () use ($program, $block) : void {
             $this->programRepository->save($program);
 
-            if ($block->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED) {
-                return;
-            }
+            if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
+                foreach ($this->userRepository->findBlockAllowed($block) as $user) {
+                    $this->registerProgramImpl($user, $program);
+                }
 
-            foreach ($this->userRepository->findBlockAllowed($block) as $user) {
-                $this->registerProgramImpl($user, $program);
+                $this->programRepository->save($program);
             }
-
-            $this->programRepository->save($program);
         });
 
         return $program;
@@ -399,14 +393,12 @@ class ProgramService
 //            $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
 //        }
 
-        if (! $sendEmail) {
-            return;
+        if ($sendEmail) {
+            $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_REGISTERED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
+            ]);
         }
-
-        $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_REGISTERED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
-        ]);
     }
 
     /**
@@ -444,14 +436,12 @@ class ProgramService
 //            $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
 //        }
 
-        if (! $sendEmail) {
-            return;
+        if ($sendEmail) {
+            $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_UNREGISTERED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
+            ]);
         }
-
-        $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_UNREGISTERED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-            TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
-        ]);
     }
 
     /**
@@ -487,19 +477,15 @@ class ProgramService
         $userAllowedPrograms = $this->getUserAllowedPrograms($user);
 
         foreach ($oldUsersPrograms as $program) {
-            if ($userAllowedPrograms->contains($program)) {
-                continue;
+            if (! $userAllowedPrograms->contains($program)) {
+                $this->unregisterProgramImpl($user, $program);
             }
-
-            $this->unregisterProgramImpl($user, $program);
         }
 
         foreach ($userAllowedPrograms as $program) {
-            if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED) {
-                continue;
+            if ($program->getBlock()->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
+                $this->registerProgramImpl($user, $program);
             }
-
-            $this->registerProgramImpl($user, $program);
         }
 
 //        $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat

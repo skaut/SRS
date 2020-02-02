@@ -100,12 +100,10 @@ class ProfilePresenter extends WebBasePresenter
     {
         parent::startup();
 
-        if ($this->user->isLoggedIn()) {
-            return;
+        if (! $this->user->isLoggedIn()) {
+            $this->flashMessage('web.common.login_required', 'danger', 'lock');
+            $this->redirect(':Web:Page:default');
         }
-
-        $this->flashMessage('web.common.login_required', 'danger', 'lock');
-        $this->redirect(':Web:Page:default');
     }
 
     /**

@@ -137,11 +137,9 @@ class ScheduleService
 
         foreach ($programDetailDtos as $p1) {
             foreach ($programDetailDtos as $p2) {
-                if (spl_object_id($p1) === spl_object_id($p2) || ! $p1->isUserAttends() || ! in_array($p2->getId(), $p1->getBlocks())) {
-                    continue;
+                if (spl_object_id($p1) !== spl_object_id($p2) && $p1->isUserAttends() && in_array($p2->getId(), $p1->getBlocks())) {
+                    $p2->setBlocked(true);
                 }
-
-                $p2->setBlocked(true);
             }
         }
 

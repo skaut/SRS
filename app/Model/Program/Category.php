@@ -100,11 +100,9 @@ class Category
 
     public function addRole(Role $role) : void
     {
-        if ($this->registerableRoles->contains($role)) {
-            return;
+        if (! $this->registerableRoles->contains($role)) {
+            $this->registerableRoles->add($role);
         }
-
-        $this->registerableRoles->add($role);
     }
 
     /**
