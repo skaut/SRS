@@ -57,12 +57,6 @@ class ProfilePresenter extends WebBasePresenter
     public $applicationsGridControlFactory;
 
     /**
-     * @var PdfExportService
-     * @inject
-     */
-    public $pdfExportService;
-
-    /**
      * @var ExcelExportService
      * @inject
      */

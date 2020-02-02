@@ -28,8 +28,8 @@ class Helpers
     {
         if (mb_strlen($text, 'UTF-8') > $length) {
             $text = mb_substr($text, 0, $length, 'UTF-8');
-            if (mb_strrpos($text, ' ', 'UTF-8') !== false) {
-                $text = mb_substr($text, 0, mb_strrpos($text, ' ', 'UTF-8'), 'UTF-8');
+            if (mb_strrpos($text, ' ', 0, 'UTF-8') !== false) {
+                $text = mb_substr($text, 0, mb_strrpos($text, ' ', 0, 'UTF-8'), 'UTF-8');
             }
             else {
                 $text = mb_substr($text, 0, $length - 1, 'UTF-8');
