@@ -57,7 +57,7 @@
         "janmarek/webloader": "dev-master",
         "jms/serializer": "^3.4",
 
-        "skautis/skautis": "^2.1",
+        "skautis/skautis": "3.0.0-alpha.1",
         "skautis/nette": "3.x-dev",
 
         "setasign/fpdf": "^1.8",
