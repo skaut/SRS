@@ -30,7 +30,7 @@ class PaymentForm extends UI\Control
     /**
      * Událost při uložení formuláře.
      *
-     * @var callable
+     * @var callable[]
      */
     public $onSave;
 

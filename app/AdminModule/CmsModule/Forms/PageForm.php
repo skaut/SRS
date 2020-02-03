@@ -59,14 +59,14 @@ class PageForm extends UI\Control
     /**
      * Událost při uložení formuláře.
      *
-     * @var callable
+     * @var callable[]
      */
     public $onPageSave;
 
     /**
      * Událost při chybě ukládání stránky.
      *
-     * @var callable
+     * @var callable[]
      */
     public $onPageSaveError;
 

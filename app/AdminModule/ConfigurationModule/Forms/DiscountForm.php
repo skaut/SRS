@@ -39,14 +39,14 @@ class DiscountForm extends UI\Control
     /**
      * Událost při uložení formuláře.
      *
-     * @var callable
+     * @var callable[]
      */
     public $onSave;
 
     /**
      * Událost při chybě podmínky.
      *
-     * @var callable
+     * @var callable[]
      */
     public $onConditionError;
 
