@@ -281,6 +281,7 @@ webloader:
         admin:
             files:
                 - libs/jquery/jquery-ui.min.css
+                - libs/jquery/jquery.floatingscroll.css
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
                 - libs/font-awesome.min.css
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css
@@ -332,6 +333,7 @@ webloader:
                 - libs/nette.ajax.js
                 - libs/jquery/jquery-ui.min.js
                 - libs/jquery/jquery.mousewheel.min.js
+                - libs/jquery/jquery.floatingscroll.min.js
                 - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js
                 - libs/moment/moment.js
                 - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js

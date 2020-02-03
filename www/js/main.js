@@ -21,6 +21,8 @@ function init() {
     initDateTimePicker();
 
     $('[data-toggle="tooltip"]').tooltip();
+
+    $(".datagrid").floatingScroll();
 }
 
 function animateAlerts() {
