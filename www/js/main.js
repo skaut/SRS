@@ -22,7 +22,7 @@ function init() {
 
     $('[data-toggle="tooltip"]').tooltip();
 
-    $(".datagrid").floatingScroll();
+    // $(".datagrid").floatingScroll();
 }
 
 function animateAlerts() {
