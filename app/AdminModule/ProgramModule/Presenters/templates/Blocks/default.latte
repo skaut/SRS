@@ -1,0 +1,10 @@
+{block main}
+    <h2>{_admin.program.blocks_heading}</h2>
+    <div class="alert alert-warning alert-forever" n:if="$emptyUserInfo">
+        {_admin.program.empty_user_info_begin}
+        <a href="{plink :Web:Profile:default}#additional-information" class="alert-link">
+            {_admin.program.empty_user_info_link}</a>{_admin.program.empty_user_info_end}
+    </div>
+
+    {control programBlocksGrid}
+{/block}

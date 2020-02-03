@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+
+    <title>{_install.common.title}</title>
+
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+
+    {control css}
+    {control js}
+
+    {block head}{/block}
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
+        <div class="container">
+            <span class="navbar-brand">{_install.common.heading}</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2>{include #header}</h2>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <div class="progress">
+                    <div class="progress-bar" style="width: {include #progress}"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3" n:if="$flashes">
+            <div class="col">
+                <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type, mt-2">
+                    {$flash->message}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card card-body bg-light pb-1">
+                    {include #content}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+

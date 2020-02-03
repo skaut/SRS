@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+
+    <title>{_admin.common.title, [seminar_name => $seminarName]}</title>
+
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+
+    {control css}
+    {control js}
+
+    {block head}{/block}
+</head>
+
+<body>
+    <div id="main-menu">
+        {import 'includes/main_menu.latte'}
+        {include main-menu}
+    </div>
+
+    <div class="container-fluid" {$containerAttributes|noescape}>
+        <div id="content" class="row">
+            <div id="sidebar" class="col-3" n:ifcontent>
+                {ifset #sidebar}
+                    {include #sidebar}
+                {/ifset}
+            </div>
+            <div id="main" class="col">
+                {snippet flashes}
+                    <div id="flashes" class="row">
+                        <div class="col-12">
+                            <div n:foreach="$flashes as $flash" n:class="alert, alert-dismissable, 'alert-' . $flash->type">
+                                {$flash->message|noescape}
+                            </div>
+                        </div>
+                    </div>
+                {/snippet}
+
+                {include #main}
+            </div>
+        </div>
+
+        <hr>
+
+        <footer>
+            <p>{$footer|noescape}</p>
+        </footer>
+    </div>
+
+    <script type="text/javascript">
+        window._urq = window._urq || [];
+        _urq.push(['initSite', 'ff3bbb84-740e-49e3-afd9-db722e8047b5']);
+        (function () {
+            var ur = document.createElement('script');
+            ur.type = 'text/javascript';
+            ur.async = true;
+            ur.src = ('https:' == document.location.protocol ?
+                'https://cdn.userreport.com/userreport.js' :
+                'http://cdn.userreport.com/userreport.js');
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ur, s);
+        })();
+    </script>
+</body>
+</html>
+
+
+
+

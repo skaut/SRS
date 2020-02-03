@@ -3,7 +3,7 @@
     <property name="tempDir" value="temp"/>
     <target name="main" description="Runs tests and prepares deployable tarball">
         <exec command="composer install" passthru="true"/>
-        <!--<phingcall target="static-analysis"/>-->
+        <phingcall target="static-analysis"/>
         <phingcall target="coding-standard"/>
         <exec command="php www/index.php orm:validate-schema --skip-sync"/>
         <phingcall target="tests"/>
@@ -39,7 +39,7 @@
         <property name="config.database.password" value="${env.CONFIG_DATABASE_PASSWORD}"/>
         <property name="config.database.name" value="${env.CONFIG_DATABASE_NAME}"/>
 
-        <copy file="./app/config/config.production.local.neon" tofile="${build.dir}/app/config/config.local.neon">
+        <copy file="./app/config/production.local.neon" tofile="${build.dir}/app/config/local.neon">
             <filterchain>
                 <expandproperties/>
             </filterchain>
@@ -168,6 +168,11 @@
 
     <target name="tests-with-coverage">
         <exec command="vendor/bin/codecept run unit,integration --coverage-xml" passthru="true" checkreturn="true"/>
+    </target>
+
+    <target name="static-analysis">
+        <exec command="php -d memory_limit=512M vendor/bin/phpstan analyse -l 6 -c phpstan.neon app --no-progress"
+              passthru="true" checkreturn="true"/>
     </target>
 
     <target name="coding-standard">

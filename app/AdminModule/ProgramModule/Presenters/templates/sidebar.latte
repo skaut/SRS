@@ -1,0 +1,18 @@
+{block sidebar}
+    <div class="card card-body bg-light mb-3">
+        <div class="nav flex-column nav-pills">
+            <a n:href="Blocks:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Program:Blocks:*') ? active">
+                {_admin.program.menu_blocks}
+            </a>
+            <a n:href="Schedule:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Program:Schedule:*') ? active">
+                {_admin.program.menu_schedule}
+            </a>
+            <a n:if="$user->isAllowed($resourceProgram, $permissionManageCategories)" n:href="Categories:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Program:Categories:*') ? active">
+                {_admin.program.menu_categories}
+            </a>
+            <a n:if="$user->isAllowed($resourceProgram, $permissionManageRooms)" n:href="Rooms:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Program:Rooms:*') ? active">
+                {_admin.program.menu_rooms}
+            </a>
+        </div>
+    </div>
+{/block}

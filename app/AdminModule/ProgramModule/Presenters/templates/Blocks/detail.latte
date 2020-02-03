@@ -1,0 +1,148 @@
+{block main}
+    <h2>{_admin.program.blocks_detail_heading, ['name' => $block->getName()]}</h2>
+    <div class="card card-body bg-light pb-1 mb-3">
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_category}
+            </div>
+            <div class="col-9">
+                {if $block->getCategory()}
+                    {$block->getCategory()->getName()}
+                {/if}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_lectors}
+            </div>
+            <div class="col-9">
+                {$block->getLectorsText()}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_duration}
+            </div>
+            <div class="col-9">
+                {_admin.common.minutes, ['count' => $block->getDuration()]}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_capacity}
+            </div>
+            <div class="col-9">
+                {if $block->getCapacity() !== null}
+                    {$block->getCapacity()}
+                {else}
+                    {_admin.program.blocks_capacity_unlimited}
+                {/if}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_mandatory}
+            </div>
+            <div class="col-9">
+                {if $block->getMandatory() == 0}
+                    {_admin.program.blocks_mandatory_voluntary}
+                {elseif $block->getMandatory() == 1}
+                    {_admin.program.blocks_mandatory_mandatory}
+                {else}
+                    {_admin.program.blocks_mandatory_auto_registered}
+                {/if}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_tools}
+            </div>
+            <div class="col-9">
+                {$block->getTools()}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-3">
+                {_admin.program.blocks_perex}
+            </div>
+            <div class="col-9">
+                {$block->getPerex()}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-12">
+                {$block->getDescription()|noescape}
+            </div>
+        </div>
+    </div>
+
+    <h3>{_admin.program.blocks_schedule}</h3>
+    {snippet programs}
+        <table class="table table-sm table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th class="text-right">{_admin.program.blocks_program_start}</th>
+                    <th class="text-right">{_admin.program.blocks_program_end}</th>
+                    <th>{_admin.program.blocks_program_room}</th>
+                    <th>{_admin.program.blocks_program_occupancy}</th>
+                    <th class="text-center" style="white-space: nowrap; width: 1%;">{_ublaboo_datagrid.action}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {var $i = 1}
+                {foreach $block->getPrograms() as $program}
+                    {var $background = $i % 2 ? '#F2F2F2' : '#FFFFFF'}
+                    <tr style="background-color: {$background|noescape}">
+                        <td class="text-right">
+                            {var $startDay = $program->getStart()->format('N')}
+                            {_common.day.$startDay}
+                            {$program->getStart()|date:"j. n. G:i"}
+                        </td>
+                        <td class="text-right">
+                            {var $endDay = $program->getEnd()->format('N')}
+                            {_common.day.$endDay}
+                            {$program->getEnd()|date:"j. n. G:i"}
+                        </td>
+                        <td>
+                            {if $program->getRoom() !== null}
+                                {$program->getRoom()->getName()}
+                            {/if}
+                        </td>
+                        <td>
+                            {$program->getAttendeesCount()}
+                        </td>
+                        <td class="text-right" style="white-space: nowrap; width: 1%;">
+                            {if $programId == $program->getId()}
+                                <a class="btn btn-xs btn-warning ajax" n:href="showattendees! 0">
+                                    {_admin.program.blocks_program_hide_attendees_list}
+                                </a>
+                            {else}
+                                <a class="btn btn-xs btn-secondary ajax" n:href="showattendees! $program->getId()">
+                                    {_admin.program.blocks_program_show_attendees_list}
+                                </a>
+                            {/if}
+                            <a class="btn btn-xs btn-danger" n:href="deleteProgram! $program->getId()" data-toggle="confirmation"
+                               data-content="{_admin.program.blocks_program_delete_confirm}" n:if="$userAllowedModifySchedule">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr style="background-color: #337ab7" class="program-attendees" n:if="$programId == $program->getId()">
+                        <td colspan="5" style="padding: 5px">
+                            {control programAttendeesGrid}
+                        </td>
+                    </tr>
+                    {var $i = $i + 1}
+                {/foreach}
+            </tbody>
+        </table>
+    {/snippet}
+{/block}

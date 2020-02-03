@@ -1,0 +1,16 @@
+parameters:
+
+dbal:
+    connection:
+        host: ${config.database.host}
+        driver: mysqli
+        dbname: ${config.database.name}
+        user: ${config.database.user}
+        password: ${config.database.password}
+
+skautis:
+    applicationId: ${config.skautis.applicationId}
+    testMode: ${config.skautis.testMode}
+
+mail:
+    smtp: false

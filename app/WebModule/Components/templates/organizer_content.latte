@@ -1,0 +1,17 @@
+<div class="clearfix"></div>
+
+<div class="organizer-content">
+    <div class="row" n:ifcontent>
+        <div class="col" n:ifcontent>
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            {$organizer|noescape}
+            <img src="{$basePath}/img/logo.png" width="100%"/>
+        </div>
+    </div>
+</div>
+

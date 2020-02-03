@@ -2,14 +2,15 @@ var ALERT_DURATION = 5000;
 
 $(function () {
     $.nette.ext('initScripts', {
+        init: function () {
+            init();
+        },
         complete: function () {
             init();
         }
     });
 
     $.nette.init();
-
-    init();
 });
 
 function init() {
@@ -20,6 +21,8 @@ function init() {
     initDateTimePicker();
 
     $('[data-toggle="tooltip"]').tooltip();
+
+    // $(".datagrid").floatingScroll();
 }
 
 function animateAlerts() {
@@ -49,34 +52,35 @@ function initSelects() {
             selectedTextFormat: 'count > 3',
             actionsBox: true,
             iconBase: 'fa',
-            tickIcon: 'fa-check'
+            tickIcon: 'fa-check',
+            style: 'btn-light'
         });
 }
 
 function initFileInputs() {
     $('input[type="file"]').fileinput({
-        language: "cs",
-        theme: "fa",
-        browseLabel: "Vybrat",
-        msgPlaceholder: "Vybrat soubor...",
+        language: 'cs',
+        theme: 'fa',
+        browseLabel: 'Vybrat',
+        msgPlaceholder: 'Vybrat soubor...',
         showPreview: false,
         showRemove: false,
         showUpload: false,
         showCancel: false,
-        browseClass: "btn btn-default"
+        browseClass: 'btn btn-secondary'
     });
 }
 
 function initConfirms() {
-    $('[data-toggle=confirmation]').confirmation({
+    $('[data-toggle="confirmation"]').confirmation({
         rootSelector: '[data-toggle=confirmation]',
         title: '',
-        singleton: 'true',
-        popout: 'true',
-        btnOkClass: 'btn btn-primary',
+        singleton: true,
+        popout: true,
+        btnOkClass: 'btn btn-sm btn-primary',
         btnOkIcon: 'fa fa-check',
         btnOkLabel: 'Ano',
-        btnCancelClass: 'btn btn-default',
+        btnCancelClass: 'btn btn-sm btn-secondary',
         btnCancelIcon: 'fa fa-times',
         btnCancelLabel: 'Ne'
     });

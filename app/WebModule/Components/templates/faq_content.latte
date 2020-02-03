@@ -1,0 +1,34 @@
+<div class="clearfix"></div>
+
+<div class="faq-content">
+    <div class="row">
+        <div class="col">
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    <div class="row mb-3" n:foreach="$questions as $question">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">{$question->getQuestion()}</div>
+                <div class="card-body pb-1">{$question->getAnswer()|noescape}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <h4>{_web.faq_content.add_question_heading}</h4>
+            {if $guestRole}
+                <div class="alert alert-warning alert-forever">
+                    {_web.faq_content.login_required_begin}
+                    <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.faq_content.login_required_link}</a>{_web.faq_content.login_required_end}
+                </div>
+            {else}
+                <div class="card card-body bg-light pb-1">
+                    {control faqForm}
+                </div>
+            {/if}
+        </div>
+    </div>
+</div>

@@ -1,8 +1,8 @@
 var apiPath = basePath + '/api/schedule/';
 
-var COLOR_VOLUNTARY = '#0275D8';
-var COLOR_MANDATORY = '#D9534F';
-var COLOR_AUTO_REGISTERED = '#F0AD4E';
+var COLOR_VOLUNTARY = '#0077F7';
+var COLOR_MANDATORY = '#D53343';
+var COLOR_AUTO_REGISTERED = '#F7BB07';
 
 
 var app = angular.module('scheduleApp', ['ui.calendar', 'ui.bootstrap']);
@@ -339,7 +339,7 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
                     snapDuration: '00:05:00'
                 }
             },
-
+            eventTextColor: '#fff',
             eventClick: function (event, element) {
                 if ($scope.loading == 0 && $scope.config.allowed_modify_schedule) {
                     $scope.event = event;
@@ -347,14 +347,12 @@ app.controller('AdminScheduleCtrl', function AdminScheduleCtrl($scope, $http, $q
                     $('#program-modal').modal('show');
                 }
             },
-
             eventDrop: function (event, delta, revertFunc) {
                 if ($scope.loading == 0)
                     $scope.moveEvent(event, revertFunc);
                 else
                     revertFunc();
             },
-
             eventReceive: function (event) {
                 if ($scope.loading == 0)
                     $scope.addEvent(event);

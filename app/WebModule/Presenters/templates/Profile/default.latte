@@ -1,0 +1,175 @@
+{block head}
+    <script>
+        $(function () {
+            //otevreni accordion podle url
+            if (location.hash != null && location.hash != "") {
+                $('.collapse').removeClass('show');
+                $(location.hash + '.collapse').collapse('show');
+            }
+        });
+    </script>
+{/block}
+
+{block body-class}body-profile{/block}
+
+{block main}
+    <div class="row">
+        <div class="col">
+            <h2>{_web.profile.heading}</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="accordion" class="col">
+            <div class="card mb-1">
+                <div class="card-header" style="transform: rotate(0);">
+                    <h5 class="mb-0">{_web.profile.seminar_group}</h5>
+                    <a href="#seminar" class="stretched-link" data-toggle="collapse" data-target="#seminar"></a>
+                </div>
+                <div id="seminar" class="collapse show" data-parent="#accordion">
+                    <div class="card-body pb-1">
+                        <div class="row mb-3">
+                            <div class="col-md-3 col-form-label">
+                                {_web.profile.attendance}
+                            </div>
+                            <div class="col-md-9 col-form-label">
+                                {if $dbuser->isInRole($nonregisteredRole)}
+                                    {_web.profile.nonregistered}
+                                {elseif !$dbuser->isApproved()}
+                                    {_web.profile.unapproved}
+                                {else}
+                                    {foreach $dbuser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="row mb-3" n:if="$dbuser->isPaying()">
+                            <div class="col-md-3 col-form-label">
+                                {_web.profile.account_number}
+                            </div>
+                            <div class="col-md-9 col-form-label">
+                                {$settings->getValue('account_number')}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                {control rolesForm}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                {control applicationsGrid}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-1">
+                <div class="card-header" style="transform: rotate(0);">
+                    <h5 class="mb-0">{_web.profile.personal_details_group}</h5>
+                    <a href="#personal-details" class="stretched-link" data-toggle="collapse" data-target="#personal-details"></a>
+                </div>
+                <div id="personal-details" class="collapse" data-parent="#accordion">
+                    <div class="card-body pb-1">
+                        <div class="row mb-3" n:if="$dbuser->getPhoto()">
+                            <div class="col-md-3 col-form-label">
+                                {_web.profile.photo}
+                            </div>
+                            <div class="col-md-9 col-form-label">
+                                <img src="{$basePath}/files/user_photos/{$dbuser->getPhoto()}" alt="user photo"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {control personalDetailsForm}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-1">
+                <div class="card-header" style="transform: rotate(0);">
+                    <h5 class="mb-0">{_web.profile.additional_information_group}</h5>
+                    <a href="#additional-information" class="stretched-link" data-toggle="collapse" data-target="#additional-information"></a>
+                </div>
+                <div id="additional-information" class="collapse" data-parent="#accordion">
+                    <div class="card-body pb-1">
+                        <div class="row">
+                            <div class="col">
+                                <div class="alert alert-info alert-forever" n:if="!$isAllowedEditCustomInputs">
+                                    {_web.profile.additional_information_edit_not_allowed}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {control additionalInformationForm}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-1">
+                <div class="card-header" style="transform: rotate(0);">
+                    <h5 class="mb-0">{_web.profile.my_schedule_group}</h5>
+                    <a href="#schedule" class="stretched-link" data-toggle="collapse" data-target="#schedule"></a>
+                </div>
+                <div id="schedule" class="collapse" data-parent="#accordion">
+                    <div class="card-body pb-1">
+                        <div class="row">
+                            <div class="col">
+                                {if $dbuser->getPrograms()->isEmpty()}
+                                    <p>{_web.profile.no_programs}</p>
+                                {else}
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-right" style="width: 15%">{_web.profile.from}</th>
+                                                            <th class="text-right" style="width: 15%">{_web.profile.to}</th>
+                                                            <th style="width: 25%">{_web.profile.program_name}</th>
+                                                            <th style="width: 20%">{_web.profile.room}</th>
+                                                            <th style="width: 25%">{_web.profile.lectors}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr n:foreach="$dbuser->getPrograms() as $program">
+                                                            <td class="text-right">
+                                                                {var $startDay = $program->getStart()->format('N')}
+                                                                {_common.day.$startDay}
+                                                                {$program->getStart()|date:"j. n. G:i"}
+                                                            </td>
+                                                            <td class="text-right">
+                                                                {var $endDay = $program->getEnd()->format('N')}
+                                                                {_common.day.$endDay}
+                                                                {$program->getEnd()|date:"j. n. G:i"}
+                                                            </td>
+                                                            <td>{$program->getBlock()->getName()}</td>
+                                                            <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
+                                                            <td>{$program->getBlock()->getLectorsText()}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <a n:href="exportschedule" class="btn btn-primary">{_web.profile.download_schedule}</a>
+                                        </div>
+                                    </div>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}
+
+

@@ -1,0 +1,41 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\AdminModule\CmsModule\Presenters;
+
+use App\AdminModule\CmsModule\Components\DocumentsGridControl;
+use App\AdminModule\CmsModule\Components\DocumentTagsGridControl;
+use App\AdminModule\CmsModule\Components\IDocumentsGridControlFactory;
+use App\AdminModule\CmsModule\Components\IDocumentTagsGridControlFactory;
+
+/**
+ * Presenter starající se o správu dokumentů.
+ *
+ * @author Michal Májský
+ * @author Jan Staněk <jan.stanek@skaut.cz>
+ */
+class DocumentsPresenter extends CmsBasePresenter
+{
+    /**
+     * @var IDocumentsGridControlFactory
+     * @inject
+     */
+    public $documentsGridControlFactory;
+
+    /**
+     * @var IDocumentTagsGridControlFactory
+     * @inject
+     */
+    public $documentTagsGridControlFactory;
+
+    protected function createComponentDocumentsGrid() : DocumentsGridControl
+    {
+        return $this->documentsGridControlFactory->create();
+    }
+
+    protected function createComponentDocumentTagsGrid() : DocumentTagsGridControl
+    {
+        return $this->documentTagsGridControlFactory->create();
+    }
+}

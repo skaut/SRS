@@ -11,10 +11,10 @@ test = no
 ignore = "
     .git*
     /.idea
-    /app/config/config.ci.local.neon
-    /app/config/config.local.neon
-    /app/config/config.local.neon.sample
-    /app/config/config.production.local.neon
+    /app/config/ci.local.neon
+    /app/config/local.neon
+    /app/config/sample.local.neon
+    /app/config/production.local.neon
     /backup
     /docker
     /log

@@ -1,0 +1,20 @@
+{block body-class}{$bodyClass}{/block}
+
+{block main}
+    <div class="row">
+        <div class="col">
+            <h2>{$page->getName()}</h2>
+        </div>
+    </div>
+
+    {foreach $page->getMainContents() as $content}
+        {control $content->getComponentName(), $content}
+    {/foreach}
+{/block}
+
+{block sidebar}
+    {foreach $page->getSidebarContents() as $content}
+        {control $content->getComponentName(), $content}
+    {/foreach}
+{/block}
+

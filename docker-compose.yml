@@ -3,16 +3,14 @@ version: '3.4'
 services:
     app:
         container_name: srs.app
-        image: fmasa/lebeda:7.1
+        image: fmasa/lebeda:7.3
         volumes:
             - www:/var/www
             - .:/var/www/html
-            - /var/www/html/temp
-        ports:
-            - 80:80
+        depends_on:
+            - mysql
         environment:
             DEVELOPMENT_MACHINE: 'true'
-            WRITABLE_DIRS: '/var/www/html/temp'
         networks:
             main:
                 aliases:
@@ -41,15 +39,6 @@ services:
             main:
                 aliases:
                     - mysql-test
-
-    phantom:
-        container_name: srs.phantom
-        image: davert/phantomjs-env
-        networks:
-            main:
-                aliases:
-                    - phantom
-        command: phantomjs --webdriver=4444 --ssl-protocol=any --ignore-ssl-errors=true
 
     smtp:
         container_name: srs.smtp

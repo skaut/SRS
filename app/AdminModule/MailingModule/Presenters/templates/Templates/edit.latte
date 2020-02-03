@@ -1,0 +1,37 @@
+{block head}
+    {include '../../../../Presenters/templates/includes/tinymce_init.latte'}
+{/block}
+
+{block main}
+    <h2>
+        {_'admin.mailing.templates.edit_heading', [
+            'type' => $translator->translate('common.mailing.template_type.' . $editedTemplate->getType())
+        ]}
+    </h2>
+
+    <div class="row">
+        <div class="col-8">
+            <div class="card card-body bg-light pb-1 mb-3">
+                {control editTemplateForm}
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="card panel-info">
+                <div class="card-header">
+                    {_admin.mailing.templates.variables}
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" n:foreach="$editedTemplate->getVariables() as $variable">
+                        <strong>
+                            <a href="#" onClick="tinymce.activeEditor.execCommand('mceInsertContent', false, '%{_'common.mailing.variable_name.' . $variable->getName()|noescape}%');">
+                                %{_'common.mailing.variable_name.' . $variable->getName()}%
+                            </a>
+                        </strong>
+                        - {_'common.mailing.variable_description.' . $variable->getName()}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{/block}

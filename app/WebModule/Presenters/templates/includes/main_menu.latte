@@ -1,0 +1,23 @@
+{define main-menu}
+    <nav class="navbar navbar-expand-md navbar-light bg-light rounded">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="main-navbar">
+            <ul class="navbar-nav mr-auto">
+                {foreach $pages as $item}
+                    {if $item->getSlug() == '/'}
+                        <li n:class="nav-item, $presenter->isLinkCurrent(':Web:Page:default', ['slug' => null]) ? active">
+                            <a class="nav-link" href="{plink :Web:Page:default}">{$item->getName()}</a>
+                        </li>
+                    {else}
+                        <li n:class="nav-item, $presenter->isLinkCurrent(':Web:Page:default', ['slug' => $item->getSlug()]) ? active" n:if="$item->isAllowedForRoles($user->roles)">
+                            <a class="nav-link" href="{plink :Web:Page:default, 'slug' => $item->getSlug()}">{$item->getName()}</a>
+                        </li>
+                    {/if}
+                {/foreach}
+            </ul>
+        </div>
+    </nav>
+{/define}

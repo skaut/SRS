@@ -1,0 +1,357 @@
+parameters:
+
+application:
+    errorPresenter: Error
+    mapping:
+        *: App\*Module\Presenters\*Presenter
+
+session:
+    expiration: 14 days
+
+services:
+    - App\Router\RouterFactory
+    router: @App\Router\RouterFactory::createRouter
+    authenticator: App\Services\Authenticator
+    console.application: Contributte\Console\Application
+    - App\Services\Authorizator
+    - App\Services\AclService
+    - App\Services\ApplicationService
+    - App\Services\BankService
+    - App\Services\CmsService
+    - App\Services\DatabaseService(%appDir%/..)
+    - App\Services\DiscountService
+    - App\Services\ExcelExportService
+    - App\Services\FilesService(%wwwDir%/files)
+    - App\Services\MailService
+    - App\Services\PdfExportService(%wwwDir%/pdf)
+    - App\Services\ProgramService
+    - App\Services\SettingsService
+    - App\Services\SkautIsEventEducationService
+    - App\Services\SkautIsEventGeneralService
+    - App\Services\SkautIsService
+    - App\Services\SubeventService
+    - App\Services\UserService
+
+    - App\Commands\ClearCacheCommand(%appDir%/..)
+    - App\ApiModule\Services\ScheduleService
+    - App\Utils\Validators
+
+    permissionRepository:
+        class: App\Model\Acl\PermissionRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\Permission)
+    resourceRepository:
+        class: App\Model\Acl\SrsResourceRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\SrsResource)
+    roleRepository:
+        class: App\Model\Acl\RoleRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\Role)
+    contentRepository:
+        class: App\Model\Cms\Content\ContentRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Content\Content)
+    documentRepository:
+        class: App\Model\Cms\Document\DocumentRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Document\Document)
+    tagRepository:
+        class: App\Model\Cms\Document\TagRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Document\Tag)
+    faqRepository:
+        class: App\Model\Cms\FaqRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Faq)
+    newsRepository:
+        class: App\Model\Cms\NewsRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\News)
+    pageRepository:
+        class: App\Model\Cms\PageRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Page)
+    mailRepository:
+        class: App\Model\Mailing\MailRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Mail)
+    templateRepository:
+        class: App\Model\Mailing\TemplateRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Template)
+    paymentRepository:
+        class: App\Model\Payment\PaymentRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Payment\Payment)
+    blockRepository:
+        class: App\Model\Program\BlockRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Block)
+    categoryRepository:
+        class: App\Model\Program\CategoryRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Category)
+    programRepository:
+        class: App\Model\Program\ProgramRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Program)
+    roomRepository:
+        class: App\Model\Program\RoomRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Room)
+    customInputRepository:
+        class: App\Model\Settings\CustomInput\CustomInputRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\CustomInput\CustomInput)
+    placePointRepository:
+        class: App\Model\Settings\Place\PlacePointRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\Place\PlacePoint)
+    settingsRepository:
+        class: App\Model\Settings\SettingsRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\Settings)
+    skautIsCourseRepository:
+        class: App\Model\SkautIs\SkautIsCourseRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\SkautIs\SkautIsCourse)
+    discountRepository:
+        class: App\Model\Structure\DiscountRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Discount)
+    subeventRepository:
+        class: App\Model\Structure\SubeventRepository
+        inject: yes
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Subevent)
+    applicationRepository:
+        class: App\Model\User\ApplicationRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application)
+    rolesApplicationRepository:
+        class: App\Model\User\RolesApplicationRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\RolesApplication)
+    subeventsApplicationRepository:
+        class: App\Model\User\SubeventsApplicationRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\SubeventsApplication)
+    customInputValueRepository:
+        class: App\Model\User\CustomInputValue\CustomInputValueRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\CustomInputValue\CustomInputValue)
+    userRepository:
+        class: App\Model\User\UserRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\User)
+    variableSymbolRepository:
+        class: App\Model\User\VariableSymbolRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\VariableSymbol)
+
+    - App\WebModule\Components\IApplicationContentControlFactory
+    - App\WebModule\Components\IBlocksContentControlFactory
+    - App\WebModule\Components\ICapacitiesContentControlFactory
+    - App\WebModule\Components\IDocumentContentControlFactory
+    - App\WebModule\Components\IFaqContentControlFactory
+    - App\WebModule\Components\IHtmlContentControlFactory
+    - App\WebModule\Components\IImageContentControlFactory
+    - App\WebModule\Components\INewsContentControlFactory
+    - App\WebModule\Components\IPlaceContentControlFactory
+    - App\WebModule\Components\IProgramsContentControlFactory
+    - App\WebModule\Components\ITextContentControlFactory
+    - App\WebModule\Components\IUsersContentControlFactory
+    - App\WebModule\Components\ILectorsContentControlFactory
+    - App\WebModule\Components\IApplicationsGridControlFactory
+    - App\WebModule\Components\IOrganizerContentControlFactory
+
+    - App\WebModule\Forms\BaseFormFactory
+    - App\WebModule\Forms\IAdditionalInformationFormFactory
+    - App\WebModule\Forms\ApplicationFormFactory
+    - App\WebModule\Forms\FaqFormFactory
+    - App\WebModule\Forms\PersonalDetailsFormFactory
+    - App\WebModule\Forms\RolesFormFactory
+
+    - App\AdminModule\Components\IApplicationsGridControlFactory
+    - App\AdminModule\Components\IRolesGridControlFactory
+    - App\AdminModule\Components\IUsersGridControlFactory
+    - App\AdminModule\CmsModule\Components\IDocumentsGridControlFactory
+    - App\AdminModule\CmsModule\Components\IDocumentTagsGridControlFactory
+    - App\AdminModule\CmsModule\Components\IFaqGridControlFactory
+    - App\AdminModule\CmsModule\Components\INewsGridControlFactory
+    - App\AdminModule\CmsModule\Components\IPagesGridControlFactory
+    - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
+    - App\AdminModule\ConfigurationModule\Components\IDiscountsGridControlFactory
+    - App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory
+    - App\AdminModule\ConfigurationModule\Components\ISkautIsEventEducationGridControlFactory
+    - App\AdminModule\ConfigurationModule\Components\ISubeventsGridControlFactory
+    - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
+    - App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory
+    - App\AdminModule\PaymentsModule\Components\IPaymentsGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory
+    - App\AdminModule\ProgramModule\Components\IRoomScheduleGridControlFactory
+
+    - App\AdminModule\Forms\BaseFormFactory
+    - App\AdminModule\Forms\AddLectorFormFactory
+    - App\AdminModule\Forms\AddRoleFormFactory
+    - App\AdminModule\Forms\EditRoleFormFactory
+    - App\AdminModule\Forms\EditUserPersonalDetailsFormFactory
+    - App\AdminModule\Forms\EditUserSeminarFormFactory
+    - App\AdminModule\CmsModule\Forms\FaqFormFactory
+    pageFormFactory:
+        factory: App\AdminModule\CmsModule\Forms\PageForm(%id%, %area%, ...)
+        implement: App\AdminModule\CmsModule\Forms\IPageFormFactory
+        parameters: [id, area]
+    - App\AdminModule\CmsModule\Forms\NewsFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\ApplicationFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\BankFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\CustomInputFormFactory
+    discountFormFactory:
+        factory: App\AdminModule\ConfigurationModule\Forms\DiscountForm(%id%, ...)
+        implement: App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory
+        parameters: [id]
+    - App\AdminModule\ConfigurationModule\Forms\MailingFormFactory
+    paymentFormFactory:
+        factory: App\AdminModule\ConfigurationModule\Forms\PaymentForm
+        implement: App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\PlacePointFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\ProgramFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\SubeventFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\SubeventsFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\TicketsFormFactory
+    - App\AdminModule\ConfigurationModule\Forms\WebFormFactory
+    - App\AdminModule\PaymentsModule\Forms\EditPaymentFormFactory
+    - App\AdminModule\ProgramModule\Forms\BlockFormFactory
+    - App\AdminModule\MailingModule\Forms\EditTemplateFormFactory
+    - App\AdminModule\MailingModule\Forms\SendFormFactory
+
+extensions:
+    # Console
+    console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
+
+    # DBAL
+    dbal: Nettrine\DBAL\DI\DbalExtension
+    dbal.console: Nettrine\DBAL\DI\DbalConsoleExtension
+
+    # Cache
+    nettrine.cache: Nettrine\Cache\DI\CacheExtension
+
+    # ORM
+    orm: Nettrine\ORM\DI\OrmExtension
+    orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
+    orm.console: Nettrine\ORM\DI\OrmConsoleExtension
+
+    migrations: Nettrine\Migrations\DI\MigrationsExtension
+    webloader: WebLoader\Nette\Extension
+    skautis: Skautis\Nette\SkautisExtension
+    translation: Contributte\Translation\DI\TranslationExtension
+    mailing: Ublaboo\Mailing\DI\MailingExtension
+
+console:
+    name: SRS
+    catchExceptions: true
+    autoExit: true
+    lazy: false
+
+dbal:
+    debug:
+        panel: %debugMode%
+    connection:
+        charset: UTF8
+
+orm.annotations:
+    debug: %debugMode%
+    paths:
+        - %appDir%/Model
+
+migrations:
+    directory: %appDir%/../migrations
+
+mailing:
+    do: both
+    logDirectory: '%appDir%/../log/mails'
+
+translation:
+    locales:
+        whitelist: [cs]
+        default: cs
+    dirs:
+        - %appDir%/lang
+
+latte:
+    macros:
+        - Nextras\FormsRendering\LatteMacros\Bs3InputMacros::install
+
+webloader:
+    css:
+        web:
+            files:
+                - libs/jquery/jquery-ui.min.css
+                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
+                - libs/font-awesome.min.css
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/css/bootstrap-select.css
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/css/fileinput.min.css
+                - libs/ublaboo-datagrid/happy.min.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid-spinners.css
+                - web/layout.css
+                - web/style.css
+
+        admin:
+            files:
+                - libs/jquery/jquery-ui.min.css
+#                - libs/jquery/jquery.floatingscroll.css
+                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
+                - libs/font-awesome.min.css
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/css/bootstrap-select.css
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/css/fileinput.min.css
+                - libs/ublaboo-datagrid/happy.min.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid.css
+                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid-spinners.css
+                - admin/style.css
+
+        install:
+            files:
+                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
+                - install/style.css
+
+        export:
+            files:
+                - export/style.css
+
+    js:
+        web:
+            files:
+                - libs/jquery/jquery-3.4.1.min.js
+                - libs/live-form-validation.js
+                - libs/nette.ajax.js
+                - libs/jquery/jquery-ui.min.js
+                - libs/jquery/jquery.mousewheel.min.js
+                - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js
+                - libs/moment/moment.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/bootstrap-select.js
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/i18n/defaults-cs_CZ.js
+                - libs/bootstrap-confirmation/bootstrap-confirmation.min.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/fileinput.min.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/themes/fa/theme.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/locales/cs.js
+                - libs/ublaboo-datagrid/happy.min.js
+#                - libs/ublaboo-datagrid/datagrid.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid-instant-url-refresh.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid-spinners.js
+                - main.js
+
+        admin:
+            files:
+                - libs/jquery/jquery-3.4.1.min.js
+                - libs/live-form-validation.js
+                - libs/nette.ajax.js
+                - libs/jquery/jquery-ui.min.js
+                - libs/jquery/jquery.mousewheel.min.js
+#                - libs/jquery/jquery.floatingscroll.min.js
+                - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js
+                - libs/moment/moment.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js
+                - libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs.js
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/bootstrap-select.js
+                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/js/i18n/defaults-cs_CZ.js
+                - libs/bootstrap-confirmation/bootstrap-confirmation.min.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/fileinput.min.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/themes/fa/theme.js
+                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/js/locales/cs.js
+                - libs/ublaboo-datagrid/happy.min.js
+#                - libs/ublaboo-datagrid/datagrid.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid-instant-url-refresh.js
+                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid-spinners.js
+                - main.js
+
+        install:
+            files:
+                - libs/jquery/jquery-3.4.1.min.js
+                - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js

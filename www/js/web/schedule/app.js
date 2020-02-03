@@ -1,9 +1,9 @@
 var apiPath = basePath + '/api/schedule/';
 
-var COLOR_VOLUNTARY = '#0275D8';
-var COLOR_MANDATORY = '#D9534F';
-var COLOR_ATTENDS = '#5CB85C';
-var COLOR_BLOCKED = '#A6A6A6';
+var COLOR_VOLUNTARY = '#0077F7';
+var COLOR_MANDATORY = '#D53343';
+var COLOR_ATTENDS = '#27A243';
+var COLOR_BLOCKED = '#6C757D';
 
 
 var app = angular.module('scheduleApp', ['ui.calendar', 'ui.bootstrap', 'ngSanitize']);
@@ -215,7 +215,7 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                     slotLabelInterval: '01:00:00'
                 }
             },
-
+            eventTextColor: '#fff',
             eventClick: function (event, element) {
                 if ($scope.loading == 0) {
                     $scope.event = $scope.events[event._id - 1];
@@ -225,11 +225,9 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                     $('#program-modal').modal('show');
                 }
             },
-
             eventMouseout: function (event, jsEvent, view) {
                 $('.popover').fadeOut();
             },
-
             eventRender: function (event, element) {
                 var options = {
                     html: true,
@@ -248,8 +246,8 @@ app.controller('WebScheduleCtrl', function WebScheduleCtrl($scope, $http, $q, ui
                 if (event.blocked.room) {
                     options.content += "<strong>Místnost:</strong> " + (event.room ? event.room.name : '') + "<br>";
                 }
-                options.content += "<strong>Obsazenost:</strong> " + (event.block.capacity !== undefined ? event.attendees_count + "/" + event.block.capacity : event.attendees_count) + "</br>";
-                options.content += event.block.perex + "</br>";
+                options.content += "<strong>Obsazenost:</strong> " + (event.block.capacity !== undefined ? event.attendees_count + "/" + event.block.capacity : event.attendees_count) + "<br>";
+                options.content += event.block.perex;
 
                 element.popover(options);
             }

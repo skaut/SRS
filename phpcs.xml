@@ -10,15 +10,14 @@
     <arg value="nps"/>
 
     <file>app</file>
-    <rule ref="Doctrine">
-        <!-- Zpusobuje problem s property pouzivanymi v Doctrine mappings -->
-        <exclude name="SlevomatCodingStandard.Classes.UnusedPrivateElements"/>
 
+    <rule ref="Doctrine">
         <!-- Zakazuje pouziti @author anotace -->
         <exclude name="SlevomatCodingStandard.Commenting.ForbiddenAnnotations.AnnotationForbidden"/>
 
         <!-- Chybejici typehints zatim nelze doplnit u funkcí volaných z AJAX nebo pretizenych funkci -->
         <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint"/>
 
         <!-- Zneprehlednuje kod -->
         <exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit"/>
@@ -27,7 +26,28 @@
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
 
         <!-- Docasne ignorovano, pro porovnavani objektu (DateTime) neni strict zadouci -->
-        <exclude name="SlevomatCodingStandard.ControlStructures.DisallowEqualOperators.DisallowedEqualOperator"/>
-        <exclude name="SlevomatCodingStandard.ControlStructures.DisallowEqualOperators.DisallowedNotEqualOperator"/>
+        <exclude name="SlevomatCodingStandard.Operators.DisallowEqualOperators.DisallowedEqualOperator"/>
+        <exclude name="SlevomatCodingStandard.Operators.DisallowEqualOperators.DisallowedNotEqualOperator"/>
+
+        <!-- Docasne ignorovano - problem ve foreach, pokud je potreba jen key -->
+        <exclude name="SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable"/>
+
+        <!-- Rozpor s phpstan -->
+        <exclude name="SlevomatCodingStandard.PHP.RequireExplicitAssertion.RequiredExplicitAssertion"/>
+
+        <!-- skautIS property -->
+        <exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Variables.UnusedVariable"/>
+    <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements">
+        <properties>
+            <property name="alwaysUsedPropertiesAnnotations" type="array">
+                <element value="@ORM\Column"/>
+                <element value="@ORM\ManyToOne"/>
+                <element value="@ORM\OneToMany"/>
+                <element value="@ORM\ManyToMany"/>
+                <element value="@ORM\Embedded"/>
+            </property>
+        </properties>
     </rule>
 </ruleset>

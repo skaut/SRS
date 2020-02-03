@@ -1,0 +1,42 @@
+{block head}
+    {include #parent}
+
+    <script>
+        $(function () {
+            $('#textbox-search').on('keyup', function () {
+                var value = $(this).val();
+                if (value.length >= 2) {
+                    $.nette.ajax({
+                        'url': {link search!},
+                        'data': {
+                            text: value
+                        }
+                    });
+                }
+                else {
+                    $('div#results').hide();
+                }
+            });
+        });
+    </script>
+{/block}
+
+{block sidebar}
+    <h3>{_admin.users.users_search_heading}</h3>
+    <div class="card card-body bg-light mb-3">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-search fa-fw"></i></span>
+            </div>
+            <input id="textbox-search" class="form-control" type="text">
+        </div>
+
+        {snippet results}
+            <div id="results" class="list-group mt-3" n:if="$results">
+                <a href="{$result['id']}" n:class="list-group-item, list-group-item-action, $result['id'] == $detailUser->getId() ? active" n:foreach="$results as $result">
+                    {$result['displayName']}
+                </a>
+            </div>
+        {/snippet}
+    </div>
+{/block}

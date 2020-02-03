@@ -192,8 +192,8 @@ blocks_content:
 
 capacities_content:
     list_empty: "Žádné role nemají veřejnou obsazenost."
-    occupied_limited: "Obsazeno %occupied% z %total%"
-    occupied_unlimited: "Obsazeno %occupied%"
+    occupied_limited: "(obsazeno %occupied% z %total%)"
+    occupied_unlimited: "(obsazeno %occupied%)"
 
 document_content:
     list_empty: "Pro vaši roli nejsou k dispozici žádné dokumenty."
@@ -206,7 +206,7 @@ faq_content:
 
     question: "Otázka"
     question_empty: "Zadejte otázku."
-    add_question: "Položit dotaz."
+    add_question: "Položit dotaz"
     add_question_successful: "Otázka byla úspěšně přidána. Dle uvážení organizátorů bude odpověď zveřejněna."
 
 programs_content:

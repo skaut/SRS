@@ -1,0 +1,12 @@
+{block head}
+    <script src="https://api.mapy.cz/loader.js"></script>
+    <script>Loader.load()</script>
+    <script src="{$basePath}/js/libs/nette-forms-gpspicker/nette.gpsPicker.js"></script>
+{/block}
+
+{block main}
+    <h2>{_admin.configuration.place_points_add_heading}</h2>
+    <div class="card card-body bg-light pb-1 mb-3">
+        {control placePointForm}
+    </div>
+{/block}

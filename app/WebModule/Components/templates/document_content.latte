@@ -1,0 +1,28 @@
+<div class="clearfix"></div>
+
+<div class="document-content">
+    <div class="row">
+        <div class="col">
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            {if $documents->isEmpty()}
+                <p>{_web.document_content.list_empty}</p>
+            {else}
+                <ul class="list-unstyled">
+                    <li class="mb-1" n:foreach="$documents as $document">
+                        <a class="btn btn-sm btn-secondary" href="{$basePath}/files{$document->getFile()}" target="_blank">
+                            <i class="fa fa-file"></i>
+                            {$document->getName()}
+                        </a>
+                        <span n:if="$document->getDescription()">- {$document->getDescription()}</span>
+                        (upraveno: {$document->getTimestamp()|date:'j. n. Y'})
+                    </li>
+                </ul>
+            {/if}
+        </div>
+    </div>
+</div>

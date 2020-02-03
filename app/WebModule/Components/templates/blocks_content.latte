@@ -1,0 +1,94 @@
+<div class="clearfix"></div>
+
+<div class="blocks-content">
+    <div class="row">
+        <div class="col">
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <h4>{_web.blocks_content.categories}</h4>
+            <div id="accordion">
+                <div class="card mb-1" n:if="!empty($uncategorizedBlocks)">
+                    <div class="card-header" style="transform: rotate(0);">
+                        {_web.blocks_content.uncategorized}
+                        <a href="#" class="stretched-link" data-toggle="collapse" data-target="#uncategorized"></a>
+                    </div>
+                    <div id="uncategorized" n:class="collapse, $selectedCategoryId == 'uncategorized' ? show" data-parent="#accordion">
+                        <div class="list-group list-group-flush">
+                            <a href="?blockId={$block->getId()}" n:class="list-group-item, list-group-item-action, $block->getId() == $selectedBlockId ? active" n:foreach="$uncategorizedBlocks as $block">
+                                {$block->getName()}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1" n:foreach="$categories as $category">
+                    <div class="card-header" style="transform: rotate(0);">
+                        {$category->getName()}
+                        <a href="#" class="stretched-link" data-toggle="collapse" data-target="#category-{$category->getId()}"></a>
+                    </div>
+                    <div id="category-{$category->getId()}" n:class="collapse, $selectedCategoryId == $category->getId() ? show" data-parent="#accordion">
+                        <div class="list-group list-group-flush">
+                            <a href="?blockId={$block->getId()}" n:class="list-group-item, list-group-item-action, $block->getId() == $selectedBlockId ? active" n:foreach="$category->getBlocks() as $block">
+                                {$block->getName()}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            {ifset $selectedBlock}
+                <h4>{$selectedBlock->getName()}</h4>
+                <div class="card card-body bg-light pb-1">
+                    <ul class="list-unstyled">
+                        <li n:if="$selectedBlock->getCategory()">
+                            <strong>{_web.blocks_content.category}</strong>
+                            {$selectedBlock->getCategory()->getName()}
+                        </li>
+                        <li>
+                            <strong>{_web.blocks_content.duration}</strong>
+                            {_web.common.minutes, $selectedBlock->getDuration()}
+                        </li>
+                        <li>
+                            <strong>{_web.blocks_content.capacity}</strong>
+                            {if $selectedBlock->getCapacity() !== null}
+                                {$selectedBlock->getCapacity()}
+                            {else}
+                                {_web.blocks_content.capacity_unlimited}
+                            {/if}
+                        </li>
+                    </ul>
+
+                    {if !$selectedBlock->getLectors()->isEmpty()}
+                        <h5>{_web.blocks_content.lectors}</h5>
+                        {foreach $selectedBlock->getLectors() as $lector}
+                            <h6>{$lector->getLectorName()}</h6>
+                            <p>
+                                <img src="{$basePath}/files/user_photos/{$lector->getPhoto()}" class="pull-left mr-3 mb-3" n:if="$lector->getPhoto()"/>
+                                {$lector->getAbout()}
+                            </p>
+                            <div class="clearfix"></div>
+                        {/foreach}
+                    {/if}
+
+                    <h5>{_web.blocks_content.about_block}</h5>
+                    <p n:ifcontent>{$selectedBlock->getPerex()}</p>
+                    {$selectedBlock->getDescription()|noescape}
+                </div>
+            {else}
+                <h4>{_web.blocks_content.all_blocks}</h4>
+                <div class="card card-body bg-light">
+                    <ul class="list-unstyled mb-0">
+                        <li n:foreach="$allBlocks as $block">
+                            <a href="?blockId={$block->getId()}"><strong>{$block->getName()}</strong></a>
+                        </li>
+                    </ul>
+                </div>
+            {/ifset}
+        </div>
+    </div>
+</div>

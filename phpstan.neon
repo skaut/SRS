@@ -1,0 +1,38 @@
+parameters:
+    autoload_directories:
+        - %rootDir%/../../../app
+        - %rootDir%/../../../code-quality
+
+    checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false
+
+    ignoreErrors:
+        - '#Parameter \#1 \$x of method Doctrine\\Common\\Collections\\ExpressionBuilder::(or|and)X\(\) expects array<int, mixed>\|null, Doctrine\\Common\\Collections\\Expr\\Comparison given\.#'
+
+includes:
+    - vendor/phpstan/phpstan-nette/extension.neon
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+
+services:
+	- class: CodeQuality\ObjectIdentityComparisonRule
+	  tags: [ phpstan.rules.rule ]
+
+	- class: SkautisAliasesExtension
+	  tags: [ phpstan.broker.propertiesClassReflectionExtension ]
+
+	- class: CodeQuality\SkautisWebserviceMagicMethodsExtension
+	  tags: [ phpstan.broker.methodsClassReflectionExtension ]
+
+	- class: CodeQuality\QueryBusDynamicReturnTypeProvider
+	  arguments:
+	      - %autoload_directories%
+	      - %rootDir%/../../../temp
+	      - '~^.*QueryHandlers\\.*Handler$~'
+
+	  tags: [ phpstan.broker.dynamicMethodReturnTypeExtension ]
+
+	#
+	# Dynamic method return types
+	#
+	- class: CodeQuality\PresenterDynamicReturnTypeExtension
+	  tags: [ phpstan.broker.dynamicMethodReturnTypeExtension ]

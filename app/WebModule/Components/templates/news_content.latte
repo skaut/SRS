@@ -1,0 +1,21 @@
+<div class="clearfix"></div>
+
+<div class="news-content">
+    <div class="row">
+        <div class="col">
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    <div class="row mb-3" n:foreach="$news as $n">
+        <div class="col">
+            <div class="card">
+                <div class="card-body pb-1">{$n->getText()|noescape}</div>
+                <div class="card-footer">
+                    <i class="fa fa-thumb-tack" n:if="$n->isPinned()"></i>
+                    {$n->getPublished()|date:'j. n. Y'}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

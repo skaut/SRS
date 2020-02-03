@@ -1,0 +1,21 @@
+<div class="clearfix"></div>
+
+<div class="users-content">
+    <div class="row">
+        <div class="col">
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            {if empty($users)}
+                <p>{_web.users_content.list_empty}</p>
+            {else}
+                <ul class="list-unstyled mb-0">
+                    <li n:foreach="$users as $u">{$u->getDisplayName()}</li>
+                </ul>
+            {/if}
+        </div>
+    </div>
+</div>
