@@ -8,9 +8,9 @@ script:
 before_deploy:
   - composer self-update
   - composer install --no-dev --prefer-dist --optimize-autoloader
-  - mv app/config/local.neon.sample app/config/local.neon
+  - mv app/config/sample.local.neon app/config/local.neon
   - rm -f app/config/ci.local.neon
-  - zip -r SRS app backup libs log migrations temp vendor www README.md
+  - zip -r SRS app backup log migrations temp vendor www .htaccess README.md
 
 deploy:
   provider: releases
