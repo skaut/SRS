@@ -36,7 +36,7 @@ class PersonalDetailsFormFactory
      */
     private $user;
 
-    /** @var callable */
+    /** @var callable[] */
     public $onSkautIsError;
 
     /** @var BaseFormFactory */
