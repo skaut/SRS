@@ -13,16 +13,14 @@
                 <p>{_web.capacities_content.list_empty}</p>
             {else}
                 <ul class="list-unstyled mb-0">
-                    <ul class="list-unstyled mb-0">
-                        <li n:foreach="$roles as $role">
-                            <strong>{$role['name']}</strong>
-                            {if  $role['capacity'] !== null}
-                                {_web.capacities_content.occupied_limited, [occupied => $role['usersCount'], total => $role['capacity']]}
-                            {else}
-                                {_web.capacities_content.occupied_unlimited, [occupied => $role['usersCount']]}
-                            {/if}
-                        </li>
-                    </ul>
+                    <li n:foreach="$roles as $role">
+                        <strong>{$role['name']}</strong>
+                        {if  $role['capacity'] !== null}
+                            {_web.capacities_content.occupied_limited, [occupied => $role['usersCount'], total => $role['capacity']]}
+                        {else}
+                            {_web.capacities_content.occupied_unlimited, [occupied => $role['usersCount']]}
+                        {/if}
+                    </li>
                 </ul>
             {/if}
         </div>

@@ -91,7 +91,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">{{ event.block.name }}</h5>
+                                    <h4 class="modal-title">{{ event.block.name }}</h4>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 </div>
                                 <div class="modal-body">
@@ -116,9 +116,9 @@
                                     </ul>
 
                                     <div ng-if="event.block.lectors">
-                                        <h6>{_web.programs_content.lectors}</h6>
+                                        <h5>{_web.programs_content.lectors}</h5>
                                         <div ng-repeat="lector in event.block.lectors">
-                                            <h7>{{ lector.name }}</h7>
+                                            <h6>{{ lector.name }}</h6>
                                             <p>
                                                 <img ng-src="{$basePath}/files/user_photos/{{ lector.photo }}" ng-if="lector.photo" class="pull-left mr-3 mb-3"/>
                                                 {{ lector.about }}
@@ -127,7 +127,7 @@
                                         </div>
                                     </div>
 
-                                    <h6>{_web.programs_content.about_program}</h6>
+                                    <h5>{_web.programs_content.about_program}</h5>
                                     <p>{{ event.block.perex }}</p>
                                     <div ng-bind-html="event.block.description"></div>
                                 </div>
@@ -150,13 +150,13 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">{_web.programs_content.help}</h5>
+                                    <h4 class="modal-title">{_web.programs_content.help}</h4>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 </div>
                                 <div class="modal-body">
                                     <p>{_web.programs_content.help_text}</p>
 
-                                    <h6>{_web.programs_content.help_legend}</h6>
+                                    <h5>{_web.programs_content.help_legend}</h5>
                                     <ul class="list-group text-white">
                                         <li class="list-group-item bg-success">{_web.programs_content.help_legend_attends}</li>
                                         <li class="list-group-item bg-primary">{_web.programs_content.help_legend_optional}</li>

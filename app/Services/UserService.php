@@ -26,6 +26,9 @@ class UserService
         $this->translator = $translator;
     }
 
+    /**
+     * Vrací informaci o členství jako text.
+     */
     public function getMembershipText(User $user) : string
     {
         if ($user->getUnit() !== null) {
@@ -43,6 +46,9 @@ class UserService
         return $this->translator->translate('admin.users.users_membership_not_connected');
     }
 
+    /**
+     * Vrací platební metodu uživatele.
+     */
     public function getPaymentMethod(User $user) : ?string
     {
         $paymentMethod = null;

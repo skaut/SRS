@@ -13,7 +13,6 @@ use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Bridges\ApplicationLatte\Template;
-use Nette\Http\Response;
 use Throwable;
 use function random_bytes;
 
