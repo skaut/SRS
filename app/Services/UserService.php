@@ -58,8 +58,7 @@ class UserService
             if ($currentPaymentMethod) {
                 if (! $paymentMethod) {
                     $paymentMethod = $currentPaymentMethod;
-                }
-                elseif ($paymentMethod !== $currentPaymentMethod) {
+                } elseif ($paymentMethod !== $currentPaymentMethod) {
                     return PaymentType::MIXED;
                 }
             }

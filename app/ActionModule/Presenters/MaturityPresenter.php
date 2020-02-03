@@ -124,6 +124,7 @@ class MaturityPresenter extends ActionBasePresenter
 
                     if ($maturityDate !== null && $cancelRegistrationDate > $maturityDate) {
                         $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED_NOT_PAID, null);
+
                         return;
                     }
                 }

@@ -879,6 +879,7 @@ class ApplicationService
                 foreach ($subevents as $subevent) {
                     $fee += $subevent->getFee();
                 }
+
                 break;
             }
         }

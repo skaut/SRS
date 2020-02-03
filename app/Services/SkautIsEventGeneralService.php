@@ -48,6 +48,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
             }
         } catch (WsdlException $ex) {
             Debugger::log($ex, ILogger::WARNING);
+
             return false;
         }
 
