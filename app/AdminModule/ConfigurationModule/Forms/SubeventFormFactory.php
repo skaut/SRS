@@ -15,6 +15,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nettrine\ORM\EntityManagerDecorator;
+use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use function md5;
 use function mt_rand;
@@ -75,6 +76,18 @@ class SubeventFormFactory
         $nameText = $form->addText('name', 'admin.configuration.subevents_name')
             ->addRule(Form::FILLED, 'admin.configuration.subevents_name_empty');
 
+        $registerableFromDateTime = new DateTimeControl('admin.configuration.subevents.registerable_from');
+        $registerableFromDateTime
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.configuration.subevents.registerable_from_note'));
+        $form->addComponent($registerableFromDateTime, 'registerableFrom');
+
+        $registerableToDateTime = new DateTimeControl('admin.configuration.subevents.registerable_to');
+        $registerableToDateTime
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.configuration.subevents.registerable_to_note'));
+        $form->addComponent($registerableToDateTime, 'registerableTo');
+
         $capacityText = $form->addText('capacity', 'admin.configuration.subevents_capacity')
             ->setHtmlAttribute('data-toggle', 'tooltip')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.configuration.subevents_capacity_note'));
@@ -131,6 +144,8 @@ class SubeventFormFactory
             $form->setDefaults([
                 'id' => $id,
                 'name' => $this->subevent->getName(),
+                'registerableFrom' => $this->subevent->getRegisterableFrom(),
+                'registerableTo' => $this->subevent->getRegisterableTo(),
                 'capacity' => $this->subevent->getCapacity(),
                 'fee' => $this->subevent->getFee(),
                 'incompatibleSubevents' => $this->subeventRepository->findSubeventsIds($this->subevent->getIncompatibleSubevents()),
@@ -162,6 +177,8 @@ class SubeventFormFactory
         $capacity = $values->capacity !== '' ? $values->capacity : null;
 
         $this->subevent->setName($values->name);
+        $this->subevent->setRegisterableFrom($values->registerableFrom);
+        $this->subevent->setRegisterableTo($values->registerableTo);
         $this->subevent->setCapacity($capacity);
         $this->subevent->setFee($values->fee);
         $this->subevent->setIncompatibleSubevents($this->subeventRepository->findSubeventsByIds($values->incompatibleSubevents));

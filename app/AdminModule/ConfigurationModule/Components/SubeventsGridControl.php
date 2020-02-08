@@ -6,6 +6,7 @@ namespace App\AdminModule\ConfigurationModule\Components;
 
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
+use App\Utils\Helpers;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
@@ -62,6 +63,12 @@ class SubeventsGridControl extends Control
                 '0' => $this->translator->translate('admin.common.no'),
                 '1' => $this->translator->translate('admin.common.yes'),
             ]);
+
+        $grid->addColumnDateTime('registerableFrom', 'admin.configuration.subevents.registerable_from')
+            ->setFormat(Helpers::DATETIME_FORMAT);
+
+        $grid->addColumnDateTime('registerableTo', 'admin.configuration.subevents.registerable_to')
+            ->setFormat(Helpers::DATETIME_FORMAT);
 
         $grid->addColumnNumber('fee', 'admin.configuration.subevents_fee');
 
