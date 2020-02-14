@@ -39,8 +39,8 @@ build:
             code: sleep 10
 
         - appnific/expandenv:
-            input_file: app/config/ci.local.neon
-            output_file: app/config/local.neon
+            input_file: App/config/ci.local.neon
+            output_file: App/config/local.neon
 
         - script:
             name: run database migrations

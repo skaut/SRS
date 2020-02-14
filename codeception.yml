@@ -3,7 +3,7 @@ actor: Tester
 coverage:
     enabled: true
     include:
-        - app/*.php
+        - App/*.php
 
 paths:
     tests: tests
