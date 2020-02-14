@@ -38,7 +38,7 @@ class SkautIsService
     /**
      * Vratí url přihlašovací stránky skautIS.
      */
-    public function getLoginUrl(?string $backlink) : string
+    public function getLoginUrl(string $backlink) : string
     {
         return $this->skautIs->getLoginUrl($backlink);
     }
