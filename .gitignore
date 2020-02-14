@@ -5,7 +5,7 @@
 /composer.phar
 /deployment.ini
 /deployment.log
-/app/config/local.neon
+/App/config/local.neon
 /www/adminer.php
 /vendor
 /tests/_output/*
