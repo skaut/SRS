@@ -90,7 +90,7 @@
     },
 
     "autoload": {
-        "classmap": ["App/Bootstrap.php"]
+        "classmap": ["app/Bootstrap.php"]
     },
 
     "autoload-dev": {

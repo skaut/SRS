@@ -9,7 +9,7 @@
     <!-- Ignore warnings, show progress of the run and show sniff names -->
     <arg value="nps"/>
 
-    <file>App</file>
+    <file>app</file>
 
     <rule ref="Doctrine">
         <!-- Zakazuje pouziti @author anotace -->
