@@ -434,33 +434,21 @@ class Subevent
         return $this->capacity ? $this->countUsers() . '/' . $this->capacity : '' . $this->countUsers();
     }
 
-    /**
-     * @return DateTimeImmutable
-     */
     public function getRegisterableFrom(): DateTimeImmutable
     {
         return $this->registerableFrom;
     }
 
-    /**
-     * @param DateTimeImmutable $registerableFrom
-     */
     public function setRegisterableFrom(DateTimeImmutable $registerableFrom): void
     {
         $this->registerableFrom = $registerableFrom;
     }
 
-    /**
-     * @return DateTimeImmutable
-     */
     public function getRegisterableTo(): DateTimeImmutable
     {
         return $this->registerableTo;
     }
 
-    /**
-     * @param DateTimeImmutable $registerableTo
-     */
     public function setRegisterableTo(DateTimeImmutable $registerableTo): void
     {
         $this->registerableTo = $registerableTo;
