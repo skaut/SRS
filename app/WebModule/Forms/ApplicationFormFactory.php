@@ -404,7 +404,7 @@ class ApplicationFormFactory
             return;
         }
 
-        $subeventsOptions = $this->subeventService->getExplicitOptionsWithCapacity();
+        $subeventsOptions = $this->subeventService->getSubeventsOptionsWithCapacity(true, true, false, false);
 
         $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
             $subeventsOptions
@@ -421,7 +421,7 @@ class ApplicationFormFactory
             ->addRule(Form::FILLED, 'web.application_content.subevents_empty');
 
         //generovani chybovych hlasek pro vsechny kombinace podakci
-        foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
+        foreach ($this->subeventRepository->findExplicitOrderedByName() as $subevent) {
             if (! $subevent->getIncompatibleSubevents()->isEmpty()) {
                 $subeventsSelect->addRule(
                     [$this, 'validateSubeventsIncompatible'],

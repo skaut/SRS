@@ -60,7 +60,7 @@ class AuthPresenter extends BasePresenter
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function actionLogin(?string $backlink = null) : void
+    public function actionLogin(string $backlink = '') : void
     {
         if (empty($this->getHttpRequest()->getPost())) {
             $loginUrl = $this->skautIsService->getLoginUrl($backlink);

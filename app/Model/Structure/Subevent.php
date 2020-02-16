@@ -9,6 +9,7 @@ use App\Model\Program\Block;
 use App\Model\SkautIs\SkautIsCourse;
 use App\Model\User\Application;
 use App\Model\User\SubeventsApplication;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -136,6 +137,24 @@ class Subevent
      * @var Collection|SkautIsCourse[]
      */
     protected $skautIsCourses;
+
+    /**
+     * Registrovatelná od.
+     *
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     *
+     * @var DateTimeImmutable
+     */
+    protected $registerableFrom;
+
+    /**
+     * Registrovatelná do.
+     *
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     *
+     * @var DateTimeImmutable
+     */
+    protected $registerableTo;
 
     public function __construct()
     {
@@ -413,5 +432,25 @@ class Subevent
     public function getOccupancyText() : string
     {
         return $this->capacity ? $this->countUsers() . '/' . $this->capacity : '' . $this->countUsers();
+    }
+
+    public function getRegisterableFrom() : ?DateTimeImmutable
+    {
+        return $this->registerableFrom;
+    }
+
+    public function setRegisterableFrom(?DateTimeImmutable $registerableFrom) : void
+    {
+        $this->registerableFrom = $registerableFrom;
+    }
+
+    public function getRegisterableTo() : ?DateTimeImmutable
+    {
+        return $this->registerableTo;
+    }
+
+    public function setRegisterableTo(?DateTimeImmutable $registerableTo) : void
+    {
+        $this->registerableTo = $registerableTo;
     }
 }

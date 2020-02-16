@@ -581,6 +581,12 @@ configuration:
     subevents_configuration_heading: "Nastavení podakcí"
     is_allowed_add_subevents_after_payment: "povolit přidávání podakcí po zaplacení"
 
+    subevents:
+        registerable_from: "Registrovatelná od"
+        registerable_from_note: "Pokud necháte datum prázdný, nebude počátek registrace omezen."
+        registerable_to: "Registrovatelná do"
+        registerable_to_note: "Pokud necháte datum prázdný, nebude konec registrace omezen."
+
     discounts_heading: "Slevy"
     discounts_condition: "Podmínka"
     discounts_condition_format: "Podmínka není zadána ve správném formátu."

@@ -75,146 +75,13 @@ class SubeventService
     }
 
     /**
-     * Vrací seznam podakcí, jako možnosti pro select
+     * Vrací seznam podakcí splňujících podmínku, s informací o obsazenosti, jako možnosti pro select.
      *
      * @return string[]
      */
-    public function getExplicitOptions() : array
+    public function getSubeventsOptionsWithCapacity(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null) : array
     {
-        $subevents = $this->subeventRepository->createQueryBuilder('s')
-            ->where('s.implicit = FALSE')
-            ->orderBy('s.name')
-            ->getQuery()
-            ->getResult();
-
-        $options = [];
-        foreach ($subevents as $subevent) {
-            $options[$subevent->getId()] = $subevent->getName();
-        }
-
-        return $options;
-    }
-
-    /**
-     * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
-     *
-     * @return string[]
-     */
-    public function getSubeventsOptionsWithCapacity() : array
-    {
-        $subevents = $this->subeventRepository->createQueryBuilder('s')
-            ->orderBy('s.name')
-            ->getQuery()
-            ->getResult();
-
-        $options = [];
-        foreach ($subevents as $subevent) {
-            if ($subevent->hasLimitedCapacity()) {
-                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', null, [
-                    'subevent' => $subevent->getName(),
-                    'occupied' => $subevent->countUsers(),
-                    'total' => $subevent->getCapacity(),
-                ]);
-            } else {
-                $options[$subevent->getId()] = $subevent->getName();
-            }
-        }
-
-        return $options;
-    }
-
-    /**
-     * Vrací seznam podakcí, s informací o obsazenosti, jako možnosti pro select
-     *
-     * @return string[]
-     */
-    public function getExplicitOptionsWithCapacity() : array
-    {
-        $subevents = $this->subeventRepository->createQueryBuilder('s')
-            ->where('s.implicit = FALSE')
-            ->orderBy('s.name')
-            ->getQuery()
-            ->getResult();
-
-        $options = [];
-        foreach ($subevents as $subevent) {
-            if ($subevent->hasLimitedCapacity()) {
-                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', null, [
-                    'subevent' => $subevent->getName(),
-                    'occupied' => $subevent->countUsers(),
-                    'total' => $subevent->getCapacity(),
-                ]);
-            } else {
-                $options[$subevent->getId()] = $subevent->getName();
-            }
-        }
-
-        return $options;
-    }
-
-    /**
-     * Vrací seznam podakcí, kromě podakcí uživatele, s informací o obsazenosti, jako možnosti pro select.
-     *
-     * @return string[]
-     */
-    public function getNonRegisteredSubeventsOptionsWithCapacity(User $user) : array
-    {
-        $usersSubevents    = $user->getSubevents();
-        $usersSubeventsIds = $this->subeventRepository->findSubeventsIds($usersSubevents);
-
-        if (empty($usersSubeventsIds)) {
-            $subevents = $this->subeventRepository->createQueryBuilder('s')
-                ->orderBy('s.name')
-                ->getQuery()
-                ->getResult();
-        } else {
-            $subevents = $this->subeventRepository->createQueryBuilder('s')
-                ->where('s.id NOT IN (:subevents)')->setParameter('subevents', $usersSubeventsIds)
-                ->orderBy('s.name')
-                ->getQuery()
-                ->getResult();
-        }
-
-        $options = [];
-        foreach ($subevents as $subevent) {
-            if ($subevent->hasLimitedCapacity()) {
-                $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', null, [
-                    'subevent' => $subevent->getName(),
-                    'occupied' => $subevent->countUsers(),
-                    'total' => $subevent->getCapacity(),
-                ]);
-            } else {
-                $options[$subevent->getId()] = $subevent->getName();
-            }
-        }
-
-        return $options;
-    }
-
-    /**
-     * Vrací seznam podakcí, kromě podakcí uživatele, s informací o obsazenosti, jako možnosti pro select.
-     *
-     * @return string[]
-     */
-    public function getNonRegisteredExplicitOptionsWithCapacity(User $user) : array
-    {
-        $usersSubevents    = $user->getSubevents();
-        $usersSubeventsIds = $this->subeventRepository->findSubeventsIds($usersSubevents);
-
-        if (empty($usersSubeventsIds)) {
-            $subevents = $this->subeventRepository->createQueryBuilder('s')
-                ->where('s.implicit = FALSE')
-                ->orderBy('s.name')
-                ->getQuery()
-                ->getResult();
-        } else {
-            $subevents = $this->subeventRepository->createQueryBuilder('s')
-                ->where('s.implicit = FALSE')
-                ->andWhere('s.id NOT IN (:subevents)')->setParameter('subevents', $usersSubeventsIds)
-                ->orderBy('s.name')
-                ->getQuery()
-                ->getResult();
-        }
+        $subevents = $this->subeventRepository->findSubeventsOrderedByName($explicitOnly, $registerableNowOnly, $notRegisteredOnly, $includeUsers, $user);
 
         $options = [];
         foreach ($subevents as $subevent) {
@@ -239,10 +106,7 @@ class SubeventService
      */
     public function getSubeventsOptionsWithUsersCount() : array
     {
-        $subevents = $this->subeventRepository->createQueryBuilder('s')
-            ->orderBy('s.name')
-            ->getQuery()
-            ->getResult();
+        $subevents = $this->subeventRepository->findAllOrderedByName();
 
         $options = [];
         foreach ($subevents as $subevent) {
