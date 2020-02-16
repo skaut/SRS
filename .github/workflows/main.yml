@@ -46,6 +46,34 @@ jobs:
         run: tar -xzf workdir.tar.gz
       - run: phing tests-unit
 
+  tests-integrations:
+    name: "Run integration tests"
+    runs-on: ubuntu-18.04
+    container:
+      image: fmasa/lebeda:7.3
+    needs: workdir
+
+    services:
+      smtp-srs.loc:
+        image: tophfr/mailcatcher:0.6.5_3
+        env:
+          SMTP_HOST: smtp-srs.loc
+      mysql-test:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: 'root'
+          MYSQL_DATABASE: srs
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+    steps:
+      - name: Download workdir
+        uses: actions/download-artifact@v1
+        with:
+          name: workdir
+          path: .
+      - name: Extract workdir
+        run: tar -xzf workdir.tar.gz
+      - run: phing tests-integration
+
   static-analysis:
     name: "Run PHPStan analysis"
     runs-on: ubuntu-18.04
