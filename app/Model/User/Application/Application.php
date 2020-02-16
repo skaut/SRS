@@ -51,7 +51,6 @@ abstract class Application
      * @var string
      */
     protected $type;
-
     use Id;
 
     /**

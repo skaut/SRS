@@ -221,7 +221,7 @@ class ApplicationsGridControl extends Control
         }
 
         $grid->setItemsDetail()
-            ->setRenderCondition(function (Application $item) {
+            ->setRenderCondition(static function (Application $item) {
                 return $item->isWaitingForPayment();
             })
             ->setText($this->translator->translate('web.profile.applications_pay'))
@@ -229,7 +229,7 @@ class ApplicationsGridControl extends Control
             ->setClass('btn btn-xs btn-primary ajax')
             ->setTemplateParameters([
                 'account' => $this->settingsService->getValue(Settings::ACCOUNT_NUMBER),
-                'message' => $this->settingsService->getValue(Settings::SEMINAR_NAME)
+                'message' => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             ]);
         $grid->setTemplateFile(__DIR__ . '/templates/applications_grid_detail.latte');
 
