@@ -124,9 +124,10 @@ class ApplicationsGridControl extends Control
             ->setParameter('user', $this->user)
             ->orderBy('a.applicationId'));
         $grid->setPagination(false);
+
         $grid->setItemsDetail()
             ->setTemplateParameters(['applicationRepository' => $this->applicationRepository]);
-        $grid->setTemplateFile(__DIR__ . '/templates/applications_grid_template.latte');
+        $grid->setTemplateFile(__DIR__ . '/templates/applications_grid_detail.latte');
 
         $grid->addColumnDateTime('applicationDate', 'admin.users.users_applications_application_date')
             ->setFormat(Helpers::DATETIME_FORMAT);

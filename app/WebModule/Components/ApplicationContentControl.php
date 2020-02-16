@@ -47,20 +47,25 @@ class ApplicationContentControl extends Control
     /** @var SubeventRepository */
     private $subeventRepository;
 
+    /** @var IApplicationsGridControlFactory */
+    public $applicationsGridControlFactory;
+
     public function __construct(
         ApplicationFormFactory $applicationFormFactory,
         Authenticator $authenticator,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
         SettingsService $settingsService,
-        SubeventRepository $subeventRepository
+        SubeventRepository $subeventRepository,
+        IApplicationsGridControlFactory $applicationsGridControlFactory
     ) {
-        $this->applicationFormFactory = $applicationFormFactory;
-        $this->authenticator          = $authenticator;
-        $this->userRepository         = $userRepository;
-        $this->roleRepository         = $roleRepository;
-        $this->settingsService        = $settingsService;
-        $this->subeventRepository     = $subeventRepository;
+        $this->applicationFormFactory         = $applicationFormFactory;
+        $this->authenticator                  = $authenticator;
+        $this->userRepository                 = $userRepository;
+        $this->roleRepository                 = $roleRepository;
+        $this->settingsService                = $settingsService;
+        $this->subeventRepository             = $subeventRepository;
+        $this->applicationsGridControlFactory = $applicationsGridControlFactory;
     }
 
     /**
@@ -68,12 +73,14 @@ class ApplicationContentControl extends Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function render(ContentDto $content) : void
+    public function render(?ContentDto $content = null) : void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/application_content.latte');
 
-        $template->heading = $content->getHeading();
+        if ($content) {
+            $template->heading = $content->getHeading();
+        }
 
         $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
 
@@ -132,5 +139,10 @@ class ApplicationContentControl extends Control
         };
 
         return $form;
+    }
+
+    protected function createComponentApplicationsGrid() : ApplicationsGridControl
+    {
+        return $this->applicationsGridControlFactory->create();
     }
 }

@@ -124,6 +124,14 @@ p {
     border-radius: 0.3rem;
 }
 
+/* mala tlacitka */
+.btn-xs {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
 /* oprava select a multiselect v inline editaci */
 .datagrid-inline-edit .bootstrap-select {
     padding-bottom: 0 !important;
