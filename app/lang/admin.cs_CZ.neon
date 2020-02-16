@@ -38,6 +38,7 @@ menu:
     acl: "Role"
     mailing: "Mailing"
     configuration: "Nastavení"
+    help: "Nápověda"
 
 cms:
     menu_pages: "Stránky"
