@@ -95,5 +95,5 @@ jobs:
       - name: Extract workdir
         run: tar -xzf workdir.tar.gz
       - run: mv app/config/ci.local.neon app/config/local.neon
-      - run: sleep 10
+      - run: docker-compose up -d
       - run: php www/console.php migrations:migrate --no-interaction
