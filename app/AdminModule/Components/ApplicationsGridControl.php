@@ -166,7 +166,7 @@ class ApplicationsGridControl extends Control
                 $container->addMultiSelect(
                     'subevents',
                     '',
-                    $this->subeventService->getNonRegisteredSubeventsOptionsWithCapacity($this->user)
+                    $this->subeventService->getSubeventsOptionsWithCapacity(false, false, true, false, $this->user)
                 )
                     ->setHtmlAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'admin.users.users_applications_subevents_empty');
@@ -178,7 +178,7 @@ class ApplicationsGridControl extends Control
             $container->addMultiSelect(
                 'subevents',
                 '',
-                $this->subeventService->getSubeventsOptionsWithCapacity()
+                $this->subeventService->getSubeventsOptionsWithCapacity(false, false, false, false)
             )
                 ->setHtmlAttribute('class', 'datagrid-multiselect');
 

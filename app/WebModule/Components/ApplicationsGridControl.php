@@ -168,7 +168,7 @@ class ApplicationsGridControl extends Control
         if ($explicitSubeventsExists) {
             if ($this->applicationService->isAllowedAddApplication($this->user)) {
                 $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) : void {
-                    $options = $this->subeventService->getNonRegisteredExplicitOptionsWithCapacity($this->user);
+                    $options = $this->subeventService->getSubeventsOptionsWithCapacity(true, true, true, false, $this->user);
                     $container->addMultiSelect('subevents', '', $options)
                         ->setHtmlAttribute('class', 'datagrid-multiselect')
                         ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
@@ -178,7 +178,7 @@ class ApplicationsGridControl extends Control
             }
 
             $grid->addInlineEdit()->onControlAdd[] = function (Container $container) : void {
-                $options = $this->subeventService->getExplicitOptionsWithCapacity();
+                $options = $this->subeventService->getSubeventsOptionsWithCapacity(true, true, false, true, $this->user);
                 $container->addMultiSelect('subevents', '', $options)
                     ->setHtmlAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
@@ -245,7 +245,7 @@ class ApplicationsGridControl extends Control
             $this->redirect('this');
         }
 
-        foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
+        foreach ($this->subeventRepository->findExplicitOrderedByName() as $subevent) {
             if (! $this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
                 $message = $this->translator->translate(
                     'web.profile.applications_incompatible_subevents_selected',
@@ -303,7 +303,7 @@ class ApplicationsGridControl extends Control
                 $this->redirect('this');
             }
 
-            foreach ($this->subeventRepository->findAllExplicitOrderedByName() as $subevent) {
+            foreach ($this->subeventRepository->findExplicitOrderedByName() as $subevent) {
                 if (! $this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
                     $message = $this->translator->translate(
                         'web.profile.applications_incompatible_subevents_selected',

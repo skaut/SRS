@@ -11,7 +11,6 @@ use Nette\Caching\IStorage;
 use Skautis\Skautis;
 use stdClass;
 use Throwable;
-use function property_exists;
 
 /**
  * Služba pro komunikaci se skautIS.
@@ -208,7 +207,7 @@ class SkautIsService
             'IsValid' => true,
         ]);
 
-        if (! property_exists($membership, 'MembershipAllOutput')) {
+        if (empty($membership)) {
             $membership = $this->skautIs->org->MembershipAllPerson([
                 'ID_Login' => $this->skautIs->getUser()->getLoginId(),
                 'ID_Person' => $personId,
@@ -216,7 +215,7 @@ class SkautIsService
                 'IsValid' => true,
             ]);
 
-            if (! property_exists($membership, 'MembershipAllOutput')) {
+            if (empty($membership)) {
                 return null;
             }
         }

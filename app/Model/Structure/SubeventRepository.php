@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Structure;
 
+use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -54,14 +55,74 @@ class SubeventRepository extends EntityRepository
     }
 
     /**
+     * Vrací podakce, seřazené podle názvu.
+     *
+     * @return Collection|Subevent[]
+     */
+    public function findAllOrderedByName() : Collection
+    {
+        $result = $this->createQueryBuilder('s')
+            ->orderBy('s.name')
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
      * Vrací vytvořené podakce, seřazené podle názvu.
      *
      * @return Collection|Subevent[]
      */
-    public function findAllExplicitOrderedByName() : Collection
+    public function findExplicitOrderedByName() : Collection
     {
         $result = $this->createQueryBuilder('s')
             ->where('s.implicit = FALSE')
+            ->orderBy('s.name')
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
+     * Vrací podakce splňující podmínku seřazené podle názvu.
+     *
+     * @return Collection|Subevent[]
+     */
+    public function findSubeventsOrderedByName(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, User $user = null) : Collection
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        $query = $qb
+            ->select('s')
+            ->where('1 = 1');
+
+        if ($explicitOnly) {
+            $query = $query->andWhere($qb->expr()->eq('s.implicit', 'false'));
+        }
+
+        if ($registerableNowOnly) {
+            $query = $query
+                ->andWhere($qb->expr()->orX(
+                    $qb->expr()->lte('s.registerableFrom', 'CURRENT_TIMESTAMP()'),
+                    $qb->expr()->isNull('s.registerableFrom')
+                ))
+                ->andWhere($qb->expr()->orX(
+                    $qb->expr()->gte('s.registerableTo', 'CURRENT_TIMESTAMP()'),
+                    $qb->expr()->isNull('s.registerableTo')
+                ));
+        }
+
+        if ($notRegisteredOnly) {
+            $query = $query->andWhere('s not in (:users_subevents)')->setParameter('users_subevents', $user->getSubevents());
+        }
+
+        if ($includeUsers) {
+            $query = $query->orWhere('s in (:users_subevents)')->setParameter('users_subevents', $user->getSubevents());
+        }
+
+        $result = $query
             ->orderBy('s.name')
             ->getQuery()
             ->getResult();
