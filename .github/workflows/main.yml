@@ -78,7 +78,7 @@ jobs:
         run: tar -xzf workdir.tar.gz
       - run: phing coding-standard
 
-  latte-lint:
+  doctrine-migrations:
     name: "Run migrations"
     runs-on: ubuntu-18.04
     container:
@@ -95,4 +95,5 @@ jobs:
       - name: Extract workdir
         run: tar -xzf workdir.tar.gz
       - run: mv app/config/ci.local.neon app/config/local.neon
+      - run: sleep 10
       - run: php www/console.php migrations:migrate --no-interaction
