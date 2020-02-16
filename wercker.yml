@@ -44,7 +44,7 @@ build:
 
         - script:
             name: run database migrations
-            code: php www/index.php migrations:migrate --no-interaction
+            code: php www/console.php migrations:migrate --no-interaction
 
 deploy:
     steps:
