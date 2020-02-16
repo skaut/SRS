@@ -6,6 +6,7 @@ namespace App\WebModule\Components;
 
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
+use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application;
@@ -17,6 +18,7 @@ use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\PdfExportService;
+use App\Services\SettingsService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
@@ -73,6 +75,9 @@ class ApplicationsGridControl extends Control
     /** @var SubeventService */
     private $subeventService;
 
+    /** @var SettingsService */
+    private $settingsService;
+
     public function __construct(
         ITranslator $translator,
         ApplicationRepository $applicationRepository,
@@ -83,7 +88,8 @@ class ApplicationsGridControl extends Control
         Validators $validators,
         RolesApplicationRepository $rolesApplicationRepository,
         SubeventsApplicationRepository $subeventsApplicationRepository,
-        SubeventService $subeventService
+        SubeventService $subeventService,
+        SettingsService $settingsService
     ) {
         $this->translator                     = $translator;
         $this->applicationRepository          = $applicationRepository;
@@ -95,6 +101,7 @@ class ApplicationsGridControl extends Control
         $this->rolesApplicationRepository     = $rolesApplicationRepository;
         $this->subeventsApplicationRepository = $subeventsApplicationRepository;
         $this->subeventService                = $subeventService;
+        $this->settingsService                = $settingsService;
     }
 
     /**
@@ -212,6 +219,19 @@ class ApplicationsGridControl extends Control
                 return $this->applicationService->isAllowedEditApplication($item);
             });
         }
+
+        $grid->setItemsDetail()
+            ->setRenderCondition(function (Application $item) {
+                return $item->isWaitingForPayment();
+            })
+            ->setText($this->translator->translate('web.profile.applications_pay'))
+            ->setIcon('money')
+            ->setClass('btn btn-xs btn-primary ajax')
+            ->setTemplateParameters([
+                'account' => $this->settingsService->getValue(Settings::ACCOUNT_NUMBER),
+                'message' => $this->settingsService->getValue(Settings::SEMINAR_NAME)
+            ]);
+        $grid->setTemplateFile(__DIR__ . '/templates/applications_grid_detail.latte');
 
         $grid->setColumnsSummary(['fee'], static function (Application $item, $column) {
             return $item->isCanceled() ? 0 : $item->getFee();

@@ -65,7 +65,7 @@
                                         <option value=""></option>
                                     </select>
                                     <span ng-show="event.room.capacity < event.block.capacity" class="text-warning">
-                                        <i class="fa fa-exclamation-triangle"></i>
+                                        <span class="fa fa-exclamation-triangle"></span>
                                         {_admin.program.schedule.room_capacity_warning}
                                     </span>
                                 </div>
@@ -95,7 +95,7 @@
     <div class="card card-body bg-light mb-3">
         <div class="input-group mb-2">
             <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fa fa-search fa-fw"></i></span>
+                <span class="input-group-text"><span class="fa fa-search fa-fw"></span></span>
             </div>
             <input id="textbox-search" class="form-control" type="text" ng-model="search">
         </div>

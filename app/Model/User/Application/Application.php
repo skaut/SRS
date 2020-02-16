@@ -10,6 +10,7 @@ use App\Model\Payment\Payment;
 use App\Model\Structure\Subevent;
 use App\Utils\Helpers;
 use DateTimeImmutable;
+use Defr\QRPlatba\QRPlatba;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -50,6 +51,7 @@ abstract class Application
      * @var string
      */
     protected $type;
+
     use Id;
 
     /**
@@ -438,5 +440,27 @@ abstract class Application
     public function isCanceled() : bool
     {
         return $this->state === ApplicationState::CANCELED || $this->state === ApplicationState::CANCELED_NOT_PAID;
+    }
+
+    public function isPaid() : bool
+    {
+        return $this->state == ApplicationState::PAID || $this->getState() == ApplicationState::PAID_FREE;
+    }
+
+    public function isWaitingForPayment() : bool
+    {
+        return $this->state == ApplicationState::WAITING_FOR_PAYMENT;
+    }
+
+    public function getPaymentQr(string $accountNumber, string $message) : string
+    {
+        $qrPlatba = new QRPlatba();
+
+        $qrPlatba->setAccount($accountNumber)
+            ->setVariableSymbol($this->getVariableSymbolText())
+            ->setAmount($this->fee)
+            ->setMessage($message);
+
+        return $qrPlatba->getQRCodeImage(true, 100);
     }
 }
