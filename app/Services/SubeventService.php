@@ -79,7 +79,7 @@ class SubeventService
      *
      * @return string[]
      */
-    public function getSubeventsOptionsWithCapacity(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, User $user = null) : array
+    public function getSubeventsOptionsWithCapacity(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null) : array
     {
         $subevents = $this->subeventRepository->findSubeventsOrderedByName($explicitOnly, $registerableNowOnly, $notRegisteredOnly, $includeUsers, $user);
 

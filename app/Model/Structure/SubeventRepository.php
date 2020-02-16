@@ -90,7 +90,7 @@ class SubeventRepository extends EntityRepository
      *
      * @return Collection|Subevent[]
      */
-    public function findSubeventsOrderedByName(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, User $user = null) : Collection
+    public function findSubeventsOrderedByName(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null) : Collection
     {
         $qb = $this->createQueryBuilder('s');
 
