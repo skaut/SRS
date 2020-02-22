@@ -66,7 +66,6 @@ class MaturityPresenter extends ActionBasePresenter
      */
     public $settingsService;
 
-
     /**
      * Zruší přihlášky po splatnosti.
      *

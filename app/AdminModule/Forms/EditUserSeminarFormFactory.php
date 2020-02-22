@@ -233,32 +233,32 @@ class EditUserSeminarFormFactory
 
                 foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                     $customInputValue = $this->user->getCustomInputValue($customInput);
-                    $customInputName = 'custom' . $customInput->getId();
-                    $oldValue = null;
-                    $newValue = null;
+                    $customInputName  = 'custom' . $customInput->getId();
+                    $oldValue         = null;
+                    $newValue         = null;
 
                     if ($customInput instanceof CustomText) {
                         /** @var CustomTextValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomTextValue();
-                        $oldValue = $customInputValue->getValue();
-                        $newValue = $values->$customInputName;
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomCheckbox) {
                         /** @var CustomCheckboxValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                        $oldValue = $customInputValue->getValue();
-                        $newValue = $values->$customInputName;
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomSelect) {
                         /** @var CustomSelectValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomSelectValue();
-                        $oldValue = $customInputValue->getValue();
-                        $newValue = $values->$customInputName;
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomFile) {
                         /** @var CustomFileValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomFileValue();
-                        $oldValue = $customInputValue->getValue();
+                        $oldValue         = $customInputValue->getValue();
                         /** @var FileUpload $newValue */
                         $newValue = $values->$customInputName;
                         if ($newValue->getError() == UPLOAD_ERR_OK) {
