@@ -9,16 +9,11 @@ use App\Model\Acl\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\User\ApplicationRepository;
-use App\Model\User\RolesApplicationRepository;
-use App\Model\User\SubeventsApplicationRepository;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\MailService;
-use App\Services\ProgramService;
 use App\Services\SettingsService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
@@ -42,18 +37,6 @@ class MaturityPresenter extends ActionBasePresenter
     public $em;
 
     /**
-     * @var ApplicationRepository
-     * @inject
-     */
-    public $applicationRepository;
-
-    /**
-     * @var ProgramRepository
-     * @inject
-     */
-    public $programRepository;
-
-    /**
      * @var UserRepository
      * @inject
      */
@@ -72,34 +55,16 @@ class MaturityPresenter extends ActionBasePresenter
     public $mailService;
 
     /**
-     * @var ProgramService
-     * @inject
-     */
-    public $programService;
-
-    /**
      * @var ApplicationService
      * @inject
      */
     public $applicationService;
 
     /**
-     * @var RolesApplicationRepository
-     * @inject
-     */
-    public $rolesApplicationRepository;
-
-    /**
      * @var SettingsService
      * @inject
      */
     public $settingsService;
-
-    /**
-     * @var SubeventsApplicationRepository
-     * @inject
-     */
-    public $subeventsApplicationRepository;
 
     /**
      * Zruší přihlášky po splatnosti.

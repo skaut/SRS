@@ -133,50 +133,52 @@ class EditUserSeminarFormFactory
 
         $form->addHidden('id');
 
-        $form->addMultiSelect(
-            'roles',
-            'admin.users.users_roles',
-            $this->aclService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED])
-        )
-            ->addRule(Form::FILLED, 'admin.users.users_edit_roles_empty')
-            ->addRule([$this, 'validateRolesNonregistered'], 'admin.users.users_edit_roles_nonregistered')
-            ->addRule([$this, 'validateRolesCapacities'], 'admin.users.users_edit_roles_occupied');
+        if (! $this->user->isExternalLector()) {
+            $form->addMultiSelect(
+                'roles',
+                'admin.users.users_roles',
+                $this->aclService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED])
+            )
+                ->addRule(Form::FILLED, 'admin.users.users_edit_roles_empty')
+                ->addRule([$this, 'validateRolesNonregistered'], 'admin.users.users_edit_roles_nonregistered')
+                ->addRule([$this, 'validateRolesCapacities'], 'admin.users.users_edit_roles_occupied');
 
-        $form->addCheckbox('approved', 'admin.users.users_approved_form');
+            $form->addCheckbox('approved', 'admin.users.users_approved_form');
 
-        $form->addCheckbox('attended', 'admin.users.users_attended_form');
+            $form->addCheckbox('attended', 'admin.users.users_attended_form');
 
-        if ($this->user->hasDisplayArrivalDepartureRole()) {
-            $arrivalDateTime = new DateTimeControl('admin.users.users_arrival');
-            $form->addComponent($arrivalDateTime, 'arrival');
-            $departureDateTime = new DateTimeControl('admin.users.users_departure');
-            $form->addComponent($departureDateTime, 'departure');
-        }
+            if ($this->user->hasDisplayArrivalDepartureRole()) {
+                $arrivalDateTime = new DateTimeControl('admin.users.users_arrival');
+                $form->addComponent($arrivalDateTime, 'arrival');
+                $departureDateTime = new DateTimeControl('admin.users.users_departure');
+                $form->addComponent($departureDateTime, 'departure');
+            }
 
-        foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            if ($customInput instanceof CustomText) {
-                $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
-                /** @var ?CustomTextValue $customInputValue */
-                $customInputValue = $this->user->getCustomInputValue($customInput);
-                if ($customInputValue) {
-                    $custom->setDefaultValue($customInputValue->getValue());
+            foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+                if ($customInput instanceof CustomText) {
+                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
+                    /** @var ?CustomTextValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        $custom->setDefaultValue($customInputValue->getValue());
+                    }
+                } elseif ($customInput instanceof CustomCheckbox) {
+                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+                    /** @var ?CustomCheckboxValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        $custom->setDefaultValue($customInputValue->getValue());
+                    }
+                } elseif ($customInput instanceof CustomSelect) {
+                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                    /** @var ?CustomSelectValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        $custom->setDefaultValue($customInputValue->getValue());
+                    }
+                } elseif ($customInput instanceof CustomFile) {
+                    $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
                 }
-            } elseif ($customInput instanceof CustomCheckbox) {
-                $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
-                /** @var ?CustomCheckboxValue $customInputValue */
-                $customInputValue = $this->user->getCustomInputValue($customInput);
-                if ($customInputValue) {
-                    $custom->setDefaultValue($customInputValue->getValue());
-                }
-            } elseif ($customInput instanceof CustomSelect) {
-                $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
-                /** @var ?CustomSelectValue $customInputValue */
-                $customInputValue = $this->user->getCustomInputValue($customInput);
-                if ($customInputValue) {
-                    $custom->setDefaultValue($customInputValue->getValue());
-                }
-            } elseif ($customInput instanceof CustomFile) {
-                $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
             }
         }
 
@@ -220,66 +222,68 @@ class EditUserSeminarFormFactory
         $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
         $this->em->transactional(function () use ($values, $loggedUser) : void {
-            $selectedRoles = $this->roleRepository->findRolesByIds($values->roles);
-            $this->applicationService->updateRoles($this->user, $selectedRoles, $loggedUser);
-
-            $this->user->setApproved($values->approved);
-            $this->user->setAttended($values->attended);
-
             $customInputValueChanged = false;
 
-            foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-                $customInputValue = $this->user->getCustomInputValue($customInput);
-                $customInputName  = 'custom' . $customInput->getId();
-                $oldValue         = null;
-                $newValue         = null;
+            if (! $this->user->isExternalLector()) {
+                $selectedRoles = $this->roleRepository->findRolesByIds($values->roles);
+                $this->applicationService->updateRoles($this->user, $selectedRoles, $loggedUser);
 
-                if ($customInput instanceof CustomText) {
-                    /** @var CustomTextValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomTextValue();
-                    $oldValue         = $customInputValue->getValue();
-                    $newValue         = $values->$customInputName;
-                    $customInputValue->setValue($newValue);
-                } elseif ($customInput instanceof CustomCheckbox) {
-                    /** @var CustomCheckboxValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                    $oldValue         = $customInputValue->getValue();
-                    $newValue         = $values->$customInputName;
-                    $customInputValue->setValue($newValue);
-                } elseif ($customInput instanceof CustomSelect) {
-                    /** @var CustomSelectValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomSelectValue();
-                    $oldValue         = $customInputValue->getValue();
-                    $newValue         = $values->$customInputName;
-                    $customInputValue->setValue($newValue);
-                } elseif ($customInput instanceof CustomFile) {
-                    /** @var CustomFileValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomFileValue();
-                    $oldValue         = $customInputValue->getValue();
-                    /** @var FileUpload $newValue */
-                    $newValue = $values->$customInputName;
-                    if ($newValue->getError() == UPLOAD_ERR_OK) {
-                        $path = $this->generatePath($newValue);
-                        $this->filesService->save($newValue, $path);
-                        $customInputValue->setValue($path);
+                $this->user->setApproved($values->approved);
+                $this->user->setAttended($values->attended);
+
+                foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    $customInputName  = 'custom' . $customInput->getId();
+                    $oldValue         = null;
+                    $newValue         = null;
+
+                    if ($customInput instanceof CustomText) {
+                        /** @var CustomTextValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomTextValue();
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
+                        $customInputValue->setValue($newValue);
+                    } elseif ($customInput instanceof CustomCheckbox) {
+                        /** @var CustomCheckboxValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomCheckboxValue();
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
+                        $customInputValue->setValue($newValue);
+                    } elseif ($customInput instanceof CustomSelect) {
+                        /** @var CustomSelectValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomSelectValue();
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
+                        $customInputValue->setValue($newValue);
+                    } elseif ($customInput instanceof CustomFile) {
+                        /** @var CustomFileValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomFileValue();
+                        $oldValue         = $customInputValue->getValue();
+                        /** @var FileUpload $newValue */
+                        $newValue = $values->$customInputName;
+                        if ($newValue->getError() == UPLOAD_ERR_OK) {
+                            $path = $this->generatePath($newValue);
+                            $this->filesService->save($newValue, $path);
+                            $customInputValue->setValue($path);
+                        }
+                    }
+
+                    $customInputValue->setUser($this->user);
+                    $customInputValue->setInput($customInput);
+                    $this->customInputValueRepository->save($customInputValue);
+
+                    if ($oldValue !== $newValue) {
+                        $customInputValueChanged = true;
                     }
                 }
 
-                $customInputValue->setUser($this->user);
-                $customInputValue->setInput($customInput);
-                $this->customInputValueRepository->save($customInputValue);
-
-                if ($oldValue !== $newValue) {
-                    $customInputValueChanged = true;
+                if (property_exists($values, 'arrival')) {
+                    $this->user->setArrival($values->arrival);
                 }
-            }
 
-            if (property_exists($values, 'arrival')) {
-                $this->user->setArrival($values->arrival);
-            }
-
-            if (property_exists($values, 'departure')) {
-                $this->user->setDeparture($values->departure);
+                if (property_exists($values, 'departure')) {
+                    $this->user->setDeparture($values->departure);
+                }
             }
 
             $this->user->setAbout($values->about);
