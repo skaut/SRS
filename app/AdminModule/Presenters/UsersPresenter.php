@@ -124,7 +124,7 @@ class UsersPresenter extends AdminBasePresenter
         $this->template->paymentMethodCash = PaymentType::CASH;
         $this->template->paymentMethodBank = PaymentType::BANK;
 
-        $this->template->registered = ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED));
+        $this->template->registered = ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)) && ! $user->isExternalLector();
     }
 
     /**
