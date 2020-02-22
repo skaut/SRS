@@ -17,6 +17,7 @@ use Throwable;
  *
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
+ * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SkautIsService
 {
@@ -207,7 +208,7 @@ class SkautIsService
             'IsValid' => true,
         ]);
 
-        if (empty($membership)) {
+        if (empty((array) $membership)) { // todo: odstranit obe pretypovani (array) po update skautis/nette
             $membership = $this->skautIs->org->MembershipAllPerson([
                 'ID_Login' => $this->skautIs->getUser()->getLoginId(),
                 'ID_Person' => $personId,
@@ -215,7 +216,7 @@ class SkautIsService
                 'IsValid' => true,
             ]);
 
-            if (empty($membership)) {
+            if (empty((array) $membership)) {
                 return null;
             }
         }
