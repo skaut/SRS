@@ -217,6 +217,7 @@ class SkautIsService
             ]);
 
             if (empty((array) $membership)) { // todo: odstranit pretypovani po update skautis/nette
+                
                 return null;
             }
         }
