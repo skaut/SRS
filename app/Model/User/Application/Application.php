@@ -201,6 +201,14 @@ abstract class Application
         $this->subevents = new ArrayCollection();
     }
 
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->roles     = clone $this->roles;
+            $this->subevents = clone $this->subevents;
+        }
+    }
+
     public function getId() : int
     {
         return $this->id;
