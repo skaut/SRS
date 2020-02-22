@@ -218,10 +218,20 @@ class ScheduleService
         $start     = $programSaveDto->getStart();
         $end       = $start->add(new DateInterval('PT' . $block->getDuration() . 'M'));
 
+        $overlappingLecturersProgram = false;
+        foreach ($block->getLectors() as $lector) {
+            if ($this->userRepository->hasOverlappingLecturersProgram($lector, $programId, $start, $end)) {
+                $overlappingLecturersProgram = true;
+                break;
+            }
+        }
+
         if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             $responseDto->setMessage($this->translator->translate('common.api.schedule_user_not_allowed_manage'));
         } elseif (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
             $responseDto->setMessage($this->translator->translate('common.api.schedule_not_allowed_modfify'));
+        } elseif ($overlappingLecturersProgram) {
+            $responseDto->setMessage($this->translator->translate('common.api.schedule_lector_has_another_program'));
         } elseif ($room && $this->roomRepository->hasOverlappingProgram($room, $programId, $start, $end)) {
             $responseDto->setMessage($this->translator->translate('common.api.schedule_room_occupied', null, ['name' => $room->getName()]));
         } elseif ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED && $this->programRepository->hasOverlappingProgram($programId, $start, $end)) {

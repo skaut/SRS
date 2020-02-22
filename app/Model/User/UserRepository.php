@@ -8,6 +8,7 @@ use App\Model\Acl\Permission;
 use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -276,6 +277,29 @@ class UserRepository extends EntityRepository
         }
 
         return $options;
+    }
+
+    /**
+     * Má lektor jiný program ve stejný čas?
+     */
+    public function hasOverlappingLecturersProgram(User $lector, ?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('u.id')
+            ->join('u.lecturersBlocks', 'b')
+            ->join('b.programs', 'p')
+            ->where($this->createQueryBuilder('u')->expr()->orX(
+                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
+                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
+            ))
+            ->andWhere('u.id = :uid')
+            ->andWhere('(p.id != :pid) or (:pid IS NULL)')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('uid', $lector->getId())
+            ->setParameter('pid', $programId);
+
+        return ! empty($qb->getQuery()->getResult());
     }
 
     /**
