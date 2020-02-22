@@ -208,7 +208,7 @@ class SkautIsService
             'IsValid' => true,
         ]);
 
-        if (empty((array) $membership)) {
+        if (empty((array) $membership)) { // todo: odstranit pretypovani po update skautis/nette
             $membership = $this->skautIs->org->MembershipAllPerson([
                 'ID_Login' => $this->skautIs->getUser()->getLoginId(),
                 'ID_Person' => $personId,
@@ -216,7 +216,7 @@ class SkautIsService
                 'IsValid' => true,
             ]);
 
-            if (empty((array) $membership)) {
+            if (empty((array) $membership)) { // todo: odstranit pretypovani po update skautis/nette
                 return null;
             }
         }
