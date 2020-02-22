@@ -265,7 +265,7 @@ class ApplicationsGridControl extends Control
             $this->redirect('this');
         }
 
-        foreach ($this->subeventRepository->findExplicitOrderedByName() as $subevent) {
+        foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
             if (! $this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
                 $message = $this->translator->translate(
                     'web.profile.applications_incompatible_subevents_selected',
@@ -323,7 +323,7 @@ class ApplicationsGridControl extends Control
                 $this->redirect('this');
             }
 
-            foreach ($this->subeventRepository->findExplicitOrderedByName() as $subevent) {
+            foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
                 if (! $this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
                     $message = $this->translator->translate(
                         'web.profile.applications_incompatible_subevents_selected',

@@ -492,7 +492,7 @@ class ExcelExportService
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
 
-        foreach ($this->subeventRepository->findExplicitOrderedByName() as $subevent) {
+        foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
             $sheet->setCellValueByColumnAndRow($column, $row, $subevent->getName());
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
@@ -524,7 +524,7 @@ class ExcelExportService
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getNickname());
 
-            foreach ($this->subeventRepository->findExplicitOrderedByName() as $subevent) {
+            foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
                 $sheet->setCellValueByColumnAndRow($column++, $row, $user->hasSubevent($subevent)
                     ? $this->translator->translate('common.export.common.yes')
                     : $this->translator->translate('common.export.common.no'));

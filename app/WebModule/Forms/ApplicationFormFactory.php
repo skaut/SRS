@@ -323,7 +323,7 @@ class ApplicationFormFactory
             if (property_exists($values, 'roles')) {
                 $roles = $this->roleRepository->findRolesByIds($values->roles);
             } else {
-                $roles = $this->roleRepository->findAllRegisterableNowOrderedByName();
+                $roles = $this->roleRepository->findFilteredRoles(true, false, false, false);
             }
 
             //podakce
@@ -421,7 +421,7 @@ class ApplicationFormFactory
             ->addRule(Form::FILLED, 'web.application_content.subevents_empty');
 
         //generovani chybovych hlasek pro vsechny kombinace podakci
-        foreach ($this->subeventRepository->findExplicitOrderedByName() as $subevent) {
+        foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
             if (! $subevent->getIncompatibleSubevents()->isEmpty()) {
                 $subeventsSelect->addRule(
                     [$this, 'validateSubeventsIncompatible'],
@@ -453,7 +453,7 @@ class ApplicationFormFactory
      */
     private function addRolesSelect(Form $form) : void
     {
-        $registerableOptions = $this->aclService->getRegisterableNowOptionsWithCapacity();
+        $registerableOptions = $this->aclService->getRolesOptionsWithCapacity(true, false);
 
         $rolesSelect = $form->addMultiSelect('roles', 'web.application_content.roles')->setItems(
             $registerableOptions
@@ -463,7 +463,7 @@ class ApplicationFormFactory
             ->addRule([$this, 'validateRolesRegisterable'], 'web.application_content.role_is_not_registerable');
 
         //generovani chybovych hlasek pro vsechny kombinace roli
-        foreach ($this->roleRepository->findAllRegisterableNowOrUsersOrderedByName($this->user) as $role) {
+        foreach ($this->roleRepository->findFilteredRoles(true, false, false, true, $this->user) as $role) {
             if (! $role->getIncompatibleRoles()->isEmpty()) {
                 $rolesSelect->addRule(
                     [$this, 'validateRolesIncompatible'],
@@ -490,7 +490,7 @@ class ApplicationFormFactory
         }
 
         $ids = [];
-        foreach ($this->roleRepository->findAllWithArrivalDeparture() as $role) {
+        foreach ($this->roleRepository->findFilteredRoles(false, false, true, false) as $role) {
             $ids[] = (string) $role->getId();
         }
 
@@ -606,7 +606,7 @@ class ApplicationFormFactory
      */
     public function toggleSubeventsRequired(MultiSelectBox $field) : bool
     {
-        $rolesWithSubevents = $this->roleRepository->findRolesIds($this->roleRepository->findAllWithSubevents());
+        $rolesWithSubevents = $this->roleRepository->findRolesIds($this->roleRepository->findFilteredRoles(false, true, false, false));
         foreach ($field->getValue() as $roleId) {
             if (in_array($roleId, $rolesWithSubevents)) {
                 return true;
