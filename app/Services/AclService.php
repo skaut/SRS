@@ -245,39 +245,13 @@ class AclService
     }
 
     /**
-     * Vrací seznam rolí s obsazenostmi jako možnosti pro select.
+     * Vrací seznam rolí splňujících podmínku, s informací o obsazenosti, jako možnosti pro select.
      *
      * @return string[]
      */
-    public function getRegisterableNowOptionsWithCapacity() : array
+    public function getRolesOptionsWithCapacity(bool $registerableNowOnly, bool $includeUsers, ?User $user = null) : array
     {
-        $roles = $this->roleRepository->findAllRegisterableNowOrderedByName();
-
-        $options = [];
-        foreach ($roles as $role) {
-            if ($role->hasLimitedCapacity()) {
-                $options[$role->getId()] = $this->translator->translate('web.common.role_option', null, [
-                    'role' => $role->getName(),
-                    'occupied' => $role->countUsers(),
-                    'total' => $role->getCapacity(),
-                ]);
-            } else {
-                $options[$role->getId()] = $role->getName();
-            }
-        }
-
-        return $options;
-    }
-
-    /**
-     * Vrací seznam rolí, které jsou v tuto chvíli registrovatelné nebo je uživatel má, s informací o jejich
-     * obsazenosti, jako možnosti pro select.
-     *
-     * @return string[]
-     */
-    public function getRegisterableNowOrUsersOptionsWithCapacity(User $user) : array
-    {
-        $roles = $this->roleRepository->findAllRegisterableNowOrUsersOrderedByName($user);
+        $roles = $this->roleRepository->findFilteredRoles($registerableNowOnly, false, false, $includeUsers, $user);
 
         $options = [];
         foreach ($roles as $role) {

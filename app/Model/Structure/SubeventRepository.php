@@ -55,42 +55,11 @@ class SubeventRepository extends EntityRepository
     }
 
     /**
-     * Vrací podakce, seřazené podle názvu.
-     *
-     * @return Collection|Subevent[]
-     */
-    public function findAllOrderedByName() : Collection
-    {
-        $result = $this->createQueryBuilder('s')
-            ->orderBy('s.name')
-            ->getQuery()
-            ->getResult();
-
-        return new ArrayCollection($result);
-    }
-
-    /**
-     * Vrací vytvořené podakce, seřazené podle názvu.
-     *
-     * @return Collection|Subevent[]
-     */
-    public function findExplicitOrderedByName() : Collection
-    {
-        $result = $this->createQueryBuilder('s')
-            ->where('s.implicit = FALSE')
-            ->orderBy('s.name')
-            ->getQuery()
-            ->getResult();
-
-        return new ArrayCollection($result);
-    }
-
-    /**
      * Vrací podakce splňující podmínku seřazené podle názvu.
      *
      * @return Collection|Subevent[]
      */
-    public function findSubeventsOrderedByName(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null) : Collection
+    public function findFilteredSubevents(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null) : Collection
     {
         $qb = $this->createQueryBuilder('s');
 

@@ -33,14 +33,6 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Vrací roli podle názvu.
-     */
-    public function findByName(string $name) : ?Role
-    {
-        return $this->findOneBy(['name' => $name]);
-    }
-
-    /**
      * Vrací systémovou roli podle systémového názvu.
      */
     public function findBySystemName(string $name) : Role
@@ -77,55 +69,6 @@ class RoleRepository extends EntityRepository
             ->getScalarResult();
 
         return array_map('current', $names);
-    }
-
-    /**
-     * Vrací registrovatelné role.
-     *
-     * @return Role[]
-     */
-    public function findAllRegisterable() : array
-    {
-        return $this->findBy(['registerable' => true]);
-    }
-
-    /**
-     * Vrací role s omezenou kapacitou.
-     *
-     * @return Collection|Role[]
-     */
-    public function findAllWithLimitedCapacity() : Collection
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('capacity', null));
-
-        return $this->matching($criteria);
-    }
-
-    /**
-     * Vrací role, u kterých se eviduje příjezd a odjezd.
-     *
-     * @return Collection|Role[]
-     */
-    public function findAllWithArrivalDeparture() : Collection
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
-
-        return $this->matching($criteria);
-    }
-
-    /**
-     * Vrací role, u kterých je cena počítána podle podakcí.
-     *
-     * @return Collection|Role[]
-     */
-    public function findAllWithSubevents() : Collection
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('fee', null));
-
-        return $this->matching($criteria);
     }
 
     /**
@@ -178,59 +121,49 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Vraci role, ktere jsou tuto chvíli registrovatelné, seřazené podle názvu.
+     * Vrací role splňující podmínku seřazené podle názvu.
      *
      * @return Collection|Role[]
      */
-    public function findAllRegisterableNowOrderedByName() : Collection
+    public function findFilteredRoles(bool $registerableNowOnly, bool $subeventsRoleOnly, bool $arrivalDepartureOnly, bool $includeUsers, ?User $user = null) : Collection
     {
-        $result = $this->createQueryBuilder('r')
+        $qb = $this->createQueryBuilder('r');
+
+        $query = $qb
             ->select('r')
-            ->where($this->createQueryBuilder('r')->expr()->andX(
-                $this->createQueryBuilder('r')->expr()->eq('r.registerable', true),
-                $this->createQueryBuilder('r')->expr()->orX(
-                    $this->createQueryBuilder('r')->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
-                    $this->createQueryBuilder('r')->expr()->isNull('r.registerableFrom')
-                ),
-                $this->createQueryBuilder('r')->expr()->orX(
-                    $this->createQueryBuilder('r')->expr()->gte('r.registerableTo', 'CURRENT_TIMESTAMP()'),
-                    $this->createQueryBuilder('r')->expr()->isNull('r.registerableTo')
-                )
-            ))
+            ->where('1 = 1');
+
+        if ($registerableNowOnly) {
+            $query = $query
+                ->andWhere($qb->expr()->eq('r.registerable', true))
+                ->andWhere($qb->expr()->orX(
+                    $qb->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
+                    $qb->expr()->isNull('r.registerableFrom')
+                ))
+                ->andWhere($qb->expr()->orX(
+                    $qb->expr()->gte('r.registerableTo', 'CURRENT_TIMESTAMP()'),
+                    $qb->expr()->isNull('r.registerableTo')
+                ));
+        }
+
+        if ($subeventsRoleOnly) {
+            $query = $query->andWhere('r.fee IS NULL');
+        }
+
+        if ($arrivalDepartureOnly) {
+            $query = $query->andWhere('r.displayArrivalDeparture = TRUE');
+        }
+
+        if ($includeUsers) {
+            $query = $query->orWhere('r in (:users_roles)')->setParameter('users_roles', $user->getRoles());
+        }
+
+        $result = $query
             ->orderBy('r.name')
             ->getQuery()
             ->getResult();
 
         return new ArrayCollection($result);
-    }
-
-    /**
-     * Vrací role, které jsou v tuto chvíli registrovatelné nebo je uživatel má, seřazené podle názvu.
-     *
-     * @return Role[]
-     */
-    public function findAllRegisterableNowOrUsersOrderedByName(User $user) : array
-    {
-        return $this->createQueryBuilder('r')
-            ->select('r')
-            ->leftJoin('r.users', 'u')
-            ->where($this->createQueryBuilder('r')->expr()->orX(
-                $this->createQueryBuilder('r')->expr()->andX(
-                    $this->createQueryBuilder('r')->expr()->eq('r.registerable', true),
-                    $this->createQueryBuilder('r')->expr()->orX(
-                        $this->createQueryBuilder('r')->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
-                        $this->createQueryBuilder('r')->expr()->isNull('r.registerableFrom')
-                    ),
-                    $this->createQueryBuilder('r')->expr()->orX(
-                        $this->createQueryBuilder('r')->expr()->gte('r.registerableTo', 'CURRENT_TIMESTAMP()'),
-                        $this->createQueryBuilder('r')->expr()->isNull('r.registerableTo')
-                    )
-                ),
-                $this->createQueryBuilder('r')->expr()->eq('u.id', $user->getId())
-            ))
-            ->orderBy('r.name')
-            ->getQuery()
-            ->getResult();
     }
 
     public function incrementOccupancy(Role $role) : void

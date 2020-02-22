@@ -99,14 +99,14 @@ class RolesFormFactory
         $form->addHidden('id');
 
         $rolesSelect = $form->addMultiSelect('roles', 'web.profile.roles')->setItems(
-            $this->aclService->getRegisterableNowOrUsersOptionsWithCapacity($this->user)
+            $this->aclService->getRolesOptionsWithCapacity(true, true, $this->user)
         )
             ->addRule(Form::FILLED, 'web.profile.roles_empty')
             ->addRule([$this, 'validateRolesCapacities'], 'web.profile.roles_capacity_occupied')
             ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.role_is_not_registerable')
             ->setDisabled(! $this->applicationService->isAllowedEditRegistration($this->user));
 
-        foreach ($this->roleRepository->findAllRegisterableNowOrUsersOrderedByName($this->user) as $role) {
+        foreach ($this->roleRepository->findFilteredRoles(true, false, false, true, $this->user) as $role) {
             if (! $role->getIncompatibleRoles()->isEmpty()) {
                 $rolesSelect->addRule(
                     [$this, 'validateRolesIncompatible'],

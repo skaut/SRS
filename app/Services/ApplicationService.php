@@ -734,6 +734,10 @@ class ApplicationService
         $user->setRolesApplicationDate(new DateTimeImmutable());
         $this->userRepository->save($user);
 
+        if ($user->getRolesApplication() != null) {
+            throw new InvalidArgumentException('User is already registered.');
+        }
+
         $application = new RolesApplication();
         $application->setUser($user);
         $application->setRoles($roles);

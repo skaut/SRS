@@ -81,7 +81,7 @@ class SubeventService
      */
     public function getSubeventsOptionsWithCapacity(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null) : array
     {
-        $subevents = $this->subeventRepository->findSubeventsOrderedByName($explicitOnly, $registerableNowOnly, $notRegisteredOnly, $includeUsers, $user);
+        $subevents = $this->subeventRepository->findFilteredSubevents($explicitOnly, $registerableNowOnly, $notRegisteredOnly, $includeUsers, $user);
 
         $options = [];
         foreach ($subevents as $subevent) {
@@ -106,7 +106,7 @@ class SubeventService
      */
     public function getSubeventsOptionsWithUsersCount() : array
     {
-        $subevents = $this->subeventRepository->findAllOrderedByName();
+        $subevents = $this->subeventRepository->findFilteredSubevents(false, false, false, false);
 
         $options = [];
         foreach ($subevents as $subevent) {
