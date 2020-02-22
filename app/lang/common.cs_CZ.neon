@@ -151,6 +151,7 @@ api:
     program_registered: "Program byl úspěšně přihlášen."
     schedule_program_not_registered: "Na tento program jste nebyli přihlášeni."
     program_unregistered: "Program byl úspěšně odhlášen."
+    schedule_lector_has_another_program: "Lektor má v tuto dobu již jiný program."
     schedule_room_occupied: "Místnost \"%name%\" je v tuto dobu již obsazena."
     schedule_auto_registered_not_allowed: "Automaticky přihlašovaný program nesmí být ve stejnou dobu jako jiný program."
 
