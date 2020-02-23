@@ -58,18 +58,25 @@ jobs:
       - run: |
           tar -zcvf release.tar.gz build
 
-      - name: scp and ssh
-        uses: alinz/ssh-scp-action@master
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@master
         with:
-          host: srs.skauting.cz
-          user: vu008925
+          host: "srs.skauting.cz"
+          username: "vu008925"
           key: ${{ secrets.SRS_SSH_KEY }}
           port: 28
-          
-          scp: |  
-            release.tar.gz vu008925@srs.skauting.cz:~/release.tar.gz
-          
-          ssh_after: |
+          source: "release.tar.gz"
+          target: "releases"
+ 
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: "srs.skauting.cz"
+          username: "vu008925"
+          key: ${{ secrets.SRS_SSH_KEY }}
+          port: 28
+          script_stop: true
+          script: |
             tar -xvzf release.tar.gz -C releases/test
             rm release.tar.gz
             rm www && ln -s releases/test/www www
