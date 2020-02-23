@@ -30,23 +30,23 @@ jobs:
       - run: composer install --no-dev
       
       - run: |
-          mkdir release
-          cp -r app release
-          cp -r backup release
-          cp -r log release
-          cp -r migrations release
-          cp -r temp release
-          cp -r vendor release
-          cp -r www release
-          cp .htaccess release
-          mv release/app/config/production.local.neon release/app/config/local.neon
-          rm release/app/config/*.local.neon
+          mkdir build
+          cp -r app build
+          cp -r backup build
+          cp -r log build
+          cp -r migrations build
+          cp -r temp build
+          cp -r vendor build
+          cp -r www build
+          cp .htaccess build
+          mv build/app/config/production.local.neon build/app/config/local.neon
+          rm build/app/config/*.local.neon
 
       - uses: cschleiden/replace-tokens@v1
         with:
           tokenPrefix: '__'
           tokenSuffix: '__'
-          files: 'release/app/config/local.neon'
+          files: 'build/app/config/local.neon'
         env:
           CONFIG_DATABASE_HOST: localhost
           CONFIG_DATABASE_NAME: srs
@@ -56,7 +56,7 @@ jobs:
           CONFIG_SKAUTIS_TEST_MODE: true
 
       - run: |
-          tar -zcvf release.tar.gz releases
+          tar -zcvf release.tar.gz build
 
       - name: copy file via ssh password
         uses: appleboy/scp-action@master
