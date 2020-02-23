@@ -13,8 +13,8 @@ jobs:
       image: fmasa/lebeda:7.3
     steps:
       - uses: actions/checkout@v2
+          
       # Copy & paste from https://github.com/actions/cache/blob/master/examples.md#php---composer
-      
       - name: Get Composer Cache Directory
         id: composer-cache
         run: |
@@ -27,14 +27,49 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
       
-      - run: composer install
+      - run: composer install --no-dev
       
-      - name: List output files
-        run: ls
- 
-      - name: FTP-Deploy-Action
-        uses: SamKirkland/FTP-Deploy-Action@3.0.0
+      - run: |
+          mkdir release
+          cp -r {app,backup,log,migrations,temp,vendor,www,.htaccess} release
+          mv release/app/config/production.local.neon release/app/config/local.neon
+          rm release/app/config/*.local.neon
+
+      - uses: cschleiden/replace-tokens@v1
         with:
-          ftp-server: sftp://skauting.cz/
-          ftp-username: srs
-          ftp-password: ${{ secrets.FTP_PASSWORD_SRS }}
+          tokenPrefix: '__'
+          tokenSuffix: '__'
+          files: 'release/app/config/local.neon'
+        env:
+          CONFIG_DATABASE_HOST: localhost
+          CONFIG_DATABASE_NAME: srs
+          CONFIG_DATABASE_USER: srs
+          CONFIG_DATABASE_PASSWORD: ${{ secrets.SRS_DB_PASSWORD }}
+          CONFIG_SKAUTIS_APPLICATION_ID: ${{ secrets.SRS_APP_ID }}
+          CONFIG_SKAUTIS_TEST_MODE: true
+
+      - run: |
+          tar -zcvf release.tar.gz releases
+
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@master
+        with:
+          host: srs.skauting.cz
+          username: vu008925
+          key: ${{ secrets.SRS_SSH_KEY }}
+          port: 28
+          source: "release.tar.gz"
+          target: ""
+ 
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: srs.skauting.cz
+          username: vu008925
+          key: ${{ secrets.SRS_SSH_KEY }}
+          port: 28
+          script_stop: true
+          script: |
+            tar -xvzf release.tar.gz -C releases/test
+            rm release.tar.gz
+            rm www && ln -s releases/test/www www
