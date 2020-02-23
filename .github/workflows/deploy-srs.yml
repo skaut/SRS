@@ -31,7 +31,14 @@ jobs:
       
       - run: |
           mkdir release
-          cp -r {app,backup,log,migrations,temp,vendor,www,.htaccess} release
+          cp -r app release
+          cp -r backup release
+          cp -r log release
+          cp -r migrations release
+          cp -r temp release
+          cp -r vendor release
+          cp -r www release
+          cp .htaccess release
           mv release/app/config/production.local.neon release/app/config/local.neon
           rm release/app/config/*.local.neon
 
