@@ -53,7 +53,7 @@ deploy:
             code: rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini || true
 
         - add-to-known_hosts:
-            hostname: test-srs.skauting.cz
+            hostname: srs.skauting.cz
             port: 28
 
         - add-to-known_hosts:
