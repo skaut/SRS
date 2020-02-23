@@ -1,0 +1,42 @@
+name: deploy-srs
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    name: "Build SRS"
+    runs-on: ubuntu-latest
+    container:
+      image: fmasa/lebeda:7.3
+    steps:
+      - uses: actions/checkout@v2
+      # Copy & paste from https://github.com/actions/cache/blob/master/examples.md#php---composer
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - run: composer install
+        
+  ftp-deploy:
+    name: "FTP deploy"
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: List output files
+      run: ls
+ 
+    - name: FTP-Deploy-Action
+      uses: SamKirkland/FTP-Deploy-Action@3.0.0
+      with:
+        ftp-server: sftp://skauting.cz/
+        ftp-username: srs
+        ftp-password: ${{ secrets.FTP_PASSWORD_SRS }}
