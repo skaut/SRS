@@ -153,7 +153,7 @@
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Copying files directory"/>
-            <property name="command" value="cp -r www/files ${deploy.release}/www/files"/>
+            <property name="command" value="cp -r www/files ${deploy.release}/www"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
