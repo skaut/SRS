@@ -153,13 +153,18 @@
         </phingcall>
 
         <phingcall target="deploy:ssh">
-            <property name="comment" value="Copying files directory"/>
+            <property name="comment" value="Copying custom CSS"/>
             <property name="command" value="cp www/css/web/style.css ${deploy.release}/www/css/web"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Copying files directory"/>
             <property name="command" value="cp -r www/files ${deploy.release}/www"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Copying backup directory"/>
+            <property name="command" value="cp -r www/../backup ${deploy.release}"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
