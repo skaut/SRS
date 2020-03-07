@@ -107,7 +107,6 @@
     </target>
 
     <target name="deploy">
-
         <tstamp/>
 
         <!-- Prepare variables -->
@@ -126,6 +125,10 @@
             <property name="build.hash" value="${deploy.releaseHash}"/>
         </phingcall>
 
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Creating release directory if not exists"/>
+            <property name="command" value="mkdir -p ${deploy.releasesDir}"/>
+        </phingcall>
 
         <phingcall target="deploy:copy-tarball">
             <property name="target" value="${deploy.ssh.target}"/>
@@ -133,7 +136,6 @@
             <property name="file" value="${tempDir}/builds/${deploy.releaseHash}.tar.gz"/>
             <property name="toDirectory" value="${deploy.releasesDir}"/>
         </phingcall>
-
 
         <property name="tarball" value="${deploy.release}.tar.gz"/>
 
@@ -148,12 +150,21 @@
         </phingcall>
 
         <phingcall target="deploy:ssh">
+            <property name="comment" value="Copying files directory"/>
+            <property name="command" value="cp www/css/web/style.css ${deploy.release}/www/css/web"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Copying files directory"/>
+            <property name="command" value="cp -r www/files ${deploy.release}/www/files"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
             <property name="comment" value="Swapping release to ${deploy.releaseHash}"/>
             <property name="command" value="rm www &amp;&amp; ln -s ${deploy.release}/www www"/>
         </phingcall>
 
         <phingcall target="deploy:cleanup"/>
-
     </target>
 
     <target name="tests-unit">
