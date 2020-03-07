@@ -80,15 +80,12 @@
     <target name="deploy:ssh">
         <echo message="${comment}..."/>
         <echo message="`${command}`"/>
-
-        <exec command="ssh ${deploy.ssh.target} -p ${deploy.ssh.port} '${command}'"
-              passthru="true"
-              checkreturn="true" />
+        <exec command="ssh ${deploy.ssh.target} -p ${deploy.ssh.port} '${command}'" passthru="true" checkreturn="true"/>
     </target>
 
     <target name="deploy:copy-tarball">
         <property name="command" value="scp -P ${port} ${file} '${target}:${toDirectory}'"/>
-        <echo message="Copying files to ${deploy.ssh.target"/>
+        <echo message="Copying files to ${deploy.ssh.target}"/>
         <echo message="${command}"/>
         <exec command="${command}" passthru="true" checkreturn="true"/>
     </target>
