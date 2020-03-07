@@ -80,7 +80,7 @@
     <target name="deploy:ssh">
         <echo message="${comment}..."/>
         <echo message="`${command}`"/>
-        <exec command="ssh ${deploy.ssh.target} -p ${deploy.ssh.port} '${command}'" passthru="true" checkreturn="true"/>
+        <exec command='ssh ${deploy.ssh.target} -p ${deploy.ssh.port} "${command}"' passthru="true" checkreturn="true"/>
     </target>
 
     <target name="deploy:copy-tarball">
