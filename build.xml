@@ -42,6 +42,12 @@
                     <token key="CONFIG_DATABASE_USER" value="${env.CONFIG_DATABASE_USER}"/>
                     <token key="CONFIG_DATABASE_PASSWORD" value="${env.CONFIG_DATABASE_PASSWORD}"/>
                     <token key="CONFIG_DATABASE_NAME" value="${env.CONFIG_DATABASE_NAME}"/>
+                    <token key="CONFIG_MAIL_SMTP" value="${env.CONFIG_MAIL_SMTP}"/>
+                    <token key="CONFIG_MAIL_HOST" value="${env.CONFIG_MAIL_HOST}"/>
+                    <token key="CONFIG_MAIL_PORT" value="${env.CONFIG_MAIL_PORT}"/>
+                    <token key="CONFIG_MAIL_USERNAME" value="${env.CONFIG_MAIL_USERNAME}"/>
+                    <token key="CONFIG_MAIL_PASSWORD" value="${env.CONFIG_MAIL_PASSWORD}"/>
+                    <token key="CONFIG_MAIL_SECURE" value="${env.CONFIG_MAIL_SECURE}"/>
                 </replacetokens>
                 <expandproperties/>
             </filterchain>

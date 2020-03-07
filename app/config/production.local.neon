@@ -13,4 +13,9 @@ skautis:
     testMode: __CONFIG_SKAUTIS_TEST_MODE__
 
 mail:
-    smtp: false
+    smtp: __CONFIG_MAIL_SMTP__
+    host: "__CONFIG_MAIL_HOST__"
+    port: __CONFIG_MAIL_PORT__
+    username: "__CONFIG_MAIL_USERNAME__"
+    password: "__CONFIG_MAIL_PASSWORD__"
+    secure: __CONFIG_MAIL_SECURE__
