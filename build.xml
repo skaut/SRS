@@ -158,7 +158,7 @@
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Swapping release to ${deploy.releaseHash}"/>
-            <property name="command" value="rm www &amp;&amp; ln -s ${deploy.release}/www www"/>
+            <property name="command" value="rm -r www &amp;&amp; ln -s ${deploy.release}/www www"/>
         </phingcall>
 
         <phingcall target="deploy:cleanup"/>
