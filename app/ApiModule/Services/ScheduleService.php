@@ -121,7 +121,7 @@ class ScheduleService
      */
     public function getProgramsWeb() : array
     {
-        $programs          = $this->programService->getUserAllowedPrograms($this->user);
+        $programs = $this->programService->getUserAllowedPrograms($this->user);
 
         /** @var ProgramDetailDto[] $programDetailDtos */
         $programDetailDtos = [];
