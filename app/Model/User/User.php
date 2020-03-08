@@ -785,7 +785,7 @@ class User
      */
     public function isInRole(Role $role) : bool
     {
-        return $this->roles->filter(static function ($item) use ($role) {
+        return $this->roles->filter(static function (Role $item) use ($role) {
             return $item === $role;
         })->count() !== 0;
     }

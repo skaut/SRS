@@ -19,12 +19,14 @@ use App\Services\ProgramService;
 use App\Services\SettingsService;
 use App\Services\SubeventService;
 use App\Utils\Validators;
+use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
+use Nette\Utils\ArrayHash;
 use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -144,10 +146,10 @@ class ProgramBlocksGridControl extends Control
 
         $grid->addColumnText('lectors', 'admin.program.blocks_lectors', 'lectorsText')
             ->setFilterMultiSelect($this->userRepository->getLectorsOptions())
-            ->setCondition(static function ($qb, $values) : void {
+            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values) : void {
                 $qb->join('b.lectors', 'l')
                     ->andWhere('l.id IN (:lids)')
-                    ->setParameter('lids', $values);
+                    ->setParameter('lids', (array) $values);
             });
 
         $grid->addColumnNumber('duration', 'admin.program.blocks_duration')

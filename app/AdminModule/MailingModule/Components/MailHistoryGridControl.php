@@ -12,6 +12,7 @@ use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
+use Nette\Utils\ArrayHash;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
@@ -68,23 +69,23 @@ class MailHistoryGridControl extends Control
 
         $grid->addColumnText('recipientRoles', 'admin.mailing.history.recipient_roles', 'recipientRolesText')
             ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
-            ->setCondition(static function (QueryBuilder $qb, $values) : void {
+            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values) : void {
                 $qb->join('m.recipientRoles', 'r')
                     ->andWhere('r.id IN (:rids)')
-                    ->setParameter('rids', $values);
+                    ->setParameter('rids', (array) $values);
             });
 
         $grid->addColumnText('recipientSubevents', 'admin.mailing.history.recipient_subevents', 'recipientSubeventsText')
             ->setFilterMultiSelect($this->subeventService->getSubeventsOptions())
-            ->setCondition(static function (QueryBuilder $qb, $values) : void {
+            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values) : void {
                 $qb->join('m.recipientSubevents', 's')
                     ->andWhere('s.id IN (:sids)')
-                    ->setParameter('sids', $values);
+                    ->setParameter('sids', (array) $values);
             });
 
         $grid->addColumnText('recipientUsers', 'admin.mailing.history.recipient_users', 'recipientUsersText')
             ->setFilterText()
-            ->setCondition(static function (QueryBuilder $qb, $value) : void {
+            ->setCondition(static function (QueryBuilder $qb, string $value) : void {
                 $qb->join('m.recipientUsers', 'u')
                     ->andWhere('u.displayName LIKE :displayName')
                     ->setParameter('displayName', '%' . $value . '%');

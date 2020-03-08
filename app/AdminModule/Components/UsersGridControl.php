@@ -42,6 +42,7 @@ use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
@@ -227,21 +228,21 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
             ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
-            ->setCondition(static function ($qb, $values) : void {
+            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values) : void {
                 $qb->join('u.roles', 'uR')
                     ->andWhere('uR.id IN (:rids)')
-                    ->setParameter('rids', $values);
+                    ->setParameter('rids', (array) $values);
             });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
             ->setFilterMultiSelect($this->subeventService->getSubeventsOptions())
-            ->setCondition(static function ($qb, $values) : void {
+            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values) : void {
                 $qb->join('u.applications', 'uA')
                     ->join('uA.subevents', 'uAS')
                     ->andWhere('uAS.id IN (:sids)')
                     ->andWhere('uA.validTo IS NULL')
                     ->andWhere('uA.state IN (:states)')
-                    ->setParameter('sids', $values)
+                    ->setParameter('sids', (array) $values)
                     ->setParameter('states', [ApplicationState::PAID, ApplicationState::PAID_FREE, ApplicationState::WAITING_FOR_PAYMENT]);
             });
 
@@ -309,7 +310,7 @@ class UsersGridControl extends Control
 
         $grid->addColumnText('variableSymbol', 'admin.users.users_variable_symbol', 'variableSymbolsText')
             ->setFilterText()
-            ->setCondition(static function (QueryBuilder $qb, $value) : void {
+            ->setCondition(static function (QueryBuilder $qb, string $value) : void {
                 $qb->join('u.applications', 'uAVS')
                     ->join('uAVS.variableSymbol', 'uAVSVS')
                     ->andWhere('uAVSVS.variableSymbol LIKE :variableSymbol')

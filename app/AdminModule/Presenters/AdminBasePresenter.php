@@ -16,6 +16,7 @@ use App\Services\Authorizator;
 use App\Services\SettingsService;
 use App\Services\SkautIsService;
 use Nette\Application\AbortException;
+use stdClass;
 use Throwable;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
@@ -147,7 +148,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $skautIsUserId                = $this->dbuser->getSkautISUserId();
         $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId);
         $skautIsRoleSelectedId        = $this->skautIsService->getUserRoleId();
-        $skautIsRoleSelected          = array_filter($skautIsRoles, static function ($r) use ($skautIsRoleSelectedId) {
+        $skautIsRoleSelected          = array_filter($skautIsRoles, static function (stdClass $r) use ($skautIsRoleSelectedId) {
             return $r->ID === $skautIsRoleSelectedId;
         });
         $this->template->skautIsRoles = $skautIsRoles;

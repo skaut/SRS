@@ -115,7 +115,7 @@ class RoleRepository extends EntityRepository
      */
     public function findRolesIds(Collection $roles) : array
     {
-        return array_map(static function ($o) {
+        return array_map(static function (Role $o) {
             return $o->getId();
         }, $roles->toArray());
     }
