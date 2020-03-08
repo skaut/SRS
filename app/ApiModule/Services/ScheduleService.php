@@ -35,7 +35,6 @@ use function array_intersect;
 use function count;
 use function floor;
 use function in_array;
-use function spl_object_id;
 use const DATE_ISO8601;
 
 /**
@@ -122,7 +121,9 @@ class ScheduleService
      */
     public function getProgramsWeb() : array
     {
-        $programs          = $this->programService->getUserAllowedPrograms($this->user);
+        $programs = $this->programService->getUserAllowedPrograms($this->user);
+
+        /** @var ProgramDetailDto[] $programDetailDtos */
         $programDetailDtos = [];
         foreach ($programs as $program) {
             $programDetailDto = $this->convertProgramToProgramDetailDto($program);
@@ -137,7 +138,7 @@ class ScheduleService
 
         foreach ($programDetailDtos as $p1) {
             foreach ($programDetailDtos as $p2) {
-                if (spl_object_id($p1) !== spl_object_id($p2) && $p1->isUserAttends() && in_array($p2->getId(), $p1->getBlocks())) {
+                if ($p1->getId() !== $p2->getId() && $p1->isUserAttends() && in_array($p2->getId(), $p1->getBlocks())) {
                     $p2->setBlocked(true);
                 }
             }

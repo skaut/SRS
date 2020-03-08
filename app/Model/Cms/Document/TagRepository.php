@@ -51,7 +51,7 @@ class TagRepository extends EntityRepository
      */
     public function findTagsIds(Collection $tags) : array
     {
-        return array_map(static function ($o) {
+        return array_map(static function (Tag $o) {
             return $o->getId();
         }, $tags->toArray());
     }

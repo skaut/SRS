@@ -20,7 +20,6 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
 use function implode;
-use function spl_object_id;
 
 /**
  * Entita uživatele.
@@ -785,8 +784,8 @@ class User
      */
     public function isInRole(Role $role) : bool
     {
-        return $this->roles->filter(static function ($item) use ($role) {
-            return $item === $role;
+        return $this->roles->filter(static function (Role $item) use ($role) {
+            return $item->getId() === $role->getId();
         })->count() !== 0;
     }
 
@@ -1050,7 +1049,7 @@ class User
     public function hasProgramBlock(Block $block) : bool
     {
         return ! $this->programs->filter(static function (Program $program) use ($block) {
-            return spl_object_id($program->getBlock()) === spl_object_id($block);
+            return $program->getBlock()->getId() === $block->getId();
         })->isEmpty();
     }
 

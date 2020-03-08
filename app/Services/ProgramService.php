@@ -31,7 +31,6 @@ use Nette;
 use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
-use function spl_object_id;
 
 /**
  * Služba pro správu programů.
@@ -162,8 +161,8 @@ class ProgramService
             //aktualizace ucastniku pri zmene kategorie nebo podakce
             if (($category === null && $oldCategory !== null)
                 || ($category !== null && $oldCategory === null)
-                || ($category !== null && $oldCategory !== null && spl_object_id($category) !== spl_object_id($oldCategory))
-                || (spl_object_id($subevent) !== spl_object_id($oldSubevent))) {
+                || ($category !== null && $oldCategory !== null && $category->getId() !== $oldCategory->getId())
+                || ($subevent->getId() !== $oldSubevent->getId())) {
                 $allowedUsers = $this->userRepository->findBlockAllowed($block);
 
                 foreach ($block->getPrograms() as $program) {

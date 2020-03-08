@@ -177,7 +177,7 @@ class BlockRepository extends EntityRepository
      */
     public function findBlocksIds(Collection $blocks) : array
     {
-        return array_map(static function ($o) {
+        return array_map(static function (Block $o) {
             return $o->getId();
         }, $blocks->toArray());
     }

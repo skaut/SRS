@@ -14,7 +14,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
 use function implode;
-use function spl_object_id;
 
 /**
  * Entita role.
@@ -571,7 +570,7 @@ class Role
      */
     private function getRequiredByRoleTransitiveRec(Collection &$allRequiredByRole, Role $role) : void
     {
-        if (spl_object_id($this) !== spl_object_id($role) && ! $allRequiredByRole->contains($role)) {
+        if ($this->getId() !== $role->getId() && ! $allRequiredByRole->contains($role)) {
             $allRequiredByRole->add($role);
 
             foreach ($role->requiredByRole as $requiredByRole) {
@@ -626,7 +625,7 @@ class Role
      */
     private function getRequiredRolesTransitiveRec(Collection &$allRequiredRoles, Role $role) : void
     {
-        if (spl_object_id($this) !== spl_object_id($role) && ! $allRequiredRoles->contains($role)) {
+        if ($this->getId() !== $role->getId() && ! $allRequiredRoles->contains($role)) {
             $allRequiredRoles->add($role);
 
             foreach ($role->requiredRoles as $requiredRole) {
