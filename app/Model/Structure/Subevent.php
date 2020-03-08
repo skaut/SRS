@@ -15,7 +15,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
 use function implode;
-use function spl_object_id;
 
 /**
  * Entita podakce.
@@ -305,7 +304,7 @@ class Subevent
      */
     private function getRequiredBySubeventTransitiveRec(Collection &$allRequiredBySubevent, Subevent $subevent) : void
     {
-        if (spl_object_id($this) !== spl_object_id($subevent) && ! $allRequiredBySubevent->contains($subevent)) {
+        if ($this->getId() !== $subevent->getId() && ! $allRequiredBySubevent->contains($subevent)) {
             $allRequiredBySubevent->add($subevent);
 
             foreach ($subevent->requiredBySubevent as $requiredBySubevent) {
@@ -353,7 +352,7 @@ class Subevent
      */
     private function getRequiredSubeventsTransitiveRec(Collection &$allRequiredSubevents, Subevent $subevent) : void
     {
-        if (spl_object_id($this) !== spl_object_id($subevent) && ! $allRequiredSubevents->contains($subevent)) {
+        if ($this->getId() !== $subevent->getId() && ! $allRequiredSubevents->contains($subevent)) {
             $allRequiredSubevents->add($subevent);
 
             foreach ($subevent->requiredSubevents as $requiredSubevent) {
