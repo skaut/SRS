@@ -130,7 +130,7 @@
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Creating release directory if not exists"/>
-            <property name="command" value="mkdir -p ${deploy.releasesDir}"/>
+            <property name="command" value="mkdir -p /home/vu009903/releases"/>
         </phingcall>
 
         <phingcall target="deploy:copy-tarball">
