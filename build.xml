@@ -85,14 +85,14 @@
 
     <target name="deploy:ssh">
         <echo message="${comment}..."/>
-        <echo message="`${command}`"/>
+        <echo message="'${command}'"/>
         <exec command="ssh ${deploy.ssh.target} -p ${deploy.ssh.port} '${command}'" passthru="true" checkreturn="true"/>
     </target>
 
     <target name="deploy:copy-tarball">
         <property name="command" value="scp -P ${port} ${file} '${target}:${toDirectory}'"/>
         <echo message="Copying files to ${deploy.ssh.target}"/>
-        <echo message="${command}"/>
+        <echo message="'${command}'"/>
         <exec command="${command}" passthru="true" checkreturn="true"/>
     </target>
 
@@ -114,7 +114,7 @@
 
         <!-- Prepare variables -->
         <property environment="env"/>
-        <property name="deploy.releasesDir" value="$HOME/releases"/>
+        <property name="deploy.releasesDir" value="~/releases"/>
         <exec command="git rev-parse --short HEAD" outputProperty="build.hash"/>
         <property name="deploy.ssh.host" refid="env.DEPLOY_SSH_HOST"/>
         <property name="deploy.ssh.username" refid="env.DEPLOY_SSH_USERNAME"/>
@@ -144,7 +144,7 @@
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Extracting tarball to release directory"/>
-            <property name="command" value="tar -xvzf ${tarball} -C ${deploy.releasesDir}"/>
+            <property name="command" value="tar -xzf ${tarball} -C ${deploy.releasesDir}"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
