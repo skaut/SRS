@@ -95,4 +95,11 @@ jobs:
       - name: Extract workdir
         run: tar -xzf workdir.tar.gz
       - run: mv app/config/ci.local.neon app/config/local.neon
-      - run: php www/console.php migrations:migrate --no-interaction
+      - name: Build the docker-compose stack
+        run: docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
+      - name: Check running containers
+        run: docker ps -a
+      - name: Check logs
+        run: docker logs backend
+      - name: Run test suite
+        run: docker exec php www/console.php migrations:migrate --no-interaction
