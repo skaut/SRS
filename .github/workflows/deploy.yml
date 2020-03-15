@@ -1,4 +1,4 @@
-name: main
+name: deploy
 
 on:
   push:
@@ -27,8 +27,11 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
-      - run: eval `ssh-agent -s`
-      - run: echo "${DEPLOY_SSH_KEY}" | tr -d '\r' | ssh-add -
+      - run: mkdir -p ~/.ssh
       - run: ssh-keyscan -H "${DEPLOY_SSH_HOST}" >> ~/.ssh/known_hosts
+      - run: echo "${DEPLOY_SSH_KEY}" | tr -d '\r' > ~/.ssh/id_ed25519
+      - run: chown www-data:www-data ~/.ssh
+      - run: eval `ssh-agent -s`
+      - run: ssh-add
       - run: phing deploy
 
