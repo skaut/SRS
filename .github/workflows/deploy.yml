@@ -45,11 +45,11 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
-      - run: mkdir -p ~/.ssh
-      - run: ssh-keyscan -H "${DEPLOY_SSH_HOST}"  >> ~/.ssh/known_hosts
-      - run: ssh-keyscan -H "${DEPLOY_SSH_IP}"  >> ~/.ssh/known_hosts
-      - run: echo "${DEPLOY_SSH_KEY}" | tr -d '\r' > ~/.ssh/id_ed25519
-      - run: chown www-data:www-data ~/.ssh
-      - run: eval `ssh-agent -s`
-      - run: ssh-add && phing deploy
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          name: id_rsa # optional
+          known_hosts: ${DEPLOY_SSH_HOST}
+      - run: phing deploy
 
