@@ -28,6 +28,7 @@ jobs:
       CONFIG_SKAUTIS_APPLICATION_ID: cb35144d-2ab7-4106-80fb-6527594f9873
       CONFIG_SKAUTIS_TEST_MODE: true
       DEPLOY_SSH_HOST: test-srs.skauting.cz
+      DEPLOY_SSH_IP: 81.31.46.138
       DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
       DEPLOY_SSH_PORT: 28
       DEPLOY_SSH_USERNAME: vu009903
@@ -45,7 +46,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
       - run: mkdir -p ~/.ssh
-      - run: ssh-keyscan -H "${DEPLOY_SSH_HOST}" >> ~/.ssh/known_hosts
+      - run: ssh-keyscan -H "${DEPLOY_SSH_HOST}"  >> ~/.ssh/known_hosts
+      - run: ssh-keyscan -H "${DEPLOY_SSH_IP}"  >> ~/.ssh/known_hosts
       - run: echo "${DEPLOY_SSH_KEY}" | tr -d '\r' > ~/.ssh/id_ed25519
       - run: chown www-data:www-data ~/.ssh
       - run: eval `ssh-agent -s`
