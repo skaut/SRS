@@ -81,6 +81,16 @@ jobs:
   doctrine-migrations:
     name: "Run migrations"
     runs-on: ubuntu-18.04
+    container:
+      image: fmasa/lebeda:7.3
+    services:
+      mysql-test:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: 'root'
+          MYSQL_DATABASE: srs
+          TZ: Europe/Paris
+        options: --health-cmd="mysqladmin ping" --health-interval=10s
     needs: workdir
     steps:
       - name: Download workdir
@@ -91,7 +101,5 @@ jobs:
       - name: Extract workdir
         run: tar -xzf workdir.tar.gz
       - run: mv app/config/ci.local.neon app/config/local.neon
-      - name: Build the docker-compose stack
-        run: docker-compose -f docker-compose.yml up -d
       - name: Run migrations
-        run: docker exec srs.app php www/console.php migrations:migrate --no-interaction
+        run: php www/console.php migrations:migrate --no-interaction
