@@ -32,6 +32,5 @@ jobs:
       - run: echo "${DEPLOY_SSH_KEY}" | tr -d '\r' > ~/.ssh/id_ed25519
       - run: chown www-data:www-data ~/.ssh
       - run: eval `ssh-agent -s`
-      - run: ssh-add
       - run: phing deploy
 
