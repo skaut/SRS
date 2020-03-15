@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   workdir:
-    name: "Prepare working directory"
+    name: "Build"
     runs-on: ubuntu-18.04
     container:
       image: fmasa/lebeda:7.3
@@ -31,7 +31,7 @@ jobs:
           path: workdir.tar.gz
 
   tests-unit:
-    name: "Run unit tests"
+    name: "Unit tests"
     runs-on: ubuntu-18.04
     container:
       image: fmasa/lebeda:7.3
@@ -47,7 +47,7 @@ jobs:
       - run: phing tests-unit
 
   static-analysis:
-    name: "Run PHPStan analysis"
+    name: "PHPStan analysis"
     runs-on: ubuntu-18.04
     container:
       image: fmasa/lebeda:7.3
@@ -63,7 +63,7 @@ jobs:
       - run: phing static-analysis
 
   coding-standard:
-    name: "Check coding standard"
+    name: "Coding standard"
     runs-on: ubuntu-18.04
     container:
       image: fmasa/lebeda:7.3
@@ -79,7 +79,7 @@ jobs:
       - run: phing coding-standard
 
   doctrine-migrations:
-    name: "Run migrations"
+    name: "Doctrine migrations"
     runs-on: ubuntu-18.04
     container:
       image: fmasa/lebeda:7.3
@@ -100,6 +100,7 @@ jobs:
           path: .
       - name: Extract workdir
         run: tar -xzf workdir.tar.gz
-      - run: mv app/config/ci.local.neon app/config/local.neon
+      - name: Create local.neon config
+        run: mv app/config/ci.local.neon app/config/local.neon
       - name: Run migrations:migrate
         run: php www/console.php migrations:migrate --no-interaction
