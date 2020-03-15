@@ -81,8 +81,6 @@ jobs:
   doctrine-migrations:
     name: "Run migrations"
     runs-on: ubuntu-18.04
-    container:
-      image: fmasa/lebeda:7.3
     needs: workdir
     env:
       DEVELOPMENT_MACHINE: true
