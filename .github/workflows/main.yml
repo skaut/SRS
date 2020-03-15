@@ -82,8 +82,6 @@ jobs:
     name: "Run migrations"
     runs-on: ubuntu-18.04
     needs: workdir
-    env:
-      DEVELOPMENT_MACHINE: true
     steps:
       - name: Download workdir
         uses: actions/download-artifact@v1
@@ -95,9 +93,5 @@ jobs:
       - run: mv app/config/ci.local.neon app/config/local.neon
       - name: Build the docker-compose stack
         run: docker-compose -f docker-compose.yml up -d
-      - name: Check running containers
-        run: docker ps -a
-      - name: Check logs
-        run: docker logs backend
-      - name: Run test suite
-        run: docker exec php www/console.php migrations:migrate --no-interaction
+      - name: Run migrations
+        run: docker exec srs.app php www/console.php migrations:migrate --no-interaction
