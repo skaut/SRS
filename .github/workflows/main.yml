@@ -90,7 +90,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: 'root'
           MYSQL_DATABASE: srs
           TZ: Europe/Paris
-        options: --health-cmd="mysqladmin ping" --health-interval=10s
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
     needs: workdir
     steps:
       - name: Download workdir
@@ -101,5 +101,5 @@ jobs:
       - name: Extract workdir
         run: tar -xzf workdir.tar.gz
       - run: mv app/config/ci.local.neon app/config/local.neon
-      - name: Run migrations
+      - name: Run migrations:migrate
         run: php www/console.php migrations:migrate --no-interaction
