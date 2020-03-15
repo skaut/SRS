@@ -30,6 +30,5 @@ jobs:
       - run: eval `ssh-agent -s`
       - run: echo "${DEPLOY_SSH_KEY}" | tr -d '\r' | ssh-add -
       - run: ssh-keyscan -H "${DEPLOY_SSH_HOST}" >> ~/.ssh/known_hosts
-      - run: ssh-keyscan -H "${DEPLOY_SSH_IP}" >> ~/.ssh/known_hosts
       - run: phing deploy
 
