@@ -45,12 +45,11 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
-      - name: Setup SSH key
+      - name: Setup SSH key and deploy
         run: |
           mkdir -p /root/.ssh
           ssh-keyscan -H "${DEPLOY_SSH_HOST}","${DEPLOY_SSH_IP}" >> /root/.ssh/known_hosts
           eval `ssh-agent -s`
           echo "${DEPLOY_SSH_KEY}" | tr -d '\r' | ssh-add -
-          ssh -v "${DEPLOY_SSH_USERNAME}@${DEPLOY_SSH_HOST}" -p ${DEPLOY_SSH_PORT} mkdir test
-      - run: phing deploy
+          phing deploy
 
