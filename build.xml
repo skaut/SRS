@@ -129,7 +129,7 @@
         </phingcall>
 
         <phingcall target="deploy:ssh">
-            <property name="comment" value="Creating release directory if not exists"/>
+            <property name="comment" value="Creating releases directory if not exists"/>
             <property name="command" value="mkdir -p ${deploy.releasesDir}"/>
         </phingcall>
 
