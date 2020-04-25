@@ -26,12 +26,6 @@ class ProgramDetailDto
      * @JMS\Type("string")
      * @var string
      */
-    private $title;
-
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
     private $start;
 
     /**
@@ -90,16 +84,6 @@ class ProgramDetailDto
     public function setId(int $id) : void
     {
         $this->id = $id;
-    }
-
-    public function getTitle() : string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title) : void
-    {
-        $this->title = $title;
     }
 
     public function getStart() : string

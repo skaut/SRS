@@ -146,11 +146,11 @@ var nette = function () {
 	};
 
 	/**
-	 * Executes AJAX request. Attaches listeners and events.
+	 * Executes AJAX superagent. Attaches listeners and events.
 	 *
 	 * @param  {object|string} settings or URL
 	 * @param  {Element|null} ussually Anchor or Form
-	 * @param  {event|null} event causing the request
+	 * @param  {event|null} event causing the superagent
 	 * @return {jqXHR|null}
 	 */
 	this.ajax = function (settings, ui, e) {
@@ -509,7 +509,7 @@ $.nette.ext('state', {
 	}
 }, {state: null});
 
-// abort last request if new started
+// abort last superagent if new started
 $.nette.ext('unique', {
 	start: function (xhr) {
 		if (this.xhr) {

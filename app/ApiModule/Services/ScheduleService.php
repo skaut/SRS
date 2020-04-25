@@ -193,10 +193,9 @@ class ScheduleService
         $toDate   = $this->settingsService->getDateValue(Settings::SEMINAR_TO_DATE);
 
         $calendarConfigDto->setSeminarFromDate($fromDate->format('Y-m-d'));
-        $calendarConfigDto->setSeminarDuration($toDate->diff($fromDate)->d + 1);
-        $calendarConfigDto->setAllowedModifySchedule(
-            $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE) &&
-            $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)
+        $calendarConfigDto->setSeminarToDate($toDate->add(new DateInterval('P1D'))->format('Y-m-d'));
+        $calendarConfigDto->setAllowedModifySchedule($this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
+            && $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)
         );
 
         return $calendarConfigDto;
@@ -384,7 +383,6 @@ class ScheduleService
         $programDetailDto = new ProgramDetailDto();
 
         $programDetailDto->setId($program->getId());
-        $programDetailDto->setTitle($program->getBlock()->getName());
         $programDetailDto->setStart($program->getStart()->format(DATE_ISO8601));
         $programDetailDto->setEnd($program->getEnd()->format(DATE_ISO8601));
         $programDetailDto->setBlockId($program->getBlock()->getId());
@@ -407,8 +405,7 @@ class ScheduleService
             return $this->convertUserToLectorDetailDto($lector);
         })->toArray());
         $blockDetailDto->setLectorsNames($block->getLectorsText());
-        $blockDetailDto->setDurationHours((int) floor($block->getDuration() / 60));
-        $blockDetailDto->setDurationMinutes($block->getDuration() % 60);
+        $blockDetailDto->setDuration($block->getDuration());
         $blockDetailDto->setCapacity($block->getCapacity());
         $blockDetailDto->setMandatory($block->getMandatory() === ProgramMandatoryType::MANDATORY || $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED);
         $blockDetailDto->setAutoRegistered($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED);

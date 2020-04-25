@@ -51,13 +51,7 @@ class BlockDetailDto
      * @JMS\Type("int")
      * @var int
      */
-    private $durationHours;
-
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $durationMinutes;
+    private $duration;
 
     /**
      * @JMS\Type("int")
@@ -163,24 +157,14 @@ class BlockDetailDto
         $this->lectorsNames = $lectorsNames;
     }
 
-    public function getDurationHours() : int
+    public function getDuration() : int
     {
-        return $this->durationHours;
+        return $this->duration;
     }
 
-    public function setDurationHours(int $durationHours) : void
+    public function setDuration(int $duration) : void
     {
-        $this->durationHours = $durationHours;
-    }
-
-    public function getDurationMinutes() : int
-    {
-        return $this->durationMinutes;
-    }
-
-    public function setDurationMinutes(int $durationMinutes) : void
-    {
-        $this->durationMinutes = $durationMinutes;
+        $this->duration = $duration;
     }
 
     public function getCapacity() : ?int

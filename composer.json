@@ -4,10 +4,6 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/Gappa/WebLoader"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/pecan987/nette-forms-gpspicker.git"
         }
     ],
@@ -54,7 +50,7 @@
         "ublaboo/datagrid": "^6.2",
         "ublaboo/mailing": "^1.2",
 
-        "janmarek/webloader": "dev-master",
+        "bicisteadm/webloader-reload": "^3.0",
         "jms/serializer": "^3.4",
 
         "skautis/skautis": "^2.1",
