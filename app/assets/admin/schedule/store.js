@@ -23,12 +23,16 @@ export default new Vuex.Store({
         blocks: [],
         blocksMap: [],
         resources: [],
+        resourcesMap: [],
         events: [],
         loading: 0
     },
     getters: {
         getBlockById: state => id => {
             return state.blocksMap[id];
+        },
+        getResourceById: state => id => {
+            return state.resourcesMap[id];
         }
     },
     mutations: {
@@ -44,6 +48,9 @@ export default new Vuex.Store({
         setResources(state, resources) {
             state.resources = resources;
         },
+        setResourcesMap(state, resourcesMap) {
+            state.resourcesMap = resourcesMap;
+        },
         setEvents(state, events) {
             state.events = events;
         },
@@ -58,12 +65,13 @@ export default new Vuex.Store({
         loadData({commit}) {
             commit('incrementLoading');
             Vue.axios.get('get-calendar-config')
-                .then(res => {
-                    const config = JSON.parse(res.data);
+                .then(response => {
+                    const config = JSON.parse(response.data);
                     commit('setConfig', config);
-                    commit('decrementLoading');
                 }).catch(error => {
                     throw new Error(`API ${error}`); // todo
+                }).finally(() => {
+                    commit('decrementLoading');
                 });
 
             commit('incrementLoading');
@@ -71,8 +79,8 @@ export default new Vuex.Store({
                 Vue.axios.get('get-blocks'),
                 Vue.axios.get('get-rooms'),
                 Vue.axios.get('get-programs-admin')
-            ]).then(axios.spread((blocksRes, roomsRes, programsRes) => {
-                const blocks = Array.prototype.slice.call(JSON.parse(blocksRes.data))
+            ]).then(axios.spread((blocksResponse, roomsResponse, programsResponse) => {
+                const blocks = Array.prototype.slice.call(JSON.parse(blocksResponse.data))
                     .map(function(block) {
                         return {
                             id: block.id,
@@ -96,7 +104,7 @@ export default new Vuex.Store({
                         }, {});
                 commit('setBlocksMap', blocksMap);
 
-                const resources = Array.prototype.slice.call(JSON.parse(roomsRes.data))
+                const resources = Array.prototype.slice.call(JSON.parse(roomsResponse.data))
                     .map(function(room) {
                         return {
                             id: room.id,
@@ -106,7 +114,13 @@ export default new Vuex.Store({
                             }
                         }
                     });
-                resources.push({id: 0, title: 'nezarazeno'});
+                resources.push({
+                    id: 0,
+                    title: 'Nepřiřazená',
+                    extendedProps: {
+                        capacity: null
+                    }
+                });
                 commit('setResources', resources);
 
                 const resourcesMap = resources
@@ -114,8 +128,9 @@ export default new Vuex.Store({
                          map[obj.id] = obj;
                          return map;
                          }, {});
+                commit('setResourcesMap', resourcesMap);
 
-                const events = Array.prototype.slice.call(JSON.parse(programsRes.data))
+                const events = Array.prototype.slice.call(JSON.parse(programsResponse.data))
                     .map(function(program) {
                         const block = blocksMap[program.block_id];
                         return {
@@ -131,31 +146,76 @@ export default new Vuex.Store({
                         }
                     });
                 commit('setEvents', events);
-
-                commit('decrementLoading');
             })).catch(error => {
                 throw new Error(`API ${error}`); // todo
+            }).finally(() => {
+                commit('decrementLoading');
             });
         },
-        addProgram(context, event) {
+        addProgram({commit}, info) {
+            commit('incrementLoading');
             const data = {
-                block_id: event.extendedProps.block.id,
-                room_id: event.resourceId > 0 ? event.resourceId : null,
-                start: event.start.toISOString()
+                block_id: info.event.extendedProps.block.id,
+                room_id: info.event.resourceId > 0 ? info.event.resourceId : null,
+                start: info.event.start.toISOString()
             };
-            Vue.axios.post('save-program', data)
-                .then(res => {
-                    const program = JSON.parse(res.data);
-                    event.id = program.id;
+            Vue.axios.put('save-program', data)
+                .then(response => {
+                    const responseObject = JSON.parse(response.data);
+                    info.event.setProp('id', responseObject.program.id);
+                    info.event.setExtendedProp('id', responseObject.program.id); // todo: odstranit workaround po oprave bugu
+                    info.event.extendedProps.block.programsCount++;
                 }).catch(error => {
-                    throw new Error(`API ${error}`); //todo
+                    info.event.remove(); // todo pracovat s referenci
+                    //todo
+                }).finally(() => {
+                    commit('decrementLoading');
                 });
         },
-        updateProgram(context, event) {
-
+        updateProgram({commit}, info) {
+            commit('incrementLoading');
+            const data = {
+                id: info.event.id !== "" ? info.event.id : info.event.extendedProps.id, // todo: odstranit workaround po oprave bugu
+                block_id: info.event.extendedProps.block.id,
+                room_id: info.event.resourceId > 0 ? info.event.resourceId : null,
+                start: info.event.start.toISOString()
+            };
+            Vue.axios.put('save-program', data)
+                .catch(error => {
+                    info.revert(); // todo pracovat s referenci
+                    //todo
+                }).finally(() => {
+                    commit('decrementLoading');
+                });
         },
-        removeProgram(context, event) {
-
+        updateProgramRoom({commit}, info) {
+            commit('incrementLoading');
+            const data = {
+                id: info.event.id !== "" ? info.event.id : info.event.extendedProps.id, // todo: odstranit workaround po oprave bugu
+                block_id: info.event.extendedProps.block.id,
+                room_id: info.resourceId > 0 ? info.resourceId : null,
+                start: info.event.start.toISOString()
+            };
+            Vue.axios.put('save-program', data)
+                .then(response => {
+                    info.event.setResources([info.resourceId]); // todo pracovat s referenci
+                }).catch(error => {
+                    //todo
+                }).finally(() => {
+                    commit('decrementLoading');
+                });
+        },
+        removeProgram({commit, state}, info) {
+            commit('incrementLoading');
+            Vue.axios.delete('remove-program/' + (info.event.id !== "" ? info.event.id : info.event.extendedProps.id)) // todo: odstranit workaround po oprave bugu
+                .then(response => {
+                    state.blocksMap[info.event.extendedProps.block.id].programsCount--;
+                    info.event.remove(); // todo pracovat s referenci
+                }).catch(error => {
+                    //todo
+                }).finally(() => {
+                    commit('decrementLoading');
+                });
         }
     }
 });

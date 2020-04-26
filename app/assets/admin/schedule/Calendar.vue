@@ -1,10 +1,76 @@
 <template>
     <div class='calendar-app'>
-        <span class="fa fa-spinner fa-pulse" v-show="loading > 0"></span>
+        <div class="notifications">
+            <div class="spinner pull-left" v-show="loading > 0">
+                <span class="fa fa-spinner fa-pulse"></span>
+            </div>
+
+            <div v-if="message" class="alert pull-left ml-2" :class="'alert-' + message.type">
+                {{ message.text }}
+            </div>
+        </div>
+
+        <div id="program-modal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content" v-if="selectedEvent">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Nastavení programu</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-3">Název</div>
+                            <div class="col-9">
+                                <a :href="'../blocks/detail/' + selectedEvent.event.extendedProps.block.id" target="_blank">
+                                    {{ selectedEvent.event.extendedProps.block.name }}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">Kategorie</div>
+                            <div class="col-9">{{ selectedEvent.event.extendedProps.block.category }}</div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">Lektoři</div>
+                            <div class="col-9">{{ selectedEvent.event.extendedProps.block.lectorsNames }}</div>
+                        </div>
+
+                        <form class="form-horizontal">
+                            <div class="form-group row mb-1">
+                                <div class="col-3 col-form-label">
+                                    <label for="select-room">Místnost</label>
+                                </div>
+                                <div class="col-9">
+                                    <select id="select-room" class="form-control" v-model="selectedEvent.resource">
+                                        <option v-for="resource in resources" :value="resource.id">{{ resource.title }}</option>
+                                    </select>
+                                    <span v-if="(getResourceById(selectedEvent.resourceId).extendedProps.capacity || Number.MAX_VALUE) < (selectedEvent.event.extendedProps.block.capacity || 0)" class="text-warning">
+                                        <span class="fa fa-exclamation-triangle"></span>
+                                        Kapacita místnosti je menší než kapacita bloku.
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="form-group row">
+                            <div class="col-3">Kapacita</div>
+                            <div class="col-9">{{ selectedEvent.event.extendedProps.block.capacity }}</div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button @click="handleEventUpdateRoom()" class="btn btn-primary pull-left">Uložit</button>
+                        <button @click="handleEventRemove()" class="btn btn-danger pull-right">Odstranit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <FullCalendar class='demo-app-calendar'
                       ref="fullCalendar"
                       theme-system="bootstrap"
                       locale="cs"
+                      timeZone="none"
                       aspect-ratio="1.6"
                       scheduler-license-key="GPL-My-Project-Is-Open-Source"
                       :plugins="calendarPlugins"
@@ -20,7 +86,8 @@
                       :event-resource-editable="config.allowed_modify_schedule"
                       :event-overlap="handleEventOverlap"
                       @eventReceive="handleEventReceive"
-                      @eventDrop="handleEventDrop"/>
+                      @eventDrop="handleEventDrop"
+                      @eventClick="handleEventClick"/>
     </div>
 </template>
 
@@ -32,7 +99,7 @@
     import resourceTimelinePlugin from '@fullcalendar/resource-timeline'
     import interactionPlugin from '@fullcalendar/interaction'
     import bootstrapPlugin from '@fullcalendar/bootstrap'
-    import { mapState, mapActions } from 'vuex'
+    import { mapState, mapGetters, mapActions } from 'vuex'
 
     export default {
         components: {
@@ -46,11 +113,13 @@
                     interactionPlugin,
                     bootstrapPlugin
                 ],
-                defaultView: localStorage.getItem("fcDefaultView") || "timeGridSeminar"
+                defaultView: localStorage.getItem("fcDefaultView") || "timeGridSeminar",
+                selectedEvent: null
             }
         },
         computed: {
             ...mapState(['events', 'resources', 'config', 'loading']),
+            ...mapGetters(['getResourceById']),
             calendarViews: function views() {
                 return {
                     timeGridSeminar: {
@@ -76,12 +145,12 @@
                         slotDuration: {minutes: 15},
                         slotLabelInterval: {hours: 1},
                         resourceLabelText: "Místnosti"
-                    }
+                    },
                 };
             }
         },
         methods: {
-            ...mapActions(['loadData', 'addProgram', 'updateProgram', 'removeProgram']),
+            ...mapActions(['loadData', 'addProgram', 'updateProgram', 'updateProgramRoom', 'removeProgram']),
             handleChangeView(info) {
                 localStorage.setItem("fcDefaultView", info.view.type);
             },
@@ -101,15 +170,26 @@
                 return !stillEvent.extendedProps.block.autoRegistered && !movingEvent.extendedProps.block.autoRegistered;
             },
             handleEventReceive(info) {
-                this.addProgram(info.event);
-                info.event.extendedProps.block.programsCount++;
+                this.addProgram(info);
             },
-            handleEventDrop(eventDropInfo) {
-                if (eventDropInfo.newResource) {
-                    // eventDropInfo.event.title = "afsafsdf";
-                    // eventDropInfo.event.extendedProps.room = eventDropInfo.newResource.extendedProps.room;
-                }
+            handleEventDrop(info) {
+                this.updateProgram(info);
             },
+            handleEventClick(info) {
+                this.selectedEvent = {
+                    event: info.event,
+                    resourceId: info.event.getResources()[0].id
+                };
+                $('#program-modal').modal('show');
+            },
+            handleEventUpdateRoom() {
+                $('#program-modal').modal('hide');
+                this.updateProgramRoom(this.selectedEvent);
+            },
+            handleEventRemove() {
+                $('#program-modal').modal('hide');
+                this.removeProgram(this.selectedEvent);
+            }
         },
         created: function () {
             this.loadData();

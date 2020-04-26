@@ -6,6 +6,7 @@ namespace App\ApiModule\Presenters;
 
 use App\ApiModule\Dto\Schedule\ProgramSaveDto;
 use App\ApiModule\Dto\Schedule\ResponseDto;
+use App\ApiModule\Services\ApiException;
 use App\ApiModule\Services\ScheduleService;
 use App\Model\Settings\SettingsException;
 use Exception;
@@ -13,6 +14,7 @@ use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 use Nette\Application\AbortException;
 use Nette\Application\Responses\JsonResponse;
+use Nette\Http\IResponse;
 use Throwable;
 
 /**
@@ -132,7 +134,6 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Uloží nebo vytvoří program.
      *
-     * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
      */
@@ -141,7 +142,11 @@ class SchedulePresenter extends ApiBasePresenter
         /** @var ProgramSaveDto $programSaveDto */
         $programSaveDto = $this->serializer->deserialize(file_get_contents('php://input'), ProgramSaveDto::class, 'json');
 
-        $data = $this->scheduleService->saveProgram($programSaveDto);
+        try {
+            $data = $this->scheduleService->saveProgram($programSaveDto);
+        } catch (ApiException $e) {
+            $this->error($e->getMessage(), IResponse::S400_BAD_REQUEST);
+        }
 
         $json     = $this->serializer->serialize($data, 'json');
         $response = new JsonResponse($json);
@@ -151,13 +156,16 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Smaže program.
      *
-     * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
      */
     public function actionRemoveProgram(int $id) : void
     {
-        $data = $this->scheduleService->removeProgram($id);
+        try {
+            $data = $this->scheduleService->removeProgram($id);
+        } catch (ApiException $e) {
+            $this->error($e->getMessage(), IResponse::S400_BAD_REQUEST);
+        }
 
         $json     = $this->serializer->serialize($data, 'json');
         $response = new JsonResponse($json);
@@ -167,13 +175,16 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Přihlásí program uživateli.
      *
-     * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
      */
     public function actionAttendProgram(int $id) : void
     {
-        $data = $this->scheduleService->attendProgram($id);
+        try {
+            $data = $this->scheduleService->attendProgram($id);
+        } catch (ApiException $e) {
+            $this->error($e->getMessage(), IResponse::S400_BAD_REQUEST);
+        }
 
         $json     = $this->serializer->serialize($data, 'json');
         $response = new JsonResponse($json);
@@ -183,13 +194,16 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Odhlásí program uživateli.
      *
-     * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
      */
     public function actionUnattendProgram(int $id) : void
     {
-        $data = $this->scheduleService->unattendProgram($id);
+        try {
+            $data = $this->scheduleService->unattendProgram($id);
+        } catch (ApiException $e) {
+            $this->error($e->getMessage(), IResponse::S400_BAD_REQUEST);
+        }
 
         $json     = $this->serializer->serialize($data, 'json');
         $response = new JsonResponse($json);
