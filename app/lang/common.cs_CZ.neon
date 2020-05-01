@@ -139,7 +139,7 @@ api:
 
     schedule:
         saved: "Program byl úspěšně uložen."
-        saved_room_capacity: "Program byl úspěšně uložen. Kapacita místnosti není dostatečná."
+        saved_room_capacity: "Program byl úspěšně uložen, ale kapacita místnosti není dostatečná."
         deleted: "Program byl úspěšně odstraněn."
         program_not_found: "Program nebyl nalezen."
         user_not_allowed_manage: "Nemáte právo upravovat harmonogram."

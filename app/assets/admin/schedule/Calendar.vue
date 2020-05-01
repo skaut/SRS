@@ -41,7 +41,7 @@
                                     <label for="select-room">Místnost</label>
                                 </div>
                                 <div class="col-9">
-                                    <select id="select-room" class="form-control" v-model="selectedEvent.resource">
+                                    <select id="select-room" class="form-control" v-model="selectedEvent.resourceId">
                                         <option v-for="resource in resources" :value="resource.id">{{ resource.title }}</option>
                                     </select>
                                     <span v-if="(getResourceById(selectedEvent.resourceId).extendedProps.capacity || Number.MAX_VALUE) < (selectedEvent.event.extendedProps.block.capacity || 0)" class="text-warning">
@@ -118,7 +118,7 @@
             }
         },
         computed: {
-            ...mapState(['events', 'resources', 'config', 'loading']),
+            ...mapState(['events', 'resources', 'config', 'loading', 'message']),
             ...mapGetters(['getResourceById']),
             calendarViews: function views() {
                 return {
@@ -167,7 +167,8 @@
                 }
             },
             handleEventOverlap(stillEvent, movingEvent) {
-                return !stillEvent.extendedProps.block.autoRegistered && !movingEvent.extendedProps.block.autoRegistered;
+                return (!stillEvent.extendedProps.block.autoRegistered && !movingEvent.extendedProps.block.autoRegistered)
+                    && movingEvent.getResources()[0].id === "0";
             },
             handleEventReceive(info) {
                 this.addProgram(info);

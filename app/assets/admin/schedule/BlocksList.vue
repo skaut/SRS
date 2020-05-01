@@ -85,10 +85,10 @@
             filterBlocks() {
                 const search = this.search.toLowerCase();
                 const unassignedOnly = this.unassignedOnly;
-                return this.blocks.filter(function (block) {
-                    return ((!unassignedOnly && !block.autoRegistered) || block.programsCount === 0)
-                        && (search === "" || block.name.toLowerCase().includes(search));
-                });
+                return this.blocks.filter(block =>
+                    ((!unassignedOnly && !block.autoRegistered) || block.programsCount === 0)
+                    && (search === "" || block.name.toLowerCase().includes(search))
+                );
             },
             blockClass(block) {
                 return block.mandatory ? (block.autoRegistered ? 'bg-warning' : 'bg-danger') : 'bg-primary';

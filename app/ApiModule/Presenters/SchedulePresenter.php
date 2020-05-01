@@ -14,7 +14,6 @@ use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 use Nette\Application\AbortException;
 use Nette\Application\Responses\JsonResponse;
-use Nette\Http\IResponse;
 use Throwable;
 
 /**
@@ -145,7 +144,10 @@ class SchedulePresenter extends ApiBasePresenter
         try {
             $data = $this->scheduleService->saveProgram($programSaveDto);
         } catch (ApiException $e) {
-            $this->error($e->getMessage(), IResponse::S400_BAD_REQUEST);
+            $this->getHttpResponse()->setCode(400);
+            $data = new ResponseDto();
+            $data->setMessage($e->getMessage());
+            $data->setStatus("danger");
         }
 
         $json     = $this->serializer->serialize($data, 'json');
@@ -164,7 +166,10 @@ class SchedulePresenter extends ApiBasePresenter
         try {
             $data = $this->scheduleService->removeProgram($id);
         } catch (ApiException $e) {
-            $this->error($e->getMessage(), IResponse::S400_BAD_REQUEST);
+            $this->getHttpResponse()->setCode(400);
+            $data = new ResponseDto();
+            $data->setMessage($e->getMessage());
+            $data->setStatus("danger");
         }
 
         $json     = $this->serializer->serialize($data, 'json');
@@ -183,7 +188,10 @@ class SchedulePresenter extends ApiBasePresenter
         try {
             $data = $this->scheduleService->attendProgram($id);
         } catch (ApiException $e) {
-            $this->error($e->getMessage(), IResponse::S400_BAD_REQUEST);
+            $this->getHttpResponse()->setCode(400);
+            $data = new ResponseDto();
+            $data->setMessage($e->getMessage());
+            $data->setStatus("danger");
         }
 
         $json     = $this->serializer->serialize($data, 'json');
@@ -202,7 +210,10 @@ class SchedulePresenter extends ApiBasePresenter
         try {
             $data = $this->scheduleService->unattendProgram($id);
         } catch (ApiException $e) {
-            $this->error($e->getMessage(), IResponse::S400_BAD_REQUEST);
+            $this->getHttpResponse()->setCode(400);
+            $data = new ResponseDto();
+            $data->setMessage($e->getMessage());
+            $data->setStatus("danger");
         }
 
         $json     = $this->serializer->serialize($data, 'json');

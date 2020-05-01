@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\ApiModule\Dto\Schedule;
 
-use ApiModule\Dto\Schedule\LectorDetailDto;
 use JMS\Serializer\Annotation as JMS;
 use Nette;
 
@@ -36,7 +35,7 @@ class BlockDetailDto
     private $category;
 
     /**
-     * @JMS\Type("array<ApiModule\Dto\Schedule\LectorDetailDto>")
+     * @JMS\Type("array<App\ApiModule\Dto\Schedule\LectorDetailDto>")
      * @var LectorDetailDto[]
      */
     private $lectors;

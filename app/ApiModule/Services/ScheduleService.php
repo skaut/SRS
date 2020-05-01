@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\ApiModule\Services;
 
-use ApiModule\Dto\Schedule\LectorDetailDto;
-use ApiModule\Dto\Schedule\RoomDetailDto;
 use App\ApiModule\Dto\Schedule\BlockDetailDto;
 use App\ApiModule\Dto\Schedule\CalendarConfigDto;
+use App\ApiModule\Dto\Schedule\LectorDetailDto;
 use App\ApiModule\Dto\Schedule\ProgramDetailDto;
 use App\ApiModule\Dto\Schedule\ProgramSaveDto;
 use App\ApiModule\Dto\Schedule\ResponseDto;
+use App\ApiModule\Dto\Schedule\RoomDetailDto;
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
@@ -34,7 +34,6 @@ use Nette\Localization\ITranslator;
 use Throwable;
 use function array_intersect;
 use function count;
-use function floor;
 use function in_array;
 use const DATE_ISO8601;
 

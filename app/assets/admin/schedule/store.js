@@ -25,6 +25,8 @@ export default new Vuex.Store({
         resources: [],
         resourcesMap: [],
         events: [],
+        eventsMap: [],
+        message: null,
         loading: 0
     },
     getters: {
@@ -45,6 +47,12 @@ export default new Vuex.Store({
         setBlocksMap(state, blocksMap) {
             state.blocksMap = blocksMap;
         },
+        incrementProgramsCount(state, blockId) {
+            state.blocksMap[blockId].programsCount++;
+        },
+        decrementProgramsCount(state, blockId) {
+            state.blocksMap[blockId].programsCount--;
+        },
         setResources(state, resources) {
             state.resources = resources;
         },
@@ -53,6 +61,25 @@ export default new Vuex.Store({
         },
         setEvents(state, events) {
             state.events = events;
+        },
+        setEventsMap(state, eventsMap) {
+            state.eventsMap = eventsMap;
+        },
+        setEventTime(state, info) {
+            const event = state.eventsMap[info.eventId];
+            if (event) {
+                event.start = info.start;
+                event.end = info.end;
+            }
+        },
+        setEventResource(state, info) {
+            const event = state.eventsMap[info.eventId];
+            if (event) {
+                event.resourceId = info.resourceId;
+            }
+        },
+        setMessage(state, message) {
+            state.message = message;
         },
         incrementLoading(state) {
             state.loading++;
@@ -83,9 +110,10 @@ export default new Vuex.Store({
                 const blocks = Array.prototype.slice.call(JSON.parse(blocksResponse.data))
                     .map(function(block) {
                         return {
-                            id: block.id,
+                            id: String(block.id),
                             name: block.name,
                             category: block.category,
+                            lectors: block.lectors,
                             lectorsNames: block.lectors_names,
                             capacity: block.capacity,
                             duration: block.duration,
@@ -107,7 +135,7 @@ export default new Vuex.Store({
                 const resources = Array.prototype.slice.call(JSON.parse(roomsResponse.data))
                     .map(function(room) {
                         return {
-                            id: room.id,
+                            id: String(room.id),
                             title: room.name + (room.capacity ? (' (' + room.capacity + ')') : ''),
                             extendedProps: {
                                 capacity: room.capacity
@@ -115,7 +143,7 @@ export default new Vuex.Store({
                         }
                     });
                 resources.push({
-                    id: 0,
+                    id: "0",
                     title: 'Nepřiřazená',
                     extendedProps: {
                         capacity: null
@@ -134,8 +162,8 @@ export default new Vuex.Store({
                     .map(function(program) {
                         const block = blocksMap[program.block_id];
                         return {
-                            id: program.id,
-                            resourceId: program.room_id || 0,
+                            id: String(program.id),
+                            resourceId: String(program.room_id || 0),
                             title: block.name,
                             start: program.start,
                             end: program.end,
@@ -146,6 +174,13 @@ export default new Vuex.Store({
                         }
                     });
                 commit('setEvents', events);
+
+                const eventsMap = events
+                    .reduce(function (map, obj) {
+                        map[obj.id] = obj;
+                        return map;
+                    }, {});
+                commit('setEventsMap', eventsMap);
             })).catch(error => {
                 throw new Error(`API ${error}`); // todo
             }).finally(() => {
@@ -156,7 +191,7 @@ export default new Vuex.Store({
             commit('incrementLoading');
             const data = {
                 block_id: info.event.extendedProps.block.id,
-                room_id: info.event.resourceId > 0 ? info.event.resourceId : null,
+                room_id: info.event.resourceId && info.event.resourceId !== "0" ? info.event.resourceId : null,
                 start: info.event.start.toISOString()
             };
             Vue.axios.put('save-program', data)
@@ -164,10 +199,16 @@ export default new Vuex.Store({
                     const responseObject = JSON.parse(response.data);
                     info.event.setProp('id', responseObject.program.id);
                     info.event.setExtendedProp('id', responseObject.program.id); // todo: odstranit workaround po oprave bugu
-                    info.event.extendedProps.block.programsCount++;
+                    commit('incrementProgramsCount', info.event.extendedProps.block.id);
+                    commit('setMessage', {type: responseObject.status, text: responseObject.message});
                 }).catch(error => {
-                    info.event.remove(); // todo pracovat s referenci
-                    //todo
+                    info.event.remove();
+                    if (error.response && error.response.data) {
+                        const responseObject = JSON.parse(error.response.data);
+                        commit('setMessage', {type: responseObject.status, text: responseObject.message});
+                    } else {
+                        commit('setMessage', {type: 'danger', text: 'Neznámá chyba.'});
+                    }
                 }).finally(() => {
                     commit('decrementLoading');
                 });
@@ -177,13 +218,24 @@ export default new Vuex.Store({
             const data = {
                 id: info.event.id !== "" ? info.event.id : info.event.extendedProps.id, // todo: odstranit workaround po oprave bugu
                 block_id: info.event.extendedProps.block.id,
-                room_id: info.event.resourceId > 0 ? info.event.resourceId : null,
+                room_id: info.event.getResources()[0].id !== "0" ? info.event.getResources()[0].id : null,
                 start: info.event.start.toISOString()
             };
             Vue.axios.put('save-program', data)
+                .then(response => {
+                    const responseObject = JSON.parse(response.data);
+                    commit('setEventTime', {eventId: info.event.id, start: responseObject.program.start, end: responseObject.program.end});
+                    commit('setEventResource', {eventId: info.event.id, resourceId: String(responseObject.program.room_id || 0)});
+                    commit('setMessage', {type: responseObject.status, text: responseObject.message});
+                })
                 .catch(error => {
-                    info.revert(); // todo pracovat s referenci
-                    //todo
+                    info.revert();
+                    if (error.response && error.response.data) {
+                        const responseObject = JSON.parse(error.response.data);
+                        commit('setMessage', {type: responseObject.status, text: responseObject.message});
+                    } else {
+                        commit('setMessage', {type: 'danger', text: 'Neznámá chyba.'});
+                    }
                 }).finally(() => {
                     commit('decrementLoading');
                 });
@@ -193,14 +245,22 @@ export default new Vuex.Store({
             const data = {
                 id: info.event.id !== "" ? info.event.id : info.event.extendedProps.id, // todo: odstranit workaround po oprave bugu
                 block_id: info.event.extendedProps.block.id,
-                room_id: info.resourceId > 0 ? info.resourceId : null,
+                room_id: info.resourceId !== "0" ? info.resourceId : null,
                 start: info.event.start.toISOString()
             };
             Vue.axios.put('save-program', data)
                 .then(response => {
-                    info.event.setResources([info.resourceId]); // todo pracovat s referenci
+                    const responseObject = JSON.parse(response.data);
+                    info.event.setResources([String(responseObject.program.room_id || 0)]);
+                    commit('setEventResource', {eventId: info.event.id, resourceId: String(responseObject.program.room_id || 0)});
+                    commit('setMessage', {type: responseObject.status, text: responseObject.message});
                 }).catch(error => {
-                    //todo
+                    if (error.response && error.response.data) {
+                        const responseObject = JSON.parse(error.response.data);
+                        commit('setMessage', {type: responseObject.status, text: responseObject.message});
+                    } else {
+                        commit('setMessage', {type: 'danger', text: 'Neznámá chyba.'});
+                    }
                 }).finally(() => {
                     commit('decrementLoading');
                 });
@@ -209,10 +269,19 @@ export default new Vuex.Store({
             commit('incrementLoading');
             Vue.axios.delete('remove-program/' + (info.event.id !== "" ? info.event.id : info.event.extendedProps.id)) // todo: odstranit workaround po oprave bugu
                 .then(response => {
-                    state.blocksMap[info.event.extendedProps.block.id].programsCount--;
-                    info.event.remove(); // todo pracovat s referenci
+                    const responseObject = JSON.parse(response.data);
+                    info.event.remove();
+                    const filteredEvents = state.events.filter(event => event.id !== info.event.id);
+                    commit('setEvents', filteredEvents);
+                    commit('decrementProgramsCount', info.event.extendedProps.block.id);
+                    commit('setMessage', {type: responseObject.status, text: responseObject.message});
                 }).catch(error => {
-                    //todo
+                    if (error.response && error.response.data) {
+                        const responseObject = JSON.parse(error.response.data);
+                        commit('setMessage', {type: responseObject.status, text: responseObject.message});
+                    } else {
+                        commit('setMessage', {type: 'danger', text: 'Neznámá chyba.'});
+                    }
                 }).finally(() => {
                     commit('decrementLoading');
                 });
