@@ -82,6 +82,9 @@
             ...mapGetters(['getBlockById'])
         },
         methods: {
+            /**
+             * Vyfiltruje bloky podle podmínky (název, nepřiřazené).
+             */
             filterBlocks() {
                 const search = this.search.toLowerCase();
                 const unassignedOnly = this.unassignedOnly;
@@ -90,6 +93,10 @@
                     && (search === "" || block.name.toLowerCase().includes(search))
                 );
             },
+
+            /**
+             * Nastaví barvu bloku.
+             */
             blockClass(block) {
                 return block.mandatory ? (block.autoRegistered ? 'bg-warning' : 'bg-danger') : 'bg-primary';
             }

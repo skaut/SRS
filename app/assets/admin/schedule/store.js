@@ -89,6 +89,9 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        /**
+         * Načte nastavení kalendáře, bloky, místnosti a programy.
+         */
         loadData({commit}) {
             commit('incrementLoading');
             Vue.axios.get('get-calendar-config')
@@ -96,7 +99,7 @@ export default new Vuex.Store({
                     const config = JSON.parse(response.data);
                     commit('setConfig', config);
                 }).catch(error => {
-                    throw new Error(`API ${error}`); // todo
+                    handleError(commit, error);
                 }).finally(() => {
                     commit('decrementLoading');
                 });
@@ -182,11 +185,15 @@ export default new Vuex.Store({
                     }, {});
                 commit('setEventsMap', eventsMap);
             })).catch(error => {
-                throw new Error(`API ${error}`); // todo
+                handleError(commit, error);
             }).finally(() => {
                 commit('decrementLoading');
             });
         },
+
+        /**
+         * Zpracuje přidání programu.
+         */
         addProgram({commit}, info) {
             commit('incrementLoading');
             const data = {
@@ -203,16 +210,15 @@ export default new Vuex.Store({
                     commit('setMessage', {type: responseObject.status, text: responseObject.message});
                 }).catch(error => {
                     info.event.remove();
-                    if (error.response && error.response.data) {
-                        const responseObject = JSON.parse(error.response.data);
-                        commit('setMessage', {type: responseObject.status, text: responseObject.message});
-                    } else {
-                        commit('setMessage', {type: 'danger', text: 'Neznámá chyba.'});
-                    }
+                    handleError(commit, error);
                 }).finally(() => {
                     commit('decrementLoading');
                 });
         },
+
+        /**
+         * Zpracuje přesunutí programu.
+         */
         updateProgram({commit}, info) {
             commit('incrementLoading');
             const data = {
@@ -230,16 +236,15 @@ export default new Vuex.Store({
                 })
                 .catch(error => {
                     info.revert();
-                    if (error.response && error.response.data) {
-                        const responseObject = JSON.parse(error.response.data);
-                        commit('setMessage', {type: responseObject.status, text: responseObject.message});
-                    } else {
-                        commit('setMessage', {type: 'danger', text: 'Neznámá chyba.'});
-                    }
+                    handleError(commit, error);
                 }).finally(() => {
                     commit('decrementLoading');
                 });
         },
+
+        /**
+         * Zpracuje změnu místnosti z modal okna.
+         */
         updateProgramRoom({commit}, info) {
             commit('incrementLoading');
             const data = {
@@ -255,16 +260,15 @@ export default new Vuex.Store({
                     commit('setEventResource', {eventId: info.event.id, resourceId: String(responseObject.program.room_id || 0)});
                     commit('setMessage', {type: responseObject.status, text: responseObject.message});
                 }).catch(error => {
-                    if (error.response && error.response.data) {
-                        const responseObject = JSON.parse(error.response.data);
-                        commit('setMessage', {type: responseObject.status, text: responseObject.message});
-                    } else {
-                        commit('setMessage', {type: 'danger', text: 'Neznámá chyba.'});
-                    }
+                    handleError(commit, error);
                 }).finally(() => {
                     commit('decrementLoading');
                 });
         },
+
+        /**
+         * Zpracuje odstranění programu z modal okna.
+         */
         removeProgram({commit, state}, info) {
             commit('incrementLoading');
             Vue.axios.delete('remove-program/' + (info.event.id !== "" ? info.event.id : info.event.extendedProps.id)) // todo: odstranit workaround po oprave bugu
@@ -276,15 +280,19 @@ export default new Vuex.Store({
                     commit('decrementProgramsCount', info.event.extendedProps.block.id);
                     commit('setMessage', {type: responseObject.status, text: responseObject.message});
                 }).catch(error => {
-                    if (error.response && error.response.data) {
-                        const responseObject = JSON.parse(error.response.data);
-                        commit('setMessage', {type: responseObject.status, text: responseObject.message});
-                    } else {
-                        commit('setMessage', {type: 'danger', text: 'Neznámá chyba.'});
-                    }
+                    handleError(commit, error);
                 }).finally(() => {
                     commit('decrementLoading');
                 });
         }
     }
 });
+
+function handleError(commit, error) {
+    if (error.response && error.response.data) {
+        const responseObject = JSON.parse(error.response.data);
+        commit('setMessage', {type: responseObject.status, text: responseObject.message});
+    } else {
+        commit('setMessage', {type: 'danger', text: 'Neznámá chyba.'});
+    }
+}

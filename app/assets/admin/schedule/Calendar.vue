@@ -1,18 +1,8 @@
 <template>
     <div class='calendar-app'>
-        <div class="notifications">
-            <div class="spinner pull-left" v-show="loading > 0">
-                <span class="fa fa-spinner fa-pulse"></span>
-            </div>
-
-            <div v-if="message" class="alert pull-left ml-2" :class="'alert-' + message.type">
-                {{ message.text }}
-            </div>
-        </div>
-
         <div id="program-modal" class="modal fade">
             <div class="modal-dialog">
-                <div class="modal-content" v-if="selectedEvent">
+                <div class="modal-content" v-if="selectedEventInfo">
                     <div class="modal-header">
                         <h5 class="modal-title">Nastavení programu</h5>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -21,7 +11,7 @@
                         <div class="form-group row">
                             <div class="col-3">Název</div>
                             <div class="col-9">
-                                <a :href="'../blocks/detail/' + selectedEvent.event.extendedProps.block.id" target="_blank">
+                                <a :href="'../blocks/detail/' + selectedEventInfo.event.extendedProps.block.id" target="_blank">
                                     {{ selectedEvent.event.extendedProps.block.name }}
                                 </a>
                             </div>
@@ -41,10 +31,10 @@
                                     <label for="select-room">Místnost</label>
                                 </div>
                                 <div class="col-9">
-                                    <select id="select-room" class="form-control" v-model="selectedEvent.resourceId">
+                                    <select id="select-room" class="form-control" v-model="selectedEventInfo.resourceId">
                                         <option v-for="resource in resources" :value="resource.id">{{ resource.title }}</option>
                                     </select>
-                                    <span v-if="(getResourceById(selectedEvent.resourceId).extendedProps.capacity || Number.MAX_VALUE) < (selectedEvent.event.extendedProps.block.capacity || 0)" class="text-warning">
+                                    <span v-if="(getResourceById(selectedEventInfo.resourceId).extendedProps.capacity || Number.MAX_VALUE) < (selectedEventInfo.event.extendedProps.block.capacity || 0)" class="text-warning">
                                         <span class="fa fa-exclamation-triangle"></span>
                                         Kapacita místnosti je menší než kapacita bloku.
                                     </span>
@@ -59,11 +49,21 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button @click="handleEventUpdateRoom()" class="btn btn-primary pull-left">Uložit</button>
-                        <button @click="handleEventRemove()" class="btn btn-danger pull-right">Odstranit</button>
+                        <button @click="handleEventUpdateRoom()" class="btn btn-primary pull-left" :disabled="!config.allowed_modify_schedule">Uložit</button>
+                        <button @click="handleEventRemove()" class="btn btn-danger pull-right" :disabled="!config.allowed_modify_schedule">Odstranit</button>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="notifications">
+            <div v-if="message" class="alert" :class="'alert-' + message.type">
+                {{ message.text }}
+            </div>
+        </div>
+
+        <div class="spinner pull-right" v-show="loading > 0">
+            <span class="fa fa-spinner fa-pulse fa-2x"></span>
         </div>
 
         <FullCalendar class='demo-app-calendar'
@@ -76,7 +76,7 @@
                       :plugins="calendarPlugins"
                       :views="calendarViews"
                       :default-view="defaultView"
-                      :event-render="handleEventRender"
+                      :event-render="eventRender"
                       :view-skeleton-render="handleChangeView"
                       :header="{left: 'timeGridSeminar,resourceTimelineSeminar', center: '', right: ''}"
                       :events="events"
@@ -84,7 +84,8 @@
                       :droppable="config.allowed_modify_schedule"
                       :event-start-editable="config.allowed_modify_schedule"
                       :event-resource-editable="config.allowed_modify_schedule"
-                      :event-overlap="handleEventOverlap"
+                      :event-overlap="eventOverlap"
+                      :event-allow="eventAllow"
                       @eventReceive="handleEventReceive"
                       @eventDrop="handleEventDrop"
                       @eventClick="handleEventClick"/>
@@ -114,7 +115,7 @@
                     bootstrapPlugin
                 ],
                 defaultView: localStorage.getItem("fcDefaultView") || "timeGridSeminar",
-                selectedEvent: null
+                selectedEventInfo: null
             }
         },
         computed: {
@@ -149,12 +150,20 @@
                 };
             }
         },
+        watch: {
+            message: function () {
+                $('.notifications').show().animate({
+                    opacity: 1.0
+                }, ALERT_DURATION).slideUp(1000);
+            }
+        },
         methods: {
             ...mapActions(['loadData', 'addProgram', 'updateProgram', 'updateProgramRoom', 'removeProgram']),
-            handleChangeView(info) {
-                localStorage.setItem("fcDefaultView", info.view.type);
-            },
-            handleEventRender(info) {
+
+            /**
+             * Vykreslí název mástnosti v timeGridSeminar zobrazení.
+             */
+            eventRender(info) {
                 if (info.view.type === 'timeGridSeminar') {
                     const eventResources = info.event.getResources();
                     if (eventResources.length > 0 && eventResources[0].id > 0) {
@@ -166,30 +175,69 @@
                     }
                 }
             },
-            handleEventOverlap(stillEvent, movingEvent) {
+
+            /**
+             * Nedovolí kolize v místnosti a u automaticky přihlašovaných programů.
+             */
+            eventOverlap(stillEvent, movingEvent) {
                 return (!stillEvent.extendedProps.block.autoRegistered && !movingEvent.extendedProps.block.autoRegistered)
                     && movingEvent.getResources()[0].id === "0";
             },
+
+            /**
+             * Zabrání přidání nového programu při zablokované editaci.
+             * Workaround - droppable=false by mělo stačit.
+             */
+            eventAllow(info, draggedEvent) {
+                return this.config.allowed_modify_schedule;
+            },
+
+            /**
+             * Uloží zvolené view.
+             */
+            handleChangeView(info) {
+                localStorage.setItem("fcDefaultView", info.view.type);
+            },
+
+            /**
+             * Zpracuje přidání programu.
+             */
             handleEventReceive(info) {
                 this.addProgram(info);
             },
+
+            /**
+             * Zpracuje přesunutí programu.
+             */
             handleEventDrop(info) {
                 this.updateProgram(info);
             },
+
+            /**
+             * Zpracuje kliknutí na událost (otevře modal okno).
+             */
             handleEventClick(info) {
-                this.selectedEvent = {
+                this.selectedEventInfo = {
                     event: info.event,
                     resourceId: info.event.getResources()[0].id
                 };
                 $('#program-modal').modal('show');
             },
+
+            /**
+             * Zpracuje změnu místnosti z modal okna.
+             */
             handleEventUpdateRoom() {
                 $('#program-modal').modal('hide');
-                this.updateProgramRoom(this.selectedEvent);
+                this.updateProgramRoom(this.selectedEventInfo);
             },
+
+            /**
+             * Zpracuje odstranění programu z modal okna.
+             */
             handleEventRemove() {
                 $('#program-modal').modal('hide');
-                this.removeProgram(this.selectedEvent);
+                this.removeProgram(this.selectedEventInfo);
             }
         },
         created: function () {
