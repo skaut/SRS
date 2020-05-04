@@ -2,15 +2,6 @@
     <script>
         var basePath = {$basePath};
     </script>
-
-    <link rel="stylesheet" type="text/css" href="{$basePath}/css/libs/fullcalendar/fullcalendar.min.css">
-    <script src="{$basePath}/js/libs/angular/angular.min.js"></script>
-    <script src="{$basePath}/js/libs/angular/angular-sanitize.min.js"></script>
-    <script src="{$basePath}/js/libs/angular-ui-calendar/calendar.js"></script>
-    <script src="{$basePath}/js/libs/angular-ui-bootstrap/ui-bootstrap-tpls-2.5.0.min.js"></script>
-    <script src="{$basePath}/js/libs/fullcalendar/fullcalendar.min.js"></script>
-    <script src="{$basePath}/js/libs/fullcalendar/lang-all.js"></script>
-    <script src="{$basePath}/js/web/schedule/app.js"></script>
 {/block}
 
 <div class="clearfix"></div>
@@ -55,119 +46,12 @@
                 {/if}
 
                 {var $userAllowedRegisterPrograms = $registerProgramsAllowed && $userHasPermission}
-
                 <script>
                     var userAllowedRegisterPrograms = {$userAllowedRegisterPrograms};
                 </script>
 
-                <div id="app" ng-app="scheduleApp" ng-controller="WebScheduleCtrl">
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <button data-toggle="modal" data-target="#help-modal" class="btn btn-info">
-                                <i class="fa fa-question-circle"></i> {_web.programs_content.help}
-                            </button>
-                        </div>
-
-                        <div class="col-md-8">
-                            <div class="notifications pull-right">
-                                <div class="spinner pull-left" ng-show="loading">
-                                    <img src="{$basePath}/img/spin.gif" height="34"/>
-                                </div>
-
-                                <div ng-model="message" ng-show="message.text" class="alert alert-{{ message.type }} pull-left ml-2">
-                                    {{ message.text }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="alert alert-warning alert-forever" ng-show="mandatory_nonregistered_programs_count">
-                        {_web.programs_content.mandatory_programs_not_registered}
-                    </div>
-
-                    <div ui-calendar="uiConfig.calendar" id="calendar" ng-model="eventSources" style="visibility: hidden"></div>
-
-                    <div id="program-modal" class="modal fade" ng-model="event">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">{{ event.block.name }}</h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    <ul class="list-unstyled">
-                                        <li ng-if="event.block.category">
-                                            <strong>{_web.programs_content.category}</strong>
-                                            {{ event.block.category }}
-                                        </li>
-
-                                        <li ng-if="event.room">
-                                            <strong>{_web.programs_content.room}</strong>
-                                            {{ event.room ? event.room.name : '' }}
-                                        </li>
-
-                                        <li>
-                                            <strong>{_web.programs_content.occupancy}</strong>
-                                            {{ event.block.capacity !== undefined
-                                                ? event.attendees_count + '/' + event.block.capacity
-                                                : event.attendees_count
-                                            }}
-                                        </li>
-                                    </ul>
-
-                                    <div ng-if="event.block.lectors">
-                                        <h5>{_web.programs_content.lectors}</h5>
-                                        <div ng-repeat="lector in event.block.lectors">
-                                            <h6>{{ lector.name }}</h6>
-                                            <p>
-                                                <img ng-src="{$basePath}/files/user_photos/{{ lector.photo }}" ng-if="lector.photo" class="pull-left mr-3 mb-3"/>
-                                                {{ lector.about }}
-                                            </p>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </div>
-
-                                    <h5>{_web.programs_content.about_program}</h5>
-                                    <p>{{ event.block.perex }}</p>
-                                    <div ng-bind-html="event.block.description"></div>
-                                </div>
-
-                                <div class="modal-footer">
-                                    {if $userAllowedRegisterPrograms}
-                                        <button ng-hide="event.user_attends || event.blocked || event.occupied || !event.paid" ng-click="attend(event)" class="btn btn-success pull-left">
-                                            {_web.programs_content.register}
-                                        </button>
-                                        <button ng-show="event.user_attends && !event.block.auto_registered" ng-click="unattend(event)" class="btn btn-danger pull-left">
-                                            {_web.programs_content.unregister}
-                                        </button>
-                                    {/if}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="help-modal" class="modal fade">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">{_web.programs_content.help}</h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>{_web.programs_content.help_text}</p>
-
-                                    <h5>{_web.programs_content.help_legend}</h5>
-                                    <ul class="list-group text-white">
-                                        <li class="list-group-item bg-success">{_web.programs_content.help_legend_attends}</li>
-                                        <li class="list-group-item bg-primary">{_web.programs_content.help_legend_optional}</li>
-                                        <li class="list-group-item bg-danger">{_web.programs_content.help_legend_mandatory}</li>
-                                        <li class="list-group-item bg-secondary">{_web.programs_content.help_legend_blocked}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id='calendar'></div>
+                <script src="{$basePath}/dist/web/schedule/main.js"></script>
             {/if}
         </div>
     </div>

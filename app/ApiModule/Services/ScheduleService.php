@@ -300,7 +300,7 @@ class ScheduleService
     {
         $program = $this->programRepository->findById($programId);
 
-         if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
+        if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
             throw new ApiException($this->translator->translate('common.api.schedule.user_not_allowed_register_programs'));
         } elseif (! $this->programService->isAllowedRegisterPrograms()) {
             throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));

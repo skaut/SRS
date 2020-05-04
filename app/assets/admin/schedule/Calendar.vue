@@ -12,17 +12,17 @@
                             <div class="col-3">Název</div>
                             <div class="col-9">
                                 <a :href="'../blocks/detail/' + selectedEventInfo.event.extendedProps.block.id" target="_blank">
-                                    {{ selectedEvent.event.extendedProps.block.name }}
+                                    {{ selectedEventInfo.event.extendedProps.block.name }}
                                 </a>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-3">Kategorie</div>
-                            <div class="col-9">{{ selectedEvent.event.extendedProps.block.category }}</div>
+                            <div class="col-9">{{ selectedEventInfo.event.extendedProps.block.category }}</div>
                         </div>
                         <div class="form-group row">
                             <div class="col-3">Lektoři</div>
-                            <div class="col-9">{{ selectedEvent.event.extendedProps.block.lectorsNames }}</div>
+                            <div class="col-9">{{ selectedEventInfo.event.extendedProps.block.lectorsNames }}</div>
                         </div>
 
                         <form class="form-horizontal">
@@ -44,7 +44,7 @@
 
                         <div class="form-group row">
                             <div class="col-3">Kapacita</div>
-                            <div class="col-9">{{ selectedEvent.event.extendedProps.block.capacity }}</div>
+                            <div class="col-9">{{ selectedEventInfo.event.extendedProps.block.capacity }}</div>
                         </div>
                     </div>
 
@@ -62,12 +62,11 @@
             </div>
         </div>
 
-        <div class="spinner pull-right" v-show="loading > 0">
+        <div class="spinner pull-right mt-1" v-show="loading > 0">
             <span class="fa fa-spinner fa-pulse fa-2x"></span>
         </div>
 
-        <FullCalendar class='demo-app-calendar'
-                      ref="fullCalendar"
+        <FullCalendar ref="fullCalendar"
                       theme-system="bootstrap"
                       locale="cs"
                       timeZone="none"
@@ -77,7 +76,7 @@
                       :views="calendarViews"
                       :default-view="defaultView"
                       :event-render="eventRender"
-                      :view-skeleton-render="handleChangeView"
+                      :view-skeleton-render="storeView"
                       :header="{left: 'timeGridSeminar,resourceTimelineSeminar', center: '', right: ''}"
                       :events="events"
                       :resources="resources"
@@ -121,7 +120,7 @@
         computed: {
             ...mapState(['events', 'resources', 'config', 'loading', 'message']),
             ...mapGetters(['getResourceById']),
-            calendarViews: function views() {
+            calendarViews() {
                 return {
                     timeGridSeminar: {
                         type: 'timeGrid',
@@ -161,7 +160,7 @@
             ...mapActions(['loadData', 'addProgram', 'updateProgram', 'updateProgramRoom', 'removeProgram']),
 
             /**
-             * Vykreslí název mástnosti v timeGridSeminar zobrazení.
+             * Vykreslí název místnosti v timeGridSeminar zobrazení.
              */
             eventRender(info) {
                 if (info.view.type === 'timeGridSeminar') {
@@ -195,7 +194,7 @@
             /**
              * Uloží zvolené view.
              */
-            handleChangeView(info) {
+            storeView(info) {
                 localStorage.setItem("fcDefaultView", info.view.type);
             },
 
