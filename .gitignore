@@ -2,12 +2,12 @@
 /.idea
 /nbproject
 /app/config/local.neon
-/www/adminer.php
-/www/dist
 /node_modules
-/vendor
 /tests/_output/*
 /tests/_support/_generated/*
+/vendor
+/www/adminer.php
+/www/dist
 /package-lock.json
 !.gitignore
 
