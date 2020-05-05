@@ -195,8 +195,7 @@ class ScheduleService
         $calendarConfigDto->setSeminarFromDate($fromDate->format('Y-m-d'));
         $calendarConfigDto->setSeminarToDate($toDate->add(new DateInterval('P1D'))->format('Y-m-d'));
         $calendarConfigDto->setAllowedModifySchedule($this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
-            && $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)
-        );
+            && $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE));
 
         return $calendarConfigDto;
     }

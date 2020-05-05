@@ -153,6 +153,7 @@ class PagePresenter extends WebBasePresenter
             if (! $this->user->isLoggedIn()) {
                 $this->redirect(':Auth:login', ['backlink' => $this->getHttpRequest()->getUrl()->getPath()]);
             }
+
             $this->error($this->translator->translate('web.common.page_access_denied'), 403);
         }
 

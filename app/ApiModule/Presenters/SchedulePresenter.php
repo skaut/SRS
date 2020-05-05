@@ -15,6 +15,7 @@ use JMS\Serializer\SerializerInterface;
 use Nette\Application\AbortException;
 use Nette\Application\Responses\JsonResponse;
 use Throwable;
+use function file_get_contents;
 
 /**
  * API pro správu harmonogramu a zapisování programů.
@@ -147,7 +148,7 @@ class SchedulePresenter extends ApiBasePresenter
             $this->getHttpResponse()->setCode(400);
             $data = new ResponseDto();
             $data->setMessage($e->getMessage());
-            $data->setStatus("danger");
+            $data->setStatus('danger');
         }
 
         $json     = $this->serializer->serialize($data, 'json');
@@ -169,7 +170,7 @@ class SchedulePresenter extends ApiBasePresenter
             $this->getHttpResponse()->setCode(400);
             $data = new ResponseDto();
             $data->setMessage($e->getMessage());
-            $data->setStatus("danger");
+            $data->setStatus('danger');
         }
 
         $json     = $this->serializer->serialize($data, 'json');
@@ -191,7 +192,7 @@ class SchedulePresenter extends ApiBasePresenter
             $this->getHttpResponse()->setCode(400);
             $data = new ResponseDto();
             $data->setMessage($e->getMessage());
-            $data->setStatus("danger");
+            $data->setStatus('danger');
         }
 
         $json     = $this->serializer->serialize($data, 'json');
@@ -213,7 +214,7 @@ class SchedulePresenter extends ApiBasePresenter
             $this->getHttpResponse()->setCode(400);
             $data = new ResponseDto();
             $data->setMessage($e->getMessage());
-            $data->setStatus("danger");
+            $data->setStatus('danger');
         }
 
         $json     = $this->serializer->serialize($data, 'json');

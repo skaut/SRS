@@ -251,7 +251,7 @@
             },
 
             /**
-             * Zpracuje změnu místnosti z modal okna.
+             * Zpracuje přihlášení na program.
              */
             handleAttendEvent() {
                 $('#program-modal').modal('hide');
@@ -260,7 +260,7 @@
             },
 
             /**
-             * Zpracuje odstranění programu z modal okna.
+             * Zpracuje odhlášení z programu.
              */
             handleUnattendEvent() {
                 $('#program-modal').modal('hide');
