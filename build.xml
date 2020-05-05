@@ -13,6 +13,9 @@
         <exec command="git rev-parse --short HEAD" outputProperty="build.hash"/>
         <property name="build.dir" value="${tempDir}/builds/${build.hash}"/>
 
+        <exec command="yarn install" passthru="true"/>
+        <exec command="yarn build" passthru="true"/>
+
         <delete dir="${build.dir}"/>
         <mkdir dir="${build.dir}"/>
         <copy todir="${build.dir}">
@@ -59,9 +62,6 @@
                         --classmap-authoritative
                         --no-dev"
               passthru="true"/>
-
-        <exec command="yarn --cwd ${build.dir} install" passthru="true"/>
-        <exec command="yarn --cwd ${build.dir} build" passthru="true"/>
 
         <delete>
             <fileset dir="${build.dir}">
