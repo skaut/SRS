@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "build": "webpack",
-    "watch": "webpack --watch"
+    "build": "yarn webpack",
+    "watch": "yarn webpack --watch"
   },
   "dependencies": {
     "@fullcalendar/bootstrap": "^4.4.0",
