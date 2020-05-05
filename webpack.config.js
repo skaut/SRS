@@ -10,7 +10,7 @@ module.exports = {
         'web/schedule': './app/assets/web/schedule/main.js'
     },
     output: {
-        filename: '[name]/main.js',
+        filename: '[name]/main.min.js',
         path: path.resolve(__dirname, 'www/dist')
     },
     module: {
@@ -37,9 +37,5 @@ module.exports = {
     plugins: [
         new VueLoaderPlugin()
     ],
-    devtool: 'source-map',
-
-    optimization: {
-        minimize: false
-    },
+    devtool: 'source-map'
 };
