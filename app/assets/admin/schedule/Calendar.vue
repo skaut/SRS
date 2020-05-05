@@ -66,7 +66,9 @@
             <span class="fa fa-spinner fa-pulse fa-2x"></span>
         </div>
 
-        <FullCalendar ref="fullCalendar"
+        <FullCalendar id="calendar"
+                      style="visibility: hidden"
+                      ref="fullCalendar"
                       theme-system="bootstrap"
                       locale="cs"
                       timeZone="none"
@@ -154,6 +156,9 @@
                 $('.notifications').show().animate({
                     opacity: 1.0
                 }, ALERT_DURATION).slideUp(1000);
+            },
+            config: function () {
+                $('#calendar').css('visibility', 'visible');
             }
         },
         methods: {
