@@ -36,7 +36,7 @@ class ProgramSaveDto
     private $roomId;
 
     /**
-     * @JMS\Type("DateTimeImmutable<'Y-m-d\TH:i:s'>")
+     * @JMS\Type("DateTimeImmutable<'Y-m-d\TH:i:s.v\Z'>")
      * @var DateTimeImmutable
      */
     private $start;

@@ -95,6 +95,22 @@ class Program
         return $this->attendees;
     }
 
+    public function addAttendee(User $user) : void
+    {
+        if (! $this->attendees->contains($user)) {
+            $this->attendees->add($user);
+            $user->addProgram($this);
+        }
+    }
+
+    public function removeAttendee(User $user) : void
+    {
+        if ($this->attendees->contains($user)) {
+            $this->attendees->removeElement($user);
+            $user->removeProgram($this);
+        }
+    }
+
     /**
      * Vrací počet účastníků.
      */

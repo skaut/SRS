@@ -23,10 +23,10 @@ class CalendarConfigDto
     private $seminarFromDate;
 
     /**
-     * @JMS\Type("int")
-     * @var int
+     * @JMS\Type("string")
+     * @var string
      */
-    private $seminarDuration;
+    private $seminarToDate;
 
     /**
      * @JMS\Type("boolean")
@@ -44,14 +44,14 @@ class CalendarConfigDto
         $this->seminarFromDate = $seminarFromDate;
     }
 
-    public function getSeminarDuration() : int
+    public function getSeminarToDate() : string
     {
-        return $this->seminarDuration;
+        return $this->seminarToDate;
     }
 
-    public function setSeminarDuration(int $seminarDuration) : void
+    public function setSeminarToDate(string $seminarToDate) : void
     {
-        $this->seminarDuration = $seminarDuration;
+        $this->seminarToDate = $seminarToDate;
     }
 
     public function isAllowedModifySchedule() : bool

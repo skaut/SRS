@@ -8,6 +8,8 @@ script:
 before_deploy:
   - composer self-update
   - composer install --no-dev --prefer-dist --optimize-autoloader
+  - yarn install
+  - yarn build
   - mv app/config/sample.local.neon app/config/local.neon
   - rm -f app/config/ci.local.neon
   - zip -r SRS app backup log migrations temp vendor www .htaccess README.md

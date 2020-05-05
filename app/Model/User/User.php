@@ -1035,12 +1035,18 @@ class User
 
     public function addProgram(Program $program) : void
     {
-        $this->programs->add($program);
+        if (! $this->programs->contains($program)) {
+            $this->programs->add($program);
+            $program->addAttendee($this);
+        }
     }
 
     public function removeProgram(Program $program) : void
     {
-        $this->programs->removeElement($program);
+        if ($this->programs->contains($program)) {
+            $this->programs->removeElement($program);
+            $program->removeAttendee($this);
+        }
     }
 
     /**

@@ -1,14 +1,14 @@
 *~
 /.idea
 /nbproject
-/composer.phar
-/deployment.ini
-/deployment.log
 /app/config/local.neon
 /www/adminer.php
+/www/dist
+/node_modules
 /vendor
 /tests/_output/*
 /tests/_support/_generated/*
+/package-lock.json
 !.gitignore
 
 

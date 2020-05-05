@@ -225,16 +225,7 @@ program:
 
     schedule:
         heading: "Harmonogram"
-        name: "Název"
-        category: "Kategorie"
-        lectors: "Lektoři"
-        room: "Místnost"
-        room_capacity_warning: "Kapacita místnosti je menší než kapacita bloku."
-        capacity: "Kapacita"
-        programs_count: "Zařazeno"
-        program_settings: "Nastavení programu"
         blocks_heading: "Programové bloky"
-        blocks_unassigned_only: "jen nezařazené"
         modify_schedule_is_not_allowed_begin: "Úprava harmonogramu není povolena, povolit ji můžete v "
         modify_schedule_is_not_allowed_link: "nastavení"
         modify_schedule_is_not_allowed_end: "."

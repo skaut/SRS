@@ -2,11 +2,6 @@
     <script>
         var basePath = {$basePath};
     </script>
-
-    {control css 'libs/fullcalendar/fullcalendar.min.css'}
-    {control js 'libs/angular/angular.min.js', 'libs/angular-ui-calendar/calendar.js',
-    'libs/angular-ui-bootstrap/ui-bootstrap-tpls-2.5.0.min.js', 'libs/fullcalendar/fullcalendar.min.js',
-    'libs/fullcalendar/lang-all.js', 'admin/schedule/app.js'}
 {/block}
 
 {block main}
@@ -16,129 +11,15 @@
         <a href="{plink :Admin:Configuration:Program:default}"
            class="alert-link">{_admin.program.schedule.modify_schedule_is_not_allowed_link}</a>{_admin.program.schedule.modify_schedule_is_not_allowed_end}
     </div>
-    <div id="app">
-        <div class="notifications">
-            <div class="spinner pull-left" ng-show="loading">
-                <img src="{$basePath}/img/spin.gif" height="50"/>
-            </div>
 
-            <div ng-model="message" ng-show="message.text" class="alert alert-{{ message.type }} pull-left ml-2">
-                {{ message.text }}
-            </div>
-        </div>
-
-        <div ui-calendar="uiConfig.calendar" id="calendar" ng-model="eventSources" style="visibility: hidden"></div>
-
-        <div id="program-modal" class="modal fade" ng-model="event">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{_admin.program.schedule.program_settings}</h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <div class="col-3">{_admin.program.schedule.name}</div>
-                            <div class="col-9">
-                                <a ng-href="../blocks/detail/{{ event.block.id }}" target="_blank">
-                                    {{ event.block.name }}
-                                </a>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-3">{_admin.program.schedule.category}</div>
-                            <div class="col-9">{{ event.block.category }}</div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-3">{_admin.program.schedule.lectors}</div>
-                            <div class="col-9">{{ event.block.lectors_names }}</div>
-                        </div>
-
-                        <form class="form-horizontal">
-                            <div class="form-group row mb-1">
-                                <div class="col-3 col-form-label">
-                                    <label for="select-room">{_admin.program.schedule.room}</label>
-                                </div>
-                                <div class="col-9">
-                                    <select id="select-room" class="form-control" ng-model="event['room']"
-                                            ng-options="value.name for (key, value) in rooms">
-                                        <option value=""></option>
-                                    </select>
-                                    <span ng-show="event.room.capacity < event.block.capacity" class="text-warning">
-                                        <span class="fa fa-exclamation-triangle"></span>
-                                        {_admin.program.schedule.room_capacity_warning}
-                                    </span>
-                                </div>
-                            </div>
-                        </form>
-
-                        <div class="form-group row">
-                            <div class="col-3">{_admin.program.schedule.capacity}</div>
-                            <div class="col-9">{{ event.block.capacity }}</div>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button ng-click="updateEvent(event, room)" class="btn btn-primary pull-left">{_admin.common.save}</button>
-                        <button ng-click="removeEvent(event)" class="btn btn-danger pull-right">{_admin.common.delete}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div id='calendar'></div>
+    <script src="{$basePath}/dist/admin/schedule/main.js"></script>
 {/block}
 
 {block sidebar}
     {include #parent}
 
     <h3>{_admin.program.schedule.blocks_heading}</h3>
-    <div class="card card-body bg-light mb-3">
-        <div class="input-group mb-2">
-            <div class="input-group-prepend">
-                <span class="input-group-text"><span class="fa fa-search fa-fw"></span></span>
-            </div>
-            <input id="textbox-search" class="form-control" type="text" ng-model="search">
-        </div>
-
-        <div class="custom-control custom-checkbox text-center mb-3">
-            <input type="checkbox" id="checkbox-unassigned" class="custom-control-input" ng-model="unassignedOnly">
-            <label class="custom-control-label" for="checkbox-unassigned">
-                {_admin.program.schedule.blocks_unassigned_only}
-            </label>
-        </div>
-
-        <div class="pre-scrollable">
-            <ul id="blocks-container" class="list-group text-white">
-                <li class="list-group-item" ng-repeat="block in blocks | filterBlocks: search:unassignedOnly"
-                    ng-class="block.mandatory ? (block.auto_registered ? 'bg-warning' : 'bg-danger') : 'bg-primary'"
-                    block="{{ block.id }}">
-
-                    <div class="row justify-content-between">
-                        <div class="col">
-                            <b>{{ block.name }}</b>
-                        </div>
-                        <div class="col-auto text-right">
-                            <span class="badge badge-dark badge-pill">{{ block.programs_count }}×</span>
-                        </div>
-                    </div>
-
-                    <table>
-                        <tr>
-                            <td class="pr-3 align-top">{_admin.program.schedule.category}</td>
-                            <td>{{ block.category }}</td>
-                        </tr>
-                        <tr>
-                            <td class="pr-3 align-top">{_admin.program.schedule.lectors}</td>
-                            <td>{{ block.lectors_names }}</td>
-                        </tr>
-                        <tr>
-                            <td class="pr-3">{_admin.program.schedule.capacity}</td>
-                            <td>{{ block.capacity }}</td>
-                        </tr>
-                    </table>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <div id="blocks-list"></div>
 {/block}
 

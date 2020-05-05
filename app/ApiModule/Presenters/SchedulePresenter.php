@@ -6,14 +6,16 @@ namespace App\ApiModule\Presenters;
 
 use App\ApiModule\Dto\Schedule\ProgramSaveDto;
 use App\ApiModule\Dto\Schedule\ResponseDto;
+use App\ApiModule\Services\ApiException;
 use App\ApiModule\Services\ScheduleService;
 use App\Model\Settings\SettingsException;
 use Exception;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 use Nette\Application\AbortException;
-use Nette\Application\Responses\TextResponse;
+use Nette\Application\Responses\JsonResponse;
 use Throwable;
+use function file_get_contents;
 
 /**
  * API pro správu harmonogramu a zapisování programů.
@@ -49,7 +51,7 @@ class SchedulePresenter extends ApiBasePresenter
             $data->setStatus('danger');
 
             $json     = $this->serializer->serialize($data, 'json');
-            $response = new TextResponse($json);
+            $response = new JsonResponse($json);
             $this->sendResponse($response);
         }
     }
@@ -65,7 +67,7 @@ class SchedulePresenter extends ApiBasePresenter
         $data = $this->scheduleService->getProgramsAdmin();
 
         $json     = $this->serializer->serialize($data, 'json');
-        $response = new TextResponse($json);
+        $response = new JsonResponse($json);
         $this->sendResponse($response);
     }
 
@@ -81,7 +83,7 @@ class SchedulePresenter extends ApiBasePresenter
         $data = $this->scheduleService->getProgramsWeb();
 
         $json     = $this->serializer->serialize($data, 'json');
-        $response = new TextResponse($json);
+        $response = new JsonResponse($json);
         $this->sendResponse($response);
     }
 
@@ -95,7 +97,7 @@ class SchedulePresenter extends ApiBasePresenter
         $data = $this->scheduleService->getBlocks();
 
         $json     = $this->serializer->serialize($data, 'json');
-        $response = new TextResponse($json);
+        $response = new JsonResponse($json);
         $this->sendResponse($response);
     }
 
@@ -109,7 +111,7 @@ class SchedulePresenter extends ApiBasePresenter
         $data = $this->scheduleService->getRooms();
 
         $json     = $this->serializer->serialize($data, 'json');
-        $response = new TextResponse($json);
+        $response = new JsonResponse($json);
         $this->sendResponse($response);
     }
 
@@ -125,74 +127,98 @@ class SchedulePresenter extends ApiBasePresenter
         $data = $this->scheduleService->getCalendarConfig();
 
         $json     = $this->serializer->serialize($data, 'json');
-        $response = new TextResponse($json);
+        $response = new JsonResponse($json);
         $this->sendResponse($response);
     }
 
     /**
      * Uloží nebo vytvoří program.
      *
-     * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionSaveProgram(string $data) : void
+    public function actionSaveProgram() : void
     {
         /** @var ProgramSaveDto $programSaveDto */
-        $programSaveDto = $this->serializer->deserialize($data, ProgramSaveDto::class, 'json');
+        $programSaveDto = $this->serializer->deserialize(file_get_contents('php://input'), ProgramSaveDto::class, 'json');
 
-        $data = $this->scheduleService->saveProgram($programSaveDto);
+        try {
+            $data = $this->scheduleService->saveProgram($programSaveDto);
+        } catch (ApiException $e) {
+            $this->getHttpResponse()->setCode(400);
+            $data = new ResponseDto();
+            $data->setMessage($e->getMessage());
+            $data->setStatus('danger');
+        }
 
         $json     = $this->serializer->serialize($data, 'json');
-        $response = new TextResponse($json);
+        $response = new JsonResponse($json);
         $this->sendResponse($response);
     }
 
     /**
      * Smaže program.
      *
-     * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
      */
     public function actionRemoveProgram(int $id) : void
     {
-        $data = $this->scheduleService->removeProgram($id);
+        try {
+            $data = $this->scheduleService->removeProgram($id);
+        } catch (ApiException $e) {
+            $this->getHttpResponse()->setCode(400);
+            $data = new ResponseDto();
+            $data->setMessage($e->getMessage());
+            $data->setStatus('danger');
+        }
 
         $json     = $this->serializer->serialize($data, 'json');
-        $response = new TextResponse($json);
+        $response = new JsonResponse($json);
         $this->sendResponse($response);
     }
 
     /**
      * Přihlásí program uživateli.
      *
-     * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
      */
     public function actionAttendProgram(int $id) : void
     {
-        $data = $this->scheduleService->attendProgram($id);
+        try {
+            $data = $this->scheduleService->attendProgram($id);
+        } catch (ApiException $e) {
+            $this->getHttpResponse()->setCode(400);
+            $data = new ResponseDto();
+            $data->setMessage($e->getMessage());
+            $data->setStatus('danger');
+        }
 
         $json     = $this->serializer->serialize($data, 'json');
-        $response = new TextResponse($json);
+        $response = new JsonResponse($json);
         $this->sendResponse($response);
     }
 
     /**
      * Odhlásí program uživateli.
      *
-     * @throws SettingsException
      * @throws AbortException
      * @throws Throwable
      */
     public function actionUnattendProgram(int $id) : void
     {
-        $data = $this->scheduleService->unattendProgram($id);
+        try {
+            $data = $this->scheduleService->unattendProgram($id);
+        } catch (ApiException $e) {
+            $this->getHttpResponse()->setCode(400);
+            $data = new ResponseDto();
+            $data->setMessage($e->getMessage());
+            $data->setStatus('danger');
+        }
 
         $json     = $this->serializer->serialize($data, 'json');
-        $response = new TextResponse($json);
+        $response = new JsonResponse($json);
         $this->sendResponse($response);
     }
 }

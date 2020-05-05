@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ApiModule\Dto\Schedule;
+namespace App\ApiModule\Dto\Schedule;
 
 use JMS\Serializer\Annotation as JMS;
 use Nette;
