@@ -203,6 +203,15 @@ class Role
     protected $fee = 0;
 
     /**
+     * Minimální věk.
+     *
+     * @ORM\Column(type="integer")
+     *
+     * @var int
+     */
+    protected $minimumAge = 0;
+
+    /**
      * Evidovat příjezd a odjezd.
      *
      * @ORM\Column(type="boolean")
@@ -472,6 +481,16 @@ class Role
     public function setFee(?int $fee) : void
     {
         $this->fee = $fee;
+    }
+
+    public function getMinimumAge() : int
+    {
+        return $this->minimumAge;
+    }
+
+    public function setMinimumAge(int $age)
+    {
+        $this->minimumAge = $age;
     }
 
     public function isDisplayArrivalDeparture() : bool

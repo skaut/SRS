@@ -79,17 +79,20 @@ class SubeventFormFactory
         $registerableFromDateTime = new DateTimeControl('admin.configuration.subevents.registerable_from');
         $registerableFromDateTime
             ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.configuration.subevents.registerable_from_note'));
         $form->addComponent($registerableFromDateTime, 'registerableFrom');
 
         $registerableToDateTime = new DateTimeControl('admin.configuration.subevents.registerable_to');
         $registerableToDateTime
             ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.configuration.subevents.registerable_to_note'));
         $form->addComponent($registerableToDateTime, 'registerableTo');
 
         $capacityText = $form->addText('capacity', 'admin.configuration.subevents_capacity')
             ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.configuration.subevents_capacity_note'));
 
         $form->addInteger('fee', 'admin.configuration.subevents_fee')

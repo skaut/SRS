@@ -459,6 +459,13 @@ acl:
     roles_add_heading: "Nová role"
     roles_edit_heading: "Úprava role: %name%"
 
+    roles:
+        minimum_age:
+            label: "Minimální věk"
+            note: "Účastník musí minimálního věku dosáhnout první den akce."
+            error_format: "Zadejte číslo."
+            error_low: ""
+
 mailing:
     menu:
         templates: "Automatické e-maily"

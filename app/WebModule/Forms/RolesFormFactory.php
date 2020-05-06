@@ -148,10 +148,12 @@ class RolesFormFactory
             $submitButton
                 ->setDisabled()
                 ->setHtmlAttribute('data-toggle', 'tooltip')
+                ->setHtmlAttribute('data-placement', 'bottom')
                 ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.change_roles_disabled'));
             $cancelRegistrationButton
                 ->setDisabled()
                 ->setHtmlAttribute('data-toggle', 'tooltip')
+                ->setHtmlAttribute('data-placement', 'bottom')
                 ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
         }
 
@@ -166,6 +168,7 @@ class RolesFormFactory
                 $downloadTicketButton
                     ->setDisabled()
                     ->setHtmlAttribute('data-toggle', 'tooltip')
+                    ->setHtmlAttribute('data-placement', 'bottom')
                     ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.download_ticket_disabled'));
             }
         }
