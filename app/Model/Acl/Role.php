@@ -488,7 +488,7 @@ class Role
         return $this->minimumAge;
     }
 
-    public function setMinimumAge(int $age)
+    public function setMinimumAge(int $age) : void
     {
         $this->minimumAge = $age;
     }

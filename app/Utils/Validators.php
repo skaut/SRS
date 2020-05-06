@@ -10,11 +10,13 @@ use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\Structure\Subevent;
 use App\Model\User\Application;
 use App\Model\User\User;
 use App\Services\SettingsService;
 use Doctrine\Common\Collections\Collection;
+use Throwable;
 
 /**
  * Třída s vlastními validátory.
@@ -32,10 +34,11 @@ class Validators
     /** @var SettingsService */
     private $settingsService;
 
-    public function __construct(RoleRepository $roleRepository,
-                                ProgramRepository $programRepository,
-                                SettingsService $settingsService)
-    {
+    public function __construct(
+        RoleRepository $roleRepository,
+        ProgramRepository $programRepository,
+        SettingsService $settingsService
+    ) {
         $this->roleRepository    = $roleRepository;
         $this->programRepository = $programRepository;
         $this->settingsService   = $settingsService;
@@ -133,8 +136,9 @@ class Validators
      * Ověří požadovaný minimální věk.
      *
      * @param Collection|Role[] $selectedRoles
-     * @throws \App\Model\Settings\SettingsException
-     * @throws \Throwable
+     *
+     * @throws SettingsException
+     * @throws Throwable
      */
     public function validateRolesMinimumAge(Collection $selectedRoles, User $user) : bool
     {
