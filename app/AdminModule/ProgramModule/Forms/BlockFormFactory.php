@@ -159,6 +159,7 @@ class BlockFormFactory
 
         $form->addText('capacity', 'admin.program.blocks_capacity')
             ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks_capacity_note'))
             ->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.program.blocks_capacity_format');
@@ -170,6 +171,7 @@ class BlockFormFactory
         $form->addCheckbox('autoRegistered', 'admin.program.blocks_auto_registered')
             ->setOption('id', 'autoRegisteredCheckbox')
             ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_registered_note'))
             ->addCondition(Form::FILLED)
             ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_registered_not_allowed');

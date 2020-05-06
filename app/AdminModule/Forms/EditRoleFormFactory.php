@@ -106,17 +106,20 @@ class EditRoleFormFactory
         $registerableFromDateTime = new DateTimeControl('admin.acl.roles_registerable_from');
         $registerableFromDateTime
             ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.acl.roles_registerable_from_note'));
         $form->addComponent($registerableFromDateTime, 'registerableFrom');
 
         $registerableToDateTime = new DateTimeControl('admin.acl.roles_registerable_to');
         $registerableToDateTime
             ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.acl.roles_registerable_to_note'));
         $form->addComponent($registerableToDateTime, 'registerableTo');
 
         $form->addText('capacity', 'admin.acl.roles_capacity')
             ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.acl.roles_capacity_note'))
             ->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.acl.roles_capacity_format')
@@ -136,6 +139,13 @@ class EditRoleFormFactory
             ->setOption('id', 'fee')
             ->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.acl.roles_fee_format');
+
+        $form->addText('minimumAge', 'admin.acl.roles.minimum_age.label')
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.acl.roles.minimum_age.note'))
+            ->addRule(Form::INTEGER, 'admin.acl.roles.minimum_age.error_format')
+            ->addRule(Form::MIN, 'admin.acl.roles.minimum_age.error_low', 0);
 
         $form->addMultiSelect('permissions', 'admin.acl.roles_permissions', $this->preparePermissionsOptions());
 
@@ -191,6 +201,7 @@ class EditRoleFormFactory
             'displayArrivalDeparture' => $this->role->isDisplayArrivalDeparture(),
             'feeFromSubevents' => $this->role->getFee() === null,
             'fee' => $this->role->getFee(),
+            'minimumAge' => $this->role->getMinimumAge(),
             'permissions' => $this->permissionRepository->findPermissionsIds($this->role->getPermissions()),
             'pages' => $this->pageRepository->findPagesSlugs($this->role->getPages()),
             'redirectAfterLogin' => $this->role->getRedirectAfterLogin(),
@@ -225,6 +236,7 @@ class EditRoleFormFactory
             $this->role->setApprovedAfterRegistration($values->approvedAfterRegistration);
             // $this->role->setSyncedWithSkautIS($values->syncedWithSkautIs);
             $this->role->setDisplayArrivalDeparture($values->displayArrivalDeparture);
+            $this->role->setMinimumAge($values->minimumAge);
             $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values->permissions));
             $this->role->setPages($this->pageRepository->findPagesBySlugs($values->pages));
             $this->role->setRedirectAfterLogin($values->redirectAfterLogin);

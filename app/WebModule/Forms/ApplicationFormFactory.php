@@ -460,7 +460,8 @@ class ApplicationFormFactory
         )
             ->addRule(Form::FILLED, 'web.application_content.roles_empty')
             ->addRule([$this, 'validateRolesCapacities'], 'web.application_content.roles_capacity_occupied')
-            ->addRule([$this, 'validateRolesRegisterable'], 'web.application_content.role_is_not_registerable');
+            ->addRule([$this, 'validateRolesRegisterable'], 'web.application_content.roles_not_registerable')
+            ->addRule([$this, 'validateRolesMinimumAge'], 'web.application_content.roles_require_minimum_age');
 
         //generovani chybovych hlasek pro vsechny kombinace roli
         foreach ($this->roleRepository->findFilteredRoles(true, false, false, true, $this->user) as $role) {
@@ -599,6 +600,16 @@ class ApplicationFormFactory
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
         return $this->validators->validateRolesRegisterable($selectedRoles, $this->user);
+    }
+
+    /**
+     * Ověří požadovaný minimální věk.
+     */
+    public function validateRolesMinimumAge(MultiSelectBox $field) : bool
+    {
+        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+
+        return $this->validators->validateRolesMinimumAge($selectedRoles, $this->user);
     }
 
     /**

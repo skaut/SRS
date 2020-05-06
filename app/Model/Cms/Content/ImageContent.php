@@ -179,11 +179,13 @@ class ImageContent extends Content implements IContent
 
         $formContainer->addText('width', 'admin.cms.pages_content_image_width')
             ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
             ->addCondition(Form::FILLED)->addRule(Form::INTEGER, 'admin.cms.pages_content_image_width_format');
 
         $formContainer->addText('height', 'admin.cms.pages_content_image_height')
             ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
             ->addCondition(Form::FILLED)->addRule(Form::INTEGER, 'admin.cms.pages_content_image_height_format');
 
