@@ -464,7 +464,7 @@ acl:
             label: "Minimální věk"
             note: "Účastník musí minimálního věku dosáhnout první den akce."
             error_format: "Zadejte číslo."
-            error_low: ""
+            error_low: "Minimální věk nesmí být menší než 0."
 
 mailing:
     menu:

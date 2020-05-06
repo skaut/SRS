@@ -9,9 +9,11 @@ use App\Model\Acl\RoleRepository;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\ProgramRepository;
+use App\Model\Settings\Settings;
 use App\Model\Structure\Subevent;
 use App\Model\User\Application;
 use App\Model\User\User;
+use App\Services\SettingsService;
 use Doctrine\Common\Collections\Collection;
 
 /**
@@ -27,10 +29,16 @@ class Validators
     /** @var ProgramRepository */
     private $programRepository;
 
-    public function __construct(RoleRepository $roleRepository, ProgramRepository $programRepository)
+    /** @var SettingsService */
+    private $settingsService;
+
+    public function __construct(RoleRepository $roleRepository,
+                                ProgramRepository $programRepository,
+                                SettingsService $settingsService)
     {
         $this->roleRepository    = $roleRepository;
         $this->programRepository = $programRepository;
+        $this->settingsService   = $settingsService;
     }
 
     /**
@@ -114,6 +122,26 @@ class Validators
     {
         foreach ($selectedRoles as $role) {
             if (! $role->isRegisterableNow() && ! $user->isInRole($role)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Ověří požadovaný minimální věk.
+     *
+     * @param Collection|Role[] $selectedRoles
+     * @throws \App\Model\Settings\SettingsException
+     * @throws \Throwable
+     */
+    public function validateRolesMinimumAge(Collection $selectedRoles, User $user) : bool
+    {
+        $age = $this->settingsService->getDateValue(Settings::SEMINAR_FROM_DATE)->diff($user->getBirthdate())->y;
+
+        foreach ($selectedRoles as $role) {
+            if ($role->getMinimumAge() > $age) {
                 return false;
             }
         }
