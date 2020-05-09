@@ -42,6 +42,11 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
+      #Copy & paste from https://codyogden.blog/yarn-with-github-actions-ci-cd/
+      - name: Install yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
       - run: npm install -g yarn
       #Copy & paste from https://github.com/actions/cache/blob/master/examples.md#node---yarn
       - name: Get yarn cache
