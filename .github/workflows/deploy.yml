@@ -45,10 +45,8 @@ jobs:
       - name: Install yarn
         run: |
           apt-get update
-          apt-get install -y gnupg
-          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-          apt-get update
-          apt-get install -y yarn
+          apt-get install nodejs
+          npm install --global yarn
       #Copy & paste from https://github.com/actions/cache/blob/master/examples.md#node---yarn
       - name: Get yarn cache
         id: yarn-cache-dir-path
