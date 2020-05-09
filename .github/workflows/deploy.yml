@@ -44,11 +44,12 @@ jobs:
             ${{ runner.os }}-composer-
       #Copy & paste from https://github.com/actions/cache/blob/master/examples.md#node---yarn
       - name: Get yarn cache
-        id: yarn-cache
+        id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - uses: actions/cache@v1
+        id: yarn-cache
         with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
