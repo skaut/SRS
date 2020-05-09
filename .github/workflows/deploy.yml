@@ -45,7 +45,7 @@ jobs:
       - name: Install yarn
         run: |
           apt-get update
-          apt-get install nodejs
+          apt-get install -y nodejs
           npm install --global yarn
       #Copy & paste from https://github.com/actions/cache/blob/master/examples.md#node---yarn
       - name: Get yarn cache
