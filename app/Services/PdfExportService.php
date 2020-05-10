@@ -8,7 +8,7 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
-use App\Model\User\Application;
+use App\Model\User\Application\Application;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use DateTimeImmutable;

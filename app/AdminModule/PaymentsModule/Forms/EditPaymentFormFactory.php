@@ -7,7 +7,7 @@ namespace App\AdminModule\PaymentsModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Payment\Payment;
 use App\Model\Payment\PaymentRepository;
-use App\Model\User\ApplicationRepository;
+use App\Model\User\Application\ApplicationRepository;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use Nette;

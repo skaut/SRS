@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User;
+namespace App\Model\User\Application;
 
 use App\Model\Acl\Role;
 use Doctrine\Common\Collections\Collection;

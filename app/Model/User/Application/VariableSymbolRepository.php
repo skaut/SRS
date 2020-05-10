@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User;
+namespace App\Model\User\Application;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;

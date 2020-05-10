@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User;
+namespace App\Model\User\Application;
 
 use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Payment\Payment;
 use App\Model\Structure\Subevent;
+use App\Model\User\User;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Defr\QRPlatba\QRPlatba;
