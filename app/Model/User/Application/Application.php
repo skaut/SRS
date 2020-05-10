@@ -66,7 +66,7 @@ abstract class Application
     /**
      * Uživatel.
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="applications", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="applications", cascade={"persist"})
      *
      * @var User
      */
@@ -172,7 +172,7 @@ abstract class Application
     protected $state;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
      *
      * @var User
      */

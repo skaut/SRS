@@ -12,7 +12,7 @@ use App\Model\Program\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\Subevent;
-use App\Model\User\Application;
+use App\Model\User\Application\Application;
 use App\Model\User\User;
 use App\Services\SettingsService;
 use Doctrine\Common\Collections\Collection;
