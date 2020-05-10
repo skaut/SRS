@@ -49,7 +49,7 @@ class Subevent
     /**
      * Přihlášky.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\Application\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
      *
      * @var Collection|SubeventsApplication[]
      */

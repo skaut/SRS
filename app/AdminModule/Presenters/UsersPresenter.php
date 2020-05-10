@@ -20,7 +20,6 @@ use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
-use App\Services\PdfExportService;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -66,12 +65,6 @@ class UsersPresenter extends AdminBasePresenter
      * @inject
      */
     public $applicationsGridControlFactory;
-
-    /**
-     * @var PdfExportService
-     * @inject
-     */
-    public $pdfExportService;
 
     /**
      * @var ExcelExportService

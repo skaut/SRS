@@ -17,7 +17,6 @@ use App\Model\User\Application\SubeventsApplicationRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\PdfExportService;
 use App\Services\SettingsService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
@@ -27,6 +26,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Http\Session;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 use stdClass;
@@ -60,9 +60,6 @@ class ApplicationsGridControl extends Control
     /** @var User */
     private $user;
 
-    /** @var PdfExportService */
-    private $pdfExportService;
-
     /** @var Validators */
     private $validators;
 
@@ -84,7 +81,6 @@ class ApplicationsGridControl extends Control
         UserRepository $userRepository,
         SubeventRepository $subeventRepository,
         ApplicationService $applicationService,
-        PdfExportService $pdfExportService,
         Validators $validators,
         RolesApplicationRepository $rolesApplicationRepository,
         SubeventsApplicationRepository $subeventsApplicationRepository,
@@ -96,7 +92,6 @@ class ApplicationsGridControl extends Control
         $this->userRepository                 = $userRepository;
         $this->subeventRepository             = $subeventRepository;
         $this->applicationService             = $applicationService;
-        $this->pdfExportService               = $pdfExportService;
         $this->validators                     = $validators;
         $this->rolesApplicationRepository     = $rolesApplicationRepository;
         $this->subeventsApplicationRepository = $subeventsApplicationRepository;
@@ -360,11 +355,7 @@ class ApplicationsGridControl extends Control
      */
     public function handleGeneratePaymentProofBank(int $id) : void
     {
-        $this->pdfExportService->generateApplicationsPaymentProof(
-            $this->applicationRepository->findById($id),
-            'potvrzeni-o-prijeti-platby.pdf',
-            $this->userRepository->findById($this->getPresenter()->getUser()->id)
-        );
+        $this->presenter->redirect(':Export:IncomeProof:application', ['id' => $id]);
     }
 
     /**

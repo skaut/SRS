@@ -20,6 +20,8 @@ use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application\Application;
 use App\Model\User\Application\ApplicationRepository;
+use App\Model\User\Application\IncomeProof;
+use App\Model\User\Application\IncomeProofRepository;
 use App\Model\User\Application\RolesApplication;
 use App\Model\User\Application\SubeventsApplication;
 use App\Model\User\Application\VariableSymbol;
@@ -99,6 +101,10 @@ class ApplicationService
     /** @var PaymentRepository */
     private $paymentRepository;
 
+    /** @var IncomeProofRepository */
+    private $incomeProofRepository;
+
+
     public function __construct(
         EntityManagerDecorator $em,
         SettingsService $settingsService,
@@ -113,7 +119,8 @@ class ApplicationService
         MailService $mailService,
         UserService $userService,
         ITranslator $translator,
-        PaymentRepository $paymentRepository
+        PaymentRepository $paymentRepository,
+        IncomeProofRepository $incomeProofRepository
     ) {
         $this->em                       = $em;
         $this->settingsService          = $settingsService;
@@ -129,6 +136,7 @@ class ApplicationService
         $this->userService              = $userService;
         $this->translator               = $translator;
         $this->paymentRepository        = $paymentRepository;
+        $this->incomeProofRepository    = $incomeProofRepository;
     }
 
     /**
@@ -476,18 +484,19 @@ class ApplicationService
         Application $application,
         ?string $paymentMethod,
         ?DateTimeImmutable $paymentDate,
-        ?DateTimeImmutable $incomeProofPrintedDate,
         ?DateTimeImmutable $maturityDate,
+        ?IncomeProof $incomeProof,
         ?User $createdBy
     ) : void {
         $oldPaymentMethod          = $application->getPaymentMethod();
         $oldPaymentDate            = $application->getPaymentDate();
-        $oldIncomeProofPrintedDate = $application->getIncomeProofPrintedDate();
         $oldMaturityDate           = $application->getMaturityDate();
+        $oldIncomeProof            = $application->getIncomeProof();
 
         //pokud neni zmena, nic se neprovede
-        if ($paymentMethod === $oldPaymentMethod && $paymentDate == $oldPaymentDate
-            && $incomeProofPrintedDate == $oldIncomeProofPrintedDate && $maturityDate == $oldMaturityDate) {
+        if ($paymentMethod === $oldPaymentMethod && $paymentDate == $oldPaymentDate && $maturityDate == $oldMaturityDate
+            && (($incomeProof === null && $oldIncomeProof === null) || (($incomeProof !== null && $oldIncomeProof !== null) && $incomeProof->getId() === $oldIncomeProof->getId()))
+        ) {
             return;
         }
 
@@ -495,19 +504,23 @@ class ApplicationService
             $application,
             $paymentMethod,
             $paymentDate,
-            $incomeProofPrintedDate,
             $maturityDate,
-            $createdBy
+            $incomeProof,
+            $createdBy,
+            $oldIncomeProof
         ) : void {
             $user = $application->getUser();
+
+            if ($oldIncomeProof === null && $incomeProof !== null) {
+                $this->incomeProofRepository->save($incomeProof);
+            }
 
             $newApplication = clone $application;
 
             $newApplication->setPaymentMethod($paymentMethod);
             $newApplication->setPaymentDate($paymentDate);
-            $newApplication->setIncomeProofPrintedDate($incomeProofPrintedDate);
             $newApplication->setMaturityDate($maturityDate);
-
+            $newApplication->setIncomeProof($incomeProof);
             $newApplication->setState($this->getApplicationState($newApplication));
             $newApplication->setCreatedBy($createdBy);
             $newApplication->setValidFrom(new DateTimeImmutable());
@@ -556,7 +569,7 @@ class ApplicationService
                 } else {
                     $payment->setState(PaymentState::PAIRED_AUTO);
                     $pairedApplication->setPayment($payment);
-                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $date, null, null, $createdBy);
+                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $date, $pairedApplication->getMaturityDate(), null, $createdBy);
                 }
             } else {
                 $payment->setState(PaymentState::NOT_PAIRED_VS);
@@ -602,7 +615,7 @@ class ApplicationService
             foreach ($oldPairedApplications as $pairedApplication) {
                 if (! $newPairedApplications->contains($pairedApplication)) {
                     $pairedApplication->setPayment(null);
-                    $this->updateApplicationPayment($pairedApplication, null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+                    $this->updateApplicationPayment($pairedApplication, null, null, $pairedApplication->getMaturityDate(), null, $createdBy);
                     $pairedApplicationsModified = true;
                 }
             }
@@ -610,7 +623,7 @@ class ApplicationService
             foreach ($newPairedApplications as $pairedApplication) {
                 if (! $oldPairedApplications->contains($pairedApplication)) {
                     $pairedApplication->setPayment($payment);
-                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $payment->getDate(), null, $pairedApplication->getMaturityDate(), $createdBy);
+                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $payment->getDate(), $pairedApplication->getMaturityDate(), null, $createdBy);
                     $pairedApplicationsModified = true;
                 }
             }
@@ -634,7 +647,7 @@ class ApplicationService
     {
         $this->em->transactional(function () use ($payment, $createdBy) : void {
             foreach ($payment->getPairedValidApplications() as $pairedApplication) {
-                $this->updateApplicationPayment($pairedApplication, null, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+                $this->updateApplicationPayment($pairedApplication, null, null, $pairedApplication->getMaturityDate(), null, $createdBy);
             }
 
             $this->paymentRepository->remove($payment);

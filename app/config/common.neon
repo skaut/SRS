@@ -23,7 +23,6 @@ services:
     - App\Services\ExcelExportService
     - App\Services\FilesService(%wwwDir%/files)
     - App\Services\MailService
-    - App\Services\PdfExportService(%wwwDir%/pdf)
     - App\Services\ProgramService
     - App\Services\SettingsService
     - App\Services\SkautIsEventEducationService
@@ -118,6 +117,9 @@ services:
     userRepository:
         class: App\Model\User\UserRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\User)
+    incomeProofRepository:
+            class: App\Model\User\Application\IncomeProofRepository
+            factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\IncomeProof)
     variableSymbolRepository:
         class: App\Model\User\Application\VariableSymbolRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\VariableSymbol)

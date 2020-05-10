@@ -93,7 +93,7 @@ class Payment
     /**
      * Spárované přihlášky.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\User\Application", mappedBy="payment", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\App\Model\User\Application\Application", mappedBy="payment", cascade={"persist"})
      *
      * @var Collection|Application[]
      */

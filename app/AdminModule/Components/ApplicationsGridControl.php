@@ -14,7 +14,6 @@ use App\Model\User\Application\SubeventsApplication;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\PdfExportService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
@@ -24,6 +23,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Http\Session;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 use Nettrine\ORM\EntityManagerDecorator;
@@ -62,9 +62,6 @@ class ApplicationsGridControl extends Control
     /** @var User */
     private $user;
 
-    /** @var PdfExportService */
-    private $pdfExportService;
-
     /** @var SubeventService */
     private $subeventService;
 
@@ -78,7 +75,6 @@ class ApplicationsGridControl extends Control
         UserRepository $userRepository,
         SubeventRepository $subeventRepository,
         ApplicationService $applicationService,
-        PdfExportService $pdfExportService,
         SubeventService $subeventService,
         Validators $validators
     ) {
@@ -88,7 +84,6 @@ class ApplicationsGridControl extends Control
         $this->userRepository        = $userRepository;
         $this->subeventRepository    = $subeventRepository;
         $this->applicationService    = $applicationService;
-        $this->pdfExportService      = $pdfExportService;
         $this->subeventService       = $subeventService;
         $this->validators            = $validators;
     }
@@ -155,8 +150,6 @@ class ApplicationsGridControl extends Control
 
         $grid->addColumnDateTime('paymentDate', 'admin.users.users_applications_payment_date');
 
-        $grid->addColumnDateTime('incomeProofPrintedDate', 'admin.users.users_applications_income_proof_printed_date');
-
         $grid->addColumnText('state', 'admin.users.users_applications_state')
             ->setRenderer(function (Application $row) {
                 return $this->translator->translate('common.application_state.' . $row->getState());
@@ -196,9 +189,6 @@ class ApplicationsGridControl extends Control
                 ->addConditionOn($paymentDateDate, Form::FILLED)
                 ->addRule(Form::FILLED, 'admin.users.users_applications_payment_method_empty');
 
-            $incomeProofPrintedDateDate = new DateControl('');
-            $container->addComponent($incomeProofPrintedDateDate, 'incomeProofPrintedDate');
-
             $maturityDateDate = new DateControl('');
             $container->addComponent($maturityDateDate, 'maturityDate');
         };
@@ -207,7 +197,6 @@ class ApplicationsGridControl extends Control
                 'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
                 'paymentMethod' => $item->getPaymentMethod(),
                 'paymentDate' => $item->getPaymentDate(),
-                'incomeProofPrintedDate' => $item->getIncomeProofPrintedDate(),
                 'maturityDate' => $item->getMaturityDate(),
             ]);
         };
@@ -329,8 +318,8 @@ class ApplicationsGridControl extends Control
                 $application,
                 $values->paymentMethod ?: null,
                 $values->paymentDate,
-                $values->incomeProofPrintedDate,
                 $values->maturityDate,
+                $application->getIncomeProof(),
                 $loggedUser
             );
         });
@@ -347,11 +336,7 @@ class ApplicationsGridControl extends Control
      */
     public function handleGeneratePaymentProofCash(int $id) : void
     {
-        $this->pdfExportService->generateApplicationsPaymentProof(
-            $this->applicationRepository->findById($id),
-            'prijmovy-pokladni-doklad.pdf',
-            $this->userRepository->findById($this->getPresenter()->getUser()->id)
-        );
+        $this->presenter->redirect(':Export:IncomeProof:application', ['id' => $id]);
     }
 
     /**
@@ -362,11 +347,7 @@ class ApplicationsGridControl extends Control
      */
     public function handleGeneratePaymentProofBank(int $id) : void
     {
-        $this->pdfExportService->generateApplicationsPaymentProof(
-            $this->applicationRepository->findById($id),
-            'potvrzeni-o-prijeti-platby.pdf',
-            $this->userRepository->findById($this->getPresenter()->getUser()->id)
-        );
+        $this->presenter->redirect(':Export:IncomeProof:application', ['id' => $id]);
     }
 
     /**

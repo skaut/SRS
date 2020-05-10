@@ -61,8 +61,8 @@ class PaymentProofFormFactory
         $form->addText('accountant', 'admin.configuration.accountant')
             ->addRule(Form::FILLED, 'admin.configuration.accountant_empty');
 
-        $form->addText('printLocation', 'admin.configuration.print_location')
-            ->addRule(Form::FILLED, 'admin.configuration.print_location_empty');
+//        $form->addText('printLocation', 'admin.configuration.print_location') todo: odstranit, pokud se nebude pouzivat v dokladech
+//            ->addRule(Form::FILLED, 'admin.configuration.print_location_empty');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -70,7 +70,7 @@ class PaymentProofFormFactory
             'company' => $this->settingsService->getValue(Settings::COMPANY),
             'ico' => $this->settingsService->getValue(Settings::ICO),
             'accountant' => $this->settingsService->getValue(Settings::ACCOUNTANT),
-            'printLocation' => $this->settingsService->getValue(Settings::PRINT_LOCATION),
+//            'printLocation' => $this->settingsService->getValue(Settings::PRINT_LOCATION), todo: odstranit, pokud se nebude pouzivat v dokladech
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -89,6 +89,6 @@ class PaymentProofFormFactory
         $this->settingsService->setValue(Settings::COMPANY, $values->company);
         $this->settingsService->setValue(Settings::ICO, $values->ico);
         $this->settingsService->setValue(Settings::ACCOUNTANT, $values->accountant);
-        $this->settingsService->setValue(Settings::PRINT_LOCATION, $values->printLocation);
+//        $this->settingsService->setValue(Settings::PRINT_LOCATION, $values->printLocation); todo: odstranit, pokud se nebude pouzivat v dokladech
     }
 }

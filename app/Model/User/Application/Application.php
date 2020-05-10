@@ -154,13 +154,13 @@ abstract class Application
     protected $payment;
 
     /**
-     * Datum vytištění dokladu o zaplacení.
+     * Příjmový doklad. Používá se pro generování id.
      *
-     * @ORM\Column(type="date_immutable", nullable=true)
+     * @ORM\ManyToOne(targetEntity="IncomeProof", cascade={"persist"})
      *
-     * @var DateTimeImmutable
+     * @var IncomeProof
      */
-    protected $incomeProofPrintedDate;
+    protected $incomeProof;
 
     /**
      * Stav přihlášky.
@@ -382,22 +382,14 @@ abstract class Application
         $this->payment = $payment;
     }
 
-    public function getIncomeProofPrintedDate() : ?DateTimeImmutable
+    public function getIncomeProof() : ?IncomeProof
     {
-        return $this->incomeProofPrintedDate;
+        return $this->incomeProof;
     }
 
-    /**
-     * Vrací datum vytištění dokladu jako text.
-     */
-    public function getIncomeProofPrintedDateText() : ?string
+    public function setIncomeProof(?IncomeProof $incomeProof) : void
     {
-        return $this->incomeProofPrintedDate !== null ? $this->incomeProofPrintedDate->format(Helpers::DATE_FORMAT) : null;
-    }
-
-    public function setIncomeProofPrintedDate(?DateTimeImmutable $incomeProofPrintedDate) : void
-    {
-        $this->incomeProofPrintedDate = $incomeProofPrintedDate;
+        $this->incomeProof = $incomeProof;
     }
 
     public function getState() : ?string

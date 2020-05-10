@@ -12,7 +12,6 @@
                 <th class="text-right">{_admin.users.users_applications_maturity_date}</th>
                 <th>{_admin.users.users_applications_payment_method}</th>
                 <th class="text-right">{_admin.users.users_applications_payment_date}</th>
-                <th class="text-right">{_admin.users.users_applications_income_proof_printed_date}</th>
                 <th>{_admin.users.users_applications_state}</th>
                 <th class="text-right">{_admin.users.users_applications_valid_from}</th>
                 <th class="text-right">{_admin.users.users_applications_valid_to}</th>
@@ -28,7 +27,6 @@
                 <td class="text-right">{$application->getMaturityDateText()}</td>
                 <td>{if $application->getPaymentMethod()}{_'common.payment.' . $application->getPaymentMethod()}{/if}</td>
                 <td class="text-right">{$application->getPaymentDateText()}</td>
-                <td class="text-right">{$application->getIncomeProofPrintedDateText()}</td>
                 <td>{_'common.application_state.' . $application->getState()}</td>
                 <td class="text-right">{$application->getValidFrom()|date:'j. n. Y H:i'}</td>
                 <td class="text-right">{$application->getValidTo()|date:'j. n. Y H:i'}</td>
