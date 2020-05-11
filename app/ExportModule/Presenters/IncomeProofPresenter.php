@@ -55,7 +55,6 @@ class IncomeProofPresenter extends ExportBasePresenter
      */
     public $settingsService;
 
-
     public function startup() : void
     {
         parent::startup();
@@ -94,7 +93,7 @@ class IncomeProofPresenter extends ExportBasePresenter
     public function actionApplications() : void
     {
         $ids          = $this->session->getSection('srs')->applicationIds;
-        $applications = $this->applicationRepository->findApplicationsByIds($ids)->filter(function (Application $application) {
+        $applications = $this->applicationRepository->findApplicationsByIds($ids)->filter(static function (Application $application) {
             return $application->getState() === ApplicationState::PAID && $application->isValid();
         });
 

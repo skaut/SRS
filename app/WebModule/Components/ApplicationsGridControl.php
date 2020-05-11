@@ -26,7 +26,6 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
-use Nette\Http\Session;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 use stdClass;
