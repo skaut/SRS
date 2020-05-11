@@ -3,7 +3,7 @@
         {if $application->getPaymentMethod() === $paymentMethodCash}
             <div class="row mb-3">
                 <div class="col-8">
-                    <h1 style="padding-top: 24px">Příjmový pokladní doklad</h1>
+                    <h1 style="padding-top: 24px">{_export.income_proof.cash.heading}</h1>
                 </div>
                 <div class="col-4 text-right">
                     <img src="{$basePath}/files/logo/{$logo}" style="max-height: 60px"/>
@@ -15,45 +15,46 @@
                     <div style="border: 1px solid #000; border-radius: 15px; padding: 10px">
                         {$company|breakLines}
                         <br>
-                        IČO: {$ico}
+                        {_export.income_proof.ico} {$ico}
                     </div>
                 </div>
                 <div class="col-4 text-right">
-                    Číslo: {$application->getIncomeProof()->getId()} ze dne: {$application->getIncomeProof()->getDateText()}<br>
+                    {_export.income_proof.cash.number} {$application->getIncomeProof()->getId()}
+                    {_export.income_proof.cash.date} {$application->getIncomeProof()->getDateText()}
                 </div>
             </div>
 
             <div class="row mb-2">
                 <div class="col-12">
-                    Přijato od: {$application->getUser()->getFirstName()} {$application->getUser()->getLastName()}
+                    {_export.income_proof.cash.name} {$application->getUser()->getFirstName()} {$application->getUser()->getLastName()}
                     &emsp;
-                    Adresa: {$application->getUser()->getStreet()}, {$application->getUser()->getPostcode()} {$application->getUser()->getCity()}
+                    {_export.income_proof.cash.address} {$application->getUser()->getStreet()}, {$application->getUser()->getPostcode()} {$application->getUser()->getCity()}
                 </div>
             </div>
 
             <div class="row mb-2">
                 <div class="col-12">
-                    Účel platby: účastnický poplatek {$seminarName}
+                    {_export.income_proof.cash.purpose} {$seminarName}
                 </div>
             </div>
 
             <div class="row mb-2">
                 <div class="col-12">
-                    Kč: =={$application->getFee()},00==
+                    {_export.income_proof.cash.fee} =={$application->getFee()},00==
                     &emsp;
-                    Slovy: =={$application->getFeeWords()}==
+                    {_export.income_proof.cash.fee_words} =={$application->getFeeWords()}==
                 </div>
             </div>
 
             <div class="row mt-4">
                 <div class="col-3 offset-9">
-                    Přijal:
+                    {_export.income_proof.cash.sign}
                 </div>
             </div>
         {elseif $application->getPaymentMethod() === $paymentMethodBank}
             <div class="row mb-3">
                 <div class="col-8">
-                    <h1 style="padding-top: 24px">Potvrzení o přijetí platby</h1>
+                    <h1 style="padding-top: 24px">{_export.income_proof.bank.heading}</h1>
                 </div>
                 <div class="col-4 text-right">
                     <img src="{$basePath}/files/logo/{$logo}" style="max-height: 60px"/>
@@ -65,34 +66,34 @@
                     <div style="border: 1px solid #000; border-radius: 15px; padding: 10px">
                         {$company|breakLines}
                         <br>
-                        IČO: {$ico}
+                        {_export.income_proof.ico} {$ico}
                     </div>
                 </div>
             </div>
 
             <div class="row mb-2">
                 <div class="col-12">
-                    Potvrzujeme přijetí platby: účastnický poplatek {$seminarName}
+                    {_export.income_proof.bank.purpose} {$seminarName}
                 </div>
             </div>
 
             <div class="row mb-2">
                 <div class="col-12">
-                    Ve výši: {$application->getFee()},00 Kč
-                    (slovy: {$application->getFeeWords()} Kč)
+                    {_export.income_proof.bank.fee} {$application->getFee()},00 {_export.income_proof.bank.fee_unit}
+                    ({_export.income_proof.bank.fee_words} {$application->getFeeWords()} {_export.income_proof.bank.fee_unit})
                 </div>
             </div>
 
             <div class="row mb-2">
                 <div class="col-12">
-                    Od: {$application->getUser()->getFirstName()} {$application->getUser()->getLastName()}
-                    (bydliště: {$application->getUser()->getStreet()}, {$application->getUser()->getPostcode()} {$application->getUser()->getCity()})
+                    {_export.income_proof.bank.name} {$application->getUser()->getFirstName()} {$application->getUser()->getLastName()}
+                    ({_export.income_proof.bank.address} {$application->getUser()->getStreet()}, {$application->getUser()->getPostcode()} {$application->getUser()->getCity()})
                 </div>
             </div>
 
             <div class="row mt-4">
                 <div class="col-12 text-right">
-                    Vystavil(a): {$accountant} dne {$date}
+                    {_export.income_proof.bank.accountant} {$accountant} {_export.income_proof.bank.date} {$date}
                 </div>
             </div>
         {/if}
