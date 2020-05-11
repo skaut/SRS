@@ -30,7 +30,6 @@ class IncomeProof
      */
     protected $date;
 
-
     public function __construct()
     {
         $this->date = new DateTimeImmutable();

@@ -104,7 +104,6 @@ class ApplicationService
     /** @var IncomeProofRepository */
     private $incomeProofRepository;
 
-
     public function __construct(
         EntityManagerDecorator $em,
         SettingsService $settingsService,
@@ -647,10 +646,12 @@ class ApplicationService
     /**
      * Vytvoří příjmový doklad a provede historizaci přihlášky.
      */
-    public function createIncomeProof(Application $application, User $createdBy) {
+    public function createIncomeProof(Application $application, User $createdBy) : void
+    {
         if ($application->getPaymentMethod() !== PaymentType::CASH) {
             return;
         }
+
         $this->em->transactional(function () use ($application, $createdBy) : void {
             $incomeProof = new IncomeProof();
             $this->incomeProofRepository->save($incomeProof);
