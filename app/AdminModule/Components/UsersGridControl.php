@@ -660,7 +660,6 @@ class UsersGridControl extends Control
                         $paymentMethod,
                         new DateTimeImmutable(),
                         $application->getMaturityDate(),
-                        $application->getIncomeProof(),
                         $loggedUser
                     );
                 }

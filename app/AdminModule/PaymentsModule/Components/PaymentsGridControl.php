@@ -175,7 +175,7 @@ class PaymentsGridControl extends Control
     {
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
-        $this->applicationService->createPayment($values->date, $values->amount, $values->variableSymbol, null, null, null, null, $loggedUser);
+        $this->applicationService->createPaymentManual($values->date, $values->amount, $values->variableSymbol, $loggedUser);
 
         $this->getPresenter()->flashMessage('admin.payments.payments.saved', 'success');
         $this->redirect('this');

@@ -319,7 +319,6 @@ class ApplicationsGridControl extends Control
                 $values->paymentMethod ?: null,
                 $values->paymentDate,
                 $values->maturityDate,
-                $application->getIncomeProof(),
                 $loggedUser
             );
         });

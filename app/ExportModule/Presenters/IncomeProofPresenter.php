@@ -136,14 +136,7 @@ class IncomeProofPresenter extends ExportBasePresenter
 
         foreach ($applications as $application) {
             if ($application->getIncomeProof() === null) {
-                $this->applicationService->updateApplicationPayment(
-                    $application,
-                    $application->getPaymentMethod(),
-                    $application->getPaymentDate(),
-                    $application->getMaturityDate(),
-                    $application->getPaymentMethod() === PaymentType::CASH ? new IncomeProof() : null,
-                    $createdBy
-                );
+                $this->applicationService->createIncomeProof($application, $createdBy);
                 $updatedApplications->add($this->applicationRepository->findValidByVariableSymbol($application->getVariableSymbolText()));
             } else {
                 $updatedApplications->add($application);
@@ -160,7 +153,7 @@ class IncomeProofPresenter extends ExportBasePresenter
         $this->template->ico               = $this->settingsService->getValue(Settings::ICO);
         $this->template->accountNumber     = $this->settingsService->getValue(Settings::ACCOUNT_NUMBER);
         $this->template->accountant        = $this->settingsService->getValue(Settings::ACCOUNTANT);
-        $this->template->date              = (new DateTimeImmutable('now'))->format(Helpers::DATE_FORMAT);
+        $this->template->date              = (new DateTimeImmutable())->format(Helpers::DATE_FORMAT);
         $this->template->paymentMethodCash = PaymentType::CASH;
         $this->template->paymentMethodBank = PaymentType::BANK;
 

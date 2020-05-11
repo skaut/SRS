@@ -200,7 +200,7 @@ class ApplicationService
     }
 
     /**
-     * Změní role uživatele.
+     * Změní role uživatele a provede historizaci přihlášky.
      *
      * @param Collection|Role[] $roles
      *
@@ -294,7 +294,7 @@ class ApplicationService
     }
 
     /**
-     * Zruší registraci uživatele na seminář.
+     * Zruší registraci uživatele na seminář a provede historizaci přihlášky.
      *
      * @throws SettingsException
      * @throws Throwable
@@ -347,7 +347,7 @@ class ApplicationService
     }
 
     /**
-     * Vytvoří novou přihlášku na podakce.
+     * Vytvoří novou přihlášku na podakce a provede její historizaci.
      *
      * @param Collection|Subevent[] $subevents
      *
@@ -371,7 +371,7 @@ class ApplicationService
     }
 
     /**
-     * Aktualizuje podakce přihlášky.
+     * Aktualizuje podakce přihlášky a provede její historizaci.
      *
      * @param Collection|Subevent[] $subevents
      *
@@ -430,7 +430,7 @@ class ApplicationService
     }
 
     /**
-     * Zruší přihlášku na podakce.
+     * Zruší přihlášku na podakce a provede její historizaci.
      *
      * @throws SettingsException
      * @throws Throwable
@@ -476,7 +476,7 @@ class ApplicationService
     }
 
     /**
-     * Aktualizuje stav platby.
+     * Aktualizuje stav platby přihlášky a provede její historizaci.
      *
      * @throws Throwable
      */
@@ -485,42 +485,24 @@ class ApplicationService
         ?string $paymentMethod,
         ?DateTimeImmutable $paymentDate,
         ?DateTimeImmutable $maturityDate,
-        ?IncomeProof $incomeProof,
         ?User $createdBy
     ) : void {
-        $oldPaymentMethod          = $application->getPaymentMethod();
-        $oldPaymentDate            = $application->getPaymentDate();
-        $oldMaturityDate           = $application->getMaturityDate();
-        $oldIncomeProof            = $application->getIncomeProof();
+        $oldPaymentMethod = $application->getPaymentMethod();
+        $oldPaymentDate   = $application->getPaymentDate();
+        $oldMaturityDate  = $application->getMaturityDate();
 
         //pokud neni zmena, nic se neprovede
-        if ($paymentMethod === $oldPaymentMethod && $paymentDate == $oldPaymentDate && $maturityDate == $oldMaturityDate
-            && (($incomeProof === null && $oldIncomeProof === null) || (($incomeProof !== null && $oldIncomeProof !== null) && $incomeProof->getId() === $oldIncomeProof->getId()))
-        ) {
+        if ($paymentMethod === $oldPaymentMethod && $paymentDate == $oldPaymentDate && $maturityDate == $oldMaturityDate) {
             return;
         }
 
-        $this->em->transactional(function () use (
-            $application,
-            $paymentMethod,
-            $paymentDate,
-            $maturityDate,
-            $incomeProof,
-            $createdBy,
-            $oldIncomeProof
-        ) : void {
+        $this->em->transactional(function () use ($application, $paymentMethod, $paymentDate, $maturityDate, $createdBy) : void {
             $user = $application->getUser();
 
-            if ($oldIncomeProof === null && $incomeProof !== null) {
-                $this->incomeProofRepository->save($incomeProof);
-            }
-
             $newApplication = clone $application;
-
             $newApplication->setPaymentMethod($paymentMethod);
             $newApplication->setPaymentDate($paymentDate);
             $newApplication->setMaturityDate($maturityDate);
-            $newApplication->setIncomeProof($incomeProof);
             $newApplication->setState($this->getApplicationState($newApplication));
             $newApplication->setCreatedBy($createdBy);
             $newApplication->setValidFrom(new DateTimeImmutable());
@@ -542,6 +524,8 @@ class ApplicationService
     }
 
     /**
+     * Vytvoří platbu a označí spárované přihlášky jako zaplacené.
+     *
      * @throws Throwable
      */
     public function createPayment(DateTimeImmutable $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
@@ -569,7 +553,7 @@ class ApplicationService
                 } else {
                     $payment->setState(PaymentState::PAIRED_AUTO);
                     $pairedApplication->setPayment($payment);
-                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $date, $pairedApplication->getMaturityDate(), null, $createdBy);
+                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $date, $pairedApplication->getMaturityDate(), $createdBy);
                 }
             } else {
                 $payment->setState(PaymentState::NOT_PAIRED_VS);
@@ -580,6 +564,8 @@ class ApplicationService
     }
 
     /**
+     * Vytvoří platbu a označí spárované přihlášky jako zaplacené (bez údajů z banky).
+     *
      * @throws Throwable
      */
     public function createPaymentManual(DateTimeImmutable $date, float $amount, string $variableSymbol, User $createdBy) : void
@@ -588,6 +574,8 @@ class ApplicationService
     }
 
     /**
+     * Aktualizuje platbu a stav spárovaných přihlášek.
+     *
      * @param Collection|Application[] $pairedApplications
      *
      * @throws Throwable
@@ -615,7 +603,7 @@ class ApplicationService
             foreach ($oldPairedApplications as $pairedApplication) {
                 if (! $newPairedApplications->contains($pairedApplication)) {
                     $pairedApplication->setPayment(null);
-                    $this->updateApplicationPayment($pairedApplication, null, null, $pairedApplication->getMaturityDate(), null, $createdBy);
+                    $this->updateApplicationPayment($pairedApplication, null, null, $pairedApplication->getMaturityDate(), $createdBy);
                     $pairedApplicationsModified = true;
                 }
             }
@@ -623,7 +611,7 @@ class ApplicationService
             foreach ($newPairedApplications as $pairedApplication) {
                 if (! $oldPairedApplications->contains($pairedApplication)) {
                     $pairedApplication->setPayment($payment);
-                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $payment->getDate(), $pairedApplication->getMaturityDate(), null, $createdBy);
+                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $payment->getDate(), $pairedApplication->getMaturityDate(), $createdBy);
                     $pairedApplicationsModified = true;
                 }
             }
@@ -641,16 +629,40 @@ class ApplicationService
     }
 
     /**
+     * Odstraní platbu a označí spárované přihlášky jako nezaplacené.
+     *
      * @throws Throwable
      */
     public function removePayment(Payment $payment, User $createdBy) : void
     {
         $this->em->transactional(function () use ($payment, $createdBy) : void {
             foreach ($payment->getPairedValidApplications() as $pairedApplication) {
-                $this->updateApplicationPayment($pairedApplication, null, null, $pairedApplication->getMaturityDate(), null, $createdBy);
+                $this->updateApplicationPayment($pairedApplication, null, null, $pairedApplication->getMaturityDate(), $createdBy);
             }
 
             $this->paymentRepository->remove($payment);
+        });
+    }
+
+    /**
+     * Vytvoří příjmový doklad a provede historizaci přihlášky.
+     */
+    public function createIncomeProof(Application $application, User $createdBy) {
+        if ($application->getPaymentMethod() !== PaymentType::CASH) {
+            return;
+        }
+        $this->em->transactional(function () use ($application, $createdBy) : void {
+            $incomeProof = new IncomeProof();
+            $this->incomeProofRepository->save($incomeProof);
+
+            $newApplication = clone $application;
+            $newApplication->setIncomeProof($incomeProof);
+            $newApplication->setCreatedBy($createdBy);
+            $newApplication->setValidFrom(new DateTimeImmutable());
+            $this->applicationRepository->save($newApplication);
+
+            $application->setValidTo(new DateTimeImmutable());
+            $this->applicationRepository->save($application);
         });
     }
 
