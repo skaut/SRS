@@ -88,11 +88,20 @@
         <div class="row">
             <div class="col-auto mr-auto">
                 <div class="btn-group">
-                    <button @click="handleChangeView('timeGridSeminar')" class="btn btn-sm btn-primary" :class="{ active: defaultView === 'timeGridSeminar' }">
+                    <button @click="handleChangeView('timeGridSeminar')" class="btn btn-sm btn-secondary" :class="{ active: defaultView === 'timeGridSeminar' }">
                         Na výšku
                     </button>
-                    <button @click="handleChangeView('resourceTimelineSeminar')" class="btn btn-sm btn-primary" :class="{ active: defaultView === 'resourceTimelineSeminar' }">
+                    <button @click="handleChangeView('resourceTimelineSeminar')" class="btn btn-sm btn-secondary" :class="{ active: defaultView === 'resourceTimelineSeminar' }">
                         Na šířku
+                    </button>
+                </div>
+                <div class="btn-group" v-show="defaultView === 'resourceTimelineSeminar'">
+                    <button @click="handlePrev()" id="btnPrev" class="btn btn-sm btn-secondary">
+                        <span class="fc-icon fc-icon-chevron-left"></span>
+                    </button>
+                    <button id="btnTitle" class="btn btn-sm btn-secondary" disabled></button>
+                    <button @click="handleNext()" id="btnNext" class="btn btn-sm btn-secondary">
+                        <span class="fc-icon fc-icon-chevron-right"></span>
                     </button>
                 </div>
                 <button data-toggle="modal" data-target="#help-modal" class="btn btn-sm btn-secondary">
@@ -103,7 +112,7 @@
                 <div class="spinner float-left" v-show="loading > 0">
                     <span class="fa fa-spinner fa-pulse fa-2x" style=""></span>
                 </div>
-                <div class="notifications float-left mt-2 mt-sm-0">
+                <div class="notifications float-left ml-2 mt-2 mt-sm-0">
                     <div v-if="message" class="alert" :class="'alert-' + message.type" style="padding: 4px 8px; margin: 0">
                         {{ message.text }}
                     </div>
@@ -117,14 +126,17 @@
                       theme-system="bootstrap"
                       locale="cs"
                       timeZone="none"
+                      scroll-time="07:00:00"
                       aspect-ratio="1.85"
+                      header="false"
                       scheduler-license-key="GPL-My-Project-Is-Open-Source"
                       :plugins="calendarPlugins"
                       :views="calendarViews"
                       :default-view="defaultView"
+                      :valid-range="validRange"
                       :event-render="eventRender"
-                      :view-skeleton-render="storeView"
-                      :header="{left: '', center: '', right: ''}"
+                      :view-skeleton-render="viewSkeletonRender"
+                      :dates-render="datesRender"
                       :events="events"
                       :resources="resources"
                       @eventClick="handleEventClick"/>
@@ -174,10 +186,6 @@
                     },
                     resourceTimelineSeminar: {
                         type: 'resourceTimeline',
-                        visibleRange: {
-                            start: this.config.seminar_from_date,
-                            end: this.config.seminar_to_date
-                        },
                         buttonText: "Na šířku",
                         snapDuration: {minutes: 5},
                         slotDuration: {minutes: 15},
@@ -185,6 +193,12 @@
                         resourceLabelText: "Místnosti"
                     },
                 };
+            },
+            validRange() {
+                return {
+                    start: this.config.seminar_from_date,
+                    end: this.config.seminar_to_date
+                }
             }
         },
         watch: {
@@ -235,8 +249,31 @@
             /**
              * Uloží zvolené view.
              */
-            storeView(info) {
+            viewSkeletonRender(info) {
                 localStorage.setItem("fcDefaultView", info.view.type);
+            },
+
+            /**
+             * Zpracuje přechod na přechozí den.
+             */
+            handlePrev(view) {
+                this.$refs.fullCalendar.getApi().prev();
+            },
+
+            /**
+             * Zpracuje přechod na následující den.
+             */
+            handleNext(view) {
+                this.$refs.fullCalendar.getApi().next();
+            },
+
+            /**
+             * Překreslí tlačítka pro volbu dne.
+             */
+            datesRender(info) {
+                $("#btnPrev").prop("disabled", info.view.currentStart.toISOString().split('T')[0] <= this.validRange.start);
+                $("#btnNext").prop("disabled", info.view.currentEnd.toISOString().split('T')[0] >= this.validRange.end);
+                $("#btnTitle").html(info.view.title);
             },
 
             /**
