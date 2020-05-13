@@ -7,8 +7,8 @@ namespace App\Model\Structure;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
 use App\Model\SkautIs\SkautIsCourse;
-use App\Model\User\Application;
-use App\Model\User\SubeventsApplication;
+use App\Model\User\Application\Application;
+use App\Model\User\Application\SubeventsApplication;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -49,7 +49,7 @@ class Subevent
     /**
      * Přihlášky.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\User\Application\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
      *
      * @var Collection|SubeventsApplication[]
      */

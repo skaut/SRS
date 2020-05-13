@@ -23,7 +23,6 @@ services:
     - App\Services\ExcelExportService
     - App\Services\FilesService(%wwwDir%/files)
     - App\Services\MailService
-    - App\Services\PdfExportService(%wwwDir%/pdf)
     - App\Services\ProgramService
     - App\Services\SettingsService
     - App\Services\SkautIsEventEducationService
@@ -104,23 +103,26 @@ services:
         inject: yes
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Subevent)
     applicationRepository:
-        class: App\Model\User\ApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application)
+        class: App\Model\User\Application\ApplicationRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\Application)
     rolesApplicationRepository:
-        class: App\Model\User\RolesApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\RolesApplication)
+        class: App\Model\User\Application\RolesApplicationRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\RolesApplication)
     subeventsApplicationRepository:
-        class: App\Model\User\SubeventsApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\SubeventsApplication)
+        class: App\Model\User\Application\SubeventsApplicationRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\SubeventsApplication)
     customInputValueRepository:
         class: App\Model\User\CustomInputValue\CustomInputValueRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\CustomInputValue\CustomInputValue)
     userRepository:
         class: App\Model\User\UserRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\User)
+    incomeProofRepository:
+            class: App\Model\User\Application\IncomeProofRepository
+            factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\IncomeProof)
     variableSymbolRepository:
-        class: App\Model\User\VariableSymbolRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\VariableSymbol)
+        class: App\Model\User\Application\VariableSymbolRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\VariableSymbol)
 
     - App\WebModule\Components\IApplicationContentControlFactory
     - App\WebModule\Components\IBlocksContentControlFactory

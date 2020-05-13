@@ -65,7 +65,7 @@ class TicketPresenter extends ExportBasePresenter
 
         $pdf = new PdfResponse($template);
 
-        $pdf->documentTitle = 'ticket';
+        $pdf->documentTitle = 'vstupenka';
         $pdf->pageFormat    = 'A4';
         $pdf->getMPDF()->SetProtection(['copy', 'print', 'print-highres'], '', random_bytes(30));
 

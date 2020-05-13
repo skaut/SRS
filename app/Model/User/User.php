@@ -12,6 +12,9 @@ use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Structure\Subevent;
+use App\Model\User\Application\Application;
+use App\Model\User\Application\RolesApplication;
+use App\Model\User\Application\SubeventsApplication;
 use App\Model\User\CustomInputValue\CustomInputValue;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -293,7 +296,7 @@ class User
     /**
      * Přihlášky.
      *
-     * @ORM\OneToMany(targetEntity="Application", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\App\Model\User\Application\Application", mappedBy="user", cascade={"persist"})
      *
      * @var Collection|Application[]
      */

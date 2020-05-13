@@ -11,3 +11,28 @@ ticket:
     program_name: "Program"
     room: "Místnost"
     lectors: "Lektoři"
+
+income_proof:
+    ico: "IČO:"
+
+    cash:
+        heading: "Příjmový pokladní doklad"
+        number: "Číslo:"
+        date: "ze dne:"
+        name: "Přijato od:"
+        address: "Adresa:"
+        purpose: "Účel platby: účastnický poplatek"
+        fee: "Kč:"
+        fee_words: "Slovy:"
+        sign: "Přijal:"
+
+    bank:
+        heading: "Potvrzení o přijetí platby"
+        purpose: "Potvrzujeme přijetí platby: účastnický poplatek"
+        fee: "Ve výši:"
+        fee_words: "slovy:"
+        fee_unit: "Kč"
+        name: "Od:"
+        address: "bydliště:"
+        accountant: "Vystavil(a):"
+        date: "dne"

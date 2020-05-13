@@ -24,7 +24,6 @@ use App\Model\User\UserRepository;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
-use App\Services\PdfExportService;
 use App\Services\SettingsService;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
@@ -86,9 +85,6 @@ class UsersGridControl extends Control
     /** @var SessionSection */
     private $sessionSection;
 
-    /** @var PdfExportService */
-    private $pdfExportService;
-
     /** @var ExcelExportService */
     private $excelExportService;
 
@@ -117,7 +113,6 @@ class UsersGridControl extends Control
         SettingsService $settingsService,
         CustomInputRepository $customInputRepository,
         RoleRepository $roleRepository,
-        PdfExportService $pdfExportService,
         ExcelExportService $excelExportService,
         Session $session,
         AclService $aclService,
@@ -133,7 +128,6 @@ class UsersGridControl extends Control
         $this->settingsService              = $settingsService;
         $this->customInputRepository        = $customInputRepository;
         $this->roleRepository               = $roleRepository;
-        $this->pdfExportService             = $pdfExportService;
         $this->excelExportService           = $excelExportService;
         $this->aclService                   = $aclService;
         $this->applicationService           = $applicationService;
@@ -665,7 +659,6 @@ class UsersGridControl extends Control
                         $application,
                         $paymentMethod,
                         new DateTimeImmutable(),
-                        $application->getIncomeProofPrintedDate(),
                         $application->getMaturityDate(),
                         $loggedUser
                     );
@@ -740,7 +733,7 @@ class UsersGridControl extends Control
     public function groupGeneratePaymentProofs(array $ids) : void
     {
         $this->sessionSection->userIds = $ids;
-        $this->redirect('generatepaymentproofs'); //presmerovani kvuli zruseni ajax
+        $this->presenter->redirect(':Export:IncomeProof:users');
     }
 
     /**
@@ -862,23 +855,6 @@ class UsersGridControl extends Control
         $response = $this->excelExportService->exportUsersSchedules($users, 'harmonogramy-uzivatelu.xlsx');
 
         $this->getPresenter()->sendResponse($response);
-    }
-
-    /**
-     * Vygeneruje doklady o zaplacení.
-     *
-     * @throws SettingsException
-     * @throws Throwable
-     */
-    public function handleGeneratePaymentProofs() : void
-    {
-        $ids   = $this->session->getSection('srs')->userIds;
-        $users = $this->userRepository->findUsersByIds($ids);
-        $this->pdfExportService->generateUsersPaymentProofs(
-            $users,
-            'doklady.pdf',
-            $this->userRepository->findById($this->getPresenter()->getUser()->id)
-        );
     }
 
     /**

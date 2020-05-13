@@ -12,13 +12,13 @@ use App\Model\Settings\SettingsException;
 use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\BankService;
-use App\Services\PdfExportService;
 use App\Services\SettingsService;
 use App\Utils\Helpers;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Http\Session;
 use Nette\Localization\ITranslator;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
@@ -48,11 +48,11 @@ class PaymentsGridControl extends Control
     /** @var ApplicationService */
     private $applicationService;
 
-    /** @var PdfExportService */
-    private $pdfExportService;
-
     /** @var BankService */
     private $bankService;
+
+    /** @var Session */
+    private $session;
 
     public function __construct(
         ITranslator $translator,
@@ -60,16 +60,16 @@ class PaymentsGridControl extends Control
         UserRepository $userRepository,
         SettingsService $settingsService,
         ApplicationService $applicationService,
-        PdfExportService $pdfExportService,
-        BankService $bankService
+        BankService $bankService,
+        Session $session
     ) {
         $this->translator         = $translator;
         $this->paymentRepository  = $paymentRepository;
         $this->userRepository     = $userRepository;
         $this->settingsService    = $settingsService;
         $this->applicationService = $applicationService;
-        $this->pdfExportService   = $pdfExportService;
         $this->bankService        = $bankService;
+        $this->session            = $session;
     }
 
     /**
@@ -175,7 +175,7 @@ class PaymentsGridControl extends Control
     {
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
-        $this->applicationService->createPayment($values->date, $values->amount, $values->variableSymbol, null, null, null, null, $loggedUser);
+        $this->applicationService->createPaymentManual($values->date, $values->amount, $values->variableSymbol, $loggedUser);
 
         $this->getPresenter()->flashMessage('admin.payments.payments.saved', 'success');
         $this->redirect('this');
@@ -206,11 +206,10 @@ class PaymentsGridControl extends Control
      */
     public function handleGeneratePaymentProofBank(int $id) : void
     {
-        $this->pdfExportService->generateApplicationsPaymentProofs(
-            $this->paymentRepository->findById($id)->getPairedValidApplications(),
-            'potvrzeni-o-prijeti-platby.pdf',
-            $this->userRepository->findById($this->getPresenter()->getUser()->id)
+        $this->session->getSection('srs')->applicationIds = Helpers::getIds(
+            $this->paymentRepository->findById($id)->getPairedApplications()
         );
+        $this->presenter->redirect(':Export:IncomeProof:applications');
     }
 
     /**

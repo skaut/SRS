@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User;
+namespace App\Model\User\Application;
 
 use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Payment\Payment;
 use App\Model\Structure\Subevent;
+use App\Model\User\User;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Defr\QRPlatba\QRPlatba;
@@ -65,7 +66,7 @@ abstract class Application
     /**
      * Uživatel.
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="applications", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="applications", cascade={"persist"})
      *
      * @var User
      */
@@ -153,13 +154,13 @@ abstract class Application
     protected $payment;
 
     /**
-     * Datum vytištění dokladu o zaplacení.
+     * Příjmový doklad. Používá se pro generování id.
      *
-     * @ORM\Column(type="date_immutable", nullable=true)
+     * @ORM\ManyToOne(targetEntity="IncomeProof", cascade={"persist"})
      *
-     * @var DateTimeImmutable
+     * @var IncomeProof
      */
-    protected $incomeProofPrintedDate;
+    protected $incomeProof;
 
     /**
      * Stav přihlášky.
@@ -171,7 +172,7 @@ abstract class Application
     protected $state;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
      *
      * @var User
      */
@@ -381,22 +382,14 @@ abstract class Application
         $this->payment = $payment;
     }
 
-    public function getIncomeProofPrintedDate() : ?DateTimeImmutable
+    public function getIncomeProof() : ?IncomeProof
     {
-        return $this->incomeProofPrintedDate;
+        return $this->incomeProof;
     }
 
-    /**
-     * Vrací datum vytištění dokladu jako text.
-     */
-    public function getIncomeProofPrintedDateText() : ?string
+    public function setIncomeProof(?IncomeProof $incomeProof) : void
     {
-        return $this->incomeProofPrintedDate !== null ? $this->incomeProofPrintedDate->format(Helpers::DATE_FORMAT) : null;
-    }
-
-    public function setIncomeProofPrintedDate(?DateTimeImmutable $incomeProofPrintedDate) : void
-    {
-        $this->incomeProofPrintedDate = $incomeProofPrintedDate;
+        $this->incomeProof = $incomeProof;
     }
 
     public function getState() : ?string
