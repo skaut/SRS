@@ -7,7 +7,7 @@ jobs:
     name: "Build"
     runs-on: ubuntu-18.04
     container:
-      image: fmasa/lebeda:7.3
+      image: fmasa/lebeda:7.4
     steps:
       - uses: actions/checkout@v2
       # Copy & paste from https://github.com/actions/cache/blob/master/examples.md#php---composer
@@ -34,7 +34,7 @@ jobs:
     name: "Unit tests"
     runs-on: ubuntu-18.04
     container:
-      image: fmasa/lebeda:7.3
+      image: fmasa/lebeda:7.4
     needs: workdir
     steps:
       - name: Download workdir
@@ -50,7 +50,7 @@ jobs:
     name: "PHPStan analysis"
     runs-on: ubuntu-18.04
     container:
-      image: fmasa/lebeda:7.3
+      image: fmasa/lebeda:7.4
     needs: workdir
     steps:
       - name: Download workdir
@@ -66,7 +66,7 @@ jobs:
     name: "Coding standard"
     runs-on: ubuntu-18.04
     container:
-      image: fmasa/lebeda:7.3
+      image: fmasa/lebeda:7.4
     needs: workdir
     steps:
       - name: Download workdir
@@ -82,7 +82,7 @@ jobs:
     name: "Doctrine migrations"
     runs-on: ubuntu-18.04
     container:
-      image: fmasa/lebeda:7.3
+      image: fmasa/lebeda:7.4
     services:
       mysql-test:
         image: mysql:5.7

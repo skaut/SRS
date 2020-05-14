@@ -10,7 +10,7 @@ jobs:
     name: "Deploy to srs.skauting.cz"
     runs-on: ubuntu-18.04
     container:
-      image: fmasa/lebeda:7.3
+      image: fmasa/lebeda:7.4
     env:
       CONFIG_DATABASE_HOST: localhost
       CONFIG_DATABASE_NAME: srs
@@ -70,7 +70,7 @@ jobs:
     name: "Deploy to test-srs.skauting.cz"
     runs-on: ubuntu-18.04
     container:
-      image: fmasa/lebeda:7.3
+      image: fmasa/lebeda:7.4
     env:
       CONFIG_DATABASE_HOST: localhost
       CONFIG_DATABASE_NAME: db009903
