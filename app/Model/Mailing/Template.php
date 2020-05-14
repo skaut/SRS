@@ -145,7 +145,7 @@ class Template
      *
      * @var bool
      */
-    protected $system;
+    protected $systemTemplate;
 
     public function __construct()
     {
@@ -225,8 +225,8 @@ class Template
         $this->sendToOrganizer = $sendToOrganizer;
     }
 
-    public function isSystem() : bool
+    public function isSystemTemplate() : bool
     {
-        return $this->system;
+        return $this->systemTemplate;
     }
 }

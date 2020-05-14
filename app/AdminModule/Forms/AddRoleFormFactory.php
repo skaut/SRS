@@ -85,7 +85,7 @@ class AddRoleFormFactory
 
         $parent = $this->roleRepository->findById($values->parent);
 
-        $role->setSystem(false);
+        $role->setSystemRole(false);
 
         if ($parent) {
             foreach ($parent->getPermissions() as $permission) {

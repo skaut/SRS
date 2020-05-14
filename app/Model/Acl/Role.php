@@ -136,7 +136,7 @@ class Role
      *
      * @var bool
      */
-    protected $system = true;
+    protected $systemRole = true;
 
     /**
      * Registrovatelná role. Lze vybrat v přihlášce.
@@ -391,14 +391,14 @@ class Role
         }
     }
 
-    public function isSystem() : bool
+    public function isSystemRole() : bool
     {
-        return $this->system;
+        return $this->systemRole;
     }
 
-    public function setSystem(bool $system) : void
+    public function setSystemRole(bool $systemRole) : void
     {
-        $this->system = $system;
+        $this->systemRole = $systemRole;
     }
 
     public function isRegisterable() : bool

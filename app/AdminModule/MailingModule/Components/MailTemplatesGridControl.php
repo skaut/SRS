@@ -52,7 +52,7 @@ class MailTemplatesGridControl extends Control
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->templateRepository->createQueryBuilder('t')
-            ->where('t.system = FALSE'));
+            ->where('t.systemTemplate = FALSE'));
         $grid->setDefaultSort(['type' => 'ASC']);
         $grid->setPagination(false);
 
@@ -97,7 +97,7 @@ class MailTemplatesGridControl extends Control
 
         $template = $this->templateRepository->findById((int) $id);
 
-        if ($template->isSystem() && ! $active) {
+        if ($template->isSystemTemplate() && ! $active) {
             $p->flashMessage('admin.mailing.templates.change_active_denied', 'danger');
         } else {
             $template->setActive((bool) $active);

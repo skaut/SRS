@@ -66,7 +66,7 @@ class RolesGridControl extends Control
 
         $grid->addColumnText('name', 'admin.acl.roles_name');
 
-        $grid->addColumnText('system', 'admin.acl.roles_system')
+        $grid->addColumnText('systemRole', 'admin.acl.roles_system')
             ->setReplacement([
                 '0' => $this->translator->translate('admin.common.no'),
                 '1' => $this->translator->translate('admin.common.yes'),
@@ -114,7 +114,7 @@ class RolesGridControl extends Control
                 'data-content' => $this->translator->translate('admin.acl.roles_delete_confirm'),
             ]);
         $grid->allowRowsAction('delete', static function (Role $item) {
-            return ! $item->isSystem();
+            return ! $item->isSystemRole();
         });
     }
 
