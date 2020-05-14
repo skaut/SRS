@@ -33,7 +33,7 @@ class Room
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected ?int $capacity;
+    protected ?int $capacity = null;
 
     /**
      * Programy v místnosti.

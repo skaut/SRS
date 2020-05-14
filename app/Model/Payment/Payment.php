@@ -32,7 +32,7 @@ class Payment
      *
      * @ORM\Column(type="string", unique=true, nullable=true)
      */
-    protected ?string $transactionId;
+    protected ?string $transactionId = null;
 
     /**
      * Datum platby.
@@ -53,28 +53,28 @@ class Payment
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected ?string $accountNumber;
+    protected ?string $accountNumber = null;
 
     /**
      * Majitel protiúčtu.
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected ?string $accountName;
+    protected ?string $accountName = null;
 
     /**
      * Variabilní symbol platby.
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected ?string $variableSymbol;
+    protected ?string $variableSymbol = null;
 
     /**
      * Zpráva pro příjemce.
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected ?string $message;
+    protected ?string $message = null;
 
     /**
      * Spárované přihlášky.

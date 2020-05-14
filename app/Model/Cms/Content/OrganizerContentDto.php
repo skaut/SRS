@@ -14,7 +14,7 @@ class OrganizerContentDto extends ContentDto
     /**
      * Pořadatel.
      */
-    protected ?string $organizer;
+    protected ?string $organizer = null;
 
     public function __construct(string $type, string $heading, ?string $organizer)
     {

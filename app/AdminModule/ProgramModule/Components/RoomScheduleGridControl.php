@@ -27,7 +27,7 @@ class RoomScheduleGridControl extends Control
     /**
      * Aktulní místnost
      */
-    private ?Room $room;
+    private ?Room $room = null;
 
     private ITranslator $translator;
 

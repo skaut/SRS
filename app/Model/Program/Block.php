@@ -84,28 +84,28 @@ class Block
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected ?int $capacity;
+    protected ?int $capacity = null;
 
     /**
      * Pomůcky.
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected ?string $tools;
+    protected ?string $tools = null;
 
     /**
      * Stručný popis.
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    protected ?string $perex;
+    protected ?string $perex = null;
 
     /**
      * Podrobný popis.
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    protected ?string $description;
+    protected ?string $description = null;
 
     public function __construct()
     {

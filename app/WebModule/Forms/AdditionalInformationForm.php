@@ -52,7 +52,7 @@ class AdditionalInformationForm extends UI\Control
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user;
+    private ?User $user = null;
 
     /**
      * Událost při uložení formuláře.

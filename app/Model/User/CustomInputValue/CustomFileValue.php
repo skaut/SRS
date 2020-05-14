@@ -21,7 +21,7 @@ class CustomFileValue extends CustomInputValue
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected ?string $value;
+    protected ?string $value = null;
 
     public function getValue() : ?string
     {

@@ -51,7 +51,7 @@ class ApplicationsGridControl extends Control
 
     private ApplicationService $applicationService;
 
-    private ?User $user;
+    private ?User $user = null;
 
     private SubeventService $subeventService;
 

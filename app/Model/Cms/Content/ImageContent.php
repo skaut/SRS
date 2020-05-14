@@ -58,28 +58,28 @@ class ImageContent extends Content implements IContent
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected ?string $image;
+    protected ?string $image = null;
 
     /**
      * Zarovnání obrázku v textu.
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected ?string $align;
+    protected ?string $align = null;
 
     /**
      * Šířka obrázku.
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected ?int $width;
+    protected ?int $width = null;
 
     /**
      * Výška obrázku.
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected ?int $height;
+    protected ?int $height = null;
 
     private FilesService $filesService;
 

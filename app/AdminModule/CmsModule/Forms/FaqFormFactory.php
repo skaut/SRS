@@ -33,7 +33,7 @@ class FaqFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user;
+    private ?User $user = null;
 
     private BaseFormFactory $baseFormFactory;
 

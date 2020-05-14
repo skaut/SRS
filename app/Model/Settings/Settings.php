@@ -231,7 +231,7 @@ class Settings
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    protected ?string $value;
+    protected ?string $value = null;
 
     public function __construct(string $item, ?string $value)
     {

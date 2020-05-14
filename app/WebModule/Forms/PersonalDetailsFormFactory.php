@@ -32,7 +32,7 @@ class PersonalDetailsFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user;
+    private ?User $user = null;
 
     /** @var callable[] */
     public array $onSkautIsError;

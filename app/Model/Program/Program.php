@@ -54,7 +54,7 @@ class Program
      *
      * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs", cascade={"persist"})
      */
-    protected ?Room $room;
+    protected ?Room $room = null;
 
     /**
      * Začátek programu.

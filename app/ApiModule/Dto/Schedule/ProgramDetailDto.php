@@ -29,7 +29,7 @@ class ProgramDetailDto
     private int $blockId;
 
     /** @JMS\Type("int") */
-    private ?int $roomId;
+    private ?int $roomId = null;
 
     /** @JMS\Type("int") */
     private int $attendeesCount;

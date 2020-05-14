@@ -54,7 +54,7 @@ class EditUserSeminarFormFactory
     /**
      * Upravovaný uživatel.
      */
-    private ?User $user;
+    private ?User $user = null;
 
     private BaseFormFactory $baseFormFactory;
 

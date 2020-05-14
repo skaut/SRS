@@ -40,7 +40,7 @@ class Faq
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    protected ?string $answer;
+    protected ?string $answer = null;
 
     /**
      * Otázka zveřejněna všem.

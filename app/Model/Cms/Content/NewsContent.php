@@ -27,7 +27,7 @@ class NewsContent extends Content implements IContent
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected ?int $count;
+    protected ?int $count = null;
 
     public function getCount() : ?int
     {
