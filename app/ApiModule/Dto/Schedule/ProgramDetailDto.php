@@ -16,65 +16,38 @@ class ProgramDetailDto
 {
     use Nette\SmartObject;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $id;
+    /** @JMS\Type("int") */
+    private int $id;
 
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $start;
+    /** @JMS\Type("string") */
+    private string $start;
 
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $end;
+    /** @JMS\Type("string") */
+    private string $end;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $blockId;
+    /** @JMS\Type("int") */
+    private int $blockId;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $roomId;
+    /** @JMS\Type("int") */
+    private int $roomId;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $attendeesCount;
+    /** @JMS\Type("int") */
+    private int $attendeesCount;
 
-    /**
-     * @JMS\Type("boolean")
-     * @var bool
-     */
-    private $userAttends;
+    /** @JMS\Type("boolean") */
+    private bool $userAttends;
 
     /**
      * @JMS\Type("array")
      * @var int[]
      */
-    private $blocks;
+    private array $blocks;
 
-    /**
-     * @JMS\Type("boolean")
-     * @var bool
-     */
-    private $blocked;
+    /** @JMS\Type("boolean") */
+    private bool $blocked;
 
-    /**
-     * @JMS\Type("boolean")
-     * @var bool
-     */
-    private $paid;
+    /** @JMS\Type("boolean") */
+    private bool $paid;
 
     public function getId() : int
     {

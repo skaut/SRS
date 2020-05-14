@@ -35,23 +35,17 @@ class SkautIsEventFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var SkautIsCourseRepository */
-    private $skautIsCourseRepository;
+    private SkautIsCourseRepository $skautIsCourseRepository;
 
-    /** @var SkautIsEventGeneralService */
-    private $skautIsEventGeneralService;
+    private SkautIsEventGeneralService $skautIsEventGeneralService;
 
-    /** @var SkautIsEventEducationService */
-    private $skautIsEventEducationService;
+    private SkautIsEventEducationService $skautIsEventEducationService;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
     public function __construct(
         BaseFormFactory $baseForm,

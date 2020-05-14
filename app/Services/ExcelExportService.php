@@ -41,26 +41,19 @@ class ExcelExportService
 {
     use Nette\SmartObject;
 
-    /** @var Spreadsheet */
-    private $spreadsheet;
+    private Spreadsheet $spreadsheet;
 
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var CustomInputRepository */
-    private $customInputRepository;
+    private CustomInputRepository $customInputRepository;
 
-    /** @var UserService */
-    private $userService;
+    private UserService $userService;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var CategoryRepository */
-    private $categoryRepository;
+    private CategoryRepository $categoryRepository;
 
-    /** @var ProgramRepository */
-    private $programRepository;
+    private ProgramRepository $programRepository;
 
     public function __construct(
         ITranslator $translator,

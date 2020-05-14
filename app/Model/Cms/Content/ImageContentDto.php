@@ -13,31 +13,23 @@ class ImageContentDto extends ContentDto
 {
     /**
      * Adresa obrázku.
-     *
-     * @var string
      */
-    protected $image;
+    protected string $image;
 
     /**
      * Zarovnání obrázku v textu.
-     *
-     * @var string
      */
-    protected $align;
+    protected string $align;
 
     /**
      * Šířka obrázku.
-     *
-     * @var int
      */
-    protected $width;
+    protected int $width;
 
     /**
      * Výška obrázku.
-     *
-     * @var int
      */
-    protected $height;
+    protected int $height;
 
     public function __construct(string $type, string $heading, ?string $image, ?string $align, ?int $width, ?int $height)
     {

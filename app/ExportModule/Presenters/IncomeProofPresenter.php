@@ -31,29 +31,17 @@ use function random_bytes;
  */
 class IncomeProofPresenter extends ExportBasePresenter
 {
-    /**
-     * @var ApplicationService
-     * @inject
-     */
-    public $applicationService;
+    /** @inject */
+    public ApplicationService $applicationService;
 
-    /**
-     * @var ApplicationRepository
-     * @inject
-     */
-    public $applicationRepository;
+    /** @inject */
+    public ApplicationRepository $applicationRepository;
 
-    /**
-     * @var UserRepository
-     * @inject
-     */
-    public $userRepository;
+    /** @inject */
+    public UserRepository $userRepository;
 
-    /**
-     * @var SettingsService
-     * @inject
-     */
-    public $settingsService;
+    /** @inject */
+    public SettingsService $settingsService;
 
     public function startup() : void
     {

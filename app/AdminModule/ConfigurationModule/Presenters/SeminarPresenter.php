@@ -18,11 +18,8 @@ use Throwable;
  */
 class SeminarPresenter extends ConfigurationBasePresenter
 {
-    /**
-     * @var SeminarFormFactory
-     * @inject
-     */
-    public $seminarFormFactory;
+    /** @inject */
+    public SeminarFormFactory $seminarFormFactory;
 
     /**
      * @throws SettingsException

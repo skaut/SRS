@@ -20,10 +20,8 @@ class CustomTextValue extends CustomInputValue
      * Hodnota textového pole přihlášky.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $value;
+    protected string $value;
 
     public function getValue() : ?string
     {

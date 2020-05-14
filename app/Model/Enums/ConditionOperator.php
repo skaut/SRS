@@ -17,7 +17,7 @@ class ConditionOperator
     public const OPERATOR_OR = 'or';
 
     /** @var string[] */
-    public static $operators = [
+    public static array $operators = [
         self::OPERATOR_AND,
         self::OPERATOR_OR,
     ];

@@ -16,11 +16,8 @@ use Nette\Application\AbortException;
  */
 class CategoriesPresenter extends ProgramBasePresenter
 {
-    /**
-     * @var IProgramCategoriesGridControlFactory
-     * @inject
-     */
-    public $programCategoriesGridControlFactory;
+    /** @inject */
+    public IProgramCategoriesGridControlFactory $programCategoriesGridControlFactory;
 
     /**
      * @throws AbortException

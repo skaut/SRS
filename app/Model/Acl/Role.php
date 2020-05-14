@@ -72,7 +72,7 @@ class Role
     public const TEST = 'test';
 
     /** @var string[] */
-    public static $roles = [
+    public static array $roles = [
         self::GUEST,
         self::NONREGISTERED,
         self::UNAPPROVED,
@@ -88,19 +88,15 @@ class Role
      * Název role.
      *
      * @ORM\Column(type="string", unique=true)
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Systémový název systémové role.
      *
      * @ORM\Column(type="string", unique=true, nullable=true)
-     *
-     * @var string
      */
-    protected $systemName;
+    protected string $systemName;
 
     /**
      * Uživatelé v roli.
@@ -109,7 +105,7 @@ class Role
      *
      * @var Collection|User[]
      */
-    protected $users;
+    protected Collection $users;
 
     /**
      * Oprávnění role.
@@ -118,7 +114,7 @@ class Role
      *
      * @var Collection|Permission[]
      */
-    protected $permissions;
+    protected Collection $permissions;
 
     /**
      * Stránky, ke kterým má role přístup.
@@ -127,107 +123,85 @@ class Role
      *
      * @var Collection|Page[]
      */
-    protected $pages;
+    protected Collection $pages;
 
     /**
      * Systémová role. Systémovou roli nelze odstranit.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $systemRole = true;
+    protected bool $systemRole = true;
 
     /**
      * Registrovatelná role. Lze vybrat v přihlášce.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $registerable = true;
+    protected bool $registerable = true;
 
     /**
      * Automaticky schválit. Role nevyžaduje schválení registrace organizátory.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $approvedAfterRegistration = false;
+    protected bool $approvedAfterRegistration = false;
 
     /**
      * Registrovatelná od.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $registerableFrom;
+    protected DateTimeImmutable $registerableFrom;
 
     /**
      * Registrovatelná do.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $registerableTo;
+    protected DateTimeImmutable $registerableTo;
 
     /**
      * Kapacita.
      *
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $capacity;
+    protected int $capacity;
 
     /**
      * Obsazenost.
      * Bude se používat pro kontrolu kapacity.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $occupancy = 0;
+    protected int $occupancy = 0;
 
     /**
      * Poplatek.
      *
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $fee = 0;
+    protected int $fee = 0;
 
     /**
      * Minimální věk.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $minimumAge = 0;
+    protected int $minimumAge = 0;
 
     /**
      * Evidovat příjezd a odjezd.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $displayArrivalDeparture = false;
+    protected bool $displayArrivalDeparture = false;
 
     /**
      * Synchronizovat účastníky v roli se skautIS.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $syncedWithSkautIS = true;
+    protected bool $syncedWithSkautIS = true;
 
     /**
      * Role neregistrovatelné současně s touto rolí.
@@ -240,7 +214,7 @@ class Role
      *
      * @var Collection|Role[]
      */
-    protected $incompatibleRoles;
+    protected Collection $incompatibleRoles;
 
     /**
      * Role vyžadující tuto roli.
@@ -249,7 +223,7 @@ class Role
      *
      * @var Collection|Role[]
      */
-    protected $requiredByRole;
+    protected Collection $requiredByRole;
 
     /**
      * Role vyžadované touto rolí.
@@ -262,7 +236,7 @@ class Role
      *
      * @var Collection|Role[]
      */
-    protected $requiredRoles;
+    protected Collection $requiredRoles;
 
     /**
      * Kategorie programů, na které se mohou účastníci v roli přihlásit.
@@ -271,16 +245,14 @@ class Role
      *
      * @var Collection|Category[]
      */
-    protected $registerableCategories;
+    protected Collection $registerableCategories;
 
     /**
      * Adresa, na kterou budou uživatelé v roli přesměrováni po přihlášení.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $redirectAfterLogin;
+    protected string $redirectAfterLogin;
 
     /**
      * Kategorie dokumentů, ke kterým má role přístup.
@@ -289,7 +261,7 @@ class Role
      *
      * @var Collection|Tag[]
      */
-    protected $tags;
+    protected Collection $tags;
 
     public function __construct(string $name)
     {

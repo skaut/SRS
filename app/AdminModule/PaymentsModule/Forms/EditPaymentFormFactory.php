@@ -27,25 +27,18 @@ class EditPaymentFormFactory
 
     /**
      * Upravovaná platba.
-     *
-     * @var Payment
      */
-    private $payment;
+    private Payment $payment;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var PaymentRepository */
-    private $paymentRepository;
+    private PaymentRepository $paymentRepository;
 
-    /** @var ApplicationRepository */
-    private $applicationRepository;
+    private ApplicationRepository $applicationRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var ApplicationService */
-    private $applicationService;
+    private ApplicationService $applicationService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,

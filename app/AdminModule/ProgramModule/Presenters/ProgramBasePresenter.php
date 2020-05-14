@@ -16,8 +16,7 @@ use Nette\Application\AbortException;
  */
 abstract class ProgramBasePresenter extends AdminBasePresenter
 {
-    /** @var string */
-    protected $resource = SrsResource::PROGRAM;
+    protected string $resource = SrsResource::PROGRAM;
 
     /**
      * @throws AbortException

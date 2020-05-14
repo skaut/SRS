@@ -59,50 +59,35 @@ class ApplicationService
 {
     use Nette\SmartObject;
 
-    /** @var EntityManagerDecorator */
-    private $em;
+    private EntityManagerDecorator $em;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var ApplicationRepository */
-    private $applicationRepository;
+    private ApplicationRepository $applicationRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var DiscountService */
-    private $discountService;
+    private DiscountService $discountService;
 
-    /** @var VariableSymbolRepository */
-    private $variableSymbolRepository;
+    private VariableSymbolRepository $variableSymbolRepository;
 
-    /** @var ProgramService */
-    private $programService;
+    private ProgramService $programService;
 
-    /** @var MailService */
-    private $mailService;
+    private MailService $mailService;
 
-    /** @var UserService */
-    private $userService;
+    private UserService $userService;
 
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var PaymentRepository */
-    private $paymentRepository;
+    private PaymentRepository $paymentRepository;
 
-    /** @var IncomeProofRepository */
-    private $incomeProofRepository;
+    private IncomeProofRepository $incomeProofRepository;
 
     public function __construct(
         EntityManagerDecorator $em,

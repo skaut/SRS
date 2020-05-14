@@ -22,7 +22,7 @@ class ProgramMandatoryType
     public const AUTO_REGISTERED = 'auto_registered';
 
     /** @var string[] */
-    public static $types = [
+    public static array $types = [
         self::VOLUNTARY,
         self::MANDATORY,
         self::AUTO_REGISTERED,

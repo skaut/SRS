@@ -18,8 +18,7 @@ class UserService
 {
     use Nette\SmartObject;
 
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
     public function __construct(ITranslator $translator)
     {

@@ -22,7 +22,7 @@ class ProgramRegistrationType
     public const ALLOWED_FROM_TO = 'allowed_from_to';
 
     /** @var string[] */
-    public static $types = [
+    public static array $types = [
         self::ALLOWED,
         self::NOT_ALLOWED,
         self::ALLOWED_FROM_TO,

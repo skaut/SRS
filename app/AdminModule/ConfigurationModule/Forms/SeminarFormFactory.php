@@ -29,14 +29,11 @@ class SeminarFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
     public function __construct(
         BaseFormFactory $baseForm,

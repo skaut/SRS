@@ -22,14 +22,11 @@ use Ublaboo\DataGrid\DataGrid;
  */
 class SkautIsEventEducationGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var SkautIsCourseRepository */
-    private $skautIsCourseRepository;
+    private SkautIsCourseRepository $skautIsCourseRepository;
 
     public function __construct(
         ITranslator $translator,

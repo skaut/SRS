@@ -41,38 +41,27 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class ProgramBlocksGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var BlockRepository */
-    private $blockRepository;
+    private BlockRepository $blockRepository;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var CategoryRepository */
-    private $categoryRepository;
+    private CategoryRepository $categoryRepository;
 
-    /** @var ExcelExportService */
-    private $excelExportService;
+    private ExcelExportService $excelExportService;
 
-    /** @var ProgramService */
-    private $programService;
+    private ProgramService $programService;
 
-    /** @var Validators */
-    private $validators;
+    private Validators $validators;
 
-    /** @var Session */
-    private $session;
+    private Session $session;
 
-    /** @var SessionSection */
-    private $sessionSection;
+    private SessionSection $sessionSection;
 
-    /** @var SubeventService */
-    private $subeventService;
+    private SubeventService $subeventService;
 
     public function __construct(
         ITranslator $translator,

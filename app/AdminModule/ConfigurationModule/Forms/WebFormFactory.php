@@ -29,17 +29,13 @@ class WebFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var PageRepository */
-    private $pageRepository;
+    private PageRepository $pageRepository;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var FilesService */
-    private $filesService;
+    private FilesService $filesService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,

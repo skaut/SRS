@@ -16,8 +16,7 @@ use Nette\Application\UI\Control;
  */
 class NewsContentControl extends Control
 {
-    /** @var NewsRepository */
-    private $newsRepository;
+    private NewsRepository $newsRepository;
 
     public function __construct(NewsRepository $newsRepository)
     {

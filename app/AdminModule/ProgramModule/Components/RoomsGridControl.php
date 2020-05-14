@@ -28,20 +28,15 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class RoomsGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var RoomRepository */
-    private $roomRepository;
+    private RoomRepository $roomRepository;
 
-    /** @var ExcelExportService */
-    private $excelExportService;
+    private ExcelExportService $excelExportService;
 
-    /** @var Session */
-    private $session;
+    private Session $session;
 
-    /** @var SessionSection */
-    private $sessionSection;
+    private SessionSection $sessionSection;
 
     public function __construct(
         ITranslator $translator,

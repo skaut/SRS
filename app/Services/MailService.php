@@ -37,29 +37,21 @@ class MailService
 {
     use Nette\SmartObject;
 
-    /** @var MailFactory */
-    private $mailFactory;
+    private MailFactory $mailFactory;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var MailRepository */
-    private $mailRepository;
+    private MailRepository $mailRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var TemplateRepository */
-    private $templateRepository;
+    private TemplateRepository $templateRepository;
 
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
     public function __construct(
         MailFactory $mailFactory,

@@ -31,22 +31,17 @@ class PersonalDetailsFormFactory
 
     /**
      * Přihlášený uživatel.
-     *
-     * @var User
      */
-    private $user;
+    private User $user;
 
     /** @var callable[] */
-    public $onSkautIsError;
+    public array $onSkautIsError;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var SkautIsService */
-    private $skautIsService;
+    private SkautIsService $skautIsService;
 
     public function __construct(BaseFormFactory $baseFormFactory, UserRepository $userRepository, SkautIsService $skautIsService)
     {

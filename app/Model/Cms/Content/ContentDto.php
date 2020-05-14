@@ -13,17 +13,13 @@ class ContentDto
 {
     /**
      * Název komponenty.
-     *
-     * @var string
      */
-    protected $componentName;
+    protected string $componentName;
 
     /**
      * Nadpis obsahu.
-     *
-     * @var string
      */
-    protected $heading;
+    protected string $heading;
 
     public function __construct(string $componentName, string $heading)
     {

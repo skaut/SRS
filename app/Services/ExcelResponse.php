@@ -19,11 +19,9 @@ class ExcelResponse implements IResponse
 {
     use Nette\SmartObject;
 
-    /** @var Spreadsheet */
-    private $spreadsheet;
+    private Spreadsheet $spreadsheet;
 
-    /** @var string */
-    private $filename;
+    private string $filename;
 
     public function __construct(Spreadsheet $spreadsheet, string $filename)
     {

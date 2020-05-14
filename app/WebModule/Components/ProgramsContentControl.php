@@ -26,17 +26,13 @@ use Throwable;
  */
 class ProgramsContentControl extends Control
 {
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var ProgramService */
-    private $programService;
+    private ProgramService $programService;
 
     public function __construct(
         UserRepository $userRepository,

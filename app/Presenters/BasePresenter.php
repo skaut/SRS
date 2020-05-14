@@ -17,17 +17,11 @@ use WebLoader\Nette\LoaderFactory;
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
-    /**
-     * @var LoaderFactory
-     * @inject
-     */
-    public $webLoader;
+    /** @inject */
+    public LoaderFactory $webLoader;
 
-    /**
-     * @var ITranslator
-     * @inject
-     */
-    public $translator;
+    /** @inject */
+    public ITranslator $translator;
 
     /**
      * Zobrazí přeloženou zprávu.

@@ -18,8 +18,7 @@ use function array_keys;
  */
 class DocumentContentControl extends Control
 {
-    /** @var DocumentRepository */
-    private $documentRepository;
+    private DocumentRepository $documentRepository;
 
     public function __construct(DocumentRepository $documentRepository)
     {

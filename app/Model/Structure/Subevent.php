@@ -32,19 +32,15 @@ class Subevent
      * Název podakce.
      *
      * @ORM\Column(type="string", unique=true)
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Implicitní podakce. Vytvořena automaticky.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $implicit = false;
+    protected bool $implicit = false;
 
     /**
      * Přihlášky.
@@ -53,7 +49,7 @@ class Subevent
      *
      * @var Collection|SubeventsApplication[]
      */
-    protected $applications;
+    protected Collection $applications;
 
     /**
      * Bloky v podakci.
@@ -63,35 +59,29 @@ class Subevent
      *
      * @var Collection|Block[]
      */
-    protected $blocks;
+    protected Collection $blocks;
 
     /**
      * Poplatek.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $fee = 0;
+    protected int $fee = 0;
 
     /**
      * Kapacita.
      *
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $capacity;
+    protected int $capacity;
 
     /**
      * Obsazenost.
      * Bude se používat pro kontrolu kapacity.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $occupancy = 0;
+    protected int $occupancy = 0;
 
     /**
      * Podakce neregistrovatelné současně s touto podakcí.
@@ -104,7 +94,7 @@ class Subevent
      *
      * @var Collection|Subevent[]
      */
-    protected $incompatibleSubevents;
+    protected Collection $incompatibleSubevents;
 
     /**
      * Podakce vyžadující tuto podakci.
@@ -113,7 +103,7 @@ class Subevent
      *
      * @var Collection|Subevent[]
      */
-    protected $requiredBySubevent;
+    protected Collection $requiredBySubevent;
 
     /**
      * Podakce vyžadované touto podakcí.
@@ -126,7 +116,7 @@ class Subevent
      *
      * @var Collection|Subevent[]
      */
-    protected $requiredSubevents;
+    protected Collection $requiredSubevents;
 
     /**
      * Propojené skautIS kurzy.
@@ -135,25 +125,21 @@ class Subevent
      *
      * @var Collection|SkautIsCourse[]
      */
-    protected $skautIsCourses;
+    protected Collection $skautIsCourses;
 
     /**
      * Registrovatelná od.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $registerableFrom;
+    protected DateTimeImmutable $registerableFrom;
 
     /**
      * Registrovatelná do.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $registerableTo;
+    protected DateTimeImmutable $registerableTo;
 
     public function __construct()
     {

@@ -19,23 +19,14 @@ use stdClass;
  */
 class FaqPresenter extends CmsBasePresenter
 {
-    /**
-     * @var IFaqGridControlFactory
-     * @inject
-     */
-    public $faqGridControlFactory;
+    /** @inject */
+    public IFaqGridControlFactory $faqGridControlFactory;
 
-    /**
-     * @var FaqFormFactory
-     * @inject
-     */
-    public $faqFormFactory;
+    /** @inject */
+    public FaqFormFactory $faqFormFactory;
 
-    /**
-     * @var FaqRepository
-     * @inject
-     */
-    public $faqRepository;
+    /** @inject */
+    public FaqRepository $faqRepository;
 
     public function renderEdit(int $id) : void
     {

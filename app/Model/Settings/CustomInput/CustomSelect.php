@@ -18,17 +18,14 @@ use function explode;
  */
 class CustomSelect extends CustomInput
 {
-    /** @var string */
-    protected $type = CustomInput::SELECT;
+    protected string $type = CustomInput::SELECT;
 
     /**
      * Možnosti výběrového pole oddělené čárkou.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $options;
+    protected string $options;
 
     public function getOptions() : string
     {

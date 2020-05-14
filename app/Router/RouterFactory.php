@@ -12,8 +12,7 @@ use Nette\Application\Routers\RouteList;
 
 final class RouterFactory
 {
-    /** @var CmsService */
-    private $cmsService;
+    private CmsService $cmsService;
 
     public function __construct(CmsService $cmsService)
     {

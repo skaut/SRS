@@ -27,8 +27,7 @@ use stdClass;
  */
 class UsersContent extends Content implements IContent
 {
-    /** @var string */
-    protected $type = Content::USERS;
+    protected string $type = Content::USERS;
 
     /**
      * Role, jejichž uživatelé budou vypsáni.
@@ -37,13 +36,11 @@ class UsersContent extends Content implements IContent
      *
      * @var Collection|Role[]
      */
-    protected $roles;
+    protected Collection $roles;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
     /**
      * @throws PageException

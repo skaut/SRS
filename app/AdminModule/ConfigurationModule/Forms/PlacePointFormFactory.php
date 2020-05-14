@@ -23,14 +23,11 @@ class PlacePointFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var ?PlacePoint */
-    private $placePoint;
+    private ?PlacePoint $placePoint = null;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var PlacePointRepository */
-    private $placePointRepository;
+    private PlacePointRepository $placePointRepository;
 
     public function __construct(BaseFormFactory $baseForm, PlacePointRepository $placePointRepository)
     {

@@ -45,244 +45,190 @@ class User
      * Uživatelské jméno skautIS.
      *
      * @ORM\Column(type="string", unique=true, nullable=true, options={"collation":"utf8_bin"})
-     *
-     * @var string
      */
-    protected $username;
+    protected string $username;
 
     /**
      * E-mail.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $email;
+    protected string $email;
 
     /**
      * Schválený.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $approved = true;
+    protected bool $approved = true;
 
     /**
      * Jméno.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $firstName;
+    protected string $firstName;
 
     /**
      * Příjmení.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $lastName;
+    protected string $lastName;
 
     /**
      * Přezdívka.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $nickName;
+    protected string $nickName;
 
     /**
      * Titul před jménem.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $degreePre;
+    protected string $degreePre;
 
     /**
      * Titul za jménem.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $degreePost;
+    protected string $degreePost;
 
     /**
      * Zobrazované jméno - Příjmení Jméno (Přezdívka).
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $displayName;
+    protected string $displayName;
 
     /**
      * Zobrazované jméno lektora, včetně titulů.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $lectorName;
+    protected string $lectorName;
 
     /**
      * Bezpečnostní kód.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $securityCode;
+    protected string $securityCode;
 
     /**
      * Propojený účet.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $member = false;
+    protected bool $member = false;
 
     /**
      * Externí lektor.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $externalLector = false;
+    protected bool $externalLector = false;
 
     /**
      * Jednotka.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $unit;
+    protected string $unit;
 
     /**
      * Pohlaví.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $sex;
+    protected string $sex;
 
     /**
      * Datum narození.
      *
      * @ORM\Column(type="date_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $birthdate;
+    protected DateTimeImmutable $birthdate;
 
     /**
      * Id uživatele ve skautIS.
      *
      * @ORM\Column(type="integer", unique=true, nullable=true, name="skautis_user_id")
-     *
-     * @var int
      */
-    protected $skautISUserId;
+    protected int $skautISUserId;
 
     /**
      * Id osoby ve skautIS.
      *
      * @ORM\Column(type="integer", unique=true, nullable=true, name="skautis_person_id")
-     *
-     * @var int
      */
-    protected $skautISPersonId;
+    protected int $skautISPersonId;
 
     /**
      * Datum posledního přihlášení.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $lastLogin;
+    protected DateTimeImmutable $lastLogin;
 
     /**
      * O mně.
      *
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $about;
+    protected string $about;
 
     /**
      * Ulice.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $street;
+    protected string $street;
 
     /**
      * Město.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $city;
+    protected string $city;
 
     /**
      * Poštovní směrovací číslo.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $postcode;
+    protected string $postcode;
 
     /**
      * Stát.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $state;
+    protected string $state;
 
     /**
      * Zúčastnil se.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $attended = false;
+    protected bool $attended = false;
 
     /**
      * Příjezd.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $arrival;
+    protected DateTimeImmutable $arrival;
 
     /**
      * Odjezd.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $departure;
+    protected DateTimeImmutable $departure;
 
     /**
      * Role.
@@ -291,7 +237,7 @@ class User
      *
      * @var Collection|Role[]
      */
-    protected $roles;
+    protected Collection $roles;
 
     /**
      * Přihlášky.
@@ -300,7 +246,7 @@ class User
      *
      * @var Collection|Application[]
      */
-    protected $applications;
+    protected Collection $applications;
 
     /**
      * Přihlášené programy.
@@ -310,7 +256,7 @@ class User
      *
      * @var Collection|Program[]
      */
-    protected $programs;
+    protected Collection $programs;
 
     /**
      * Lektorované bloky.
@@ -319,52 +265,42 @@ class User
      *
      * @var Collection|Block[]
      */
-    protected $lecturersBlocks;
+    protected Collection $lecturersBlocks;
 
     /**
      * Poplatek uživatele.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $fee = 0;
+    protected int $fee = 0;
 
     /**
      * Zbývající poplatek uživatele.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $feeRemaining = 0;
+    protected int $feeRemaining = 0;
 
     /**
      * Platební metoda.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $paymentMethod;
+    protected string $paymentMethod;
 
     /**
      * Datum poslední platby.
      *
      * @ORM\Column(type="date_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $lastPaymentDate;
+    protected DateTimeImmutable $lastPaymentDate;
 
     /**
      * Datum a čas vytvoření přihlášky rolí.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $rolesApplicationDate;
+    protected DateTimeImmutable $rolesApplicationDate;
 
     /**
      * Programové bloky, které jsou pro uživatele povinné, ale nemá je zapsané.
@@ -373,16 +309,14 @@ class User
      *
      * @var Collection|Block[]
      */
-    protected $notRegisteredMandatoryBlocks;
+    protected Collection $notRegisteredMandatoryBlocks;
 
     /**
      * Počet programových bloků, které jsou pro uživatele povinné, ale nemá je zapsané.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $notRegisteredMandatoryBlocksCount = 0;
+    protected int $notRegisteredMandatoryBlocksCount = 0;
 
     /**
      * Hodnoty vlastních polí přihlášky.
@@ -391,34 +325,28 @@ class User
      *
      * @var Collection|CustomInputValue[]
      */
-    protected $customInputValues;
+    protected Collection $customInputValues;
 
     /**
      * Neveřejná poznámka.
      *
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $note;
+    protected string $note;
 
     /**
      * Fotka.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $photo;
+    protected string $photo;
 
     /**
      * Datum aktualizace fotky.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $photoUpdate;
+    protected DateTimeImmutable $photoUpdate;
 
     public function __construct()
     {

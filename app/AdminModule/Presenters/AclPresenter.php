@@ -26,32 +26,19 @@ use Throwable;
  */
 class AclPresenter extends AdminBasePresenter
 {
-    /** @var string */
-    protected $resource = SrsResource::ACL;
+    protected string $resource = SrsResource::ACL;
 
-    /**
-     * @var AddRoleFormFactory
-     * @inject
-     */
-    public $addRoleFormFactory;
+    /** @inject */
+    public AddRoleFormFactory $addRoleFormFactory;
 
-    /**
-     * @var EditRoleFormFactory
-     * @inject
-     */
-    public $editRoleFormFactory;
+    /** @inject */
+    public EditRoleFormFactory $editRoleFormFactory;
 
-    /**
-     * @var IRolesGridControlFactory
-     * @inject
-     */
-    public $rolesGridControlFactory;
+    /** @inject */
+    public IRolesGridControlFactory $rolesGridControlFactory;
 
-    /**
-     * @var Authenticator
-     * @inject
-     */
-    public $authenticator;
+    /** @inject */
+    public Authenticator $authenticator;
 
     /**
      * @throws AbortException

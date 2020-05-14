@@ -19,23 +19,14 @@ use stdClass;
  */
 class NewsPresenter extends CmsBasePresenter
 {
-    /**
-     * @var INewsGridControlFactory
-     * @inject
-     */
-    public $newsGridControlFactory;
+    /** @inject */
+    public INewsGridControlFactory $newsGridControlFactory;
 
-    /**
-     * @var NewsFormFactory
-     * @inject
-     */
-    public $newsFormFactory;
+    /** @inject */
+    public NewsFormFactory $newsFormFactory;
 
-    /**
-     * @var NewsRepository
-     * @inject
-     */
-    public $newsRepository;
+    /** @inject */
+    public NewsRepository $newsRepository;
 
     public function renderEdit(int $id) : void
     {

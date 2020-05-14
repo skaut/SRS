@@ -20,10 +20,8 @@ class CustomFileValue extends CustomInputValue
      * Název souboru.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $value;
+    protected string $value;
 
     public function getValue() : ?string
     {

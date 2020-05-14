@@ -35,34 +35,24 @@ class RolesFormFactory
 
     /**
      * Přihlášený uživatel.
-     *
-     * @var User
      */
-    private $user;
+    private User $user;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var ApplicationService */
-    private $applicationService;
+    private ApplicationService $applicationService;
 
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var Validators */
-    private $validators;
+    private Validators $validators;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,

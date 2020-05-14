@@ -33,20 +33,15 @@ use function count;
  */
 class PagesGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var CmsService */
-    private $cmsService;
+    private CmsService $cmsService;
 
-    /** @var PageRepository */
-    private $pageRepository;
+    private PageRepository $pageRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
     public function __construct(
         ITranslator $translator,

@@ -40,51 +40,36 @@ class BlockFormFactory
 
     /**
      * Přihlášený uživatel.
-     *
-     * @var User
      */
-    private $user;
+    private User $user;
 
     /**
      * Upravovaný programový blok.
-     *
-     * @var ?Block
      */
-    private $block;
+    private ?Block $block = null;
 
     /**
      * Jsou vytvořené podakce.
-     *
-     * @var bool
      */
-    private $subeventsExists;
+    private bool $subeventsExists;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var BlockRepository */
-    private $blockRepository;
+    private BlockRepository $blockRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var CategoryRepository */
-    private $categoryRepository;
+    private CategoryRepository $categoryRepository;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var ProgramService */
-    private $programService;
+    private ProgramService $programService;
 
-    /** @var SubeventService */
-    private $subeventService;
+    private SubeventService $subeventService;
 
-    /** @var Validators */
-    private $validators;
+    private Validators $validators;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,

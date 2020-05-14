@@ -29,8 +29,7 @@ use const UPLOAD_ERR_OK;
  */
 class ImageContent extends Content implements IContent
 {
-    /** @var string */
-    protected $type = Content::IMAGE;
+    protected string $type = Content::IMAGE;
 
     /**
      * Zarovnání vlevo.
@@ -48,7 +47,7 @@ class ImageContent extends Content implements IContent
     public const CENTER = 'center';
 
     /** @var string[] */
-    public static $aligns = [
+    public static array $aligns = [
         self::LEFT,
         self::RIGHT,
         self::CENTER,
@@ -58,40 +57,31 @@ class ImageContent extends Content implements IContent
      * Adresa obrázku.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $image;
+    protected string $image;
 
     /**
      * Zarovnání obrázku v textu.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $align;
+    protected string $align;
 
     /**
      * Šířka obrázku.
      *
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $width;
+    protected int $width;
 
     /**
      * Výška obrázku.
      *
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $height;
+    protected int $height;
 
-    /** @var FilesService */
-    private $filesService;
+    private FilesService $filesService;
 
     public function injectFilesService(FilesService $filesService) : void
     {

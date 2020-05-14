@@ -20,11 +20,9 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class MailTemplatesGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var TemplateRepository */
-    private $templateRepository;
+    private TemplateRepository $templateRepository;
 
     public function __construct(ITranslator $translator, TemplateRepository $templateRepository)
     {

@@ -23,11 +23,9 @@ class SkautIsService
 {
     use Nette\SmartObject;
 
-    /** @var Skautis */
-    private $skautIs;
+    private Skautis $skautIs;
 
-    /** @var Cache */
-    private $userRolesCache;
+    private Cache $userRolesCache;
 
     public function __construct(Skautis $skautIS, IStorage $storage)
     {

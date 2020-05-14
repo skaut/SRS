@@ -23,28 +23,22 @@ class PlacePoint
      * Název bodu.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Zeměpisná šířka.
      *
      * @ORM\Column(type="float")
-     *
-     * @var float
      */
-    protected $gpsLat;
+    protected float $gpsLat;
 
     /**
      * Zeměpisná délka.
      *
      * @ORM\Column(type="float")
-     *
-     * @var float
      */
-    protected $gpsLon;
+    protected float $gpsLon;
 
     public function getName() : string
     {

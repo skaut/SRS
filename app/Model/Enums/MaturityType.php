@@ -27,7 +27,7 @@ class MaturityType
     public const WORK_DAYS = 'work_days';
 
     /** @var string[] */
-    public static $types = [
+    public static array $types = [
         self::UNLIMITED,
         self::DATE,
         self::DAYS,

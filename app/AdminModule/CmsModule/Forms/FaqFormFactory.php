@@ -27,26 +27,19 @@ class FaqFormFactory
 
     /**
      * Upravovaná otázka.
-     *
-     * @var ?Faq
      */
-    private $faq;
+    private ?Faq $faq = null;
 
     /**
      * Přihlášený uživatel.
-     *
-     * @var User
      */
-    private $user;
+    private User $user;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var FaqRepository */
-    private $faqRepository;
+    private FaqRepository $faqRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
     public function __construct(BaseFormFactory $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
     {

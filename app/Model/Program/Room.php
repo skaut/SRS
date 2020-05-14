@@ -25,19 +25,15 @@ class Room
      * Název místnosti.
      *
      * @ORM\Column(type="string", unique=true)
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Kapacita.
      *
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $capacity;
+    protected int $capacity;
 
     /**
      * Programy v místnosti.
@@ -47,7 +43,7 @@ class Room
      *
      * @var Collection|Program[]
      */
-    protected $programs;
+    protected Collection $programs;
 
     public function __construct()
     {

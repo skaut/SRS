@@ -18,11 +18,8 @@ use Throwable;
  */
 class ProgramPresenter extends ConfigurationBasePresenter
 {
-    /**
-     * @var ProgramFormFactory
-     * @inject
-     */
-    public $programFormFactory;
+    /** @inject */
+    public ProgramFormFactory $programFormFactory;
 
     /**
      * @throws SettingsException

@@ -31,20 +31,15 @@ class Authenticator implements IAuthenticator
 {
     use Nette\SmartObject;
 
-    /** @var Cache */
-    private $userRolesCache;
+    private Cache $userRolesCache;
 
-    /** @var SkautIsService */
-    protected $skautIsService;
+    protected SkautIsService $skautIsService;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var FilesService */
-    private $filesService;
+    private FilesService $filesService;
 
     public function __construct(
         UserRepository $userRepository,

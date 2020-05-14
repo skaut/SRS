@@ -23,29 +23,17 @@ use Throwable;
  */
 class PaymentPresenter extends ConfigurationBasePresenter
 {
-    /**
-     * @var IPaymentFormFactory
-     * @inject
-     */
-    public $paymentFormFactory;
+    /** @inject */
+    public IPaymentFormFactory $paymentFormFactory;
 
-    /**
-     * @var PaymentProofFormFactory
-     * @inject
-     */
-    public $paymentProofFormFactory;
+    /** @inject */
+    public PaymentProofFormFactory $paymentProofFormFactory;
 
-    /**
-     * @var BankFormFactory
-     * @inject
-     */
-    public $bankFormFactory;
+    /** @inject */
+    public BankFormFactory $bankFormFactory;
 
-    /**
-     * @var TicketsFormFactory
-     * @inject
-     */
-    public $ticketsFormFactory;
+    /** @inject */
+    public TicketsFormFactory $ticketsFormFactory;
 
     /**
      * @throws SettingsException

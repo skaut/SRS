@@ -33,7 +33,7 @@ class Mail
      *
      * @var Collection|Role[]
      */
-    protected $recipientRoles;
+    protected Collection $recipientRoles;
 
     /**
      * Podakce, jejichž účastníkům byl e-mail odeslán.
@@ -42,7 +42,7 @@ class Mail
      *
      * @var Collection|Subevent[]
      */
-    protected $recipientSubevents;
+    protected Collection $recipientSubevents;
 
     /**
      * Uživatelé, kterém byl e-mail odeslán.
@@ -51,43 +51,35 @@ class Mail
      *
      * @var Collection|User[]
      */
-    protected $recipientUsers;
+    protected Collection $recipientUsers;
 
     /**
      * Předmět e-mailu.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $subject;
+    protected string $subject;
 
     /**
      * Text e-mailu.
      *
      * @ORM\Column(type="text")
-     *
-     * @var string
      */
-    protected $text;
+    protected string $text;
 
     /**
      * Datum a čas odeslání.
      *
      * @ORM\Column(type="datetime_immutable")
-     *
-     * @var DateTimeImmutable
      */
-    protected $datetime;
+    protected DateTimeImmutable $datetime;
 
     /**
      * Automatický e-mail.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $automatic = false;
+    protected bool $automatic = false;
 
     public function __construct()
     {

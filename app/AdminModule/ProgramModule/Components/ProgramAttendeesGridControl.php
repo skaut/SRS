@@ -31,32 +31,23 @@ class ProgramAttendeesGridControl extends Control
 {
     /**
      * Aktuální program.
-     *
-     * @var Program
      */
-    private $program;
+    private Program $program;
 
     /**
      * Přihlášený uživatel.
-     *
-     * @var User
      */
-    private $user;
+    private User $user;
 
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var ProgramRepository */
-    private $programRepository;
+    private ProgramRepository $programRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var ProgramService */
-    private $programService;
+    private ProgramService $programService;
 
-    /** @var SessionSection */
-    private $sessionSection;
+    private SessionSection $sessionSection;
 
     public function __construct(
         ITranslator $translator,

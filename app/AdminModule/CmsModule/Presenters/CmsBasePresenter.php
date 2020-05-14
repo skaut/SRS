@@ -16,8 +16,7 @@ use Nette\Application\AbortException;
  */
 abstract class CmsBasePresenter extends AdminBasePresenter
 {
-    /** @var string */
-    protected $resource = SrsResource::CMS;
+    protected string $resource = SrsResource::CMS;
 
     /**
      * @throws AbortException

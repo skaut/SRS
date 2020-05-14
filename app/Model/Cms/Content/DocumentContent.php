@@ -27,8 +27,7 @@ use stdClass;
  */
 class DocumentContent extends Content implements IContent
 {
-    /** @var string */
-    protected $type = Content::DOCUMENT;
+    protected string $type = Content::DOCUMENT;
 
     /**
      * Tagy dokumentů, které se zobrazí.
@@ -37,10 +36,9 @@ class DocumentContent extends Content implements IContent
      *
      * @var Collection|Tag[]
      */
-    protected $tags;
+    protected Collection $tags;
 
-    /** @var TagRepository */
-    private $tagRepository;
+    private TagRepository $tagRepository;
 
     /**
      * @throws PageException

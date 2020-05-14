@@ -17,8 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SubeventsApplication extends Application
 {
-    /** @var string */
-    protected $type = Application::SUBEVENTS;
+    protected string $type = Application::SUBEVENTS;
 
     /**
      * @param Collection|Subevent[] $subevents

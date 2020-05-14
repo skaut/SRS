@@ -16,6 +16,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BlocksContent extends Content implements IContent
 {
-    /** @var string */
-    protected $type = Content::BLOCKS;
+    protected string $type = Content::BLOCKS;
 }

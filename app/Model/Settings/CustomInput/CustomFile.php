@@ -21,6 +21,5 @@ class CustomFile extends CustomInput
      */
     public const PATH = '/custom_input';
 
-    /** @var string */
-    protected $type = CustomInput::FILE;
+    protected string $type = CustomInput::FILE;
 }

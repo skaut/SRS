@@ -17,8 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RolesApplication extends Application
 {
-    /** @var string */
-    protected $type = Application::ROLES;
+    protected string $type = Application::ROLES;
 
     /**
      * @param Collection|Role[] $roles

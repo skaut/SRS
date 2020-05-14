@@ -16,6 +16,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CustomCheckbox extends CustomInput
 {
-    /** @var string */
-    protected $type = CustomInput::CHECKBOX;
+    protected string $type = CustomInput::CHECKBOX;
 }

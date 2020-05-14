@@ -19,23 +19,14 @@ use App\Model\Cms\PageRepository;
  */
 class PagesPresenter extends CmsBasePresenter
 {
-    /**
-     * @var IPagesGridControlFactory
-     * @inject
-     */
-    public $pagesGridControlFactory;
+    /** @inject */
+    public IPagesGridControlFactory $pagesGridControlFactory;
 
-    /**
-     * @var IPageFormFactory
-     * @inject
-     */
-    public $pageFormFactory;
+    /** @inject */
+    public IPageFormFactory $pageFormFactory;
 
-    /**
-     * @var PageRepository
-     * @inject
-     */
-    public $pagesRepository;
+    /** @inject */
+    public PageRepository $pagesRepository;
 
     public function renderContent(int $id, string $area) : void
     {

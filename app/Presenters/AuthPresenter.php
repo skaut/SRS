@@ -27,29 +27,17 @@ use function strpos;
  */
 class AuthPresenter extends BasePresenter
 {
-    /**
-     * @var SkautIsService
-     * @inject
-     */
-    public $skautIsService;
+    /** @inject */
+    public SkautIsService $skautIsService;
 
-    /**
-     * @var SettingsService
-     * @inject
-     */
-    public $settingsService;
+    /** @inject */
+    public SettingsService $settingsService;
 
-    /**
-     * @var UserRepository
-     * @inject
-     */
-    public $userRepository;
+    /** @inject */
+    public UserRepository $userRepository;
 
-    /**
-     * @var MailService
-     * @inject
-     */
-    public $mailService;
+    /** @inject */
+    public MailService $mailService;
 
     /**
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.

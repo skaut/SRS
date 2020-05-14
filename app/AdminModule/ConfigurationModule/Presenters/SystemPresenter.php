@@ -19,17 +19,11 @@ use Symfony\Component\Console\Output\BufferedOutput;
  */
 class SystemPresenter extends ConfigurationBasePresenter
 {
-    /**
-     * @var ClearCacheCommand
-     * @inject
-     */
-    public $clearCacheCommand;
+    /** @inject */
+    public ClearCacheCommand $clearCacheCommand;
 
-    /**
-     * @var Application
-     * @inject
-     */
-    public $consoleApplication;
+    /** @inject */
+    public Application $consoleApplication;
 
     /**
      * Promaže cache.

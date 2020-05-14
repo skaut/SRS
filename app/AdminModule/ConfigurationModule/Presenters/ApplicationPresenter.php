@@ -21,29 +21,17 @@ use Throwable;
  */
 class ApplicationPresenter extends ConfigurationBasePresenter
 {
-    /**
-     * @var CustomInputRepository
-     * @inject
-     */
-    public $customInputRepository;
+    /** @inject */
+    public CustomInputRepository $customInputRepository;
 
-    /**
-     * @var ICustomInputsGridControlFactory
-     * @inject
-     */
-    public $customInputsGridControlFactory;
+    /** @inject */
+    public ICustomInputsGridControlFactory $customInputsGridControlFactory;
 
-    /**
-     * @var ApplicationFormFactory
-     * @inject
-     */
-    public $applicationFormFactory;
+    /** @inject */
+    public ApplicationFormFactory $applicationFormFactory;
 
-    /**
-     * @var CustomInputFormFactory
-     * @inject
-     */
-    public $customInputFormFactory;
+    /** @inject */
+    public CustomInputFormFactory $customInputFormFactory;
 
     public function renderEdit(int $id) : void
     {

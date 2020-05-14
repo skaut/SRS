@@ -26,16 +26,12 @@ class NewsFormFactory
 
     /**
      * Upravovaná aktualita.
-     *
-     * @var ?News
      */
-    private $news;
+    private ?News $news = null;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var NewsRepository */
-    private $newsRepository;
+    private NewsRepository $newsRepository;
 
     public function __construct(BaseFormFactory $baseFormFactory, NewsRepository $newsRepository)
     {

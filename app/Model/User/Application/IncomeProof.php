@@ -25,10 +25,8 @@ class IncomeProof
      * Datum vystavení příjmového dokladu.
      *
      * @ORM\Column(type="date_immutable")
-     *
-     * @var DateTimeImmutable
      */
-    protected $date;
+    protected DateTimeImmutable $date;
 
     public function __construct()
     {

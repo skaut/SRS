@@ -10,45 +10,39 @@ class PageDto
 {
     /**
      * Název stránky.
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Cesta stránky.
-     *
-     * @var string
      */
-    protected $slug;
+    protected string $slug;
 
     /**
      * Role, které mají na stránku přístup.
      *
      * @var string[]
      */
-    protected $allowedRoles;
+    protected array $allowedRoles;
 
     /**
      * Obsahy v hlavní části stránky.
      *
      * @var ContentDto[]
      */
-    protected $mainContents;
+    protected array $mainContents;
 
     /**
      * Obsahy v postranní části stránky.
      *
      * @var ContentDto[]
      */
-    protected $sidebarContents;
+    protected array $sidebarContents;
 
     /**
      * Má stránka sidebar?
-     *
-     * @var bool
      */
-    protected $hasSidebar;
+    protected bool $hasSidebar;
 
     /**
      * @param string[]     $allowedRoles

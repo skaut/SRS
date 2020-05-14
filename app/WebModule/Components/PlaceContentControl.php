@@ -19,11 +19,9 @@ use Throwable;
  */
 class PlaceContentControl extends Control
 {
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var PlacePointRepository */
-    private $placePointRepository;
+    private PlacePointRepository $placePointRepository;
 
     public function __construct(SettingsService $settingsService, PlacePointRepository $placePointRepository)
     {

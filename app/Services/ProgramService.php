@@ -42,26 +42,19 @@ class ProgramService
 {
     use Nette\SmartObject;
 
-    /** @var EntityManagerDecorator */
-    private $em;
+    private EntityManagerDecorator $em;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var ProgramRepository */
-    private $programRepository;
+    private ProgramRepository $programRepository;
 
-    /** @var BlockRepository */
-    private $blockRepository;
+    private BlockRepository $blockRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var CategoryRepository */
-    private $categoryRepository;
+    private CategoryRepository $categoryRepository;
 
-    /** @var MailService */
-    private $mailService;
+    private MailService $mailService;
 
     public function __construct(
         EntityManagerDecorator $em,

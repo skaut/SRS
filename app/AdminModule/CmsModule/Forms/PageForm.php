@@ -37,59 +37,46 @@ class PageForm extends UI\Control
 {
     /**
      * Id upravované stránky.
-     *
-     * @var int
      */
-    public $id;
+    public int $id;
 
     /**
      * Upravovaná stránka.
-     *
-     * @var Page
      */
-    private $page;
+    private Page $page;
 
     /**
      * Upravovaná oblast.
-     *
-     * @var string
      */
-    public $area;
+    public string $area;
 
     /**
      * Událost při uložení formuláře.
      *
      * @var callable[]
      */
-    public $onPageSave;
+    public array $onPageSave;
 
     /**
      * Událost při chybě ukládání stránky.
      *
      * @var callable[]
      */
-    public $onPageSaveError;
+    public array $onPageSaveError;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var PageRepository */
-    private $pageRepository;
+    private PageRepository $pageRepository;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
-    /** @var CmsService */
-    private $cmsService;
+    private CmsService $cmsService;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var TagRepository */
-    private $tagRepository;
+    private TagRepository $tagRepository;
 
-    /** @var FilesService */
-    private $filesService;
+    private FilesService $filesService;
 
     public function __construct(
         int $id,

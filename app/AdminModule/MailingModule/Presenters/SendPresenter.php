@@ -16,11 +16,8 @@ use stdClass;
  */
 class SendPresenter extends MailingBasePresenter
 {
-    /**
-     * @var SendFormFactory
-     * @inject
-     */
-    public $sendFormFactory;
+    /** @inject */
+    public SendFormFactory $sendFormFactory;
 
     protected function createComponentSendForm() : Form
     {

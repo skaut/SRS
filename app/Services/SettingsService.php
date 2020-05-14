@@ -25,11 +25,9 @@ class SettingsService
 {
     use Nette\SmartObject;
 
-    /** @var SettingsRepository */
-    private $settingsRepository;
+    private SettingsRepository $settingsRepository;
 
-    /** @var Cache */
-    private $settingsCache;
+    private Cache $settingsCache;
 
     public function __construct(SettingsRepository $settingsRepository, IStorage $storage)
     {

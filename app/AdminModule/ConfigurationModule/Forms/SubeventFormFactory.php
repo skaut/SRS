@@ -33,22 +33,16 @@ class SubeventFormFactory
 
     /**
      * Upravovaná podakce.
-     *
-     * @var ?Subevent
      */
-    private $subevent;
+    private ?Subevent $subevent = null;
 
-    /** @var EntityManagerDecorator */
-    private $em;
+    private EntityManagerDecorator $em;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var SubeventService */
-    private $subeventService;
+    private SubeventService $subeventService;
 
     public function __construct(
         EntityManagerDecorator $em,

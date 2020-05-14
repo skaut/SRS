@@ -20,17 +20,11 @@ use Throwable;
  */
 class MailingPresenter extends ConfigurationBasePresenter
 {
-    /**
-     * @var MailingFormFactory
-     * @inject
-     */
-    public $mailingFormFactory;
+    /** @inject */
+    public MailingFormFactory $mailingFormFactory;
 
-    /**
-     * @var SettingsService
-     * @inject
-     */
-    public $settingsService;
+    /** @inject */
+    public SettingsService $settingsService;
 
     /**
      * @throws SettingsException

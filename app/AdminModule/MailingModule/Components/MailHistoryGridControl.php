@@ -22,17 +22,13 @@ use Ublaboo\DataGrid\DataGrid;
  */
 class MailHistoryGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var MailRepository */
-    private $mailRepository;
+    private MailRepository $mailRepository;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
-    /** @var SubeventService */
-    private $subeventService;
+    private SubeventService $subeventService;
 
     public function __construct(
         ITranslator $translator,

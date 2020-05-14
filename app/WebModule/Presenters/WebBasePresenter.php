@@ -32,56 +32,31 @@ use WebLoader\Nette\JavaScriptLoader;
  */
 abstract class WebBasePresenter extends BasePresenter
 {
-    /**
-     * @var Authorizator
-     * @inject
-     */
-    public $authorizator;
+    /** @inject */
+    public Authorizator $authorizator;
 
-    /**
-     * @var Authenticator
-     * @inject
-     */
-    public $authenticator;
+    /** @inject */
+    public Authenticator $authenticator;
 
-    /**
-     * @var RoleRepository
-     * @inject
-     */
-    public $roleRepository;
+    /** @inject */
+    public RoleRepository $roleRepository;
 
-    /**
-     * @var CmsService
-     * @inject
-     */
-    public $cmsService;
+    /** @inject */
+    public CmsService $cmsService;
 
-    /**
-     * @var SettingsService
-     * @inject
-     */
-    public $settingsService;
+    /** @inject */
+    public SettingsService $settingsService;
 
-    /**
-     * @var UserRepository
-     * @inject
-     */
-    public $userRepository;
+    /** @inject */
+    public UserRepository $userRepository;
 
-    /**
-     * @var SkautIsService
-     * @inject
-     */
-    public $skautIsService;
+    /** @inject */
+    public SkautIsService $skautIsService;
 
-    /**
-     * @var DatabaseService
-     * @inject
-     */
-    public $databaseService;
+    /** @inject */
+    public DatabaseService $databaseService;
 
-    /** @var User */
-    protected $dbuser;
+    protected User $dbuser;
 
     /**
      * Načte css podle konfigurace v common.neon.

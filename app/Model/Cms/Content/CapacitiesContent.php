@@ -27,8 +27,7 @@ use stdClass;
  */
 class CapacitiesContent extends Content implements IContent
 {
-    /** @var string */
-    protected $type = Content::CAPACITIES;
+    protected string $type = Content::CAPACITIES;
 
     /**
      * Role, jejichž obsazenosti se vypíší.
@@ -37,13 +36,11 @@ class CapacitiesContent extends Content implements IContent
      *
      * @var Collection|Role[]
      */
-    protected $roles;
+    protected Collection $roles;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
     /**
      * @throws PageException

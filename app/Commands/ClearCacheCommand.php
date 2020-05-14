@@ -26,8 +26,7 @@ use function unlink;
  */
 class ClearCacheCommand extends Command
 {
-    /** @var string */
-    private $dir;
+    private string $dir;
 
     public function __construct(string $dir)
     {

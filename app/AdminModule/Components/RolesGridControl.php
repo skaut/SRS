@@ -25,14 +25,11 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class RolesGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
     public function __construct(ITranslator $translator, AclService $aclService, RoleRepository $roleRepository)
     {

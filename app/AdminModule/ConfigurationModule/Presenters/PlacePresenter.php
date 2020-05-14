@@ -21,29 +21,17 @@ use Throwable;
  */
 class PlacePresenter extends ConfigurationBasePresenter
 {
-    /**
-     * @var PlacePointRepository
-     * @inject
-     */
-    public $placePointRepository;
+    /** @inject */
+    public PlacePointRepository $placePointRepository;
 
-    /**
-     * @var PlaceDescriptionFormFactory
-     * @inject
-     */
-    public $placeDescriptionFormFactory;
+    /** @inject */
+    public PlaceDescriptionFormFactory $placeDescriptionFormFactory;
 
-    /**
-     * @var PlacePointFormFactory
-     * @inject
-     */
-    public $placePointFormFactory;
+    /** @inject */
+    public PlacePointFormFactory $placePointFormFactory;
 
-    /**
-     * @var IPlacePointsGridControlFactory
-     * @inject
-     */
-    public $placePointsGridControlFactory;
+    /** @inject */
+    public IPlacePointsGridControlFactory $placePointsGridControlFactory;
 
     public function renderEdit(int $id) : void
     {

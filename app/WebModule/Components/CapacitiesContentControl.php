@@ -15,8 +15,7 @@ use Nette\Application\UI\Control;
  */
 class CapacitiesContentControl extends Control
 {
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
     public function __construct(RoleRepository $roleRepository)
     {

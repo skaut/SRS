@@ -26,22 +26,16 @@ class RoomScheduleGridControl extends Control
 {
     /**
      * Aktulní místnost
-     *
-     * @var Room
      */
-    private $room;
+    private Room $room;
 
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var RoomRepository */
-    private $roomRepository;
+    private RoomRepository $roomRepository;
 
-    /** @var ProgramRepository */
-    private $programRepository;
+    private ProgramRepository $programRepository;
 
-    /** @var ExcelExportService */
-    private $excelExportService;
+    private ExcelExportService $excelExportService;
 
     public function __construct(
         ITranslator $translator,

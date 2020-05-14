@@ -25,46 +25,36 @@ class Faq
      * Otázka.
      *
      * @ORM\Column(type="text")
-     *
-     * @var string
      */
-    protected $question;
+    protected string $question;
 
     /**
      * Autor otázky.
      *
      * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
-     *
-     * @var User
      */
-    protected $author;
+    protected User $author;
 
     /**
      * Odpověď.
      *
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $answer;
+    protected string $answer;
 
     /**
      * Otázka zveřejněna všem.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $public = false;
+    protected bool $public = false;
 
     /**
      * Pozice otázky.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $position = 0;
+    protected int $position = 0;
 
     public function getId() : int
     {

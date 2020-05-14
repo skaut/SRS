@@ -21,11 +21,9 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class NewsGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var NewsRepository */
-    private $newsRepository;
+    private NewsRepository $newsRepository;
 
     public function __construct(ITranslator $translator, NewsRepository $newsRepository)
     {

@@ -20,17 +20,14 @@ use stdClass;
  */
 class NewsContent extends Content implements IContent
 {
-    /** @var string */
-    protected $type = Content::NEWS;
+    protected string $type = Content::NEWS;
 
     /**
      * Počet posledních novinek k zobrazení.
      *
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $count;
+    protected int $count;
 
     public function getCount() : ?int
     {

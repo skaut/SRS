@@ -17,29 +17,17 @@ class ProgramSaveDto
 {
     use Nette\SmartObject;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $id;
+    /** @JMS\Type("int") */
+    private int $id;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $blockId;
+    /** @JMS\Type("int") */
+    private int $blockId;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $roomId;
+    /** @JMS\Type("int") */
+    private int $roomId;
 
-    /**
-     * @JMS\Type("DateTimeImmutable<'Y-m-d\TH:i:s.v\Z'>")
-     * @var DateTimeImmutable
-     */
-    private $start;
+    /** @JMS\Type("DateTimeImmutable<'Y-m-d\TH:i:s.v\Z'>") */
+    private DateTimeImmutable $start;
 
     public function getId() : ?int
     {

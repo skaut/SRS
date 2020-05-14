@@ -30,26 +30,19 @@ class AclService
 {
     use Nette\SmartObject;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var PermissionRepository */
-    private $permissionRepository;
+    private PermissionRepository $permissionRepository;
 
-    /** @var SrsResourceRepository */
-    private $resourceRepository;
+    private SrsResourceRepository $resourceRepository;
 
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var Cache */
-    private $roleNamesCache;
+    private Cache $roleNamesCache;
 
-    /** @var Cache */
-    private $permissionNamesCache;
+    private Cache $permissionNamesCache;
 
-    /** @var Cache */
-    private $resourceNamesCache;
+    private Cache $resourceNamesCache;
 
     public function __construct(
         RoleRepository $roleRepository,

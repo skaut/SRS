@@ -22,7 +22,7 @@ class PaymentType
     public const MIXED = 'mixed';
 
     /** @var string[] */
-    public static $types = [
+    public static array $types = [
         self::CASH,
         self::BANK,
     ];

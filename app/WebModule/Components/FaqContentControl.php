@@ -21,14 +21,11 @@ use stdClass;
  */
 class FaqContentControl extends Control
 {
-    /** @var FaqFormFactory */
-    private $faqFormFactory;
+    private FaqFormFactory $faqFormFactory;
 
-    /** @var FaqRepository */
-    private $faqRepository;
+    private FaqRepository $faqRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
     public function __construct(FaqFormFactory $faqFormFactory, FaqRepository $faqRepository, RoleRepository $roleRepository)
     {

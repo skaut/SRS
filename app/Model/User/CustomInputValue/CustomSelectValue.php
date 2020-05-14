@@ -22,10 +22,8 @@ class CustomSelectValue extends CustomInputValue
      * Vybraná položka výběrového pole přihlášky.
      *
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $value;
+    protected int $value;
 
     public function getValue() : ?int
     {

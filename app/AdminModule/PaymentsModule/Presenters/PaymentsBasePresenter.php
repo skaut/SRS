@@ -16,8 +16,7 @@ use Nette\Application\AbortException;
  */
 abstract class PaymentsBasePresenter extends AdminBasePresenter
 {
-    /** @var string */
-    protected $resource = SrsResource::PAYMENTS;
+    protected string $resource = SrsResource::PAYMENTS;
 
     /**
      * @throws AbortException

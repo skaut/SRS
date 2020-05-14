@@ -23,10 +23,8 @@ class VariableSymbol
      * Variabilní symbol.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $variableSymbol;
+    protected string $variableSymbol;
 
     public function getId() : int
     {

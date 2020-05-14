@@ -16,89 +16,53 @@ class BlockDetailDto
 {
     use Nette\SmartObject;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $id;
+    /** @JMS\Type("int") */
+    private int $id;
 
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $name;
+    /** @JMS\Type("string") */
+    private string $name;
 
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $category;
+    /** @JMS\Type("string") */
+    private string $category;
 
     /**
      * @JMS\Type("array<App\ApiModule\Dto\Schedule\LectorDetailDto>")
      * @var LectorDetailDto[]
      */
-    private $lectors;
+    private array $lectors;
 
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $lectorsNames;
+    /** @JMS\Type("string") */
+    private string $lectorsNames;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $duration;
+    /** @JMS\Type("int") */
+    private int $duration;
 
     /**
      * @JMS\Type("int")
      * @var ?int
      */
-    private $capacity;
+    private ?int $capacity = null;
 
-    /**
-     * @JMS\Type("boolean")
-     * @var bool
-     */
-    private $mandatory;
+    /** @JMS\Type("boolean") */
+    private bool $mandatory;
 
-    /**
-     * @JMS\Type("boolean")
-     * @var bool
-     */
-    private $autoRegistered;
+    /** @JMS\Type("boolean") */
+    private bool $autoRegistered;
 
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $perex;
+    /** @JMS\Type("string") */
+    private string $perex;
 
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $description;
+    /** @JMS\Type("string") */
+    private string $description;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $programsCount;
+    /** @JMS\Type("int") */
+    private int $programsCount;
 
-    /**
-     * @JMS\Type("boolean")
-     * @var bool
-     */
-    private $userAllowed;
+    /** @JMS\Type("boolean") */
+    private bool $userAllowed;
 
-    /**
-     * @JMS\Type("boolean")
-     * @var bool
-     */
-    private $userAttends;
+    /** @JMS\Type("boolean") */
+    private bool $userAttends;
 
     public function getId() : int
     {

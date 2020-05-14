@@ -33,56 +33,31 @@ use Throwable;
  */
 class UsersPresenter extends AdminBasePresenter
 {
-    /** @var string */
-    protected $resource = SrsResource::USERS;
+    protected string $resource = SrsResource::USERS;
 
-    /**
-     * @var IUsersGridControlFactory
-     * @inject
-     */
-    public $usersGridControlFactory;
+    /** @inject */
+    public IUsersGridControlFactory $usersGridControlFactory;
 
-    /**
-     * @var AddLectorFormFactory
-     * @inject
-     */
-    public $addLectorFormFactory;
+    /** @inject */
+    public AddLectorFormFactory $addLectorFormFactory;
 
-    /**
-     * @var EditUserPersonalDetailsFormFactory
-     * @inject
-     */
-    public $editUserPersonalDetailsFormFactory;
+    /** @inject */
+    public EditUserPersonalDetailsFormFactory $editUserPersonalDetailsFormFactory;
 
-    /**
-     * @var EditUserSeminarFormFactory
-     * @inject
-     */
-    public $editUserSeminarFormFactory;
+    /** @inject */
+    public EditUserSeminarFormFactory $editUserSeminarFormFactory;
 
-    /**
-     * @var IApplicationsGridControlFactory
-     * @inject
-     */
-    public $applicationsGridControlFactory;
+    /** @inject */
+    public IApplicationsGridControlFactory $applicationsGridControlFactory;
 
-    /**
-     * @var ExcelExportService
-     * @inject
-     */
-    public $excelExportService;
+    /** @inject */
+    public ExcelExportService $excelExportService;
 
-    /**
-     * @var CustomInputRepository
-     * @inject
-     */
-    public $customInputRepository;
+    /** @inject */
+    public CustomInputRepository $customInputRepository;
 
-    /**
-     * @var ApplicationService
-     * @inject
-     */
-    public $applicationService;
+    /** @inject */
+    public ApplicationService $applicationService;
 
     /**
      * @throws AbortException
