@@ -25,9 +25,7 @@ class LectorDetailDto
     /** @JMS\Type("string") */
     private ?string $about;
 
-    /**
-     * @JMS\Type("string")
-     */
+    /** @JMS\Type("string") */
     private ?string $photo = null;
 
     public function getId() : int
