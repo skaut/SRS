@@ -9112,12 +9112,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "5a342e2dc0408d026b97ee3176b5b406e54e3766"
+                "reference": "9b0501ceb2d00bea5814316c5333d513d7622ed5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5a342e2dc0408d026b97ee3176b5b406e54e3766",
-                "reference": "5a342e2dc0408d026b97ee3176b5b406e54e3766",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/9b0501ceb2d00bea5814316c5333d513d7622ed5",
+                "reference": "9b0501ceb2d00bea5814316c5333d513d7622ed5",
                 "shasum": ""
             },
             "conflict": {
@@ -9373,7 +9373,17 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2020-05-12T11:18:47+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/Ocramius",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/roave/security-advisories",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-14T00:01:29+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
