@@ -194,7 +194,6 @@ class PaymentsGridControl extends Control
     /**
      * Vygeneruje potvrzení o přijetí platby.
      *
-     * @throws SettingsException
      * @throws Throwable
      */
     public function handleGeneratePaymentProofBank(int $id) : void

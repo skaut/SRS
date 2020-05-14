@@ -25,7 +25,7 @@ class EditTemplateFormFactory
     /**
      * Upravovaná šablona.
      */
-    private Template $template;
+    private ?Template $template;
 
     private BaseFormFactory $baseFormFactory;
 

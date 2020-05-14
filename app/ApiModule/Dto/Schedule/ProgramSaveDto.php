@@ -24,7 +24,7 @@ class ProgramSaveDto
     private int $blockId;
 
     /** @JMS\Type("int") */
-    private int $roomId;
+    private ?int $roomId;
 
     /** @JMS\Type("DateTimeImmutable<'Y-m-d\TH:i:s.v\Z'>") */
     private DateTimeImmutable $start;

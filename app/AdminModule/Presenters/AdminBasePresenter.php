@@ -50,7 +50,7 @@ abstract class AdminBasePresenter extends BasePresenter
     /**
      * Přihlášený uživatel.
      */
-    public User $dbuser;
+    public ?User $dbuser;
 
     /**
      * Načte css podle konfigurace v common.neon.

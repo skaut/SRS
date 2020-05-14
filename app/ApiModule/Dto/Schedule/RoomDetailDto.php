@@ -22,10 +22,7 @@ class RoomDetailDto
     /** @JMS\Type("string") */
     private string $name;
 
-    /**
-     * @JMS\Type("integer")
-     * @var ?int
-     */
+    /** @JMS\Type("integer") */
     private ?int $capacity = null;
 
     public function getId() : int

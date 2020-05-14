@@ -39,7 +39,7 @@ class EditRoleFormFactory
     /**
      * Upravovaná role.
      */
-    private Role $role;
+    private ?Role $role;
 
     private BaseFormFactory $baseFormFactory;
 

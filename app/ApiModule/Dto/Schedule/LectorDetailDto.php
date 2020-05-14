@@ -23,11 +23,10 @@ class LectorDetailDto
     private string $name;
 
     /** @JMS\Type("string") */
-    private string $about;
+    private ?string $about;
 
     /**
      * @JMS\Type("string")
-     * @var ?string
      */
     private ?string $photo = null;
 

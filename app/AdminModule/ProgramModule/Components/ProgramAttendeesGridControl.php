@@ -34,11 +34,6 @@ class ProgramAttendeesGridControl extends Control
      */
     private Program $program;
 
-    /**
-     * Přihlášený uživatel.
-     */
-    private User $user;
-
     private ITranslator $translator;
 
     private ProgramRepository $programRepository;
@@ -93,7 +88,7 @@ class ProgramAttendeesGridControl extends Control
             $grid->setDataSource([]);
         } else {
             $this->program = $program;
-            $this->user    = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+            $user          = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
 
             $grid->setTranslator($this->translator);
 
@@ -155,13 +150,13 @@ class ProgramAttendeesGridControl extends Control
 
             $grid->setDefaultFilter(['attends' => 'yes'], false);
 
-            if ($this->user->isAllowed(SrsResource::USERS, Permission::MANAGE)) {
+            if ($user->isAllowed(SrsResource::USERS, Permission::MANAGE)) {
                 $grid->addAction('detail', 'admin.common.detail', ':Admin:Users:detail')
                     ->setClass('btn btn-xs btn-primary')
                     ->addAttributes(['target' => '_blank']);
             }
 
-            if ($this->user->isAllowedModifyBlock($this->program->getBlock())) {
+            if ($user->isAllowedModifyBlock($this->program->getBlock())) {
                 $grid->addAction('register', 'admin.program.blocks_attendees_register', 'register!')
                     ->setClass('btn btn-xs btn-success ajax');
                 $grid->allowRowsAction('register', function ($item) {

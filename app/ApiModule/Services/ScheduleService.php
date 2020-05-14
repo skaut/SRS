@@ -46,7 +46,7 @@ class ScheduleService
 {
     use Nette\SmartObject;
 
-    private User $user;
+    private ?User $user;
 
     private ITranslator $translator;
 

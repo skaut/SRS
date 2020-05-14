@@ -24,7 +24,7 @@ class VariableSymbol
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected string $variableSymbol;
+    protected ?string $variableSymbol;
 
     public function getId() : int
     {

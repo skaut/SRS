@@ -56,7 +56,7 @@ abstract class WebBasePresenter extends BasePresenter
     /** @inject */
     public DatabaseService $databaseService;
 
-    protected User $dbuser;
+    protected ?User $dbuser;
 
     /**
      * Načte css podle konfigurace v common.neon.

@@ -157,7 +157,7 @@ abstract class Content implements IContent
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected string $heading;
+    protected ?string $heading;
 
     /**
      * Stránka, na které je obsah umístěn.

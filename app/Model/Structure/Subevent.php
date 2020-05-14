@@ -73,7 +73,7 @@ class Subevent
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected int $capacity;
+    protected ?int $capacity;
 
     /**
      * Obsazenost.
@@ -132,14 +132,14 @@ class Subevent
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    protected DateTimeImmutable $registerableFrom;
+    protected ?DateTimeImmutable $registerableFrom;
 
     /**
      * Registrovatelná do.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    protected DateTimeImmutable $registerableTo;
+    protected ?DateTimeImmutable $registerableTo;
 
     public function __construct()
     {

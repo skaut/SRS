@@ -55,7 +55,7 @@ class Document
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected string $description;
+    protected ?string $description;
 
     /**
      * Datum změny souboru.

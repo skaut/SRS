@@ -28,7 +28,7 @@ class EditPaymentFormFactory
     /**
      * Upravovaná platba.
      */
-    private Payment $payment;
+    private ?Payment $payment;
 
     private BaseFormFactory $baseFormFactory;
 

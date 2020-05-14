@@ -51,7 +51,7 @@ class ApplicationsGridControl extends Control
 
     private ApplicationService $applicationService;
 
-    private User $user;
+    private ?User $user;
 
     private Validators $validators;
 
@@ -338,8 +338,7 @@ class ApplicationsGridControl extends Control
     /**
      * Vygeneruje potvrzení o přijetí platby.
      *
-     * @throws SettingsException
-     * @throws Throwable
+     * @throws AbortException
      */
     public function handleGeneratePaymentProofBank(int $id) : void
     {

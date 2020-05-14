@@ -30,7 +30,7 @@ class DiscountForm extends UI\Control
     /**
      * Upravovaná sleva.
      */
-    private ?Discount $discount = null;
+    private ?Discount $discount;
 
     /**
      * Událost při uložení formuláře.

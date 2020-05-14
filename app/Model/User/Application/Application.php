@@ -57,7 +57,7 @@ abstract class Application
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected int $applicationId;
+    protected ?int $applicationId;
 
     /**
      * Uživatel.
@@ -110,35 +110,35 @@ abstract class Application
      *
      * @ORM\Column(type="date_immutable", nullable=true)
      */
-    protected DateTimeImmutable $maturityDate;
+    protected ?DateTimeImmutable $maturityDate;
 
     /**
      * Platební metoda.
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected string $paymentMethod;
+    protected ?string $paymentMethod;
 
     /**
      * Datum zaplacení.
      *
      * @ORM\Column(type="date_immutable", nullable=true)
      */
-    protected DateTimeImmutable $paymentDate;
+    protected ?DateTimeImmutable $paymentDate;
 
     /**
      * Spárovaná platba.
      *
      * @ORM\ManyToOne(targetEntity="\App\Model\Payment\Payment", inversedBy="pairedApplications", cascade={"persist"})
      */
-    protected Payment $payment;
+    protected ?Payment $payment;
 
     /**
      * Příjmový doklad. Používá se pro generování id.
      *
      * @ORM\ManyToOne(targetEntity="IncomeProof", cascade={"persist"})
      */
-    protected IncomeProof $incomeProof;
+    protected ?IncomeProof $incomeProof;
 
     /**
      * Stav přihlášky.
@@ -148,7 +148,7 @@ abstract class Application
     protected string $state;
 
     /** @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"}) */
-    protected User $createdBy;
+    protected ?User $createdBy;
 
     /**
      * Platnost záznamu od.
@@ -162,7 +162,7 @@ abstract class Application
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    protected DateTimeImmutable $validTo;
+    protected ?DateTimeImmutable $validTo;
 
     public function __construct()
     {
@@ -360,12 +360,12 @@ abstract class Application
         $this->incomeProof = $incomeProof;
     }
 
-    public function getState() : ?string
+    public function getState() : string
     {
         return $this->state;
     }
 
-    public function setState(?string $state) : void
+    public function setState(string $state) : void
     {
         $this->state = $state;
     }

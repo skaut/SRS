@@ -43,7 +43,7 @@ class PageForm extends UI\Control
     /**
      * Upravovaná stránka.
      */
-    private Page $page;
+    private ?Page $page;
 
     /**
      * Upravovaná oblast.

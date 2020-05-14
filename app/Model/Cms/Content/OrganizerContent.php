@@ -26,7 +26,7 @@ class OrganizerContent extends Content implements IContent
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected string $organizer;
+    protected ?string $organizer;
 
     public function getOrganizer() : ?string
     {

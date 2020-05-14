@@ -17,6 +17,7 @@ use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\NonUniqueResultException;
 use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
@@ -56,7 +57,6 @@ class IncomeProofPresenter extends ExportBasePresenter
      * Vygeneruje doklad pro přihlášku.
      *
      * @throws AbortException
-     * @throws SettingsException
      * @throws Throwable
      */
     public function actionApplication(int $id) : void
@@ -75,7 +75,6 @@ class IncomeProofPresenter extends ExportBasePresenter
      * Vygeneruje doklady pro přihlášky.
      *
      * @throws AbortException
-     * @throws SettingsException
      * @throws Throwable
      */
     public function actionApplications() : void
@@ -92,7 +91,6 @@ class IncomeProofPresenter extends ExportBasePresenter
      * Vygeneruje doklady pro uživatele.
      *
      * @throws AbortException
-     * @throws SettingsException
      * @throws Throwable
      */
     public function actionUsers() : void
@@ -114,6 +112,9 @@ class IncomeProofPresenter extends ExportBasePresenter
      * @param Collection|Application[] $applications
      *
      * @throws AbortException
+     * @throws SettingsException
+     * @throws Throwable
+     * @throws NonUniqueResultException
      */
     private function generateIncomeProofs(Collection $applications) : void
     {

@@ -96,7 +96,7 @@ class Role
      *
      * @ORM\Column(type="string", unique=true, nullable=true)
      */
-    protected string $systemName;
+    protected ?string $systemName;
 
     /**
      * Uživatelé v roli.
@@ -151,21 +151,21 @@ class Role
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    protected DateTimeImmutable $registerableFrom;
+    protected ?DateTimeImmutable $registerableFrom;
 
     /**
      * Registrovatelná do.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    protected DateTimeImmutable $registerableTo;
+    protected ?DateTimeImmutable $registerableTo;
 
     /**
      * Kapacita.
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected int $capacity;
+    protected ?int $capacity;
 
     /**
      * Obsazenost.
@@ -180,7 +180,7 @@ class Role
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected int $fee = 0;
+    protected ?int $fee = 0;
 
     /**
      * Minimální věk.
@@ -252,7 +252,7 @@ class Role
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected string $redirectAfterLogin;
+    protected ?string $redirectAfterLogin;
 
     /**
      * Kategorie dokumentů, ke kterým má role přístup.

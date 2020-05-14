@@ -6,7 +6,6 @@ namespace App\AdminModule\Components;
 
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application\Application;
 use App\Model\User\Application\ApplicationRepository;
@@ -52,7 +51,7 @@ class ApplicationsGridControl extends Control
 
     private ApplicationService $applicationService;
 
-    private User $user;
+    private ?User $user;
 
     private SubeventService $subeventService;
 
@@ -320,7 +319,6 @@ class ApplicationsGridControl extends Control
     /**
      * Vygeneruje příjmový pokladní doklad.
      *
-     * @throws SettingsException
      * @throws Throwable
      */
     public function handleGeneratePaymentProofCash(int $id) : void
@@ -331,7 +329,6 @@ class ApplicationsGridControl extends Control
     /**
      * Vygeneruje potvrzení o přijetí platby.
      *
-     * @throws SettingsException
      * @throws Throwable
      */
     public function handleGeneratePaymentProofBank(int $id) : void

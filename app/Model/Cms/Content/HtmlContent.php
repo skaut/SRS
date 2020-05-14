@@ -27,7 +27,7 @@ class HtmlContent extends Content implements IContent
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    protected string $text;
+    protected ?string $text;
 
     public function getText() : ?string
     {

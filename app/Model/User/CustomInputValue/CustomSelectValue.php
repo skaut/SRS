@@ -23,7 +23,7 @@ class CustomSelectValue extends CustomInputValue
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected int $value;
+    protected ?int $value;
 
     public function getValue() : ?int
     {

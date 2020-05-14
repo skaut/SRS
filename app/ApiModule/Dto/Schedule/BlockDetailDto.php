@@ -39,7 +39,6 @@ class BlockDetailDto
 
     /**
      * @JMS\Type("int")
-     * @var ?int
      */
     private ?int $capacity = null;
 
