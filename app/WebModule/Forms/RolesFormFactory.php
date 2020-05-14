@@ -236,6 +236,9 @@ class RolesFormFactory
 
     /**
      * Ověří požadovaný minimální věk.
+     *
+     * @throws SettingsException
+     * @throws Throwable
      */
     public function validateRolesMinimumAge(MultiSelectBox $field) : bool
     {

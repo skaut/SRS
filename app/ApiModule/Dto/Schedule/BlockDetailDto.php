@@ -37,9 +37,7 @@ class BlockDetailDto
     /** @JMS\Type("int") */
     private int $duration;
 
-    /**
-     * @JMS\Type("int")
-     */
+    /** @JMS\Type("int") */
     private ?int $capacity = null;
 
     /** @JMS\Type("boolean") */

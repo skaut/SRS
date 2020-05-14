@@ -46,7 +46,7 @@ class Payment
      *
      * @ORM\Column(type="float")
      */
-    protected double $amount;
+    protected float $amount;
 
     /**
      * Číslo protiúčtu.

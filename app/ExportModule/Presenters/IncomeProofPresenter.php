@@ -44,6 +44,9 @@ class IncomeProofPresenter extends ExportBasePresenter
     /** @inject */
     public SettingsService $settingsService;
 
+    /**
+     * @throws ForbiddenRequestException
+     */
     public function startup() : void
     {
         parent::startup();
