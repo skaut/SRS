@@ -53,46 +53,32 @@ class EditUserSeminarFormFactory
 
     /**
      * Upravovaný uživatel.
-     *
-     * @var User
      */
-    private $user;
+    private ?User $user = null;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var EntityManagerDecorator */
-    private $em;
+    private EntityManagerDecorator $em;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var CustomInputRepository */
-    private $customInputRepository;
+    private CustomInputRepository $customInputRepository;
 
-    /** @var CustomInputValueRepository */
-    private $customInputValueRepository;
+    private CustomInputValueRepository $customInputValueRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var ApplicationService */
-    private $applicationService;
+    private ApplicationService $applicationService;
 
-    /** @var Validators */
-    private $validators;
+    private Validators $validators;
 
-    /** @var FilesService*/
-    private $filesService;
+    private FilesService $filesService;
 
-    /** @var MailService */
-    private $mailService;
+    private MailService $mailService;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,

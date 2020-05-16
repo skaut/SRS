@@ -27,10 +27,8 @@ class Category
      * Název kategorie.
      *
      * @ORM\Column(type="string", unique=true)
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Role, které si mohou přihlašovat programy z kategorie.
@@ -39,7 +37,7 @@ class Category
      *
      * @var Collection|Role[]
      */
-    protected $registerableRoles;
+    protected Collection $registerableRoles;
 
     /**
      * Bloky v kategorii.
@@ -49,7 +47,7 @@ class Category
      *
      * @var Collection|Block[]
      */
-    protected $blocks;
+    protected Collection $blocks;
 
     public function __construct()
     {

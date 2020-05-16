@@ -29,26 +29,19 @@ use function json_encode;
  */
 class ApplicationContentControl extends Control
 {
-    /** @var ApplicationFormFactory */
-    private $applicationFormFactory;
+    private ApplicationFormFactory $applicationFormFactory;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var Authenticator */
-    private $authenticator;
+    private Authenticator $authenticator;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var IApplicationsGridControlFactory */
-    public $applicationsGridControlFactory;
+    public IApplicationsGridControlFactory $applicationsGridControlFactory;
 
     public function __construct(
         ApplicationFormFactory $applicationFormFactory,

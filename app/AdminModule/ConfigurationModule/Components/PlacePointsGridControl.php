@@ -22,11 +22,9 @@ use function number_format;
  */
 class PlacePointsGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var PlacePointRepository */
-    private $placePointRepository;
+    private PlacePointRepository $placePointRepository;
 
     public function __construct(ITranslator $translator, PlacePointRepository $placePointRepository)
     {

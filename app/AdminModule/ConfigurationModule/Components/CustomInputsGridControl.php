@@ -23,11 +23,9 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class CustomInputsGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var CustomInputRepository */
-    private $customInputRepository;
+    private CustomInputRepository $customInputRepository;
 
     public function __construct(ITranslator $translator, CustomInputRepository $customInputRepository)
     {

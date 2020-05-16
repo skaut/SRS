@@ -61,7 +61,7 @@ class Permission
     public const CHOOSE_PROGRAMS = 'choose_programs';
 
     /** @var string[] */
-    public static $permissions = [
+    public static array $permissions = [
         self::MANAGE,
         self::ACCESS,
         self::MANAGE_OWN_PROGRAMS,
@@ -75,10 +75,8 @@ class Permission
      * Název oprávnění.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Role s tímto oprávněním.
@@ -87,16 +85,14 @@ class Permission
      *
      * @var Collection|Role[]
      */
-    protected $roles;
+    protected Collection $roles;
 
     /**
      * Prostředek oprávnění.
      *
      * @ORM\ManyToOne(targetEntity="SrsResource", inversedBy="permissions", cascade={"persist"})
-     *
-     * @var SrsResource
      */
-    protected $resource;
+    protected SrsResource $resource;
 
     public function __construct(string $name, SrsResource $resource)
     {

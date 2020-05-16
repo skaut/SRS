@@ -18,23 +18,14 @@ use stdClass;
  */
 class TemplatesPresenter extends MailingBasePresenter
 {
-    /**
-     * @var TemplateRepository
-     * @inject
-     */
-    public $templateRepository;
+    /** @inject */
+    public TemplateRepository $templateRepository;
 
-    /**
-     * @var IMailTemplatesGridControlFactory
-     * @inject
-     */
-    public $mailTemplatesGridControlFactory;
+    /** @inject */
+    public IMailTemplatesGridControlFactory $mailTemplatesGridControlFactory;
 
-    /**
-     * @var EditTemplateFormFactory
-     * @inject
-     */
-    public $editTemplateFormFactory;
+    /** @inject */
+    public EditTemplateFormFactory $editTemplateFormFactory;
 
     public function renderEdit(int $id) : void
     {

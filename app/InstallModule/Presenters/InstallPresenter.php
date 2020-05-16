@@ -33,53 +33,29 @@ use Throwable;
  */
 class InstallPresenter extends InstallBasePresenter
 {
-    /**
-     * @var Application
-     * @inject
-     */
-    public $consoleApplication;
+    /** @inject */
+    public Application $consoleApplication;
 
-    /**
-     * @var EntityManagerDecorator
-     * @inject
-     */
-    public $em;
+    /** @inject */
+    public EntityManagerDecorator $em;
 
-    /**
-     * @var SettingsService
-     * @inject
-     */
-    public $settingsService;
+    /** @inject */
+    public SettingsService $settingsService;
 
-    /**
-     * @var RoleRepository
-     * @inject
-     */
-    public $roleRepository;
+    /** @inject */
+    public RoleRepository $roleRepository;
 
-    /**
-     * @var UserRepository
-     * @inject
-     */
-    public $userRepository;
+    /** @inject */
+    public UserRepository $userRepository;
 
-    /**
-     * @var SubeventRepository
-     * @inject
-     */
-    public $subeventRepository;
+    /** @inject */
+    public SubeventRepository $subeventRepository;
 
-    /**
-     * @var ApplicationService
-     * @inject
-     */
-    public $applicationService;
+    /** @inject */
+    public ApplicationService $applicationService;
 
-    /**
-     * @var Skautis
-     * @inject
-     */
-    public $skautIs;
+    /** @inject */
+    public Skautis $skautIs;
 
     /**
      * Zobrazení první stránky průvodce.

@@ -46,29 +46,21 @@ class ScheduleService
 {
     use Nette\SmartObject;
 
-    /** @var User */
-    private $user;
+    private ?User $user = null;
 
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var ProgramRepository */
-    private $programRepository;
+    private ProgramRepository $programRepository;
 
-    /** @var BlockRepository */
-    private $blockRepository;
+    private BlockRepository $blockRepository;
 
-    /** @var RoomRepository */
-    private $roomRepository;
+    private RoomRepository $roomRepository;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var ProgramService */
-    private $programService;
+    private ProgramService $programService;
 
     public function __construct(
         ITranslator $translator,

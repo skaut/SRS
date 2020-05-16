@@ -17,7 +17,7 @@ class Sex
     public const FEMALE = 'female';
 
     /** @var string[] */
-    public static $sex = [
+    public static array $sex = [
         self::MALE,
         self::FEMALE,
     ];

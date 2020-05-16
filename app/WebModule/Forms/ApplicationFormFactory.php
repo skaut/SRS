@@ -69,58 +69,41 @@ class ApplicationFormFactory
 
     /**
      * Přihlášený uživatel.
-     *
-     * @var User
      */
-    private $user;
+    private ?User $user = null;
 
     /** @var callable[] */
-    public $onSkautIsError;
+    public array $onSkautIsError = [];
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var EntityManagerDecorator */
-    private $em;
+    private EntityManagerDecorator $em;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var CustomInputRepository */
-    private $customInputRepository;
+    private CustomInputRepository $customInputRepository;
 
-    /** @var CustomInputValueRepository */
-    private $customInputValueRepository;
+    private CustomInputValueRepository $customInputValueRepository;
 
-    /** @var SkautIsService */
-    private $skautIsService;
+    private SkautIsService $skautIsService;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
-    /** @var ApplicationService */
-    private $applicationService;
+    private ApplicationService $applicationService;
 
-    /** @var Validators */
-    private $validators;
+    private Validators $validators;
 
-    /** @var FilesService */
-    private $filesService;
+    private FilesService $filesService;
 
-    /** @var SubeventService */
-    private $subeventService;
+    private SubeventService $subeventService;
 
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
@@ -604,6 +587,9 @@ class ApplicationFormFactory
 
     /**
      * Ověří požadovaný minimální věk.
+     *
+     * @throws SettingsException
+     * @throws Throwable
      */
     public function validateRolesMinimumAge(MultiSelectBox $field) : bool
     {

@@ -31,32 +31,18 @@ class ProgramAttendeesGridControl extends Control
 {
     /**
      * Aktuální program.
-     *
-     * @var Program
      */
-    private $program;
+    private Program $program;
 
-    /**
-     * Přihlášený uživatel.
-     *
-     * @var User
-     */
-    private $user;
+    private ITranslator $translator;
 
-    /** @var ITranslator */
-    private $translator;
+    private ProgramRepository $programRepository;
 
-    /** @var ProgramRepository */
-    private $programRepository;
+    private UserRepository $userRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private ProgramService $programService;
 
-    /** @var ProgramService */
-    private $programService;
-
-    /** @var SessionSection */
-    private $sessionSection;
+    private SessionSection $sessionSection;
 
     public function __construct(
         ITranslator $translator,
@@ -102,7 +88,7 @@ class ProgramAttendeesGridControl extends Control
             $grid->setDataSource([]);
         } else {
             $this->program = $program;
-            $this->user    = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+            $user          = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
 
             $grid->setTranslator($this->translator);
 
@@ -164,13 +150,13 @@ class ProgramAttendeesGridControl extends Control
 
             $grid->setDefaultFilter(['attends' => 'yes'], false);
 
-            if ($this->user->isAllowed(SrsResource::USERS, Permission::MANAGE)) {
+            if ($user->isAllowed(SrsResource::USERS, Permission::MANAGE)) {
                 $grid->addAction('detail', 'admin.common.detail', ':Admin:Users:detail')
                     ->setClass('btn btn-xs btn-primary')
                     ->addAttributes(['target' => '_blank']);
             }
 
-            if ($this->user->isAllowedModifyBlock($this->program->getBlock())) {
+            if ($user->isAllowedModifyBlock($this->program->getBlock())) {
                 $grid->addAction('register', 'admin.program.blocks_attendees_register', 'register!')
                     ->setClass('btn btn-xs btn-success ajax');
                 $grid->allowRowsAction('register', function ($item) {

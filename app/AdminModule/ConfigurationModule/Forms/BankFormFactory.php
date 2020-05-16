@@ -29,14 +29,11 @@ class BankFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var BankService */
-    private $bankService;
+    private BankService $bankService;
 
     public function __construct(
         BaseFormFactory $baseForm,

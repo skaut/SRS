@@ -79,37 +79,29 @@ class Template
      * Typ e-mailu.
      *
      * @ORM\Column(type="string", unique=true)
-     *
-     * @var string
      */
-    protected $type;
+    protected string $type;
 
     /**
      * Předmět e-mailu.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $subject;
+    protected string $subject;
 
     /**
      * Text e-mailu.
      *
      * @ORM\Column(type="text")
-     *
-     * @var string
      */
-    protected $text;
+    protected string $text;
 
     /**
      * Aktivní.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $active;
+    protected bool $active;
 
     /**
      * Proměnné použitelné v šabloně.
@@ -118,34 +110,28 @@ class Template
      *
      * @var Collection|TemplateVariable[]
      */
-    protected $variables;
+    protected Collection $variables;
 
     /**
      * Zaslat uživateli.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $sendToUser;
+    protected bool $sendToUser;
 
     /**
      * Zaslat pořadateli.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $sendToOrganizer;
+    protected bool $sendToOrganizer;
 
     /**
      * Systémový e-mail. Nelze u něj měnit příjemce.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $system;
+    protected bool $systemTemplate;
 
     public function __construct()
     {
@@ -225,8 +211,8 @@ class Template
         $this->sendToOrganizer = $sendToOrganizer;
     }
 
-    public function isSystem() : bool
+    public function isSystemTemplate() : bool
     {
-        return $this->system;
+        return $this->systemTemplate;
     }
 }

@@ -20,17 +20,14 @@ use stdClass;
  */
 class TextContent extends Content implements IContent
 {
-    /** @var string */
-    protected $type = Content::TEXT;
+    protected string $type = Content::TEXT;
 
     /**
      * Text.
      *
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $text;
+    protected ?string $text = null;
 
     public function getText() : ?string
     {

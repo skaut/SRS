@@ -25,14 +25,11 @@ use Throwable;
  */
 class Validators
 {
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var ProgramRepository */
-    private $programRepository;
+    private ProgramRepository $programRepository;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
     public function __construct(
         RoleRepository $roleRepository,

@@ -20,14 +20,10 @@ use Throwable;
  */
 abstract class ConfigurationBasePresenter extends AdminBasePresenter
 {
-    /** @var string */
-    protected $resource = SrsResource::CONFIGURATION;
+    protected string $resource = SrsResource::CONFIGURATION;
 
-    /**
-     * @var SubeventRepository
-     * @inject
-     */
-    public $subeventRepository;
+    /** @inject */
+    public SubeventRepository $subeventRepository;
 
     /**
      * @throws AbortException

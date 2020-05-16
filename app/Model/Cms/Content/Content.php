@@ -123,7 +123,7 @@ abstract class Content implements IContent
 
 
     /** @var string[] */
-    public static $types = [
+    public static array $types = [
         self::TEXT,
         self::IMAGE,
         self::DOCUMENT,
@@ -141,54 +141,44 @@ abstract class Content implements IContent
     ];
 
     /** @var string[] */
-    public static $areas = [
+    public static array $areas = [
         self::MAIN,
         self::SIDEBAR,
     ];
 
     /**
      * Typ obsahu.
-     *
-     * @var string
      */
-    protected $type;
+    protected string $type;
     use Identifier;
 
     /**
      * Nadpis obsahu.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $heading;
+    protected ?string $heading = null;
 
     /**
      * Stránka, na které je obsah umístěn.
      *
      * @ORM\ManyToOne(targetEntity="\App\Model\Cms\Page", inversedBy="contents", cascade={"persist"})
-     *
-     * @var Page
      */
-    protected $page;
+    protected Page $page;
 
     /**
      * Oblast stránky, ve které se obsah nachází.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $area;
+    protected string $area;
 
     /**
      * Pořadí obsahu na stránce.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $position = 0;
+    protected int $position = 0;
 
     /**
      * @throws PageException

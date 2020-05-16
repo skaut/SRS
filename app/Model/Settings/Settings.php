@@ -223,19 +223,15 @@ class Settings
      *
      * @ORM\Column(type="string", unique=true)
      * @ORM\Id
-     *
-     * @var string
      */
-    protected $item;
+    protected string $item;
 
     /**
      * Hodnota položky nastavení.
      *
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $value;
+    protected ?string $value = null;
 
     public function __construct(string $item, ?string $value)
     {

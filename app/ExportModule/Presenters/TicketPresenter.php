@@ -23,23 +23,14 @@ use function random_bytes;
  */
 class TicketPresenter extends ExportBasePresenter
 {
-    /**
-     * @var UserRepository
-     * @inject
-     */
-    public $userRepository;
+    /** @inject */
+    public UserRepository $userRepository;
 
-    /**
-     * @var SettingsService
-     * @inject
-     */
-    public $settingsService;
+    /** @inject */
+    public SettingsService $settingsService;
 
-    /**
-     * @var SubeventRepository
-     * @inject
-     */
-    public $subeventRepository;
+    /** @inject */
+    public SubeventRepository $subeventRepository;
 
     /**
      * Vygeneruje vstupenku v PDF.

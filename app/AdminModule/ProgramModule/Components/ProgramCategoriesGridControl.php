@@ -29,20 +29,15 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class ProgramCategoriesGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var CategoryRepository */
-    private $categoryRepository;
+    private CategoryRepository $categoryRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var ProgramService */
-    private $programService;
+    private ProgramService $programService;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
     public function __construct(
         ITranslator $translator,

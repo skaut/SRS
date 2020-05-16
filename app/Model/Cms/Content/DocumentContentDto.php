@@ -16,7 +16,7 @@ class DocumentContentDto extends ContentDto
      *
      * @var int[]
      */
-    protected $tags;
+    protected array $tags;
 
     /**
      * @param int[] $tags

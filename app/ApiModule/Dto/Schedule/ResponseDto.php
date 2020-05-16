@@ -16,23 +16,14 @@ class ResponseDto
 {
     use Nette\SmartObject;
 
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $message;
+    /** @JMS\Type("string") */
+    private string $message;
 
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $status;
+    /** @JMS\Type("string") */
+    private string $status;
 
-    /**
-     * @JMS\Type("App\ApiModule\Dto\Schedule\ProgramDetailDto")
-     * @var ProgramDetailDto
-     */
-    private $program;
+    /** @JMS\Type("App\ApiModule\Dto\Schedule\ProgramDetailDto") */
+    private ProgramDetailDto $program;
 
     public function getMessage() : string
     {

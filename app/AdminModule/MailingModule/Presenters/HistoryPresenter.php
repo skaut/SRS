@@ -14,11 +14,8 @@ use App\AdminModule\MailingModule\Components\MailHistoryGridControl;
  */
 class HistoryPresenter extends MailingBasePresenter
 {
-    /**
-     * @var IMailHistoryGridControlFactory
-     * @inject
-     */
-    public $mailHistoryGridControlFactory;
+    /** @inject */
+    public IMailHistoryGridControlFactory $mailHistoryGridControlFactory;
 
     protected function createComponentMailHistoryGrid() : MailHistoryGridControl
     {

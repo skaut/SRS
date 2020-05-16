@@ -17,6 +17,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ApplicationContent extends Content implements IContent
 {
-    /** @var string */
-    protected $type = Content::APPLICATION;
+    protected string $type = Content::APPLICATION;
 }

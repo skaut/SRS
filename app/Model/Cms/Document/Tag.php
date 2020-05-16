@@ -31,16 +31,14 @@ class Tag
      *
      * @var Collection|Document[]
      */
-    protected $documents;
+    protected Collection $documents;
 
     /**
      * Název tagu.
      *
      * @ORM\Column(type="string", unique=true)
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Role oprávněné zobrazit dokumenty v této kategorií.
@@ -49,7 +47,7 @@ class Tag
      *
      * @var Collection|Role[]
      */
-    protected $roles;
+    protected Collection $roles;
 
     public function __construct()
     {

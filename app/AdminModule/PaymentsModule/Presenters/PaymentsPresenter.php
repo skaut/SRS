@@ -18,17 +18,11 @@ use Throwable;
  */
 class PaymentsPresenter extends PaymentsBasePresenter
 {
-    /**
-     * @var IPaymentsGridControlFactory
-     * @inject
-     */
-    public $paymentsGridControlFactory;
+    /** @inject */
+    public IPaymentsGridControlFactory $paymentsGridControlFactory;
 
-    /**
-     * @var EditPaymentFormFactory
-     * @inject
-     */
-    public $editPaymentFormFactory;
+    /** @inject */
+    public EditPaymentFormFactory $editPaymentFormFactory;
 
     public function renderEdit(int $id) : void
     {

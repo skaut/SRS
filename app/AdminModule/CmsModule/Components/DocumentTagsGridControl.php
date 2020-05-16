@@ -28,17 +28,13 @@ use function count;
  */
 class DocumentTagsGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
-    /** @var TagRepository */
-    private $tagRepository;
+    private TagRepository $tagRepository;
 
     public function __construct(
         ITranslator $translator,

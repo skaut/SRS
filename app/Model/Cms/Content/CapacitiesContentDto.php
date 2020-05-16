@@ -16,7 +16,7 @@ class CapacitiesContentDto extends ContentDto
      *
      * @var int[]
      */
-    protected $roles;
+    protected array $roles;
 
     /**
      * @param int[] $roles

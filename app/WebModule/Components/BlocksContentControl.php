@@ -16,11 +16,9 @@ use Nette\Application\UI\Control;
  */
 class BlocksContentControl extends Control
 {
-    /** @var BlockRepository */
-    private $blockRepository;
+    private BlockRepository $blockRepository;
 
-    /** @var CategoryRepository */
-    private $categoryRepository;
+    private CategoryRepository $categoryRepository;
 
     public function __construct(BlockRepository $blockRepository, CategoryRepository $categoryRepository)
     {

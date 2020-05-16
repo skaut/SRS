@@ -31,16 +31,12 @@ class CustomInputFormFactory
 
     /**
      * Upravované pole.
-     *
-     * @var ?CustomInput
      */
-    private $customInput;
+    private ?CustomInput $customInput = null;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var CustomInputRepository */
-    private $customInputRepository;
+    private CustomInputRepository $customInputRepository;
 
     public function __construct(BaseFormFactory $baseFormFactory, CustomInputRepository $customInputRepository)
     {

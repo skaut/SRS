@@ -30,45 +30,27 @@ use function array_keys;
  */
 abstract class AdminBasePresenter extends BasePresenter
 {
-    /** @var string */
-    protected $resource = SrsResource::ADMIN;
+    protected string $resource = SrsResource::ADMIN;
 
-    /**
-     * @var Authorizator
-     * @inject
-     */
-    public $authorizator;
+    /** @inject */
+    public Authorizator $authorizator;
 
-    /**
-     * @var RoleRepository
-     * @inject
-     */
-    public $roleRepository;
+    /** @inject */
+    public RoleRepository $roleRepository;
 
-    /**
-     * @var SettingsService
-     * @inject
-     */
-    public $settingsService;
+    /** @inject */
+    public SettingsService $settingsService;
 
-    /**
-     * @var UserRepository
-     * @inject
-     */
-    public $userRepository;
+    /** @inject */
+    public UserRepository $userRepository;
 
-    /**
-     * @var SkautIsService
-     * @inject
-     */
-    public $skautIsService;
+    /** @inject */
+    public SkautIsService $skautIsService;
 
     /**
      * Přihlášený uživatel.
-     *
-     * @var User
      */
-    public $dbuser;
+    public ?User $dbuser = null;
 
     /**
      * Načte css podle konfigurace v common.neon.

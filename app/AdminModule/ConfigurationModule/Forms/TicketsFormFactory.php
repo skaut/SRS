@@ -21,11 +21,9 @@ use Throwable;
  */
 class TicketsFormFactory
 {
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
     public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
     {

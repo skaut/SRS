@@ -13,10 +13,8 @@ class NewsContentDto extends ContentDto
 {
     /**
      * Počet posledních novinek k zobrazení.
-     *
-     * @var int
      */
-    protected $count;
+    protected ?int $count = null;
 
     public function __construct(string $type, string $heading, ?int $count)
     {

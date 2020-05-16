@@ -25,17 +25,13 @@ class BankService
 {
     use Nette\SmartObject;
 
-    /** @var ApplicationService */
-    private $applicationService;
+    private ApplicationService $applicationService;
 
-    /** @var EntityManagerDecorator */
-    private $em;
+    private EntityManagerDecorator $em;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var PaymentRepository */
-    private $paymentRepository;
+    private PaymentRepository $paymentRepository;
 
     public function __construct(
         ApplicationService $applicationService,

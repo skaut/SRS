@@ -38,31 +38,22 @@ class EditRoleFormFactory
 
     /**
      * Upravovaná role.
-     *
-     * @var Role
      */
-    private $role;
+    private ?Role $role = null;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var EntityManagerDecorator */
-    private $em;
+    private EntityManagerDecorator $em;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var PageRepository */
-    private $pageRepository;
+    private PageRepository $pageRepository;
 
-    /** @var PermissionRepository */
-    private $permissionRepository;
+    private PermissionRepository $permissionRepository;
 
-    /** @var ProgramService */
-    private $programService;
+    private ProgramService $programService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,

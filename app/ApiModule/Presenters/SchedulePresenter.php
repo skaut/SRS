@@ -25,14 +25,10 @@ use function file_get_contents;
  */
 class SchedulePresenter extends ApiBasePresenter
 {
-    /**
-     * @var ScheduleService
-     * @inject
-     */
-    public $scheduleService;
+    /** @inject */
+    public ScheduleService $scheduleService;
 
-    /** @var SerializerInterface */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     /**
      * @throws AbortException

@@ -17,7 +17,7 @@ class SkautIsEventType
     public const GENERAL = 'general';
 
     /** @var string[] */
-    public static $types = [
+    public static array $types = [
         self::GENERAL,
         self::EDUCATION,
     ];

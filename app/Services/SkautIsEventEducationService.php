@@ -22,11 +22,9 @@ use function array_key_exists;
  */
 class SkautIsEventEducationService extends SkautIsEventService
 {
-    /** @var SkautIsCourseRepository */
-    private $skautIsCourseRepository;
+    private SkautIsCourseRepository $skautIsCourseRepository;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
     public function __construct(
         Skautis $skautIs,

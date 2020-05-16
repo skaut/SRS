@@ -18,17 +18,11 @@ use Throwable;
  */
 class BankPresenter extends ActionBasePresenter
 {
-    /**
-     * @var BankService
-     * @inject
-     */
-    public $bankService;
+    /** @inject */
+    public BankService $bankService;
 
-    /**
-     * @var SettingsService
-     * @inject
-     */
-    public $settingsService;
+    /** @inject */
+    public SettingsService $settingsService;
 
     /**
      * Zkontroluje splatnost přihlášek.

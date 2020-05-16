@@ -3,7 +3,7 @@ version: '3.4'
 services:
     app:
         container_name: srs.app
-        image: fmasa/lebeda:7.3
+        image: fmasa/lebeda:7.4
         volumes:
             - www:/var/www
             - .:/var/www/html
@@ -18,7 +18,7 @@ services:
 
     mysql:
         container_name: srs.mysql
-        image: mysql:5.7
+        image: mysql:8.0
         volumes:
             - mysql:/var/lib/mysql
         environment:
@@ -32,7 +32,7 @@ services:
 
     mysql-test:
         container_name: srs.mysql-test
-        image: mysql:5.7
+        image: mysql:8.0
         environment:
             MYSQL_ROOT_PASSWORD: 'root'
             MYSQL_DATABASE: srs

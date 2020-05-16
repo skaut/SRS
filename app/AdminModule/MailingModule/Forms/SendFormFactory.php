@@ -34,31 +34,22 @@ class SendFormFactory
 
     /**
      * Stav odeslání e-mailu.
-     *
-     * @var bool
      */
-    public $mailSuccess;
+    public bool $mailSuccess;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var MailService */
-    private $mailService;
+    private MailService $mailService;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
-    /** @var SubeventService */
-    private $subeventService;
+    private SubeventService $subeventService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,

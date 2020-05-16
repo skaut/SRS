@@ -24,23 +24,14 @@ use Throwable;
  */
 class SkautIsPresenter extends ConfigurationBasePresenter
 {
-    /**
-     * @var SkautIsEventFormFactory
-     * @inject
-     */
-    public $skautIsEventFormFactory;
+    /** @inject */
+    public SkautIsEventFormFactory $skautIsEventFormFactory;
 
-    /**
-     * @var ISkautIsEventEducationGridControlFactory
-     * @inject
-     */
-    public $skautISEventEducationGridControlFactory;
+    /** @inject */
+    public ISkautIsEventEducationGridControlFactory $skautISEventEducationGridControlFactory;
 
-    /**
-     * @var SkautIsCourseRepository
-     * @inject
-     */
-    public $skautIsCourseRepository;
+    /** @inject */
+    public SkautIsCourseRepository $skautIsCourseRepository;
 
     /**
      * @throws SettingsException

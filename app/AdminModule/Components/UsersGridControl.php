@@ -61,50 +61,35 @@ use function explode;
  */
 class UsersGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var EntityManagerDecorator */
-    private $em;
+    private EntityManagerDecorator $em;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var CustomInputRepository */
-    private $customInputRepository;
+    private CustomInputRepository $customInputRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
-    /** @var Session */
-    private $session;
+    private Session $session;
 
-    /** @var SessionSection */
-    private $sessionSection;
+    private SessionSection $sessionSection;
 
-    /** @var ExcelExportService */
-    private $excelExportService;
+    private ExcelExportService $excelExportService;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
-    /** @var ApplicationService */
-    private $applicationService;
+    private ApplicationService $applicationService;
 
-    /** @var UserService */
-    private $userService;
+    private UserService $userService;
 
-    /** @var SkautIsEventEducationService */
-    private $skautIsEventEducationService;
+    private SkautIsEventEducationService $skautIsEventEducationService;
 
-    /** @var SkautIsEventGeneralService */
-    private $skautIsEventGeneralService;
+    private SkautIsEventGeneralService $skautIsEventGeneralService;
 
-    /** @var SubeventService */
-    private $subeventService;
+    private SubeventService $subeventService;
 
     public function __construct(
         ITranslator $translator,

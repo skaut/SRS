@@ -32,47 +32,26 @@ use Throwable;
  */
 class BlocksPresenter extends ProgramBasePresenter
 {
-    /**
-     * @var BlockRepository
-     * @inject
-     */
-    public $blockRepository;
+    /** @inject */
+    public BlockRepository $blockRepository;
 
-    /**
-     * @var ProgramRepository
-     * @inject
-     */
-    public $programRepository;
+    /** @inject */
+    public ProgramRepository $programRepository;
 
-    /**
-     * @var IProgramBlocksGridControlFactory
-     * @inject
-     */
-    public $programBlocksGridControlFactory;
+    /** @inject */
+    public IProgramBlocksGridControlFactory $programBlocksGridControlFactory;
 
-    /**
-     * @var IProgramAttendeesGridControlFactory
-     * @inject
-     */
-    public $programAttendeesGridControlFactory;
+    /** @inject */
+    public IProgramAttendeesGridControlFactory $programAttendeesGridControlFactory;
 
-    /**
-     * @var BlockFormFactory
-     * @inject
-     */
-    public $blockFormFactory;
+    /** @inject */
+    public BlockFormFactory $blockFormFactory;
 
-    /**
-     * @var Session
-     * @inject
-     */
-    public $session;
+    /** @inject */
+    public Session $session;
 
-    /**
-     * @var ProgramService
-     * @inject
-     */
-    public $programService;
+    /** @inject */
+    public ProgramService $programService;
 
     public function renderDefault() : void
     {

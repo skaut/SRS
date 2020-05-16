@@ -31,64 +31,50 @@ class Payment
      * Id platby v systému banky.
      *
      * @ORM\Column(type="string", unique=true, nullable=true)
-     *
-     * @var string
      */
-    protected $transactionId;
+    protected ?string $transactionId = null;
 
     /**
      * Datum platby.
      *
      * @ORM\Column(type="date_immutable")
-     *
-     * @var DateTimeImmutable
      */
-    protected $date;
+    protected DateTimeImmutable $date;
 
     /**
      * Částka.
      *
      * @ORM\Column(type="float")
-     *
-     * @var double
      */
-    protected $amount;
+    protected float $amount;
 
     /**
      * Číslo protiúčtu.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $accountNumber;
+    protected ?string $accountNumber = null;
 
     /**
      * Majitel protiúčtu.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $accountName;
+    protected ?string $accountName = null;
 
     /**
      * Variabilní symbol platby.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $variableSymbol;
+    protected ?string $variableSymbol = null;
 
     /**
      * Zpráva pro příjemce.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $message;
+    protected ?string $message = null;
 
     /**
      * Spárované přihlášky.
@@ -97,16 +83,14 @@ class Payment
      *
      * @var Collection|Application[]
      */
-    protected $pairedApplications;
+    protected Collection $pairedApplications;
 
     /**
      * Stav platby.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $state;
+    protected string $state;
 
     public function __construct()
     {

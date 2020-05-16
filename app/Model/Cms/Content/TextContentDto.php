@@ -13,10 +13,8 @@ class TextContentDto extends ContentDto
 {
     /**
      * Text.
-     *
-     * @var string
      */
-    protected $text;
+    protected ?string $text = null;
 
     public function __construct(string $type, string $heading, ?string $text)
     {

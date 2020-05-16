@@ -30,41 +30,23 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  */
 class MaturityPresenter extends ActionBasePresenter
 {
-    /**
-     * @var EntityManagerDecorator
-     * @inject
-     */
-    public $em;
+    /** @inject */
+    public EntityManagerDecorator $em;
 
-    /**
-     * @var UserRepository
-     * @inject
-     */
-    public $userRepository;
+    /** @inject */
+    public UserRepository $userRepository;
 
-    /**
-     * @var RoleRepository
-     * @inject
-     */
-    public $roleRepository;
+    /** @inject */
+    public RoleRepository $roleRepository;
 
-    /**
-     * @var MailService
-     * @inject
-     */
-    public $mailService;
+    /** @inject */
+    public MailService $mailService;
 
-    /**
-     * @var ApplicationService
-     * @inject
-     */
-    public $applicationService;
+    /** @inject */
+    public ApplicationService $applicationService;
 
-    /**
-     * @var SettingsService
-     * @inject
-     */
-    public $settingsService;
+    /** @inject */
+    public SettingsService $settingsService;
 
     /**
      * Zruší přihlášky po splatnosti.

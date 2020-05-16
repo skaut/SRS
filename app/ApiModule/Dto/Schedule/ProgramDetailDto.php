@@ -16,65 +16,38 @@ class ProgramDetailDto
 {
     use Nette\SmartObject;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $id;
+    /** @JMS\Type("int") */
+    private int $id;
 
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $start;
+    /** @JMS\Type("string") */
+    private string $start;
 
-    /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $end;
+    /** @JMS\Type("string") */
+    private string $end;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $blockId;
+    /** @JMS\Type("int") */
+    private int $blockId;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $roomId;
+    /** @JMS\Type("int") */
+    private ?int $roomId = null;
 
-    /**
-     * @JMS\Type("int")
-     * @var int
-     */
-    private $attendeesCount;
+    /** @JMS\Type("int") */
+    private ?int $attendeesCount = null;
 
-    /**
-     * @JMS\Type("boolean")
-     * @var bool
-     */
-    private $userAttends;
+    /** @JMS\Type("boolean") */
+    private ?bool $userAttends = null;
 
     /**
      * @JMS\Type("array")
      * @var int[]
      */
-    private $blocks;
+    private ?array $blocks = null;
 
-    /**
-     * @JMS\Type("boolean")
-     * @var bool
-     */
-    private $blocked;
+    /** @JMS\Type("boolean") */
+    private ?bool $blocked = null;
 
-    /**
-     * @JMS\Type("boolean")
-     * @var bool
-     */
-    private $paid;
+    /** @JMS\Type("boolean") */
+    private ?bool $paid = null;
 
     public function getId() : int
     {

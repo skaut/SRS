@@ -6,7 +6,6 @@ namespace App\AdminModule\Components;
 
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\Application\Application;
 use App\Model\User\Application\ApplicationRepository;
@@ -40,32 +39,23 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class ApplicationsGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var EntityManagerDecorator */
-    private $em;
+    private EntityManagerDecorator $em;
 
-    /** @var ApplicationRepository */
-    private $applicationRepository;
+    private ApplicationRepository $applicationRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var ApplicationService */
-    private $applicationService;
+    private ApplicationService $applicationService;
 
-    /** @var User */
-    private $user;
+    private ?User $user = null;
 
-    /** @var SubeventService */
-    private $subeventService;
+    private SubeventService $subeventService;
 
-    /** @var Validators */
-    private $validators;
+    private Validators $validators;
 
     public function __construct(
         ITranslator $translator,
@@ -329,7 +319,6 @@ class ApplicationsGridControl extends Control
     /**
      * Vygeneruje příjmový pokladní doklad.
      *
-     * @throws SettingsException
      * @throws Throwable
      */
     public function handleGeneratePaymentProofCash(int $id) : void
@@ -340,7 +329,6 @@ class ApplicationsGridControl extends Control
     /**
      * Vygeneruje potvrzení o přijetí platby.
      *
-     * @throws SettingsException
      * @throws Throwable
      */
     public function handleGeneratePaymentProofBank(int $id) : void

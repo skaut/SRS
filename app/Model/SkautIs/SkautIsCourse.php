@@ -23,19 +23,15 @@ class SkautIsCourse
      * SkautIS id kurzu.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $skautIsCourseId;
+    protected int $skautIsCourseId;
 
     /**
      * Název kurzu.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     public function getId() : int
     {

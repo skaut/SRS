@@ -30,10 +30,8 @@ class Program
      * Programový blok.
      *
      * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs", cascade={"persist"})
-     *
-     * @var Block
      */
-    protected $block;
+    protected Block $block;
 
     /**
      * Účastníci programu.
@@ -42,34 +40,28 @@ class Program
      *
      * @var Collection|User[]
      */
-    protected $attendees;
+    protected Collection $attendees;
 
     /**
      * Obsazenost.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $occupancy = 0;
+    protected int $occupancy = 0;
 
     /**
      * Místnost.
      *
      * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs", cascade={"persist"})
-     *
-     * @var Room
      */
-    protected $room;
+    protected ?Room $room = null;
 
     /**
      * Začátek programu.
      *
      * @ORM\Column(type="datetime_immutable")
-     *
-     * @var DateTimeImmutable
      */
-    protected $start;
+    protected DateTimeImmutable $start;
 
     public function __construct(Block $block)
     {

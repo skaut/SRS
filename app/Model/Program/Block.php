@@ -29,10 +29,8 @@ class Block
      * Název programového bloku.
      *
      * @ORM\Column(type="string", unique=true)
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Programy v bloku.
@@ -42,7 +40,7 @@ class Block
      *
      * @var Collection|Program[]
      */
-    protected $programs;
+    protected Collection $programs;
 
     /**
      * Lektor.
@@ -51,79 +49,63 @@ class Block
      *
      * @var Collection|User[]
      */
-    protected $lectors;
+    protected Collection $lectors;
 
     /**
      * Kategorie bloku.
      *
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks", cascade={"persist"})
-     *
-     * @var ?Category
      */
-    protected $category;
+    protected ?Category $category = null;
 
     /**
      * Podakce bloku.
      *
      * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", inversedBy="blocks", cascade={"persist"})
-     *
-     * @var Subevent
      */
-    protected $subevent;
+    protected Subevent $subevent;
 
     /**
      * Povinnost.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $mandatory;
+    protected string $mandatory;
 
     /**
      * Délka programového bloku.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $duration;
+    protected int $duration;
 
     /**
      * Kapacita.
      *
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $capacity;
+    protected ?int $capacity = null;
 
     /**
      * Pomůcky.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $tools;
+    protected ?string $tools = null;
 
     /**
      * Stručný popis.
      *
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $perex;
+    protected ?string $perex = null;
 
     /**
      * Podrobný popis.
      *
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $description;
+    protected ?string $description = null;
 
     public function __construct()
     {

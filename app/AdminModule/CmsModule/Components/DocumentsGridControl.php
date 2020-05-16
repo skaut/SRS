@@ -32,17 +32,13 @@ use const UPLOAD_ERR_OK;
  */
 class DocumentsGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var DocumentRepository */
-    private $documentRepository;
+    private DocumentRepository $documentRepository;
 
-    /** @var FilesService */
-    private $filesService;
+    private FilesService $filesService;
 
-    /** @var TagRepository */
-    private $tagRepository;
+    private TagRepository $tagRepository;
 
     public function __construct(
         ITranslator $translator,

@@ -24,43 +24,35 @@ class DiscountForm extends UI\Control
 {
     /**
      * Id upravované slevy.
-     *
-     * @var int
      */
-    public $id;
+    public int $id;
 
     /**
      * Upravovaná sleva.
-     *
-     * @var ?Discount
      */
-    private $discount;
+    private ?Discount $discount;
 
     /**
      * Událost při uložení formuláře.
      *
      * @var callable[]
      */
-    public $onSave;
+    public array $onSave = [];
 
     /**
      * Událost při chybě podmínky.
      *
      * @var callable[]
      */
-    public $onConditionError;
+    public array $onConditionError = [];
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var DiscountRepository */
-    private $discountRepository;
+    private DiscountRepository $discountRepository;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var DiscountService */
-    private $discountService;
+    private DiscountService $discountService;
 
     public function __construct(
         int $id,

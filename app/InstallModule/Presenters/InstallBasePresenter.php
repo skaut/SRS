@@ -16,11 +16,8 @@ use WebLoader\Nette\JavaScriptLoader;
  */
 abstract class InstallBasePresenter extends BasePresenter
 {
-    /**
-     * @var ITranslator
-     * @inject
-     */
-    public $translator;
+    /** @inject */
+    public ITranslator $translator;
 
     /**
      * Načte css podle konfigurace v common.neon.

@@ -29,19 +29,15 @@ class Discount
      * Podmínka.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $discountCondition;
+    protected string $discountCondition;
 
     /**
      * Sleva.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $discount;
+    protected int $discount;
 
     public function getId() : int
     {

@@ -61,7 +61,7 @@ class SrsResource
     public const PAYMENTS = 'payments';
 
     /** @var string[] */
-    public static $resources = [
+    public static array $resources = [
         self::ADMIN,
         self::CMS,
         self::ACL,
@@ -77,10 +77,8 @@ class SrsResource
      * Název prostředku.
      *
      * @ORM\Column(type="string", unique=true)
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Oprávnění s tímto prostředkem.
@@ -89,7 +87,7 @@ class SrsResource
      *
      * @var Collection|Permission[]
      */
-    protected $permissions;
+    protected Collection $permissions;
 
     public function __construct(string $name)
     {

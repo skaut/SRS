@@ -34,43 +34,35 @@ class Document
      *
      * @var Collection|Tag[]
      */
-    protected $tags;
+    protected Collection $tags;
 
     /**
      * Název dokumentu.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Adresa souboru.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $file;
+    protected string $file;
 
     /**
      * Popis.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $description;
+    protected ?string $description = null;
 
     /**
      * Datum změny souboru.
      *
      * @ORM\Column(type="datetime_immutable");
-     *
-     * @var DateTimeImmutable
      */
-    protected $timestamp;
+    protected DateTimeImmutable $timestamp;
 
     public function __construct()
     {

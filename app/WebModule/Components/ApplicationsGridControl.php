@@ -41,38 +41,27 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  */
 class ApplicationsGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var ApplicationRepository */
-    private $applicationRepository;
+    private ApplicationRepository $applicationRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var ApplicationService */
-    private $applicationService;
+    private ApplicationService $applicationService;
 
-    /** @var User */
-    private $user;
+    private ?User $user = null;
 
-    /** @var Validators */
-    private $validators;
+    private Validators $validators;
 
-    /** @var RolesApplicationRepository */
-    private $rolesApplicationRepository;
+    private RolesApplicationRepository $rolesApplicationRepository;
 
-    /** @var SubeventsApplicationRepository */
-    private $subeventsApplicationRepository;
+    private SubeventsApplicationRepository $subeventsApplicationRepository;
 
-    /** @var SubeventService */
-    private $subeventService;
+    private SubeventService $subeventService;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
     public function __construct(
         ITranslator $translator,
@@ -349,8 +338,7 @@ class ApplicationsGridControl extends Control
     /**
      * Vygeneruje potvrzení o přijetí platby.
      *
-     * @throws SettingsException
-     * @throws Throwable
+     * @throws AbortException
      */
     public function handleGeneratePaymentProofBank(int $id) : void
     {

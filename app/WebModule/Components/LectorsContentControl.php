@@ -17,11 +17,9 @@ use Nette\Application\UI\Control;
  */
 class LectorsContentControl extends Control
 {
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository)
     {

@@ -33,17 +33,13 @@ class MailingFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var MailService */
-    private $mailService;
+    private MailService $mailService;
 
-    /** @var LinkGenerator */
-    private $linkGenerator;
+    private LinkGenerator $linkGenerator;
 
     public function __construct(
         BaseFormFactory $baseForm,

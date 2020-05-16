@@ -24,16 +24,12 @@ class EditTemplateFormFactory
 
     /**
      * Upravovaná šablona.
-     *
-     * @var Template
      */
-    private $template;
+    private ?Template $template = null;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var TemplateRepository */
-    private $templateRepository;
+    private TemplateRepository $templateRepository;
 
     public function __construct(BaseFormFactory $baseFormFactory, TemplateRepository $templateRepository)
     {

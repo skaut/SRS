@@ -19,23 +19,14 @@ use Nette\Application\AbortException;
  */
 class RoomsPresenter extends ProgramBasePresenter
 {
-    /**
-     * @var RoomRepository
-     * @inject
-     */
-    public $roomRepository;
+    /** @inject */
+    public RoomRepository $roomRepository;
 
-    /**
-     * @var IRoomsGridControlFactory
-     * @inject
-     */
-    public $roomsGridControlFactory;
+    /** @inject */
+    public IRoomsGridControlFactory $roomsGridControlFactory;
 
-    /**
-     * @var IRoomScheduleGridControlFactory
-     * @inject
-     */
-    public $roomScheduleGridControlFactory;
+    /** @inject */
+    public IRoomScheduleGridControlFactory $roomScheduleGridControlFactory;
 
     /**
      * @throws AbortException

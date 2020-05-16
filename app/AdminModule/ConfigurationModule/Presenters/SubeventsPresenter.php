@@ -21,29 +21,17 @@ use Throwable;
  */
 class SubeventsPresenter extends ConfigurationBasePresenter
 {
-    /**
-     * @var ISubeventsGridControlFactory
-     * @inject
-     */
-    public $subeventsGridControlFactory;
+    /** @inject */
+    public ISubeventsGridControlFactory $subeventsGridControlFactory;
 
-    /**
-     * @var SubeventFormFactory
-     * @inject
-     */
-    public $subeventFormFactory;
+    /** @inject */
+    public SubeventFormFactory $subeventFormFactory;
 
-    /**
-     * @var SubeventsFormFactory
-     * @inject
-     */
-    public $subeventsFormFactory;
+    /** @inject */
+    public SubeventsFormFactory $subeventsFormFactory;
 
-    /**
-     * @var SubeventRepository
-     * @inject
-     */
-    public $subeventRepository;
+    /** @inject */
+    public SubeventRepository $subeventRepository;
 
     public function renderEdit(int $id) : void
     {

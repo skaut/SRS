@@ -17,6 +17,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FaqContent extends Content implements IContent
 {
-    /** @var string */
-    protected $type = Content::FAQ;
+    protected string $type = Content::FAQ;
 }

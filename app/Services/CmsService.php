@@ -27,17 +27,13 @@ use function array_map;
  */
 class CmsService
 {
-    /** @var Cache */
-    private $pageCache;
+    private Cache $pageCache;
 
-    /** @var Cache */
-    private $menuCache;
+    private Cache $menuCache;
 
-    /** @var PageRepository */
-    private $pageRepository;
+    private PageRepository $pageRepository;
 
-    /** @var ContentRepository */
-    private $contentRepository;
+    private ContentRepository $contentRepository;
 
     public function __construct(PageRepository $pageRepository, ContentRepository $contentRepository, IStorage $storage)
     {

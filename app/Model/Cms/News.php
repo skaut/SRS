@@ -25,28 +25,22 @@ class News
      * Text aktuality.
      *
      * @ORM\Column(type="text")
-     *
-     * @var string
      */
-    protected $text;
+    protected string $text;
 
     /**
      * Datum publikování aktuality.
      *
      * @ORM\Column(type="datetime_immutable")
-     *
-     * @var DateTimeImmutable
      */
-    protected $published;
+    protected DateTimeImmutable $published;
 
     /**
      * Připíchnutá nahoru.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $pinned = false;
+    protected bool $pinned = false;
 
     public function getId() : int
     {

@@ -17,11 +17,8 @@ use Throwable;
  */
 class DashboardPresenter extends AdminBasePresenter
 {
-    /**
-     * @var SubeventRepository
-     * @inject
-     */
-    public $subeventRepository;
+    /** @inject */
+    public SubeventRepository $subeventRepository;
 
     /**
      * @throws SettingsException

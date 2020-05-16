@@ -33,26 +33,19 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class PaymentsGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var PaymentRepository */
-    private $paymentRepository;
+    private PaymentRepository $paymentRepository;
 
-    /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
-    /** @var SettingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /** @var ApplicationService */
-    private $applicationService;
+    private ApplicationService $applicationService;
 
-    /** @var BankService */
-    private $bankService;
+    private BankService $bankService;
 
-    /** @var Session */
-    private $session;
+    private Session $session;
 
     public function __construct(
         ITranslator $translator,
@@ -201,7 +194,6 @@ class PaymentsGridControl extends Control
     /**
      * Vygeneruje potvrzení o přijetí platby.
      *
-     * @throws SettingsException
      * @throws Throwable
      */
     public function handleGeneratePaymentProofBank(int $id) : void

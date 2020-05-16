@@ -49,7 +49,7 @@ abstract class CustomInput
     public const FILE = 'file';
 
     /** @var string[] */
-    public static $types = [
+    public static array $types = [
         self::TEXT,
         self::CHECKBOX,
         self::SELECT,
@@ -58,38 +58,30 @@ abstract class CustomInput
 
     /**
      * Typ vlastního pole.
-     *
-     * @var string
      */
-    protected $type;
+    protected string $type;
     use Id;
 
     /**
      * Název vlastního pole.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Povinné pole.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $mandatory = false;
+    protected bool $mandatory = false;
 
     /**
      * Pořadí pole na přihlášce.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $position = 0;
+    protected int $position = 0;
 
     /**
      * Hodnoty pole pro jednotlivé uživatele.
@@ -98,7 +90,7 @@ abstract class CustomInput
      *
      * @var Collection|CustomInputValue[]
      */
-    protected $customInputValues;
+    protected Collection $customInputValues;
 
     public function __construct()
     {

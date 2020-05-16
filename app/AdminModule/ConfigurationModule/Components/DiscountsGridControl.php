@@ -22,14 +22,11 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class DiscountsGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var DiscountRepository */
-    private $discountRepository;
+    private DiscountRepository $discountRepository;
 
-    /** @var DiscountService */
-    private $discountService;
+    private DiscountService $discountService;
 
     public function __construct(
         ITranslator $translator,

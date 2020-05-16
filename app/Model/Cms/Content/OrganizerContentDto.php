@@ -13,10 +13,8 @@ class OrganizerContentDto extends ContentDto
 {
     /**
      * Pořadatel.
-     *
-     * @var string
      */
-    protected $organizer;
+    protected ?string $organizer = null;
 
     public function __construct(string $type, string $heading, ?string $organizer)
     {

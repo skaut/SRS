@@ -29,20 +29,15 @@ class DatabaseService
 {
     use Nette\SmartObject;
 
-    /** @var Container */
-    public $container;
+    public Container $container;
 
-    /** @var string */
-    public $dir;
+    public string $dir;
 
-    /** @var Cache */
-    protected $databaseCache;
+    protected Cache $databaseCache;
 
-    /** @var Application */
-    private $consoleApplication;
+    private Application $consoleApplication;
 
-    /** @var EntityManagerDecorator */
-    private $em;
+    private EntityManagerDecorator $em;
 
     public function __construct(
         string $dir,

@@ -28,30 +28,25 @@ class DiscountService
      *
      * @var string[][]
      */
-    private $symbols;
+    private array $symbols;
 
     /**
      * Aktuálně zpracovávaný token.
-     *
-     * @var int
      */
-    private $currentSymbol;
+    private int $currentSymbol;
 
     /**
      * Id zvolených podakcí.
      *
      * @var int[]
      */
-    private $selectedSubeventsIds;
+    private array $selectedSubeventsIds;
 
-    /** @var DiscountRepository */
-    private $discountRepository;
+    private DiscountRepository $discountRepository;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
     public function __construct(
         DiscountRepository $discountRepository,

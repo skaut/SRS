@@ -17,6 +17,7 @@ use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\NonUniqueResultException;
 use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
@@ -31,30 +32,21 @@ use function random_bytes;
  */
 class IncomeProofPresenter extends ExportBasePresenter
 {
-    /**
-     * @var ApplicationService
-     * @inject
-     */
-    public $applicationService;
+    /** @inject */
+    public ApplicationService $applicationService;
+
+    /** @inject */
+    public ApplicationRepository $applicationRepository;
+
+    /** @inject */
+    public UserRepository $userRepository;
+
+    /** @inject */
+    public SettingsService $settingsService;
 
     /**
-     * @var ApplicationRepository
-     * @inject
+     * @throws ForbiddenRequestException
      */
-    public $applicationRepository;
-
-    /**
-     * @var UserRepository
-     * @inject
-     */
-    public $userRepository;
-
-    /**
-     * @var SettingsService
-     * @inject
-     */
-    public $settingsService;
-
     public function startup() : void
     {
         parent::startup();
@@ -68,7 +60,6 @@ class IncomeProofPresenter extends ExportBasePresenter
      * Vygeneruje doklad pro přihlášku.
      *
      * @throws AbortException
-     * @throws SettingsException
      * @throws Throwable
      */
     public function actionApplication(int $id) : void
@@ -87,7 +78,6 @@ class IncomeProofPresenter extends ExportBasePresenter
      * Vygeneruje doklady pro přihlášky.
      *
      * @throws AbortException
-     * @throws SettingsException
      * @throws Throwable
      */
     public function actionApplications() : void
@@ -104,7 +94,6 @@ class IncomeProofPresenter extends ExportBasePresenter
      * Vygeneruje doklady pro uživatele.
      *
      * @throws AbortException
-     * @throws SettingsException
      * @throws Throwable
      */
     public function actionUsers() : void
@@ -126,6 +115,9 @@ class IncomeProofPresenter extends ExportBasePresenter
      * @param Collection|Application[] $applications
      *
      * @throws AbortException
+     * @throws SettingsException
+     * @throws Throwable
+     * @throws NonUniqueResultException
      */
     private function generateIncomeProofs(Collection $applications) : void
     {

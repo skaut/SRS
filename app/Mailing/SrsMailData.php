@@ -16,45 +16,35 @@ class SrsMailData implements IMessageData
 {
     /**
      * E-mail odesílatele.
-     *
-     * @var string
      */
-    private $fromEmail;
+    private string $fromEmail;
 
     /**
      * Jméno odesílatele.
-     *
-     * @var string
      */
-    private $fromName;
+    private string $fromName;
 
     /**
      * Příjemci mailu.
      *
      * @var User[]
      */
-    private $recipients;
+    private array $recipients;
 
     /**
      * Kopie mailu.
-     *
-     * @var string
      */
-    private $copy;
+    private string $copy;
 
     /**
      * Předmět mailu.
-     *
-     * @var string
      */
-    private $subject;
+    private string $subject;
 
     /**
      * Text mailu.
-     *
-     * @var string
      */
-    private $text;
+    private string $text;
 
     /**
      * @param User[] $recipients

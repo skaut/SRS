@@ -82,10 +82,8 @@ class TemplateVariable
      * Název proměnné.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     public function getId() : int
     {

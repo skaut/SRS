@@ -24,14 +24,11 @@ class AddRoleFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var BaseFormFactory */
-    private $baseFormFactory;
+    private BaseFormFactory $baseFormFactory;
 
-    /** @var AclService */
-    private $aclService;
+    private AclService $aclService;
 
-    /** @var RoleRepository */
-    private $roleRepository;
+    private RoleRepository $roleRepository;
 
     public function __construct(BaseFormFactory $baseFormFactory, AclService $aclService, RoleRepository $roleRepository)
     {
@@ -85,7 +82,7 @@ class AddRoleFormFactory
 
         $parent = $this->roleRepository->findById($values->parent);
 
-        $role->setSystem(false);
+        $role->setSystemRole(false);
 
         if ($parent) {
             foreach ($parent->getPermissions() as $permission) {

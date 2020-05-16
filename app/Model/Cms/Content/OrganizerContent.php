@@ -19,17 +19,14 @@ use stdClass;
  */
 class OrganizerContent extends Content implements IContent
 {
-    /** @var string */
-    protected $type = Content::ORGANIZER;
+    protected string $type = Content::ORGANIZER;
 
     /**
      * Pořadatel.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $organizer;
+    protected ?string $organizer = null;
 
     public function getOrganizer() : ?string
     {

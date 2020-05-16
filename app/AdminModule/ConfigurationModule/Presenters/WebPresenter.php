@@ -19,11 +19,8 @@ use Throwable;
  */
 class WebPresenter extends ConfigurationBasePresenter
 {
-    /**
-     * @var WebFormFactory
-     * @inject
-     */
-    public $webFormFactory;
+    /** @inject */
+    public WebFormFactory $webFormFactory;
 
     /**
      * @throws SettingsException

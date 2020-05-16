@@ -48,29 +48,23 @@ abstract class Application
 
     /**
      * Typ přihlášky.
-     *
-     * @var string
      */
-    protected $type;
+    protected string $type;
     use Id;
 
     /**
      * Id přihlášky.
      *
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $applicationId;
+    protected ?int $applicationId = null;
 
     /**
      * Uživatel.
      *
      * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="applications", cascade={"persist"})
-     *
-     * @var User
      */
-    protected $user;
+    protected User $user;
 
     /**
      * Role.
@@ -79,7 +73,7 @@ abstract class Application
      *
      * @var Collection|Role[]
      */
-    protected $roles;
+    protected Collection $roles;
 
     /**
      * Podakce.
@@ -88,113 +82,87 @@ abstract class Application
      *
      * @var Collection|Subevent[]
      */
-    protected $subevents;
+    protected Collection $subevents;
 
     /**
      * Poplatek.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $fee;
+    protected int $fee;
 
     /**
      * Variabilní symbol.
      *
      * @ORM\ManyToOne(targetEntity="VariableSymbol", cascade={"persist"})
-     *
-     * @var VariableSymbol
      */
-    protected $variableSymbol;
+    protected VariableSymbol $variableSymbol;
 
     /**
      * Datum podání přihlášky.
      *
      * @ORM\Column(type="datetime_immutable")
-     *
-     * @var DateTimeImmutable
      */
-    protected $applicationDate;
+    protected DateTimeImmutable $applicationDate;
 
     /**
      * Datum splatnosti.
      *
      * @ORM\Column(type="date_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $maturityDate;
+    protected ?DateTimeImmutable $maturityDate = null;
 
     /**
      * Platební metoda.
      *
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
      */
-    protected $paymentMethod;
+    protected ?string $paymentMethod = null;
 
     /**
      * Datum zaplacení.
      *
      * @ORM\Column(type="date_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $paymentDate;
+    protected ?DateTimeImmutable $paymentDate = null;
 
     /**
      * Spárovaná platba.
      *
      * @ORM\ManyToOne(targetEntity="\App\Model\Payment\Payment", inversedBy="pairedApplications", cascade={"persist"})
-     *
-     * @var Payment
      */
-    protected $payment;
+    protected ?Payment $payment = null;
 
     /**
      * Příjmový doklad. Používá se pro generování id.
      *
      * @ORM\ManyToOne(targetEntity="IncomeProof", cascade={"persist"})
-     *
-     * @var IncomeProof
      */
-    protected $incomeProof;
+    protected ?IncomeProof $incomeProof = null;
 
     /**
      * Stav přihlášky.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $state;
+    protected ?string $state = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
-     *
-     * @var User
-     */
-    protected $createdBy;
+    /** @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"}) */
+    protected ?User $createdBy = null;
 
     /**
      * Platnost záznamu od.
      *
      * @ORM\Column(type="datetime_immutable")
-     *
-     * @var DateTimeImmutable
      */
-    protected $validFrom;
+    protected DateTimeImmutable $validFrom;
 
     /**
      * Platnost záznamu do.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable
      */
-    protected $validTo;
+    protected ?DateTimeImmutable $validTo = null;
 
     public function __construct()
     {
@@ -397,7 +365,7 @@ abstract class Application
         return $this->state;
     }
 
-    public function setState(?string $state) : void
+    public function setState(string $state) : void
     {
         $this->state = $state;
     }

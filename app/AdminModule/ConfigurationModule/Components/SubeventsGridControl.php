@@ -22,11 +22,9 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class SubeventsGridControl extends Control
 {
-    /** @var ITranslator */
-    private $translator;
+    private ITranslator $translator;
 
-    /** @var SubeventRepository */
-    private $subeventRepository;
+    private SubeventRepository $subeventRepository;
 
     public function __construct(ITranslator $translator, SubeventRepository $subeventRepository)
     {

@@ -32,37 +32,29 @@ class Page
      * Název stránky.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Cesta stránky.
      *
      * @ORM\Column(type="string", unique=true)
-     *
-     * @var string
      */
-    protected $slug;
+    protected string $slug;
 
     /**
      * Pořadí v menu.
      *
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    protected $position = 0;
+    protected int $position = 0;
 
     /**
      * Viditelná.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $public = false;
+    protected bool $public = false;
 
     /**
      * Role, které mají na stránku přístup.
@@ -71,7 +63,7 @@ class Page
      *
      * @var Collection|Role[]
      */
-    protected $roles;
+    protected Collection $roles;
 
     /**
      * Obsahy na stránce.
@@ -81,7 +73,7 @@ class Page
      *
      * @var Collection|Content[]
      */
-    protected $contents;
+    protected Collection $contents;
 
     public function __construct(string $name, string $slug)
     {

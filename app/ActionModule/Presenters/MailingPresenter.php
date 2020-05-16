@@ -19,11 +19,8 @@ use Throwable;
  */
 class MailingPresenter extends ActionBasePresenter
 {
-    /**
-     * @var SettingsService
-     * @inject
-     */
-    public $settingsService;
+    /** @inject */
+    public SettingsService $settingsService;
 
     /**
      * Ověří e-mail semináře.

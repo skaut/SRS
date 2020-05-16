@@ -31,59 +31,32 @@ use Throwable;
  */
 class ProfilePresenter extends WebBasePresenter
 {
-    /**
-     * @var PersonalDetailsFormFactory
-     * @inject
-     */
-    public $personalDetailsFormFactory;
+    /** @inject */
+    public PersonalDetailsFormFactory $personalDetailsFormFactory;
 
-    /**
-     * @var IAdditionalInformationFormFactory
-     * @inject
-     */
-    public $additionalInformationFormFactory;
+    /** @inject */
+    public IAdditionalInformationFormFactory $additionalInformationFormFactory;
 
-    /**
-     * @var RolesFormFactory
-     * @inject
-     */
-    public $rolesFormFactory;
+    /** @inject */
+    public RolesFormFactory $rolesFormFactory;
 
-    /**
-     * @var IApplicationsGridControlFactory
-     * @inject
-     */
-    public $applicationsGridControlFactory;
+    /** @inject */
+    public IApplicationsGridControlFactory $applicationsGridControlFactory;
 
-    /**
-     * @var ExcelExportService
-     * @inject
-     */
-    public $excelExportService;
+    /** @inject */
+    public ExcelExportService $excelExportService;
 
-    /**
-     * @var SubeventRepository
-     * @inject
-     */
-    public $subeventRepository;
+    /** @inject */
+    public SubeventRepository $subeventRepository;
 
-    /**
-     * @var MailService
-     * @inject
-     */
-    public $mailService;
+    /** @inject */
+    public MailService $mailService;
 
-    /**
-     * @var ApplicationService
-     * @inject
-     */
-    public $applicationService;
+    /** @inject */
+    public ApplicationService $applicationService;
 
-    /**
-     * @var Authenticator
-     * @inject
-     */
-    public $authenticator;
+    /** @inject */
+    public Authenticator $authenticator;
 
     /**
      * @throws AbortException

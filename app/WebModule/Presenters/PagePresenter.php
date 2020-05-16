@@ -43,89 +43,47 @@ use Throwable;
  */
 class PagePresenter extends WebBasePresenter
 {
-    /**
-     * @var IApplicationContentControlFactory
-     * @inject
-     */
-    public $applicationContentControlFactory;
+    /** @inject */
+    public IApplicationContentControlFactory $applicationContentControlFactory;
 
-    /**
-     * @var IBlocksContentControlFactory
-     * @inject
-     */
-    public $blocksContentControlFactory;
+    /** @inject */
+    public IBlocksContentControlFactory $blocksContentControlFactory;
 
-    /**
-     * @var ICapacitiesContentControlFactory
-     * @inject
-     */
-    public $capacitiesContentControlFactory;
+    /** @inject */
+    public ICapacitiesContentControlFactory $capacitiesContentControlFactory;
 
-    /**
-     * @var IDocumentContentControlFactory
-     * @inject
-     */
-    public $documentContentControlFactory;
+    /** @inject */
+    public IDocumentContentControlFactory $documentContentControlFactory;
 
-    /**
-     * @var IFaqContentControlFactory
-     * @inject
-     */
-    public $faqContentControlFactory;
+    /** @inject */
+    public IFaqContentControlFactory $faqContentControlFactory;
 
-    /**
-     * @var IHtmlContentControlFactory
-     * @inject
-     */
-    public $htmlContentControlFactory;
+    /** @inject */
+    public IHtmlContentControlFactory $htmlContentControlFactory;
 
-    /**
-     * @var IImageContentControlFactory
-     * @inject
-     */
-    public $imageContentControlFactory;
+    /** @inject */
+    public IImageContentControlFactory $imageContentControlFactory;
 
-    /**
-     * @var INewsContentControlFactory
-     * @inject
-     */
-    public $newsContentControlFactory;
+    /** @inject */
+    public INewsContentControlFactory $newsContentControlFactory;
 
-    /**
-     * @var IPlaceContentControlFactory
-     * @inject
-     */
-    public $placeContentControlFactory;
+    /** @inject */
+    public IPlaceContentControlFactory $placeContentControlFactory;
 
-    /**
-     * @var IProgramsContentControlFactory
-     * @inject
-     */
-    public $programsContentControlFactory;
+    /** @inject */
+    public IProgramsContentControlFactory $programsContentControlFactory;
 
-    /**
-     * @var ITextContentControlFactory
-     * @inject
-     */
-    public $textContentControlFactory;
+    /** @inject */
+    public ITextContentControlFactory $textContentControlFactory;
 
-    /**
-     * @var IUsersContentControlFactory
-     * @inject
-     */
-    public $usersContentControlFactory;
+    /** @inject */
+    public IUsersContentControlFactory $usersContentControlFactory;
 
-    /**
-     * @var ILectorsContentControlFactory
-     * @inject
-     */
-    public $lectorsContentControlFactory;
+    /** @inject */
+    public ILectorsContentControlFactory $lectorsContentControlFactory;
 
-    /**
-     * @var IOrganizerContentControlFactory
-     * @inject
-     */
-    public $organizerContentControlFactory;
+    /** @inject */
+    public IOrganizerContentControlFactory $organizerContentControlFactory;
 
     /**
      * @throws BadRequestException
