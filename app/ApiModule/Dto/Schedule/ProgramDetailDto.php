@@ -32,22 +32,22 @@ class ProgramDetailDto
     private ?int $roomId = null;
 
     /** @JMS\Type("int") */
-    private int $attendeesCount;
+    private ?int $attendeesCount = null;
 
     /** @JMS\Type("boolean") */
-    private bool $userAttends;
+    private ?bool $userAttends = null;
 
     /**
      * @JMS\Type("array")
      * @var int[]
      */
-    private array $blocks;
+    private ?array $blocks = null;
 
     /** @JMS\Type("boolean") */
-    private bool $blocked;
+    private ?bool $blocked = null;
 
     /** @JMS\Type("boolean") */
-    private bool $paid;
+    private ?bool $paid = null;
 
     public function getId() : int
     {

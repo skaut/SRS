@@ -73,7 +73,7 @@ class ApplicationFormFactory
     private ?User $user = null;
 
     /** @var callable[] */
-    public array $onSkautIsError;
+    public array $onSkautIsError = [];
 
     private BaseFormFactory $baseFormFactory;
 

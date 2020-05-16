@@ -67,14 +67,14 @@ class User
      *
      * @ORM\Column(type="string")
      */
-    protected string $firstName;
+    protected ?string $firstName = null;
 
     /**
      * Příjmení.
      *
      * @ORM\Column(type="string")
      */
-    protected string $lastName;
+    protected ?string $lastName = null;
 
     /**
      * Přezdívka.

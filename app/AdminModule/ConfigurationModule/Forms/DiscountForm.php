@@ -37,14 +37,14 @@ class DiscountForm extends UI\Control
      *
      * @var callable[]
      */
-    public array $onSave;
+    public array $onSave = [];
 
     /**
      * Událost při chybě podmínky.
      *
      * @var callable[]
      */
-    public array $onConditionError;
+    public array $onConditionError = [];
 
     private BaseFormFactory $baseFormFactory;
 

@@ -32,7 +32,7 @@ class PaymentForm extends UI\Control
      *
      * @var callable[]
      */
-    public array $onSave;
+    public array $onSave = [];
 
     private BaseFormFactory $baseFormFactory;
 

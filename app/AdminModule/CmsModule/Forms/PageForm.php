@@ -55,14 +55,14 @@ class PageForm extends UI\Control
      *
      * @var callable[]
      */
-    public array $onPageSave;
+    public array $onPageSave = [];
 
     /**
      * Událost při chybě ukládání stránky.
      *
      * @var callable[]
      */
-    public array $onPageSaveError;
+    public array $onPageSaveError = [];
 
     private BaseFormFactory $baseFormFactory;
 

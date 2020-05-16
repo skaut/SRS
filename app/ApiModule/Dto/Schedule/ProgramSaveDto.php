@@ -18,7 +18,7 @@ class ProgramSaveDto
     use Nette\SmartObject;
 
     /** @JMS\Type("int") */
-    private int $id;
+    private ?int $id = null;
 
     /** @JMS\Type("int") */
     private int $blockId;

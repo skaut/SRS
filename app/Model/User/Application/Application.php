@@ -145,7 +145,7 @@ abstract class Application
      *
      * @ORM\Column(type="string")
      */
-    protected string $state;
+    protected ?string $state = null;
 
     /** @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"}) */
     protected ?User $createdBy = null;
@@ -360,7 +360,7 @@ abstract class Application
         $this->incomeProof = $incomeProof;
     }
 
-    public function getState() : string
+    public function getState() : ?string
     {
         return $this->state;
     }
