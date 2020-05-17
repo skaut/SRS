@@ -51,22 +51,22 @@ class CalendarConfigDto
         $this->seminarToDate = $seminarToDate;
     }
 
-    public function getMinTime(): string
+    public function getMinTime() : string
     {
         return $this->minTime;
     }
 
-    public function setMinTime(string $minTime): void
+    public function setMinTime(string $minTime) : void
     {
         $this->minTime = $minTime;
     }
 
-    public function getMaxTime(): string
+    public function getMaxTime() : string
     {
         return $this->maxTime;
     }
 
-    public function setMaxTime(string $maxTime): void
+    public function setMaxTime(string $maxTime) : void
     {
         $this->maxTime = $maxTime;
     }

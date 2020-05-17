@@ -202,15 +202,18 @@ class ScheduleService
                 if ($start < $minTime) {
                     $minTime = $start;
                 }
+
                 $end = (int) $program->getEnd()->format('H');
                 if ((int) $program->getEnd()->format('i') > 0) {
                     $end++;
                 }
+
                 if ($end > $maxTime) {
                     $maxTime = $end;
                 }
             }
         }
+
         $calendarConfigDto->setMinTime((string) $minTime);
         $calendarConfigDto->setMaxTime((string) $maxTime);
 
