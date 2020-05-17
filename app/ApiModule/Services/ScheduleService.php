@@ -189,6 +189,31 @@ class ScheduleService
         $calendarConfigDto->setAllowedModifySchedule($this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
             && $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE));
 
+        /** @var Program[] $programs */
+        $programs = $this->programRepository->findAll();
+        if (empty($programs)) {
+            $minTime = 0;
+            $maxTime = 24;
+        } else {
+            $minTime = 24;
+            $maxTime = 0;
+            foreach ($programs as $program) {
+                $start = (int) $program->getStart()->format('H');
+                if ($start < $minTime) {
+                    $minTime = $start;
+                }
+                $end = (int) $program->getEnd()->format('H');
+                if ((int) $program->getEnd()->format('i') > 0) {
+                    $end++;
+                }
+                if ($end > $maxTime) {
+                    $maxTime = $end;
+                }
+            }
+        }
+        $calendarConfigDto->setMinTime((string) $minTime);
+        $calendarConfigDto->setMaxTime((string) $maxTime);
+
         return $calendarConfigDto;
     }
 

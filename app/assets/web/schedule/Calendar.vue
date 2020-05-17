@@ -134,6 +134,8 @@
                       :views="calendarViews"
                       :default-view="defaultView"
                       :valid-range="validRange"
+                      :min-time="minTime"
+                      :max-time="maxTime"
                       :event-render="eventRender"
                       :view-skeleton-render="viewSkeletonRender"
                       :dates-render="datesRender"
@@ -199,6 +201,16 @@
                     start: this.config.seminar_from_date,
                     end: this.config.seminar_to_date
                 }
+            },
+            minTime() {
+                return {
+                    minutes: this.config.min_time * 60
+                };
+            },
+            maxTime() {
+                return {
+                    minutes: this.config.max_time * 60
+                };
             }
         },
         watch: {
