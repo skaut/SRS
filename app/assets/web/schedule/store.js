@@ -18,7 +18,9 @@ export default new Vuex.Store({
     state: {
         config: {
             seminar_from_date: "2000-01-01",
-            seminar_to_date: "2000-01-01"
+            seminar_to_date: "2000-01-01",
+            min_time: "0",
+            max_time: "24"
         },
         blocks: [],
         resources: [],
