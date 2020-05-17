@@ -126,7 +126,6 @@
                       theme-system="bootstrap"
                       locale="cs"
                       timeZone="none"
-                      scroll-time="07:00:00"
                       aspect-ratio="1.85"
                       header="false"
                       scheduler-license-key="GPL-My-Project-Is-Open-Source"
