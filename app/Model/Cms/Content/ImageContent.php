@@ -232,9 +232,9 @@ class ImageContent extends Content implements IContent
                 $this->height = $image->getHeight();
             } elseif ($width) {
                 $this->width  = $width;
-                $this->height = $image->getHeight() * $width / $image->getWidth();
+                $this->height = (int) ($image->getHeight() * $width / $image->getWidth());
             } else {
-                $this->width  = $image->getWidth() * $height / $image->getHeight();
+                $this->width  = (int) ($image->getWidth() * $height / $image->getHeight());
                 $this->height = $height;
             }
         } else {

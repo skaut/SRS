@@ -289,7 +289,7 @@ abstract class Content implements IContent
     {
         $formName       = $this->getContentFormName();
         $values         = $values->$formName;
-        $this->position = $values->position;
+        $this->position = (int) $values->position;
         $this->heading  = $values->heading;
     }
 
