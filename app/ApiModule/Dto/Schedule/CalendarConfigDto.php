@@ -22,6 +22,12 @@ class CalendarConfigDto
     /** @JMS\Type("string") */
     private string $seminarToDate;
 
+    /** @JMS\Type("string") */
+    private string $minTime;
+
+    /** @JMS\Type("string") */
+    private string $maxTime;
+
     /** @JMS\Type("boolean") */
     private bool $allowedModifySchedule;
 
@@ -43,6 +49,26 @@ class CalendarConfigDto
     public function setSeminarToDate(string $seminarToDate) : void
     {
         $this->seminarToDate = $seminarToDate;
+    }
+
+    public function getMinTime() : string
+    {
+        return $this->minTime;
+    }
+
+    public function setMinTime(string $minTime) : void
+    {
+        $this->minTime = $minTime;
+    }
+
+    public function getMaxTime() : string
+    {
+        return $this->maxTime;
+    }
+
+    public function setMaxTime(string $maxTime) : void
+    {
+        $this->maxTime = $maxTime;
     }
 
     public function isAllowedModifySchedule() : bool
