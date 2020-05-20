@@ -157,23 +157,21 @@
         </phingcall>
 
         <phingcall target="deploy:ssh">
-            <property name="comment" value="Copying custom CSS"/>
+            <property name="comment" value="Copying custom CSS and directories: log, backup, img, files"/>
             <property name="command" value="cp ${deploy.workDir}/www/css/web/style.css ${deploy.release}/www/css/web"/>
-        </phingcall>
-
-        <phingcall target="deploy:ssh">
-            <property name="comment" value="Copying img directory"/>
+            <property name="command" value="cp -r ${deploy.workDir}/www/../log ${deploy.release}"/>
+            <property name="command" value="cp -r ${deploy.workDir}/www/../backup ${deploy.release}"/>
             <property name="command" value="cp -r ${deploy.workDir}/www/img ${deploy.release}/www"/>
-        </phingcall>
-
-        <phingcall target="deploy:ssh">
-            <property name="comment" value="Copying files directory"/>
             <property name="command" value="cp -r ${deploy.workDir}/www/files ${deploy.release}/www"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
-            <property name="comment" value="Copying backup directory"/>
-            <property name="command" value="cp -r ${deploy.workDir}/www/../backup ${deploy.release}"/>
+            <property name="comment" value="Setting access rights for directories: temp, log, backup, files, webtemp"/>
+            <property name="command" value="chmod -R 777 ${deploy.release}/temp"/>
+            <property name="command" value="chmod -R 777 ${deploy.release}/log"/>
+            <property name="command" value="chmod -R 777 ${deploy.release}/backup"/>
+            <property name="command" value="chmod -R 777 ${deploy.release}/www/files"/>
+            <property name="command" value="chmod -R 777 ${deploy.release}/www/webtemp"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
