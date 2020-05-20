@@ -157,20 +157,52 @@
         </phingcall>
 
         <phingcall target="deploy:ssh">
-            <property name="comment" value="Copying custom CSS and directories: log, backup, img, files"/>
+            <property name="comment" value="Copying custom CSS"/>
             <property name="command" value="cp ${deploy.workDir}/www/css/web/style.css ${deploy.release}/www/css/web"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Copying old log directory"/>
             <property name="command" value="cp -r ${deploy.workDir}/www/../log ${deploy.release}"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Copying old backup directory"/>
             <property name="command" value="cp -r ${deploy.workDir}/www/../backup ${deploy.release}"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Copying old img directory"/>
             <property name="command" value="cp -r ${deploy.workDir}/www/img ${deploy.release}/www"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Copying old files directory"/>
             <property name="command" value="cp -r ${deploy.workDir}/www/files ${deploy.release}/www"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
-            <property name="comment" value="Setting access rights for directories: temp, log, backup, files, webtemp"/>
+            <property name="comment" value="Setting access rights for temp directory"/>
             <property name="command" value="chmod -R 777 ${deploy.release}/temp"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Setting access rights for log directory"/>
             <property name="command" value="chmod -R 777 ${deploy.release}/log"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Setting access rights for backup directory"/>
             <property name="command" value="chmod -R 777 ${deploy.release}/backup"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Setting access rights for files directory"/>
             <property name="command" value="chmod -R 777 ${deploy.release}/www/files"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Setting access rights for webtemp directory"/>
             <property name="command" value="chmod -R 777 ${deploy.release}/www/webtemp"/>
         </phingcall>
 
