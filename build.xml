@@ -158,27 +158,27 @@
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Copying custom CSS"/>
-            <property name="command" value="cp ${deploy.workDir}/www/css/web/style.css ${deploy.release}/www/css/web | true"/>
+            <property name="command" value="cp ${deploy.workDir}/www/css/web/style.css ${deploy.release}/www/css/web || true"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Copying old log directory"/>
-            <property name="command" value="cp -r ${deploy.workDir}/www/../log ${deploy.release} | true"/>
+            <property name="command" value="cp -r ${deploy.workDir}/www/../log ${deploy.release} || true"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Copying old backup directory"/>
-            <property name="command" value="cp -r ${deploy.workDir}/www/../backup ${deploy.release} | true"/>
+            <property name="command" value="cp -r ${deploy.workDir}/www/../backup ${deploy.release} || true"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Copying old img directory"/>
-            <property name="command" value="cp -r ${deploy.workDir}/www/img ${deploy.release}/www | true"/>
+            <property name="command" value="cp -r ${deploy.workDir}/www/img ${deploy.release}/www || true"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Copying old files directory"/>
-            <property name="command" value="cp -r ${deploy.workDir}/www/files ${deploy.release}/www | true"/>
+            <property name="command" value="cp -r ${deploy.workDir}/www/files ${deploy.release}/www || true"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
