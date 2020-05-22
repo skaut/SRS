@@ -168,19 +168,10 @@ class AdditionalInformationForm extends UI\Control
 
         $form->addTextArea('about', 'web.profile.about_me');
 
-        if ($this->user->hasDisplayArrivalDepartureRole()) {
-            $arrivalDateTime = new DateTimeControl('web.profile.arrival');
-            $form->addComponent($arrivalDateTime, 'arrival');
-            $departureDateTime = new DateTimeControl('web.profile.departure');
-            $form->addComponent($departureDateTime, 'departure');
-        }
-
         $form->addSubmit('submit', 'web.profile.update_additional_information');
 
         $form->setDefaults([
             'about' => $this->user->getAbout(),
-            'arrival' => $this->user->getArrival(),
-            'departure' => $this->user->getDeparture(),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -247,14 +238,6 @@ class AdditionalInformationForm extends UI\Control
             }
 
             $this->user->setAbout($values->about);
-
-            if (property_exists($values, 'arrival')) {
-                $this->user->setArrival($values->arrival);
-            }
-
-            if (property_exists($values, 'departure')) {
-                $this->user->setDeparture($values->departure);
-            }
 
             $this->userRepository->save($this->user);
 

@@ -89,7 +89,7 @@ class ApplicationContentControl extends Control
 
             $template->unapprovedRole      = $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName());
             $template->nonregisteredRole   = $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName());
-            $template->noRegisterableRole  = $this->roleRepository->findFilteredRoles(true, false, false, false)->isEmpty();
+            $template->noRegisterableRole  = $this->roleRepository->findFilteredRoles(true, false, false)->isEmpty();
             $template->registrationStart   = $this->roleRepository->getRegistrationStart();
             $template->registrationEnd     = $this->roleRepository->getRegistrationEnd();
             $template->bankAccount         = $this->settingsService->getValue(Settings::ACCOUNT_NUMBER);
@@ -105,7 +105,7 @@ class ApplicationContentControl extends Control
         }
 
         $template->explicitSubeventsExists = $explicitSubeventsExists;
-        $template->rolesWithSubevents      = json_encode($this->roleRepository->findRolesIds($this->roleRepository->findFilteredRoles(false, true, false, false)));
+        $template->rolesWithSubevents      = json_encode($this->roleRepository->findRolesIds($this->roleRepository->findFilteredRoles(false, true, false)));
 
         $template->render();
     }

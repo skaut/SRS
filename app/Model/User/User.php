@@ -217,20 +217,6 @@ class User
     protected bool $attended = false;
 
     /**
-     * Příjezd.
-     *
-     * @ORM\Column(type="datetime_immutable", nullable=true)
-     */
-    protected ?DateTimeImmutable $arrival = null;
-
-    /**
-     * Odjezd.
-     *
-     * @ORM\Column(type="datetime_immutable", nullable=true)
-     */
-    protected ?DateTimeImmutable $departure = null;
-
-    /**
      * Role.
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="users", cascade={"persist"})
@@ -664,26 +650,6 @@ class User
         $this->attended = $attended;
     }
 
-    public function getArrival() : ?DateTimeImmutable
-    {
-        return $this->arrival;
-    }
-
-    public function setArrival(?DateTimeImmutable $arrival) : void
-    {
-        $this->arrival = $arrival;
-    }
-
-    public function getDeparture() : ?DateTimeImmutable
-    {
-        return $this->departure;
-    }
-
-    public function setDeparture(?DateTimeImmutable $departure) : void
-    {
-        $this->departure = $departure;
-    }
-
     /**
      * @return Collection|Role[]
      */
@@ -718,17 +684,6 @@ class User
         return $this->roles->filter(static function (Role $item) use ($role) {
             return $item->getId() === $role->getId();
         })->count() !== 0;
-    }
-
-    /**
-     * Je uživatel v roli, u které se eviduje příjezd a odjezd?
-     */
-    public function hasDisplayArrivalDepartureRole() : bool
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('displayArrivalDeparture', true));
-
-        return ! $this->roles->matching($criteria)->isEmpty();
     }
 
     /**

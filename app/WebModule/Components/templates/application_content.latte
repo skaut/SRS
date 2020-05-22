@@ -45,17 +45,6 @@
                 </div>
             </div>
         {else}
-            <script>
-                Nette.validators.AppWebModuleFormsApplicationForm_toggleArrivalDeparture = function (elem, arg, value) {
-                    var i;
-                    for (i = 0; i < value.length; i++) {
-                        if (jQuery.inArray(value[i], arg) != -1)
-                            return true;
-                    }
-                    return false;
-                };
-            </script>
-
             <script n:if="$explicitSubeventsExists">
                 $(function () {
                     $("select[name='roles[]']").on("change", function () {

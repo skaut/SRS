@@ -113,7 +113,6 @@ class AddRoleFormFactory
             $role->setRegisterable($parent->isRegisterable());
             $role->setRegisterableFrom($parent->getRegisterableFrom());
             $role->setRegisterableTo($parent->getRegisterableTo());
-            $role->setDisplayArrivalDeparture($parent->isDisplayArrivalDeparture());
         } else {
             $nonregistered = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
             foreach ($nonregistered->getPages() as $page) {

@@ -97,7 +97,7 @@ class RolesFormFactory
             ->addRule([$this, 'validateRolesMinimumAge'], 'web.application_content.roles_require_minimum_age')
             ->setDisabled(! $this->applicationService->isAllowedEditRegistration($this->user));
 
-        foreach ($this->roleRepository->findFilteredRoles(true, false, false, true, $this->user) as $role) {
+        foreach ($this->roleRepository->findFilteredRoles(true, false, true, $this->user) as $role) {
             if (! $role->getIncompatibleRoles()->isEmpty()) {
                 $rolesSelect->addRule(
                     [$this, 'validateRolesIncompatible'],

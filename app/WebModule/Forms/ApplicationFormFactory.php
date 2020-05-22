@@ -198,8 +198,6 @@ class ApplicationFormFactory
 
         $this->addSubeventsSelect($form);
 
-        $this->addArrivalDeparture($form);
-
         $this->addCustomInputs($form);
 
         $form->addCheckbox('agreement', $this->settingsService->getValue(Settings::APPLICATION_AGREEMENT))
@@ -293,20 +291,11 @@ class ApplicationFormFactory
                 $this->customInputValueRepository->save($customInputValue);
             }
 
-            //prijezd, odjezd
-            if (property_exists($values, 'arrival')) {
-                $this->user->setArrival($values->arrival);
-            }
-
-            if (property_exists($values, 'departure')) {
-                $this->user->setDeparture($values->departure);
-            }
-
             //role
             if (property_exists($values, 'roles')) {
                 $roles = $this->roleRepository->findRolesByIds($values->roles);
             } else {
-                $roles = $this->roleRepository->findFilteredRoles(true, false, false, false);
+                $roles = $this->roleRepository->findFilteredRoles(true, false, false);
             }
 
             //podakce
@@ -447,7 +436,7 @@ class ApplicationFormFactory
             ->addRule([$this, 'validateRolesMinimumAge'], 'web.application_content.roles_require_minimum_age');
 
         //generovani chybovych hlasek pro vsechny kombinace roli
-        foreach ($this->roleRepository->findFilteredRoles(true, false, false, true, $this->user) as $role) {
+        foreach ($this->roleRepository->findFilteredRoles(true, false, true, $this->user) as $role) {
             if (! $role->getIncompatibleRoles()->isEmpty()) {
                 $rolesSelect->addRule(
                     [$this, 'validateRolesIncompatible'],
@@ -473,34 +462,11 @@ class ApplicationFormFactory
             }
         }
 
-        $ids = [];
-        foreach ($this->roleRepository->findFilteredRoles(false, false, true, false) as $role) {
-            $ids[] = (string) $role->getId();
-        }
-
-        $rolesSelect->addCondition(self::class . '::toggleArrivalDeparture', $ids)
-            ->toggle('arrivalInput')
-            ->toggle('departureInput');
-
         //pokud je na vyber jen jedna role, je oznacena
         if (count($registerableOptions) === 1) {
             $rolesSelect->setDisabled(true);
             $rolesSelect->setDefaultValue(array_keys($registerableOptions));
         }
-    }
-
-    /**
-     * Přidá pole pro zadání příjezdu a odjezdu.
-     */
-    private function addArrivalDeparture(Form $form) : void
-    {
-        $arrivalDateTime = new DateTimeControl('web.application_content.arrival');
-        $arrivalDateTime->setOption('id', 'arrivalInput');
-        $form->addComponent($arrivalDateTime, 'arrival');
-
-        $departureDateTime = new DateTimeControl('web.application_content.departure');
-        $departureDateTime->setOption('id', 'departureInput');
-        $form->addComponent($departureDateTime, 'departure');
     }
 
     /**
@@ -603,21 +569,13 @@ class ApplicationFormFactory
      */
     public function toggleSubeventsRequired(MultiSelectBox $field) : bool
     {
-        $rolesWithSubevents = $this->roleRepository->findRolesIds($this->roleRepository->findFilteredRoles(false, true, false, false));
+        $rolesWithSubevents = $this->roleRepository->findRolesIds($this->roleRepository->findFilteredRoles(false, true, false));
         foreach ($field->getValue() as $roleId) {
             if (in_array($roleId, $rolesWithSubevents)) {
                 return true;
             }
         }
 
-        return false;
-    }
-
-    /**
-     * Přepne zobrazení polí pro příjezd a odjezd.
-     */
-    public static function toggleArrivalDeparture(IControl $control) : bool
-    {
         return false;
     }
 

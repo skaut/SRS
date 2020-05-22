@@ -125,7 +125,7 @@ class RoleRepository extends EntityRepository
      *
      * @return Collection|Role[]
      */
-    public function findFilteredRoles(bool $registerableNowOnly, bool $subeventsRoleOnly, bool $arrivalDepartureOnly, bool $includeUsers, ?User $user = null) : Collection
+    public function findFilteredRoles(bool $registerableNowOnly, bool $subeventsRoleOnly, bool $includeUsers, ?User $user = null) : Collection
     {
         $qb = $this->createQueryBuilder('r');
 
@@ -148,10 +148,6 @@ class RoleRepository extends EntityRepository
 
         if ($subeventsRoleOnly) {
             $query = $query->andWhere('r.fee IS NULL');
-        }
-
-        if ($arrivalDepartureOnly) {
-            $query = $query->andWhere('r.displayArrivalDeparture = TRUE');
         }
 
         if ($includeUsers) {

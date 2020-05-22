@@ -133,13 +133,6 @@ class EditUserSeminarFormFactory
 
             $form->addCheckbox('attended', 'admin.users.users_attended_form');
 
-            if ($this->user->hasDisplayArrivalDepartureRole()) {
-                $arrivalDateTime = new DateTimeControl('admin.users.users_arrival');
-                $form->addComponent($arrivalDateTime, 'arrival');
-                $departureDateTime = new DateTimeControl('admin.users.users_departure');
-                $form->addComponent($departureDateTime, 'departure');
-            }
-
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 if ($customInput instanceof CustomText) {
                     $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
@@ -183,8 +176,6 @@ class EditUserSeminarFormFactory
             'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
             'approved' => $this->user->isApproved(),
             'attended' => $this->user->isAttended(),
-            'arrival' => $this->user->getArrival(),
-            'departure' => $this->user->getDeparture(),
             'about' => $this->user->getAbout(),
             'privateNote' => $this->user->getNote(),
         ]);
@@ -261,14 +252,6 @@ class EditUserSeminarFormFactory
                     if ($oldValue !== $newValue) {
                         $customInputValueChanged = true;
                     }
-                }
-
-                if (property_exists($values, 'arrival')) {
-                    $this->user->setArrival($values->arrival);
-                }
-
-                if (property_exists($values, 'departure')) {
-                    $this->user->setDeparture($values->departure);
                 }
             }
 
