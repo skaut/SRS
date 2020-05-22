@@ -22,6 +22,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *     "custom_checkbox" = "CustomCheckbox",
  *     "custom_text" = "CustomText",
  *     "custom_select" = "CustomSelect",
+ *     "custom_multiselect" = "CustomMultiSelect",
  *     "custom_file" = "CustomFile",
  *     "custom_date" = "CustomDate",
  *     "custom_datetime" = "CustomDateTime"
@@ -47,6 +48,11 @@ abstract class CustomInput
     public const SELECT = 'select';
 
     /**
+     * Výběrové pole s více možnostmi.
+     */
+    public const MULTISELECT = 'multiselect';
+
+    /**
      * Soubor.
      */
     public const FILE = 'file';
@@ -67,6 +73,7 @@ abstract class CustomInput
         self::TEXT,
         self::CHECKBOX,
         self::SELECT,
+        self::MULTISELECT,
         self::FILE,
         self::DATE,
         self::DATETIME,
