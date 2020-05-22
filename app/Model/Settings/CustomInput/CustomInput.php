@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Settings\CustomInput;
 
+use App\Model\Acl\Role;
 use App\Model\User\CustomInputValue\CustomInputValue;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,7 +22,9 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *     "custom_checkbox" = "CustomCheckbox",
  *     "custom_text" = "CustomText",
  *     "custom_select" = "CustomSelect",
- *     "custom_file" = "CustomFile"
+ *     "custom_file" = "CustomFile",
+ *     "custom_date" = "CustomDate",
+ *     "custom_datetime" = "CustomDateTime"
  * })
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
@@ -48,12 +51,25 @@ abstract class CustomInput
      */
     public const FILE = 'file';
 
+    /**
+     * Datum.
+     */
+    public const DATE = 'date';
+
+    /**
+     * Datum čas.
+     */
+    public const DATETIME = 'datetime';
+
+
     /** @var string[] */
     public static array $types = [
         self::TEXT,
         self::CHECKBOX,
         self::SELECT,
         self::FILE,
+        self::DATE,
+        self::DATETIME,
     ];
 
     /**
@@ -91,6 +107,15 @@ abstract class CustomInput
      * @var Collection|CustomInputValue[]
      */
     protected Collection $customInputValues;
+
+    /**
+     * Role, pro které se pole zobrazuje.
+     *
+     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
+     *
+     * @var Collection|Role[]
+     */
+    protected Collection $roles;
 
     public function __construct()
     {
@@ -143,5 +168,21 @@ abstract class CustomInput
     public function getCustomInputValues() : Collection
     {
         return $this->customInputValues;
+    }
+
+    /**
+     * @return Role[]|Collection
+     */
+    public function getRoles() : Collection
+    {
+        return $this->roles;
+    }
+
+    /**
+     * @param Role[]|Collection $roles
+     */
+    public function setRoles(Collection $roles) : void
+    {
+        $this->roles = $roles;
     }
 }

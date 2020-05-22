@@ -21,14 +21,14 @@ class CustomCheckboxValue extends CustomInputValue
      *
      * @ORM\Column(type="boolean")
      */
-    protected ?bool $value = null;
+    protected bool $value = false;
 
-    public function getValue() : ?bool
+    public function getValue() : bool
     {
         return $this->value;
     }
 
-    public function setValue(?bool $value) : void
+    public function setValue(bool $value) : void
     {
         $this->value = $value;
     }
