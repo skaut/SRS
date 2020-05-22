@@ -182,6 +182,31 @@
         </phingcall>
 
         <phingcall target="deploy:ssh">
+            <property name="comment" value="Setting access rights for temp directory"/>
+            <property name="command" value="chmod -R 777 ${deploy.release}/temp"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Setting access rights for log directory"/>
+            <property name="command" value="chmod -R 777 ${deploy.release}/log"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Setting access rights for backup directory"/>
+            <property name="command" value="chmod -R 777 ${deploy.release}/backup"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Setting access rights for files directory"/>
+            <property name="command" value="chmod -R 777 ${deploy.release}/www/files"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Setting access rights for webtemp directory"/>
+            <property name="command" value="chmod -R 777 ${deploy.release}/www/webtemp"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
             <property name="comment" value="Swapping release to ${deploy.releaseHash}"/>
             <property name="command" value="rm -rf ${deploy.workDir}/www &amp;&amp; ln -s ${deploy.release}/www ${deploy.workDir}/www"/>
         </phingcall>
