@@ -11,6 +11,8 @@ class Bootstrap
 {
     public static function boot() : Configurator
     {
+        umask(0002);
+
         $configurator = new Configurator();
 
         //$configurator->setDebugMode('23.75.345.200'); // enable for your remote IP
