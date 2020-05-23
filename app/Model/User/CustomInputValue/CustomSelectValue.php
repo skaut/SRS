@@ -6,7 +6,6 @@ namespace App\Model\User\CustomInputValue;
 
 use App\Model\Settings\CustomInput\CustomSelect;
 use Doctrine\ORM\Mapping as ORM;
-use function explode;
 
 /**
  * Entita hodnota vlastního výběrového pole přihlášky.

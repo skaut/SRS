@@ -6,7 +6,7 @@ namespace App\Model\Settings\CustomInput;
 
 use Doctrine\ORM\Mapping as ORM;
 use function count;
-use function explode;
+use function implode;
 
 /**
  * Entita vlastní výběrové pole přihlášky.
@@ -24,14 +24,22 @@ class CustomSelect extends CustomInput
      * Možnosti výběrového pole oddělené čárkou.
      *
      * @ORM\Column(type="simple_array")
+     *
+     * @var string[]
      */
     protected array $options = [];
 
+    /**
+     * @return string[]
+     */
     public function getOptions() : array
     {
         return $this->options;
     }
 
+    /**
+     * @param string[] $options
+     */
     public function setOptions(array $options) : void
     {
         $this->options = $options;

@@ -10,7 +10,6 @@ use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomDate;
 use App\Model\Settings\CustomInput\CustomDateTime;
 use App\Model\Settings\CustomInput\CustomFile;
-use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
@@ -44,7 +43,6 @@ use Throwable;
 use function array_slice;
 use function array_values;
 use function explode;
-use function property_exists;
 use const UPLOAD_ERR_OK;
 
 /**
@@ -139,6 +137,7 @@ class AdditionalInformationForm extends UI\Control
                 if ($customInput->isMandatory()) {
                     $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
                 }
+
                 /** @var ?CustomTextValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
@@ -150,6 +149,7 @@ class AdditionalInformationForm extends UI\Control
                 if ($customInput->isMandatory()) {
                     $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
                 }
+
                 /** @var ?CustomCheckboxValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
@@ -161,6 +161,7 @@ class AdditionalInformationForm extends UI\Control
                 if ($customInput->isMandatory()) {
                     $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
                 }
+
                 /** @var ?CustomSelectValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
@@ -172,6 +173,7 @@ class AdditionalInformationForm extends UI\Control
                 if ($customInput->isMandatory()) {
                     $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
                 }
+
                 /** @var ?CustomMultiSelectValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
@@ -192,11 +194,13 @@ class AdditionalInformationForm extends UI\Control
                 if ($customInput->isMandatory()) {
                     $dateInput->addRule(Form::FILLED, 'web.profile.custom_input_empty');
                 }
+
                 /** @var ?CustomDateValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
                     $dateInput->setDefaultValue($customInputValue->getValue());
                 }
+
                 $form->addComponent($dateInput, 'custom' . $customInput->getId());
             } elseif ($customInput instanceof CustomDateTime) {
                 $dateTimeInput = new DateTimeControl($customInput->getName());
@@ -204,11 +208,13 @@ class AdditionalInformationForm extends UI\Control
                 if ($customInput->isMandatory()) {
                     $dateTimeInput->addRule(Form::FILLED, 'web.profile.custom_input_empty');
                 }
+
                 /** @var ?CustomDateTimeValue $customInputValue */
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 if ($customInputValue) {
                     $dateTimeInput->setDefaultValue($customInputValue->getValue());
                 }
+
                 $form->addComponent($dateTimeInput, 'custom' . $customInput->getId());
             }
         }

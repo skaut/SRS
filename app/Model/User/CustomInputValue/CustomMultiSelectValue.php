@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Model\User\CustomInputValue;
 
 use App\Model\Settings\CustomInput\CustomMultiSelect;
-use App\Model\Settings\CustomInput\CustomSelect;
 use Doctrine\ORM\Mapping as ORM;
-use Mpdf\Tag\P;
-use function explode;
+use function implode;
 
 /**
  * Entita hodnota vlastního výběrového pole s více možnostmi přihlášky.
@@ -24,14 +22,22 @@ class CustomMultiSelectValue extends CustomInputValue
      * Vybrané položky výběrového pole s více možnostmi přihlášky.
      *
      * @ORM\Column(type="simple_array", nullable=true)
+     *
+     * @var string[]
      */
     protected array $value = [];
 
+    /**
+     * @return string[]
+     */
     public function getValue() : array
     {
         return $this->value;
     }
 
+    /**
+     * @param string[] $value
+     */
     public function setValue(array $value) : void
     {
         $this->value = $value;
@@ -52,7 +58,8 @@ class CustomMultiSelectValue extends CustomInputValue
             foreach ($this->value as $value) {
                 $selectedValues[] = $input->getSelectOptions()[$value];
             }
-            return implode(", ", $selectedValues);
+
+            return implode(', ', $selectedValues);
         }
     }
 }

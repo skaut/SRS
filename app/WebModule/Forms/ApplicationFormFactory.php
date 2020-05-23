@@ -43,7 +43,6 @@ use InvalidArgumentException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
-use Nette\Forms\IControl;
 use Nette\Http\FileUpload;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Random;
@@ -266,7 +265,7 @@ class ApplicationFormFactory
             //vlastni pole
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
-                $customInputName = 'custom' . $customInput->getId();
+                $customInputName  = 'custom' . $customInput->getId();
 
                 if ($customInput instanceof CustomText) {
                     /** @var CustomTextValue $customInputValue */
@@ -361,6 +360,7 @@ class ApplicationFormFactory
                     if ($customInput->isMandatory()) {
                         $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
                     }
+
                     break;
 
                 case $customInput instanceof CustomCheckbox:
@@ -368,6 +368,7 @@ class ApplicationFormFactory
                     if ($customInput->isMandatory()) {
                         $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
                     }
+
                     break;
 
                 case $customInput instanceof CustomSelect:
@@ -375,6 +376,7 @@ class ApplicationFormFactory
                     if ($customInput->isMandatory()) {
                         $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
                     }
+
                     break;
 
                 case $customInput instanceof CustomMultiSelect:
@@ -382,6 +384,7 @@ class ApplicationFormFactory
                     if ($customInput->isMandatory()) {
                         $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
                     }
+
                     break;
 
                 case $customInput instanceof CustomFile:
@@ -389,6 +392,7 @@ class ApplicationFormFactory
                     if ($customInput->isMandatory()) {
                         $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
                     }
+
                     break;
 
                 case $customInput instanceof CustomDate:
@@ -396,6 +400,7 @@ class ApplicationFormFactory
                     if ($customInput->isMandatory()) {
                         $dateInput->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
                     }
+
                     $form->addComponent($dateInput, 'custom' . $customInput->getId());
                     break;
 
@@ -404,6 +409,7 @@ class ApplicationFormFactory
                     if ($customInput->isMandatory()) {
                         $dateTimeInput->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
                     }
+
                     $form->addComponent($dateTimeInput, 'custom' . $customInput->getId());
                     break;
 

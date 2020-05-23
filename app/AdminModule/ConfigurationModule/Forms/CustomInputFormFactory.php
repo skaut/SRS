@@ -19,8 +19,8 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
+use function array_map;
 use function explode;
-use function implode;
 use function trim;
 
 /**
@@ -122,13 +122,13 @@ class CustomInputFormFactory
 
                 case CustomInput::SELECT:
                     $this->customInput = new CustomSelect();
-                    $options = array_map(function (string $o) {return trim($o);}, explode(',', $values->options));
+                    $options           = array_map(function (string $o) {return trim($o);}, explode(',', $values->options));
                     $this->customInput->setOptions($options);
                     break;
 
                 case CustomInput::MULTISELECT:
                     $this->customInput = new CustomMultiSelect();
-                    $options = array_map(function (string $o) {return trim($o);}, explode(',', $values->options));
+                    $options           = array_map(function (string $o) {return trim($o);}, explode(',', $values->options));
                     $this->customInput->setOptions($options);
                     break;
 
