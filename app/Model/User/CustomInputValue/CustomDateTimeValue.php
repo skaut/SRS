@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Model\User\CustomInputValue;
 
+use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use PHPUnit\TextUI\Help;
 
 /**
  * Entita hodnota vlastního pole přihlášky typu datum a čas.
@@ -32,5 +34,10 @@ class CustomDateTimeValue extends CustomInputValue
     public function setValue(?DateTimeImmutable $value) : void
     {
         $this->value = $value;
+    }
+
+    public function getValueText() : ?string
+    {
+        return $this->value ? $this->value->format(Helpers::DATETIME_FORMAT) : null;
     }
 }

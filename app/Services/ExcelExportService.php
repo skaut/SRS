@@ -14,6 +14,7 @@ use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomFileValue;
+use App\Model\User\CustomInputValue\CustomMultiSelectValue;
 use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
@@ -429,18 +430,12 @@ class ExcelExportService
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $user->getCustomInputValue($customInput);
 
-                if ($customInputValue instanceof CustomTextValue) {
-                    $value = $customInputValue->getValue();
-                } elseif ($customInputValue instanceof CustomCheckboxValue) {
+                if ($customInputValue instanceof CustomCheckboxValue) {
                     $value = $customInputValue->getValue()
                         ? $this->translator->translate('common.export.common.yes')
                         : $this->translator->translate('common.export.common.no');
-                } elseif ($customInputValue instanceof CustomSelectValue) {
-                    $value = $customInputValue->getValueOption();
-                } elseif ($customInputValue instanceof CustomFileValue) {
-                    continue;
                 } else {
-                    $value = '';
+                    $value = $customInputValue->getValueText();
                 }
 
                 $sheet->setCellValueByColumnAndRow($column++, $row, $value);

@@ -10,7 +10,10 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\CustomInput\CustomCheckbox;
+use App\Model\Settings\CustomInput\CustomDate;
+use App\Model\Settings\CustomInput\CustomDateTime;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Settings;
@@ -52,6 +55,7 @@ use function array_merge;
 use function array_slice;
 use function array_values;
 use function explode;
+use function GuzzleHttp\default_ca_bundle;
 
 /**
  * Komponenta pro správu rolí.
@@ -351,8 +355,6 @@ class UsersGridControl extends Control
                                 return $customInputValue->getValue()
                                     ? $this->translator->translate('admin.common.yes')
                                     : $this->translator->translate('admin.common.no');
-                            case $customInputValue instanceof CustomSelectValue:
-                                return $customInputValue->getValueOption();
                             case $customInputValue instanceof CustomFileValue:
                                 return $customInputValue->getValue()
                                     ? Html::el('a')
@@ -365,6 +367,8 @@ class UsersGridControl extends Control
                                             Html::el('span')->setAttribute('class', 'fa fa-download')
                                         )
                                     : '';
+                            default:
+                                return $customInputValue->getValueText();
                         }
                     }
 
@@ -404,8 +408,8 @@ class UsersGridControl extends Control
                         ->setTranslateOptions();
                     break;
 
-                case $customInput instanceof CustomSelect:
-                    $columnCustomInput->setFilterSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
+                case $customInput instanceof CustomSelect: // todo
+                    $columnCustomInput->setFilterMultiSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
                         ->setCondition(static function (QueryBuilder $qb, string $value) use ($customInput) : void {
                             if ($value === '') {
                                 return;
@@ -420,6 +424,48 @@ class UsersGridControl extends Control
                             }
                         })
                         ->setTranslateOptions();
+                    break;
+
+                case $customInput instanceof CustomMultiSelect: // todo
+                    $columnCustomInput->setFilterMultiSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
+                        ->setCondition(static function (QueryBuilder $qb, string $value) use ($customInput) : void {
+                            if ($value === '') {
+                                return;
+                            } else {
+                                $qb->leftJoin('u.customInputValues', 'uCIV4')
+                                    ->leftJoin('uCIV4.input', 'uCIVI4')
+                                    ->leftJoin('App\Model\User\CustomInputValue\CustomMultiSelectValue', 'uCMSV', 'WITH', 'uCIV4.id = uCMSV.id')
+                                    ->andWhere('uCIVI4.id = :iid4 OR uCIVI4.id IS NULL')
+                                    ->andWhere('uCMSV.value = :ivalue4')
+                                    ->setParameter('iid4', $customInput->getId())
+                                    ->setParameter('ivalue4', $value);
+                            }
+                        })
+                        ->setTranslateOptions();
+                    break;
+
+                case $customInput instanceof CustomDate:
+                    $columnCustomInput->setSortable()
+                        ->setSortableCallback(static function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
+                            $qb->leftJoin('u.customInputValues', 'uCIV5')
+                                ->leftJoin('uCIV5.input', 'uCIVI5')
+                                ->leftJoin('App\Model\User\CustomInputValue\CustomDateValue', 'uCDV', 'WITH', 'uCIV5.id = uCDV.id')
+                                ->andWhere('uCIVI5.id = :iid5 OR uCIVI5.id IS NULL')
+                                ->setParameter('iid5', $customInput->getId())
+                                ->orderBy('uCDV.value', $sort[$columnCustomInputName]);
+                        });
+                    break;
+
+                case $customInput instanceof CustomDateTime:
+                    $columnCustomInput->setSortable()
+                        ->setSortableCallback(static function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
+                            $qb->leftJoin('u.customInputValues', 'uCIV6')
+                                ->leftJoin('uCIV6.input', 'uCIVI6')
+                                ->leftJoin('App\Model\User\CustomInputValue\CustomDateTimeValue', 'uCDTV', 'WITH', 'uCIV6.id = uCDTV.id')
+                                ->andWhere('uCIVI6.id = :iid6 OR uCIVI6.id IS NULL')
+                                ->setParameter('iid6', $customInput->getId())
+                                ->orderBy('uCDTV.value', $sort[$columnCustomInputName]);
+                        });
                     break;
             }
         }

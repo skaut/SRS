@@ -22,7 +22,10 @@ common:
     custom_text: "Textové pole"
     custom_checkbox: "Zaškrtávací pole"
     custom_select: "Výběrové pole"
+    custom_multiselect: "Výběrové pole s více možnostmi"
     custom_file: "Soubor"
+    custom_date: "Datum"
+    custom_datetime: "Datum a čas"
 
     access_denied: "Pro přístup k této stránce nemáte oprávnění."
 

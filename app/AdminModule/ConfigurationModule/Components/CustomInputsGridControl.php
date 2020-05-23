@@ -6,7 +6,10 @@ namespace App\AdminModule\ConfigurationModule\Components;
 
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
+use App\Utils\Helpers;
+use Codeception\Lib\Generator\Helper;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
@@ -76,7 +79,7 @@ class CustomInputsGridControl extends Control
 
         $grid->addColumnText('options', 'admin.configuration.custom_inputs_options')
             ->setRenderer(static function (CustomInput $input) {
-                return $input instanceof CustomSelect ? $input->getOptions() : null;
+                return $input instanceof CustomSelect || $input instanceof CustomMultiSelect ? $input->getOptionsText() : null;
             });
 
         $grid->addToolbarButton('Application:add')

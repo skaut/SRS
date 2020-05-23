@@ -32,4 +32,9 @@ class CustomTextValue extends CustomInputValue
     {
         $this->value = $value;
     }
+
+    public function getValueText() : ?string
+    {
+        return $this->value;
+    }
 }

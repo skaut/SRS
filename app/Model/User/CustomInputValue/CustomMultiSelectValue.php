@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Model\User\CustomInputValue;
 
+use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
 use Doctrine\ORM\Mapping as ORM;
+use Mpdf\Tag\P;
 use function explode;
 
 /**
@@ -38,11 +40,19 @@ class CustomMultiSelectValue extends CustomInputValue
     /**
      * Vrátí název vybrané možnosti.
      */
-    public function getValueOption() : ?string
+    public function getValueText() : ?string
     {
-        /** @var CustomSelect $input */
+        /** @var CustomMultiSelect $input */
         $input = $this->getInput();
 
-//        return $this->value !== 0 ? explode(', ', $input->getOptions())[$this->value - 1] : null; //todo
+        if (empty($this->value)) {
+            return null;
+        } else {
+            $selectedValues = [];
+            foreach ($this->value as $value) {
+                $selectedValues[] = $input->getSelectOptions()[$value];
+            }
+            return implode(", ", $selectedValues);
+        }
     }
 }

@@ -38,11 +38,11 @@ class CustomSelectValue extends CustomInputValue
     /**
      * Vrátí název vybrané možnosti.
      */
-    public function getValueOption() : ?string
+    public function getValueText() : ?string
     {
         /** @var CustomSelect $input */
         $input = $this->getInput();
 
-        return $this->value !== 0 ? explode(', ', $input->getOptions())[$this->value - 1] : null;
+        return $this->value !== 0 ? $input->getSelectOptions()[$this->value] : null;
     }
 }

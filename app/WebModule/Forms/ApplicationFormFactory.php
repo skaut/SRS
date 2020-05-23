@@ -8,8 +8,11 @@ use App\Model\Acl\Role;
 use App\Model\Acl\RoleRepository;
 use App\Model\Enums\Sex;
 use App\Model\Settings\CustomInput\CustomCheckbox;
+use App\Model\Settings\CustomInput\CustomDate;
+use App\Model\Settings\CustomInput\CustomDateTime;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Settings;
@@ -17,8 +20,11 @@ use App\Model\Settings\SettingsException;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
+use App\Model\User\CustomInputValue\CustomDateTimeValue;
+use App\Model\User\CustomInputValue\CustomDateValue;
 use App\Model\User\CustomInputValue\CustomFileValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
+use App\Model\User\CustomInputValue\CustomMultiSelectValue;
 use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
@@ -258,9 +264,9 @@ class ApplicationFormFactory
             $this->user->setState($values->state);
 
             //vlastni pole
-            foreach ($this->customInputRepository->findAll() as $customInput) {
+            foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
-                $customInputName  = 'custom' . $customInput->getId();
+                $customInputName = 'custom' . $customInput->getId();
 
                 if ($customInput instanceof CustomText) {
                     /** @var CustomTextValue $customInputValue */
@@ -274,6 +280,10 @@ class ApplicationFormFactory
                     /** @var CustomSelectValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomSelectValue();
                     $customInputValue->setValue($values->$customInputName);
+                } elseif ($customInput instanceof CustomMultiSelect) {
+                    /** @var CustomMultiSelectValue $customInputValue */
+                    $customInputValue = $customInputValue ?: new CustomMultiSelectValue();
+                    $customInputValue->setValue($values->$customInputName);
                 } elseif ($customInput instanceof CustomFile) {
                     /** @var CustomFileValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomFileValue();
@@ -284,6 +294,14 @@ class ApplicationFormFactory
                         $this->filesService->save($file, $path);
                         $customInputValue->setValue($path);
                     }
+                } elseif ($customInput instanceof CustomDate) {
+                    /** @var CustomDateValue $customInputValue */
+                    $customInputValue = $customInputValue ?: new CustomDateValue();
+                    $customInputValue->setValue($values->$customInputName);
+                } elseif ($customInput instanceof CustomDateTime) {
+                    /** @var CustomDateTimeValue $customInputValue */
+                    $customInputValue = $customInputValue ?: new CustomDateTimeValue();
+                    $customInputValue->setValue($values->$customInputName);
                 }
 
                 $customInputValue->setUser($this->user);
@@ -340,26 +358,57 @@ class ApplicationFormFactory
             switch (true) {
                 case $customInput instanceof CustomText:
                     $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
+                    if ($customInput->isMandatory()) {
+                        $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
+                    }
                     break;
 
                 case $customInput instanceof CustomCheckbox:
                     $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+                    if ($customInput->isMandatory()) {
+                        $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
+                    }
                     break;
 
                 case $customInput instanceof CustomSelect:
                     $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                    if ($customInput->isMandatory()) {
+                        $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
+                    }
+                    break;
+
+                case $customInput instanceof CustomMultiSelect:
+                    $custom = $form->addMultiSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                    if ($customInput->isMandatory()) {
+                        $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
+                    }
                     break;
 
                 case $customInput instanceof CustomFile:
                     $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
+                    if ($customInput->isMandatory()) {
+                        $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
+                    }
+                    break;
+
+                case $customInput instanceof CustomDate:
+                    $dateInput = new DateControl($customInput->getName());
+                    if ($customInput->isMandatory()) {
+                        $dateInput->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
+                    }
+                    $form->addComponent($dateInput, 'custom' . $customInput->getId());
+                    break;
+
+                case $customInput instanceof CustomDateTime:
+                    $dateTimeInput = new DateTimeControl($customInput->getName());
+                    if ($customInput->isMandatory()) {
+                        $dateTimeInput->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
+                    }
+                    $form->addComponent($dateTimeInput, 'custom' . $customInput->getId());
                     break;
 
                 default:
                     throw new InvalidArgumentException();
-            }
-
-            if ($customInput->isMandatory()) {
-                $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
             }
         }
     }

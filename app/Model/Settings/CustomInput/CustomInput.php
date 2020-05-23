@@ -71,12 +71,12 @@ abstract class CustomInput
     /** @var string[] */
     public static array $types = [
         self::TEXT,
+        self::DATE,
+        self::DATETIME,
         self::CHECKBOX,
         self::SELECT,
         self::MULTISELECT,
         self::FILE,
-        self::DATE,
-        self::DATETIME,
     ];
 
     /**

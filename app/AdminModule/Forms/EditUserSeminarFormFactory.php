@@ -9,14 +9,20 @@ use App\Model\Acl\RoleRepository;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\CustomInput\CustomCheckbox;
+use App\Model\Settings\CustomInput\CustomDate;
+use App\Model\Settings\CustomInput\CustomDateTime;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Settings;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
+use App\Model\User\CustomInputValue\CustomDateTimeValue;
+use App\Model\User\CustomInputValue\CustomDateValue;
 use App\Model\User\CustomInputValue\CustomFileValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
+use App\Model\User\CustomInputValue\CustomMultiSelectValue;
 use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
@@ -34,6 +40,7 @@ use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
+use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
@@ -155,8 +162,31 @@ class EditUserSeminarFormFactory
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
+                } elseif ($customInput instanceof CustomMultiSelect) {
+                    $custom = $form->addMultiSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                    /** @var ?CustomMultiSelectValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        $custom->setDefaultValue($customInputValue->getValue());
+                    }
                 } elseif ($customInput instanceof CustomFile) {
                     $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
+                } elseif ($customInput instanceof CustomDate) {
+                    $dateInput = new DateControl($customInput->getName());
+                    /** @var ?CustomDateValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        $dateInput->setDefaultValue($customInputValue->getValue());
+                    }
+                    $custom = $form->addComponent($dateInput, 'custom' . $customInput->getId());
+                } elseif ($customInput instanceof CustomDateTime) {
+                    $dateTimeInput = new DateTimeControl($customInput->getName());
+                    /** @var ?CustomDateTimeValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        $dateTimeInput->setDefaultValue($customInputValue->getValue());
+                    }
+                    $custom = $form->addComponent($dateTimeInput, 'custom' . $customInput->getId());
                 }
             }
         }
@@ -232,6 +262,12 @@ class EditUserSeminarFormFactory
                         $oldValue         = $customInputValue->getValue();
                         $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
+                    } elseif ($customInput instanceof CustomMultiSelect) {
+                        /** @var CustomMultiSelectValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomMultiSelectValue();
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
+                        $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomFile) {
                         /** @var CustomFileValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomFileValue();
@@ -243,6 +279,18 @@ class EditUserSeminarFormFactory
                             $this->filesService->save($newValue, $path);
                             $customInputValue->setValue($path);
                         }
+                    } elseif ($customInput instanceof CustomDate) {
+                        /** @var CustomDateValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomDateValue();
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
+                        $customInputValue->setValue($newValue);
+                    } elseif ($customInput instanceof CustomDateTime) {
+                        /** @var CustomDateTimeValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomDateTimeValue();
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
+                        $customInputValue->setValue($newValue);
                     }
 
                     $customInputValue->setUser($this->user);

@@ -23,16 +23,16 @@ class CustomSelect extends CustomInput
     /**
      * Možnosti výběrového pole oddělené čárkou.
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="simple_array")
      */
-    protected string $options;
+    protected array $options = [];
 
-    public function getOptions() : string
+    public function getOptions() : array
     {
         return $this->options;
     }
 
-    public function setOptions(string $options) : void
+    public function setOptions(array $options) : void
     {
         $this->options = $options;
     }
@@ -50,11 +50,15 @@ class CustomSelect extends CustomInput
             $options[0] = '';
         }
 
-        $optionaArray = explode(', ', $this->options);
-        for ($i = 0; $i < count($optionaArray); $i++) {
-            $options[$i+1] = $optionaArray[$i];
+        for ($i = 0; $i < count($this->options); $i++) {
+            $options[$i+1] = $this->options[$i];
         }
 
         return $options;
+    }
+
+    public function getOptionsText() : string
+    {
+        return implode(', ', $this->options);
     }
 }

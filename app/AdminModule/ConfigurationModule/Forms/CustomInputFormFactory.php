@@ -6,9 +6,12 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\CustomInput\CustomCheckbox;
+use App\Model\Settings\CustomInput\CustomDate;
+use App\Model\Settings\CustomInput\CustomDateTime;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
 use Doctrine\ORM\NonUniqueResultException;
@@ -60,6 +63,7 @@ class CustomInputFormFactory
 
         $typeSelect = $form->addSelect('type', 'admin.configuration.custom_inputs_type', $this->prepareCustomInputTypesOptions());
         $typeSelect->addCondition($form::EQUAL, CustomInput::SELECT)->toggle('custom-input-select');
+        $typeSelect->addCondition($form::EQUAL, CustomInput::MULTISELECT)->toggle('custom-input-select');
 
         $form->addCheckbox('mandatory', 'admin.configuration.custom_inputs_edit_mandatory');
 
@@ -83,9 +87,9 @@ class CustomInputFormFactory
                 'mandatory' => $this->customInput->isMandatory(),
             ]);
 
-            if ($this->customInput instanceof CustomSelect) {
+            if ($this->customInput instanceof CustomSelect || $this->customInput instanceof CustomMultiSelect) {
                 $customInput = $this->customInput;
-                $optionsText->setDefaultValue($customInput->getOptions());
+                $optionsText->setDefaultValue($customInput->getOptionsText());
             }
         }
 
@@ -118,19 +122,26 @@ class CustomInputFormFactory
 
                 case CustomInput::SELECT:
                     $this->customInput = new CustomSelect();
+                    $options = array_map(function (string $o) {return trim($o);}, explode(',', $values->options));
+                    $this->customInput->setOptions($options);
+                    break;
 
-                    $options        = explode(',', $values->options);
-                    $optionsTrimmed = [];
-                    foreach ($options as $option) {
-                        $optionsTrimmed[] = trim($option);
-                    }
-
-                    $this->customInput->setOptions(implode(', ', $optionsTrimmed));
-
+                case CustomInput::MULTISELECT:
+                    $this->customInput = new CustomMultiSelect();
+                    $options = array_map(function (string $o) {return trim($o);}, explode(',', $values->options));
+                    $this->customInput->setOptions($options);
                     break;
 
                 case CustomInput::FILE:
                     $this->customInput = new CustomFile();
+                    break;
+
+                case CustomInput::DATE:
+                    $this->customInput = new CustomDate();
+                    break;
+
+                case CustomInput::DATETIME:
+                    $this->customInput = new CustomDateTime();
                     break;
             }
         }
