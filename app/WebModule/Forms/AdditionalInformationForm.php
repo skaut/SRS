@@ -128,7 +128,7 @@ class AdditionalInformationForm extends UI\Control
 
         $form = $this->baseFormFactory->create();
 
-        foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+        foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {
             $custom = null;
 
             if ($customInput instanceof CustomText) {
@@ -243,7 +243,7 @@ class AdditionalInformationForm extends UI\Control
             $customInputValueChanged = false;
 
             if ($this->applicationService->isAllowedEditCustomInputs()) {
-                foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+                foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {
                     $customInputValue = $this->user->getCustomInputValue($customInput);
                     $customInputName  = 'custom' . $customInput->getId();
                     $oldValue         = null;

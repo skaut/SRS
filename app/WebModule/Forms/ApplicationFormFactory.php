@@ -262,8 +262,15 @@ class ApplicationFormFactory
             $this->user->setPostcode($values->postcode);
             $this->user->setState($values->state);
 
+            //role
+            if (property_exists($values, 'roles')) {
+                $roles = $this->roleRepository->findRolesByIds($values->roles);
+            } else {
+                $roles = $this->roleRepository->findFilteredRoles(true, false, false);
+            }
+
             //vlastni pole
-            foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+            foreach ($this->customInputRepository->findByRolesOrderedByPosition($roles) as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 $customInputName  = 'custom' . $customInput->getId();
 
@@ -306,13 +313,6 @@ class ApplicationFormFactory
                 $customInputValue->setUser($this->user);
                 $customInputValue->setInput($customInput);
                 $this->customInputValueRepository->save($customInputValue);
-            }
-
-            //role
-            if (property_exists($values, 'roles')) {
-                $roles = $this->roleRepository->findRolesByIds($values->roles);
-            } else {
-                $roles = $this->roleRepository->findFilteredRoles(true, false, false);
             }
 
             //podakce
