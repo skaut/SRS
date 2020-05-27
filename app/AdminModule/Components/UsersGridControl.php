@@ -20,7 +20,6 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
 use App\Model\User\CustomInputValue\CustomFileValue;
-use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
@@ -55,7 +54,6 @@ use function array_merge;
 use function array_slice;
 use function array_values;
 use function explode;
-use function GuzzleHttp\default_ca_bundle;
 
 /**
  * Komponenta pro správu rolí.

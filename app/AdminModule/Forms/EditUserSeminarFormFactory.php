@@ -44,7 +44,6 @@ use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
-use function property_exists;
 use const UPLOAD_ERR_OK;
 
 /**
@@ -178,7 +177,8 @@ class EditUserSeminarFormFactory
                     if ($customInputValue) {
                         $dateInput->setDefaultValue($customInputValue->getValue());
                     }
-                    $custom = $form->addComponent($dateInput, 'custom' . $customInput->getId());
+
+                    $form->addComponent($dateInput, 'custom' . $customInput->getId());
                 } elseif ($customInput instanceof CustomDateTime) {
                     $dateTimeInput = new DateTimeControl($customInput->getName());
                     /** @var ?CustomDateTimeValue $customInputValue */
@@ -186,7 +186,8 @@ class EditUserSeminarFormFactory
                     if ($customInputValue) {
                         $dateTimeInput->setDefaultValue($customInputValue->getValue());
                     }
-                    $custom = $form->addComponent($dateTimeInput, 'custom' . $customInput->getId());
+
+                    $form->addComponent($dateTimeInput, 'custom' . $customInput->getId());
                 }
             }
         }

@@ -45,6 +45,7 @@ class CustomInputRepository extends EntityRepository
      * Vrací pole podle rolí uživatele, seřazené podle pozice.
      *
      * @param Collection|Role[] $roles
+     *
      * @return CustomInput[]
      */
     public function findByRolesOrderedByPosition(Collection $roles) : array

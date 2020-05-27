@@ -18,6 +18,7 @@ use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use function count;
 
 /**
  * Komponenta pro správu vlastních polí přihlášky.
@@ -32,9 +33,10 @@ class CustomInputsGridControl extends Control
 
     private AclService $aclService;
 
-    public function __construct(ITranslator $translator,
-                                CustomInputRepository $customInputRepository,
-                                AclService $aclService
+    public function __construct(
+        ITranslator $translator,
+        CustomInputRepository $customInputRepository,
+        AclService $aclService
     ) {
         $this->translator            = $translator;
         $this->customInputRepository = $customInputRepository;

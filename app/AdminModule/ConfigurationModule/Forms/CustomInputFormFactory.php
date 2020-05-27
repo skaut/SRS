@@ -23,6 +23,7 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
+use function array_keys;
 use function array_map;
 use function explode;
 use function trim;
@@ -49,10 +50,11 @@ class CustomInputFormFactory
 
     private RoleRepository $roleRepository;
 
-    public function __construct(BaseFormFactory $baseFormFactory,
-                                CustomInputRepository $customInputRepository,
-                                AclService $aclService,
-                                RoleRepository $roleRepository
+    public function __construct(
+        BaseFormFactory $baseFormFactory,
+        CustomInputRepository $customInputRepository,
+        AclService $aclService,
+        RoleRepository $roleRepository
     ) {
         $this->baseFormFactory       = $baseFormFactory;
         $this->customInputRepository = $customInputRepository;
@@ -75,7 +77,7 @@ class CustomInputFormFactory
             ->addRule(Form::FILLED, 'admin.configuration.custom_inputs_name_empty');
 
         $rolesOptions = $this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
-        $rolesSelect = $form->addMultiSelect('roles', 'admin.configuration.custom_inputs_roles', $rolesOptions)
+        $rolesSelect  = $form->addMultiSelect('roles', 'admin.configuration.custom_inputs_roles', $rolesOptions)
             ->addRule(Form::FILLED, 'admin.configuration.custom_inputs_roles_empty');
 
         $typeSelect = $form->addSelect('type', 'admin.configuration.custom_inputs_type', $this->prepareCustomInputTypesOptions());
@@ -142,13 +144,21 @@ class CustomInputFormFactory
 
                 case CustomInput::SELECT:
                     $this->customInput = new CustomSelect();
-                    $options           = array_map(function (string $o) {return trim($o);}, explode(',', $values->options));
+                    $options           = array_map(static function (string $o) {
+                            return trim($o);
+                        },
+                        explode(',', $values->options)
+                    );
                     $this->customInput->setOptions($options);
                     break;
 
                 case CustomInput::MULTISELECT:
                     $this->customInput = new CustomMultiSelect();
-                    $options           = array_map(function (string $o) {return trim($o);}, explode(',', $values->options));
+                    $options           = array_map(static function (string $o) {
+                            return trim($o);
+                        },
+                        explode(',', $values->options)
+                    );
                     $this->customInput->setOptions($options);
                     break;
 
