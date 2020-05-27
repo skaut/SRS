@@ -80,10 +80,8 @@ class UsersPresenter extends AdminBasePresenter
 
         $this->template->detailUser = $user;
 
-        $this->template->customInputs            = $this->customInputRepository->findAllOrderedByPosition();
-        $this->template->customInputTypeText     = CustomInput::TEXT;
+        $this->template->customInputs            = $this->customInputRepository->findByRolesOrderedByPosition($user->getRoles());
         $this->template->customInputTypeCheckbox = CustomInput::CHECKBOX;
-        $this->template->customInputTypeSelect   = CustomInput::SELECT;
         $this->template->customInputTypeFile     = CustomInput::FILE;
 
         $this->template->roleAdminName     = $this->roleRepository->findBySystemName(Role::ADMIN)->getName();

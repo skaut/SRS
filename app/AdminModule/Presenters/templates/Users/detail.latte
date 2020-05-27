@@ -112,20 +112,18 @@
                             {var $customInputValue = $detailUser->getCustomInputValue($customInput)}
                             {if $customInputValue}
                                 {switch $customInput->getType()}
-                                    {case $customInputTypeText}
-                                        {$customInputValue->getValue()}
                                     {case $customInputTypeCheckbox}
                                         {if $customInputValue->getValue()}
                                             {_admin.common.yes}
                                         {else}
                                             {_admin.common.no}
                                         {/if}
-                                    {case $customInputTypeSelect}
-                                        {$customInputValue->getValueOption()}
                                     {case $customInputTypeFile}
                                         <a href="{$basePath}/files{$customInputValue->getValue()}" target="_blank" n:if="$customInputValue->getValue() !== null">
                                             {array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]}
                                         </a>
+                                    {default}
+                                        {$customInputValue->getValueText()}
                                 {/switch}
                             {/if}
                         </div>

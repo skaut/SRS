@@ -140,7 +140,7 @@ class EditUserSeminarFormFactory
 
             $form->addCheckbox('attended', 'admin.users.users_attended_form');
 
-            foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+            foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {
                 if ($customInput instanceof CustomText) {
                     $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
                     /** @var ?CustomTextValue $customInputValue */
@@ -238,7 +238,7 @@ class EditUserSeminarFormFactory
                 $this->user->setApproved($values->approved);
                 $this->user->setAttended($values->attended);
 
-                foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+                foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {
                     $customInputValue = $this->user->getCustomInputValue($customInput);
                     $customInputName  = 'custom' . $customInput->getId();
                     $oldValue         = null;
