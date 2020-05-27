@@ -45,6 +45,41 @@
                 </div>
             </div>
         {else}
+            <script>
+                Nette.validators.AppWebModuleFormsApplicationFormFactory_toggleCustomInput = function (elem, arg, value) {
+                    var i;
+                    for (i = 0; i < value.length; i++) {
+                        if (jQuery.inArray(parseInt(value[i]), arg) !== -1) {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+            </script>
+
+            <script>
+                $(function () {
+                    $("select[name='roles[]']").on("change", function () {
+                        changeCustomInputsRequired();
+                    });
+                    changeCustomInputsRequired();
+                });
+
+                function changeCustomInputsRequired() { //todo
+                    var value = $("select[name='roles[]']").val();
+                    var label = $("label[for='frm-applicationContent-applicationForm-subevents']");
+                    var rolesWithSubevents = JSON.parse({$rolesWithSubevents});
+                    var i;
+                    for (i = 0; i < value.length; i++) {
+                        if (jQuery.inArray(parseInt(value[i]), rolesWithSubevents) !== -1) {
+                            label.addClass('required');
+                            return;
+                        }
+                    }
+                    label.removeClass('required');
+                }
+            </script>
+
             <script n:if="$explicitSubeventsExists">
                 $(function () {
                     $("select[name='roles[]']").on("change", function () {
@@ -59,7 +94,7 @@
                     var rolesWithSubevents = JSON.parse({$rolesWithSubevents});
                     var i;
                     for (i = 0; i < value.length; i++) {
-                        if (jQuery.inArray(parseInt(value[i]), rolesWithSubevents) != -1) {
+                        if (jQuery.inArray(parseInt(value[i]), rolesWithSubevents) !== -1) {
                             label.addClass('required');
                             return;
                         }

@@ -11,6 +11,7 @@ use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomDate;
 use App\Model\Settings\CustomInput\CustomDateTime;
 use App\Model\Settings\CustomInput\CustomFile;
+use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
@@ -35,6 +36,7 @@ use App\Services\FilesService;
 use App\Services\SettingsService;
 use App\Services\SkautIsService;
 use App\Services\SubeventService;
+use App\Utils\Helpers;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
@@ -354,67 +356,50 @@ class ApplicationFormFactory
     private function addCustomInputs(Form $form) : void
     {
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+            $customInputId = 'custom' . $customInput->getId();
+            $customInputName = $customInput->getName();
+
             switch (true) {
                 case $customInput instanceof CustomText:
-                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInput->isMandatory()) {
-                        $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
-                    }
-
+                    $custom = $form->addText($customInputId, $customInputName);
                     break;
 
                 case $customInput instanceof CustomCheckbox:
-                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInput->isMandatory()) {
-                        $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
-                    }
-
+                    $custom = $form->addCheckbox($customInputId, $customInputName);
                     break;
 
                 case $customInput instanceof CustomSelect:
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
-                    if ($customInput->isMandatory()) {
-                        $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
-                    }
-
+                    $custom = $form->addSelect($customInputId, $customInputName, $customInput->getSelectOptions());
                     break;
 
                 case $customInput instanceof CustomMultiSelect:
-                    $custom = $form->addMultiSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
-                    if ($customInput->isMandatory()) {
-                        $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
-                    }
-
+                    $custom = $form->addMultiSelect($customInputId, $customInputName, $customInput->getSelectOptions());
                     break;
 
                 case $customInput instanceof CustomFile:
-                    $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
-                    if ($customInput->isMandatory()) {
-                        $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
-                    }
-
+                    $custom = $form->addUpload($customInputId, $customInputName);
                     break;
 
                 case $customInput instanceof CustomDate:
-                    $dateInput = new DateControl($customInput->getName());
-                    if ($customInput->isMandatory()) {
-                        $dateInput->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
-                    }
-
-                    $form->addComponent($dateInput, 'custom' . $customInput->getId());
+                    $custom = new DateControl($customInputName);
+                    $form->addComponent($custom, $customInputId);
                     break;
 
                 case $customInput instanceof CustomDateTime:
-                    $dateTimeInput = new DateTimeControl($customInput->getName());
-                    if ($customInput->isMandatory()) {
-                        $dateTimeInput->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
-                    }
-
-                    $form->addComponent($dateTimeInput, 'custom' . $customInput->getId());
+                    $custom = new DateTimeControl($customInputName);
+                    $form->addComponent($custom, $customInputId);
                     break;
 
                 default:
                     throw new InvalidArgumentException();
+            }
+
+            $custom->setOption('id', $customInputId);
+            if ($customInput->isMandatory()) {
+                /** @var MultiSelectBox $rolesSelect */
+                $rolesSelect = $form['roles'];
+                $custom->addConditionOn($rolesSelect, [$this, 'toggleCustomInputRequired'], $customInput)
+                    ->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
             }
         }
     }
@@ -515,6 +500,11 @@ class ApplicationFormFactory
                     [$role]
                 );
             }
+        }
+
+        foreach ($this->customInputRepository->findAll() as $customInput) {
+            $rolesSelect->addCondition(self::class . '::toggleCustomInput', Helpers::getIds($customInput->getRoles()))
+                ->toggle('custom' . $customInput->getId());
         }
 
         //pokud je na vyber jen jedna role, je oznacena
@@ -631,6 +621,29 @@ class ApplicationFormFactory
             }
         }
 
+        return false;
+    }
+
+    /**
+     * Vrací, zda je vlastní pole povinné pro kombinaci rolí.
+     */
+    public function toggleCustomInputRequired(MultiSelectBox $field, CustomInput $customInput) : bool
+    {
+        $customInputRoles = Helpers::getIds($customInput->getRoles());
+        foreach ($field->getValue() as $roleId) {
+            if (in_array($roleId, $customInputRoles)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Přepne zobrazení vlastních polí.
+     */
+    public static function toggleCustomInput(MultiSelectBox $field) : bool
+    {
         return false;
     }
 
