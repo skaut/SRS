@@ -151,7 +151,7 @@
             <property name="command" value="tar -xzf ${tarball} -C ${deploy.releasesDir}"/>
         </phingcall>
 
-        <phingcall target="deploy:ssh">c
+        <phingcall target="deploy:ssh">
             <property name="comment" value="Removing tarball"/>
             <property name="command" value="rm ${tarball}"/>
         </phingcall>
