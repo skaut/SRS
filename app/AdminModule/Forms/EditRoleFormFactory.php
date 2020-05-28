@@ -120,8 +120,6 @@ class EditRoleFormFactory
 
         // $form->addCheckbox('syncedWithSkautIs', 'admin.acl.roles_synced_with_skaut_is');
 
-        $form->addCheckbox('displayArrivalDeparture', 'admin.acl.roles_display_arrival_departure');
-
         $form->addCheckbox('feeFromSubevents', 'admin.acl.roles_fee_from_subevents_checkbox')
             ->addCondition(Form::EQUAL, false)
             ->toggle('fee');
@@ -189,7 +187,6 @@ class EditRoleFormFactory
             'capacity' => $this->role->getCapacity(),
             'approvedAfterRegistration' => $this->role->isApprovedAfterRegistration(),
             // 'syncedWithSkautIs' => $this->role->isSyncedWithSkautIS(),
-            'displayArrivalDeparture' => $this->role->isDisplayArrivalDeparture(),
             'feeFromSubevents' => $this->role->getFee() === null,
             'fee' => $this->role->getFee(),
             'minimumAge' => $this->role->getMinimumAge(),
@@ -226,7 +223,6 @@ class EditRoleFormFactory
             $this->role->setCapacity($capacity);
             $this->role->setApprovedAfterRegistration($values->approvedAfterRegistration);
             // $this->role->setSyncedWithSkautIS($values->syncedWithSkautIs);
-            $this->role->setDisplayArrivalDeparture($values->displayArrivalDeparture);
             $this->role->setMinimumAge($values->minimumAge);
             $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values->permissions));
             $this->role->setPages($this->pageRepository->findPagesBySlugs($values->pages));

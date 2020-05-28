@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Settings\CustomInput;
 
+use App\Model\Acl\Role;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -34,6 +36,23 @@ class CustomInputRepository extends EntityRepository
     public function findAllOrderedByPosition() : array
     {
         return $this->createQueryBuilder('i')
+            ->orderBy('i.position')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Vrací pole podle rolí uživatele, seřazené podle pozice.
+     *
+     * @param Collection|Role[] $roles
+     *
+     * @return CustomInput[]
+     */
+    public function findByRolesOrderedByPosition(Collection $roles) : array
+    {
+        return $this->createQueryBuilder('i')
+            ->join('i.roles', 'r')
+            ->where('r IN (:roles)')->setParameter('roles', $roles)
             ->orderBy('i.position')
             ->getQuery()
             ->getResult();

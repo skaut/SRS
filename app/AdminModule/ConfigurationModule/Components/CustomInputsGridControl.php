@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
+use App\Model\Acl\Role;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
+use App\Services\AclService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
@@ -15,6 +18,7 @@ use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use function count;
 
 /**
  * Komponenta pro správu vlastních polí přihlášky.
@@ -27,10 +31,16 @@ class CustomInputsGridControl extends Control
 
     private CustomInputRepository $customInputRepository;
 
-    public function __construct(ITranslator $translator, CustomInputRepository $customInputRepository)
-    {
+    private AclService $aclService;
+
+    public function __construct(
+        ITranslator $translator,
+        CustomInputRepository $customInputRepository,
+        AclService $aclService
+    ) {
         $this->translator            = $translator;
         $this->customInputRepository = $customInputRepository;
+        $this->aclService            = $aclService;
     }
 
     /**
@@ -59,6 +69,13 @@ class CustomInputsGridControl extends Control
 
         $grid->addColumnText('name', 'admin.configuration.custom_inputs_name');
 
+        $grid->addColumnText('roles', 'admin.configuration.custom_inputs_roles', 'rolesText')
+            ->setRendererOnCondition(function () {
+                return $this->translator->translate('admin.configuration.custom_inputs_roles_all');
+            }, function (CustomInput $input) {
+                return count($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])) === $input->getRoles()->count();
+            });
+
         $grid->addColumnText('type', 'admin.configuration.custom_inputs_type')
             ->setRenderer(function (CustomInput $input) {
                 return $this->translator->translate('admin.common.custom_' . $input->getType());
@@ -76,7 +93,7 @@ class CustomInputsGridControl extends Control
 
         $grid->addColumnText('options', 'admin.configuration.custom_inputs_options')
             ->setRenderer(static function (CustomInput $input) {
-                return $input instanceof CustomSelect ? $input->getOptions() : null;
+                return $input instanceof CustomSelect || $input instanceof CustomMultiSelect ? $input->getOptionsText() : null;
             });
 
         $grid->addToolbarButton('Application:add')

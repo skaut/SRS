@@ -9,16 +9,16 @@ use function count;
 use function implode;
 
 /**
- * Entita vlastní výběrové pole přihlášky.
+ * Entita vlastní výběrové pole s více možnostmi přihlášky.
  *
  * @ORM\Entity
- * @ORM\Table(name="custom_select")
+ * @ORM\Table(name="custom_multiselect")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class CustomSelect extends CustomInput
+class CustomMultiSelect extends CustomInput
 {
-    protected string $type = CustomInput::SELECT;
+    protected string $type = CustomInput::MULTISELECT;
 
     /**
      * Možnosti výběrového pole oddělené čárkou.
@@ -54,31 +54,11 @@ class CustomSelect extends CustomInput
     {
         $options = [];
 
-        if (! $this->isMandatory()) {
-            $options[0] = '';
-        }
-
         for ($i = 0; $i < count($this->options); $i++) {
             $options[$i+1] = $this->options[$i];
         }
 
-        return $options;
-    }
-
-    /**
-     * Vrátí možnosti jako možnosti pro filter.
-     *
-     * @return string[]
-     */
-    public function getFilterOptions() : array
-    {
-        $options = [];
-
-        for ($i = 0; $i < count($this->options); $i++) {
-            $options[$i+1] = $this->options[$i];
-        }
-
-        return $options;
+        return $this->options;
     }
 
     public function getOptionsText() : string

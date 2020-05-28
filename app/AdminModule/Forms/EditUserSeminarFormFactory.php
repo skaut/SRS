@@ -9,14 +9,20 @@ use App\Model\Acl\RoleRepository;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\CustomInput\CustomCheckbox;
+use App\Model\Settings\CustomInput\CustomDate;
+use App\Model\Settings\CustomInput\CustomDateTime;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Settings;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
+use App\Model\User\CustomInputValue\CustomDateTimeValue;
+use App\Model\User\CustomInputValue\CustomDateValue;
 use App\Model\User\CustomInputValue\CustomFileValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
+use App\Model\User\CustomInputValue\CustomMultiSelectValue;
 use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
@@ -26,7 +32,9 @@ use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
 use App\Services\SettingsService;
+use App\Utils\Helpers;
 use App\Utils\Validators;
+use InvalidArgumentException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -34,10 +42,10 @@ use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
+use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
-use function property_exists;
 use const UPLOAD_ERR_OK;
 
 /**
@@ -120,7 +128,7 @@ class EditUserSeminarFormFactory
         $form->addHidden('id');
 
         if (! $this->user->isExternalLector()) {
-            $form->addMultiSelect(
+            $rolesSelect = $form->addMultiSelect(
                 'roles',
                 'admin.users.users_roles',
                 $this->aclService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED])
@@ -133,38 +141,84 @@ class EditUserSeminarFormFactory
 
             $form->addCheckbox('attended', 'admin.users.users_attended_form');
 
-            if ($this->user->hasDisplayArrivalDepartureRole()) {
-                $arrivalDateTime = new DateTimeControl('admin.users.users_arrival');
-                $form->addComponent($arrivalDateTime, 'arrival');
-                $departureDateTime = new DateTimeControl('admin.users.users_departure');
-                $form->addComponent($departureDateTime, 'departure');
-            }
+            foreach ($this->customInputRepository->findAll() as $customInput) {
+                $customInputId = 'custom' . $customInput->getId();
 
-            foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-                if ($customInput instanceof CustomText) {
-                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
-                    /** @var ?CustomTextValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                } elseif ($customInput instanceof CustomCheckbox) {
-                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
-                    /** @var ?CustomCheckboxValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                } elseif ($customInput instanceof CustomSelect) {
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
-                    /** @var ?CustomSelectValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                } elseif ($customInput instanceof CustomFile) {
-                    $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
+                switch (true) {
+                    case $customInput instanceof CustomText:
+                        $custom = $form->addText($customInputId, $customInput->getName());
+                        /** @var ?CustomTextValue $customInputValue */
+                        $customInputValue = $this->user->getCustomInputValue($customInput);
+                        if ($customInputValue) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
+
+                        break;
+
+                    case $customInput instanceof CustomCheckbox:
+                        $custom = $form->addCheckbox($customInputId, $customInput->getName());
+                        /** @var ?CustomCheckboxValue $customInputValue */
+                        $customInputValue = $this->user->getCustomInputValue($customInput);
+                        if ($customInputValue) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
+
+                        break;
+
+                    case $customInput instanceof CustomSelect:
+                        $custom = $form->addSelect($customInputId, $customInput->getName(), $customInput->getSelectOptions());
+                        /** @var ?CustomSelectValue $customInputValue */
+                        $customInputValue = $this->user->getCustomInputValue($customInput);
+                        if ($customInputValue) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
+
+                        break;
+
+                    case $customInput instanceof CustomMultiSelect:
+                        $custom = $form->addMultiSelect($customInputId, $customInput->getName(), $customInput->getSelectOptions());
+                        /** @var ?CustomMultiSelectValue $customInputValue */
+                        $customInputValue = $this->user->getCustomInputValue($customInput);
+                        if ($customInputValue) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
+
+                        break;
+
+                    case $customInput instanceof CustomFile:
+                        $custom = $form->addUpload($customInputId, $customInput->getName());
+                        break;
+
+                    case $customInput instanceof CustomDate:
+                        $custom = new DateControl($customInput->getName());
+                        /** @var ?CustomDateValue $customInputValue */
+                        $customInputValue = $this->user->getCustomInputValue($customInput);
+                        if ($customInputValue) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
+
+                        $form->addComponent($custom, $customInputId);
+                        break;
+
+                    case $customInput instanceof CustomDateTime:
+                        $custom = new DateTimeControl($customInput->getName());
+                        /** @var ?CustomDateTimeValue $customInputValue */
+                        $customInputValue = $this->user->getCustomInputValue($customInput);
+                        if ($customInputValue) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
+
+                        $form->addComponent($custom, $customInputId);
+                        break;
+
+                    default:
+                        throw new InvalidArgumentException();
                 }
+
+                $custom->setOption('id', 'form-group-' . $customInputId);
+
+                $rolesSelect->addCondition(self::class . '::toggleCustomInputVisibility', Helpers::getIds($customInput->getRoles()))
+                    ->toggle('form-group-' . $customInputId);
             }
         }
 
@@ -183,8 +237,6 @@ class EditUserSeminarFormFactory
             'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
             'approved' => $this->user->isApproved(),
             'attended' => $this->user->isAttended(),
-            'arrival' => $this->user->getArrival(),
-            'departure' => $this->user->getDeparture(),
             'about' => $this->user->getAbout(),
             'privateNote' => $this->user->getNote(),
         ]);
@@ -217,7 +269,7 @@ class EditUserSeminarFormFactory
                 $this->user->setApproved($values->approved);
                 $this->user->setAttended($values->attended);
 
-                foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+                foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {
                     $customInputValue = $this->user->getCustomInputValue($customInput);
                     $customInputName  = 'custom' . $customInput->getId();
                     $oldValue         = null;
@@ -241,6 +293,12 @@ class EditUserSeminarFormFactory
                         $oldValue         = $customInputValue->getValue();
                         $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
+                    } elseif ($customInput instanceof CustomMultiSelect) {
+                        /** @var CustomMultiSelectValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomMultiSelectValue();
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
+                        $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomFile) {
                         /** @var CustomFileValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomFileValue();
@@ -252,6 +310,18 @@ class EditUserSeminarFormFactory
                             $this->filesService->save($newValue, $path);
                             $customInputValue->setValue($path);
                         }
+                    } elseif ($customInput instanceof CustomDate) {
+                        /** @var CustomDateValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomDateValue();
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
+                        $customInputValue->setValue($newValue);
+                    } elseif ($customInput instanceof CustomDateTime) {
+                        /** @var CustomDateTimeValue $customInputValue */
+                        $customInputValue = $customInputValue ?: new CustomDateTimeValue();
+                        $oldValue         = $customInputValue->getValue();
+                        $newValue         = $values->$customInputName;
+                        $customInputValue->setValue($newValue);
                     }
 
                     $customInputValue->setUser($this->user);
@@ -261,14 +331,6 @@ class EditUserSeminarFormFactory
                     if ($oldValue !== $newValue) {
                         $customInputValueChanged = true;
                     }
-                }
-
-                if (property_exists($values, 'arrival')) {
-                    $this->user->setArrival($values->arrival);
-                }
-
-                if (property_exists($values, 'departure')) {
-                    $this->user->setDeparture($values->departure);
                 }
             }
 
@@ -305,6 +367,17 @@ class EditUserSeminarFormFactory
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
         return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
+    }
+
+    /**
+     * Přepíná zobrazení vlastních polí podle kombinace rolí.
+     * Je nutná, na výsledku nezáleží (používá se javascript funkce).
+     *
+     * @param int[] $customInputRoles
+     */
+    public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles) : bool
+    {
+        return false;
     }
 
     /**

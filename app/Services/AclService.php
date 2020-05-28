@@ -244,7 +244,7 @@ class AclService
      */
     public function getRolesOptionsWithCapacity(bool $registerableNowOnly, bool $includeUsers, ?User $user = null) : array
     {
-        $roles = $this->roleRepository->findFilteredRoles($registerableNowOnly, false, false, $includeUsers, $user);
+        $roles = $this->roleRepository->findFilteredRoles($registerableNowOnly, false, $includeUsers, $user);
 
         $options = [];
         foreach ($roles as $role) {

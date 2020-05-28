@@ -7,6 +7,7 @@ namespace App\WebModule\Components;
 use App\Model\Acl\Role;
 use App\Model\Acl\RoleRepository;
 use App\Model\Cms\Content\ContentDto;
+use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
@@ -19,7 +20,6 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
-use function json_encode;
 
 /**
  * Komponenta s přihláškou.
@@ -43,6 +43,8 @@ class ApplicationContentControl extends Control
 
     public IApplicationsGridControlFactory $applicationsGridControlFactory;
 
+    public CustomInputRepository $customInputRepository;
+
     public function __construct(
         ApplicationFormFactory $applicationFormFactory,
         Authenticator $authenticator,
@@ -50,7 +52,8 @@ class ApplicationContentControl extends Control
         RoleRepository $roleRepository,
         SettingsService $settingsService,
         SubeventRepository $subeventRepository,
-        IApplicationsGridControlFactory $applicationsGridControlFactory
+        IApplicationsGridControlFactory $applicationsGridControlFactory,
+        CustomInputRepository $customInputRepository
     ) {
         $this->applicationFormFactory         = $applicationFormFactory;
         $this->authenticator                  = $authenticator;
@@ -59,6 +62,7 @@ class ApplicationContentControl extends Control
         $this->settingsService                = $settingsService;
         $this->subeventRepository             = $subeventRepository;
         $this->applicationsGridControlFactory = $applicationsGridControlFactory;
+        $this->customInputRepository          = $customInputRepository;
     }
 
     /**
@@ -89,7 +93,7 @@ class ApplicationContentControl extends Control
 
             $template->unapprovedRole      = $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName());
             $template->nonregisteredRole   = $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName());
-            $template->noRegisterableRole  = $this->roleRepository->findFilteredRoles(true, false, false, false)->isEmpty();
+            $template->noRegisterableRole  = $this->roleRepository->findFilteredRoles(true, false, false)->isEmpty();
             $template->registrationStart   = $this->roleRepository->getRegistrationStart();
             $template->registrationEnd     = $this->roleRepository->getRegistrationEnd();
             $template->bankAccount         = $this->settingsService->getValue(Settings::ACCOUNT_NUMBER);
@@ -105,7 +109,6 @@ class ApplicationContentControl extends Control
         }
 
         $template->explicitSubeventsExists = $explicitSubeventsExists;
-        $template->rolesWithSubevents      = json_encode($this->roleRepository->findRolesIds($this->roleRepository->findFilteredRoles(false, true, false, false)));
 
         $template->render();
     }

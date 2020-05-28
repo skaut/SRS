@@ -8,8 +8,11 @@ use App\Model\Acl\Role;
 use App\Model\Acl\RoleRepository;
 use App\Model\Enums\Sex;
 use App\Model\Settings\CustomInput\CustomCheckbox;
+use App\Model\Settings\CustomInput\CustomDate;
+use App\Model\Settings\CustomInput\CustomDateTime;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Settings;
@@ -17,8 +20,11 @@ use App\Model\Settings\SettingsException;
 use App\Model\Structure\Subevent;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\CustomInputValue\CustomCheckboxValue;
+use App\Model\User\CustomInputValue\CustomDateTimeValue;
+use App\Model\User\CustomInputValue\CustomDateValue;
 use App\Model\User\CustomInputValue\CustomFileValue;
 use App\Model\User\CustomInputValue\CustomInputValueRepository;
+use App\Model\User\CustomInputValue\CustomMultiSelectValue;
 use App\Model\User\CustomInputValue\CustomSelectValue;
 use App\Model\User\CustomInputValue\CustomTextValue;
 use App\Model\User\User;
@@ -29,6 +35,7 @@ use App\Services\FilesService;
 use App\Services\SettingsService;
 use App\Services\SkautIsService;
 use App\Services\SubeventService;
+use App\Utils\Helpers;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
@@ -37,7 +44,6 @@ use InvalidArgumentException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
-use Nette\Forms\IControl;
 use Nette\Http\FileUpload;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Random;
@@ -198,8 +204,6 @@ class ApplicationFormFactory
 
         $this->addSubeventsSelect($form);
 
-        $this->addArrivalDeparture($form);
-
         $this->addCustomInputs($form);
 
         $form->addCheckbox('agreement', $this->settingsService->getValue(Settings::APPLICATION_AGREEMENT))
@@ -259,8 +263,15 @@ class ApplicationFormFactory
             $this->user->setPostcode($values->postcode);
             $this->user->setState($values->state);
 
+            //role
+            if (property_exists($values, 'roles')) {
+                $roles = $this->roleRepository->findRolesByIds($values->roles);
+            } else {
+                $roles = $this->roleRepository->findFilteredRoles(true, false, false);
+            }
+
             //vlastni pole
-            foreach ($this->customInputRepository->findAll() as $customInput) {
+            foreach ($this->customInputRepository->findByRolesOrderedByPosition($roles) as $customInput) {
                 $customInputValue = $this->user->getCustomInputValue($customInput);
                 $customInputName  = 'custom' . $customInput->getId();
 
@@ -276,6 +287,10 @@ class ApplicationFormFactory
                     /** @var CustomSelectValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomSelectValue();
                     $customInputValue->setValue($values->$customInputName);
+                } elseif ($customInput instanceof CustomMultiSelect) {
+                    /** @var CustomMultiSelectValue $customInputValue */
+                    $customInputValue = $customInputValue ?: new CustomMultiSelectValue();
+                    $customInputValue->setValue($values->$customInputName);
                 } elseif ($customInput instanceof CustomFile) {
                     /** @var CustomFileValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomFileValue();
@@ -286,27 +301,19 @@ class ApplicationFormFactory
                         $this->filesService->save($file, $path);
                         $customInputValue->setValue($path);
                     }
+                } elseif ($customInput instanceof CustomDate) {
+                    /** @var CustomDateValue $customInputValue */
+                    $customInputValue = $customInputValue ?: new CustomDateValue();
+                    $customInputValue->setValue($values->$customInputName);
+                } elseif ($customInput instanceof CustomDateTime) {
+                    /** @var CustomDateTimeValue $customInputValue */
+                    $customInputValue = $customInputValue ?: new CustomDateTimeValue();
+                    $customInputValue->setValue($values->$customInputName);
                 }
 
                 $customInputValue->setUser($this->user);
                 $customInputValue->setInput($customInput);
                 $this->customInputValueRepository->save($customInputValue);
-            }
-
-            //prijezd, odjezd
-            if (property_exists($values, 'arrival')) {
-                $this->user->setArrival($values->arrival);
-            }
-
-            if (property_exists($values, 'departure')) {
-                $this->user->setDeparture($values->departure);
-            }
-
-            //role
-            if (property_exists($values, 'roles')) {
-                $roles = $this->roleRepository->findRolesByIds($values->roles);
-            } else {
-                $roles = $this->roleRepository->findFilteredRoles(true, false, false, false);
             }
 
             //podakce
@@ -348,29 +355,51 @@ class ApplicationFormFactory
     private function addCustomInputs(Form $form) : void
     {
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+            $customInputId   = 'custom' . $customInput->getId();
+            $customInputName = $customInput->getName();
+
             switch (true) {
                 case $customInput instanceof CustomText:
-                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
+                    $custom = $form->addText($customInputId, $customInputName);
                     break;
 
                 case $customInput instanceof CustomCheckbox:
-                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+                    $custom = $form->addCheckbox($customInputId, $customInputName);
                     break;
 
                 case $customInput instanceof CustomSelect:
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                    $custom = $form->addSelect($customInputId, $customInputName, $customInput->getSelectOptions());
+                    break;
+
+                case $customInput instanceof CustomMultiSelect:
+                    $custom = $form->addMultiSelect($customInputId, $customInputName, $customInput->getSelectOptions());
                     break;
 
                 case $customInput instanceof CustomFile:
-                    $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
+                    $custom = $form->addUpload($customInputId, $customInputName);
+                    break;
+
+                case $customInput instanceof CustomDate:
+                    $custom = new DateControl($customInputName);
+                    $form->addComponent($custom, $customInputId);
+                    break;
+
+                case $customInput instanceof CustomDateTime:
+                    $custom = new DateTimeControl($customInputName);
+                    $form->addComponent($custom, $customInputId);
                     break;
 
                 default:
                     throw new InvalidArgumentException();
             }
 
+            $custom->setOption('id', 'form-group-' . $customInputId);
+
             if ($customInput->isMandatory()) {
-                $custom->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
+                /** @var MultiSelectBox $rolesSelect */
+                $rolesSelect = $form['roles'];
+                $custom->addConditionOn($rolesSelect, self::class . '::toggleCustomInputRequired', ['id' => $customInputId, 'roles' => Helpers::getIds($customInput->getRoles())])
+                    ->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
             }
         }
     }
@@ -392,16 +421,18 @@ class ApplicationFormFactory
         $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
             $subeventsOptions
         );
+        $subeventsSelect->setOption('id', 'form-group-subevents');
         $subeventsSelect
             ->setRequired(false)
             ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
 
         /** @var MultiSelectBox $rolesSelect */
         $rolesSelect = $form['roles'];
-
-        $subeventsSelect
-            ->addConditionOn($rolesSelect, [$this, 'toggleSubeventsRequired'])
-            ->addRule(Form::FILLED, 'web.application_content.subevents_empty');
+        $subeventsSelect->addConditionOn(
+            $rolesSelect,
+            self::class . '::toggleSubeventsRequired',
+            Helpers::getIds($this->roleRepository->findFilteredRoles(false, true, false))
+        )->addRule(Form::FILLED, 'web.application_content.subevents_empty');
 
         //generovani chybovych hlasek pro vsechny kombinace podakci
         foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
@@ -447,7 +478,7 @@ class ApplicationFormFactory
             ->addRule([$this, 'validateRolesMinimumAge'], 'web.application_content.roles_require_minimum_age');
 
         //generovani chybovych hlasek pro vsechny kombinace roli
-        foreach ($this->roleRepository->findFilteredRoles(true, false, false, true, $this->user) as $role) {
+        foreach ($this->roleRepository->findFilteredRoles(true, false, true, $this->user) as $role) {
             if (! $role->getIncompatibleRoles()->isEmpty()) {
                 $rolesSelect->addRule(
                     [$this, 'validateRolesIncompatible'],
@@ -473,34 +504,17 @@ class ApplicationFormFactory
             }
         }
 
-        $ids = [];
-        foreach ($this->roleRepository->findFilteredRoles(false, false, true, false) as $role) {
-            $ids[] = (string) $role->getId();
+        foreach ($this->customInputRepository->findAll() as $customInput) {
+            $customInputId = 'custom' . $customInput->getId();
+            $rolesSelect->addCondition(self::class . '::toggleCustomInputVisibility', Helpers::getIds($customInput->getRoles()))
+                ->toggle('form-group-' . $customInputId);
         }
-
-        $rolesSelect->addCondition(self::class . '::toggleArrivalDeparture', $ids)
-            ->toggle('arrivalInput')
-            ->toggle('departureInput');
 
         //pokud je na vyber jen jedna role, je oznacena
         if (count($registerableOptions) === 1) {
             $rolesSelect->setDisabled(true);
             $rolesSelect->setDefaultValue(array_keys($registerableOptions));
         }
-    }
-
-    /**
-     * Přidá pole pro zadání příjezdu a odjezdu.
-     */
-    private function addArrivalDeparture(Form $form) : void
-    {
-        $arrivalDateTime = new DateTimeControl('web.application_content.arrival');
-        $arrivalDateTime->setOption('id', 'arrivalInput');
-        $form->addComponent($arrivalDateTime, 'arrival');
-
-        $departureDateTime = new DateTimeControl('web.application_content.departure');
-        $departureDateTime->setOption('id', 'departureInput');
-        $form->addComponent($departureDateTime, 'departure');
     }
 
     /**
@@ -599,11 +613,12 @@ class ApplicationFormFactory
     }
 
     /**
-     * Vrací, zda je výběr podakcí povinný pro kombinaci rolí.
+     * Přepíná povinnost podakcí podle kombinace rolí.
+
+     * @param int[] $rolesWithSubevents
      */
-    public function toggleSubeventsRequired(MultiSelectBox $field) : bool
+    public static function toggleSubeventsRequired(MultiSelectBox $field, array $rolesWithSubevents) : bool
     {
-        $rolesWithSubevents = $this->roleRepository->findRolesIds($this->roleRepository->findFilteredRoles(false, true, false, false));
         foreach ($field->getValue() as $roleId) {
             if (in_array($roleId, $rolesWithSubevents)) {
                 return true;
@@ -614,9 +629,28 @@ class ApplicationFormFactory
     }
 
     /**
-     * Přepne zobrazení polí pro příjezd a odjezd.
+     * Přepíná povinnost vlastních polí podle kombinace rolí.
+     *
+     * @param array<string,int[]> $customInput
      */
-    public static function toggleArrivalDeparture(IControl $control) : bool
+    public static function toggleCustomInputRequired(MultiSelectBox $field, array $customInput) : bool
+    {
+        foreach ($field->getValue() as $roleId) {
+            if (in_array($roleId, $customInput['roles'])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Přepíná zobrazení vlastních polí podle kombinace rolí.
+     * Je nutná, na výsledku nezáleží (používá se javascript funkce).
+     *
+     * @param int[] $customInputRoles
+     */
+    public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles) : bool
     {
         return false;
     }

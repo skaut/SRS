@@ -106,38 +106,24 @@
                         </div>
                     </div>
 
-                    {if $detailUser->hasDisplayArrivalDepartureRole()}
-                        <div class="form-group row">
-                            <div class="col-3">{_admin.users.users_arrival}</div>
-                            <div class="col-9">{$detailUser->getArrival()|date:'j. n. Y H:i'}</div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-3">{_admin.users.users_departure}</div>
-                            <div class="col-9">{$detailUser->getDeparture()|date:'j. n. Y H:i'}</div>
-                        </div>
-                    {/if}
-
                     <div class="form-group row" n:foreach="$customInputs as $customInput">
                         <div class="col-3">{$customInput->getName()}</div>
                         <div class="col-9">
                             {var $customInputValue = $detailUser->getCustomInputValue($customInput)}
                             {if $customInputValue}
                                 {switch $customInput->getType()}
-                                    {case $customInputTypeText}
-                                        {$customInputValue->getValue()}
                                     {case $customInputTypeCheckbox}
                                         {if $customInputValue->getValue()}
                                             {_admin.common.yes}
                                         {else}
                                             {_admin.common.no}
                                         {/if}
-                                    {case $customInputTypeSelect}
-                                        {$customInputValue->getValueOption()}
                                     {case $customInputTypeFile}
                                         <a href="{$basePath}/files{$customInputValue->getValue()}" target="_blank" n:if="$customInputValue->getValue() !== null">
                                             {array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]}
                                         </a>
+                                    {default}
+                                        {$customInputValue->getValueText()}
                                 {/switch}
                             {/if}
                         </div>
@@ -170,6 +156,17 @@
                 </div>
             {else}
                 {control editUserSeminarForm}
+                <script>
+                    Nette.validators.AppAdminModuleFormsEditUserSeminarFormFactory_toggleCustomInputVisibility = function (elem, arg, value) {
+                        let i;
+                        for (i = 0; i < value.length; i++) {
+                            if (jQuery.inArray(parseInt(value[i]), arg) !== -1) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    };
+                </script>
             {/if}
         </div>
 

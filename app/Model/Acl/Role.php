@@ -190,13 +190,6 @@ class Role
     protected int $minimumAge = 0;
 
     /**
-     * Evidovat příjezd a odjezd.
-     *
-     * @ORM\Column(type="boolean")
-     */
-    protected bool $displayArrivalDeparture = false;
-
-    /**
      * Synchronizovat účastníky v roli se skautIS.
      *
      * @ORM\Column(type="boolean")
@@ -463,16 +456,6 @@ class Role
     public function setMinimumAge(int $age) : void
     {
         $this->minimumAge = $age;
-    }
-
-    public function isDisplayArrivalDeparture() : bool
-    {
-        return $this->displayArrivalDeparture;
-    }
-
-    public function setDisplayArrivalDeparture(bool $displayArrivalDeparture) : void
-    {
-        $this->displayArrivalDeparture = $displayArrivalDeparture;
     }
 
     public function isSyncedWithSkautIS() : bool

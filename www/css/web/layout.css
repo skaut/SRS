@@ -82,8 +82,8 @@ p {
     line-height: 2.5em;
 }
 
-/* application content */
-.application-content .control-label .required::after {
+/* povinna pole */
+.col-form-label .required::after {
     content: " *";
     color: red;
 }

@@ -5,19 +5,27 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Acl\Role;
+use App\Model\Acl\RoleRepository;
 use App\Model\Settings\CustomInput\CustomCheckbox;
+use App\Model\Settings\CustomInput\CustomDate;
+use App\Model\Settings\CustomInput\CustomDateTime;
 use App\Model\Settings\CustomInput\CustomFile;
 use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
 use App\Model\Settings\CustomInput\CustomText;
+use App\Services\AclService;
+use App\Utils\Helpers;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
+use function array_keys;
+use function array_map;
 use function explode;
-use function implode;
 use function trim;
 
 /**
@@ -38,10 +46,20 @@ class CustomInputFormFactory
 
     private CustomInputRepository $customInputRepository;
 
-    public function __construct(BaseFormFactory $baseFormFactory, CustomInputRepository $customInputRepository)
-    {
+    private AclService $aclService;
+
+    private RoleRepository $roleRepository;
+
+    public function __construct(
+        BaseFormFactory $baseFormFactory,
+        CustomInputRepository $customInputRepository,
+        AclService $aclService,
+        RoleRepository $roleRepository
+    ) {
         $this->baseFormFactory       = $baseFormFactory;
         $this->customInputRepository = $customInputRepository;
+        $this->aclService            = $aclService;
+        $this->roleRepository        = $roleRepository;
     }
 
     /**
@@ -58,8 +76,13 @@ class CustomInputFormFactory
         $form->addText('name', 'admin.configuration.custom_inputs_name')
             ->addRule(Form::FILLED, 'admin.configuration.custom_inputs_name_empty');
 
+        $rolesOptions = $this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
+        $rolesSelect  = $form->addMultiSelect('roles', 'admin.configuration.custom_inputs_roles', $rolesOptions)
+            ->addRule(Form::FILLED, 'admin.configuration.custom_inputs_roles_empty');
+
         $typeSelect = $form->addSelect('type', 'admin.configuration.custom_inputs_type', $this->prepareCustomInputTypesOptions());
         $typeSelect->addCondition($form::EQUAL, CustomInput::SELECT)->toggle('custom-input-select');
+        $typeSelect->addCondition($form::EQUAL, CustomInput::MULTISELECT)->toggle('custom-input-select');
 
         $form->addCheckbox('mandatory', 'admin.configuration.custom_inputs_edit_mandatory');
 
@@ -79,14 +102,17 @@ class CustomInputFormFactory
             $form->setDefaults([
                 'id' => $id,
                 'name' => $this->customInput->getName(),
+                'roles' => Helpers::getIds($this->customInput->getRoles()),
                 'type' => $this->customInput->getType(),
                 'mandatory' => $this->customInput->isMandatory(),
             ]);
 
-            if ($this->customInput instanceof CustomSelect) {
+            if ($this->customInput instanceof CustomSelect || $this->customInput instanceof CustomMultiSelect) {
                 $customInput = $this->customInput;
-                $optionsText->setDefaultValue($customInput->getOptions());
+                $optionsText->setDefaultValue($customInput->getOptionsText());
             }
+        } else {
+            $rolesSelect->setDefaultValue(array_keys($rolesOptions));
         }
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -118,24 +144,42 @@ class CustomInputFormFactory
 
                 case CustomInput::SELECT:
                     $this->customInput = new CustomSelect();
+                    $options           = array_map(
+                        static function (string $o) {
+                            return trim($o);
+                        },
+                        explode(',', $values->options)
+                    );
+                    $this->customInput->setOptions($options);
+                    break;
 
-                    $options        = explode(',', $values->options);
-                    $optionsTrimmed = [];
-                    foreach ($options as $option) {
-                        $optionsTrimmed[] = trim($option);
-                    }
-
-                    $this->customInput->setOptions(implode(', ', $optionsTrimmed));
-
+                case CustomInput::MULTISELECT:
+                    $this->customInput = new CustomMultiSelect();
+                    $options           = array_map(
+                        static function (string $o) {
+                            return trim($o);
+                        },
+                        explode(',', $values->options)
+                    );
+                    $this->customInput->setOptions($options);
                     break;
 
                 case CustomInput::FILE:
                     $this->customInput = new CustomFile();
                     break;
+
+                case CustomInput::DATE:
+                    $this->customInput = new CustomDate();
+                    break;
+
+                case CustomInput::DATETIME:
+                    $this->customInput = new CustomDateTime();
+                    break;
             }
         }
 
         $this->customInput->setName($values->name);
+        $this->customInput->setRoles($this->roleRepository->findRolesByIds($values->roles));
         $this->customInput->setMandatory($values->mandatory);
 
         $this->customInputRepository->save($this->customInput);

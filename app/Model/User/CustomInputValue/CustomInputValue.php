@@ -20,7 +20,10 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *     "custom_checkbox_value" = "CustomCheckboxValue",
  *     "custom_text_value" = "CustomTextValue",
  *     "custom_select_value" = "CustomSelectValue",
- *     "custom_file_value" = "CustomFileValue"
+ *     "custom_multiselect_value" = "CustomMultiSelectValue",
+ *     "custom_file_value" = "CustomFileValue",
+ *     "custom_date_value" = "CustomDateValue",
+ *     "custom_datetime_value" = "CustomDateTimeValue"
  * })
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
@@ -67,4 +70,6 @@ abstract class CustomInputValue
     {
         $this->user = $user;
     }
+
+    abstract public function getValueText() : ?string;
 }
