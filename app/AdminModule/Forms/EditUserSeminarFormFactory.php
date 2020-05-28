@@ -144,7 +144,7 @@ class EditUserSeminarFormFactory
             foreach ($this->customInputRepository->findAll() as $customInput) {
                 $customInputId = 'custom' . $customInput->getId();
 
-                switch(true) {
+                switch (true) {
                     case $customInput instanceof CustomText:
                         $custom = $form->addText($customInputId, $customInput->getName());
                         /** @var ?CustomTextValue $customInputValue */
@@ -152,6 +152,7 @@ class EditUserSeminarFormFactory
                         if ($customInputValue) {
                             $custom->setDefaultValue($customInputValue->getValue());
                         }
+
                         break;
 
                     case $customInput instanceof CustomCheckbox:
@@ -161,6 +162,7 @@ class EditUserSeminarFormFactory
                         if ($customInputValue) {
                             $custom->setDefaultValue($customInputValue->getValue());
                         }
+
                         break;
 
                     case $customInput instanceof CustomSelect:
@@ -170,6 +172,7 @@ class EditUserSeminarFormFactory
                         if ($customInputValue) {
                             $custom->setDefaultValue($customInputValue->getValue());
                         }
+
                         break;
 
                     case $customInput instanceof CustomMultiSelect:
@@ -179,6 +182,7 @@ class EditUserSeminarFormFactory
                         if ($customInputValue) {
                             $custom->setDefaultValue($customInputValue->getValue());
                         }
+
                         break;
 
                     case $customInput instanceof CustomFile:

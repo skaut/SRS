@@ -50,7 +50,6 @@ use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
-use function array_merge;
 use function array_slice;
 use function array_values;
 use function explode;

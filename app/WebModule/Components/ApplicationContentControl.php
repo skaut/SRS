@@ -16,7 +16,6 @@ use App\Services\Authenticator;
 use App\Services\SettingsService;
 use App\Utils\Helpers;
 use App\WebModule\Forms\ApplicationFormFactory;
-use Codeception\Lib\Generator\Helper;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -112,13 +111,6 @@ class ApplicationContentControl extends Control
         }
 
         $template->explicitSubeventsExists = $explicitSubeventsExists;
-        $template->rolesWithSubevents      = json_encode($this->roleRepository->findRolesIds($this->roleRepository->findFilteredRoles(false, true, false)));
-
-        $customInputsRoles = [];
-        foreach ($this->customInputRepository->findAll() as $customInput) {
-            $customInputsRoles[] = ['id' => $customInput->getId(), 'roles' => Helpers::getIds($customInput->getRoles())];
-        }
-        $template->customInputsRoles = json_encode($customInputsRoles);
 
         $template->render();
     }

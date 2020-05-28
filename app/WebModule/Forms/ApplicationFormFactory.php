@@ -11,7 +11,6 @@ use App\Model\Settings\CustomInput\CustomCheckbox;
 use App\Model\Settings\CustomInput\CustomDate;
 use App\Model\Settings\CustomInput\CustomDateTime;
 use App\Model\Settings\CustomInput\CustomFile;
-use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\CustomInput\CustomMultiSelect;
 use App\Model\Settings\CustomInput\CustomSelect;
@@ -52,7 +51,6 @@ use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
-use PHPUnit\TextUI\Help;
 use Skautis\Wsdl\WsdlException;
 use stdClass;
 use Throwable;
@@ -357,7 +355,7 @@ class ApplicationFormFactory
     private function addCustomInputs(Form $form) : void
     {
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            $customInputId = 'custom' . $customInput->getId();
+            $customInputId   = 'custom' . $customInput->getId();
             $customInputName = $customInput->getName();
 
             switch (true) {
@@ -431,7 +429,8 @@ class ApplicationFormFactory
         /** @var MultiSelectBox $rolesSelect */
         $rolesSelect = $form['roles'];
         $subeventsSelect->addConditionOn(
-            $rolesSelect, self::class . '::toggleSubeventsRequired',
+            $rolesSelect,
+            self::class . '::toggleSubeventsRequired',
             Helpers::getIds($this->roleRepository->findFilteredRoles(false, true, false))
         )->addRule(Form::FILLED, 'web.application_content.subevents_empty');
 
@@ -615,6 +614,8 @@ class ApplicationFormFactory
 
     /**
      * Přepíná povinnost podakcí podle kombinace rolí.
+
+     * @param int[] $rolesWithSubevents
      */
     public static function toggleSubeventsRequired(MultiSelectBox $field, array $rolesWithSubevents) : bool
     {
@@ -629,6 +630,8 @@ class ApplicationFormFactory
 
     /**
      * Přepíná povinnost vlastních polí podle kombinace rolí.
+     *
+     * @param array $customInput
      */
     public static function toggleCustomInputRequired(MultiSelectBox $field, array $customInput) : bool
     {
@@ -645,6 +648,8 @@ class ApplicationFormFactory
     /**
      * Přepíná zobrazení vlastních polí podle kombinace rolí.
      * Je nutná, na výsledku nezáleží (používá se javascript funkce).
+     *
+     * @param int[] $customInputRoles
      */
     public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles) : bool
     {
