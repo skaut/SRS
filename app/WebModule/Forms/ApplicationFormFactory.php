@@ -52,6 +52,7 @@ use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
+use PHPUnit\TextUI\Help;
 use Skautis\Wsdl\WsdlException;
 use stdClass;
 use Throwable;
@@ -394,11 +395,12 @@ class ApplicationFormFactory
                     throw new InvalidArgumentException();
             }
 
-            $custom->setOption('id', $customInputId);
+            $custom->setOption('id', 'form-group-' . $customInputId);
+
             if ($customInput->isMandatory()) {
                 /** @var MultiSelectBox $rolesSelect */
                 $rolesSelect = $form['roles'];
-                $custom->addConditionOn($rolesSelect, [$this, 'toggleCustomInputRequired'], $customInput)
+                $custom->addConditionOn($rolesSelect, self::class . '::toggleCustomInputRequired', [$customInputId, Helpers::getIds($customInput->getRoles())])
                     ->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
             }
         }
@@ -421,16 +423,17 @@ class ApplicationFormFactory
         $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
             $subeventsOptions
         );
+        $subeventsSelect->setOption('id', 'form-group-subevents');
         $subeventsSelect
             ->setRequired(false)
             ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
 
         /** @var MultiSelectBox $rolesSelect */
         $rolesSelect = $form['roles'];
-
-        $subeventsSelect
-            ->addConditionOn($rolesSelect, [$this, 'toggleSubeventsRequired'])
-            ->addRule(Form::FILLED, 'web.application_content.subevents_empty');
+        $subeventsSelect->addConditionOn(
+            $rolesSelect, self::class . '::toggleSubeventsRequired',
+            Helpers::getIds($this->roleRepository->findFilteredRoles(false, true, false))
+        )->addRule(Form::FILLED, 'web.application_content.subevents_empty');
 
         //generovani chybovych hlasek pro vsechny kombinace podakci
         foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
@@ -503,8 +506,9 @@ class ApplicationFormFactory
         }
 
         foreach ($this->customInputRepository->findAll() as $customInput) {
-            $rolesSelect->addCondition(self::class . '::toggleCustomInput', Helpers::getIds($customInput->getRoles()))
-                ->toggle('custom' . $customInput->getId());
+            $customInputId = 'custom' . $customInput->getId();
+            $rolesSelect->addCondition(self::class . '::toggleCustomInputVisibility', Helpers::getIds($customInput->getRoles()))
+                ->toggle('form-group-' . $customInputId);
         }
 
         //pokud je na vyber jen jedna role, je oznacena
@@ -610,11 +614,10 @@ class ApplicationFormFactory
     }
 
     /**
-     * Vrací, zda je výběr podakcí povinný pro kombinaci rolí.
+     * Přepíná povinnost podakcí podle kombinace rolí.
      */
-    public function toggleSubeventsRequired(MultiSelectBox $field) : bool
+    public static function toggleSubeventsRequired(MultiSelectBox $field, array $rolesWithSubevents) : bool
     {
-        $rolesWithSubevents = $this->roleRepository->findRolesIds($this->roleRepository->findFilteredRoles(false, true, false));
         foreach ($field->getValue() as $roleId) {
             if (in_array($roleId, $rolesWithSubevents)) {
                 return true;
@@ -625,11 +628,11 @@ class ApplicationFormFactory
     }
 
     /**
-     * Vrací, zda je vlastní pole povinné pro kombinaci rolí.
+     * Přepíná povinnost vlastních polí podle kombinace rolí.
      */
-    public function toggleCustomInputRequired(MultiSelectBox $field, CustomInput $customInput) : bool
+    public static function toggleCustomInputRequired(MultiSelectBox $field, array $customInput) : bool
     {
-        $customInputRoles = Helpers::getIds($customInput->getRoles());
+        $customInputRoles = $customInput[1];
         foreach ($field->getValue() as $roleId) {
             if (in_array($roleId, $customInputRoles)) {
                 return true;
@@ -640,9 +643,10 @@ class ApplicationFormFactory
     }
 
     /**
-     * Přepne zobrazení vlastních polí.
+     * Přepíná zobrazení vlastních polí podle kombinace rolí.
+     * Je nutná, na výsledku nezáleží (používá se javascript funkce).
      */
-    public static function toggleCustomInput(MultiSelectBox $field) : bool
+    public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles) : bool
     {
         return false;
     }

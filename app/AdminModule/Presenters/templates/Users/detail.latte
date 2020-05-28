@@ -156,6 +156,17 @@
                 </div>
             {else}
                 {control editUserSeminarForm}
+                <script>
+                    Nette.validators.AppAdminModuleFormsEditUserSeminarFormFactory_toggleCustomInputVisibility = function (elem, arg, value) {
+                        let i;
+                        for (i = 0; i < value.length; i++) {
+                            if (jQuery.inArray(parseInt(value[i]), arg) !== -1) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    };
+                </script>
             {/if}
         </div>
 

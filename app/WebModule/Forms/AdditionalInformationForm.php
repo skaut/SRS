@@ -30,6 +30,7 @@ use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
 use App\Services\SettingsService;
+use InvalidArgumentException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
@@ -131,91 +132,106 @@ class AdditionalInformationForm extends UI\Control
         foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {
             $custom = null;
 
-            if ($customInput instanceof CustomText) {
-                $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName())
-                    ->setDisabled(! $isAllowedEditCustomInputs);
-                if ($customInput->isMandatory()) {
-                    $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
-                }
+            switch (true) {
+                case $customInput instanceof CustomText:
+                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName())
+                        ->setDisabled(! $isAllowedEditCustomInputs);
+                    if ($customInput->isMandatory()) {
+                        $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
+                    }
 
-                /** @var ?CustomTextValue $customInputValue */
-                $customInputValue = $this->user->getCustomInputValue($customInput);
-                if ($customInputValue) {
-                    $custom->setDefaultValue($customInputValue->getValue());
-                }
-            } elseif ($customInput instanceof CustomCheckbox) {
-                $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName())
-                    ->setDisabled(! $isAllowedEditCustomInputs);
-                if ($customInput->isMandatory()) {
-                    $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
-                }
+                    /** @var ?CustomTextValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        $custom->setDefaultValue($customInputValue->getValue());
+                    }
+                    break;
 
-                /** @var ?CustomCheckboxValue $customInputValue */
-                $customInputValue = $this->user->getCustomInputValue($customInput);
-                if ($customInputValue) {
-                    $custom->setDefaultValue($customInputValue->getValue());
-                }
-            } elseif ($customInput instanceof CustomSelect) {
-                $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
-                    ->setDisabled(! $isAllowedEditCustomInputs);
-                if ($customInput->isMandatory()) {
-                    $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
-                }
+                case $customInput instanceof CustomCheckbox:
+                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName())
+                        ->setDisabled(!$isAllowedEditCustomInputs);
+                    if ($customInput->isMandatory()) {
+                        $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
+                    }
 
-                /** @var ?CustomSelectValue $customInputValue */
-                $customInputValue = $this->user->getCustomInputValue($customInput);
-                if ($customInputValue) {
-                    $custom->setDefaultValue($customInputValue->getValue());
-                }
-            } elseif ($customInput instanceof CustomMultiSelect) {
-                $custom = $form->addMultiSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
-                    ->setDisabled(! $isAllowedEditCustomInputs);
-                if ($customInput->isMandatory()) {
-                    $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
-                }
+                    /** @var ?CustomCheckboxValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        $custom->setDefaultValue($customInputValue->getValue());
+                    }
+                    break;
 
-                /** @var ?CustomMultiSelectValue $customInputValue */
-                $customInputValue = $this->user->getCustomInputValue($customInput);
-                if ($customInputValue) {
-                    $custom->setDefaultValue($customInputValue->getValue());
-                }
-            } elseif ($customInput instanceof CustomFile) {
-                $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName())
-                    ->setDisabled(! $isAllowedEditCustomInputs);
-                /** @var ?CustomFileValue $customInputValue */
-                $customInputValue = $this->user->getCustomInputValue($customInput);
-                if ($customInputValue && $customInputValue->getValue()) {
-                    $custom->setHtmlAttribute('data-current-file-link', $customInputValue->getValue())
-                        ->setHtmlAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
-                }
-            } elseif ($customInput instanceof CustomDate) {
-                $dateInput = new DateControl($customInput->getName());
-                $dateInput->setDisabled(! $isAllowedEditCustomInputs);
-                if ($customInput->isMandatory()) {
-                    $dateInput->addRule(Form::FILLED, 'web.profile.custom_input_empty');
-                }
+                case $customInput instanceof CustomSelect:
+                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
+                        ->setDisabled(!$isAllowedEditCustomInputs);
+                    if ($customInput->isMandatory()) {
+                        $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
+                    }
 
-                /** @var ?CustomDateValue $customInputValue */
-                $customInputValue = $this->user->getCustomInputValue($customInput);
-                if ($customInputValue) {
-                    $dateInput->setDefaultValue($customInputValue->getValue());
-                }
+                    /** @var ?CustomSelectValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        $custom->setDefaultValue($customInputValue->getValue());
+                    }
+                    break;
 
-                $form->addComponent($dateInput, 'custom' . $customInput->getId());
-            } elseif ($customInput instanceof CustomDateTime) {
-                $dateTimeInput = new DateTimeControl($customInput->getName());
-                $dateTimeInput->setDisabled(! $isAllowedEditCustomInputs);
-                if ($customInput->isMandatory()) {
-                    $dateTimeInput->addRule(Form::FILLED, 'web.profile.custom_input_empty');
-                }
+                case $customInput instanceof CustomMultiSelect:
+                    $custom = $form->addMultiSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions())
+                        ->setDisabled(!$isAllowedEditCustomInputs);
+                    if ($customInput->isMandatory()) {
+                        $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
+                    }
 
-                /** @var ?CustomDateTimeValue $customInputValue */
-                $customInputValue = $this->user->getCustomInputValue($customInput);
-                if ($customInputValue) {
-                    $dateTimeInput->setDefaultValue($customInputValue->getValue());
-                }
+                    /** @var ?CustomMultiSelectValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        $custom->setDefaultValue($customInputValue->getValue());
+                    }
+                    break;
 
-                $form->addComponent($dateTimeInput, 'custom' . $customInput->getId());
+                case $customInput instanceof CustomFile:
+                    $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName())
+                        ->setDisabled(!$isAllowedEditCustomInputs);
+                    /** @var ?CustomFileValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue && $customInputValue->getValue()) {
+                        $custom->setHtmlAttribute('data-current-file-link', $customInputValue->getValue())
+                            ->setHtmlAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
+                    }
+                    break;
+
+                case $customInput instanceof CustomDate:
+                    $custom = new DateControl($customInput->getName());
+                    $custom->setDisabled(!$isAllowedEditCustomInputs);
+
+                    /** @var ?CustomDateValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        $custom->setDefaultValue($customInputValue->getValue());
+                    }
+
+                    $form->addComponent($custom, 'custom' . $customInput->getId());
+                    break;
+
+                case $customInput instanceof CustomDateTime:
+                    $custom = new DateTimeControl($customInput->getName());
+                    $custom->setDisabled(!$isAllowedEditCustomInputs);
+
+                    /** @var ?CustomDateTimeValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
+                    if ($customInputValue) {
+                        $custom->setDefaultValue($customInputValue->getValue());
+                    }
+
+                    $form->addComponent($custom, 'custom' . $customInput->getId());
+                    break;
+
+                default:
+                    throw new InvalidArgumentException();
+            }
+
+            if ($customInput->isMandatory()) {
+                $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
             }
         }
 

@@ -42,6 +42,12 @@ body {
     border-top-right-radius: 0;
 }
 
+/* povinna pole */
+.col-form-label .required::after {
+    content: " *";
+    color: red;
+}
+
 /* mala tlacitka */
 .btn-xs {
     padding: 1px 5px;

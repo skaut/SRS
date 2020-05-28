@@ -7,13 +7,16 @@ namespace App\WebModule\Components;
 use App\Model\Acl\Role;
 use App\Model\Acl\RoleRepository;
 use App\Model\Cms\Content\ContentDto;
+use App\Model\Settings\CustomInput\CustomInputRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\Authenticator;
 use App\Services\SettingsService;
+use App\Utils\Helpers;
 use App\WebModule\Forms\ApplicationFormFactory;
+use Codeception\Lib\Generator\Helper;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -43,6 +46,8 @@ class ApplicationContentControl extends Control
 
     public IApplicationsGridControlFactory $applicationsGridControlFactory;
 
+    public CustomInputRepository $customInputRepository;
+
     public function __construct(
         ApplicationFormFactory $applicationFormFactory,
         Authenticator $authenticator,
@@ -50,7 +55,8 @@ class ApplicationContentControl extends Control
         RoleRepository $roleRepository,
         SettingsService $settingsService,
         SubeventRepository $subeventRepository,
-        IApplicationsGridControlFactory $applicationsGridControlFactory
+        IApplicationsGridControlFactory $applicationsGridControlFactory,
+        CustomInputRepository $customInputRepository
     ) {
         $this->applicationFormFactory         = $applicationFormFactory;
         $this->authenticator                  = $authenticator;
@@ -59,6 +65,7 @@ class ApplicationContentControl extends Control
         $this->settingsService                = $settingsService;
         $this->subeventRepository             = $subeventRepository;
         $this->applicationsGridControlFactory = $applicationsGridControlFactory;
+        $this->customInputRepository          = $customInputRepository;
     }
 
     /**
@@ -106,6 +113,12 @@ class ApplicationContentControl extends Control
 
         $template->explicitSubeventsExists = $explicitSubeventsExists;
         $template->rolesWithSubevents      = json_encode($this->roleRepository->findRolesIds($this->roleRepository->findFilteredRoles(false, true, false)));
+
+        $customInputsRoles = [];
+        foreach ($this->customInputRepository->findAll() as $customInput) {
+            $customInputsRoles[] = ['id' => $customInput->getId(), 'roles' => Helpers::getIds($customInput->getRoles())];
+        }
+        $template->customInputsRoles = json_encode($customInputsRoles);
 
         $template->render();
     }

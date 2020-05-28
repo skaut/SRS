@@ -32,7 +32,9 @@ use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
 use App\Services\SettingsService;
+use App\Utils\Helpers;
 use App\Utils\Validators;
+use InvalidArgumentException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -126,7 +128,7 @@ class EditUserSeminarFormFactory
         $form->addHidden('id');
 
         if (! $this->user->isExternalLector()) {
-            $form->addMultiSelect(
+            $rolesSelect = $form->addMultiSelect(
                 'roles',
                 'admin.users.users_roles',
                 $this->aclService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED])
@@ -139,56 +141,80 @@ class EditUserSeminarFormFactory
 
             $form->addCheckbox('attended', 'admin.users.users_attended_form');
 
-            foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {
-                if ($customInput instanceof CustomText) {
-                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
-                    /** @var ?CustomTextValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                } elseif ($customInput instanceof CustomCheckbox) {
-                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
-                    /** @var ?CustomCheckboxValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                } elseif ($customInput instanceof CustomSelect) {
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
-                    /** @var ?CustomSelectValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                } elseif ($customInput instanceof CustomMultiSelect) {
-                    $custom = $form->addMultiSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
-                    /** @var ?CustomMultiSelectValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue) {
-                        $custom->setDefaultValue($customInputValue->getValue());
-                    }
-                } elseif ($customInput instanceof CustomFile) {
-                    $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
-                } elseif ($customInput instanceof CustomDate) {
-                    $dateInput = new DateControl($customInput->getName());
-                    /** @var ?CustomDateValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue) {
-                        $dateInput->setDefaultValue($customInputValue->getValue());
-                    }
+            foreach ($this->customInputRepository->findAll() as $customInput) {
+                $customInputId = 'custom' . $customInput->getId();
 
-                    $form->addComponent($dateInput, 'custom' . $customInput->getId());
-                } elseif ($customInput instanceof CustomDateTime) {
-                    $dateTimeInput = new DateTimeControl($customInput->getName());
-                    /** @var ?CustomDateTimeValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue) {
-                        $dateTimeInput->setDefaultValue($customInputValue->getValue());
-                    }
+                switch(true) {
+                    case $customInput instanceof CustomText:
+                        $custom = $form->addText($customInputId, $customInput->getName());
+                        /** @var ?CustomTextValue $customInputValue */
+                        $customInputValue = $this->user->getCustomInputValue($customInput);
+                        if ($customInputValue) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
+                        break;
 
-                    $form->addComponent($dateTimeInput, 'custom' . $customInput->getId());
+                    case $customInput instanceof CustomCheckbox:
+                        $custom = $form->addCheckbox($customInputId, $customInput->getName());
+                        /** @var ?CustomCheckboxValue $customInputValue */
+                        $customInputValue = $this->user->getCustomInputValue($customInput);
+                        if ($customInputValue) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
+                        break;
+
+                    case $customInput instanceof CustomSelect:
+                        $custom = $form->addSelect($customInputId, $customInput->getName(), $customInput->getSelectOptions());
+                        /** @var ?CustomSelectValue $customInputValue */
+                        $customInputValue = $this->user->getCustomInputValue($customInput);
+                        if ($customInputValue) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
+                        break;
+
+                    case $customInput instanceof CustomMultiSelect:
+                        $custom = $form->addMultiSelect($customInputId, $customInput->getName(), $customInput->getSelectOptions());
+                        /** @var ?CustomMultiSelectValue $customInputValue */
+                        $customInputValue = $this->user->getCustomInputValue($customInput);
+                        if ($customInputValue) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
+                        break;
+
+                    case $customInput instanceof CustomFile:
+                        $custom = $form->addUpload($customInputId, $customInput->getName());
+                        break;
+
+                    case $customInput instanceof CustomDate:
+                        $custom = new DateControl($customInput->getName());
+                        /** @var ?CustomDateValue $customInputValue */
+                        $customInputValue = $this->user->getCustomInputValue($customInput);
+                        if ($customInputValue) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
+
+                        $form->addComponent($custom, $customInputId);
+                        break;
+
+                    case $customInput instanceof CustomDateTime:
+                        $custom = new DateTimeControl($customInput->getName());
+                        /** @var ?CustomDateTimeValue $customInputValue */
+                        $customInputValue = $this->user->getCustomInputValue($customInput);
+                        if ($customInputValue) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
+
+                        $form->addComponent($custom, $customInputId);
+                        break;
+
+                    default:
+                        throw new InvalidArgumentException();
                 }
+
+                $custom->setOption('id', 'form-group-' . $customInputId);
+
+                $rolesSelect->addCondition(self::class . '::toggleCustomInputVisibility', Helpers::getIds($customInput->getRoles()))
+                    ->toggle('form-group-' . $customInputId);
             }
         }
 
@@ -337,6 +363,15 @@ class EditUserSeminarFormFactory
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
         return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
+    }
+
+    /**
+     * Přepíná zobrazení vlastních polí podle kombinace rolí.
+     * Je nutná, na výsledku nezáleží (používá se javascript funkce).
+     */
+    public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles) : bool
+    {
+        return false;
     }
 
     /**
