@@ -406,38 +406,30 @@ class UsersGridControl extends Control
                         ->setTranslateOptions();
                     break;
 
-                case $customInput instanceof CustomSelect: // todo
-                    $columnCustomInput->setFilterMultiSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
-                        ->setCondition(static function (QueryBuilder $qb, string $value) use ($customInput) : void {
-                            if ($value === '') {
-                                return;
-                            } else {
-                                $qb->leftJoin('u.customInputValues', 'uCIV3')
-                                    ->leftJoin('uCIV3.input', 'uCIVI3')
-                                    ->leftJoin('App\Model\User\CustomInputValue\CustomSelectValue', 'uCSV', 'WITH', 'uCIV3.id = uCSV.id')
-                                    ->andWhere('uCIVI3.id = :iid3 OR uCIVI3.id IS NULL')
-                                    ->andWhere('uCSV.value = :ivalue3')
-                                    ->setParameter('iid3', $customInput->getId())
-                                    ->setParameter('ivalue3', $value);
-                            }
+                case $customInput instanceof CustomSelect:
+                    $columnCustomInput->setFilterMultiSelect($customInput->getFilterOptions())
+                        ->setCondition(static function (QueryBuilder $qb, ArrayHash $values) use ($customInput) : void {
+                            $qb->leftJoin('u.customInputValues', 'uCIV3')
+                                ->leftJoin('uCIV3.input', 'uCIVI3')
+                                ->leftJoin('App\Model\User\CustomInputValue\CustomSelectValue', 'uCSV', 'WITH', 'uCIV3.id = uCSV.id')
+                                ->andWhere('uCIVI3.id = :iid3 OR uCIVI3.id IS NULL')
+                                ->andWhere('uCSV.value in (:ivalues3)')
+                                ->setParameter('iid3', $customInput->getId())
+                                ->setParameter('ivalues3', (array) $values);
                         })
                         ->setTranslateOptions();
                     break;
 
-                case $customInput instanceof CustomMultiSelect: // todo
-                    $columnCustomInput->setFilterMultiSelect(array_merge(['' => 'admin.common.all'], $customInput->getSelectOptions()))
-                        ->setCondition(static function (QueryBuilder $qb, string $value) use ($customInput) : void {
-                            if ($value === '') {
-                                return;
-                            } else {
-                                $qb->leftJoin('u.customInputValues', 'uCIV4')
-                                    ->leftJoin('uCIV4.input', 'uCIVI4')
-                                    ->leftJoin('App\Model\User\CustomInputValue\CustomMultiSelectValue', 'uCMSV', 'WITH', 'uCIV4.id = uCMSV.id')
-                                    ->andWhere('uCIVI4.id = :iid4 OR uCIVI4.id IS NULL')
-                                    ->andWhere('uCMSV.value = :ivalue4')
-                                    ->setParameter('iid4', $customInput->getId())
-                                    ->setParameter('ivalue4', $value);
-                            }
+                case $customInput instanceof CustomMultiSelect:
+                    $columnCustomInput->setFilterMultiSelect($customInput->getSelectOptions())
+                        ->setCondition(static function (QueryBuilder $qb, ArrayHash $values) use ($customInput) : void {
+                            $qb->leftJoin('u.customInputValues', 'uCIV4')
+                                ->leftJoin('uCIV4.input', 'uCIVI4')
+                                ->leftJoin('App\Model\User\CustomInputValue\CustomMultiSelectValue', 'uCMSV', 'WITH', 'uCIV4.id = uCMSV.id')
+                                ->andWhere('uCIVI4.id = :iid4 OR uCIVI4.id IS NULL')
+                                ->andWhere('uCMSV.value in (:ivalues4)')
+                                ->setParameter('iid4', $customInput->getId())
+                                ->setParameter('ivalues4', (array) $values);
                         })
                         ->setTranslateOptions();
                     break;

@@ -65,6 +65,22 @@ class CustomSelect extends CustomInput
         return $options;
     }
 
+    /**
+     * Vrátí možnosti jako možnosti pro filter.
+     *
+     * @return string[]
+     */
+    public function getFilterOptions() : array
+    {
+        $options = [];
+
+        for ($i = 0; $i < count($this->options); $i++) {
+            $options[$i+1] = $this->options[$i];
+        }
+
+        return $options;
+    }
+
     public function getOptionsText() : string
     {
         return implode(', ', $this->options);
