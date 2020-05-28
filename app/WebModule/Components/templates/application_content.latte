@@ -57,11 +57,10 @@
                 };
 
                 Nette.validators.AppWebModuleFormsApplicationFormFactory_toggleCustomInputRequired = function (elem, arg, value) {
-                    const label = $('#form-group-' + arg[0] + ' label');
+                    const label = $('#form-group-' + arg.id + ' label');
                     let i;
                     for (i = 0; i < value.length; i++) {
-                        if (jQuery.inArray(parseInt(value[i]), arg[1]) !== -1) {
-                            console.log(arg[1]);
+                        if (jQuery.inArray(parseInt(value[i]), arg.roles) !== -1) {
                             label.addClass('required');
                             return true;
                         }

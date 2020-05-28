@@ -145,7 +145,9 @@ class CustomInputFormFactory
                 case CustomInput::SELECT:
                     $this->customInput = new CustomSelect();
                     $options           = array_map(
-                        static function (string $o) {return trim($o);},
+                        static function (string $o) {
+                            return trim($o);
+                        },
                         explode(',', $values->options)
                     );
                     $this->customInput->setOptions($options);
@@ -154,7 +156,9 @@ class CustomInputFormFactory
                 case CustomInput::MULTISELECT:
                     $this->customInput = new CustomMultiSelect();
                     $options           = array_map(
-                        static function (string $o) {return trim($o);},
+                        static function (string $o) {
+                            return trim($o);
+                        },
                         explode(',', $values->options)
                     );
                     $this->customInput->setOptions($options);

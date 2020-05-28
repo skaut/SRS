@@ -14,14 +14,12 @@ use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\Authenticator;
 use App\Services\SettingsService;
-use App\Utils\Helpers;
 use App\WebModule\Forms\ApplicationFormFactory;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
-use function json_encode;
 
 /**
  * Komponenta s přihláškou.

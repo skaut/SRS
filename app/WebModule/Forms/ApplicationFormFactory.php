@@ -398,7 +398,7 @@ class ApplicationFormFactory
             if ($customInput->isMandatory()) {
                 /** @var MultiSelectBox $rolesSelect */
                 $rolesSelect = $form['roles'];
-                $custom->addConditionOn($rolesSelect, self::class . '::toggleCustomInputRequired', [$customInputId, Helpers::getIds($customInput->getRoles())])
+                $custom->addConditionOn($rolesSelect, self::class . '::toggleCustomInputRequired', ['id' => $customInputId, 'roles' => Helpers::getIds($customInput->getRoles())])
                     ->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
             }
         }
@@ -631,13 +631,12 @@ class ApplicationFormFactory
     /**
      * Přepíná povinnost vlastních polí podle kombinace rolí.
      *
-     * @param array $customInput
+     * @param array<string,int[]> $customInput
      */
     public static function toggleCustomInputRequired(MultiSelectBox $field, array $customInput) : bool
     {
-        $customInputRoles = $customInput[1];
         foreach ($field->getValue() as $roleId) {
-            if (in_array($roleId, $customInputRoles)) {
+            if (in_array($roleId, $customInput['roles'])) {
                 return true;
             }
         }

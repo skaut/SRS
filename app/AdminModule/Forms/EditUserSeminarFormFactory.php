@@ -372,6 +372,8 @@ class EditUserSeminarFormFactory
     /**
      * Přepíná zobrazení vlastních polí podle kombinace rolí.
      * Je nutná, na výsledku nezáleží (používá se javascript funkce).
+     *
+     * @param int[] $customInputRoles
      */
     public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles) : bool
     {
