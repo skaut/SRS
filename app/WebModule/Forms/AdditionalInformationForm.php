@@ -131,8 +131,8 @@ class AdditionalInformationForm extends UI\Control
         $form = $this->baseFormFactory->create();
 
         foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {
-            $customInputId    = 'custom' . $customInput->getId();
-            $custom           = null;
+            $customInputId = 'custom' . $customInput->getId();
+            $custom        = null;
 
             switch (true) {
                 case $customInput instanceof CustomText:
@@ -282,6 +282,7 @@ class AdditionalInformationForm extends UI\Control
                         $customInputValue = $customInputValue ?: new CustomFileValue();
                         $oldValue         = $customInputValue->getValue();
                         /** @var FileUpload $newValue */
+                        $newValue = $values->$customInputId;
                         if ($newValue->getError() == UPLOAD_ERR_OK) {
                             $path = $this->generatePath($newValue);
                             $this->filesService->save($newValue, $path);
