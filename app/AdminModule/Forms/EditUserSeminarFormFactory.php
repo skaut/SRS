@@ -46,8 +46,8 @@ use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
-use const UPLOAD_ERR_OK;
 use function array_key_exists;
+use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro úpravu podrobností o účasti uživatele na semináři.
