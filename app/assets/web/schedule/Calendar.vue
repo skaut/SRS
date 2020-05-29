@@ -126,7 +126,7 @@
                       theme-system="bootstrap"
                       locale="cs"
                       timeZone="none"
-                      aspect-ratio="1.85"
+                      aspect-ratio="1.6"
                       header="false"
                       scheduler-license-key="GPL-My-Project-Is-Open-Source"
                       :plugins="calendarPlugins"

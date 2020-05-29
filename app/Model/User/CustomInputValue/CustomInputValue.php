@@ -71,5 +71,5 @@ abstract class CustomInputValue
         $this->user = $user;
     }
 
-    abstract public function getValueText() : ?string;
+    abstract public function getValueText() : string;
 }

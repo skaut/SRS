@@ -46,13 +46,13 @@ class CustomMultiSelectValue extends CustomInputValue
     /**
      * Vrátí název vybrané možnosti.
      */
-    public function getValueText() : ?string
+    public function getValueText() : string
     {
         /** @var CustomMultiSelect $input */
         $input = $this->getInput();
 
         if (empty($this->value)) {
-            return null;
+            return '';
         } else {
             $selectedValues = [];
             foreach ($this->value as $value) {

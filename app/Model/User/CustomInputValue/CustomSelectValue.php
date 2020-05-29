@@ -29,7 +29,7 @@ class CustomSelectValue extends CustomInputValue
         return $this->value;
     }
 
-    public function setValue(?int $value) : void
+    public function setValue(int $value) : void
     {
         $this->value = $value;
     }
@@ -37,11 +37,11 @@ class CustomSelectValue extends CustomInputValue
     /**
      * Vrátí název vybrané možnosti.
      */
-    public function getValueText() : ?string
+    public function getValueText() : string
     {
         /** @var CustomSelect $input */
         $input = $this->getInput();
 
-        return $this->value !== 0 ? $input->getSelectOptions()[$this->value] : null;
+        return $this->value !== 0 ? $input->getSelectOptions()[$this->value] : '';
     }
 }
