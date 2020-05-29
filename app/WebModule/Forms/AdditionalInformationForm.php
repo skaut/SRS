@@ -130,14 +130,16 @@ class AdditionalInformationForm extends UI\Control
         $form = $this->baseFormFactory->create();
 
         foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {
+            $customInputId    = 'custom' . $customInput->getId();
+            $customInputValue = $customInputValue = $this->user->getCustomInputValue($customInput);
+
             $custom = null;
 
             switch (true) {
                 case $customInput instanceof CustomText:
-                    $custom = $form->addText('custom' . $customInput->getId(), $customInput->getName());
+                    $custom = $form->addText($customInputId, $customInput->getName());
 
                     /** @var ?CustomTextValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
@@ -145,10 +147,9 @@ class AdditionalInformationForm extends UI\Control
                     break;
 
                 case $customInput instanceof CustomCheckbox:
-                    $custom = $form->addCheckbox('custom' . $customInput->getId(), $customInput->getName());
+                    $custom = $form->addCheckbox($customInputId, $customInput->getName());
 
                     /** @var ?CustomCheckboxValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
@@ -156,21 +157,20 @@ class AdditionalInformationForm extends UI\Control
                     break;
 
                 case $customInput instanceof CustomSelect:
-                    $custom = $form->addSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                    $selectOptions = $customInput->getSelectOptions();
+                    $custom = $form->addSelect($customInputId, $customInput->getName(), $selectOptions);
 
                     /** @var ?CustomSelectValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue) {
+                    if ($customInputValue && array_key_exists($customInputValue->getValue(), $selectOptions)) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
 
                     break;
 
                 case $customInput instanceof CustomMultiSelect:
-                    $custom = $form->addMultiSelect('custom' . $customInput->getId(), $customInput->getName(), $customInput->getSelectOptions());
+                    $custom = $form->addMultiSelect($customInputId, $customInput->getName(), $customInput->getSelectOptions());
 
                     /** @var ?CustomMultiSelectValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
@@ -178,10 +178,9 @@ class AdditionalInformationForm extends UI\Control
                     break;
 
                 case $customInput instanceof CustomFile:
-                    $custom = $form->addUpload('custom' . $customInput->getId(), $customInput->getName());
+                    $custom = $form->addUpload($customInputId, $customInput->getName());
 
                     /** @var ?CustomFileValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue && $customInputValue->getValue()) {
                         $custom->setHtmlAttribute('data-current-file-link', $customInputValue->getValue())
                             ->setHtmlAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
@@ -193,24 +192,22 @@ class AdditionalInformationForm extends UI\Control
                     $custom = new DateControl($customInput->getName());
 
                     /** @var ?CustomDateValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
 
-                    $form->addComponent($custom, 'custom' . $customInput->getId());
+                    $form->addComponent($custom, $customInputId);
                     break;
 
                 case $customInput instanceof CustomDateTime:
                     $custom = new DateTimeControl($customInput->getName());
 
                     /** @var ?CustomDateTimeValue $customInputValue */
-                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
 
-                    $form->addComponent($custom, 'custom' . $customInput->getId());
+                    $form->addComponent($custom, $customInputId);
                     break;
 
                 default:

@@ -21,9 +21,9 @@ class CustomCheckboxValue extends CustomInputValue
      *
      * @ORM\Column(type="boolean")
      */
-    protected bool $value = false;
+    protected ?bool $value = null;
 
-    public function getValue() : bool
+    public function getValue() : ?bool
     {
         return $this->value;
     }
@@ -33,8 +33,8 @@ class CustomCheckboxValue extends CustomInputValue
         $this->value = $value;
     }
 
-    public function getValueText() : ?string
+    public function getValueText() : string
     {
-        return (string) $this->value;
+        return $this->value ? (string) $this->value : '';
     }
 }

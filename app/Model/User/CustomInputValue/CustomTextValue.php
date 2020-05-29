@@ -21,9 +21,9 @@ class CustomTextValue extends CustomInputValue
      *
      * @ORM\Column(type="string")
      */
-    protected string $value;
+    protected ?string $value = null;
 
-    public function getValue() : string
+    public function getValue() : ?string
     {
         return $this->value;
     }
@@ -33,8 +33,8 @@ class CustomTextValue extends CustomInputValue
         $this->value = $value;
     }
 
-    public function getValueText() : ?string
+    public function getValueText() : string
     {
-        return $this->value;
+        return $this->value ?: '';
     }
 }

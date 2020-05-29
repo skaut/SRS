@@ -272,30 +272,30 @@ class ApplicationFormFactory
 
             //vlastni pole
             foreach ($this->customInputRepository->findByRolesOrderedByPosition($roles) as $customInput) {
+                $customInputId    = 'custom' . $customInput->getId();
                 $customInputValue = $this->user->getCustomInputValue($customInput);
-                $customInputName  = 'custom' . $customInput->getId();
 
                 if ($customInput instanceof CustomText) {
                     /** @var CustomTextValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomTextValue();
-                    $customInputValue->setValue($values->$customInputName);
+                    $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomCheckbox) {
                     /** @var CustomCheckboxValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomCheckboxValue();
-                    $customInputValue->setValue($values->$customInputName);
+                    $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomSelect) {
                     /** @var CustomSelectValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomSelectValue();
-                    $customInputValue->setValue($values->$customInputName);
+                    $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomMultiSelect) {
                     /** @var CustomMultiSelectValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomMultiSelectValue();
-                    $customInputValue->setValue($values->$customInputName);
+                    $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomFile) {
                     /** @var CustomFileValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomFileValue();
                     /** @var FileUpload $file */
-                    $file = $values->$customInputName;
+                    $file = $values->$customInputId;
                     if ($file->getError() == UPLOAD_ERR_OK) {
                         $path = $this->generatePath($file);
                         $this->filesService->save($file, $path);
@@ -304,11 +304,11 @@ class ApplicationFormFactory
                 } elseif ($customInput instanceof CustomDate) {
                     /** @var CustomDateValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomDateValue();
-                    $customInputValue->setValue($values->$customInputName);
+                    $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomDateTime) {
                     /** @var CustomDateTimeValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomDateTimeValue();
-                    $customInputValue->setValue($values->$customInputName);
+                    $customInputValue->setValue($values->$customInputId);
                 }
 
                 $customInputValue->setUser($this->user);

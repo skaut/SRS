@@ -166,10 +166,11 @@ class EditUserSeminarFormFactory
                         break;
 
                     case $customInput instanceof CustomSelect:
-                        $custom = $form->addSelect($customInputId, $customInput->getName(), $customInput->getSelectOptions());
+                        $selectOptions = $customInput->getSelectOptions();
+                        $custom = $form->addSelect($customInputId, $customInput->getName(), $selectOptions);
                         /** @var ?CustomSelectValue $customInputValue */
                         $customInputValue = $this->user->getCustomInputValue($customInput);
-                        if ($customInputValue) {
+                        if ($customInputValue && array_key_exists($customInputValue->getValue(), $selectOptions)) {
                             $custom->setDefaultValue($customInputValue->getValue());
                         }
 
@@ -270,41 +271,36 @@ class EditUserSeminarFormFactory
                 $this->user->setAttended($values->attended);
 
                 foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {
+                    $customInputId    = 'custom' . $customInput->getId();
                     $customInputValue = $this->user->getCustomInputValue($customInput);
-                    $customInputName  = 'custom' . $customInput->getId();
                     $oldValue         = null;
-                    $newValue         = null;
+                    $newValue         = $values->$customInputId;
 
                     if ($customInput instanceof CustomText) {
                         /** @var CustomTextValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomTextValue();
                         $oldValue         = $customInputValue->getValue();
-                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomCheckbox) {
                         /** @var CustomCheckboxValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                         $oldValue         = $customInputValue->getValue();
-                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomSelect) {
                         /** @var CustomSelectValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomSelectValue();
                         $oldValue         = $customInputValue->getValue();
-                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomMultiSelect) {
                         /** @var CustomMultiSelectValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomMultiSelectValue();
                         $oldValue         = $customInputValue->getValue();
-                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomFile) {
                         /** @var CustomFileValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomFileValue();
                         $oldValue         = $customInputValue->getValue();
                         /** @var FileUpload $newValue */
-                        $newValue = $values->$customInputName;
                         if ($newValue->getError() == UPLOAD_ERR_OK) {
                             $path = $this->generatePath($newValue);
                             $this->filesService->save($newValue, $path);
@@ -314,13 +310,11 @@ class EditUserSeminarFormFactory
                         /** @var CustomDateValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomDateValue();
                         $oldValue         = $customInputValue->getValue();
-                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomDateTime) {
                         /** @var CustomDateTimeValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomDateTimeValue();
                         $oldValue         = $customInputValue->getValue();
-                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     }
 

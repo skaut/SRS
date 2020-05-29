@@ -35,8 +35,8 @@ class CustomDateValue extends CustomInputValue
         $this->value = $value;
     }
 
-    public function getValueText() : ?string
+    public function getValueText() : string
     {
-        return $this->value ? $this->value->format(Helpers::DATE_FORMAT) : null;
+        return $this->value ? $this->value->format(Helpers::DATE_FORMAT) : '';
     }
 }

@@ -33,8 +33,8 @@ class CustomFileValue extends CustomInputValue
         $this->value = $value;
     }
 
-    public function getValueText() : ?string
+    public function getValueText() : string
     {
-        return null;
+        return '';
     }
 }
