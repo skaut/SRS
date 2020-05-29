@@ -246,41 +246,36 @@ class AdditionalInformationForm extends UI\Control
 
             if ($this->applicationService->isAllowedEditCustomInputs()) {
                 foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {
+                    $customInputId    = 'custom' . $customInput->getId();
                     $customInputValue = $this->user->getCustomInputValue($customInput);
-                    $customInputName  = 'custom' . $customInput->getId();
                     $oldValue         = null;
-                    $newValue         = null;
+                    $newValue         = $values->$customInputId;
 
                     if ($customInput instanceof CustomText) {
                         /** @var CustomTextValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomTextValue();
                         $oldValue         = $customInputValue->getValue();
-                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomCheckbox) {
                         /** @var CustomCheckboxValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue();
                         $oldValue         = $customInputValue->getValue();
-                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomSelect) {
                         /** @var CustomSelectValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomSelectValue();
                         $oldValue         = $customInputValue->getValue();
-                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomMultiSelect) {
                         /** @var CustomMultiSelectValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomMultiSelectValue();
                         $oldValue         = $customInputValue->getValue();
-                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomFile) {
                         /** @var CustomFileValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomFileValue();
                         $oldValue         = $customInputValue->getValue();
                         /** @var FileUpload $newValue */
-                        $newValue = $values->$customInputName;
                         if ($newValue->getError() == UPLOAD_ERR_OK) {
                             $path = $this->generatePath($newValue);
                             $this->filesService->save($newValue, $path);
@@ -290,13 +285,11 @@ class AdditionalInformationForm extends UI\Control
                         /** @var CustomDateValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomDateValue();
                         $oldValue         = $customInputValue->getValue();
-                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomDateTime) {
                         /** @var CustomDateTimeValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomDateTimeValue();
                         $oldValue         = $customInputValue->getValue();
-                        $newValue         = $values->$customInputName;
                         $customInputValue->setValue($newValue);
                     }
 
