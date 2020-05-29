@@ -41,6 +41,7 @@ use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
+use function array_key_exists;
 use function array_slice;
 use function array_values;
 use function explode;
@@ -131,15 +132,14 @@ class AdditionalInformationForm extends UI\Control
 
         foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {
             $customInputId    = 'custom' . $customInput->getId();
-            $customInputValue = $customInputValue = $this->user->getCustomInputValue($customInput);
-
-            $custom = null;
+            $custom           = null;
 
             switch (true) {
                 case $customInput instanceof CustomText:
                     $custom = $form->addText($customInputId, $customInput->getName());
 
                     /** @var ?CustomTextValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
@@ -150,6 +150,7 @@ class AdditionalInformationForm extends UI\Control
                     $custom = $form->addCheckbox($customInputId, $customInput->getName());
 
                     /** @var ?CustomCheckboxValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
@@ -161,6 +162,7 @@ class AdditionalInformationForm extends UI\Control
                     $custom        = $form->addSelect($customInputId, $customInput->getName(), $selectOptions);
 
                     /** @var ?CustomSelectValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue && array_key_exists($customInputValue->getValue(), $selectOptions)) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
@@ -171,6 +173,7 @@ class AdditionalInformationForm extends UI\Control
                     $custom = $form->addMultiSelect($customInputId, $customInput->getName(), $customInput->getSelectOptions());
 
                     /** @var ?CustomMultiSelectValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
@@ -181,6 +184,7 @@ class AdditionalInformationForm extends UI\Control
                     $custom = $form->addUpload($customInputId, $customInput->getName());
 
                     /** @var ?CustomFileValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue && $customInputValue->getValue()) {
                         $custom->setHtmlAttribute('data-current-file-link', $customInputValue->getValue())
                             ->setHtmlAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
@@ -192,6 +196,7 @@ class AdditionalInformationForm extends UI\Control
                     $custom = new DateControl($customInput->getName());
 
                     /** @var ?CustomDateValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
@@ -203,6 +208,7 @@ class AdditionalInformationForm extends UI\Control
                     $custom = new DateTimeControl($customInput->getName());
 
                     /** @var ?CustomDateTimeValue $customInputValue */
+                    $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         $custom->setDefaultValue($customInputValue->getValue());
                     }

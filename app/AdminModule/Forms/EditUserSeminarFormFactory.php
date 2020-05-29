@@ -47,6 +47,7 @@ use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
 use const UPLOAD_ERR_OK;
+use function array_key_exists;
 
 /**
  * Formulář pro úpravu podrobností o účasti uživatele na semináři.
@@ -301,6 +302,7 @@ class EditUserSeminarFormFactory
                         $customInputValue = $customInputValue ?: new CustomFileValue();
                         $oldValue         = $customInputValue->getValue();
                         /** @var FileUpload $newValue */
+                        $newValue = $values->$customInputId;
                         if ($newValue->getError() == UPLOAD_ERR_OK) {
                             $path = $this->generatePath($newValue);
                             $this->filesService->save($newValue, $path);
