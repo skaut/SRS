@@ -167,7 +167,7 @@ class EditUserSeminarFormFactory
 
                     case $customInput instanceof CustomSelect:
                         $selectOptions = $customInput->getSelectOptions();
-                        $custom = $form->addSelect($customInputId, $customInput->getName(), $selectOptions);
+                        $custom        = $form->addSelect($customInputId, $customInput->getName(), $selectOptions);
                         /** @var ?CustomSelectValue $customInputValue */
                         $customInputValue = $this->user->getCustomInputValue($customInput);
                         if ($customInputValue && array_key_exists($customInputValue->getValue(), $selectOptions)) {
