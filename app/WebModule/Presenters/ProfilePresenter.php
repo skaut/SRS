@@ -92,7 +92,7 @@ class ProfilePresenter extends WebBasePresenter
     public function actionExportSchedule() : void
     {
         $user     = $this->userRepository->findById($this->user->id);
-        $response = $this->excelExportService->exportUserSchedule($user, 'harmonogram-seminare.xlsx');
+        $response = $this->excelExportService->exportUserSchedule($user, 'harmonogram.xlsx');
         $this->sendResponse($response);
     }
 

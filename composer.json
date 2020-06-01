@@ -43,6 +43,8 @@
         "nextras/forms-rendering": "^1.0",
         "vojtys/nette-forms-gpspicker": "dev-master",
 
+        "bicisteadm/webloader-reload": "^3.0",
+
         "twbs/bootstrap": "^4.5",
         "snapappointments/bootstrap-select": "^1.13",
         "kartik-v/bootstrap-fileinput": "^5.0",
@@ -50,16 +52,15 @@
         "ublaboo/datagrid": "^6.2",
         "ublaboo/mailing": "^1.2",
 
-        "bicisteadm/webloader-reload": "^3.0",
         "jms/serializer": "^3.6",
-
-        "skautis/skautis": "^2.1",
-        "skautis/nette": "^2.2",
-
         "phpoffice/phpspreadsheet": "^1.12",
         "joseki/pdf-response": "^5.1",
         "mpdf/qrcode": "^1.0",
         "dfridrich/qr-platba": "^1.0",
+        "eluceo/ical": "^0.16",
+
+        "skautis/skautis": "^2.1",
+        "skautis/nette": "^2.2",
 
         "pear/numbers_words": "^0.18",
         "azuyalabs/yasumi": "^1.8",
