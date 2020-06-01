@@ -28,7 +28,7 @@ class SchedulePresenter extends ExportBasePresenter
     {
         $calendar = new Calendar('-//Junák - český skaut//SRS//CS');
 
-        $user = $this->userRepository->findById($id);
+        $user     = $this->userRepository->findById($id);
         $programs = $user->getPrograms();
 
         foreach ($programs as $program) {
@@ -49,7 +49,7 @@ class SchedulePresenter extends ExportBasePresenter
             $calendar->addComponent($event);
         }
 
-        $icalResponse = new IcalResponse($calendar, "harmonogram.ics");
+        $icalResponse = new IcalResponse($calendar, 'harmonogram.ics');
         $this->sendResponse($icalResponse);
     }
 }

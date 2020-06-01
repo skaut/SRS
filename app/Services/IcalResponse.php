@@ -32,6 +32,6 @@ class IcalResponse implements IResponse
         $httpResponse->setContentType('text/calendar', 'utf-8');
         $httpResponse->setHeader('Content-Disposition', 'attachment;filename=' . $this->filename);
 
-        echo ($this->calendar->render());
+        echo $this->calendar->render();
     }
 }
