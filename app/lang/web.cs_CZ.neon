@@ -110,7 +110,9 @@ profile:
     room: "Místnost"
     lectors: "Lektoři"
     no_programs: "Nemáte zvolené žádné programy."
-    download_schedule: "Stáhnout harmonogram"
+    download_schedule_excel: "Stáhnout harmonogram (XLSX)"
+    download_schedule_ical: "Stáhnout harmonogram (ICS)"
+    download_schedule_ical_copy: "Kopírovat URL kalendáře"
 
 member:
     name: "Nepropojený účet člena"

@@ -151,7 +151,7 @@ class RolesFormFactory
         $ticketDownloadFrom = $this->settingsService->getDateTimeValue(Settings::TICKETS_FROM);
         if ($ticketDownloadFrom !== null) {
             $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.download_ticket')
-                ->setHtmlAttribute('class', 'btn-success');
+                ->setHtmlAttribute('class', 'btn-secondary');
 
             if ($this->user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
                 || ! $this->user->hasPaidEveryApplication()

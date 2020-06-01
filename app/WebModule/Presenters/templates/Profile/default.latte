@@ -159,9 +159,31 @@
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col">
-                                            <a n:href="exportschedule" class="btn btn-primary">{_web.profile.download_schedule}</a>
+                                            <div class="btn-toolbar">
+                                                <a n:href="exportschedule" class="btn btn-secondary mr-2">{_web.profile.download_schedule_excel}</a>
+
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <a n:href=":Export:Schedule:ical $user->id" class="btn btn-secondary">
+                                                            {_web.profile.download_schedule_ical}
+                                                        </a>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="schedule-url" value="{plink //:Export:Schedule:ical $user->id}">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-outline-secondary" onclick="clipboard()" title="{_web.profile.download_schedule_ical_copy}">
+                                                            <span class="fa fa-clipboard">
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+                                    <script>
+                                        function clipboard() {
+                                            document.getElementById('schedule-url').select();
+                                            document.execCommand('copy');
+                                        }
+                                    </script>
                                 {/if}
                             </div>
                         </div>
