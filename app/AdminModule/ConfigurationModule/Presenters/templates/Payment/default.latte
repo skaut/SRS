@@ -9,8 +9,11 @@
         {if !$connected}
             {control bankForm}
         {else}
-            <a class="btn btn-danger" id="disconnect-button"
-               href="{link disconnect!}">{_admin.configuration.payment.bank.disconnect}</a>
+            <p>
+                <a class="btn btn-danger" id="disconnect-button" href="{link disconnect!}">
+                    {_admin.configuration.payment.bank.disconnect}
+                </a>
+            </p>
         {/if}
     </div>
 
