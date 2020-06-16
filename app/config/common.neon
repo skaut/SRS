@@ -13,6 +13,11 @@ services:
     router: @App\Router\RouterFactory::createRouter
     authenticator: App\Services\Authenticator
     console.application: Contributte\Console\Application
+    -
+        factory: Joseki\Application\Responses\PdfResponse
+        setup:
+            - $mpdfConfig([tempDir: %tempDir%/mpdf])
+
     - App\Services\Authorizator
     - App\Services\AclService
     - App\Services\ApplicationService
