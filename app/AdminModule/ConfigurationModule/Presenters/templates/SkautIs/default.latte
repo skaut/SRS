@@ -16,7 +16,11 @@
         {control skautIsEventForm}
         {else}
             <div class="alert alert-info alert-forever">{_admin.configuration.skautis_event_name, ['name' => $event]}</div>
-            <p><a class="btn btn-danger" id="disconnect-button" n:href="disconnect!">{_admin.configuration.skautis_event_disconnect}</a></p>
+            <p>
+                <a class="btn btn-danger" id="disconnect-button" n:href="disconnect!">
+                    {_admin.configuration.skautis_event_disconnect}
+                </a>
+            </p>
         {/if}
     </div>
 
