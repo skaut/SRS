@@ -294,7 +294,7 @@ class UsersGridControl extends Control
                 $qb->join('u.applications', 'uAVS')
                     ->join('uAVS.variableSymbol', 'uAVSVS')
                     ->andWhere('uAVSVS.variableSymbol LIKE :variableSymbol')
-                    ->setParameter(':variableSymbol', $value . '%');
+                    ->setParameter(':variableSymbol', '%' . $value . '%');
             });
 
         $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')

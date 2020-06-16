@@ -56,10 +56,12 @@ class ApplicationRepository extends EntityRepository
      */
     public function findValidByVariableSymbol(?string $variableSymbol) : ?Application
     {
+        $variableSymbolRegex = '^0*' . $variableSymbol . '$';
+
         return $this->createQueryBuilder('a')
             ->select('a')
             ->join('a.variableSymbol', 'v')
-            ->where('v.variableSymbol = :variableSymbol')->setParameter('variableSymbol', $variableSymbol)
+            ->where('REGEXP(v.variableSymbol, :variableSymbol) = 1')->setParameter('variableSymbol', $variableSymbolRegex)
             ->andWhere('a.validTo IS NULL')
             ->getQuery()
             ->getOneOrNullResult();
