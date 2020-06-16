@@ -36,6 +36,8 @@
         "nettrine/orm": "^0.4",
         "nettrine/cache": "^0.1",
         "nettrine/migrations": "^0.6",
+        "beberlei/doctrineextensions": "^1.2",
+        "doctrine/common": "<3.0.0",
 
         "dg/mysql-dump": "^1.5",
 

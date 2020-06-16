@@ -241,6 +241,11 @@ dbal:
     connection:
         charset: UTF8
 
+orm:
+    configuration:
+        customStringFunctions:
+            regexp: DoctrineExtensions\Query\Mysql\Regexp
+
 orm.annotations:
     debug: %debugMode%
     paths:
