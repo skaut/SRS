@@ -39,6 +39,9 @@ class IncomeProofPresenter extends ExportBasePresenter
     public ApplicationRepository $applicationRepository;
 
     /** @inject */
+    public PdfResponse $pdfResponse;
+
+    /** @inject */
     public UserRepository $userRepository;
 
     /** @inject */
@@ -148,12 +151,12 @@ class IncomeProofPresenter extends ExportBasePresenter
         $template->paymentMethodCash = PaymentType::CASH;
         $template->paymentMethodBank = PaymentType::BANK;
 
-        $pdf = new PdfResponse($template);
+        $this->pdfResponse->setTemplate($template);
 
-        $pdf->documentTitle = 'potvrzeni-platby';
-        $pdf->pageFormat    = 'A4';
-        $pdf->getMPDF()->SetProtection(['copy', 'print', 'print-highres'], '', random_bytes(30));
+        $this->pdfResponse->documentTitle = 'potvrzeni-platby';
+        $this->pdfResponse->pageFormat    = 'A4';
+        $this->pdfResponse->getMPDF()->SetProtection(['copy', 'print', 'print-highres'], '', random_bytes(30));
 
-        $this->sendResponse($pdf);
+        $this->sendResponse($this->pdfResponse);
     }
 }

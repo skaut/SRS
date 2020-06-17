@@ -24,13 +24,16 @@ use function random_bytes;
 class TicketPresenter extends ExportBasePresenter
 {
     /** @inject */
-    public UserRepository $userRepository;
+    public PdfResponse $pdfResponse;
 
     /** @inject */
     public SettingsService $settingsService;
 
     /** @inject */
     public SubeventRepository $subeventRepository;
+
+    /** @inject */
+    public UserRepository $userRepository;
 
     /**
      * Vygeneruje vstupenku v PDF.
@@ -54,12 +57,12 @@ class TicketPresenter extends ExportBasePresenter
         $template->ticketUser              = $this->userRepository->findById($this->user->id);
         $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
-        $pdf = new PdfResponse($template);
+        $this->pdfResponse->setTemplate($template);
 
-        $pdf->documentTitle = 'vstupenka';
-        $pdf->pageFormat    = 'A4';
-        $pdf->getMPDF()->SetProtection(['copy', 'print', 'print-highres'], '', random_bytes(30));
+        $this->pdfResponse->documentTitle = 'vstupenka';
+        $this->pdfResponse->pageFormat    = 'A4';
+        $this->pdfResponse->getMPDF()->SetProtection(['copy', 'print', 'print-highres'], '', random_bytes(30));
 
-        $this->sendResponse($pdf);
+        $this->sendResponse($this->pdfResponse);
     }
 }
