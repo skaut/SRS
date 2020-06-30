@@ -350,15 +350,15 @@ class ExcelExportService
 
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
+                case CustomInput::SELECT:
+                case CustomInput::MULTISELECT:
+                case CustomInput::DATE:
+                case CustomInput::DATETIME:
                     $width = 30;
                     break;
 
                 case CustomInput::CHECKBOX:
                     $width = 15;
-                    break;
-
-                case CustomInput::SELECT:
-                    $width = 30;
                     break;
 
                 case CustomInput::FILE:
