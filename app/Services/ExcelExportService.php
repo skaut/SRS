@@ -350,15 +350,18 @@ class ExcelExportService
 
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
+                case CustomInput::SELECT:
+                case CustomInput::MULTISELECT:
+                case CustomInput::DATETIME:
                     $width = 30;
+                    break;
+
+                case CustomInput::DATE:
+                    $width = 20;
                     break;
 
                 case CustomInput::CHECKBOX:
                     $width = 15;
-                    break;
-
-                case CustomInput::SELECT:
-                    $width = 30;
                     break;
 
                 case CustomInput::FILE:
@@ -425,6 +428,11 @@ class ExcelExportService
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $user->getCustomInputValue($customInput);
+
+                if ($customInputValue === null) {
+                    $column++;
+                    continue;
+                }
 
                 if ($customInputValue instanceof CustomCheckboxValue) {
                     $value = $customInputValue->getValue()
