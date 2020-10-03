@@ -1,6 +1,6 @@
 parameters:
 
-dbal:
+nettrine.dbal:
     connection:
         host: mysql-test
         driver: mysqli

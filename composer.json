@@ -10,6 +10,7 @@
 
     "require": {
         "php": ">=7.4",
+        "ext-bcmath": "*",
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-mysqli": "*",
@@ -26,15 +27,14 @@
         "nette/mail": "^3.1",
         "nette/robot-loader": "^3.2",
         "nette/security": "^3.0",
-        "nette/utils": "^3.0",
+        "nette/utils": "^3.1",
         "latte/latte": "^2.8",
         "tracy/tracy": "^2.7",
 
-        "contributte/console": "^0.7",
-        "contributte/translation": "0.4.1",
+        "contributte/console": "^0.8",
+        "contributte/translation": "0.7",
 
-        "nettrine/orm": "^0.4",
-        "nettrine/cache": "^0.1",
+        "nettrine/orm": "^0.7",
         "nettrine/migrations": "^0.6",
         "beberlei/doctrineextensions": "^1.2",
         "doctrine/common": "<3.0.0",

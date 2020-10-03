@@ -1,6 +1,6 @@
 parameters:
 
-dbal:
+nettrine.dbal:
     connection:
         host: "__CONFIG_DATABASE_HOST__"
         driver: mysqli

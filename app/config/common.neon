@@ -216,19 +216,21 @@ extensions:
     # Console
     console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
 
-    # DBAL
-    dbal: Nettrine\DBAL\DI\DbalExtension
-    dbal.console: Nettrine\DBAL\DI\DbalConsoleExtension
-
-    # Cache
+    # Common
+    nettrine.annotations: Nettrine\Annotations\DI\AnnotationsExtension
     nettrine.cache: Nettrine\Cache\DI\CacheExtension
+    nettrine.migrations: Nettrine\Migrations\DI\MigrationsExtension
+
+    # DBAL
+    nettrine.dbal: Nettrine\DBAL\DI\DbalExtension
+    nettrine.dbal.console: Nettrine\DBAL\DI\DbalConsoleExtension
 
     # ORM
-    orm: Nettrine\ORM\DI\OrmExtension
-    orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
-    orm.console: Nettrine\ORM\DI\OrmConsoleExtension
+    nettrine.orm: Nettrine\ORM\DI\OrmExtension
+    nettrine.orm.cache: Nettrine\ORM\DI\OrmCacheExtension
+    nettrine.orm.console: Nettrine\ORM\DI\OrmConsoleExtension(%consoleMode%)
+    nettrine.orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
 
-    migrations: Nettrine\Migrations\DI\MigrationsExtension
     webloader: WebLoader\Nette\Extension
     skautis: Skautis\Nette\SkautisExtension
     translation: Contributte\Translation\DI\TranslationExtension
@@ -240,23 +242,25 @@ console:
     autoExit: true
     lazy: false
 
-dbal:
+nettrine.dbal:
     debug:
         panel: %debugMode%
     connection:
-        charset: UTF8
+        charset: utf8mb4
+        default_table_options:
+            charset: utf8mb4
+            collate: utf8mb4_unicode_ci
 
-orm:
+nettrine.orm:
     configuration:
         customStringFunctions:
             regexp: DoctrineExtensions\Query\Mysql\Regexp
 
-orm.annotations:
-    debug: %debugMode%
-    paths:
-        - %appDir%/Model
+nettrine.orm.annotations:
+    mapping:
+       App\Model: %appDir%/Model
 
-migrations:
+nettrine.migrations:
     directory: %appDir%/../migrations
 
 mailing:
@@ -267,6 +271,7 @@ translation:
     locales:
         whitelist: [cs]
         default: cs
+        fallback: [cs]
     dirs:
         - %appDir%/lang
 

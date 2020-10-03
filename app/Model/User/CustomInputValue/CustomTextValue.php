@@ -19,7 +19,7 @@ class CustomTextValue extends CustomInputValue
     /**
      * Hodnota textového pole přihlášky.
      *
-     * @ORM\Column(type="text", options={"charset":"utf8mb4", "collation":"utf8mb4_unicode_ci"})
+     * @ORM\Column(type="text")
      */
     protected ?string $value = null;
 
