@@ -20,13 +20,13 @@ class ProgramDetailDto
     private int $id;
 
     /** @JMS\Type("string") */
-    private string $start;
+    private ?string $start = null;
 
     /** @JMS\Type("string") */
-    private string $end;
+    private ?string $end = null;
 
     /** @JMS\Type("int") */
-    private int $blockId;
+    private ?int $blockId = null;
 
     /** @JMS\Type("int") */
     private ?int $roomId = null;
