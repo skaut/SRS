@@ -92,6 +92,7 @@ class AclService
     {
         $this->roleRepository->save($role);
         $this->roleNamesCache->clean([Cache::NAMESPACES => ['RoleNames']]);
+        $this->permissionNamesCache->clean([Cache::NAMESPACES => ['PermissionNames']]);
     }
 
     /**
