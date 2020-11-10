@@ -9,13 +9,13 @@
                     </div>
                     <div class="modal-body">
                         <ul class="list-unstyled">
-                            <li ng-if="event.block.category">
+                            <li v-if="selectedEventInfo.event.extendedProps.block.category">
                                 <strong>Kategorie: </strong>
                                 {{ selectedEventInfo.event.extendedProps.block.category }}
                             </li>
-                            <li ng-if="event.room">
+                            <li v-if="selectedEventInfo.event.getResources().length > 0">
                                 <strong>Místnost: </strong>
-                                {{ selectedEventInfo.event.getResources().length > 0 ? selectedEventInfo.event.getResources()[0].title : ''}}
+                                {{ selectedEventInfo.event.getResources()[0].title }}
                             </li>
                             <li>
                                 <strong>Obsazenost: </strong>
@@ -26,7 +26,7 @@
                             </li>
                         </ul>
 
-                        <div ng-if="event.block.lectors">
+                        <div v-if="selectedEventInfo.event.extendedProps.block.lectors.length > 0">
                             <h6>Lektoři</h6>
                             <div v-for="lector in selectedEventInfo.event.extendedProps.block.lectors">
                                 <b>{{ lector.name }}</b>
@@ -166,7 +166,8 @@
                 ],
                 defaultView: localStorage.getItem("fcDefaultView") || "timeGridSeminar",
                 selectedEventInfo: null,
-                userAllowedRegisterPrograms: userAllowedRegisterPrograms
+                userAllowedRegisterPrograms: userAllowedRegisterPrograms,
+                basePath: basePath
             }
         },
         computed: {

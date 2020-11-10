@@ -22,7 +22,6 @@ class SchedulePresenter extends ProgramBasePresenter
      */
     public function renderDefault() : void
     {
-        $this->template->containerAttributes     = 'ng-app="scheduleApp" ng-controller="AdminScheduleCtrl"';
         $this->template->isAllowedModifySchedule = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
     }
 }
