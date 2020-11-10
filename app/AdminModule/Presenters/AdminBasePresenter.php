@@ -125,8 +125,6 @@ abstract class AdminBasePresenter extends BasePresenter
 
         $this->template->settings = $this->settingsService;
 
-        $this->template->containerAttributes = '';
-
         $skautIsUserId                = $this->dbuser->getSkautISUserId();
         $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId);
         $skautIsRoleSelectedId        = $this->skautIsService->getUserRoleId();
