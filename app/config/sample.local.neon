@@ -14,8 +14,8 @@ skautis:
 
 mail:
     smtp: false
-    host:
-    port:
-    username:
-    password:
-    secure:
+    host: ""
+    port: 0
+    username: ""
+    password: ""
+    secure: ""
