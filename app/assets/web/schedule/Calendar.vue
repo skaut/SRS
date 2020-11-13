@@ -184,7 +184,8 @@
                         allDaySlot: false,
                         snapDuration: {minutes: 5},
                         slotDuration: {minutes: 15},
-                        slotLabelInterval: {hours: 1}
+                        slotLabelInterval: {hours: 1},
+                        columnHeaderFormat: {weekday: "short", day: "numeric", month: "numeric"}
                     },
                     resourceTimelineSeminar: {
                         type: 'resourceTimeline',
