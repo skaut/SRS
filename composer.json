@@ -44,6 +44,7 @@
         "nextras/form-components": "^1.0",
         "nextras/forms-rendering": "^1.0",
         "vojtys/nette-forms-gpspicker": "dev-master",
+        "contributte/recaptcha": "^3.3",
 
         "bicisteadm/webloader-reload": "^3.0",
 

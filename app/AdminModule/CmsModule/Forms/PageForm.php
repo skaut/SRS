@@ -24,7 +24,8 @@ use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
 use function get_class;
-use function ucfirst;
+use function str_replace;
+use function ucwords;
 
 /**
  * Komponenta s formulářem pro úpravu obsahu stránky.
@@ -196,7 +197,7 @@ class PageForm extends UI\Control
         }
 
         if ($form->isSubmitted() === $form['submitAdd']) {
-            $contentClass = '\\App\\Model\\Cms\\Content\\' . ucfirst($type) . 'Content';
+            $contentClass = '\\App\\Model\\Cms\\Content\\' . str_replace('_', '', ucwords($type, '_')) . 'Content';
             $content      = new $contentClass($page, $area);
             $content->setHeading($form->getTranslator()->translate('common.content.default_heading.' . $type));
             $this->cmsService->saveContent($content);

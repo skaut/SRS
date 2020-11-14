@@ -1,9 +1,9 @@
 {form form class => form-horizontal}
-    <div class="form-group row required">
+    <div class="form-group row">
         {var $input = $form->getComponent('accountNumber')}
 
         <div class="col-5 col-form-label">
-            <label for="{$input->htmlId}">
+            <label for="{$input->htmlId}" class="{$input->required ? required}">
                 {_$input->caption}
             </label>
         </div>

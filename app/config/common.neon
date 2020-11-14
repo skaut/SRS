@@ -144,6 +144,7 @@ services:
     - App\WebModule\Components\ILectorsContentControlFactory
     - App\WebModule\Components\IApplicationsGridControlFactory
     - App\WebModule\Components\IOrganizerContentControlFactory
+    - App\WebModule\Components\IContactFormContentControlFactory
 
     - App\WebModule\Forms\BaseFormFactory
     - App\WebModule\Forms\IAdditionalInformationFormFactory
@@ -151,6 +152,7 @@ services:
     - App\WebModule\Forms\FaqFormFactory
     - App\WebModule\Forms\PersonalDetailsFormFactory
     - App\WebModule\Forms\RolesFormFactory
+    - App\WebModule\Forms\IContactFormFactory
 
     - App\AdminModule\Components\IApplicationsGridControlFactory
     - App\AdminModule\Components\IRolesGridControlFactory
@@ -235,6 +237,7 @@ extensions:
     skautis: Skautis\Nette\SkautisExtension
     translation: Contributte\Translation\DI\TranslationExtension
     mailing: Ublaboo\Mailing\DI\MailingExtension
+    recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
 
 console:
     name: SRS

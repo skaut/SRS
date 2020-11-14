@@ -32,7 +32,8 @@ use stdClass;
  *     "lectors_content" = "LectorsContent",
  *     "blocks_content" = "BlocksContent",
  *     "capacities_content" = "CapacitiesContent",
- *     "organizer_content" = "OrganizerContent"
+ *     "organizer_content" = "OrganizerContent",
+ *     "contact_form_content" = "ContactFormContent"
  * })
  *
  * @author Michal Májský
@@ -110,6 +111,11 @@ abstract class Content implements IContent
      */
     public const ORGANIZER = 'organizer';
 
+    /**
+     * ContactFormContent
+     */
+    public const CONTACT_FORM = 'contact_form';
+
 
     /**
      * Hlavní oblast stránky.
@@ -138,6 +144,7 @@ abstract class Content implements IContent
         self::BLOCKS,
         self::CAPACITIES,
         self::ORGANIZER,
+        self::CONTACT_FORM,
     ];
 
     /** @var string[] */
@@ -200,7 +207,7 @@ abstract class Content implements IContent
 
     public function getComponentName() : string
     {
-        return $this->type . 'Content';
+        return lcfirst(str_replace('_', '', ucwords($this->type, '_'))) . 'Content';
     }
 
     public function getId() : int

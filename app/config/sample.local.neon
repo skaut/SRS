@@ -19,3 +19,7 @@ mail:
     username: ""
     password: ""
     secure: ""
+
+recaptcha:
+    siteKey:
+    secretKey:

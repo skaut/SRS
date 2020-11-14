@@ -19,3 +19,7 @@ mail:
     username: "__CONFIG_MAIL_USERNAME__"
     password: "__CONFIG_MAIL_PASSWORD__"
     secure: __CONFIG_MAIL_SECURE__
+
+recaptcha:
+    siteKey: __CONFIG_RECAPTCHA_SITE_KEY__
+    secretKey: __CONFIG_RECAPTCHA_SECRET_KEY__

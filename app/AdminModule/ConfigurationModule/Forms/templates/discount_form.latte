@@ -150,11 +150,11 @@
         </div>
     </div>
 
-    <div class="form-group row required">
+    <div class="form-group row">
         {var $input = $form->getComponent('discount')}
 
         <div class="col-3 col-form-label">
-            <label for="{$input->htmlId}">
+            <label for="{$input->htmlId}" class="{$input->required ? required}">
                 {_$input->caption}
             </label>
         </div>
@@ -165,8 +165,7 @@
     </div>
 
     <div class="form-group row">
-        <div class="col-3"></div>
-        <div class="col-9">
+        <div class="col-9 offset-3">
             {input submit class => 'btn btn-primary button'}
             <a href="{plink Discounts:default}" class="btn btn-warning">{_admin.common.cancel}</a>
         </div>

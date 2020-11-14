@@ -51,6 +51,7 @@ content:
         blocks: "Program semináře"
         capacities: "Kapacita semináře"
         organizer: "Pořadatel"
+        contact_form: "Kontaktní formulář"
 
     default_heading:
         text: ""
@@ -67,6 +68,7 @@ content:
         blocks: "Program semináře"
         capacities: "Kapacita semináře"
         organizer: "Pořadatel"
+        contact_form: "Kontaktní formulář"
 
 area:
     main: "Hlavní oblast"
