@@ -127,10 +127,14 @@ class ContactForm extends UI\Control
         }
 
         $this->mailService->sendMailFromTemplate(
-            $recipientsUsers, $recipientsEmails, Template::CONTACT_FORM, [
+            $recipientsUsers,
+            $recipientsEmails,
+            Template::CONTACT_FORM,
+            [
                 TemplateVariable::SENDER => "", //todo
                 TemplateVariable::MESSAGE => $values->message,
-            ], false
+            ],
+            false
         );
 
         $this->onSave();

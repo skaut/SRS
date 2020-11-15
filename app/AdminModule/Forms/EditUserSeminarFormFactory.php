@@ -40,6 +40,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Http\FileUpload;
+use Nette\InvalidStateException;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
@@ -258,6 +259,10 @@ class EditUserSeminarFormFactory
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;
+        }
+
+        if ($this->user === null) {
+            throw new InvalidStateException();
         }
 
         $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);

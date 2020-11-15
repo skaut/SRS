@@ -11,7 +11,6 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
-use function in_array;
 
 /**
  * Formulář pro nastavení šablony automatického e-mailu.

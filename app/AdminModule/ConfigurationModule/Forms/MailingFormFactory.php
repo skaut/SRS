@@ -106,10 +106,14 @@ class MailingFormFactory
         $link = $this->linkGenerator->link('Action:Mailing:verify', ['code' => $verificationCode]);
 
         $this->mailService->sendMailFromTemplate(
-            null, new ArrayCollection([$values->seminarEmail]), Template::EMAIL_VERIFICATION, [
+            null,
+            new ArrayCollection([$values->seminarEmail]),
+            Template::EMAIL_VERIFICATION,
+            [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
-            ], true
+            ],
+            true
         );
     }
 }
