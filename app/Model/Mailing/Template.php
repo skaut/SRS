@@ -73,6 +73,11 @@ class Template
      * Potvrzení změny vlastního pole.
      */
     public const CUSTOM_INPUT_VALUE_CHANGED = 'custom_input_value_changed';
+
+    /**
+     * Zpráva z kontaktního formuláře.
+     */
+    public const CONTACT_FORM = 'contact_form';
     use Id;
 
     /**
@@ -111,27 +116,6 @@ class Template
      * @var Collection|TemplateVariable[]
      */
     protected Collection $variables;
-
-    /**
-     * Zaslat uživateli.
-     *
-     * @ORM\Column(type="boolean")
-     */
-    protected bool $sendToUser;
-
-    /**
-     * Zaslat pořadateli.
-     *
-     * @ORM\Column(type="boolean")
-     */
-    protected bool $sendToOrganizer;
-
-    /**
-     * Systémový e-mail. Nelze u něj měnit příjemce.
-     *
-     * @ORM\Column(type="boolean")
-     */
-    protected bool $systemTemplate;
 
     public function __construct()
     {
@@ -189,30 +173,5 @@ class Template
     public function getVariables() : Collection
     {
         return $this->variables;
-    }
-
-    public function isSendToUser() : bool
-    {
-        return $this->sendToUser;
-    }
-
-    public function setSendToUser(bool $sendToUser) : void
-    {
-        $this->sendToUser = $sendToUser;
-    }
-
-    public function isSendToOrganizer() : bool
-    {
-        return $this->sendToOrganizer;
-    }
-
-    public function setSendToOrganizer(bool $sendToOrganizer) : void
-    {
-        $this->sendToOrganizer = $sendToOrganizer;
-    }
-
-    public function isSystemTemplate() : bool
-    {
-        return $this->systemTemplate;
     }
 }

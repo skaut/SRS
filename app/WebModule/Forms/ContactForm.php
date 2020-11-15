@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use App\Services\MailService;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
 use Contributte\ReCaptcha\ReCaptchaProvider;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
@@ -39,14 +43,18 @@ class ContactForm extends UI\Control
 
     private ReCaptchaProvider $recaptchaProvider;
 
+    private MailService $mailService;
+
     public function __construct(
         BaseFormFactory $baseFormFactory,
         UserRepository $userRepository,
-        ReCaptchaProvider $recaptchaProvider
+        ReCaptchaProvider $recaptchaProvider,
+        MailService $mailService
     ) {
         $this->baseFormFactory   = $baseFormFactory;
         $this->userRepository    = $userRepository;
         $this->recaptchaProvider = $recaptchaProvider;
+        $this->mailService       = $mailService;
     }
 
     /**
@@ -68,10 +76,13 @@ class ContactForm extends UI\Control
         $form = $this->baseFormFactory->create();
 
         $emailText = $form->addText('email', 'web.contact_form_content.email')
-            ->addRule(Form::FILLED, 'web.contact_form_content.email_empty');
+            ->addRule(Form::FILLED, 'web.contact_form_content.email_empty')
+            ->addRule(Form::EMAIL, 'web.contact_form_content.email_format');
 
         $form->addTextArea('message', 'web.contact_form_content.message')
             ->addRule(Form::FILLED, 'web.contact_form_content.message_empty');
+
+        $form->addCheckbox('sendCopy', 'web.contact_form_content.send_copy');
 
         if ($this->user === null) {
             $field = new ReCaptchaField($this->recaptchaProvider);
@@ -102,12 +113,24 @@ class ContactForm extends UI\Control
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-//        $faq = new Faq();
-//
-//        $faq->setQuestion($values->question);
-//        $faq->setAuthor($this->user);
-//
-//        $this->faqRepository->save($faq);
+        $recipientsUsers  = new ArrayCollection();
+        $recipientsEmails = new ArrayCollection();
+
+        //todo: pridani prijemcu
+
+        if ($values->sendCopy) {
+            if ($this->user) {
+                $recipientsUsers->add($this->user);
+            } else {
+                $recipientsEmails->add($values->email);
+            }
+        }
+
+        $this->mailService->sendMailFromTemplate($recipientsUsers, $recipientsEmails, Template::CONTACT_FORM, [
+                TemplateVariable::SENDER => "", //todo
+                TemplateVariable::MESSAGE => $values->message,
+            ], false
+        );
 
         $this->onSave();
     }

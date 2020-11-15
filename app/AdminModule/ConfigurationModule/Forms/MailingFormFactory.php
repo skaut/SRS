@@ -11,6 +11,7 @@ use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
 use App\Services\MailService;
 use App\Services\SettingsService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Form;
@@ -104,11 +105,7 @@ class MailingFormFactory
 
         $link = $this->linkGenerator->link('Action:Mailing:verify', ['code' => $verificationCode]);
 
-        $this->mailService->sendMailFromTemplate(
-            null,
-            $values->seminarEmail,
-            Template::EMAIL_VERIFICATION,
-            [
+        $this->mailService->sendMailFromTemplate(null, new ArrayCollection([$values->seminarEmail]), Template::EMAIL_VERIFICATION, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
             ],

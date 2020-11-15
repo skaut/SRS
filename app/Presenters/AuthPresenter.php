@@ -12,6 +12,7 @@ use App\Model\User\UserRepository;
 use App\Services\MailService;
 use App\Services\SettingsService;
 use App\Services\SkautIsService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Application\AbortException;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
@@ -64,7 +65,7 @@ class AuthPresenter extends BasePresenter
         if ($userIdentity->data['firstLogin']) {
             $user = $this->userRepository->findById($this->user->id);
 
-            $this->mailService->sendMailFromTemplate($user, '', Template::SIGN_IN, [
+            $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::SIGN_IN, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             ]);
         }

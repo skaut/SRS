@@ -17,6 +17,7 @@ use App\Services\MailService;
 use App\Services\SettingsService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Application\Responses\TextResponse;
 use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
@@ -126,7 +127,7 @@ class MaturityPresenter extends ActionBasePresenter
                 $maturityDate = $application->getMaturityDate();
 
                 if ($maturityReminderDate == $maturityDate) {
-                    $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::MATURITY_REMINDER, [
+                    $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::MATURITY_REMINDER, [
                         TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                         TemplateVariable::APPLICATION_MATURITY => $maturityDate->format(Helpers::DATE_FORMAT),
                     ]);

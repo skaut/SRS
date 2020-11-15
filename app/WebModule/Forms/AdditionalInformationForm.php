@@ -30,6 +30,7 @@ use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
 use App\Services\SettingsService;
+use Doctrine\Common\Collections\ArrayCollection;
 use InvalidArgumentException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
@@ -315,7 +316,7 @@ class AdditionalInformationForm extends UI\Control
             $this->userRepository->save($this->user);
 
             if ($customInputValueChanged) {
-                $this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
+                $this->mailService->sendMailFromTemplate(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
                     TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                     TemplateVariable::USER => $this->user->getDisplayName(),
                 ]);
