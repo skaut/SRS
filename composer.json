@@ -69,7 +69,8 @@
         "azuyalabs/yasumi": "^1.8",
 
         "mhujer/fio-api-php": "^4.1",
-        "composer/ca-bundle": "^1.2"
+        "composer/ca-bundle": "^1.2",
+        "uestla/recaptcha-control": "^8.0"
     },
 
     "require-dev": {

@@ -36,7 +36,7 @@ class ContactFormContentControl extends Control
 
     public function createComponentContactForm() : ContactForm
     {
-        $form = $this->contactFormFactory->create($this->getPresenter()->getUser()->id);
+        $form = $this->contactFormFactory->create();
 
         $form->onSave[] = function () : void {
             $this->flashMessage('web.contact_form_content.send_message_successful', 'success');

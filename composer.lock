@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d2efe93d7be6bfd951930474ef7a4aca",
+    "content-hash": "afdbf4b788d1687d3bd891e40ebc2dfc",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -7725,6 +7725,61 @@
                 "nette"
             ],
             "time": "2019-05-09T11:26:12+00:00"
+        },
+        {
+            "name": "uestla/recaptcha-control",
+            "version": "8.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/uestla/ReCaptchaControl.git",
+                "reference": "9a1b14c674434218fa140f0126d1cb8c2e7f288c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/uestla/ReCaptchaControl/zipball/9a1b14c674434218fa140f0126d1cb8c2e7f288c",
+                "reference": "9a1b14c674434218fa140f0126d1cb8c2e7f288c",
+                "shasum": ""
+            },
+            "require": {
+                "nette/di": "^3.0",
+                "nette/forms": "^3.0",
+                "nette/http": "^3.0",
+                "nette/php-generator": "^3.0",
+                "nette/utils": "^3.0",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^7.2",
+                "latte/latte": "^2.5",
+                "nette/bootstrap": "^3.0",
+                "nette/tester": "^2.2",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.12.49",
+                "phpstan/phpstan-nette": "^0.12.9",
+                "tracy/tracy": "^2.6"
+            },
+            "suggest": {
+                "ext-curl": "Needed by the default ReCaptchaControl\\Http\\Requester\\CurlRequester.",
+                "guzzlehttp/guzzle": "Needed by ReCaptchaControl\\Http\\Requester\\GuzzleRequester."
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "reCAPTCHA control for Nette Framework forms",
+            "homepage": "https://github.com/uestla/ReCaptchaControl",
+            "keywords": [
+                "Forms",
+                "nette",
+                "recaptcha"
+            ],
+            "time": "2020-10-13T09:25:20+00:00"
         },
         {
             "name": "vojtys/nette-forms-gpspicker",

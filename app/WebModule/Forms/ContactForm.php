@@ -75,7 +75,7 @@ class ContactForm extends UI\Control
             ->addRule(Form::FILLED, 'web.contact_form_content.message_empty');
 
         if ($this->user === null) {
-            $form->addReCaptcha('recaptcha');
+            $form->addReCaptcha('recaptcha', 'Captcha', 'Are you a bot?');
         }
 
         $form->addSubmit('submit', 'web.contact_form_content.send_message');
