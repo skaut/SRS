@@ -237,7 +237,7 @@ extensions:
     skautis: Skautis\Nette\SkautisExtension
     translation: Contributte\Translation\DI\TranslationExtension
     mailing: Ublaboo\Mailing\DI\MailingExtension
-    recaptcha: ReCaptchaControl\DI\Extension
+    recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
 
 console:
     name: SRS

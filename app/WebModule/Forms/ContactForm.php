@@ -8,11 +8,14 @@ use App\Model\Cms\Faq;
 use App\Model\Cms\FaqRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
+use Contributte\ReCaptcha\Forms\ReCaptchaField;
+use Contributte\ReCaptcha\ReCaptchaProvider;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
+use Tracy\Debugger;
 
 /**
  * Komponenta s formulářem pro kontaktaktní formulář.
@@ -33,21 +36,20 @@ class ContactForm extends UI\Control
      */
     public array $onSave = [];
 
-    /**
-     * Událost při úspěšném neodeslání formuláře.
-     *
-     * @var callable[]
-     */
-    public array $onError = [];
-
     private BaseFormFactory $baseFormFactory;
 
     private UserRepository $userRepository;
 
-    public function __construct(BaseFormFactory $baseFormFactory, UserRepository $userRepository)
-    {
-        $this->baseFormFactory = $baseFormFactory;
-        $this->userRepository  = $userRepository;
+    private ReCaptchaProvider $recaptchaProvider;
+
+    public function __construct(
+        BaseFormFactory $baseFormFactory,
+        UserRepository $userRepository,
+        ReCaptchaProvider $recaptchaProvider
+    ) {
+        $this->baseFormFactory   = $baseFormFactory;
+        $this->userRepository    = $userRepository;
+        $this->recaptchaProvider = $recaptchaProvider;
     }
 
     /**
@@ -75,7 +77,9 @@ class ContactForm extends UI\Control
             ->addRule(Form::FILLED, 'web.contact_form_content.message_empty');
 
         if ($this->user === null) {
-            $form->addReCaptcha('recaptcha', 'Captcha', 'Are you a bot?');
+            $field = new ReCaptchaField($this->recaptchaProvider);
+            $field->addRule(Form::FILLED, 'web.contact_form_content.recaptcha_empty');
+            $form->addComponent($field, 'recaptcha');
         }
 
         $form->addSubmit('submit', 'web.contact_form_content.send_message');
@@ -89,10 +93,6 @@ class ContactForm extends UI\Control
         }
 
         $form->onSuccess[] = [$this, 'processForm'];
-
-        $form->onError[] = function () use ($form) : void {
-            $this->onError($form);
-        };
 
         return $form;
     }
@@ -112,6 +112,6 @@ class ContactForm extends UI\Control
 //
 //        $this->faqRepository->save($faq);
 
-        $this->onSave($this);
+        $this->onSave();
     }
 }

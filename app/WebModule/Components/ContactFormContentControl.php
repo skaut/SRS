@@ -39,17 +39,9 @@ class ContactFormContentControl extends Control
         $form = $this->contactFormFactory->create();
 
         $form->onSave[] = function () : void {
-            $this->flashMessage('web.contact_form_content.send_message_successful', 'success');
+            $this->getPresenter()->flashMessage('web.contact_form_content.send_message_successful', 'success');
 
-            $this->redirect('this');
-        };
-
-        $form->onError[] = function (Form $form) : void {
-            foreach ($form->errors as $error) {
-                $this->flashMessage($error, 'danger');
-            }
-
-            $this->redirect('this');
+            $this->getPresenter()->redirect('this');
         };
 
         return $form;
