@@ -19,7 +19,6 @@ use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Nette;
 use Nette\Localization\ITranslator;
@@ -77,10 +76,10 @@ class MailService
     /**
      * Rozešle e-mail.
      *
-     * @param Collection|Role[]|null $recipientsRoles
+     * @param Collection|Role[]|null     $recipientsRoles
      * @param Collection|Subevent[]|null $recipientsSubevents
-     * @param Collection|User[]|null $recipientsUsers
-     * @param Collection|string[]|null $recipientEmails
+     * @param Collection|User[]|null     $recipientsUsers
+     * @param Collection|string[]|null   $recipientEmails
      *
      * @throws SettingsException
      * @throws Throwable
@@ -93,7 +92,7 @@ class MailService
         if ($recipientsRoles !== null) {
             foreach ($this->userRepository->findAllApprovedInRoles($this->roleRepository->findRolesIds($recipientsRoles)) as $user) {
                 $recipient = Recipient::createFromUser($user);
-                if (!in_array($recipient, $recipients)) {
+                if (! in_array($recipient, $recipients)) {
                     $recipients[] = $recipient;
                 }
             }
@@ -102,7 +101,7 @@ class MailService
         if ($recipientsSubevents !== null) {
             foreach ($this->userRepository->findAllWithSubevents($this->subeventRepository->findSubeventsIds($recipientsSubevents)) as $user) {
                 $recipient = Recipient::createFromUser($user);
-                if (!in_array($recipient, $recipients)) {
+                if (! in_array($recipient, $recipients)) {
                     $recipients[] = $recipient;
                 }
             }
@@ -111,7 +110,7 @@ class MailService
         if ($recipientsUsers !== null) {
             foreach ($recipientsUsers as $user) {
                 $recipient = Recipient::createFromUser($user);
-                if (!in_array($recipient, $recipients)) {
+                if (! in_array($recipient, $recipients)) {
                     $recipients[] = $recipient;
                 }
             }
@@ -120,7 +119,7 @@ class MailService
         if ($recipientEmails !== null) {
             foreach ($recipientEmails as $email) {
                 $recipient = new Recipient($email);
-                if (!in_array($recipient, $recipients)) {
+                if (! in_array($recipient, $recipients)) {
                     $recipients[] = $recipient;
                 }
             }
@@ -133,15 +132,19 @@ class MailService
         $mail->send();
 
         $mailLog = new Mail();
+
         if ($recipientsRoles !== null) {
             $mailLog->setRecipientRoles($recipientsRoles);
         }
+
         if ($recipientsSubevents !== null) {
             $mailLog->setRecipientSubevents($recipientsSubevents);
         }
+
         if ($recipientsUsers !== null) {
             $mailLog->setRecipientUsers($recipientsUsers);
         }
+
         $mailLog->setSubject($subject);
         $mailLog->setText($text);
         $mailLog->setDatetime(new DateTimeImmutable());
@@ -152,9 +155,9 @@ class MailService
     /**
      * Rozešle e-mail podle šablony.
      *
-     * @param Collection|null $recipientsUsers
-     * @param Collection|null $recipientsEmails
-     * @param string[] $parameters
+     * @param Collection|User[]|null   $recipientsUsers
+     * @param Collection|string[]|null $recipientsEmails
+     * @param string[]                 $parameters
      *
      * @throws MailingMailCreationException
      * @throws SettingsException

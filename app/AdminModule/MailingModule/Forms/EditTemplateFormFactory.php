@@ -48,12 +48,7 @@ class EditTemplateFormFactory
 
         $form->addHidden('id');
 
-        $form->addCheckbox('active', 'admin.mailing.templates.active_form');
-
-        $form->addMultiSelect('recipients', 'admin.mailing.templates.recipients', [
-            'user' => 'admin.mailing.templates.send_to_user_form',
-            'organizer' => 'admin.mailing.templates.send_to_organizer_form',
-        ])->addRule(Form::FILLED, 'admin.mailing.templates.recipients_empty');
+        $form->addCheckbox('active', 'admin.mailing.templates.active_form'); //todo: nepovolit deaktivovat systemovy
 
         $form->addText('subject', 'admin.mailing.templates.subject')
             ->addRule(Form::FILLED, 'admin.mailing.templates.subject_empty');
@@ -68,19 +63,9 @@ class EditTemplateFormFactory
             ->setValidationScope([])
             ->setHtmlAttribute('class', 'btn btn-warning');
 
-        $selectedRecipients = [];
-        if ($this->template->isSendToOrganizer()) {
-            $selectedRecipients[] = 'organizer';
-        }
-
-        if ($this->template->isSendToUser()) {
-            $selectedRecipients[] = 'user';
-        }
-
         $form->setDefaults([
             'id' => $id,
             'active' => $this->template->isActive(),
-            'recipients' => $selectedRecipients,
             'subject' => $this->template->getSubject(),
             'text' => $this->template->getText(),
         ]);
@@ -103,8 +88,6 @@ class EditTemplateFormFactory
         }
 
         $this->template->setActive($values->active);
-        $this->template->setSendToUser(in_array('user', $values->recipients));
-        $this->template->setSendToOrganizer(in_array('organizer', $values->recipients));
         $this->template->setSubject($values->subject);
         $this->template->setText($values->text);
 

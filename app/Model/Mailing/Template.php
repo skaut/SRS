@@ -117,6 +117,13 @@ class Template
      */
     protected Collection $variables;
 
+    /**
+     * Systémový e-mail. Nelze jej deaktivovat.
+     *
+     * @ORM\Column(type="boolean")
+     */
+    protected bool $systemTemplate;
+
     public function __construct()
     {
         $this->variables = new ArrayCollection();
@@ -173,5 +180,10 @@ class Template
     public function getVariables() : Collection
     {
         return $this->variables;
+    }
+
+    public function isSystemTemplate() : bool
+    {
+        return $this->systemTemplate;
     }
 }

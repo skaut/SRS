@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Mailing;
 
 use App\Model\Mailing\Recipient;
-use App\Model\User\User;
 use Ublaboo\Mailing\IMessageData;
 
 /**

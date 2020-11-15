@@ -15,7 +15,7 @@ class Recipient
     public function __construct(string $email, ?string $name = null)
     {
         $this->email = $email;
-        $this->name = $name;
+        $this->name  = $name;
     }
 
     public function getEmail() : string
@@ -28,7 +28,8 @@ class Recipient
         return $this->name;
     }
 
-    public static function createFromUser(User $user) : Recipient {
+    public static function createFromUser(User $user) : Recipient
+    {
         return new Recipient($user->getEmail(), $user->getDisplayName());
     }
 }
