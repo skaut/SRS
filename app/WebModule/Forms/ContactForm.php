@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
-use App\Model\Cms\Faq;
-use App\Model\Cms\FaqRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
@@ -15,7 +13,6 @@ use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
-use Tracy\Debugger;
 
 /**
  * Komponenta s formulářem pro kontaktaktní formulář.

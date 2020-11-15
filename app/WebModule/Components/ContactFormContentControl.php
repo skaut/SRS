@@ -8,7 +8,6 @@ use App\Model\Cms\Content\ContentDto;
 use App\WebModule\Forms\ContactForm;
 use App\WebModule\Forms\IContactFormFactory;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
 
 /**
  * Komponenta s kontaktním formulářem.
@@ -29,7 +28,7 @@ class ContactFormContentControl extends Control
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/contact_form_content.latte');
 
-        $template->heading   = $content->getHeading();
+        $template->heading = $content->getHeading();
 
         $template->render();
     }

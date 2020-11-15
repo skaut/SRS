@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 use stdClass;
+use function lcfirst;
+use function str_replace;
+use function ucwords;
 
 /**
  * Abstraktní entita obsahu.
