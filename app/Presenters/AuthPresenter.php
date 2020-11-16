@@ -67,7 +67,7 @@ class AuthPresenter extends BasePresenter
         if ($userIdentity->data['firstLogin']) {
             $user = $this->userRepository->findById($this->user->id);
 
-            assert($this->user instanceof User);
+            assert($user instanceof User);
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::SIGN_IN, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             ]);
