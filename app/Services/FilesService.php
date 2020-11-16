@@ -95,15 +95,13 @@ class FilesService
         $image = Image::fromFile($this->dir . $path);
 
         if ($image->getWidth() / $width > $image->getHeight() / $height) {
-            $image->resize(0, $height);
+            $image->resize(null, $height);
         } else {
-            $image->resize($width, 0);
+            $image->resize($width, null);
         }
 
         $image->sharpen();
-
-        $image->crop(($image->getWidth() - $width) / 2, ($image->getHeight() - $height) / 2, $width, $height);
-
+        $image->crop('50%', '50%', $width, $height);
         $image->save($this->dir . $path);
     }
 
