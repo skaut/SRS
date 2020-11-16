@@ -40,7 +40,6 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Http\FileUpload;
-use Nette\InvalidStateException;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
@@ -49,6 +48,7 @@ use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
 use function array_key_exists;
+use function assert;
 use const UPLOAD_ERR_OK;
 
 /**
@@ -261,9 +261,7 @@ class EditUserSeminarFormFactory
             return;
         }
 
-        if ($this->user === null) {
-            throw new InvalidStateException();
-        }
+        assert($this->user !== null);
 
         $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 

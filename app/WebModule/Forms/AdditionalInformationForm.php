@@ -35,7 +35,6 @@ use InvalidArgumentException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
-use Nette\InvalidStateException;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nettrine\ORM\EntityManagerDecorator;
@@ -46,6 +45,7 @@ use Throwable;
 use function array_key_exists;
 use function array_slice;
 use function array_values;
+use function assert;
 use function explode;
 use const UPLOAD_ERR_OK;
 
@@ -249,9 +249,7 @@ class AdditionalInformationForm extends UI\Control
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        if ($this->user === null) {
-            throw new InvalidStateException();
-        }
+        assert($this->user !== null);
 
         $this->em->transactional(function () use ($values) : void {
             $customInputValueChanged = false;

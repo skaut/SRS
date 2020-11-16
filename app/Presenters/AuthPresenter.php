@@ -14,11 +14,11 @@ use App\Services\SettingsService;
 use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Application\AbortException;
-use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
+use function assert;
 use function strpos;
 
 /**
@@ -66,9 +66,7 @@ class AuthPresenter extends BasePresenter
         if ($userIdentity->data['firstLogin']) {
             $user = $this->userRepository->findById($this->user->id);
 
-            if ($user === null) {
-                throw new InvalidStateException();
-            }
+            assert($user !== null);
 
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::SIGN_IN, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
