@@ -1,6 +1,7 @@
 parameters:
-    checkGenericClassInNonGenericObjectType: false
-    checkMissingIterableValueType: false
+    autoload_directories:
+        - %rootDir%/../../../app
+        - %rootDir%/../../../code-quality
 
 includes:
     - vendor/phpstan/phpstan-nette/extension.neon
