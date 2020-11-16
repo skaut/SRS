@@ -8,6 +8,7 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
+use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
 use App\Services\SettingsService;
@@ -66,8 +67,7 @@ class AuthPresenter extends BasePresenter
         if ($userIdentity->data['firstLogin']) {
             $user = $this->userRepository->findById($this->user->id);
 
-            assert($user !== null);
-
+            assert($this->user instanceof User);
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::SIGN_IN, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             ]);

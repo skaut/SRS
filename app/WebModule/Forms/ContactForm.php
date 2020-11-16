@@ -131,7 +131,7 @@ class ContactForm extends UI\Control
             $recipientsEmails,
             Template::CONTACT_FORM,
             [
-                TemplateVariable::SENDER => "", //todo
+                TemplateVariable::SENDER => '', //todo
                 TemplateVariable::MESSAGE => $values->message,
             ],
             false

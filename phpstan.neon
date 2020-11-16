@@ -1,8 +1,4 @@
 parameters:
-    autoload_directories:
-        - %rootDir%/../../../app
-        - %rootDir%/../../../code-quality
-
     checkGenericClassInNonGenericObjectType: false
     checkMissingIterableValueType: false
 

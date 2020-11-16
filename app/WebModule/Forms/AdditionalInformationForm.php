@@ -249,8 +249,6 @@ class AdditionalInformationForm extends UI\Control
      */
     public function processForm(Form $form, stdClass $values) : void
     {
-        assert($this->user !== null);
-
         $this->em->transactional(function () use ($values) : void {
             $customInputValueChanged = false;
 
@@ -319,6 +317,7 @@ class AdditionalInformationForm extends UI\Control
             $this->userRepository->save($this->user);
 
             if ($customInputValueChanged) {
+                assert($this->user instanceof User);
                 $this->mailService->sendMailFromTemplate(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
                     TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                     TemplateVariable::USER => $this->user->getDisplayName(),

@@ -261,8 +261,6 @@ class EditUserSeminarFormFactory
             return;
         }
 
-        assert($this->user !== null);
-
         $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
         $this->em->transactional(function () use ($values, $loggedUser) : void {
@@ -341,6 +339,7 @@ class EditUserSeminarFormFactory
             $this->userRepository->save($this->user);
 
             if ($customInputValueChanged) {
+                assert($this->user instanceof User);
                 $this->mailService->sendMailFromTemplate(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
                     TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                     TemplateVariable::USER => $this->user->getDisplayName(),
