@@ -214,6 +214,7 @@ class InstallPresenter extends InstallBasePresenter
             $this->skautIs->org->UnitAllRegistryBasic();
         } catch (WsdlException $ex) {
             Debugger::log($ex, ILogger::WARNING);
+
             return false;
         }
 
