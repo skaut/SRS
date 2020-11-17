@@ -159,8 +159,7 @@ class ContactForm extends UI\Control
                 TemplateVariable::SENDER_NAME => $senderName,
                 TemplateVariable::SENDER_EMAIL => $senderEmail,
                 TemplateVariable::MESSAGE => nl2br($values->message, false),
-            ],
-            false
+            ]
         );
 
         $this->onSave();

@@ -118,7 +118,7 @@ class Template
     protected Collection $variables;
 
     /**
-     * Systémový e-mail. Nelze jej deaktivovat.
+     * Systémový e-mail. Nezobrazuje se v přehledu a nelze jej editovat.
      *
      * @ORM\Column(type="boolean")
      */

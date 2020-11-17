@@ -135,19 +135,19 @@ abstract class Content implements IContent
     public static array $types = [
         self::TEXT,
         self::IMAGE,
+        self::HTML,
+        self::NEWS,
         self::DOCUMENT,
         self::APPLICATION,
-        self::HTML,
-        self::FAQ,
-        self::NEWS,
-        self::PLACE,
         self::PROGRAMS,
+        self::CONTACT_FORM,
+        self::FAQ,
+        self::PLACE,
         self::USERS,
         self::LECTORS,
         self::BLOCKS,
         self::CAPACITIES,
         self::ORGANIZER,
-        self::CONTACT_FORM,
     ];
 
     /** @var string[] */

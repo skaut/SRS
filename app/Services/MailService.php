@@ -163,7 +163,7 @@ class MailService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function sendMailFromTemplate(?Collection $recipientsUsers, ?Collection $recipientsEmails, string $type, array $parameters, bool $automatic = true) : void
+    public function sendMailFromTemplate(?Collection $recipientsUsers, ?Collection $recipientsEmails, string $type, array $parameters) : void
     {
         $template = $this->templateRepository->findByType($type);
 
@@ -182,6 +182,6 @@ class MailService
             $text    = str_replace($variableName, $value, $text);
         }
 
-        $this->sendMail(null, null, $recipientsUsers, $recipientsEmails, $subject, $text, $automatic);
+        $this->sendMail(null, null, $recipientsUsers, $recipientsEmails, $subject, $text, true);
     }
 }

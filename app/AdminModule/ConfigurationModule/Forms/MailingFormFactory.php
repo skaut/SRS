@@ -124,8 +124,7 @@ class MailingFormFactory
                 [
                     TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                     TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
-                ],
-                true
+                ]
             );
         }
 
