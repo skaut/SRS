@@ -19,6 +19,7 @@ use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
+use function nl2br;
 
 /**
  * Komponenta s formulářem pro kontaktaktní formulář.
@@ -131,13 +132,13 @@ class ContactForm extends UI\Control
         $senderEmail = null;
 
         if ($this->user) {
-            $senderName = $this->user->getDisplayName();
+            $senderName  = $this->user->getDisplayName();
             $senderEmail = $this->user->getEmail();
             if ($values->sendCopy) {
                 $recipientsUsers->add($this->user);
             }
         } else {
-            $senderName = $values->name;
+            $senderName  = $values->name;
             $senderEmail = $values->email;
             if ($values->sendCopy) {
                 $recipientsEmails->add($senderEmail);

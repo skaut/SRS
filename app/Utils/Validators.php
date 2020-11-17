@@ -16,8 +16,10 @@ use App\Model\User\Application\Application;
 use App\Model\User\User;
 use App\Services\SettingsService;
 use Doctrine\Common\Collections\Collection;
-use Nette\Forms\Validator;
 use Throwable;
+use function array_map;
+use function explode;
+use function trim;
 
 /**
  * Třída s vlastními validátory.
@@ -259,7 +261,7 @@ class Validators
 
         foreach ($emails as $email) {
             if (! \Nette\Utils\Validators::isEmail($email)) {
-                return  false;
+                return false;
             }
         }
 

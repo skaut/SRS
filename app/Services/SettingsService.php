@@ -13,6 +13,8 @@ use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Throwable;
 use function filter_var;
+use function serialize;
+use function unserialize;
 use const FILTER_VALIDATE_BOOLEAN;
 use const FILTER_VALIDATE_INT;
 

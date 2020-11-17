@@ -21,9 +21,13 @@ use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
+use function array_map;
+use function explode;
+use function implode;
 use function md5;
 use function mt_rand;
 use function substr;
+use function trim;
 use function uniqid;
 
 /**
