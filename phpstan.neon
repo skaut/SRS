@@ -1,5 +1,5 @@
 parameters:
-    autoload_directories:
+    scanDirectories:
         - %rootDir%/../../../app
         - %rootDir%/../../../code-quality
 
@@ -20,16 +20,5 @@ services:
 	- class: CodeQuality\SkautisWebserviceMagicMethodsExtension
 	  tags: [ phpstan.broker.methodsClassReflectionExtension ]
 
-	- class: CodeQuality\QueryBusDynamicReturnTypeProvider
-	  arguments:
-	      - %autoload_directories%
-	      - %rootDir%/../../../temp
-	      - '~^.*QueryHandlers\\.*Handler$~'
-
-	  tags: [ phpstan.broker.dynamicMethodReturnTypeExtension ]
-
-	#
-	# Dynamic method return types
-	#
 	- class: CodeQuality\PresenterDynamicReturnTypeExtension
 	  tags: [ phpstan.broker.dynamicMethodReturnTypeExtension ]

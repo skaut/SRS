@@ -234,11 +234,27 @@ class SettingsService
         }
     }
 
+    /**
+     * Vrátí hodnotu položky typu pole.
+     *
+     * @return mixed[]
+     *
+     * @throws SettingsException
+     * @throws Throwable
+     */
     public function getArrayValue(string $item) : array
     {
         return unserialize($this->getValue($item));
     }
 
+    /**
+     * Nastavení hodnoty položky typu pole.
+     *
+     * @param mixed[] $value
+     *
+     * @throws SettingsException
+     * @throws Throwable
+     */
     public function setArrayValue(string $item, array $value) : void
     {
         $this->setValue($item, serialize($value));
