@@ -47,7 +47,7 @@ class EditTemplateFormFactory
 
         $form->addHidden('id');
 
-        $form->addCheckbox('active', 'admin.mailing.templates.active_form'); //todo: nepovolit deaktivovat systemovy
+        $form->addCheckbox('active', 'admin.mailing.templates.active_form');
 
         $form->addText('subject', 'admin.mailing.templates.subject')
             ->addRule(Form::FILLED, 'admin.mailing.templates.subject_empty');

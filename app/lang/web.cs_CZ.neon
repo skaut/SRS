@@ -228,6 +228,8 @@ lectors_content:
     blocks: "Programové bloky"
 
 contact_form_content:
+    name: "Jméno"
+    name_empty: "Zadejte jméno"
     email: "E-mail"
     email_empty: "Zadejte e-mail"
     email_format: "Zadejte e-mail ve správném formátu."

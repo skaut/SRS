@@ -1,5 +1,17 @@
 {form form class => form-horizontal}
     <div class="form-group row">
+        {var $nameInput = $form->getComponent('name')}
+        <div class="col-md-3 col-form-label">
+            <label for="{$nameInput->htmlId}" class="{$nameInput->required ? required}">
+                {_$nameInput->caption}
+            </label>
+        </div>
+        <div class="col-md-9">
+            {input $nameInput}
+        </div>
+    </div>
+
+    <div class="form-group row">
         {var $emailInput = $form->getComponent('email')}
         <div class="col-md-3 col-form-label">
             <label for="{$emailInput->htmlId}" class="{$emailInput->required ? required}">

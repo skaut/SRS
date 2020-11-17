@@ -6,9 +6,11 @@ namespace App\WebModule\Forms;
 
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Settings;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
+use App\Services\SettingsService;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
 use Contributte\ReCaptcha\ReCaptchaProvider;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -45,16 +47,20 @@ class ContactForm extends UI\Control
 
     private MailService $mailService;
 
+    private SettingsService $settingsService;
+
     public function __construct(
         BaseFormFactory $baseFormFactory,
         UserRepository $userRepository,
         ReCaptchaProvider $recaptchaProvider,
-        MailService $mailService
+        MailService $mailService,
+        SettingsService $settingsService
     ) {
         $this->baseFormFactory   = $baseFormFactory;
         $this->userRepository    = $userRepository;
         $this->recaptchaProvider = $recaptchaProvider;
         $this->mailService       = $mailService;
+        $this->settingsService   = $settingsService;
     }
 
     /**
@@ -75,6 +81,9 @@ class ContactForm extends UI\Control
 
         $form = $this->baseFormFactory->create();
 
+        $nameText = $form->addText('name', 'web.contact_form_content.name')
+            ->addRule(Form::FILLED, 'web.contact_form_content.name_empty');
+
         $emailText = $form->addText('email', 'web.contact_form_content.email')
             ->addRule(Form::FILLED, 'web.contact_form_content.email_empty')
             ->addRule(Form::EMAIL, 'web.contact_form_content.email_format');
@@ -93,9 +102,11 @@ class ContactForm extends UI\Control
         $form->addSubmit('submit', 'web.contact_form_content.send_message');
 
         if ($this->user !== null) {
+            $nameText->setDisabled();
             $emailText->setDisabled();
 
             $form->setDefaults([
+                'name' => $this->user->getDisplayName(),
                 'email' => $this->user->getEmail(),
             ]);
         }
@@ -116,14 +127,26 @@ class ContactForm extends UI\Control
         $recipientsUsers  = new ArrayCollection();
         $recipientsEmails = new ArrayCollection();
 
-        //todo: pridani prijemcu
+        $senderName  = null;
+        $senderEmail = null;
 
-        if ($values->sendCopy) {
-            if ($this->user) {
+        if ($this->user) {
+            $senderName = $this->user->getDisplayName();
+            $senderEmail = $this->user->getEmail();
+            if ($values->sendCopy) {
                 $recipientsUsers->add($this->user);
-            } else {
-                $recipientsEmails->add($values->email);
             }
+        } else {
+            $senderName = $values->name;
+            $senderEmail = $values->email;
+            if ($values->sendCopy) {
+                $recipientsEmails->add($senderEmail);
+            }
+        }
+
+        $recipients = $this->settingsService->getArrayValue(Settings::CONTACT_FORM_RECIPIENTS);
+        foreach ($recipients as $recipient) {
+            $recipientsEmails->add($recipient);
         }
 
         $this->mailService->sendMailFromTemplate(
@@ -131,8 +154,10 @@ class ContactForm extends UI\Control
             $recipientsEmails,
             Template::CONTACT_FORM,
             [
-                TemplateVariable::SENDER => '', //todo
-                TemplateVariable::MESSAGE => $values->message,
+                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SENDER_NAME => $senderName,
+                TemplateVariable::SENDER_EMAIL => $senderEmail,
+                TemplateVariable::MESSAGE => nl2br($values->message, false),
             ],
             false
         );

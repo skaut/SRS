@@ -231,4 +231,14 @@ class SettingsService
             $this->setValue($item, $value->format('Y-m-d'));
         }
     }
+
+    public function getArrayValue(string $item) : array
+    {
+        return unserialize($this->getValue($item));
+    }
+
+    public function setArrayValue(string $item, array $value) : void
+    {
+        $this->setValue($item, serialize($value));
+    }
 }

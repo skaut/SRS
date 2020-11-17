@@ -16,6 +16,7 @@ use App\Model\User\Application\Application;
 use App\Model\User\User;
 use App\Services\SettingsService;
 use Doctrine\Common\Collections\Collection;
+use Nette\Forms\Validator;
 use Throwable;
 
 /**
@@ -242,5 +243,26 @@ class Validators
                     )
                 )
             );
+    }
+
+    /**
+     * Ověří seznam e-mailů oddělených ','.
+     */
+    public function validateEmails(string $emails) : bool
+    {
+        $emails = array_map(
+            static function (string $o) {
+                return trim($o);
+            },
+            explode(',', $emails)
+        );
+
+        foreach ($emails as $email) {
+            if (! \Nette\Utils\Validators::isEmail($email)) {
+                return  false;
+            }
+        }
+
+        return true;
     }
 }

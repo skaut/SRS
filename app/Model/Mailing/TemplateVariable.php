@@ -78,9 +78,14 @@ class TemplateVariable
     public const USER = 'user';
 
     /**
-     * Odesilatel.
+     * Jméno odesilatele.
      */
-    public const SENDER = 'email';
+    public const SENDER_NAME = 'sender_name';
+
+    /**
+     * E-mail odesilatele.
+     */
+    public const SENDER_EMAIL = 'sender_email';
 
     /**
      * Zpráva.
