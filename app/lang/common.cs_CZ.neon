@@ -51,6 +51,7 @@ content:
         blocks: "Program semináře"
         capacities: "Kapacita semináře"
         organizer: "Pořadatel"
+        contact_form: "Kontaktní formulář"
 
     default_heading:
         text: ""
@@ -67,6 +68,7 @@ content:
         blocks: "Program semináře"
         capacities: "Kapacita semináře"
         organizer: "Pořadatel"
+        contact_form: "Kontaktní formulář"
 
 area:
     main: "Hlavní oblast"
@@ -211,6 +213,7 @@ mailing:
         program_unregistered: "Odhlášení z programu"
         email_verification: "Ověření změny e-mailu semináře"
         custom_input_value_changed: "Potvrzení změny vlastních polí"
+        contact_form: "Zpráva z kontaktního formuláře"
 
     variable_name:
         seminar_name: "nazev-seminare"
@@ -225,6 +228,9 @@ mailing:
         bank_account: "cislo-uctu"
         email_verification_link: "overovaci-odkaz"
         user: "uzivatel"
+        sender_name: "jmeno-odesilatele"
+        sender_email: "email-odesilatele"
+        message: "zprava"
 
     variable_description:
         seminar_name: "název semináře"
@@ -239,3 +245,6 @@ mailing:
         bank_account: "číslo účtu"
         email_verification_link: "ověřovací odkaz"
         user: "jméno uživatele"
+        sender_name: "jméno odesílatele"
+        sender_email: "e-mail odesílatele"
+        message: "text zprávy"

@@ -10,6 +10,7 @@ use App\Model\Acl\Role;
 use App\Model\Acl\RoleRepository;
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailRepository;
+use App\Model\Mailing\Recipient;
 use App\Model\Mailing\TemplateRepository;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -18,7 +19,6 @@ use App\Model\Structure\SubeventRepository;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Nette;
 use Nette\Localization\ITranslator;
@@ -76,51 +76,75 @@ class MailService
     /**
      * Rozešle e-mail.
      *
-     * @param Collection|Role[]     $recipientsRoles
-     * @param Collection|Subevent[] $recipientsSubevents
-     * @param Collection|User[]     $recipientsUsers
+     * @param Collection|Role[]|null     $recipientsRoles
+     * @param Collection|Subevent[]|null $recipientsSubevents
+     * @param Collection|User[]|null     $recipientsUsers
+     * @param Collection|string[]|null   $recipientEmails
      *
      * @throws SettingsException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function sendMail(Collection $recipientsRoles, Collection $recipientsSubevents, Collection $recipientsUsers, string $copy, string $subject, string $text, bool $automatic = false) : void
+    public function sendMail(?Collection $recipientsRoles, ?Collection $recipientsSubevents, ?Collection $recipientsUsers, ?Collection $recipientEmails, string $subject, string $text, bool $automatic = false) : void
     {
         $recipients = [];
 
-        foreach ($this->userRepository->findAllApprovedInRoles($this->roleRepository->findRolesIds($recipientsRoles)) as $user) {
-            if (! in_array($user, $recipients)) {
-                $recipients[] = $user;
+        if ($recipientsRoles !== null) {
+            foreach ($this->userRepository->findAllApprovedInRoles($this->roleRepository->findRolesIds($recipientsRoles)) as $user) {
+                $recipient = Recipient::createFromUser($user);
+                if (! in_array($recipient, $recipients)) {
+                    $recipients[] = $recipient;
+                }
             }
         }
 
-        foreach ($this->userRepository->findAllWithSubevents($this->subeventRepository->findSubeventsIds($recipientsSubevents)) as $user) {
-            if (! in_array($user, $recipients)) {
-                $recipients[] = $user;
+        if ($recipientsSubevents !== null) {
+            foreach ($this->userRepository->findAllWithSubevents($this->subeventRepository->findSubeventsIds($recipientsSubevents)) as $user) {
+                $recipient = Recipient::createFromUser($user);
+                if (! in_array($recipient, $recipients)) {
+                    $recipients[] = $recipient;
+                }
             }
         }
 
-        foreach ($recipientsUsers as $user) {
-            if (! in_array($user, $recipients)) {
-                $recipients[] = $user;
+        if ($recipientsUsers !== null) {
+            foreach ($recipientsUsers as $user) {
+                $recipient = Recipient::createFromUser($user);
+                if (! in_array($recipient, $recipients)) {
+                    $recipients[] = $recipient;
+                }
             }
         }
 
-        $messageData = new SrsMailData(
-            $this->settingsService->getValue(Settings::SEMINAR_EMAIL),
-            $this->settingsService->getValue(Settings::SEMINAR_NAME),
-            $recipients,
-            $copy,
-            $subject,
-            $text
-        );
+        if ($recipientEmails !== null) {
+            foreach ($recipientEmails as $email) {
+                $recipient = new Recipient($email);
+                if (! in_array($recipient, $recipients)) {
+                    $recipients[] = $recipient;
+                }
+            }
+        }
+
+        $from = new Recipient($this->settingsService->getValue(Settings::SEMINAR_EMAIL), $this->settingsService->getValue(Settings::SEMINAR_NAME));
+
+        $messageData = new SrsMailData($from, $recipients, $subject, $text);
         $mail        = $this->mailFactory->createByType(SrsMail::class, $messageData);
         $mail->send();
 
         $mailLog = new Mail();
-        $mailLog->setRecipientRoles($recipientsRoles);
-        $mailLog->setRecipientSubevents($recipientsSubevents);
-        $mailLog->setRecipientUsers($recipientsUsers);
+
+        if ($recipientsRoles !== null) {
+            $mailLog->setRecipientRoles($recipientsRoles);
+        }
+
+        if ($recipientsSubevents !== null) {
+            $mailLog->setRecipientSubevents($recipientsSubevents);
+        }
+
+        if ($recipientsUsers !== null) {
+            $mailLog->setRecipientUsers($recipientsUsers);
+        }
+
         $mailLog->setSubject($subject);
         $mailLog->setText($text);
         $mailLog->setDatetime(new DateTimeImmutable());
@@ -131,30 +155,20 @@ class MailService
     /**
      * Rozešle e-mail podle šablony.
      *
-     * @param string[] $parameters
+     * @param Collection|User[]|null   $recipientsUsers
+     * @param Collection|string[]|null $recipientsEmails
+     * @param string[]                 $parameters
      *
+     * @throws MailingMailCreationException
      * @throws SettingsException
      * @throws Throwable
-     * @throws MailingMailCreationException
      */
-    public function sendMailFromTemplate(?User $recipientUser, string $copy, string $type, array $parameters, bool $automatic = true) : void
+    public function sendMailFromTemplate(?Collection $recipientsUsers, ?Collection $recipientsEmails, string $type, array $parameters) : void
     {
         $template = $this->templateRepository->findByType($type);
 
         if (! $template->isActive()) {
             return;
-        }
-
-        $recipientsRoles     = new ArrayCollection();
-        $recipientsSubevents = new ArrayCollection();
-        $recipientsUsers     = new ArrayCollection();
-
-        if ($template->isSendToUser()) {
-            $recipientsUsers->add($recipientUser);
-        }
-
-        if ($template->isSendToOrganizer()) {
-            $copy = $this->settingsService->getValue(Settings::SEMINAR_EMAIL);
         }
 
         $subject = $template->getSubject();
@@ -168,6 +182,6 @@ class MailService
             $text    = str_replace($variableName, $value, $text);
         }
 
-        $this->sendMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $copy, $subject, $text, $automatic);
+        $this->sendMail(null, null, $recipientsUsers, $recipientsEmails, $subject, $text, true);
     }
 }

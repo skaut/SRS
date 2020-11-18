@@ -23,6 +23,8 @@ use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
 use Symfony\Component\Console\Input\ArrayInput;
 use Throwable;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  * Obsluhuje instalačního průvodce.
@@ -211,6 +213,8 @@ class InstallPresenter extends InstallBasePresenter
         try {
             $this->skautIs->org->UnitAllRegistryBasic();
         } catch (WsdlException $ex) {
+            Debugger::log($ex, ILogger::WARNING);
+
             return false;
         }
 

@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 use stdClass;
+use function lcfirst;
+use function str_replace;
+use function ucwords;
 
 /**
  * Abstraktní entita obsahu.
@@ -32,7 +35,8 @@ use stdClass;
  *     "lectors_content" = "LectorsContent",
  *     "blocks_content" = "BlocksContent",
  *     "capacities_content" = "CapacitiesContent",
- *     "organizer_content" = "OrganizerContent"
+ *     "organizer_content" = "OrganizerContent",
+ *     "contact_form_content" = "ContactFormContent"
  * })
  *
  * @author Michal Májský
@@ -110,6 +114,11 @@ abstract class Content implements IContent
      */
     public const ORGANIZER = 'organizer';
 
+    /**
+     * ContactFormContent
+     */
+    public const CONTACT_FORM = 'contact_form';
+
 
     /**
      * Hlavní oblast stránky.
@@ -126,13 +135,14 @@ abstract class Content implements IContent
     public static array $types = [
         self::TEXT,
         self::IMAGE,
+        self::HTML,
+        self::NEWS,
         self::DOCUMENT,
         self::APPLICATION,
-        self::HTML,
-        self::FAQ,
-        self::NEWS,
-        self::PLACE,
         self::PROGRAMS,
+        self::CONTACT_FORM,
+        self::FAQ,
+        self::PLACE,
         self::USERS,
         self::LECTORS,
         self::BLOCKS,
@@ -200,7 +210,7 @@ abstract class Content implements IContent
 
     public function getComponentName() : string
     {
-        return $this->type . 'Content';
+        return lcfirst(str_replace('_', '', ucwords($this->type, '_'))) . 'Content';
     }
 
     public function getId() : int

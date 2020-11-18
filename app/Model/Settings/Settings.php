@@ -217,6 +217,16 @@ class Settings
      */
     public const GA_ID = 'ga_id';
 
+    /**
+     * Příjemci zpráv z kontaktního formuláře.
+     */
+    public const CONTACT_FORM_RECIPIENTS = 'contact_form_recipients';
+
+    /**
+     * Povolit kontaktní formulář pro nepřihlášené.
+     */
+    public const CONTACT_FORM_GUESTS_ALLOWED = 'contact_form_guests_allowed';
+
 
     /**
      * Název položky nastavení.

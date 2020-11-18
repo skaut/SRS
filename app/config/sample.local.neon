@@ -18,4 +18,8 @@ mail:
     port: 0
     username: ""
     password: ""
-    secure: ""
+    secure:
+
+recaptcha:
+    siteKey:
+    secretKey:

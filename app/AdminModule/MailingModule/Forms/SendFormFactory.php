@@ -13,6 +13,7 @@ use App\Model\User\UserRepository;
 use App\Services\AclService;
 use App\Services\MailService;
 use App\Services\SubeventService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Mail\SendException;
@@ -142,8 +143,12 @@ class SendFormFactory
             $recipientsRoles     = $this->roleRepository->findRolesByIds($values->recipientRoles);
             $recipientsSubevents = $this->subeventRepository->findSubeventsByIds($values->recipientSubevents);
             $recipientsUsers     = $this->userRepository->findUsersByIds($values->recipientUsers);
+            $recipientsEmails    = new ArrayCollection();
+            if (! empty($values->copy)) {
+                $recipientsEmails->add($values->copy);
+            }
 
-            $this->mailService->sendMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $values->copy, $values->subject, $values->text);
+            $this->mailService->sendMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $recipientsEmails, $values->subject, $values->text);
             $this->mailSuccess = true;
         } catch (SendException $ex) {
             Debugger::log($ex, ILogger::WARNING);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mailing;
 
-use App\Model\User\User;
+use App\Model\Mailing\Recipient;
 use Ublaboo\Mailing\IMessageData;
 
 /**
@@ -15,26 +15,16 @@ use Ublaboo\Mailing\IMessageData;
 class SrsMailData implements IMessageData
 {
     /**
-     * E-mail odesílatele.
+     * Odesilatel mailu.
      */
-    private string $fromEmail;
-
-    /**
-     * Jméno odesílatele.
-     */
-    private string $fromName;
+    private Recipient $from;
 
     /**
      * Příjemci mailu.
      *
-     * @var User[]
+     * @var Recipient[]
      */
     private array $recipients;
-
-    /**
-     * Kopie mailu.
-     */
-    private string $copy;
 
     /**
      * Předmět mailu.
@@ -47,39 +37,27 @@ class SrsMailData implements IMessageData
     private string $text;
 
     /**
-     * @param User[] $recipients
+     * @param Recipient[] $recipients
      */
-    public function __construct(string $fromEmail, string $fromName, array $recipients, string $copy, string $subject, string $text)
+    public function __construct(Recipient $from, array $recipients, string $subject, string $text)
     {
-        $this->fromEmail  = $fromEmail;
-        $this->fromName   = $fromName;
+        $this->from       = $from;
         $this->recipients = $recipients;
-        $this->copy       = $copy;
         $this->subject    = $subject;
         $this->text       = $text;
     }
 
-    public function getFromEmail() : string
+    public function getFrom() : Recipient
     {
-        return $this->fromEmail;
-    }
-
-    public function getFromName() : string
-    {
-        return $this->fromName;
+        return $this->from;
     }
 
     /**
-     * @return User[]
+     * @return Recipient[]
      */
     public function getRecipients() : array
     {
         return $this->recipients;
-    }
-
-    public function getCopy() : string
-    {
-        return $this->copy;
     }
 
     public function getSubject() : string

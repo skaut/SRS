@@ -34,6 +34,7 @@ use App\Services\MailService;
 use App\Services\SettingsService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
+use Doctrine\Common\Collections\ArrayCollection;
 use InvalidArgumentException;
 use Nette;
 use Nette\Application\UI\Form;
@@ -47,6 +48,7 @@ use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
 use function array_key_exists;
+use function assert;
 use const UPLOAD_ERR_OK;
 
 /**
@@ -337,7 +339,8 @@ class EditUserSeminarFormFactory
             $this->userRepository->save($this->user);
 
             if ($customInputValueChanged) {
-                $this->mailService->sendMailFromTemplate($this->user, '', Template::CUSTOM_INPUT_VALUE_CHANGED, [
+                assert($this->user instanceof User);
+                $this->mailService->sendMailFromTemplate(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
                     TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                     TemplateVariable::USER => $this->user->getDisplayName(),
                 ]);

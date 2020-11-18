@@ -7,12 +7,14 @@ namespace App\WebModule\Presenters;
 use App\WebModule\Components\ApplicationContentControl;
 use App\WebModule\Components\BlocksContentControl;
 use App\WebModule\Components\CapacitiesContentControl;
+use App\WebModule\Components\ContactFormContentControl;
 use App\WebModule\Components\DocumentContentControl;
 use App\WebModule\Components\FaqContentControl;
 use App\WebModule\Components\HtmlContentControl;
 use App\WebModule\Components\IApplicationContentControlFactory;
 use App\WebModule\Components\IBlocksContentControlFactory;
 use App\WebModule\Components\ICapacitiesContentControlFactory;
+use App\WebModule\Components\IContactFormContentControlFactory;
 use App\WebModule\Components\IDocumentContentControlFactory;
 use App\WebModule\Components\IFaqContentControlFactory;
 use App\WebModule\Components\IHtmlContentControlFactory;
@@ -84,6 +86,9 @@ class PagePresenter extends WebBasePresenter
 
     /** @inject */
     public IOrganizerContentControlFactory $organizerContentControlFactory;
+
+    /** @inject */
+    public IContactFormContentControlFactory $contactFormContentFactory;
 
     /**
      * @throws BadRequestException
@@ -187,5 +192,10 @@ class PagePresenter extends WebBasePresenter
     protected function createComponentOrganizerContent() : OrganizerContentControl
     {
         return $this->organizerContentControlFactory->create();
+    }
+
+    protected function createComponentContactFormContent() : ContactFormContentControl
+    {
+        return $this->contactFormContentFactory->create();
     }
 }

@@ -13,6 +13,8 @@ use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Throwable;
 use function filter_var;
+use function serialize;
+use function unserialize;
 use const FILTER_VALIDATE_BOOLEAN;
 use const FILTER_VALIDATE_INT;
 
@@ -230,5 +232,31 @@ class SettingsService
         } else {
             $this->setValue($item, $value->format('Y-m-d'));
         }
+    }
+
+    /**
+     * Vrátí hodnotu položky typu pole.
+     *
+     * @return mixed[]
+     *
+     * @throws SettingsException
+     * @throws Throwable
+     */
+    public function getArrayValue(string $item) : array
+    {
+        return unserialize($this->getValue($item));
+    }
+
+    /**
+     * Nastavení hodnoty položky typu pole.
+     *
+     * @param mixed[] $value
+     *
+     * @throws SettingsException
+     * @throws Throwable
+     */
+    public function setArrayValue(string $item, array $value) : void
+    {
+        $this->setValue($item, serialize($value));
     }
 }

@@ -121,10 +121,10 @@ class BlocksPresenter extends ProgramBasePresenter
         if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
             ! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
         ) {
-            $this->getPresenter()->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
+            $this->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
         } else {
             $this->programService->removeProgram($program);
-            $this->getPresenter()->flashMessage('admin.program.blocks_program_deleted', 'success');
+            $this->flashMessage('admin.program.blocks_program_deleted', 'success');
         }
 
         $this->redirect('this');

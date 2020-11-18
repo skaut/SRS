@@ -1,0 +1,29 @@
+<div class="clearfix"></div>
+
+<div class="contact-form-content">
+    <div class="row">
+        <div class="col">
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    {if $guestRole && !$guestsAllowed}
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-warning alert-forever">
+                    {_web.contact_form_content.login_required_begin}
+                        <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.contact_form_content.login_required_link}</a>{_web.contact_form_content.login_required_end}
+                </div>
+            </div>
+        </div>
+    {else}
+        <div class="row">
+            <div class="col">
+                <div class="card card-body bg-light pb-1">
+                    {control contactForm}
+                </div>
+            </div>
+        </div>
+    {/if}
+</div>
+

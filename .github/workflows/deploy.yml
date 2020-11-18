@@ -24,6 +24,8 @@ jobs:
       CONFIG_MAIL_USERNAME:
       CONFIG_SKAUTIS_APPLICATION_ID: fbdfa6ea-8794-448f-b084-832ae3d61588
       CONFIG_SKAUTIS_TEST_MODE: true
+      CONFIG_RECAPTCHA_SITE_KEY: 6LfQAuMZAAAAAL6xbQzujWRZDw-ivJmDF79ch5uQ
+      CONFIG_RECAPTCHA_SECRET_KEY: ${{ secrets.SRS_CONFIG_RECAPTCHA_SECRET_KEY }}
       DEPLOY_DIRECTORY: "~"
       DEPLOY_SSH_HOST: srs.skauting.cz
       DEPLOY_SSH_IP: 81.31.46.138
@@ -66,7 +68,6 @@ jobs:
           eval `ssh-agent -s`
           echo "${DEPLOY_SSH_KEY}" | tr -d '\r' | ssh-add -
           phing deploy
-
   deploy-test-srs:
     name: "Deploy to test-srs.skauting.cz"
     runs-on: ubuntu-18.04
@@ -85,6 +86,8 @@ jobs:
       CONFIG_MAIL_USERNAME:
       CONFIG_SKAUTIS_APPLICATION_ID: cb35144d-2ab7-4106-80fb-6527594f9873
       CONFIG_SKAUTIS_TEST_MODE: true
+      CONFIG_RECAPTCHA_SITE_KEY: 6LfQAuMZAAAAAL6xbQzujWRZDw-ivJmDF79ch5uQ
+      CONFIG_RECAPTCHA_SECRET_KEY: ${{ secrets.TEST_SRS_CONFIG_RECAPTCHA_SECRET_KEY }}
       DEPLOY_DIRECTORY: "~"
       DEPLOY_SSH_HOST: test-srs.skauting.cz
       DEPLOY_SSH_IP: 81.31.46.138
@@ -127,4 +130,3 @@ jobs:
           eval `ssh-agent -s`
           echo "${DEPLOY_SSH_KEY}" | tr -d '\r' | ssh-add -
           phing deploy
-

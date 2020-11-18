@@ -173,7 +173,7 @@ class ApplicationService
 
         $editRegistrationToText = $this->settingsService->getDateValueText(Settings::EDIT_REGISTRATION_TO);
 
-        $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION, [
+        $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION, [
             TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationToText ?? '-',
             TemplateVariable::APPLICATION_MATURITY => $applicatonMaturity,
@@ -269,7 +269,7 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
-        $this->mailService->sendMailFromTemplate($user, '', Template::ROLES_CHANGED, [
+        $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::ROLES_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::USERS_ROLES => implode(', ', $roles->map(static function (Role $role) {
                 return $role->getName();
@@ -325,7 +325,7 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
-        $this->mailService->sendMailFromTemplate($user, '', Template::REGISTRATION_CANCELED, [
+        $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_CANCELED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
         ]);
     }
@@ -348,7 +348,7 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
-        $this->mailService->sendMailFromTemplate($user, '', Template::SUBEVENTS_CHANGED, [
+        $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::SUBEVENTS_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::USERS_SUBEVENTS => $user->getSubeventsText(),
         ]);
@@ -407,7 +407,7 @@ class ApplicationService
             $this->decrementSubeventsOccupancy($application->getSubevents());
         });
 
-        $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::SUBEVENTS_CHANGED, [
+        $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::SUBEVENTS_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
         ]);
@@ -453,7 +453,7 @@ class ApplicationService
             $this->decrementSubeventsOccupancy($application->getSubevents());
         });
 
-        $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::SUBEVENTS_CHANGED, [
+        $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::SUBEVENTS_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
         ]);
@@ -500,7 +500,7 @@ class ApplicationService
         });
 
         if ($paymentDate !== null && $oldPaymentDate === null) {
-            $this->mailService->sendMailFromTemplate($application->getUser(), '', Template::PAYMENT_CONFIRMED, [
+            $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::PAYMENT_CONFIRMED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText(),
             ]);

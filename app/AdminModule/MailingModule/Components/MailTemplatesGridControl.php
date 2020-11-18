@@ -68,18 +68,6 @@ class MailTemplatesGridControl extends Control
             ->endOption()
             ->onChange[] = [$this, 'changeActive'];
 
-        $grid->addColumnText('sendToUser', 'admin.mailing.templates.send_to_user')
-            ->setReplacement([
-                '0' => $this->translator->translate('admin.common.no'),
-                '1' => $this->translator->translate('admin.common.yes'),
-            ]);
-
-        $grid->addColumnText('sendToOrganizer', 'admin.mailing.templates.send_to_organizer')
-            ->setReplacement([
-                '0' => $this->translator->translate('admin.common.no'),
-                '1' => $this->translator->translate('admin.common.yes'),
-            ]);
-
         $grid->addAction('edit', 'admin.common.edit', 'Templates:edit');
     }
 

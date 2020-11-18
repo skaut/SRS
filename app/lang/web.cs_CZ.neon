@@ -226,3 +226,19 @@ users_content:
 lectors_content:
     about_me: "O mně"
     blocks: "Programové bloky"
+
+contact_form_content:
+    name: "Jméno"
+    name_empty: "Zadejte jméno."
+    email: "E-mail"
+    email_empty: "Zadejte e-mail."
+    email_format: "Zadejte e-mail ve správném formátu."
+    message: "Zpráva"
+    message_empty: "Zadejte zprávu."
+    send_copy: "zaslat kopii dotazu na můj e-mail"
+    recaptcha_empty: "Potvrďte, že nejste robot."
+    send_message: "Odeslat zprávu"
+    send_message_successful: "Zpráva byla úspěšně odeslána."
+    login_required_begin: "Pro použití kontaktního formuláře se musíte nejprve"
+    login_required_link: "přihlásit přes skautIS"
+    login_required_end: "."

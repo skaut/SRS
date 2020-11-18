@@ -52,7 +52,7 @@ services:
                 aliases:
                 - smtp-srs.loc
         ports:
-            - 1080:1080
+            - 1080:80
 
 volumes:
     mysql:

@@ -389,7 +389,7 @@ class ProgramService
 //        }
 
         if ($sendEmail) {
-            $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_REGISTERED, [
+            $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::PROGRAM_REGISTERED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
             ]);
@@ -432,7 +432,7 @@ class ProgramService
 //        }
 
         if ($sendEmail) {
-            $this->mailService->sendMailFromTemplate($user, '', Template::PROGRAM_UNREGISTERED, [
+            $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::PROGRAM_UNREGISTERED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
             ]);
