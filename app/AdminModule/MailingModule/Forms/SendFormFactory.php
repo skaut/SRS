@@ -144,7 +144,7 @@ class SendFormFactory
             $recipientsSubevents = $this->subeventRepository->findSubeventsByIds($values->recipientSubevents);
             $recipientsUsers     = $this->userRepository->findUsersByIds($values->recipientUsers);
             $recipientsEmails    = new ArrayCollection();
-            if (! $values->copy->isEmpty()) {
+            if (! empty($values->copy)) {
                 $recipientsEmails->add($values->copy);
             }
 

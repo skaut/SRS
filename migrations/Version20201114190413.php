@@ -28,7 +28,7 @@ final class Version20201114190413 extends AbstractMigration
         $this->addSql('ALTER TABLE mail_template DROP send_to_user, DROP send_to_organizer');
 
         $this->addSql('INSERT INTO `mail_template_variable` (`id`, `name`) VALUES (NULL, \'sender_name\'), (NULL, \'sender_email\'), (NULL, \'message\')');
-        $this->addSql('INSERT INTO `mail_template` (`id`, `type`, `subject`, `text`, `active`, `system_template`) VALUES (NULL, \'contact_form\', \'%nazev-seminare%: zpráva z kontaktního formuláře\', \'<p>Jméno odesílatele: %jmeno-odesilatele%</p><p>E-mail odesílatele: %email-odesilatele%</p><p>Zpráva:</p><p>%zprava%</p>\', \'1\', \'1\')');
+        $this->addSql('INSERT INTO `mail_template` (`id`, `type`, `subject`, `text`, `active`, `system_template`) VALUES (NULL, \'contact_form\', \'%nazev-seminare%: zpráva z kontaktního formuláře\', \'<p>Jméno odesílatele: %jmeno-odesilatele%</p><p>E-mail odesílatele: %email-odesilatele%</p><p>Zpráva:<br>%zprava%</p>\', \'1\', \'1\')');
         $this->addSql('INSERT INTO `template_template_variable` (`template_id`, `template_variable_id`) VALUES (\'12\', \'1\'), (\'12\', \'13\'), (\'12\', \'14\'), (\'12\', \'15\')');
     }
 

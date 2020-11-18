@@ -20,6 +20,7 @@ use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
 use function nl2br;
+use function str_replace;
 
 /**
  * Komponenta s formulářem pro kontaktaktní formulář.
@@ -158,7 +159,7 @@ class ContactForm extends UI\Control
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::SENDER_NAME => $senderName,
                 TemplateVariable::SENDER_EMAIL => $senderEmail,
-                TemplateVariable::MESSAGE => nl2br($values->message, false),
+                TemplateVariable::MESSAGE => str_replace(["\n", "\r"], '', nl2br($values->message, false)),
             ]
         );
 
