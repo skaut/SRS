@@ -87,11 +87,14 @@ class MailingFormFactory
             ->addRule(Form::FILLED, 'admin.configuration.mailing_contact_form_recipients_empty')
             ->addRule([$this, 'validateEmails'], 'admin.configuration.mailing_contact_form_recipients_format');
 
+        $form->addCheckbox('contactFormGuestsAllowed', 'admin.configuration.mailing_contact_form_guests_allowed');
+
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
             'seminarEmail' => $this->settingsService->getValue(Settings::SEMINAR_EMAIL),
             'contactFormRecipients' => implode(', ', $this->settingsService->getArrayValue(Settings::CONTACT_FORM_RECIPIENTS)),
+            'contactFormGuestsAllowed' => $this->settingsService->getBoolValue(Settings::CONTACT_FORM_GUESTS_ALLOWED),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -135,6 +138,8 @@ class MailingFormFactory
             explode(',', $values->contactFormRecipients)
         );
         $this->settingsService->setArrayValue(Settings::CONTACT_FORM_RECIPIENTS, $contactFormRecipients);
+
+        $this->settingsService->setBoolValue(Settings::CONTACT_FORM_GUESTS_ALLOWED, $values->contactFormGuestsAllowed);
     }
 
     /**

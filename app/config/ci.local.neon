@@ -15,7 +15,6 @@ skautis:
 mail:
     smtp: true
     host: smtp-srs.loc
-    username: test@srs.loc
 
 recaptcha:
     siteKey: 6LdUAuMZAAAAALl3JDqMpjZpmhjwtOjGwRfuW7y7

@@ -222,6 +222,11 @@ class Settings
      */
     public const CONTACT_FORM_RECIPIENTS = 'contact_form_recipients';
 
+    /**
+     * Povolit kontaktní formulář pro nepřihlášené.
+     */
+    public const CONTACT_FORM_GUESTS_ALLOWED = 'contact_form_guests_allowed';
+
 
     /**
      * Název položky nastavení.

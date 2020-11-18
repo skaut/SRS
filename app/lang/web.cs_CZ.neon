@@ -239,3 +239,6 @@ contact_form_content:
     recaptcha_empty: "Potvrďte, že nejste robot."
     send_message: "Odeslat zprávu"
     send_message_successful: "Zpráva byla úspěšně odeslána."
+    login_required_begin: "Pro použití kontaktního formuláře se musíte nejprve"
+    login_required_link: "přihlásit přes skautIS"
+    login_required_end: "."

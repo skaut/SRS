@@ -24,6 +24,7 @@ final class Version20201114190413 extends AbstractMigration
         $this->addSql('CREATE TABLE contact_form_content (id INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE contact_form_content ADD CONSTRAINT FK_E31E62A6BF396750 FOREIGN KEY (id) REFERENCES content (id) ON DELETE CASCADE');
         $this->addSql('INSERT INTO `settings` (`item`, `value`) VALUES (\'contact_form_recipients\', \'a:1:{i:0;s:12:"srs@skaut.cz";}\')');
+        $this->addSql('INSERT INTO `settings` (`item`, `value`) VALUES (\'contact_form_guests_allowed\', \'1\')');
         $this->addSql('ALTER TABLE mail_template DROP send_to_user, DROP send_to_organizer');
 
         $this->addSql('INSERT INTO `mail_template_variable` (`id`, `name`) VALUES (NULL, \'sender_name\'), (NULL, \'sender_email\'), (NULL, \'message\')');
