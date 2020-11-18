@@ -52,7 +52,7 @@
         "snapappointments/bootstrap-select": "^1.13",
         "kartik-v/bootstrap-fileinput": "^5.0",
 
-        "ublaboo/datagrid": "^6.2",
+        "ublaboo/datagrid": "6.2.23",
         "ublaboo/mailing": "^1.2",
 
         "jms/serializer": "^3.6",
