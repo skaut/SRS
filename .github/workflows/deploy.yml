@@ -68,6 +68,7 @@ jobs:
           eval `ssh-agent -s`
           echo "${DEPLOY_SSH_KEY}" | tr -d '\r' | ssh-add -
           phing deploy
+
   deploy-test-srs:
     name: "Deploy to test-srs.skauting.cz"
     runs-on: ubuntu-18.04

@@ -29,7 +29,6 @@
                 <include name="www/**"/>
                 <include name="composer.*"/>
                 <exclude name="app/config/*local.neon"/>
-                <exclude name="app/config/*sample"/>
                 <exclude name="**/.gitignore"/>
             </fileset>
         </copy>
