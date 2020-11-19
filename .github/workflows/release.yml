@@ -39,15 +39,18 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: Create package
+      - name: Install dependencies
         run: |
           composer self-update
           composer install --no-dev --prefer-dist --optimize-autoloader
           yarn install
           yarn build
           mv app/config/sample.local.neon app/config/local.neon
-          rm -f app/config/ci.local.neon
-          zip -r srs app backup log migrations temp vendor www .htaccess README.md
+          rm -f app/config/ci.local.neon app/config/production.local.neon
+      - name: Zip package
+        uses: montudor/action-zip@v0.1.1
+        with:
+          args: zip -qq -r srs.zip *
       - name: Upload artifact
         uses: skx/github-action-publish-binaries@release-1.3
         env:
