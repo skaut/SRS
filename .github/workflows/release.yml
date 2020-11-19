@@ -47,10 +47,11 @@ jobs:
           yarn build
           mv app/config/sample.local.neon app/config/local.neon
           rm -f app/config/ci.local.neon app/config/production.local.neon
+          find . -name .gitignore -type f -delete
       - name: Zip package
         uses: montudor/action-zip@v0.1.1
         with:
-          args: zip -qq -r srs.zip .
+          args: zip -qq -r srs.zip app backup log migrations temp vendor www .htaccess LICENSE README.md
       - name: Upload artifact
         uses: skx/github-action-publish-binaries@release-1.3
         env:
