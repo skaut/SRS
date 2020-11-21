@@ -17,6 +17,7 @@ use Nette\Utils\Strings;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
+use function array_key_exists;
 use const UPLOAD_ERR_OK;
 
 /**
@@ -71,7 +72,10 @@ class WebFormFactory
 
         $form->addText('footer', 'admin.configuration.web_footer');
 
-        $form->addSelect('redirectAfterLogin', 'admin.configuration.web_redirect_after_login', $this->pageRepository->getPagesOptions())
+        $redirectAfterLoginOptions = $this->pageRepository->getPagesOptions();
+        $redirectAfterLoginValue   = $this->settingsService->getValue(Settings::REDIRECT_AFTER_LOGIN);
+
+        $form->addSelect('redirectAfterLogin', 'admin.configuration.web_redirect_after_login', $redirectAfterLoginOptions)
             ->addRule(Form::FILLED, 'admin.configuration.web_redirect_after_login_empty');
 
         $form->addText('ga_id', 'admin.configuration.web_ga_id');
@@ -80,7 +84,7 @@ class WebFormFactory
 
         $form->setDefaults([
             'footer' => $this->settingsService->getValue(Settings::FOOTER),
-            'redirectAfterLogin' => $this->settingsService->getValue(Settings::REDIRECT_AFTER_LOGIN),
+            'redirectAfterLogin' => array_key_exists($redirectAfterLoginValue, $redirectAfterLoginOptions) ? $redirectAfterLoginValue : null,
             'ga_id' => $this->settingsService->getValue(Settings::GA_ID),
         ]);
 

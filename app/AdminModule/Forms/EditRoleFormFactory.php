@@ -23,6 +23,7 @@ use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
+use function array_key_exists;
 use function in_array;
 
 /**
@@ -178,6 +179,8 @@ class EditRoleFormFactory
             ->setValidationScope([])
             ->setHtmlAttribute('class', 'btn btn-warning');
 
+        $redirectAfterLoginValue = $this->role->getRedirectAfterLogin();
+
         $form->setDefaults([
             'id' => $id,
             'name' => $this->role->getName(),
@@ -192,7 +195,7 @@ class EditRoleFormFactory
             'minimumAge' => $this->role->getMinimumAge(),
             'permissions' => $this->permissionRepository->findPermissionsIds($this->role->getPermissions()),
             'pages' => $this->pageRepository->findPagesSlugs($this->role->getPages()),
-            'redirectAfterLogin' => $this->role->getRedirectAfterLogin(),
+            'redirectAfterLogin' => array_key_exists($redirectAfterLoginValue, $pagesOptions) ? $redirectAfterLoginValue : null,
             'incompatibleRoles' => $this->roleRepository->findRolesIds($this->role->getIncompatibleRoles()),
             'requiredRoles' => $this->roleRepository->findRolesIds($this->role->getRequiredRoles()),
         ]);
