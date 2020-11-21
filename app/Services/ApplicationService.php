@@ -325,9 +325,15 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
-        $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_CANCELED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-        ]);
+        if ($state === ApplicationState::CANCELED) {
+            $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_CANCELED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+            ]);
+        } elseif ($state === ApplicationState::CANCELED_NOT_PAID) {
+            $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_CANCELED_NOT_PAID, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+            ]);
+        }
     }
 
     /**

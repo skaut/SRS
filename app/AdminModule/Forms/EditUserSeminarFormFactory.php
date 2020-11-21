@@ -32,6 +32,7 @@ use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\MailService;
 use App\Services\SettingsService;
+use App\Services\UserService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -91,6 +92,8 @@ class EditUserSeminarFormFactory
 
     private AclService $aclService;
 
+    private UserService $userService;
+
     public function __construct(
         BaseFormFactory $baseFormFactory,
         EntityManagerDecorator $em,
@@ -103,7 +106,8 @@ class EditUserSeminarFormFactory
         FilesService $filesService,
         MailService $mailService,
         SettingsService $settingsService,
-        AclService $aclService
+        AclService $aclService,
+        UserService $userService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
         $this->em                         = $em;
@@ -117,6 +121,7 @@ class EditUserSeminarFormFactory
         $this->mailService                = $mailService;
         $this->settingsService            = $settingsService;
         $this->aclService                 = $aclService;
+        $this->userService                = $userService;
     }
 
     /**
@@ -270,7 +275,7 @@ class EditUserSeminarFormFactory
                 $selectedRoles = $this->roleRepository->findRolesByIds($values->roles);
                 $this->applicationService->updateRoles($this->user, $selectedRoles, $loggedUser);
 
-                $this->user->setApproved($values->approved);
+                $this->userService->setApproved($this->user, $values->approved);
                 $this->user->setAttended($values->attended);
 
                 foreach ($this->customInputRepository->findByRolesOrderedByPosition($this->user->getRoles()) as $customInput) {

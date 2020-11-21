@@ -8,10 +8,12 @@ use App\Model\Acl\Role;
 use App\Model\Acl\RoleRepository;
 use App\Model\Cms\Content\ContentDto;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
 use App\WebModule\Forms\ContactForm;
 use App\WebModule\Forms\IContactFormFactory;
 use Nette\Application\UI\Control;
+use Throwable;
 
 /**
  * Komponenta s kontaktním formulářem.
@@ -36,6 +38,10 @@ class ContactFormContentControl extends Control
         $this->settingsService    = $settingsService;
     }
 
+    /**
+     * @throws SettingsException
+     * @throws Throwable
+     */
     public function render(ContentDto $content) : void
     {
         $template = $this->template;

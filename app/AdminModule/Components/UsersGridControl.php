@@ -390,9 +390,7 @@ class UsersGridControl extends Control
                 case $customInput instanceof CustomCheckbox:
                     $columnCustomInput->setFilterSelect(['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
                         ->setCondition(static function (QueryBuilder $qb, string $value) use ($customInput) : void {
-                            if ($value === '') {
-                                return;
-                            } else {
+                            if ($value !== '') {
                                 $qb->leftJoin('u.customInputValues', 'uCIV2')
                                     ->leftJoin('uCIV2.input', 'uCIVI2')
                                     ->leftJoin('App\Model\User\CustomInputValue\CustomCheckboxValue', 'uCCV', 'WITH', 'uCIV2.id = uCCV.id')
@@ -510,8 +508,8 @@ class UsersGridControl extends Control
     public function changeApproved(string $id, string $approved) : void
     {
         $user = $this->userRepository->findById((int) $id);
-        $user->setApproved((bool) $approved);
-        $this->userRepository->save($user);
+
+        $this->userService->setApproved($user, (bool) $approved);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.users.users_changed_approved', 'success');
@@ -565,8 +563,7 @@ class UsersGridControl extends Control
 
         $this->em->transactional(function () use ($users) : void {
             foreach ($users as $user) {
-                $user->setApproved(true);
-                $this->userRepository->save($user);
+                $this->userService->approveUser($user);
             }
         });
 

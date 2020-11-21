@@ -5,7 +5,13 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Enums\PaymentType;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Settings;
 use App\Model\User\User;
+use App\Model\User\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Localization\ITranslator;
 
@@ -20,9 +26,22 @@ class UserService
 
     private ITranslator $translator;
 
-    public function __construct(ITranslator $translator)
-    {
-        $this->translator = $translator;
+    private UserRepository $userRepository;
+
+    private MailService $mailService;
+
+    private SettingsService $settingsService;
+
+    public function __construct(
+        ITranslator $translator,
+        UserRepository $userRepository,
+        MailService $mailService,
+        SettingsService $settingsService
+    ) {
+        $this->translator      = $translator;
+        $this->userRepository  = $userRepository;
+        $this->mailService     = $mailService;
+        $this->settingsService = $settingsService;
     }
 
     /**
@@ -68,5 +87,53 @@ class UserService
         }
 
         return null;
+    }
+
+    /**
+     * Schválí registraci uživatele, pokud už není schválený.
+     *
+     * @throws ORMException
+     */
+    public function approveUser(User $user) : void
+    {
+        if ($user->isApproved()) {
+            return;
+        }
+
+        $user->setApproved(true);
+        $this->userRepository->save($user);
+
+        $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_APPROVED, [
+            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+        ]);
+    }
+
+    /**
+     * Zruší schválení registrace uživatele, pokud není neschválený.
+     *
+     * @throws ORMException
+     */
+    public function unapproveUser(User $user) : void
+    {
+        if (! $user->isApproved()) {
+            return;
+        }
+
+        $user->setApproved(false);
+        $this->userRepository->save($user);
+    }
+
+    /**
+     * Nastaví registraci uživatele jako schválenou nebo nechválenou.
+     *
+     * @throws ORMException
+     */
+    public function setApproved(User $user, bool $approved) : void
+    {
+        if ($approved) {
+            $this->approveUser($user);
+        } else {
+            $this->unapproveUser($user);
+        }
     }
 }

@@ -7,6 +7,7 @@ namespace App\WebModule\Forms;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
+use App\Model\Settings\SettingsException;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use App\Services\MailService;
@@ -14,11 +15,11 @@ use App\Services\SettingsService;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
 use Contributte\ReCaptcha\ReCaptchaProvider;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
+use Throwable;
+use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use function nl2br;
 use function str_replace;
 
@@ -121,8 +122,9 @@ class ContactForm extends UI\Control
     /**
      * Zpracuje formulář.
      *
-     * @throws NonUniqueResultException
-     * @throws ORMException
+     * @throws SettingsException
+     * @throws Throwable
+     * @throws MailingMailCreationException
      */
     public function processForm(Form $form, stdClass $values) : void
     {

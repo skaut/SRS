@@ -35,6 +35,16 @@ class Template
     public const REGISTRATION_CANCELED = 'registration_canceled';
 
     /**
+     * Odhlášení ze semináře - nezaplaceno.
+     */
+    public const REGISTRATION_CANCELED_NOT_PAID = 'registration_canceled_not_paid';
+
+    /**
+     * Potvrzení schválení registrace.
+     */
+    public const REGISTRATION_APPROVED = 'registration_approved';
+
+    /**
      * Potvrzení změny rolí.
      */
     public const ROLES_CHANGED = 'roles_changed';

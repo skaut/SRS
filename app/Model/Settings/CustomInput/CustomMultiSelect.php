@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\Settings\CustomInput;
 
 use Doctrine\ORM\Mapping as ORM;
-use function count;
 use function implode;
 
 /**
@@ -52,12 +51,6 @@ class CustomMultiSelect extends CustomInput
      */
     public function getSelectOptions() : array
     {
-        $options = [];
-
-        for ($i = 0; $i < count($this->options); $i++) {
-            $options[$i+1] = $this->options[$i];
-        }
-
         return $this->options;
     }
 
