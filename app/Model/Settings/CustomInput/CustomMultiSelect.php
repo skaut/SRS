@@ -52,12 +52,6 @@ class CustomMultiSelect extends CustomInput
      */
     public function getSelectOptions() : array
     {
-        $options = [];
-
-        for ($i = 0; $i < count($this->options); $i++) {
-            $options[$i+1] = $this->options[$i];
-        }
-
         return $this->options;
     }
 

@@ -329,7 +329,7 @@ class ApplicationService
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_CANCELED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             ]);
-        } else if ($state === ApplicationState::CANCELED_NOT_PAID) {
+        } elseif ($state === ApplicationState::CANCELED_NOT_PAID) {
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_CANCELED_NOT_PAID, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
             ]);

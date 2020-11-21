@@ -11,6 +11,7 @@ use App\Model\Settings\Settings;
 use App\Model\User\User;
 use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Localization\ITranslator;
 
@@ -78,7 +79,13 @@ class UserService
         return null;
     }
 
-    public function approveUser(User $user) {
+    /**
+     * Schválí registraci uživatele, pokud už není schválený.
+     *
+     * @throws ORMException
+     */
+    public function approveUser(User $user) : void
+    {
         if ($user->isApproved()) {
             return;
         }
@@ -91,7 +98,13 @@ class UserService
         ]);
     }
 
-    public function unapproveUser(User $user) {
+    /**
+     * Zruší schválení registrace uživatele, pokud není neschválený.
+     *
+     * @throws ORMException
+     */
+    public function unapproveUser(User $user) : void
+    {
         if (! $user->isApproved()) {
             return;
         }
@@ -100,7 +113,13 @@ class UserService
         $this->userRepository->save($user);
     }
 
-    public function setApproved(User $user, bool $approved) {
+    /**
+     * Nastaví registraci uživatele jako schválenou nebo nechválenou.
+     *
+     * @throws ORMException
+     */
+    public function setApproved(User $user, bool $approved) : void
+    {
         if ($approved) {
             $this->approveUser($user);
         } else {

@@ -390,9 +390,7 @@ class UsersGridControl extends Control
                 case $customInput instanceof CustomCheckbox:
                     $columnCustomInput->setFilterSelect(['' => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
                         ->setCondition(static function (QueryBuilder $qb, string $value) use ($customInput) : void {
-                            if ($value === '') {
-                                return;
-                            } else {
+                            if ($value !== '') {
                                 $qb->leftJoin('u.customInputValues', 'uCIV2')
                                     ->leftJoin('uCIV2.input', 'uCIVI2')
                                     ->leftJoin('App\Model\User\CustomInputValue\CustomCheckboxValue', 'uCCV', 'WITH', 'uCIV2.id = uCCV.id')

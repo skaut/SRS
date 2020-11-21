@@ -9,6 +9,7 @@ use App\Services\IcalResponse;
 use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event;
 use Eluceo\iCal\Property\Event\Organizer;
+use Exception;
 use Nette\Application\AbortException;
 
 /**
@@ -23,6 +24,7 @@ class SchedulePresenter extends ExportBasePresenter
 
     /**
      * @throws AbortException
+     * @throws Exception
      */
     public function actionIcal(int $id) : void
     {
