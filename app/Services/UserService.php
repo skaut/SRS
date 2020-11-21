@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Enums\PaymentType;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Settings;
 use App\Model\User\User;
+use App\Model\User\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Localization\ITranslator;
 
@@ -20,9 +25,12 @@ class UserService
 
     private ITranslator $translator;
 
-    public function __construct(ITranslator $translator)
+    private UserRepository $userRepository;
+
+    public function __construct(ITranslator $translator, UserRepository $userRepository)
     {
-        $this->translator = $translator;
+        $this->translator     = $translator;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -68,5 +76,35 @@ class UserService
         }
 
         return null;
+    }
+
+    public function approveUser(User $user) {
+        if ($user->isApproved()) {
+            return;
+        }
+
+        $user->setApproved(true);
+        $this->userRepository->save($user);
+
+        $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_APPROVED, [
+            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+        ]);
+    }
+
+    public function unapproveUser(User $user) {
+        if (! $user->isApproved()) {
+            return;
+        }
+
+        $user->setApproved(false);
+        $this->userRepository->save($user);
+    }
+
+    public function setApproved(User $user, bool $approved) {
+        if ($approved) {
+            $this->approveUser($user);
+        } else {
+            $this->unapproveUser($user);
+        }
     }
 }

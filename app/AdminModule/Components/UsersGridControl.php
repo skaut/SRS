@@ -510,8 +510,8 @@ class UsersGridControl extends Control
     public function changeApproved(string $id, string $approved) : void
     {
         $user = $this->userRepository->findById((int) $id);
-        $user->setApproved((bool) $approved);
-        $this->userRepository->save($user);
+
+        $this->userService->setApproved($user, (bool) $approved);
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.users.users_changed_approved', 'success');
@@ -565,8 +565,7 @@ class UsersGridControl extends Control
 
         $this->em->transactional(function () use ($users) : void {
             foreach ($users as $user) {
-                $user->setApproved(true);
-                $this->userRepository->save($user);
+                $this->userService->approveUser($user);
             }
         });
 
