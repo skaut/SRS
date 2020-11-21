@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\Settings\CustomInput;
 
 use Doctrine\ORM\Mapping as ORM;
-use function count;
 use function implode;
 
 /**

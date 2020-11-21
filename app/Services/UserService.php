@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Enums\PaymentType;
+use App\Model\Mailing\Mail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
@@ -28,10 +29,20 @@ class UserService
 
     private UserRepository $userRepository;
 
-    public function __construct(ITranslator $translator, UserRepository $userRepository)
-    {
-        $this->translator     = $translator;
-        $this->userRepository = $userRepository;
+    private MailService $mailService;
+
+    private SettingsService $settingsService;
+
+    public function __construct(
+        ITranslator $translator,
+        UserRepository $userRepository,
+        MailService $mailService,
+        SettingsService $settingsService
+    ) {
+        $this->translator      = $translator;
+        $this->userRepository  = $userRepository;
+        $this->mailService     = $mailService;
+        $this->settingsService = $settingsService;
     }
 
     /**
