@@ -23,6 +23,7 @@ use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
+use function array_key_exists;
 use function in_array;
 
 /**
