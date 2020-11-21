@@ -51,9 +51,9 @@
     <div n:if="$recaptcha" class="form-group row">
         <div class="col-9 offset-3">
             <div n:name="$recaptcha->name"></div>
-            <span class="help-block text-danger" n:if="$form['recaptcha']->getError()">
+            <span class="help-block text-danger" n:if="$recaptcha->error">
                 <i class="fa fa-exclamation-circle"></i>
-                {$form['recaptcha']->getError()}
+                {$recaptcha->error}
             </span>
         </div>
     </div>
