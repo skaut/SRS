@@ -2,7 +2,7 @@
     <div class="form-group row">
         {var $nameInput = $form->getComponent('name')}
         <div class="col-md-3 col-form-label">
-            <label for="{$nameInput->htmlId}" class="{$nameInput->required ? required}">
+            <label for="{$nameInput->htmlId}" n:class="$nameInput->required ? required">
                 {_$nameInput->caption}
             </label>
         </div>
@@ -14,7 +14,7 @@
     <div class="form-group row">
         {var $emailInput = $form->getComponent('email')}
         <div class="col-md-3 col-form-label">
-            <label for="{$emailInput->htmlId}" class="{$emailInput->required ? required}">
+            <label for="{$emailInput->htmlId}" n:class="$emailInput->required ? required">
                 {_$emailInput->caption}
             </label>
         </div>
@@ -26,7 +26,7 @@
     <div class="form-group row">
         {var $messageInput = $form->getComponent('message')}
         <div class="col-md-3 col-form-label">
-            <label for="{$messageInput->htmlId}" class="{$messageInput->required ? required}">
+            <label for="{$messageInput->htmlId}" n:class="$messageInput->required ? required">
                 {_$messageInput->caption}
             </label>
         </div>
@@ -38,17 +38,22 @@
     <div class="form-group row">
         {var $sendCopyInput = $form->getComponent('sendCopy')}
         <div class="col-md-9 offset-3">
-            {input $sendCopyInput}
+            <div class="form-check">
+                <label class="form-check-label" for="{$sendCopyInput->htmlId}">
+                    <input type="checkbox" n:name="$sendCopyInput->name" class="form-check-input">
+                    {_$sendCopyInput->caption}
+                </label>
+            </div>
         </div>
     </div>
 
     {var $recaptcha = $form->getComponent('recaptcha', false)}
     <div n:if="$recaptcha" class="form-group row">
         <div class="col-9 offset-3">
-            <div n:name="recaptcha"></div>
-            <span class="help-block text-danger" n:if="$form['recaptcha']->getError()">
+            <div n:name="$recaptcha->name"></div>
+            <span class="help-block text-danger" n:if="$recaptcha->error">
                 <i class="fa fa-exclamation-circle"></i>
-                {$form['recaptcha']->getError()}
+                {$recaptcha->error}
             </span>
         </div>
     </div>

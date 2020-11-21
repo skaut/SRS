@@ -26,7 +26,16 @@
                 {/if}
 
                 <div class="col-md-9">
-                    {input $c}
+                    {if !$c instanceof Nette\Forms\Controls\Checkbox}
+                        {input $c}
+                    {else}
+                        <div class="form-check">
+                            <label class="form-check-label" for="{$c->htmlId}">
+                                <input type="checkbox" n:name="$c->name" class="form-check-input">
+                                {_$c->caption}
+                            </label>
+                        </div>
+                    {/if}
                 </div>
             </div>
         {/if}
