@@ -73,7 +73,7 @@ class WebFormFactory
         $form->addText('footer', 'admin.configuration.web_footer');
 
         $redirectAfterLoginOptions = $this->pageRepository->getPagesOptions();
-        $redirectAfterLoginValue = $this->settingsService->getValue(Settings::REDIRECT_AFTER_LOGIN);
+        $redirectAfterLoginValue   = $this->settingsService->getValue(Settings::REDIRECT_AFTER_LOGIN);
 
         $form->addSelect('redirectAfterLogin', 'admin.configuration.web_redirect_after_login', $redirectAfterLoginOptions)
             ->addRule(Form::FILLED, 'admin.configuration.web_redirect_after_login_empty');
