@@ -10,6 +10,17 @@
 
     {control css}
 
+    <script src="{$basePath}/dist/admin-vendor/main.min.js"></script>
+    <script src="{$basePath}/dist/admin/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/happy-inputs@2.1.0/src/nomodule-es5-fallback.js"></script>
+	<script>
+        var happy = new Happy;
+        happy.init();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.4.1/assets/datagrid.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.4.1/assets/datagrid-instant-url-refresh.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.4.1/assets/datagrid-spinners.js"></script>
+
     {block head}{/block}
 </head>
 
@@ -49,8 +60,6 @@
     </div>
 
     {block scripts}
-        <script src="{$basePath}/dist/admin/main.min.js"></script>
-
         <script type="text/javascript">
             window._urq = window._urq || [];
             _urq.push(['initSite', 'ff3bbb84-740e-49e3-afd9-db722e8047b5']);
