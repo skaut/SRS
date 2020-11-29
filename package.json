@@ -12,6 +12,12 @@
     "@fullcalendar/timegrid": "^4.4.0",
     "@fullcalendar/vue": "^4.4.0",
     "axios": "^0.19.2",
+    "bootstrap": "^4.5.3",
+    "jquery": "^3.5.1",
+    "live-form-validation": "https://github.com/contributte/live-form-validation.git",
+    "naja": "^2.0.1",
+    "popper.js": "^1.16.1",
+    "ublaboo-datagrid": "^6.4.1",
     "vue-axios": "^2.1.5",
     "vuex": "^3.1.3"
   },

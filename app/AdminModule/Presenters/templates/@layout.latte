@@ -9,7 +9,6 @@
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
 
     {control css}
-    {control js}
 
     {block head}{/block}
 </head>
@@ -49,20 +48,24 @@
         </footer>
     </div>
 
-    <script type="text/javascript">
-        window._urq = window._urq || [];
-        _urq.push(['initSite', 'ff3bbb84-740e-49e3-afd9-db722e8047b5']);
-        (function () {
-            var ur = document.createElement('script');
-            ur.type = 'text/javascript';
-            ur.async = true;
-            ur.src = ('https:' == document.location.protocol ?
-                'https://cdn.userreport.com/userreport.js' :
-                'http://cdn.userreport.com/userreport.js');
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(ur, s);
-        })();
-    </script>
+    {block scripts}
+        <script src="{$basePath}/dist/admin/main.min.js"></script>
+
+        <script type="text/javascript">
+            window._urq = window._urq || [];
+            _urq.push(['initSite', 'ff3bbb84-740e-49e3-afd9-db722e8047b5']);
+            (function () {
+                var ur = document.createElement('script');
+                ur.type = 'text/javascript';
+                ur.async = true;
+                ur.src = ('https:' == document.location.protocol ?
+                    'https://cdn.userreport.com/userreport.js' :
+                    'http://cdn.userreport.com/userreport.js');
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(ur, s);
+            })();
+        </script>
+    {/block}
 </body>
 </html>
 
