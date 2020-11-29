@@ -9,7 +9,7 @@ use App\Model\Settings\SettingsException;
 use App\Model\Structure\SubeventRepository;
 use App\Model\User\UserRepository;
 use App\Services\SettingsService;
-use Joseki\Application\Responses\PdfResponse;
+use Contributte\PdfResponse\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Bridges\ApplicationLatte\Template;
