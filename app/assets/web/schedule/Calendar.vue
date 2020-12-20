@@ -237,6 +237,9 @@
                 }, ALERT_DURATION).slideUp(1000);
             },
             config: function () {
+                if (!localStorage.getItem('fcInitialView')) {
+                    this.handleChangeView(this.config.initial_view, false);
+                }
                 $('#calendar').css('visibility', 'visible');
             }
         },
@@ -277,18 +280,14 @@
             },
 
             /**
-             * Zpracuje přepnutí view.
+             * Zpracuje přepnutí view a uloží zvolené.
              */
-            handleChangeView(view) {
+            handleChangeView(view, save=true) {
                 this.initialView = view;
                 this.$refs.fullCalendar.getApi().changeView(view);
-            },
-
-            /**
-             * Uloží zvolené view.
-             */
-            viewDidMount(info) {
-                localStorage.setItem('fcInitialView', info.view.type);
+                if (save) {
+                    localStorage.setItem('fcInitialView', view);
+                }
             },
 
             /**

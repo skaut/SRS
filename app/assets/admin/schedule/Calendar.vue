@@ -227,18 +227,12 @@
             },
 
             /**
-             * Zpracuje přepnutí view.
+             * Zpracuje přepnutí view a uloží zvolené.
              */
             handleChangeView(view) {
                 this.initialView = view;
                 this.$refs.fullCalendar.getApi().changeView(view);
-            },
-
-            /**
-             * Uloží zvolené view.
-             */
-            viewDidMount(info) {
-                localStorage.setItem('fcAdminInitialView', info.view.type);
+                localStorage.setItem('fcAdminInitialView', view);
             },
 
             /**

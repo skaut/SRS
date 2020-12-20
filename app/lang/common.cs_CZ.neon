@@ -123,6 +123,11 @@ application_state:
     paid: "Zaplaceno"
     paid_free: "Zaplaceno (zdarma)"
 
+calendar_view:
+    timeGridSeminar: "Na výšku"
+    resourceTimelineSeminar: "Na šířku"
+    listSeminar: "Seznam"
+
 condition_operator:
     and: "a"
     or: "nebo"

@@ -73,6 +73,11 @@ class Settings
     public const IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT = 'is_allowed_add_subevents_after_payment';
 
     /**
+     * Výchozí zobrazení harmonogramu semináře.
+     */
+    public const SCHEDULE_INITIAL_VIEW = 'schedule_initial_view';
+
+    /**
      * Id propojené skautIS akce.
      */
     public const SKAUTIS_EVENT_ID = 'skautis_event_id';

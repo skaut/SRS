@@ -1,9 +1,9 @@
 'use strict';
 
-import Vue from "vue";
-import Vuex from "vuex";
-import axios from "axios";
-import VueAxios from "vue-axios"
+import Vue from 'vue';
+import Vuex from 'vuex';
+import axios from 'axios';
+import VueAxios from 'vue-axios'
 
 const COLOR_VOLUNTARY = '#0077F7';
 const COLOR_MANDATORY = '#D53343';
@@ -16,8 +16,8 @@ Vue.axios.defaults.baseURL = basePath + '/api/schedule/';
 export default new Vuex.Store({
     state: {
         config: {
-            seminar_from_date: "2000-01-01",
-            seminar_to_date: "2000-01-01",
+            seminar_from_date: '2000-01-01',
+            seminar_to_date: '2000-01-01',
             allowed_modify_schedule: false
         },
         blocks: [],
@@ -146,7 +146,7 @@ export default new Vuex.Store({
                         }
                     });
                 resources.push({
-                    id: "0",
+                    id: '0',
                     title: 'Nepřiřazená',
                     extendedProps: {
                         capacity: null
@@ -198,7 +198,7 @@ export default new Vuex.Store({
             commit('incrementLoading');
             const data = {
                 block_id: info.event.extendedProps.block.id,
-                room_id: info.event.resourceId && info.event.resourceId !== "0" ? info.event.resourceId : null,
+                room_id: info.event.resourceId && info.event.resourceId !== '0' ? info.event.resourceId : null,
                 start: info.event.start.toISOString()
             };
             Vue.axios.put('save-program', data)
@@ -222,9 +222,9 @@ export default new Vuex.Store({
         updateProgram({commit}, info) {
             commit('incrementLoading');
             const data = {
-                id: info.event.id !== "" ? info.event.id : info.event.extendedProps.id, // todo: odstranit workaround po oprave bugu (https://github.com/fullcalendar/fullcalendar/issues/4730)
+                id: info.event.id !== '' ? info.event.id : info.event.extendedProps.id, // todo: odstranit workaround po oprave bugu (https://github.com/fullcalendar/fullcalendar/issues/4730)
                 block_id: info.event.extendedProps.block.id,
-                room_id: info.event.getResources()[0].id !== "0" ? info.event.getResources()[0].id : null,
+                room_id: info.event.getResources()[0].id !== '0' ? info.event.getResources()[0].id : null,
                 start: info.event.start.toISOString()
             };
             Vue.axios.put('save-program', data)
@@ -248,9 +248,9 @@ export default new Vuex.Store({
         updateProgramRoom({commit}, info) {
             commit('incrementLoading');
             const data = {
-                id: info.event.id !== "" ? info.event.id : info.event.extendedProps.id, // todo: odstranit workaround po oprave bugu (https://github.com/fullcalendar/fullcalendar/issues/4730)
+                id: info.event.id !== '' ? info.event.id : info.event.extendedProps.id, // todo: odstranit workaround po oprave bugu (https://github.com/fullcalendar/fullcalendar/issues/4730)
                 block_id: info.event.extendedProps.block.id,
-                room_id: info.resourceId !== "0" ? info.resourceId : null,
+                room_id: info.resourceId !== '0' ? info.resourceId : null,
                 start: info.event.start.toISOString()
             };
             Vue.axios.put('save-program', data)
@@ -271,7 +271,7 @@ export default new Vuex.Store({
          */
         removeProgram({commit, state}, info) {
             commit('incrementLoading');
-            Vue.axios.delete('remove-program/' + (info.event.id !== "" ? info.event.id : info.event.extendedProps.id)) // todo: odstranit workaround po oprave bugu (https://github.com/fullcalendar/fullcalendar/issues/4730)
+            Vue.axios.delete('remove-program/' + (info.event.id !== '' ? info.event.id : info.event.extendedProps.id)) // todo: odstranit workaround po oprave bugu (https://github.com/fullcalendar/fullcalendar/issues/4730)
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
                     info.event.remove();
