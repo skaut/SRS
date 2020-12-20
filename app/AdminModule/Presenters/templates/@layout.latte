@@ -9,7 +9,17 @@
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
 
     {control css}
-    {control js}
+
+    <script src="{$basePath}/dist/admin-vendor/main.min.js"></script>
+    <script src="{$basePath}/dist/admin/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/happy-inputs@2.1.0/src/nomodule-es5-fallback.js"></script>
+	<script>
+        var happy = new Happy;
+        happy.init();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.4.1/assets/datagrid.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.4.1/assets/datagrid-instant-url-refresh.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.4.1/assets/datagrid-spinners.js"></script>
 
     {block head}{/block}
 </head>
@@ -49,20 +59,22 @@
         </footer>
     </div>
 
-    <script type="text/javascript">
-        window._urq = window._urq || [];
-        _urq.push(['initSite', 'ff3bbb84-740e-49e3-afd9-db722e8047b5']);
-        (function () {
-            var ur = document.createElement('script');
-            ur.type = 'text/javascript';
-            ur.async = true;
-            ur.src = ('https:' == document.location.protocol ?
-                'https://cdn.userreport.com/userreport.js' :
-                'http://cdn.userreport.com/userreport.js');
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(ur, s);
-        })();
-    </script>
+    {block scripts}
+        <script type="text/javascript">
+            window._urq = window._urq || [];
+            _urq.push(['initSite', 'ff3bbb84-740e-49e3-afd9-db722e8047b5']);
+            (function () {
+                var ur = document.createElement('script');
+                ur.type = 'text/javascript';
+                ur.async = true;
+                ur.src = ('https:' == document.location.protocol ?
+                    'https://cdn.userreport.com/userreport.js' :
+                    'http://cdn.userreport.com/userreport.js');
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(ur, s);
+            })();
+        </script>
+    {/block}
 </body>
 </html>
 

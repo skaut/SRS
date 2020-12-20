@@ -28,11 +28,11 @@
         "nette/robot-loader": "^3.2",
         "nette/security": "^3.0",
         "nette/utils": "^3.1",
-        "latte/latte": "^2.8",
+        "latte/latte": "^2.9",
         "tracy/tracy": "^2.7",
 
         "contributte/console": "^0.8",
-        "contributte/translation": "0.7",
+        "contributte/translation": "0.8",
 
         "nettrine/orm": "^0.7",
         "nettrine/migrations": "^0.6",
@@ -50,23 +50,23 @@
 
         "twbs/bootstrap": "^4.5",
         "snapappointments/bootstrap-select": "^1.13",
-        "kartik-v/bootstrap-fileinput": "^5.0",
+        "kartik-v/bootstrap-fileinput": "^5.1",
 
-        "ublaboo/datagrid": "6.2.23",
+        "ublaboo/datagrid": "^6.4",
         "ublaboo/mailing": "^1.2",
 
-        "jms/serializer": "^3.6",
-        "phpoffice/phpspreadsheet": "^1.12",
-        "joseki/pdf-response": "^5.1",
-        "mpdf/qrcode": "^1.0",
+        "jms/serializer": "^3.10",
+        "phpoffice/phpspreadsheet": "^1.15",
+        "contributte/pdf": "^6.0",
+        "mpdf/qrcode": "^1.1",
         "dfridrich/qr-platba": "^1.0",
         "eluceo/ical": "^0.16",
 
-        "skautis/skautis": "^2.1",
+        "skautis/skautis": "^2.2",
         "skautis/nette": "^2.2",
 
         "pear/numbers_words": "^0.18",
-        "azuyalabs/yasumi": "^1.8",
+        "azuyalabs/yasumi": "^2.3",
 
         "mhujer/fio-api-php": "^4.1",
         "composer/ca-bundle": "^1.2"
