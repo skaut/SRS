@@ -62,17 +62,17 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row mb-3">
             <div class="col-auto mr-auto">
                 <div class="btn-group">
-                    <button @click="handleChangeView('timeGridSeminar')" class="btn btn-sm btn-secondary" :class="{ active: defaultView === 'timeGridSeminar' }">
+                    <button @click="handleChangeView('timeGridSeminar')" class="btn btn-sm btn-secondary" :class="{ active: initialView === 'timeGridSeminar' }">
                         Na výšku
                     </button>
-                    <button @click="handleChangeView('resourceTimelineSeminar')" class="btn btn-sm btn-secondary" :class="{ active: defaultView === 'resourceTimelineSeminar' }">
+                    <button @click="handleChangeView('resourceTimelineSeminar')" class="btn btn-sm btn-secondary" :class="{ active: initialView === 'resourceTimelineSeminar' }">
                         Na šířku
                     </button>
                 </div>
-                <div class="btn-group" v-show="defaultView === 'resourceTimelineSeminar'">
+                <div class="btn-group" v-show="initialView === 'resourceTimelineSeminar'">
                     <button @click="handlePrev()" id="btnPrev" class="btn btn-sm btn-secondary">
                         <span class="fc-icon fc-icon-chevron-left"></span>
                     </button>
@@ -89,33 +89,7 @@
             </div>
         </div>
 
-        <FullCalendar id="calendar"
-                      style="visibility: hidden"
-                      ref="fullCalendar"
-                      theme-system="bootstrap"
-                      locale="cs"
-                      timeZone="none"
-                      scroll-time="07:00:00"
-                      aspect-ratio="1.85"
-                      header="false"
-                      scheduler-license-key="GPL-My-Project-Is-Open-Source"
-                      :plugins="calendarPlugins"
-                      :views="calendarViews"
-                      :default-view="defaultView"
-                      :valid-range="validRange"
-                      :event-render="eventRender"
-                      :view-skeleton-render="viewSkeletonRender"
-                      :dates-render="datesRender"
-                      :events="events"
-                      :resources="resources"
-                      :droppable="config.allowed_modify_schedule"
-                      :event-start-editable="config.allowed_modify_schedule"
-                      :event-resource-editable="config.allowed_modify_schedule"
-                      :event-overlap="eventOverlap"
-                      :event-allow="eventAllow"
-                      @eventReceive="handleEventReceive"
-                      @eventDrop="handleEventDrop"
-                      @eventClick="handleEventClick"/>
+        <FullCalendar id="calendar" style="visibility: hidden" ref="fullCalendar" :options="calendarOptions"/>
     </div>
 </template>
 
@@ -123,6 +97,7 @@
     'use strict';
 
     import FullCalendar from '@fullcalendar/vue'
+    import csLocale from '@fullcalendar/core/locales/cs';
     import timeGridPlugin from '@fullcalendar/timegrid'
     import resourceTimelinePlugin from '@fullcalendar/resource-timeline'
     import interactionPlugin from '@fullcalendar/interaction'
@@ -135,19 +110,47 @@
         },
         data: function () {
             return {
-                calendarPlugins: [
-                    timeGridPlugin,
-                    resourceTimelinePlugin,
-                    interactionPlugin,
-                    bootstrapPlugin
-                ],
-                defaultView: localStorage.getItem("fcDefaultView") || "timeGridSeminar",
+                initialView: localStorage.getItem('fcAdminInitialView') || 'timeGridSeminar',
                 selectedEventInfo: null
             }
         },
         computed: {
             ...mapState(['events', 'resources', 'config', 'loading', 'message']),
             ...mapGetters(['getResourceById']),
+            calendarOptions() {
+                return {
+                    themeSystem: 'bootstrap',
+                    locales: csLocale,
+                    locale: 'cs',
+                    timeZone: 'none',
+                    scrollTime: '07:00:00',
+                    aspectRatio: 1.85,
+                    headerToolbar: false,
+                    schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+                    plugins: [
+                        timeGridPlugin,
+                        resourceTimelinePlugin,
+                        interactionPlugin,
+                        bootstrapPlugin
+                    ],
+                    views: this.calendarViews,
+                    initialView: this.initialView,
+                    validRange: this.validRange,
+                    eventDidMount: this.eventDidMount,
+                    viewDidMount: this.viewDidMount,
+                    datesSet: this.datesSet,
+                    events: this.events,
+                    resources: this.resources,
+                    droppable: this.config.allowed_modify_schedule,
+                    eventStartEditable: this.config.allowed_modify_schedule,
+                    eventResourceEditable: this.config.allowed_modify_schedule,
+                    eventOverlap: this.eventOverlap,
+                    eventAllow: this.eventAllow,
+                    eventReceive: this.handleEventReceive,
+                    eventDrop: this.handleEventDrop,
+                    eventClick: this.handleEventClick
+                }
+            },
             calendarViews() {
                 return {
                     timeGridSeminar: {
@@ -156,20 +159,18 @@
                             start: this.config.seminar_from_date,
                             end: this.config.seminar_to_date
                         },
-                        buttonText: "Na výšku",
                         allDaySlot: false,
                         snapDuration: {minutes: 5},
                         slotDuration: {minutes: 15},
                         slotLabelInterval: {hours: 1},
-                        columnHeaderFormat: {weekday: "short", day: "numeric", month: "numeric"}
+                        dayHeaderFormat: {weekday: 'short', day: 'numeric', month: 'numeric'}
                     },
                     resourceTimelineSeminar: {
                         type: 'resourceTimeline',
-                        buttonText: "Na šířku",
                         snapDuration: {minutes: 5},
                         slotDuration: {minutes: 15},
                         slotLabelInterval: {hours: 1},
-                        resourceLabelText: "Místnosti"
+                        resourceAreaHeaderContent: 'Místnosti'
                     },
                 };
             },
@@ -196,13 +197,13 @@
             /**
              * Vykreslí název místnosti v timeGridSeminar zobrazení.
              */
-            eventRender(info) {
+            eventDidMount(info) {
                 if (info.view.type === 'timeGridSeminar') {
                     const eventResources = info.event.getResources();
                     if (eventResources.length > 0 && eventResources[0].id > 0) {
-                        const titleEl = info.el.getElementsByClassName('fc-title')[0];
+                        const titleEl = info.el.getElementsByClassName('fc-event-title')[0];
                         const roomEl = document.createElement('div');
-                        roomEl.setAttribute('class', 'fc-room');
+                        roomEl.setAttribute('class', 'fc-event-room');
                         roomEl.innerText = eventResources[0].title;
                         titleEl.parentNode.insertBefore(roomEl, titleEl.nextSibling);
                     }
@@ -214,7 +215,7 @@
              */
             eventOverlap(stillEvent, movingEvent) {
                 return (!stillEvent.extendedProps.block.autoRegistered && !movingEvent.extendedProps.block.autoRegistered)
-                    && movingEvent.getResources()[0].id === "0";
+                    && movingEvent.getResources()[0].id === '0';
             },
 
             /**
@@ -229,15 +230,15 @@
              * Zpracuje přepnutí view.
              */
             handleChangeView(view) {
-                this.defaultView = view;
+                this.initialView = view;
                 this.$refs.fullCalendar.getApi().changeView(view);
             },
 
             /**
              * Uloží zvolené view.
              */
-            viewSkeletonRender(info) {
-                localStorage.setItem("fcDefaultView", info.view.type);
+            viewDidMount(info) {
+                localStorage.setItem('fcAdminInitialView', info.view.type);
             },
 
             /**
@@ -257,10 +258,10 @@
             /**
              * Překreslí tlačítka pro volbu dne.
              */
-            datesRender(info) {
-                $("#btnPrev").prop("disabled", info.view.currentStart.toISOString().split('T')[0] <= this.validRange.start);
-                $("#btnNext").prop("disabled", info.view.currentEnd.toISOString().split('T')[0] >= this.validRange.end);
-                $("#btnTitle").html(info.view.title);
+            datesSet(info) {
+                $('#btnPrev').prop('disabled', info.view.currentStart.toISOString().split('T')[0] <= this.validRange.start);
+                $('#btnNext').prop('disabled', info.view.currentEnd.toISOString().split('T')[0] >= this.validRange.end);
+                $('#btnTitle').html(info.view.title);
             },
 
             /**
@@ -310,21 +311,14 @@
     }
 </script>
 
-<style lang='scss'>
-    @import '~@fullcalendar/core/main.css';
-    @import '~@fullcalendar/daygrid/main.css';
-    @import '~@fullcalendar/timegrid/main.css';
-    @import '~@fullcalendar/timeline/main.css';
-    @import '~@fullcalendar/resource-timeline/main.css';
-    @import '~@fullcalendar/bootstrap/main.css';
-
-    .fc-today {
+<style lang='css'>
+    .fc-day-today {
         background-color: inherit !important;
     }
-    .fc-title {
+    .fc-event-title {
         font-weight: bold;
     }
-    .fc-room {
+    .fc-event-room {
         padding: 0 1px;
     }
 </style>
