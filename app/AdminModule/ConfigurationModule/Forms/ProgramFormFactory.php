@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Enums\CalendarView;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Settings;
 use App\Model\Settings\SettingsException;
@@ -81,7 +82,10 @@ class ProgramFormFactory
             ->addRule([$this, 'validateRegisterProgramsTo'], 'admin.configuration.register_programs_to_before_from', [$registerProgramsToDateTime, $registerProgramsFromDateTime]);
 
         $form->addCheckbox('isAllowedAddBlock', 'admin.configuration.is_allowed_add_block');
+
         $form->addCheckbox('isAllowedModifySchedule', 'admin.configuration.is_allowed_modify_schedule');
+
+        $form->addSelect('scheduleInitialView', 'admin.configuration.schedule_initial_view', CalendarView::getCalendarViewsOptions());
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -92,6 +96,7 @@ class ProgramFormFactory
             'registerProgramsFrom' => $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM),
             'registerProgramsTo' => $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO),
             'isAllowedRegisterProgramsBeforePayment' => $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT),
+            'scheduleInitialView' => $this->settingsService->getValue(Settings::SCHEDULE_INITIAL_VIEW),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -113,6 +118,7 @@ class ProgramFormFactory
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values->isAllowedRegisterProgramsBeforePayment);
         $this->settingsService->setDateTimeValue(Settings::REGISTER_PROGRAMS_FROM, $values->registerProgramsFrom);
         $this->settingsService->setDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values->registerProgramsTo);
+        $this->settingsService->setValue(Settings::SCHEDULE_INITIAL_VIEW, $values->scheduleInitialView);
     }
 
     /**

@@ -217,6 +217,8 @@ class ScheduleService
         $calendarConfigDto->setMinTime((string) $minTime);
         $calendarConfigDto->setMaxTime((string) $maxTime);
 
+        $calendarConfigDto->setInitialView($this->settingsService->getValue(Settings::SCHEDULE_INITIAL_VIEW));
+
         return $calendarConfigDto;
     }
 

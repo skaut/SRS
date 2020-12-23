@@ -31,6 +31,9 @@ class CalendarConfigDto
     /** @JMS\Type("boolean") */
     private bool $allowedModifySchedule;
 
+    /** @JMS\Type("string") */
+    private string $initialView;
+
     public function getSeminarFromDate() : string
     {
         return $this->seminarFromDate;
@@ -79,5 +82,15 @@ class CalendarConfigDto
     public function setAllowedModifySchedule(bool $allowedModifySchedule) : void
     {
         $this->allowedModifySchedule = $allowedModifySchedule;
+    }
+
+    public function getInitialView() : string
+    {
+        return $this->initialView;
+    }
+
+    public function setInitialView(string $initialView) : void
+    {
+        $this->initialView = $initialView;
     }
 }

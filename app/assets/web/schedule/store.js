@@ -1,9 +1,9 @@
 'use strict';
 
-import Vue from "vue";
-import Vuex from "vuex";
-import axios from "axios";
-import VueAxios from "vue-axios"
+import Vue from 'vue';
+import Vuex from 'vuex';
+import axios from 'axios';
+import VueAxios from 'vue-axios'
 
 var COLOR_VOLUNTARY = '#0077F7';
 var COLOR_MANDATORY = '#D53343';
@@ -17,10 +17,11 @@ Vue.axios.defaults.baseURL = basePath + '/api/schedule/';
 export default new Vuex.Store({
     state: {
         config: {
-            seminar_from_date: "2000-01-01",
-            seminar_to_date: "2000-01-01",
-            min_time: "0",
-            max_time: "24"
+            seminar_from_date: '2000-01-01',
+            seminar_to_date: '2000-01-01',
+            min_time: '0',
+            max_time: '24',
+            initial_view: 'timeGridSeminar'
         },
         blocks: [],
         resources: [],
@@ -149,7 +150,7 @@ export default new Vuex.Store({
                         }
                     });
                 resources.push({
-                    id: "0",
+                    id: '0',
                     title: 'Nepřiřazená'
                 });
                 commit('setResources', resources);
