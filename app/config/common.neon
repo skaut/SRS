@@ -40,6 +40,12 @@ services:
     - App\ApiModule\Services\ScheduleService
     - App\Utils\Validators
 
+#    - class: App\Model\Handlers\SeoHandler
+#      tags: [commandBus.handler]
+
+#    - class: App\Model\Subscribers\SeoMailListener
+#      tags: [eventBus.subscriber]
+
     permissionRepository:
         class: App\Model\Acl\PermissionRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\Permission)
@@ -238,6 +244,7 @@ extensions:
     translation: Contributte\Translation\DI\TranslationExtension
     mailing: Ublaboo\Mailing\DI\MailingExtension
     recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
+    messagebus: eGen\MessageBus\DI\MessageBusExtension
 
 console:
     name: SRS
@@ -277,6 +284,11 @@ translation:
         fallback: [cs]
     dirs:
         - %appDir%/lang
+
+messageBus:
+    commandBus:
+    eventBus:
+    queryBus:
 
 latte:
     macros:

@@ -38,8 +38,9 @@
         "nettrine/migrations": "^0.6",
         "beberlei/doctrineextensions": "^1.2",
         "doctrine/common": "<3.0.0",
-
         "dg/mysql-dump": "^1.5",
+
+        "egen/message-bus": "^2.1",
 
         "nextras/form-components": "^1.0",
         "nextras/forms-rendering": "^1.0",
