@@ -244,7 +244,7 @@ extensions:
     translation: Contributte\Translation\DI\TranslationExtension
     mailing: Ublaboo\Mailing\DI\MailingExtension
     recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
-    messagebus: eGen\MessageBus\DI\MessageBusExtension
+    messageBus: eGen\MessageBus\DI\MessageBusExtension
 
 console:
     name: SRS
