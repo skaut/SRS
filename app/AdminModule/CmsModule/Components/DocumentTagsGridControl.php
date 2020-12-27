@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\AdminModule\CmsModule\Components;
 
 use App\Model\Acl\Repositories\RoleRepository;
-use App\Model\Cms\Tag;
 use App\Model\Cms\Repositories\TagRepository;
+use App\Model\Cms\Tag;
 use App\Services\AclService;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
