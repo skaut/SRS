@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
+use App\Model\CustomInput\CustomCheckbox;
+use App\Model\CustomInput\CustomCheckboxValue;
+use App\Model\CustomInput\CustomDate;
+use App\Model\CustomInput\CustomDateTime;
+use App\Model\CustomInput\CustomFileValue;
+use App\Model\CustomInput\CustomMultiSelect;
+use App\Model\CustomInput\CustomSelect;
+use App\Model\CustomInput\CustomText;
+use App\Model\CustomInput\CustomTextValue;
+use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
-use App\Model\Settings\CustomInput\CustomCheckbox;
-use App\Model\Settings\CustomInput\CustomDate;
-use App\Model\Settings\CustomInput\CustomDateTime;
-use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\CustomInput\CustomMultiSelect;
-use App\Model\Settings\CustomInput\CustomSelect;
-use App\Model\Settings\CustomInput\CustomText;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\User\CustomInputValue\CustomCheckboxValue;
-use App\Model\User\CustomInputValue\CustomFileValue;
-use App\Model\User\CustomInputValue\CustomTextValue;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
@@ -380,7 +380,7 @@ class UsersGridControl extends Control
                         ->setSortableCallback(static function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
                             $qb->leftJoin('u.customInputValues', 'uCIV1')
                                 ->leftJoin('uCIV1.input', 'uCIVI1')
-                                ->leftJoin('App\Model\User\CustomInputValue\CustomTextValue', 'uCTV', 'WITH', 'uCIV1.id = uCTV.id')
+                                ->leftJoin('App\Model\CustomInput\CustomTextValue', 'uCTV', 'WITH', 'uCIV1.id = uCTV.id')
                                 ->andWhere('uCIVI1.id = :iid1 OR uCIVI1.id IS NULL')
                                 ->setParameter('iid1', $customInput->getId())
                                 ->orderBy('uCTV.value', $sort[$columnCustomInputName]);
@@ -393,7 +393,7 @@ class UsersGridControl extends Control
                             if ($value !== '') {
                                 $qb->leftJoin('u.customInputValues', 'uCIV2')
                                     ->leftJoin('uCIV2.input', 'uCIVI2')
-                                    ->leftJoin('App\Model\User\CustomInputValue\CustomCheckboxValue', 'uCCV', 'WITH', 'uCIV2.id = uCCV.id')
+                                    ->leftJoin('App\Model\CustomInput\CustomCheckboxValue', 'uCCV', 'WITH', 'uCIV2.id = uCCV.id')
                                     ->andWhere('uCIVI2.id = :iid2 OR uCIVI2.id IS NULL')
                                     ->andWhere('uCCV.value = :ivalue2')
                                     ->setParameter('iid2', $customInput->getId())
@@ -408,7 +408,7 @@ class UsersGridControl extends Control
                         ->setCondition(static function (QueryBuilder $qb, ArrayHash $values) use ($customInput) : void {
                             $qb->leftJoin('u.customInputValues', 'uCIV3')
                                 ->leftJoin('uCIV3.input', 'uCIVI3')
-                                ->leftJoin('App\Model\User\CustomInputValue\CustomSelectValue', 'uCSV', 'WITH', 'uCIV3.id = uCSV.id')
+                                ->leftJoin('App\Model\CustomInput\CustomSelectValue', 'uCSV', 'WITH', 'uCIV3.id = uCSV.id')
                                 ->andWhere('uCIVI3.id = :iid3 OR uCIVI3.id IS NULL')
                                 ->andWhere('uCSV.value in (:ivalues3)')
                                 ->setParameter('iid3', $customInput->getId())
@@ -422,7 +422,7 @@ class UsersGridControl extends Control
                         ->setCondition(static function (QueryBuilder $qb, ArrayHash $values) use ($customInput) : void {
                             $qb->leftJoin('u.customInputValues', 'uCIV4')
                                 ->leftJoin('uCIV4.input', 'uCIVI4')
-                                ->leftJoin('App\Model\User\CustomInputValue\CustomMultiSelectValue', 'uCMSV', 'WITH', 'uCIV4.id = uCMSV.id')
+                                ->leftJoin('App\Model\CustomInput\CustomMultiSelectValue', 'uCMSV', 'WITH', 'uCIV4.id = uCMSV.id')
                                 ->andWhere('uCIVI4.id = :iid4 OR uCIVI4.id IS NULL')
                                 ->andWhere('uCMSV.value in (:ivalues4)')
                                 ->setParameter('iid4', $customInput->getId())
@@ -436,7 +436,7 @@ class UsersGridControl extends Control
                         ->setSortableCallback(static function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
                             $qb->leftJoin('u.customInputValues', 'uCIV5')
                                 ->leftJoin('uCIV5.input', 'uCIVI5')
-                                ->leftJoin('App\Model\User\CustomInputValue\CustomDateValue', 'uCDV', 'WITH', 'uCIV5.id = uCDV.id')
+                                ->leftJoin('App\Model\CustomInput\CustomDateValue', 'uCDV', 'WITH', 'uCIV5.id = uCDV.id')
                                 ->andWhere('uCIVI5.id = :iid5 OR uCIVI5.id IS NULL')
                                 ->setParameter('iid5', $customInput->getId())
                                 ->orderBy('uCDV.value', $sort[$columnCustomInputName]);
@@ -448,7 +448,7 @@ class UsersGridControl extends Control
                         ->setSortableCallback(static function (QueryBuilder $qb, array $sort) use ($customInput, $columnCustomInputName) : void {
                             $qb->leftJoin('u.customInputValues', 'uCIV6')
                                 ->leftJoin('uCIV6.input', 'uCIVI6')
-                                ->leftJoin('App\Model\User\CustomInputValue\CustomDateTimeValue', 'uCDTV', 'WITH', 'uCIV6.id = uCDTV.id')
+                                ->leftJoin('App\Model\CustomInput\CustomDateTimeValue', 'uCDTV', 'WITH', 'uCIV6.id = uCDTV.id')
                                 ->andWhere('uCIVI6.id = :iid6 OR uCIVI6.id IS NULL')
                                 ->setParameter('iid6', $customInput->getId())
                                 ->orderBy('uCDTV.value', $sort[$columnCustomInputName]);

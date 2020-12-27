@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\Cms\Content\DocumentContentDto;
-use App\Model\Cms\Document\DocumentRepository;
+use App\Model\Cms\Dto\DocumentContentDto;
+use App\Model\Cms\Repositories\DocumentRepository;
 use Nette\Application\UI\Control;
 use function array_keys;
 

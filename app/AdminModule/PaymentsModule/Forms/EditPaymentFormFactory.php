@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\AdminModule\PaymentsModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Payment\Payment;
-use App\Model\Payment\PaymentRepository;
-use App\Model\User\Application\ApplicationRepository;
-use App\Model\User\UserRepository;
+use App\Model\Payment\Repositories\PaymentRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use Nette;
 use Nette\Application\UI\Form;

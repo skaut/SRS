@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Components;
 
 use App\Model\Acl\Role;
-use App\Model\Settings\CustomInput\CustomInput;
-use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\CustomInput\CustomMultiSelect;
-use App\Model\Settings\CustomInput\CustomSelect;
+use App\Model\CustomInput\CustomInput;
+use App\Model\CustomInput\CustomMultiSelect;
+use App\Model\CustomInput\CustomSelect;
+use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Services\AclService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;

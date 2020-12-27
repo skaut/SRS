@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Presenters;
 
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
+use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Structure\Repositories\SubeventRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Throwable;
 

@@ -16,7 +16,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita program.
  *
- * @ORM\Entity(repositoryClass="ProgramRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\Program\Repositories\ProgramRepository")
  * @ORM\Table(name="program")
  *
  * @author Michal Májský

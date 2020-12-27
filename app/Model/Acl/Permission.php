@@ -12,7 +12,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita oprávnění.
  *
- * @ORM\Entity(repositoryClass="PermissionRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\Acl\Repositories\PermissionRepository")
  * @ORM\Table(name="permission")
  *
  * @author Michal Májský
@@ -81,7 +81,7 @@ class Permission
     /**
      * Role s tímto oprávněním.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", mappedBy="permissions", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Role", mappedBy="permissions", cascade={"persist"})
      *
      * @var Collection|Role[]
      */

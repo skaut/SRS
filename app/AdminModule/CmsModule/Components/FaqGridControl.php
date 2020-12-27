@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\CmsModule\Components;
 
-use App\Model\Cms\FaqRepository;
+use App\Model\Cms\Repositories\FaqRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;

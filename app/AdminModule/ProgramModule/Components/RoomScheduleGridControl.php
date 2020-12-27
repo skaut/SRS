@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\Program\Program;
-use App\Model\Program\ProgramRepository;
+use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
-use App\Model\Program\RoomRepository;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Exception;

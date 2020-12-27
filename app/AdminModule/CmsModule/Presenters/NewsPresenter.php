@@ -7,7 +7,7 @@ namespace App\AdminModule\CmsModule\Presenters;
 use App\AdminModule\CmsModule\Components\INewsGridControlFactory;
 use App\AdminModule\CmsModule\Components\NewsGridControl;
 use App\AdminModule\CmsModule\Forms\NewsFormFactory;
-use App\Model\Cms\NewsRepository;
+use App\Model\Cms\Repositories\NewsRepository;
 use Nette\Application\UI\Form;
 use stdClass;
 

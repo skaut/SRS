@@ -12,7 +12,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita místnost.
  *
- * @ORM\Entity(repositoryClass="RoomRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\Program\Repositories\RoomRepository")
  * @ORM\Table(name="room")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>

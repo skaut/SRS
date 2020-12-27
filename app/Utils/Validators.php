@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
+use App\Model\Application\Application;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
-use App\Model\Program\ProgramRepository;
+use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use App\Model\Structure\Subevent;
-use App\Model\User\Application\Application;
 use App\Model\User\User;
 use App\Services\SettingsService;
 use Doctrine\Common\Collections\Collection;

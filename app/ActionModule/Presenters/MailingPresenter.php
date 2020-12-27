@@ -6,8 +6,8 @@ namespace App\ActionModule\Presenters;
 
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
 use Nette\Application\AbortException;
 use Throwable;

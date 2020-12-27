@@ -17,7 +17,7 @@ use function implode;
 /**
  * Entita e-mail.
  *
- * @ORM\Entity(repositoryClass="MailRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\Mailing\Repositories\MailRepository")
  * @ORM\Table(name="mail")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>

@@ -6,7 +6,7 @@ namespace App\AdminModule\CmsModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\News;
-use App\Model\Cms\NewsRepository;
+use App\Model\Cms\Repositories\NewsRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\ORMException;
 use Nette;

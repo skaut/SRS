@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\ActionModule\Presenters;
 
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use App\Services\BankService;
 use App\Services\SettingsService;
 use Nette\Application\Responses\TextResponse;

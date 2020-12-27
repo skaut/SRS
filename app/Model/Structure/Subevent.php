@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Model\Structure;
 
+use App\Model\Application\Application;
+use App\Model\Application\SubeventsApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
 use App\Model\SkautIs\SkautIsCourse;
-use App\Model\User\Application\Application;
-use App\Model\User\Application\SubeventsApplication;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,7 +19,7 @@ use function implode;
 /**
  * Entita podakce.
  *
- * @ORM\Entity(repositoryClass="SubeventRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\Structure\Repositories\SubeventRepository")
  * @ORM\Table(name="subevent")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
@@ -45,7 +45,7 @@ class Subevent
     /**
      * Přihlášky.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\Application\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Application\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
      *
      * @var Collection|SubeventsApplication[]
      */

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Router;
 
-use App\Model\Cms\PageDto;
+use App\Model\Cms\Dto\PageDto;
 use App\Services\CmsService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette\Application\Routers\Route;

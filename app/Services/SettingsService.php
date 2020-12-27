@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\Settings\SettingsException;
-use App\Model\Settings\SettingsRepository;
+use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Repositories\SettingsRepository;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Nette;

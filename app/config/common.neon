@@ -47,93 +47,93 @@ services:
 #      tags: [eventBus.subscriber]
 
     permissionRepository:
-        class: App\Model\Acl\PermissionRepository
+        class: App\Model\Acl\Repositories\PermissionRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\Permission)
     resourceRepository:
-        class: App\Model\Acl\SrsResourceRepository
+        class: App\Model\Acl\Repositories\SrsResourceRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\SrsResource)
     roleRepository:
-        class: App\Model\Acl\RoleRepository
+        class: App\Model\Acl\Repositories\RoleRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\Role)
+    applicationRepository:
+        class: App\Model\Application\Repositories\ApplicationRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Application\Application)
+    incomeProofRepository:
+        class: App\Model\Application\Repositories\IncomeProofRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Application\IncomeProof)
+    rolesApplicationRepository:
+        class: App\Model\Application\Repositories\RolesApplicationRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Application\RolesApplication)
+    subeventsApplicationRepository:
+        class: App\Model\Application\Repositories\SubeventsApplicationRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Application\SubeventsApplication)
+    variableSymbolRepository:
+        class: App\Model\Application\Repositories\VariableSymbolRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Application\VariableSymbol)
     contentRepository:
-        class: App\Model\Cms\Content\ContentRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Content\Content)
+        class: App\Model\Cms\Repositories\ContentRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Content)
     documentRepository:
-        class: App\Model\Cms\Document\DocumentRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Document\Document)
-    tagRepository:
-        class: App\Model\Cms\Document\TagRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Document\Tag)
+        class: App\Model\Cms\Repositories\DocumentRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Document)
     faqRepository:
-        class: App\Model\Cms\FaqRepository
+        class: App\Model\Cms\Repositories\FaqRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Faq)
     newsRepository:
-        class: App\Model\Cms\NewsRepository
+        class: App\Model\Cms\Repositories\NewsRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\News)
     pageRepository:
-        class: App\Model\Cms\PageRepository
+        class: App\Model\Cms\Repositories\PageRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Page)
+    tagRepository:
+        class: App\Model\Cms\Repositories\TagRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Tag)
+    customInputRepository:
+        class: App\Model\CustomInput\Repositories\CustomInputRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CustomInput\CustomInput)
+    customInputValueRepository:
+        class: App\Model\CustomInput\Repositories\CustomInputValueRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CustomInput\CustomInputValue)
     mailRepository:
-        class: App\Model\Mailing\MailRepository
+        class: App\Model\Mailing\Repositories\MailRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Mail)
     templateRepository:
-        class: App\Model\Mailing\TemplateRepository
+        class: App\Model\Mailing\Repositories\TemplateRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Template)
     paymentRepository:
-        class: App\Model\Payment\PaymentRepository
+        class: App\Model\Payment\Repositories\PaymentRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Payment\Payment)
     blockRepository:
-        class: App\Model\Program\BlockRepository
+        class: App\Model\Program\Repositories\BlockRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Block)
     categoryRepository:
-        class: App\Model\Program\CategoryRepository
+        class: App\Model\Program\Repositories\CategoryRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Category)
     programRepository:
-        class: App\Model\Program\ProgramRepository
+        class: App\Model\Program\Repositories\ProgramRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Program)
     roomRepository:
-        class: App\Model\Program\RoomRepository
+        class: App\Model\Program\Repositories\RoomRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Room)
-    customInputRepository:
-        class: App\Model\Settings\CustomInput\CustomInputRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\CustomInput\CustomInput)
     placePointRepository:
-        class: App\Model\Settings\Place\PlacePointRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\Place\PlacePoint)
+        class: App\Model\Settings\Repositories\PlacePointRepository
+        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\PlacePoint)
     settingsRepository:
-        class: App\Model\Settings\SettingsRepository
+        class: App\Model\Settings\Repositories\SettingsRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\Settings)
     skautIsCourseRepository:
-        class: App\Model\SkautIs\SkautIsCourseRepository
+        class: App\Model\SkautIs\Repositories\SkautIsCourseRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\SkautIs\SkautIsCourse)
     discountRepository:
-        class: App\Model\Structure\DiscountRepository
+        class: App\Model\Structure\Repositories\DiscountRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Discount)
     subeventRepository:
-        class: App\Model\Structure\SubeventRepository
+        class: App\Model\Structure\Repositories\SubeventRepository
         inject: yes
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Subevent)
-    applicationRepository:
-        class: App\Model\User\Application\ApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\Application)
-    rolesApplicationRepository:
-        class: App\Model\User\Application\RolesApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\RolesApplication)
-    subeventsApplicationRepository:
-        class: App\Model\User\Application\SubeventsApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\SubeventsApplication)
-    customInputValueRepository:
-        class: App\Model\User\CustomInputValue\CustomInputValueRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\CustomInputValue\CustomInputValue)
     userRepository:
-        class: App\Model\User\UserRepository
+        class: App\Model\User\Repositories\UserRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\User)
-    incomeProofRepository:
-            class: App\Model\User\Application\IncomeProofRepository
-            factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\IncomeProof)
-    variableSymbolRepository:
-        class: App\Model\User\Application\VariableSymbolRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\VariableSymbol)
 
     - App\WebModule\Components\IApplicationContentControlFactory
     - App\WebModule\Components\IBlocksContentControlFactory

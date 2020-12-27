@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\WebModule\Forms;
 
 use App\Model\Cms\Faq;
-use App\Model\Cms\FaqRepository;
+use App\Model\Cms\Repositories\FaqRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Nette;

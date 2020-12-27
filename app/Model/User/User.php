@@ -7,15 +7,15 @@ namespace App\Model\User;
 use App\Model\Acl\Permission;
 use App\Model\Acl\Role;
 use App\Model\Acl\SrsResource;
+use App\Model\Application\Application;
+use App\Model\Application\RolesApplication;
+use App\Model\Application\SubeventsApplication;
+use App\Model\CustomInput\CustomInput;
+use App\Model\CustomInput\CustomInputValue;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
-use App\Model\Settings\CustomInput\CustomInput;
 use App\Model\Structure\Subevent;
-use App\Model\User\Application\Application;
-use App\Model\User\Application\RolesApplication;
-use App\Model\User\Application\SubeventsApplication;
-use App\Model\User\CustomInputValue\CustomInputValue;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,7 +27,7 @@ use function implode;
 /**
  * Entita uživatele.
  *
- * @ORM\Entity(repositoryClass="UserRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\User\Repositories\UserRepository")
  * @ORM\Table(name="user")
  *
  * @author Michal Májský
@@ -228,7 +228,7 @@ class User
     /**
      * Přihlášky.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\User\Application\Application", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\App\Model\Application\Application", mappedBy="user", cascade={"persist"})
      *
      * @var Collection|Application[]
      */
@@ -307,7 +307,7 @@ class User
     /**
      * Hodnoty vlastních polí přihlášky.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\App\Model\CustomInput\CustomInputValue", mappedBy="user", cascade={"persist"})
      *
      * @var Collection|CustomInputValue[]
      */

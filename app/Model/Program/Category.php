@@ -14,7 +14,7 @@ use function implode;
 /**
  * Entita kategorie programového bloku.
  *
- * @ORM\Entity(repositoryClass="CategoryRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\Program\Repositories\CategoryRepository")
  * @ORM\Table(name="category")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>

@@ -12,7 +12,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita prostředek.
  *
- * @ORM\Entity(repositoryClass="SrsResourceRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\Acl\Repositories\SrsResourceRepository")
  * @ORM\Table(name="resource")
  *
  * @author Michal Májský
@@ -83,7 +83,7 @@ class SrsResource
     /**
      * Oprávnění s tímto prostředkem.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\Acl\Permission", mappedBy="resource", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Permission", mappedBy="resource", cascade={"persist"})
      *
      * @var Collection|Permission[]
      */

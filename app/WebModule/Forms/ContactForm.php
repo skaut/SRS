@@ -6,10 +6,10 @@ namespace App\WebModule\Forms;
 
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\MailService;
 use App\Services\SettingsService;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\WebModule\Presenters;
 
 use App\Model\Acl\Permission;
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
 use App\Model\Acl\SrsResource;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Presenters\BasePresenter;
 use App\Services\Authenticator;
 use App\Services\Authorizator;

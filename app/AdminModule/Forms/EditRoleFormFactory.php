@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\AdminModule\Forms;
 
 use App\Model\Acl\Permission;
-use App\Model\Acl\PermissionRepository;
+use App\Model\Acl\Repositories\PermissionRepository;
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
 use App\Model\Acl\SrsResource;
-use App\Model\Cms\PageRepository;
+use App\Model\Cms\Repositories\PageRepository;
 use App\Services\AclService;
 use App\Services\ProgramService;
 use Doctrine\DBAL\ConnectionException;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\AdminModule\CmsModule\Components;
 
-use App\Model\Cms\Document\Document;
-use App\Model\Cms\Document\DocumentRepository;
-use App\Model\Cms\Document\TagRepository;
+use App\Model\Cms\Document;
+use App\Model\Cms\Repositories\DocumentRepository;
+use App\Model\Cms\Repositories\TagRepository;
 use App\Services\FilesService;
 use App\Utils\Helpers;
 use DateTimeImmutable;

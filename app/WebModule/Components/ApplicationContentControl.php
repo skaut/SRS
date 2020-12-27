@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
-use App\Model\Cms\Content\ContentDto;
-use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Cms\Dto\ContentDto;
+use App\Model\CustomInput\Repositories\CustomInputRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\UserRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\Authenticator;
 use App\Services\SettingsService;
 use App\WebModule\Forms\ApplicationFormFactory;

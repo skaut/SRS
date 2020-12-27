@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\Settings\Place\PlacePoint;
-use App\Model\Settings\Place\PlacePointRepository;
+use App\Model\Settings\PlacePoint;
+use App\Model\Settings\Repositories\PlacePointRepository;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;

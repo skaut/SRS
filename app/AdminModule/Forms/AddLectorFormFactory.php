@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\FilesService;
 use Doctrine\ORM\ORMException;
 use Exception;

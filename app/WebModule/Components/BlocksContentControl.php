@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\Cms\Content\ContentDto;
-use App\Model\Program\BlockRepository;
-use App\Model\Program\CategoryRepository;
+use App\Model\Cms\Dto\ContentDto;
+use App\Model\Program\Repositories\BlockRepository;
+use App\Model\Program\Repositories\CategoryRepository;
 use Nette\Application\UI\Control;
 
 /**

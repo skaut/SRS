@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\Payment\PaymentRepository;
+use App\Model\Payment\Repositories\PaymentRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use DateTimeImmutable;
 use FioApi\Downloader;
 use FioApi\TransactionList;

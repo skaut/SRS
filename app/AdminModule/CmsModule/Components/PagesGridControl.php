@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\AdminModule\CmsModule\Components;
 
-use App\Model\Acl\RoleRepository;
+use App\Model\Acl\Repositories\RoleRepository;
+use App\Model\Cms\Exceptions\PageException;
 use App\Model\Cms\Page;
-use App\Model\Cms\PageException;
-use App\Model\Cms\PageRepository;
+use App\Model\Cms\Repositories\PageRepository;
 use App\Services\AclService;
 use App\Services\CmsService;
 use Doctrine\ORM\NonUniqueResultException;

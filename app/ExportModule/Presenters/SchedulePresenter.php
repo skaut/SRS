@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ExportModule\Presenters;
 
-use App\Model\User\UserRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\IcalResponse;
 use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event;

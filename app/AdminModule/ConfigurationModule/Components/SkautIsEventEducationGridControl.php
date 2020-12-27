@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
-use App\Model\SkautIs\SkautIsCourseRepository;
+use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
-use App\Model\Structure\SubeventRepository;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Container;

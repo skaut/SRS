@@ -6,10 +6,10 @@ namespace App\AdminModule\PaymentsModule\Components;
 
 use App\Model\Enums\PaymentState;
 use App\Model\Payment\Payment;
-use App\Model\Payment\PaymentRepository;
+use App\Model\Payment\Repositories\PaymentRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\User\UserRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\BankService;
 use App\Services\SettingsService;

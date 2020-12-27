@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
 use App\Services\AclService;
 use App\Utils\Helpers;
 use Doctrine\ORM\OptimisticLockException;

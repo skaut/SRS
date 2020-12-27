@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
 use App\Model\Enums\ApplicationState;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\SettingsService;

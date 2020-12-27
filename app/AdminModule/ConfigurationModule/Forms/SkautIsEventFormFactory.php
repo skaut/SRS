@@ -6,11 +6,11 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\SkautIsEventType;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
+use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
 use App\Model\SkautIs\SkautIsCourse;
-use App\Model\SkautIs\SkautIsCourseRepository;
-use App\Model\Structure\SubeventRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
 use App\Services\SettingsService;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;

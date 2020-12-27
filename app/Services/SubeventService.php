@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\Structure\SubeventRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\User;
 use Nette;
 use Nette\Localization\ITranslator;

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\ExportModule\Presenters;
 
+use App\Model\Application\Application;
+use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\User\Application\Application;
-use App\Model\User\Application\ApplicationRepository;
-use App\Model\User\UserRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\SettingsService;
 use App\Utils\Helpers;

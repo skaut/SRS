@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
+use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
-use App\Model\Program\RoomRepository;
 use App\Services\ExcelExportService;
 use Doctrine\ORM\ORMException;
 use Exception;

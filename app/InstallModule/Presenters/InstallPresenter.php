@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\InstallModule\Presenters;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\UserRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\SettingsService;
 use Contributte\Console\Application;

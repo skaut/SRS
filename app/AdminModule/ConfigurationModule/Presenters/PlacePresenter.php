@@ -8,8 +8,8 @@ use App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactor
 use App\AdminModule\ConfigurationModule\Components\PlacePointsGridControl;
 use App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\PlacePointFormFactory;
-use App\Model\Settings\Place\PlacePointRepository;
-use App\Model\Settings\SettingsException;
+use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Repositories\PlacePointRepository;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;

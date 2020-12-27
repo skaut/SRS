@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\Acl\RoleRepository;
-use App\Model\Cms\Content\CapacitiesContentDto;
+use App\Model\Acl\Repositories\RoleRepository;
+use App\Model\Cms\Dto\CapacitiesContentDto;
 use Nette\Application\UI\Control;
 
 /**

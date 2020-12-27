@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Model\Cms;
 
 use App\Model\Acl\Role;
-use App\Model\Cms\Content\Content;
+use App\Model\Cms\Dto\PageDto;
+use App\Model\Cms\Exceptions\PageException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -18,7 +19,7 @@ use function in_array;
 /**
  * Entita stránky.
  *
- * @ORM\Entity(repositoryClass="PageRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\Cms\Repositories\PageRepository")
  * @ORM\Table(name="page")
  *
  * @author Michal Májský
@@ -68,7 +69,7 @@ class Page
     /**
      * Obsahy na stránce.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\Cms\Content\Content", mappedBy="page", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Content", mappedBy="page", cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
      *
      * @var Collection|Content[]

@@ -10,7 +10,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita skautIS kurz.
  *
- * @ORM\Entity(repositoryClass="SkautIsCourseRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\SkautIs\Repositories\SkautIsCourseRepository")
  * @ORM\Table(name="skaut_is_course")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>

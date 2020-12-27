@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\Cms\Content\Content;
-use App\Model\Cms\Content\ContentRepository;
+use App\Model\Cms\Content;
+use App\Model\Cms\Dto\PageDto;
+use App\Model\Cms\Exceptions\PageException;
 use App\Model\Cms\Page;
-use App\Model\Cms\PageDto;
-use App\Model\Cms\PageException;
-use App\Model\Cms\PageRepository;
+use App\Model\Cms\Repositories\ContentRepository;
+use App\Model\Cms\Repositories\PageRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;

@@ -6,8 +6,8 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\MaturityType;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
 use DateTimeImmutable;
 use Nette\Application\UI;

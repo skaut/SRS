@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use Throwable;
 
 /**

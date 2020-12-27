@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\WebModule\Presenters;
 
 use App\Model\Enums\PaymentType;
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
+use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Structure\Repositories\SubeventRepository;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\ExcelExportService;

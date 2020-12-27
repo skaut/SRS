@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
+use App\Model\Application\Application;
+use App\Model\Application\Repositories\ApplicationRepository;
+use App\Model\Application\SubeventsApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\Application\Application;
-use App\Model\User\Application\ApplicationRepository;
-use App\Model\User\Application\SubeventsApplication;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;

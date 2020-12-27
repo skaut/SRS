@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
-use App\Model\Settings\Place\PlacePoint;
-use App\Model\Settings\Place\PlacePointRepository;
+use App\Model\Settings\PlacePoint;
+use App\Model\Settings\Repositories\PlacePointRepository;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\CmsModule\Components;
 
-use App\Model\Cms\NewsRepository;
+use App\Model\Cms\Repositories\NewsRepository;
 use App\Utils\Helpers;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;

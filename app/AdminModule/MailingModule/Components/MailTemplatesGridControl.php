@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Components;
 
-use App\Model\Mailing\TemplateRepository;
+use App\Model\Mailing\Repositories\TemplateRepository;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;

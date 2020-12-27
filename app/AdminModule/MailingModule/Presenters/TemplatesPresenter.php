@@ -7,7 +7,7 @@ namespace App\AdminModule\MailingModule\Presenters;
 use App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory;
 use App\AdminModule\MailingModule\Components\MailTemplatesGridControl;
 use App\AdminModule\MailingModule\Forms\EditTemplateFormFactory;
-use App\Model\Mailing\TemplateRepository;
+use App\Model\Mailing\Repositories\TemplateRepository;
 use Nette\Application\UI\Form;
 use stdClass;
 

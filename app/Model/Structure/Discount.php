@@ -10,7 +10,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita sleva.
  *
- * @ORM\Entity(repositoryClass="DiscountRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\Structure\Repositories\DiscountRepository")
  * @ORM\Table(name="discount")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>

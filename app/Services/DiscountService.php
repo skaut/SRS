@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Structure\Discount;
-use App\Model\Structure\DiscountRepository;
-use App\Model\Structure\SubeventRepository;
+use App\Model\Structure\Repositories\DiscountRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
 use InvalidArgumentException;
 use Nette;
 use Nette\Localization\ITranslator;

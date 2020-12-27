@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\Cms\PageRepository;
+use App\Model\Cms\Repositories\PageRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use App\Services\FilesService;
 use App\Services\SettingsService;
 use Nette;

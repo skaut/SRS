@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\AdminModule\CmsModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\Acl\RoleRepository;
-use App\Model\Cms\Content\CapacitiesContent;
-use App\Model\Cms\Content\Content;
-use App\Model\Cms\Content\DocumentContent;
-use App\Model\Cms\Content\ImageContent;
-use App\Model\Cms\Content\UsersContent;
-use App\Model\Cms\Document\TagRepository;
+use App\Model\Acl\Repositories\RoleRepository;
+use App\Model\Cms\CapacitiesContent;
+use App\Model\Cms\Content;
+use App\Model\Cms\DocumentContent;
+use App\Model\Cms\Exceptions\PageException;
+use App\Model\Cms\ImageContent;
 use App\Model\Cms\Page;
-use App\Model\Cms\PageException;
-use App\Model\Cms\PageRepository;
+use App\Model\Cms\Repositories\TagRepository;
+use App\Model\Cms\Repositories\PageRepository;
+use App\Model\Cms\UsersContent;
 use App\Services\AclService;
 use App\Services\CmsService;
 use App\Services\FilesService;
@@ -197,7 +197,7 @@ class PageForm extends UI\Control
         }
 
         if ($form->isSubmitted() === $form['submitAdd']) {
-            $contentClass = '\\App\\Model\\Cms\\Content\\' . str_replace('_', '', ucwords($type, '_')) . 'Content';
+            $contentClass = '\\App\\Model\\Cms\\' . str_replace('_', '', ucwords($type, '_')) . 'Content';
             $content      = new $contentClass($page, $area);
             $content->setHeading($form->getTranslator()->translate('common.content.default_heading.' . $type));
             $this->cmsService->saveContent($content);

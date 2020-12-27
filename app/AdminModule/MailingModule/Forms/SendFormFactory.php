@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\AdminModule\MailingModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\UserRepository;
+use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\AclService;
 use App\Services\MailService;
 use App\Services\SubeventService;

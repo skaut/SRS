@@ -8,7 +8,7 @@ use App\ApiModule\Dto\Schedule\ProgramSaveDto;
 use App\ApiModule\Dto\Schedule\ResponseDto;
 use App\ApiModule\Services\ApiException;
 use App\ApiModule\Services\ScheduleService;
-use App\Model\Settings\SettingsException;
+use App\Model\Settings\Exceptions\SettingsException;
 use Exception;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;

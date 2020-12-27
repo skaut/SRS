@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Components;
 
 use App\Model\Structure\Discount;
-use App\Model\Structure\DiscountRepository;
+use App\Model\Structure\Repositories\DiscountRepository;
 use App\Services\DiscountService;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;

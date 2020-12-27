@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\Application\Application;
+use App\Model\Application\Repositories\ApplicationRepository;
+use App\Model\Application\Repositories\RolesApplicationRepository;
+use App\Model\Application\Repositories\SubeventsApplicationRepository;
+use App\Model\Application\SubeventsApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\Application\Application;
-use App\Model\User\Application\ApplicationRepository;
-use App\Model\User\Application\RolesApplicationRepository;
-use App\Model\User\Application\SubeventsApplication;
-use App\Model\User\Application\SubeventsApplicationRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\SettingsService;
 use App\Services\SubeventService;

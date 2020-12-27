@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory;
-use App\Model\Settings\SettingsException;
+use App\Model\Settings\Exceptions\SettingsException;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;

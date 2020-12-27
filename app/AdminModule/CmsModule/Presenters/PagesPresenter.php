@@ -8,8 +8,8 @@ use App\AdminModule\CmsModule\Components\IPagesGridControlFactory;
 use App\AdminModule\CmsModule\Components\PagesGridControl;
 use App\AdminModule\CmsModule\Forms\IPageFormFactory;
 use App\AdminModule\CmsModule\Forms\PageForm;
-use App\Model\Cms\Content\Content;
-use App\Model\Cms\PageRepository;
+use App\Model\Cms\Content;
+use App\Model\Cms\Repositories\PageRepository;
 
 /**
  * Presenter starající se o správu stránek.

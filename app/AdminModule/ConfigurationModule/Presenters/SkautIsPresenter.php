@@ -8,9 +8,9 @@ use App\AdminModule\ConfigurationModule\Components\ISkautIsEventEducationGridCon
 use App\AdminModule\ConfigurationModule\Components\SkautIsEventEducationGridControl;
 use App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory;
 use App\Model\Enums\SkautIsEventType;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\SkautIs\SkautIsCourseRepository;
+use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use stdClass;

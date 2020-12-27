@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\ExportModule\Presenters;
 
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\UserRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\SettingsService;
 use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\AbortException;

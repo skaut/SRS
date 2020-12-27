@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\MailingModule\Components;
 
 use App\Model\Acl\Role;
-use App\Model\Mailing\MailRepository;
+use App\Model\Mailing\Repositories\MailRepository;
 use App\Services\AclService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;

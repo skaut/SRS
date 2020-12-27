@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\Acl\PermissionRepository;
+use App\Model\Acl\Repositories\PermissionRepository;
+use App\Model\Acl\Repositories\RoleRepository;
+use App\Model\Acl\Repositories\SrsResourceRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
-use App\Model\Acl\SrsResourceRepository;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

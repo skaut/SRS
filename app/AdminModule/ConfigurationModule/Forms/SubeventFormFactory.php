@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
-use App\Model\Structure\SubeventRepository;
 use App\Services\SubeventService;
 use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\OptimisticLockException;

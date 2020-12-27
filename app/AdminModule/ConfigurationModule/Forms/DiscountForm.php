@@ -6,8 +6,8 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Structure\Discount;
-use App\Model\Structure\DiscountRepository;
-use App\Model\Structure\SubeventRepository;
+use App\Model\Structure\Repositories\DiscountRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
 use App\Services\DiscountService;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;

@@ -15,7 +15,7 @@ use function implode;
 /**
  * Entita programový blok.
  *
- * @ORM\Entity(repositoryClass="BlockRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\Program\Repositories\BlockRepository")
  * @ORM\Table(name="block")
  *
  * @author Michal Májský

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\WebModule\Forms;
 
 use App\Model\Enums\Sex;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\SkautIsService;
 use Doctrine\ORM\ORMException;
 use Nette;

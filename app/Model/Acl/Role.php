@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Acl;
 
-use App\Model\Cms\Document\Tag;
 use App\Model\Cms\Page;
+use App\Model\Cms\Tag;
 use App\Model\Program\Category;
 use App\Model\User\User;
 use DateTimeImmutable;
@@ -18,7 +18,7 @@ use function implode;
 /**
  * Entita role.
  *
- * @ORM\Entity(repositoryClass="RoleRepository")
+ * @ORM\Entity(repositoryClass="\App\Model\Acl\Repositories\RoleRepository")
  * @ORM\Table(name="role")
  *
  * @author Michal Májský
@@ -250,7 +250,7 @@ class Role
     /**
      * Kategorie dokumentů, ke kterým má role přístup.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Cms\Document\Tag", mappedBy="roles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Cms\Tag", mappedBy="roles", cascade={"persist"})
      *
      * @var Collection|Tag[]
      */

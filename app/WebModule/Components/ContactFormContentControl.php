@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
-use App\Model\Cms\Content\ContentDto;
+use App\Model\Cms\Dto\ContentDto;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use App\Services\SettingsService;
 use App\WebModule\Forms\ContactForm;
 use App\WebModule\Forms\IContactFormFactory;

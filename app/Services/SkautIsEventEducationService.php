@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\SkautIs\SkautIsCourseRepository;
-use App\Model\Structure\SubeventRepository;
+use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 use Skautis\Skautis;

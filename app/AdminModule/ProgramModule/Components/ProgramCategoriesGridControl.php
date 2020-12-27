@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
 use App\Model\Program\Category;
-use App\Model\Program\CategoryRepository;
+use App\Model\Program\Repositories\CategoryRepository;
 use App\Services\AclService;
 use App\Services\ProgramService;
 use Doctrine\ORM\ORMException;

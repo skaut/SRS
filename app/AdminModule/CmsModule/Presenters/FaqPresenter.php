@@ -7,7 +7,7 @@ namespace App\AdminModule\CmsModule\Presenters;
 use App\AdminModule\CmsModule\Components\FaqGridControl;
 use App\AdminModule\CmsModule\Components\IFaqGridControlFactory;
 use App\AdminModule\CmsModule\Forms\FaqFormFactory;
-use App\Model\Cms\FaqRepository;
+use App\Model\Cms\Repositories\FaqRepository;
 use Nette\Application\UI\Form;
 use stdClass;
 
