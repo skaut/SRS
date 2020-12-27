@@ -34,13 +34,13 @@ class Program
     protected Block $block;
 
     /**
-     * Účastníci programu.
+     * Přihlášky na program.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ProgramApplication", mappedBy="program", cascade={"persist"})
      *
-     * @var Collection|User[]
+     * @var Collection|ProgramApplication[]
      */
-    protected Collection $attendees;
+    protected Collection $programApplications;
 
     /**
      * Obsazenost.
@@ -65,8 +65,8 @@ class Program
 
     public function __construct(Block $block)
     {
-        $this->block     = $block;
-        $this->attendees = new ArrayCollection();
+        $this->block               = $block;
+        $this->programApplications = new ArrayCollection();
     }
 
     public function getId() : ?int
@@ -79,45 +79,45 @@ class Program
         return $this->block;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getAttendees() : Collection
-    {
-        return $this->attendees;
-    }
-
-    public function addAttendee(User $user) : void
-    {
-        if (! $this->attendees->contains($user)) {
-            $this->attendees->add($user);
-            $user->addProgram($this);
-        }
-    }
-
-    public function removeAttendee(User $user) : void
-    {
-        if ($this->attendees->contains($user)) {
-            $this->attendees->removeElement($user);
-            $user->removeProgram($this);
-        }
-    }
-
-    /**
-     * Vrací počet účastníků.
-     */
-    public function getAttendeesCount() : int
-    {
-        return $this->attendees->count();
-    }
-
-    /**
-     * Je uživatel účastník programu?
-     */
-    public function isAttendee(User $user) : bool
-    {
-        return $this->attendees->contains($user);
-    }
+//    /**
+//     * @return Collection|User[]
+//     */
+//    public function getAttendees() : Collection
+//    {
+//        return $this->attendees;
+//    }
+//
+//    public function addAttendee(User $user) : void
+//    {
+//        if (! $this->attendees->contains($user)) {
+//            $this->attendees->add($user);
+//            $user->addProgram($this);
+//        }
+//    }
+//
+//    public function removeAttendee(User $user) : void
+//    {
+//        if ($this->attendees->contains($user)) {
+//            $this->attendees->removeElement($user);
+//            $user->removeProgram($this);
+//        }
+//    }
+//
+//    /**
+//     * Vrací počet účastníků.
+//     */
+//    public function getAttendeesCount() : int
+//    {
+//        return $this->attendees->count();
+//    }
+//
+//    /**
+//     * Je uživatel účastník programu?
+//     */
+//    public function isAttendee(User $user) : bool
+//    {
+//        return $this->attendees->contains($user);
+//    }
 
     /**
      * Vrací kapacitu programového bloku.

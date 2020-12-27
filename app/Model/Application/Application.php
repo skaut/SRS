@@ -147,7 +147,11 @@ abstract class Application
      */
     protected ?string $state = null;
 
-    /** @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"}) */
+    /**
+     * Uživatel, který vytvořil přihlášku.
+     *
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
+     */
     protected ?User $createdBy = null;
 
     /**

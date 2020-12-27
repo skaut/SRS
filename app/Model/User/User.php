@@ -14,7 +14,7 @@ use App\Model\CustomInput\CustomInput;
 use App\Model\CustomInput\CustomInputValue;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
-use App\Model\Program\Program;
+use App\Model\Program\ProgramApplication;
 use App\Model\Structure\Subevent;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -237,12 +237,11 @@ class User
     /**
      * Přihlášené programy.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees", cascade={"persist"})
-     * @ORM\OrderBy({"start" = "ASC"})
+     * @ORM\OneToMany(targetEntity="\App\Model\Program\ProgramApplication", mappedBy="user", cascade={"persist"})
      *
-     * @var Collection|Program[]
+     * @var Collection|ProgramApplication[]
      */
-    protected Collection $programs;
+    protected Collection $programApplications;
 
     /**
      * Lektorované bloky.
@@ -338,7 +337,7 @@ class User
     {
         $this->applications                 = new ArrayCollection();
         $this->roles                        = new ArrayCollection();
-        $this->programs                     = new ArrayCollection();
+        $this->programApplications          = new ArrayCollection();
         $this->lecturersBlocks              = new ArrayCollection();
         $this->notRegisteredMandatoryBlocks = new ArrayCollection();
     }
@@ -911,39 +910,39 @@ class User
         return $this->getRolesApplication()->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
     }
 
-    /**
-     * @return Collection|Program[]
-     */
-    public function getPrograms() : Collection
-    {
-        return $this->programs;
-    }
-
-    public function addProgram(Program $program) : void
-    {
-        if (! $this->programs->contains($program)) {
-            $this->programs->add($program);
-            $program->addAttendee($this);
-        }
-    }
-
-    public function removeProgram(Program $program) : void
-    {
-        if ($this->programs->contains($program)) {
-            $this->programs->removeElement($program);
-            $program->removeAttendee($this);
-        }
-    }
-
-    /**
-     * Má uživatel přihlášený program z bloku?
-     */
-    public function hasProgramBlock(Block $block) : bool
-    {
-        return ! $this->programs->filter(static function (Program $program) use ($block) {
-            return $program->getBlock()->getId() === $block->getId();
-        })->isEmpty();
-    }
+//    /**
+//     * @return Collection|Program[]
+//     */
+//    public function getPrograms() : Collection
+//    {
+//        return $this->programs;
+//    }
+//
+//    public function addProgram(Program $program) : void
+//    {
+//        if (! $this->programs->contains($program)) {
+//            $this->programs->add($program);
+//            $program->addAttendee($this);
+//        }
+//    }
+//
+//    public function removeProgram(Program $program) : void
+//    {
+//        if ($this->programs->contains($program)) {
+//            $this->programs->removeElement($program);
+//            $program->removeAttendee($this);
+//        }
+//    }
+//
+//    /**
+//     * Má uživatel přihlášený program z bloku?
+//     */
+//    public function hasProgramBlock(Block $block) : bool
+//    {
+//        return ! $this->programs->filter(static function (Program $program) use ($block) {
+//            return $program->getBlock()->getId() === $block->getId();
+//        })->isEmpty();
+//    }
 
     /**
      * @return Collection|Block[]
