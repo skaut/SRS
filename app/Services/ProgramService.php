@@ -108,8 +108,6 @@ class ProgramService
             $block->setTools($tools);
 
             $this->blockRepository->save($block);
-
-//            $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll())); TODO: optimalizovat
         });
     }
 
@@ -136,8 +134,6 @@ class ProgramService
         $this->em->transactional(function () use ($block, $name, $subevent, $category, $lectors, $duration, $capacity, $mandatory, $perex, $description, $tools) : void {
             $oldSubevent = $block->getSubevent();
             $oldCategory = $block->getCategory();
-
-//            $oldAllowedUsers = clone $this->userRepository->findBlockAllowed($block);
 
             $block->setName($name);
             $block->setSubevent($subevent);
@@ -171,9 +167,6 @@ class ProgramService
                         }
                     }
                 }
-
-//                $this->updateUsersNotRegisteredMandatoryBlocks($oldAllowedUsers); TODO: optimalizovat
-//                $this->updateUsersNotRegisteredMandatoryBlocks($allowedUsers); TODO: optimalizovat
             }
 
             //aktualizace ucastniku pri zmene povinnosti
@@ -231,14 +224,6 @@ class ProgramService
             }
         }
 
-        //prepocet neprihlasenych povinnych bloku, pri zmene z povinneho na nepovinny a naopak
-//        if (($oldMandatory === ProgramMandatoryType::VOLUNTARY &&
-//                ($mandatory === ProgramMandatoryType::MANDATORY || $mandatory === ProgramMandatoryType::AUTO_REGISTERED))
-//            || (($oldMandatory === ProgramMandatoryType::MANDATORY || $oldMandatory === ProgramMandatoryType::AUTO_REGISTERED)
-//                && $mandatory === ProgramMandatoryType::VOLUNTARY)) {
-//            $this->updateUsersNotRegisteredMandatoryBlocks($this->userRepository->findBlockAllowed($block));
-//        } TODO: optimalizovat
-
         $this->blockRepository->save($block);
     }
 
@@ -257,8 +242,6 @@ class ProgramService
             if ($isVoluntary) {
                 return;
             }
-
-//            $this->updateUsersNotRegisteredMandatoryBlocks(new ArrayCollection($this->userRepository->findAll())); TODO: optimalizovat
         });
     }
 
@@ -345,98 +328,8 @@ class ProgramService
     public function removeProgram(Program $program) : void
     {
         $this->em->transactional(function () use ($program) : void {
-//            $attendees = clone $program->getAttendees();
-
             $this->programRepository->remove($program);
-
-//            $this->updateUsersNotRegisteredMandatoryBlocks($attendees); TODO: optimalizovat
         });
-    }
-
-    /**
-     * Přihlásí uživatele na program.
-     *
-     * @param bool $sendEmail Poslat uživateli e-mail o přihlášení?
-     *
-     * @throws Throwable
-     */
-    public function registerProgram(User $user, Program $program, bool $sendEmail = false) : void
-    {
-        $this->em->transactional(function () use ($user, $program, $sendEmail) : void {
-            $this->registerProgramImpl($user, $program, $sendEmail);
-        });
-    }
-
-    /**
-     * @throws ORMException
-     * @throws SettingsException
-     * @throws Throwable
-     * @throws MailingMailCreationException
-     */
-    private function registerProgramImpl(User $user, Program $program, bool $sendEmail = false) : void
-    {
-        if ($user->getPrograms()->contains($program)) {
-            return;
-        }
-
-        $this->programRepository->incrementOccupancy($program);
-
-        $user->addProgram($program);
-        $this->userRepository->save($user);
-
-//        if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::VOLUNTARY) {
-//            $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
-//        }
-
-        if ($sendEmail) {
-            $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::PROGRAM_REGISTERED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
-            ]);
-        }
-    }
-
-    /**
-     * Odhlásí uživatele z programu.
-     *
-     * @param bool $sendEmail Poslat uživateli e-mail o odhlášení?
-     *
-     * @throws Throwable
-     */
-    public function unregisterProgram(User $user, Program $program, bool $sendEmail = false) : void
-    {
-        $this->em->transactional(function () use ($user, $program, $sendEmail) : void {
-            $this->unregisterProgramImpl($user, $program, $sendEmail);
-        });
-    }
-
-    /**
-     * @throws ORMException
-     * @throws SettingsException
-     * @throws Throwable
-     * @throws MailingMailCreationException
-     */
-    private function unregisterProgramImpl(User $user, Program $program, bool $sendEmail = false) : void
-    {
-        if (! $user->getPrograms()->contains($program)) {
-            return;
-        }
-
-        $this->programRepository->decrementOccupancy($program);
-
-        $user->removeProgram($program);
-        $this->userRepository->save($user);
-
-//        if ($program->getBlock()->getMandatory() !== ProgramMandatoryType::VOLUNTARY) {
-//            $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
-//        }
-
-        if ($sendEmail) {
-            $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::PROGRAM_UNREGISTERED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::PROGRAM_NAME => $program->getBlock()->getName(),
-            ]);
-        }
     }
 
     /**
@@ -456,108 +349,5 @@ class ProgramService
                     || $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO) >= new DateTimeImmutable()
                 )
             );
-    }
-
-    /**
-     * Aktualizuje programy uživatele (odhlásí nepovolené a přihlásí automaticky přihlašované).
-     *
-     * @throws MailingMailCreationException
-     * @throws ORMException
-     * @throws SettingsException
-     * @throws Throwable
-     */
-    public function updateUserPrograms(User $user) : void
-    {
-        $oldUsersPrograms    = clone $user->getPrograms();
-        $userAllowedPrograms = $this->getUserAllowedPrograms($user);
-
-        foreach ($oldUsersPrograms as $program) {
-            if (! $userAllowedPrograms->contains($program)) {
-                $this->unregisterProgramImpl($user, $program);
-            }
-        }
-
-        foreach ($userAllowedPrograms as $program) {
-            if ($program->getBlock()->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
-                $this->registerProgramImpl($user, $program);
-            }
-        }
-
-//        $this->updateUserNotRegisteredMandatoryBlocks($user); TODO: optimalizovat
-    }
-
-    /**
-     * Aktualizuje programy uživatelů (odhlásí nepovolené a přihlásí automaticky přihlašované).
-     *
-     * @param Collection|User[] $users
-     *
-     * @throws MailingMailCreationException
-     * @throws ORMException
-     * @throws SettingsException
-     * @throws Throwable
-     */
-    public function updateUsersPrograms(Collection $users) : void
-    {
-        foreach ($users as $user) {
-            $this->updateUserPrograms($user);
-        }
-    }
-
-//    /**
-//     * Aktualizuje uživateli seznam nepřihlášených povinných bloků.
-//     *
-//     * @throws Exception
-//     */
-//    private function updateUserNotRegisteredMandatoryBlocks(User $user, bool $flush = true) : void
-//    {
-//        if ($user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
-//            $registerableCategories = $this->categoryRepository->findUserAllowed($user);
-//            $registeredSubevents    = $user->getSubevents();
-//
-//            $notRegisteredMandatoryBlocks = $this->blockRepository->findMandatoryForCategoriesAndSubevents($user, $registerableCategories, $registeredSubevents);
-//
-//            $user->setNotRegisteredMandatoryBlocks($notRegisteredMandatoryBlocks);
-//        } else {
-//            $user->setNotRegisteredMandatoryBlocks(new ArrayCollection());
-//        }
-//
-//        if (! $flush) {
-//            return;
-//        }
-//
-//        $this->em->flush();
-//    }
-
-//    /**
-//     * Aktualizuje uživatelům seznam nepřihlášených povinných bloků.
-//     *
-//     * @param Collection|User[] $users
-//     *
-//     * @throws Exception
-//     */
-//    private function updateUsersNotRegisteredMandatoryBlocks(Collection $users) : void
-//    {
-//        foreach ($users as $user) {
-//            $this->updateUserNotRegisteredMandatoryBlocks($user, false);
-//        }
-//
-//        $this->em->flush();
-//    }
-
-    /**
-     * Vrací programy, na které se uživatel může přihlásit.
-     *
-     * @return Collection|Program[]
-     */
-    public function getUserAllowedPrograms(User $user) : Collection
-    {
-        if (! $user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
-            return new ArrayCollection();
-        }
-
-        $registerableCategories = $this->categoryRepository->findUserAllowed($user);
-        $registeredSubevents    = $user->getSubevents();
-
-        return $this->programRepository->findAllowedForCategoriesAndSubevents($registerableCategories, $registeredSubevents);
     }
 }
