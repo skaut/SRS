@@ -72,20 +72,38 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
+     * @return Collection<Program>
+     */
+    public function findUserRegistered(User $user, $includeAlternates = false) : Collection
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->leftJoin('p.programApplications', 'a')
+            ->where('a.user = :user')->setParameter('user', $user);
+
+        if ($includeAlternates === false) {
+            $qb = $qb->andWhere('a.alternate = true');
+        }
+
+        $result = $qb->getQuery()->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
      * Vrací programy, na které je uživatel zapsaný a jsou v danné kategorii.
      *
-     * @return Program[]
+     * @return Collection<Program>
      */
-    public function findUserRegisteredAndInCategory(User $user, Category $category) : array
+    public function findUserRegisteredAndInCategory(User $user, Category $category) : Collection
     {
-        return $this->createQueryBuilder('p')
-            ->select('p')
-            ->join('p.block', 'b')
-            ->join('p.attendees', 'a')
+        $result = $this->createQueryBuilder('p')
+            ->leftJoin('p.block', 'b')
+            ->leftJoin('p.programApplications', 'a')
             ->where('b.category = :category')->setParameter('category', $category)
-            ->andWhere('a = :user')->setParameter('user', $user)
+            ->andWhere('a.user = :user')->setParameter('user', $user)
             ->getQuery()
             ->getResult();
+        return new ArrayCollection($result);
     }
 
     /**

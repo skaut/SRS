@@ -13,11 +13,13 @@ use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Room;
 use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Queries\UserProgramsQuery;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use eGen\MessageBus\Bus\QueryBus;
 use Exception;
 use InvalidArgumentException;
 use Nette;
@@ -52,13 +54,16 @@ class ExcelExportService
 
     private ProgramRepository $programRepository;
 
+    private QueryBus $queryBus;
+
     public function __construct(
         ITranslator $translator,
         CustomInputRepository $customInputRepository,
         UserService $userService,
         SubeventRepository $subeventRepository,
         CategoryRepository $categoryRepository,
-        ProgramRepository $programRepository
+        ProgramRepository $programRepository,
+        QueryBus $queryBus
     ) {
         $this->spreadsheet = new Spreadsheet();
 
@@ -68,6 +73,7 @@ class ExcelExportService
         $this->subeventRepository    = $subeventRepository;
         $this->categoryRepository    = $categoryRepository;
         $this->programRepository     = $programRepository;
+        $this->queryBus              = $queryBus;
     }
 
     /**
@@ -168,7 +174,9 @@ class ExcelExportService
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth(25);
 
-            foreach ($user->getPrograms() as $program) {
+            $userPrograms = $this->queryBus->handle(new UserProgramsQuery($user));
+
+            foreach ($userPrograms as $program) {
                 $row++;
                 $column = 1;
 

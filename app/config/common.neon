@@ -44,12 +44,20 @@ services:
       tags: [commandBus.handler]
     - class: App\Model\User\Commands\Handlers\UnregisterProgramHandler
       tags: [commandBus.handler]
-    - class: App\Model\User\Commands\Handlers\UpdateUserProgramsHandler
+    - class: App\Model\User\Commands\Handlers\UpdateUsersProgramsHandler
       tags: [commandBus.handler]
 
-    - class: App\Model\User\Queries\Handlers\AllowedProgramsQueryHandler
+    - class: App\Model\User\Queries\Handlers\UserAllowedProgramsQueryHandler
+      tags: [queryBus.handler]
+    - class: App\Model\User\Queries\Handlers\UserProgramBlocksQueryHandler
+      tags: [queryBus.handler]
+    - class: App\Model\User\Queries\Handlers\UserProgramsQueryHandler
       tags: [queryBus.handler]
 
+    - class: App\Model\Acl\Events\Subscribers\CategoryChangedEventListener
+      tags: [eventBus.subscriber]
+    - class: App\Model\Acl\Events\Subscribers\RoleChangedEventListener
+      tags: [eventBus.subscriber]
     - class: App\Model\Mailing\Events\Subscribers\ProgramRegisteredEventMailListener
       tags: [eventBus.subscriber]
     - class: App\Model\Mailing\Events\Subscribers\ProgramUnregisteredEventMailListener
@@ -57,6 +65,8 @@ services:
     - class: App\Model\User\Events\Subscribers\ProgramRegisteredEventListener
       tags: [eventBus.subscriber]
     - class: App\Model\User\Events\Subscribers\ProgramUnregisteredEventListener
+      tags: [eventBus.subscriber]
+    - class: App\Model\User\Events\Subscribers\UserApplicationChangedEventListener
       tags: [eventBus.subscriber]
 
     permissionRepository:

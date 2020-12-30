@@ -49,6 +49,14 @@ class ProgramApplication
      */
     protected DateTimeImmutable $createdAt;
 
+    public function __construct(User $user, Program $program, bool $alternate = false)
+    {
+        $this->user      = $user;
+        $this->program   = $program;
+        $this->alternate = $alternate;
+        $this->createdAt = new DateTimeImmutable();
+    }
+
     public function getId() : int
     {
         return $this->id;

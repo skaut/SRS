@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User\Queries;
+namespace App\Model\User\Events;
 
+use App\Model\Program\Program;
 use App\Model\User\User;
 
-class AllowedProgramsQuery
+class UserApplicationChangedEvent
 {
     private User $user;
 

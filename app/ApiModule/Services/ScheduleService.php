@@ -22,12 +22,18 @@ use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
+use App\Model\User\Commands\RegisterProgram;
+use App\Model\User\Commands\UnregisterProgram;
+use App\Model\User\Queries\UserAllowedProgramsQuery;
+use App\Model\User\Queries\UserProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ProgramService;
 use App\Services\SettingsService;
 use DateInterval;
 use Doctrine\ORM\ORMException;
+use eGen\MessageBus\Bus\CommandBus;
+use eGen\MessageBus\Bus\QueryBus;
 use Exception;
 use Nette;
 use Nette\Localization\ITranslator;
@@ -62,6 +68,10 @@ class ScheduleService
 
     private ProgramService $programService;
 
+    private CommandBus $commandBus;
+
+    private QueryBus $queryBus;
+
     public function __construct(
         ITranslator $translator,
         UserRepository $userRepository,
@@ -69,7 +79,9 @@ class ScheduleService
         BlockRepository $blockRepository,
         RoomRepository $roomRepository,
         SettingsService $settingsService,
-        ProgramService $programService
+        ProgramService $programService,
+        CommandBus $commandBus,
+        QueryBus $queryBus
     ) {
         $this->translator        = $translator;
         $this->userRepository    = $userRepository;
@@ -78,6 +90,8 @@ class ScheduleService
         $this->roomRepository    = $roomRepository;
         $this->settingsService   = $settingsService;
         $this->programService    = $programService;
+        $this->commandBus        = $commandBus;
+        $this->queryBus          = $queryBus;
     }
 
     public function setUser(int $userId) : void
@@ -113,7 +127,7 @@ class ScheduleService
      */
     public function getProgramsWeb() : array
     {
-        $programs = $this->programService->getUserAllowedPrograms($this->user);
+        $programs = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user));
 
         /** @var ProgramDetailDto[] $programDetailDtos */
         $programDetailDtos = [];
@@ -331,21 +345,21 @@ class ScheduleService
             throw new ApiException($this->translator->translate('common.api.schedule.register_programs_before_payment_not_allowed'));
         } elseif (! $program) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_not_found'));
-        } elseif ($this->user->getPrograms()->contains($program)) {
+        } elseif ($this->queryBus->handle(new UserProgramsQuery($this->user))->contains($program)) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_already_registered'));
         } elseif ($program->getCapacity() !== null && $program->getCapacity() <= $program->getAttendeesCount()) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_no_vacancies'));
-        } elseif (! $this->programService->getUserAllowedPrograms($this->user)->contains($program)) {
+        } elseif (! $this->queryBus->handle(new UserAllowedProgramsQuery($this->user))->contains($program)) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_category_not_allowed'));
         } elseif (count(
             array_intersect(
                 $this->programRepository->findBlockedProgramsIdsByProgram($program),
-                $this->programRepository->findProgramsIds($this->user->getPrograms())
+                $this->programRepository->findProgramsIds($this->queryBus->handle(new UserProgramsQuery($this->user)))
             )
         )) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_blocked'));
         } else {
-            $this->programService->registerProgram($this->user, $program);
+            $this->commandBus->handle(new RegisterProgram($this->user, $program));
 
             $responseDto = new ResponseDto();
             $responseDto->setMessage($this->translator->translate('common.api.schedule.program_registered'));
@@ -374,10 +388,10 @@ class ScheduleService
             throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));
         } elseif (! $program) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_not_found'));
-        } elseif (! $this->user->getPrograms()->contains($program)) {
+        } elseif (! $this->queryBus->handle(new UserProgramsQuery($this->user))->contains($program)) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_not_registered'));
         } else {
-            $this->programService->unregisterProgram($this->user, $program);
+            $this->commandBus->handle(new UnregisterProgram($this->user, $program));
 
             $responseDto = new ResponseDto();
             $responseDto->setMessage($this->translator->translate('common.api.schedule.program_unregistered'));

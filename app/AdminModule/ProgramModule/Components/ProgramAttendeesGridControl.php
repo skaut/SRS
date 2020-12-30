@@ -9,10 +9,14 @@ use App\Model\Acl\SrsResource;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Program;
 use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\User\Commands\RegisterProgram;
+use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ProgramService;
 use Doctrine\ORM\QueryBuilder;
+use eGen\MessageBus\Bus\CommandBus;
+use eGen\MessageBus\Bus\QueryBus;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -44,17 +48,25 @@ class ProgramAttendeesGridControl extends Control
 
     private SessionSection $sessionSection;
 
+    private CommandBus $commandBus;
+
+    private QueryBus $queryBus;
+
     public function __construct(
         ITranslator $translator,
         ProgramRepository $programRepository,
         UserRepository $userRepository,
         ProgramService $programService,
-        Session $session
+        Session $session,
+        CommandBus $commandBus,
+        QueryBus $queryBus
     ) {
         $this->translator        = $translator;
         $this->programRepository = $programRepository;
         $this->userRepository    = $userRepository;
         $this->programService    = $programService;
+        $this->commandBus        = $commandBus;
+        $this->queryBus          = $queryBus;
 
         $this->sessionSection = $session->getSection('srs');
     }
@@ -191,7 +203,7 @@ class ProgramAttendeesGridControl extends Control
         } elseif ($user->hasProgramBlock($program->getBlock())) {
             $p->flashMessage('admin.program.blocks_attendees_already_has_block', 'danger');
         } else {
-            $this->programService->registerProgram($user, $program, true);
+            $this->commandBus->handle(new RegisterProgram($user, $program, false, true));
             $p->flashMessage('admin.program.blocks_attendees_registered', 'success');
         }
 
@@ -220,7 +232,7 @@ class ProgramAttendeesGridControl extends Control
         if (! $this->isAllowedModifyProgram($program)) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         } else {
-            $this->programService->unregisterProgram($user, $program, true);
+            $this->commandBus->handle(new UnregisterProgram($user, $program, true));
             $p->flashMessage('admin.program.blocks_attendees_unregistered', 'success');
         }
 
@@ -250,7 +262,7 @@ class ProgramAttendeesGridControl extends Control
             foreach ($ids as $id) {
                 $user = $this->userRepository->findById($id);
                 if (! $user->hasProgramBlock($this->program->getBlock())) {
-                    $this->programService->registerProgram($user, $this->program, true);
+                    $this->commandBus->handle(new RegisterProgram($user, $this->program, false, true));
                 }
             }
 
@@ -283,7 +295,7 @@ class ProgramAttendeesGridControl extends Control
             foreach ($ids as $id) {
                 $user = $this->userRepository->findById($id);
                 if ($user->hasProgramBlock($this->program->getBlock())) {
-                    $this->programService->unregisterProgram($user, $this->program, true);
+                    $this->commandBus->handle(new UnregisterProgram($user, $this->program, true));
                 }
             }
 

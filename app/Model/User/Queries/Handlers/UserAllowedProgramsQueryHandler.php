@@ -6,14 +6,13 @@ namespace App\Model\User\Queries\Handlers;
 
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
-use App\Model\Program\Program;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramRepository;
-use App\Model\User\Queries\AllowedProgramsQuery;
+use App\Model\User\Queries\UserAllowedProgramsQuery;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-class AllowedProgramsQueryHandler
+class UserAllowedProgramsQueryHandler
 {
     private CategoryRepository $categoryRepository;
 
@@ -25,10 +24,7 @@ class AllowedProgramsQueryHandler
         $this->programRepository = $programRepository;
     }
 
-    /**
-     * @return Collection<Program>
-     */
-    public function __invoke(AllowedProgramsQuery $query) : Collection
+    public function __invoke(UserAllowedProgramsQuery $query) : Collection
     {
         if (! $query->getUser()->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
             return new ArrayCollection();

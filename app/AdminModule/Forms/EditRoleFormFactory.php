@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
+use App\Model\Acl\Events\RoleChangedEvent;
 use App\Model\Acl\Permission;
 use App\Model\Acl\Repositories\PermissionRepository;
 use App\Model\Acl\Repositories\RoleRepository;
@@ -15,6 +16,7 @@ use App\Services\ProgramService;
 use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use eGen\MessageBus\Bus\EventBus;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -56,6 +58,8 @@ class EditRoleFormFactory
 
     private ProgramService $programService;
 
+    private EventBus $eventBus;
+
     public function __construct(
         BaseFormFactory $baseFormFactory,
         EntityManagerDecorator $em,
@@ -63,7 +67,8 @@ class EditRoleFormFactory
         RoleRepository $roleRepository,
         PageRepository $pageRepository,
         PermissionRepository $permissionRepository,
-        ProgramService $programService
+        ProgramService $programService,
+        EventBus $eventBus
     ) {
         $this->baseFormFactory      = $baseFormFactory;
         $this->em                   = $em;
@@ -72,6 +77,7 @@ class EditRoleFormFactory
         $this->pageRepository       = $pageRepository;
         $this->permissionRepository = $permissionRepository;
         $this->programService       = $programService;
+        $this->eventBus             = $eventBus;
     }
 
     /**
@@ -241,7 +247,7 @@ class EditRoleFormFactory
 
             $this->aclService->saveRole($this->role);
 
-            $this->programService->updateUsersPrograms($this->role->getUsers());
+            $this->eventBus->handle(new RoleChangedEvent($this->role));
         });
     }
 

@@ -26,6 +26,7 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
+use App\Model\User\Events\UserApplicationChangedEvent;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Utils\Helpers;
@@ -34,6 +35,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use eGen\MessageBus\Bus\CommandBus;
+use eGen\MessageBus\Bus\EventBus;
 use InvalidArgumentException;
 use Nette;
 use Nette\Localization\ITranslator;
@@ -89,6 +92,10 @@ class ApplicationService
 
     private IncomeProofRepository $incomeProofRepository;
 
+    private CommandBus $commandBus;
+
+    private EventBus $eventBus;
+
     public function __construct(
         EntityManagerDecorator $em,
         SettingsService $settingsService,
@@ -104,7 +111,9 @@ class ApplicationService
         UserService $userService,
         ITranslator $translator,
         PaymentRepository $paymentRepository,
-        IncomeProofRepository $incomeProofRepository
+        IncomeProofRepository $incomeProofRepository,
+        CommandBus $commandBus,
+        EventBus $eventBus
     ) {
         $this->em                       = $em;
         $this->settingsService          = $settingsService;
@@ -121,6 +130,8 @@ class ApplicationService
         $this->translator               = $translator;
         $this->paymentRepository        = $paymentRepository;
         $this->incomeProofRepository    = $incomeProofRepository;
+        $this->commandBus               = $commandBus;
+        $this->eventBus                 = $eventBus;
     }
 
     /**
@@ -141,7 +152,7 @@ class ApplicationService
         $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
         $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
 
-        $this->programService->updateUserPrograms($user);
+        $this->eventBus->handle(new UserApplicationChangedEvent($user));
         $this->updateUserPaymentInfo($user);
 
         $applicatonMaturity        = '-';
@@ -265,7 +276,7 @@ class ApplicationService
                 $this->decrementRolesOccupancy($user->getRolesApplication()->getRoles());
             }
 
-            $this->programService->updateUserPrograms($user);
+            $this->eventBus->handle(new UserApplicationChangedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
 
@@ -321,7 +332,7 @@ class ApplicationService
 
             $this->userRepository->save($user);
 
-            $this->programService->updateUserPrograms($user);
+            $this->eventBus->handle(new UserApplicationChangedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
 
@@ -350,7 +361,7 @@ class ApplicationService
 
             $this->createSubeventsApplication($user, $subevents, $createdBy);
 
-            $this->programService->updateUserPrograms($user);
+            $this->eventBus->handle(new UserApplicationChangedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
 
@@ -407,7 +418,7 @@ class ApplicationService
             $application->setValidTo(new DateTimeImmutable());
             $this->applicationRepository->save($application);
 
-            $this->programService->updateUserPrograms($user);
+            $this->eventBus->handle(new UserApplicationChangedEvent($user));
             $this->updateUserPaymentInfo($user);
 
             $this->decrementSubeventsOccupancy($application->getSubevents());
@@ -453,7 +464,7 @@ class ApplicationService
             $application->setValidTo(new DateTimeImmutable());
             $this->applicationRepository->save($application);
 
-            $this->programService->updateUserPrograms($user);
+            $this->eventBus->handle(new UserApplicationChangedEvent($user));
             $this->updateUserPaymentInfo($user);
 
             $this->decrementSubeventsOccupancy($application->getSubevents());
@@ -501,7 +512,7 @@ class ApplicationService
             $application->setValidTo(new DateTimeImmutable());
             $this->applicationRepository->save($application);
 
-            $this->programService->updateUserPrograms($user);
+            $this->eventBus->handle(new UserApplicationChangedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
 

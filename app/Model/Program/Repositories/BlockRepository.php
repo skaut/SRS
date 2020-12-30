@@ -78,7 +78,7 @@ class BlockRepository extends EntityRepository
     }
 
     /**
-     * Vrací všechny bloky nezařezené v kategorii, seřazené podle názvu.
+     * Vrací všechny bloky nezařazené v kategorii, seřazené podle názvu.
      *
      * @return Block[]
      */
@@ -109,68 +109,6 @@ class BlockRepository extends EntityRepository
     }
 
     /**
-     * Vrací bloky podle textu obsaženého v názvu, seřazené podle názvu.
-     *
-     * @return Block[]
-     */
-    public function findByLikeNameOrderedByName(string $text, bool $unassignedOnly = false) : array
-    {
-        $qb = $this->createQueryBuilder('b')
-            ->select('b')
-            ->where('b.name LIKE :text')->setParameter('text', '%' . $text . '%');
-
-        if ($unassignedOnly) {
-            $qb = $qb->leftJoin('b.programs', 'p')
-                ->andWhere('SIZE(b.programs) = 0');
-        }
-
-        return $qb->orderBy('b.name')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Vrací bloky, které jsou pro uživatele povinné a není na ně přihlášený.
-     *
-     * @param Collection|Category[] $categories
-     * @param Collection|Subevent[] $subevents
-     *
-     * @return Collection|Block[]
-     */
-    public function findMandatoryForCategoriesAndSubevents(User $user, Collection $categories, Collection $subevents) : Collection
-    {
-        $usersBlocks = $this->createQueryBuilder('b')
-            ->select('b')
-            ->leftJoin('b.programs', 'p')
-            ->leftJoin('p.attendees', 'u')
-            ->where('u = :user')
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult();
-
-        $qb = $this->createQueryBuilder('b')
-            ->select('b')
-            ->leftJoin('b.category', 'c')
-            ->where($this->createQueryBuilder('b')->expr()->orX(
-                'c IN (:categories)',
-                'b.category IS NULL'
-            ))
-            ->andWhere('b.subevent IN (:usersSubevents)')
-            ->andWhere('b.mandatory != :voluntary')
-            ->setParameter('categories', $categories)
-            ->setParameter('usersSubevents', $subevents)
-            ->setParameter('voluntary', ProgramMandatoryType::VOLUNTARY);
-
-        if (! empty($usersBlocks)) {
-            $qb = $qb
-                ->andWhere('b NOT IN (:usersBlocks)')
-                ->setParameter('usersBlocks', $usersBlocks);
-        }
-
-        return new ArrayCollection($qb->getQuery()->getResult());
-    }
-
-    /**
      * Vrací id bloků.
      *
      * @param Collection|Block[] $blocks
@@ -197,6 +135,25 @@ class BlockRepository extends EntityRepository
             ->where(Criteria::expr()->in('id', $ids));
 
         return $this->matching($criteria);
+    }
+
+    /**
+     * @return Collection<Block>
+     */
+    public function findUserRegistered(User $user, bool $includeAlternates = false) : Collection
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->leftJoin('b.programs', 'p')
+            ->leftJoin('p.programApplications', 'a')
+            ->where('a.user = :user')->setParameter('user', $user);
+
+        if ($includeAlternates === false) {
+            $qb = $qb->andWhere('a.alternate = true');
+        }
+
+        $result = $qb->getQuery()->getResult();
+
+        return new ArrayCollection($result);
     }
 
     /**

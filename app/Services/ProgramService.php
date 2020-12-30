@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Model\Acl\Events\CategoryChangedEvent;
 use App\Model\Acl\Permission;
 use App\Model\Acl\Role;
 use App\Model\Acl\SrsResource;
@@ -27,6 +28,8 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\ORMException;
+use eGen\MessageBus\Bus\EventBus;
+use Eluceo\iCal\Component\Event;
 use Nette;
 use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
@@ -56,6 +59,8 @@ class ProgramService
 
     private MailService $mailService;
 
+    private EventBus $eventBus;
+
     public function __construct(
         EntityManagerDecorator $em,
         SettingsService $settingsService,
@@ -63,7 +68,8 @@ class ProgramService
         BlockRepository $blockRepository,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
-        MailService $mailService
+        MailService $mailService,
+        EventBus $eventBus
     ) {
         $this->em                 = $em;
         $this->settingsService    = $settingsService;
@@ -72,6 +78,7 @@ class ProgramService
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->mailService        = $mailService;
+        $this->eventBus           = $eventBus;
     }
 
     /**
@@ -277,7 +284,7 @@ class ProgramService
 
             $this->categoryRepository->save($category);
 
-            $this->updateUsersPrograms(new ArrayCollection($this->userRepository->findAll()));
+            $this->eventBus->handle(new CategoryChangedEvent());
         });
     }
 
