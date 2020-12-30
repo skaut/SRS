@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User\Events\Handlers;
+namespace App\Model\User\Events\Subscribers;
 
 use App\Model\Program\Repositories\ProgramApplicationRepository;
-use App\Model\User\Events\ProgramRegisteredEvent;
+use App\Model\User\Events\ProgramUnregisteredEvent;
 use App\Services\MailService;
 use App\Services\SettingsService;
 use eGen\MessageBus\Bus\QueryBus;
 
-class ProgramRegisteredEventHandler
+class ProgramUnregisteredEventListener
 {
     private QueryBus $queryBus;
 
@@ -32,7 +32,7 @@ class ProgramRegisteredEventHandler
         $this->settingsService               = $settingsService;
     }
 
-    public function __invoke(ProgramRegisteredEvent $event) : void
+    public function __invoke(ProgramUnregisteredEvent $event) : void
     {
 
     }

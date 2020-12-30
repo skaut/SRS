@@ -910,40 +910,6 @@ class User
         return $this->getRolesApplication()->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
     }
 
-//    /**
-//     * @return Collection|Program[]
-//     */
-//    public function getPrograms() : Collection
-//    {
-//        return $this->programs;
-//    }
-//
-//    public function addProgram(Program $program) : void
-//    {
-//        if (! $this->programs->contains($program)) {
-//            $this->programs->add($program);
-//            $program->addAttendee($this);
-//        }
-//    }
-//
-//    public function removeProgram(Program $program) : void
-//    {
-//        if ($this->programs->contains($program)) {
-//            $this->programs->removeElement($program);
-//            $program->removeAttendee($this);
-//        }
-//    }
-//
-//    /**
-//     * Má uživatel přihlášený program z bloku?
-//     */
-//    public function hasProgramBlock(Block $block) : bool
-//    {
-//        return ! $this->programs->filter(static function (Program $program) use ($block) {
-//            return $program->getBlock()->getId() === $block->getId();
-//        })->isEmpty();
-//    }
-
     /**
      * @return Collection|Block[]
      */

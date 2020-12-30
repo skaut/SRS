@@ -23,7 +23,7 @@ class RegisterProgramHandler
     public function __construct(
         QueryBus $queryBus,
         EventBus $eventBus,
-        ProgramApplicationRepository $programApplicationRepository,
+        ProgramApplicationRepository $programApplicationRepository
     ) {
         $this->queryBus                      = $queryBus;
         $this->eventBus                      = $eventBus;

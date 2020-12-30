@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\Mailing\Events\Handlers;
+namespace App\Model\Mailing\Events\Subscribers;
 
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
@@ -12,7 +12,7 @@ use App\Services\MailService;
 use App\Services\SettingsService;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class ProgramUnregisteredEventMailHandler
+class ProgramUnregisteredEventMailListener
 {
     private MailService $mailService;
 

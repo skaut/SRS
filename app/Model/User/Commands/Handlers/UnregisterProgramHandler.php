@@ -11,7 +11,7 @@ use App\Model\User\Queries\HasProgramQuery;
 use eGen\MessageBus\Bus\EventBus;
 use eGen\MessageBus\Bus\QueryBus;
 
-class RegisterProgramHandler
+class UnregisterProgramHandler
 {
     private QueryBus $queryBus;
 
@@ -22,7 +22,7 @@ class RegisterProgramHandler
     public function __construct(
         QueryBus $queryBus,
         EventBus $eventBus,
-        ProgramApplicationRepository $programApplicationRepository,
+        ProgramApplicationRepository $programApplicationRepository
     ) {
         $this->queryBus                      = $queryBus;
         $this->eventBus                      = $eventBus;

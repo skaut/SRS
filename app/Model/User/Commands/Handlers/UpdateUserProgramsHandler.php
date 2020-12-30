@@ -20,20 +20,12 @@ class UpdateUserProgramsHandler // todo: nahradit pomoci event?
 
     private ProgramApplicationRepository $programApplicationRepository;
 
-    private MailService $mailService;
-
-    private SettingsService $settingsService;
-
     public function __construct(
         QueryBus $queryBus,
-        ProgramApplicationRepository $programApplicationRepository,
-        MailService $mailService,
-        SettingsService $settingsService
+        ProgramApplicationRepository $programApplicationRepository
     ) {
         $this->queryBus                      = $queryBus;
         $this->programApplicationRepository  = $programApplicationRepository;
-        $this->mailService                   = $mailService;
-        $this->settingsService               = $settingsService;
     }
 
     public function __invoke(UpdateUserPrograms $command) : void

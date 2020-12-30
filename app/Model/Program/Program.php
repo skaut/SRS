@@ -79,46 +79,6 @@ class Program
         return $this->block;
     }
 
-//    /**
-//     * @return Collection|User[]
-//     */
-//    public function getAttendees() : Collection
-//    {
-//        return $this->attendees;
-//    }
-//
-//    public function addAttendee(User $user) : void
-//    {
-//        if (! $this->attendees->contains($user)) {
-//            $this->attendees->add($user);
-//            $user->addProgram($this);
-//        }
-//    }
-//
-//    public function removeAttendee(User $user) : void
-//    {
-//        if ($this->attendees->contains($user)) {
-//            $this->attendees->removeElement($user);
-//            $user->removeProgram($this);
-//        }
-//    }
-//
-//    /**
-//     * Vrací počet účastníků.
-//     */
-//    public function getAttendeesCount() : int
-//    {
-//        return $this->attendees->count();
-//    }
-//
-//    /**
-//     * Je uživatel účastník programu?
-//     */
-//    public function isAttendee(User $user) : bool
-//    {
-//        return $this->attendees->contains($user);
-//    }
-
     /**
      * Vrací kapacitu programového bloku.
      */

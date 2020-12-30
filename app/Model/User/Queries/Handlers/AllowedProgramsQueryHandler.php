@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User\Commands\Handlers;
+namespace App\Model\User\Queries\Handlers;
 
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
