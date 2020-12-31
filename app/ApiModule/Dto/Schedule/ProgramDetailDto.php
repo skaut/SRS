@@ -34,8 +34,14 @@ class ProgramDetailDto
     /** @JMS\Type("int") */
     private ?int $attendeesCount = null;
 
+    /** @JMS\Type("int") */
+    private ?int $alternatesCount = null;
+
     /** @JMS\Type("boolean") */
     private ?bool $userAttends = null;
+
+    /** @JMS\Type("boolean") */
+    private ?bool $userAlternates = null;
 
     /**
      * @JMS\Type("array")
@@ -109,6 +115,16 @@ class ProgramDetailDto
         $this->attendeesCount = $attendeesCount;
     }
 
+    public function getAlternatesCount() : ?int
+    {
+        return $this->alternatesCount;
+    }
+
+    public function setAlternatesCount(int $alternatesCount) : void
+    {
+        $this->alternatesCount = $alternatesCount;
+    }
+
     public function isUserAttends() : bool
     {
         return $this->userAttends;
@@ -117,6 +133,16 @@ class ProgramDetailDto
     public function setUserAttends(bool $userAttends) : void
     {
         $this->userAttends = $userAttends;
+    }
+
+    public function getUserAlternates() : ?bool
+    {
+        return $this->userAlternates;
+    }
+
+    public function setUserAlternates(bool $userAlternates) : void
+    {
+        $this->userAlternates = $userAlternates;
     }
 
     /**

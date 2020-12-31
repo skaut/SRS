@@ -8,6 +8,7 @@ import VueAxios from 'vue-axios'
 var COLOR_VOLUNTARY = '#0077F7';
 var COLOR_MANDATORY = '#D53343';
 var COLOR_ATTENDS = '#27A243';
+var COLOR_ALTERNATES = '#F7BB07';
 var COLOR_BLOCKED = '#6C757D';
 
 Vue.use(Vuex);
@@ -54,11 +55,24 @@ export default new Vuex.Store({
                 event.color = getColor(event);
             }
         },
+        setEventUserAlternates(state, info) {
+            const event = state.eventsMap[info.eventId];
+            if (event) {
+                event.extendedProps.userAlternates = info.userAlternates;
+                event.color = getColor(event);
+            }
+        },
         setEventAttendeesCount(state, info) {
             const event = state.eventsMap[info.eventId];
             if (event) {
                 event.extendedProps.attendeesCount = info.attendeesCount;
                 event.extendedProps.occupied = event.extendedProps.block.capacity !== null && event.extendedProps.block.capacity <= info.attendeesCount;
+            }
+        },
+        setEventAlternatesCount(state, info) {
+            const event = state.eventsMap[info.eventId];
+            if (event) {
+                event.extendedProps.alternatesCount = info.alternatesCount;
             }
         },
         setEventBlocked(state, info) {
@@ -167,7 +181,9 @@ export default new Vuex.Store({
                             extendedProps: {
                                 block: block,
                                 attendeesCount: program.attendees_count,
+                                alternatesCount: program.alternates_count,
                                 userAttends: program.user_attends,
+                                userAlternates: program.user_alternates,
                                 blocks: program.blocks,
                                 blocked: program.blocked,
                                 paid: program.paid,
@@ -273,6 +289,8 @@ function handleError(commit, error) {
 function getColor(event) {
     if (event.extendedProps.userAttends) {
         return COLOR_ATTENDS;
+    } else if (event.extendedProps.userAlternates) {
+        return COLOR_ALTERNATES;
     } else if (!userAllowedRegisterPrograms || event.extendedProps.occupied || event.extendedProps.blocked || !event.extendedProps.paid) {
         return COLOR_BLOCKED;
     } else if (event.extendedProps.block.mandatory) {

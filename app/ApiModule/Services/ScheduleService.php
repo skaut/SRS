@@ -134,7 +134,9 @@ class ScheduleService
         foreach ($programs as $program) {
             $programDetailDto = $this->convertProgramToProgramDetailDto($program);
             $programDetailDto->setAttendeesCount($program->getAttendeesCount());
+            $programDetailDto->setAlternatesCount(0); //todo
             $programDetailDto->setUserAttends($program->isAttendee($this->user));
+            $programDetailDto->setUserAlternates(false); //todo
             $programDetailDto->setBlocks($this->programRepository->findBlockedProgramsIdsByProgram($program));
             $programDetailDto->setBlocked(false);
             $programDetailDto->setPaid($this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
