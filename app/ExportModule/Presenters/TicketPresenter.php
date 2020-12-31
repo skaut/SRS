@@ -53,7 +53,7 @@ class TicketPresenter extends ExportBasePresenter
             throw new ForbiddenRequestException();
         }
 
-        $user = $this->userRepository->findById($this->user->id);
+        $user         = $this->userRepository->findById($this->user->id);
         $userPrograms = $this->queryBus->handle(new UserProgramsQuery($user));
 
         /** @var Template $template */

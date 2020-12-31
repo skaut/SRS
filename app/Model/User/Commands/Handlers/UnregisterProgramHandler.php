@@ -7,9 +7,7 @@ namespace App\Model\User\Commands\Handlers;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Events\ProgramUnregisteredEvent;
-use App\Model\User\Queries\UserProgramsQuery;
 use eGen\MessageBus\Bus\EventBus;
-use eGen\MessageBus\Bus\QueryBus;
 
 class UnregisterProgramHandler
 {
@@ -19,8 +17,8 @@ class UnregisterProgramHandler
 
     public function __construct(EventBus $eventBus, ProgramApplicationRepository $programApplicationRepository)
     {
-        $this->eventBus                      = $eventBus;
-        $this->programApplicationRepository  = $programApplicationRepository;
+        $this->eventBus                     = $eventBus;
+        $this->programApplicationRepository = $programApplicationRepository;
     }
 
     public function __invoke(UnregisterProgram $command) : void

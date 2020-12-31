@@ -8,9 +8,7 @@ use App\Model\Program\ProgramApplication;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramRegisteredEvent;
-use App\Model\User\Queries\UserProgramsQuery;
 use eGen\MessageBus\Bus\EventBus;
-use eGen\MessageBus\Bus\QueryBus;
 
 class RegisterProgramHandler
 {
@@ -20,8 +18,8 @@ class RegisterProgramHandler
 
     public function __construct(EventBus $eventBus, ProgramApplicationRepository $programApplicationRepository)
     {
-        $this->eventBus                      = $eventBus;
-        $this->programApplicationRepository  = $programApplicationRepository;
+        $this->eventBus                     = $eventBus;
+        $this->programApplicationRepository = $programApplicationRepository;
     }
 
     public function __invoke(RegisterProgram $command) : void

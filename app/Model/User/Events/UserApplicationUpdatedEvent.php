@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\User\Events;
 
-use App\Model\Program\Program;
 use App\Model\User\User;
 
 class UserApplicationUpdatedEvent

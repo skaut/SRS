@@ -14,7 +14,6 @@ use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Queries\UserProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\ProgramService;
 use Doctrine\ORM\QueryBuilder;
 use eGen\MessageBus\Bus\CommandBus;
 use eGen\MessageBus\Bus\QueryBus;

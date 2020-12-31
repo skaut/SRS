@@ -19,7 +19,6 @@ use App\Model\Program\Room;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Subevent;
-use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;

@@ -12,8 +12,6 @@ use eGen\MessageBus\Bus\QueryBus;
 
 class ProgramRegisteredEventListener
 {
-    private QueryBus $queryBus;
-
     private ProgramApplicationRepository $programApplicationRepository;
 
     private MailService $mailService;

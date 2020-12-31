@@ -35,7 +35,7 @@ class SchedulePresenter extends ExportBasePresenter
     {
         $calendar = new Calendar('-//Junák - český skaut//SRS//CS');
 
-        $user     = $this->userRepository->findById($id);
+        $user         = $this->userRepository->findById($id);
         $userPrograms = $this->queryBus->handle(new UserProgramsQuery($user));
 
         foreach ($userPrograms as $program) {
