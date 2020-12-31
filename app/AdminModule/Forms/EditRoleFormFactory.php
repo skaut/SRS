@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
-use App\Model\Acl\Events\RoleChangedEvent;
+use App\Model\Acl\Events\RoleUpdatedEvent;
 use App\Model\Acl\Permission;
 use App\Model\Acl\Repositories\PermissionRepository;
 use App\Model\Acl\Repositories\RoleRepository;
@@ -247,7 +247,7 @@ class EditRoleFormFactory
 
             $this->aclService->saveRole($this->role);
 
-            $this->eventBus->handle(new RoleChangedEvent($this->role));
+            $this->eventBus->handle(new RoleUpdatedEvent($this->role));
         });
     }
 

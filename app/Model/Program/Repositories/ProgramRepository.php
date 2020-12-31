@@ -74,7 +74,7 @@ class ProgramRepository extends EntityRepository
     /**
      * @return Collection<Program>
      */
-    public function findUserRegistered(User $user, $includeAlternates = false) : Collection
+    public function findUserRegistered(User $user, bool $includeAlternates = false) : Collection
     {
         $qb = $this->createQueryBuilder('p')
             ->leftJoin('p.programApplications', 'a')

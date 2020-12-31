@@ -6,7 +6,7 @@ namespace App\Model\Acl\Events;
 
 use App\Model\Acl\Role;
 
-class RoleChangedEvent
+class RoleUpdatedEvent
 {
     private Role $role;
 

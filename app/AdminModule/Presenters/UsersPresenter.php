@@ -18,8 +18,10 @@ use App\Model\CustomInput\CustomInput;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
+use App\Model\User\Queries\UserProgramsQuery;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
+use eGen\MessageBus\Bus\QueryBus;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -59,6 +61,9 @@ class UsersPresenter extends AdminBasePresenter
     /** @inject */
     public ApplicationService $applicationService;
 
+    /** @inject */
+    public QueryBus $queryBus;
+
     /**
      * @throws AbortException
      */
@@ -79,6 +84,7 @@ class UsersPresenter extends AdminBasePresenter
         $user = $this->userRepository->findById($id);
 
         $this->template->detailUser = $user;
+        $this->template->detailUserPrograms = $this->queryBus->handle(new UserProgramsQuery($user));
 
         $this->template->customInputs            = $this->customInputRepository->findByRolesOrderedByPosition($user->getRoles());
         $this->template->customInputTypeCheckbox = CustomInput::CHECKBOX;

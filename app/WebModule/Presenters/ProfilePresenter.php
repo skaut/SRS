@@ -7,6 +7,7 @@ namespace App\WebModule\Presenters;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Queries\UserProgramsQuery;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\ExcelExportService;
@@ -17,6 +18,7 @@ use App\WebModule\Forms\AdditionalInformationForm;
 use App\WebModule\Forms\IAdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesFormFactory;
+use eGen\MessageBus\Bus\QueryBus;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
@@ -58,6 +60,9 @@ class ProfilePresenter extends WebBasePresenter
     /** @inject */
     public Authenticator $authenticator;
 
+    /** @inject */
+    public QueryBus $queryBus;
+
     /**
      * @throws AbortException
      * @throws Throwable
@@ -81,6 +86,7 @@ class ProfilePresenter extends WebBasePresenter
         $this->template->pageName                  = $this->translator->translate('web.profile.title');
         $this->template->paymentMethodBank         = PaymentType::BANK;
         $this->template->isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
+        $this->template->userPrograms              = $this->queryBus->handle(new UserProgramsQuery($this->dbuser));
     }
 
     /**

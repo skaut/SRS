@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Model\User\Events\Subscribers;
 
 use App\Model\User\Commands\UpdateUsersPrograms;
-use App\Model\User\Events\UserApplicationChangedEvent;
+use App\Model\User\Events\UserApplicationUpdatedEvent;
 use Doctrine\Common\Collections\ArrayCollection;
 use eGen\MessageBus\Bus\CommandBus;
 
-class UserApplicationChangedEventListener
+class UserApplicationUpdatedEventListener
 {
     private CommandBus $commandBus;
 
@@ -18,7 +18,7 @@ class UserApplicationChangedEventListener
         $this->commandBus = $commandBus;
     }
 
-    public function __invoke(UserApplicationChangedEvent $event) : void
+    public function __invoke(UserApplicationUpdatedEvent $event) : void
     {
         $this->commandBus->handle(new UpdateUsersPrograms(new ArrayCollection([$event->getUser()])));
     }

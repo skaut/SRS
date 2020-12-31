@@ -7,7 +7,7 @@ namespace App\Model\User\Events;
 use App\Model\Program\Program;
 use App\Model\User\User;
 
-class UserApplicationChangedEvent
+class UserApplicationUpdatedEvent
 {
     private User $user;
 

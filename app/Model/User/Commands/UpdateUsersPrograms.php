@@ -13,7 +13,7 @@ class UpdateUsersPrograms
     private Collection $users;
 
     /**
-     * @param Collection<User>
+     * @param Collection<User> $users
      */
     public function __construct(Collection $users)
     {

@@ -35,15 +35,6 @@ class ProgramApplicationRepository extends EntityRepository
         });
     }
 
-//    public function saveMultiple(Collection $programApplications) : void
-//    {
-//        $this->_em->transactional(function () use ($programApplications) : void {
-//            foreach ($programApplications as $programApplication) {
-//                $this->save($programApplication);
-//            }
-//        });
-//    }
-
     public function remove(ProgramApplication $programApplication) : void
     {
         $this->_em->transactional(function () use ($programApplication) : void {

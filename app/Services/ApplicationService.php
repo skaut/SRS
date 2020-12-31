@@ -26,7 +26,7 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
-use App\Model\User\Events\UserApplicationChangedEvent;
+use App\Model\User\Events\UserApplicationUpdatedEvent;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Utils\Helpers;
@@ -152,7 +152,7 @@ class ApplicationService
         $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
         $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
 
-        $this->eventBus->handle(new UserApplicationChangedEvent($user));
+        $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
         $this->updateUserPaymentInfo($user);
 
         $applicatonMaturity        = '-';
@@ -276,7 +276,7 @@ class ApplicationService
                 $this->decrementRolesOccupancy($user->getRolesApplication()->getRoles());
             }
 
-            $this->eventBus->handle(new UserApplicationChangedEvent($user));
+            $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
 
@@ -332,7 +332,7 @@ class ApplicationService
 
             $this->userRepository->save($user);
 
-            $this->eventBus->handle(new UserApplicationChangedEvent($user));
+            $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
 
@@ -361,7 +361,7 @@ class ApplicationService
 
             $this->createSubeventsApplication($user, $subevents, $createdBy);
 
-            $this->eventBus->handle(new UserApplicationChangedEvent($user));
+            $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
 
@@ -418,7 +418,7 @@ class ApplicationService
             $application->setValidTo(new DateTimeImmutable());
             $this->applicationRepository->save($application);
 
-            $this->eventBus->handle(new UserApplicationChangedEvent($user));
+            $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
 
             $this->decrementSubeventsOccupancy($application->getSubevents());
@@ -464,7 +464,7 @@ class ApplicationService
             $application->setValidTo(new DateTimeImmutable());
             $this->applicationRepository->save($application);
 
-            $this->eventBus->handle(new UserApplicationChangedEvent($user));
+            $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
 
             $this->decrementSubeventsOccupancy($application->getSubevents());
@@ -512,7 +512,7 @@ class ApplicationService
             $application->setValidTo(new DateTimeImmutable());
             $this->applicationRepository->save($application);
 
-            $this->eventBus->handle(new UserApplicationChangedEvent($user));
+            $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
 

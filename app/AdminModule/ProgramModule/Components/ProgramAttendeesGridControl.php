@@ -11,6 +11,7 @@ use App\Model\Program\Program;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
+use App\Model\User\Queries\UserProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ProgramService;
@@ -140,7 +141,8 @@ class ProgramAttendeesGridControl extends Control
 
             $grid->addColumnText('attends', 'admin.program.blocks_attendees_attends', 'pid')
                 ->setRenderer(function (User $item) {
-                    return $item->getPrograms()->contains($this->program)
+                    $userPrograms = $this->queryBus->handle(new UserProgramsQuery($item));
+                    return $userPrograms->contains($this->program)
                         ? $this->translator->translate('admin.common.yes')
                         : $this->translator->translate('admin.common.no');
                 })

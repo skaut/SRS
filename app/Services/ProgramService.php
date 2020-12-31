@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\Acl\Events\CategoryChangedEvent;
-use App\Model\Acl\Permission;
+use App\Model\Acl\Events\CategoryUpdatedEvent;
 use App\Model\Acl\Role;
-use App\Model\Acl\SrsResource;
-use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Enums\ProgramRegistrationType;
-use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\Block;
 use App\Model\Program\Category;
+use App\Model\Program\Events\BlockUpdatedEvent;
+use App\Model\Program\Events\ProgramCreatedEvent;
 use App\Model\Program\Program;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
@@ -25,15 +22,12 @@ use App\Model\Structure\Subevent;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\ORMException;
 use eGen\MessageBus\Bus\EventBus;
-use Eluceo\iCal\Component\Event;
 use Nette;
 use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
-use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
  * Služba pro správu programů.
@@ -139,8 +133,9 @@ class ProgramService
         string $tools
     ) : void {
         $this->em->transactional(function () use ($block, $name, $subevent, $category, $lectors, $duration, $capacity, $mandatory, $perex, $description, $tools) : void {
-            $oldSubevent = $block->getSubevent();
-            $oldCategory = $block->getCategory();
+            $originalCategory  = $block->getCategory();
+            $originalSubevent  = $block->getSubevent();
+            $originalMandatory = $block->getMandatory();
 
             $block->setName($name);
             $block->setSubevent($subevent);
@@ -148,36 +143,14 @@ class ProgramService
             $block->setLectors($lectors);
             $block->setDuration($duration);
             $block->setCapacity($capacity);
+            $block->setMandatory($mandatory);
             $block->setPerex($perex);
             $block->setDescription($description);
             $block->setTools($tools);
 
             $this->blockRepository->save($block);
 
-            //aktualizace ucastniku pri zmene kategorie nebo podakce
-            if (($category === null && $oldCategory !== null)
-                || ($category !== null && $oldCategory === null)
-                || ($category !== null && $oldCategory !== null && $category->getId() !== $oldCategory->getId())
-                || ($subevent->getId() !== $oldSubevent->getId())) {
-                $allowedUsers = $this->userRepository->findBlockAllowed($block);
-
-                foreach ($block->getPrograms() as $program) {
-                    foreach ($program->getAttendees() as $user) {
-                        if (! $allowedUsers->contains($user)) {
-                            $this->unregisterProgramImpl($user, $program);
-                        }
-                    }
-
-                    if ($mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
-                        foreach ($allowedUsers as $user) {
-                            $this->registerProgramImpl($user, $program);
-                        }
-                    }
-                }
-            }
-
-            //aktualizace ucastniku pri zmene povinnosti
-            $this->updateBlockMandatoryImpl($block, $mandatory);
+            $this->eventBus->handle(new BlockUpdatedEvent($block, $originalCategory, $originalSubevent, $originalMandatory));
         });
     }
 
@@ -189,49 +162,16 @@ class ProgramService
     public function updateBlockMandatory(Block $block, string $mandatory) : void
     {
         $this->em->transactional(function () use ($block, $mandatory) : void {
-            $this->updateBlockMandatoryImpl($block, $mandatory);
+            $originalCategory  = $block->getCategory();
+            $originalSubevent  = $block->getSubevent();
+            $originalMandatory = $block->getMandatory();
+
+            $block->setMandatory($mandatory);
+
+            $this->blockRepository->save($block);
+
+            $this->eventBus->handle(new BlockUpdatedEvent($block, $originalCategory, $originalSubevent, $originalMandatory));
         });
-    }
-
-    /**
-     * @throws ORMException
-     * @throws SettingsException
-     * @throws Throwable
-     * @throws MailingMailCreationException
-     */
-    private function updateBlockMandatoryImpl(Block $block, string $mandatory) : void
-    {
-        $oldMandatory = $block->getMandatory();
-
-        if ($mandatory === $oldMandatory) {
-            return;
-        }
-
-        $block->setMandatory($mandatory);
-
-        $this->blockRepository->save($block);
-
-        //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
-        if ($oldMandatory === ProgramMandatoryType::AUTO_REGISTERED && $mandatory !== ProgramMandatoryType::AUTO_REGISTERED) {
-            foreach ($block->getPrograms() as $program) {
-                foreach ($program->getAttendees() as $user) {
-                    $this->unregisterProgramImpl($user, $program);
-                }
-            }
-        }
-
-        //pridani ucastniku, pokud je pridano automaticke prihlaseni
-        if ($oldMandatory !== ProgramMandatoryType::AUTO_REGISTERED && $mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
-            $allowedUsers = $this->userRepository->findBlockAllowed($block);
-
-            foreach ($block->getPrograms() as $program) {
-                foreach ($allowedUsers as $user) {
-                    $this->registerProgramImpl($user, $program);
-                }
-            }
-        }
-
-        $this->blockRepository->save($block);
     }
 
     /**
@@ -241,15 +181,7 @@ class ProgramService
      */
     public function removeBlock(Block $block) : void
     {
-        $this->em->transactional(function () use ($block) : void {
-            $isVoluntary = $block->getMandatory() === ProgramMandatoryType::VOLUNTARY;
-
-            $this->blockRepository->remove($block);
-
-            if ($isVoluntary) {
-                return;
-            }
-        });
+        $this->blockRepository->remove($block);
     }
 
     /**
@@ -279,12 +211,14 @@ class ProgramService
     public function updateCategory(Category $category, string $name, Collection $registerableRoles) : void
     {
         $this->em->transactional(function () use ($category, $name, $registerableRoles) : void {
+            $originalRegisterableRoles = clone($category->getRegisterableRoles());
+
             $category->setName($name);
             $category->setRegisterableRoles($registerableRoles);
 
             $this->categoryRepository->save($category);
 
-            $this->eventBus->handle(new CategoryChangedEvent());
+            $this->eventBus->handle(new CategoryUpdatedEvent($originalRegisterableRoles, $registerableRoles));
         });
     }
 
@@ -297,19 +231,12 @@ class ProgramService
     {
         $program = new Program($block);
 
-        $program->setRoom($room);
-        $program->setStart($start);
-
-        $this->em->transactional(function () use ($program, $block) : void {
+        $this->em->transactional(function () use ($program, $room, $start) : void {
+            $program->setRoom($room);
+            $program->setStart($start);
             $this->programRepository->save($program);
 
-            if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
-                foreach ($this->userRepository->findBlockAllowed($block) as $user) {
-                    $this->registerProgramImpl($user, $program);
-                }
-
-                $this->programRepository->save($program);
-            }
+            $this->eventBus->handle(new ProgramCreatedEvent($program));
         });
 
         return $program;
@@ -334,9 +261,7 @@ class ProgramService
      */
     public function removeProgram(Program $program) : void
     {
-        $this->em->transactional(function () use ($program) : void {
-            $this->programRepository->remove($program);
-        });
+        $this->programRepository->remove($program);
     }
 
     /**

@@ -7,8 +7,10 @@ namespace App\ExportModule\Presenters;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Queries\UserProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\SettingsService;
+use eGen\MessageBus\Bus\QueryBus;
 use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
@@ -35,6 +37,9 @@ class TicketPresenter extends ExportBasePresenter
     /** @inject */
     public UserRepository $userRepository;
 
+    /** @inject */
+    public QueryBus $queryBus;
+
     /**
      * Vygeneruje vstupenku v PDF.
      *
@@ -55,6 +60,7 @@ class TicketPresenter extends ExportBasePresenter
         $template->logo                    = $this->settingsService->getValue(Settings::LOGO);
         $template->seminarName             = $this->settingsService->getValue(Settings::SEMINAR_NAME);
         $template->ticketUser              = $this->userRepository->findById($this->user->id);
+        $template->tickerUserPrograms      = $this->queryBus->handle(new UserProgramsQuery($this->dbuser));
         $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         $this->pdfResponse->setTemplate($template);

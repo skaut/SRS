@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Model\Acl\Events\Subscribers;
 
-use App\Model\Acl\Events\RoleChangedEvent;
+use App\Model\Acl\Events\RoleUpdatedEvent;
 use App\Model\User\Commands\UpdateUsersPrograms;
 use eGen\MessageBus\Bus\CommandBus;
 
-class RoleChangedEventListener
+class RoleUpdatedEventListener
 {
     private CommandBus $commandBus;
 
@@ -17,8 +17,8 @@ class RoleChangedEventListener
         $this->commandBus = $commandBus;
     }
 
-    public function __invoke(RoleChangedEvent $event) : void
+    public function __invoke(RoleUpdatedEvent $event) : void
     {
-        $this->commandBus->handle(new UpdateUsersPrograms($event->getRole()->getUsers()));
+        $this->commandBus->handle(new UpdateUsersPrograms($event->getRole()->getUsers())); // todo: není potřeba při každé změně role
     }
 }
