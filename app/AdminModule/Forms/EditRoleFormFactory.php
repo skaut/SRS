@@ -56,8 +56,6 @@ class EditRoleFormFactory
 
     private PermissionRepository $permissionRepository;
 
-    private ProgramService $programService;
-
     private EventBus $eventBus;
 
     public function __construct(
@@ -67,7 +65,6 @@ class EditRoleFormFactory
         RoleRepository $roleRepository,
         PageRepository $pageRepository,
         PermissionRepository $permissionRepository,
-        ProgramService $programService,
         EventBus $eventBus
     ) {
         $this->baseFormFactory      = $baseFormFactory;
@@ -76,7 +73,6 @@ class EditRoleFormFactory
         $this->roleRepository       = $roleRepository;
         $this->pageRepository       = $pageRepository;
         $this->permissionRepository = $permissionRepository;
-        $this->programService       = $programService;
         $this->eventBus             = $eventBus;
     }
 

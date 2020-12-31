@@ -103,6 +103,7 @@ class ProgramRepository extends EntityRepository
             ->andWhere('a.user = :user')->setParameter('user', $user)
             ->getQuery()
             ->getResult();
+
         return new ArrayCollection($result);
     }
 

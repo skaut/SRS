@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Events\Subscribers;
 
-use App\Model\Acl\Events\CategoryUpdatedEvent;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Events\BlockUpdatedEvent;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
-use App\Model\User\Commands\UpdateUsersPrograms;
 use App\Model\User\Repositories\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use eGen\MessageBus\Bus\CommandBus;
 use Nettrine\ORM\EntityManagerDecorator;
 
@@ -51,10 +48,11 @@ class BlockUpdatedEventListener
 
                 foreach ($block->getPrograms() as $program) {
                     foreach ($program->getAttendees() as $user) {
-                        if (!$allowedUsers->contains($user)) {
+                        if (! $allowedUsers->contains($user)) {
                             $this->commandBus->handle(new UnregisterProgram($user, $program, true));
                         }
                     }
+
                     if ($mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
                         foreach ($allowedUsers as $user) {
                             $this->commandBus->handle(new RegisterProgram($user, $program, false, true));

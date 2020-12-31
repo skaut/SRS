@@ -10,7 +10,6 @@ use Doctrine\Common\Collections\Collection;
 
 class CategoryUpdatedEvent
 {
-    /** @var Category */
     private Category $category;
 
     /** @var Collection<Role> */

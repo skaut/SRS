@@ -45,8 +45,6 @@ class ProgramAttendeesGridControl extends Control
 
     private UserRepository $userRepository;
 
-    private ProgramService $programService;
-
     private SessionSection $sessionSection;
 
     private CommandBus $commandBus;
@@ -57,7 +55,6 @@ class ProgramAttendeesGridControl extends Control
         ITranslator $translator,
         ProgramRepository $programRepository,
         UserRepository $userRepository,
-        ProgramService $programService,
         Session $session,
         CommandBus $commandBus,
         QueryBus $queryBus
@@ -65,7 +62,6 @@ class ProgramAttendeesGridControl extends Control
         $this->translator        = $translator;
         $this->programRepository = $programRepository;
         $this->userRepository    = $userRepository;
-        $this->programService    = $programService;
         $this->commandBus        = $commandBus;
         $this->queryBus          = $queryBus;
 
@@ -142,6 +138,7 @@ class ProgramAttendeesGridControl extends Control
             $grid->addColumnText('attends', 'admin.program.blocks_attendees_attends', 'pid')
                 ->setRenderer(function (User $item) {
                     $userPrograms = $this->queryBus->handle(new UserProgramsQuery($item));
+
                     return $userPrograms->contains($this->program)
                         ? $this->translator->translate('admin.common.yes')
                         : $this->translator->translate('admin.common.no');

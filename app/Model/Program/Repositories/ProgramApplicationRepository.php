@@ -7,8 +7,8 @@ namespace App\Model\Program\Repositories;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramApplication;
 use App\Model\User\User;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
+use function assert;
 
 /**
  * Třída spravující přihlášky programů.
@@ -21,6 +21,7 @@ class ProgramApplicationRepository extends EntityRepository
     {
         $result = $this->findOneBy(['user' => $user, 'program' => $program]);
         assert($result === null || $result instanceof ProgramApplication);
+
         return $result;
     }
 

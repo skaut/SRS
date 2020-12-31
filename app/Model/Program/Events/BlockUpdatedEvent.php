@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Events;
 
-use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\Category;
 use App\Model\Structure\Subevent;
@@ -13,13 +12,13 @@ class BlockUpdatedEvent
 {
     private Block $block;
 
-    private Category $originalCategory;
+    private ?Category $originalCategory;
 
     private Subevent $originalSubevent;
 
     private string $originalMandatory;
 
-    public function __construct(Block $block, Category $originalCategory, Subevent $originalSubevent, string $originalMandatory)
+    public function __construct(Block $block, ?Category $originalCategory, Subevent $originalSubevent, string $originalMandatory)
     {
         $this->block             = $block;
         $this->originalCategory  = $originalCategory;
@@ -32,7 +31,7 @@ class BlockUpdatedEvent
         return $this->block;
     }
 
-    public function getOriginalCategory() : Category
+    public function getOriginalCategory() : ?Category
     {
         return $this->originalCategory;
     }

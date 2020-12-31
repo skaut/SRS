@@ -32,7 +32,7 @@ class UnregisterProgram
         return $this->program;
     }
 
-    public function isNotifyUser(): bool
+    public function isNotifyUser() : bool
     {
         return $this->notifyUser;
     }

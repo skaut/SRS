@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Events\Subscribers;
 
-use App\Model\Acl\Events\CategoryUpdatedEvent;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Events\ProgramCreatedEvent;
 use App\Model\User\Commands\RegisterProgram;
-use App\Model\User\Commands\UpdateUsersPrograms;
 use App\Model\User\Repositories\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use eGen\MessageBus\Bus\CommandBus;
 use Nettrine\ORM\EntityManagerDecorator;
 

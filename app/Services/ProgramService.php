@@ -47,11 +47,7 @@ class ProgramService
 
     private BlockRepository $blockRepository;
 
-    private UserRepository $userRepository;
-
     private CategoryRepository $categoryRepository;
-
-    private MailService $mailService;
 
     private EventBus $eventBus;
 
@@ -60,18 +56,14 @@ class ProgramService
         SettingsService $settingsService,
         ProgramRepository $programRepository,
         BlockRepository $blockRepository,
-        UserRepository $userRepository,
         CategoryRepository $categoryRepository,
-        MailService $mailService,
         EventBus $eventBus
     ) {
         $this->em                 = $em;
         $this->settingsService    = $settingsService;
         $this->programRepository  = $programRepository;
         $this->blockRepository    = $blockRepository;
-        $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->mailService        = $mailService;
         $this->eventBus           = $eventBus;
     }
 
@@ -211,14 +203,14 @@ class ProgramService
     public function updateCategory(Category $category, string $name, Collection $registerableRoles) : void
     {
         $this->em->transactional(function () use ($category, $name, $registerableRoles) : void {
-            $originalRegisterableRoles = clone($category->getRegisterableRoles());
+            $originalRegisterableRoles = clone $category->getRegisterableRoles();
 
             $category->setName($name);
             $category->setRegisterableRoles($registerableRoles);
 
             $this->categoryRepository->save($category);
 
-            $this->eventBus->handle(new CategoryUpdatedEvent($originalRegisterableRoles, $registerableRoles));
+            $this->eventBus->handle(new CategoryUpdatedEvent($category, $originalRegisterableRoles));
         });
     }
 

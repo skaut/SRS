@@ -83,7 +83,7 @@ class UsersPresenter extends AdminBasePresenter
     {
         $user = $this->userRepository->findById($id);
 
-        $this->template->detailUser = $user;
+        $this->template->detailUser         = $user;
         $this->template->detailUserPrograms = $this->queryBus->handle(new UserProgramsQuery($user));
 
         $this->template->customInputs            = $this->customInputRepository->findByRolesOrderedByPosition($user->getRoles());

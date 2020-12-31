@@ -53,14 +53,17 @@ class TicketPresenter extends ExportBasePresenter
             throw new ForbiddenRequestException();
         }
 
+        $user = $this->userRepository->findById($this->user->id);
+        $userPrograms = $this->queryBus->handle(new UserProgramsQuery($user));
+
         /** @var Template $template */
         $template = $this->createTemplate();
         $template->setFile(__DIR__ . '/templates/Ticket/pdf.latte');
 
         $template->logo                    = $this->settingsService->getValue(Settings::LOGO);
         $template->seminarName             = $this->settingsService->getValue(Settings::SEMINAR_NAME);
-        $template->ticketUser              = $this->userRepository->findById($this->user->id);
-        $template->tickerUserPrograms      = $this->queryBus->handle(new UserProgramsQuery($this->dbuser));
+        $template->ticketUser              = $user;
+        $template->tickerUserPrograms      = $userPrograms;
         $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         $this->pdfResponse->setTemplate($template);

@@ -36,9 +36,9 @@ class SchedulePresenter extends ExportBasePresenter
         $calendar = new Calendar('-//Junák - český skaut//SRS//CS');
 
         $user     = $this->userRepository->findById($id);
-        $programs = $this->queryBus->handle(new UserProgramsQuery($user));
+        $userPrograms = $this->queryBus->handle(new UserProgramsQuery($user));
 
-        foreach ($programs as $program) {
+        foreach ($userPrograms as $program) {
             $event = new Event();
             $event->setDtStart($program->getStart())
                 ->setDtEnd($program->getEnd())

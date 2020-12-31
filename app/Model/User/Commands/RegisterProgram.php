@@ -35,12 +35,12 @@ class RegisterProgram
         return $this->program;
     }
 
-    public function isAlternate(): bool
+    public function isAlternate() : bool
     {
         return $this->alternate;
     }
 
-    public function isNotifyUser(): bool
+    public function isNotifyUser() : bool
     {
         return $this->notifyUser;
     }

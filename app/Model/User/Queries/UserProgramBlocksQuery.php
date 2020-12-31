@@ -14,7 +14,7 @@ class UserProgramBlocksQuery
 
     public function __construct(User $user, bool $includeAlternates = false)
     {
-        $this->user = $user;
+        $this->user              = $user;
         $this->includeAlternates = $includeAlternates;
     }
 
@@ -23,7 +23,7 @@ class UserProgramBlocksQuery
         return $this->user;
     }
 
-    public function isIncludeAlternates(): bool
+    public function isIncludeAlternates() : bool
     {
         return $this->includeAlternates;
     }

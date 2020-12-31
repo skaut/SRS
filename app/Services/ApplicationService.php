@@ -80,8 +80,6 @@ class ApplicationService
 
     private VariableSymbolRepository $variableSymbolRepository;
 
-    private ProgramService $programService;
-
     private MailService $mailService;
 
     private UserService $userService;
@@ -91,8 +89,6 @@ class ApplicationService
     private PaymentRepository $paymentRepository;
 
     private IncomeProofRepository $incomeProofRepository;
-
-    private CommandBus $commandBus;
 
     private EventBus $eventBus;
 
@@ -106,13 +102,11 @@ class ApplicationService
         SubeventRepository $subeventRepository,
         DiscountService $discountService,
         VariableSymbolRepository $variableSymbolRepository,
-        ProgramService $programService,
         MailService $mailService,
         UserService $userService,
         ITranslator $translator,
         PaymentRepository $paymentRepository,
         IncomeProofRepository $incomeProofRepository,
-        CommandBus $commandBus,
         EventBus $eventBus
     ) {
         $this->em                       = $em;
@@ -124,13 +118,11 @@ class ApplicationService
         $this->subeventRepository       = $subeventRepository;
         $this->discountService          = $discountService;
         $this->variableSymbolRepository = $variableSymbolRepository;
-        $this->programService           = $programService;
         $this->mailService              = $mailService;
         $this->userService              = $userService;
         $this->translator               = $translator;
         $this->paymentRepository        = $paymentRepository;
         $this->incomeProofRepository    = $incomeProofRepository;
-        $this->commandBus               = $commandBus;
         $this->eventBus                 = $eventBus;
     }
 

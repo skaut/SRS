@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Repositories;
 
-use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
-use App\Model\Program\Category;
-use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

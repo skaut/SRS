@@ -9,6 +9,7 @@ use App\Model\User\Commands\UpdateUsersPrograms;
 use App\Model\User\Repositories\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use eGen\MessageBus\Bus\CommandBus;
+use function array_diff;
 
 class CategoryUpdatedEventListener
 {
@@ -27,7 +28,7 @@ class CategoryUpdatedEventListener
      */
     public function __invoke(CategoryUpdatedEvent $event) : void
     {
-        $registerableRoles  = $event->getCategory()->getRegisterableRoles()->toArray();
+        $registerableRoles         = $event->getCategory()->getRegisterableRoles()->toArray();
         $originalRegisterableRoles = $event->getOriginalRegisterableRoles()->toArray();
 
         if (! empty(array_diff($registerableRoles, $originalRegisterableRoles))) {
