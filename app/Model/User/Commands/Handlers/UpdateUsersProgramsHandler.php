@@ -10,9 +10,9 @@ use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Commands\UpdateUsersPrograms;
 use App\Model\User\Queries\UserAllowedProgramsQuery;
 use App\Model\User\Queries\UserProgramsQuery;
-use Doctrine\ORM\EntityManager;
 use eGen\MessageBus\Bus\CommandBus;
 use eGen\MessageBus\Bus\QueryBus;
+use Nettrine\ORM\EntityManagerDecorator;
 
 class UpdateUsersProgramsHandler
 {
@@ -20,9 +20,9 @@ class UpdateUsersProgramsHandler
 
     private CommandBus $commandBus;
 
-    private EntityManager $em;
+    private EntityManagerDecorator $em;
 
-    public function __construct(QueryBus $queryBus, CommandBus $commandBus, EntityManager $em)
+    public function __construct(QueryBus $queryBus, CommandBus $commandBus, EntityManagerDecorator $em)
     {
         $this->queryBus   = $queryBus;
         $this->commandBus = $commandBus;

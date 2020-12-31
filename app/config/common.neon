@@ -54,19 +54,23 @@ services:
     - class: App\Model\User\Queries\Handlers\UserProgramsQueryHandler
       tags: [queryBus.handler]
 
-    - class: App\Model\Acl\Events\Subscribers\CategoryChangedEventListener
+    - class: App\Model\Acl\Events\Subscribers\CategoryUpdatedEventListener
       tags: [eventBus.subscriber]
-    - class: App\Model\Acl\Events\Subscribers\RoleChangedEventListener
+    - class: App\Model\Acl\Events\Subscribers\RoleUpdatedEventListener
       tags: [eventBus.subscriber]
     - class: App\Model\Mailing\Events\Subscribers\ProgramRegisteredEventMailListener
       tags: [eventBus.subscriber]
     - class: App\Model\Mailing\Events\Subscribers\ProgramUnregisteredEventMailListener
       tags: [eventBus.subscriber]
+    - class: App\Model\Program\Events\Subscribers\BlockUpdatedEventListener
+      tags: [eventBus.subscriber]
+    - class: App\Model\Program\Events\Subscribers\ProgramCreatedEventListener
+      tags: [eventBus.subscriber]
     - class: App\Model\User\Events\Subscribers\ProgramRegisteredEventListener
       tags: [eventBus.subscriber]
     - class: App\Model\User\Events\Subscribers\ProgramUnregisteredEventListener
       tags: [eventBus.subscriber]
-    - class: App\Model\User\Events\Subscribers\UserApplicationChangedEventListener
+    - class: App\Model\User\Events\Subscribers\UserApplicationUpdatedEventListener
       tags: [eventBus.subscriber]
 
     permissionRepository:
