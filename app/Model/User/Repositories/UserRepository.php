@@ -239,6 +239,22 @@ class UserRepository extends EntityRepository
     /**
      * @return Collection<User>
      */
+    public function findBlockAttendees(Block $block) : Collection
+    {
+        $result = $this->createQueryBuilder('u')
+            ->leftJoin('u.programApplications', 'a')
+            ->leftJoin('a.program', 'p')
+            ->where('p.block = :block')->setParameter('block', $block)
+            ->andWhere('a.alternate = false')
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
+     * @return Collection<User>
+     */
     public function findProgramAttendees(Program $program) : Collection
     {
         $result = $this->createQueryBuilder('u')

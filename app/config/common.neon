@@ -47,6 +47,8 @@ services:
     - class: App\Model\User\Commands\Handlers\UpdateUsersProgramsHandler
       tags: [commandBus.handler]
 
+    - class: App\Model\Program\Queries\Handlers\BlockAttendeesQueryHandler
+      tags: [queryBus.handler]
     - class: App\Model\Program\Queries\Handlers\ProgramAlternatesCountQueryHandler
       tags: [queryBus.handler]
     - class: App\Model\Program\Queries\Handlers\ProgramAlternatesQueryHandler

@@ -9,6 +9,7 @@ use App\Model\CustomInput\CustomCheckboxValue;
 use App\Model\CustomInput\CustomInput;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Program\Block;
+use App\Model\Program\Queries\BlockAttendeesQuery;
 use App\Model\Program\Queries\ProgramAttendeesCountQuery;
 use App\Model\Program\Queries\ProgramAttendeesQuery;
 use App\Model\Program\Repositories\CategoryRepository;
@@ -576,9 +577,8 @@ class ExcelExportService
             $sheet->getColumnDimensionByColumn($column++)->setWidth(40);
 
             $attendees = $this->queryBus->handle(new BlockAttendeesQuery($block));
-            $criteria = Criteria::create()->orderBy(['displayName' => 'ASC']);
 
-            foreach ($attendees->matching($criteria) as $attendee) {
+            foreach ($attendees as $attendee) {
                 $row++;
                 $column = 1;
 
