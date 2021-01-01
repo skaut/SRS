@@ -11,6 +11,7 @@ use App\Model\Program\Program;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
+use App\Model\User\Queries\UserProgramBlocksQuery;
 use App\Model\User\Queries\UserProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
@@ -101,7 +102,7 @@ class ProgramAttendeesGridControl extends Control
             $grid->setTranslator($this->translator);
 
             $qb = $this->userRepository->createQueryBuilder('u')
-                ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
+                ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid') // todo: fix
                 ->innerJoin('u.roles', 'r')
                 ->innerJoin('r.permissions', 'per')
                 ->innerJoin('u.applications', 'a')
@@ -147,13 +148,16 @@ class ProgramAttendeesGridControl extends Control
                     if ($value === '') {
                         return;
                     } elseif ($value === 'yes') {
-                        $qb->innerJoin('u.programs', 'pro')
-                            ->andWhere('pro.id = :proid')
-                            ->setParameter('proid', $this->program->getId());
+                        $qb->innerJoin('u.programApplications', 'pa')
+                            ->andWhere('pa.alternate = false')
+                            ->andWhere('pa.program = :program')
+                            ->setParameter('program', $this->program);
                     } elseif ($value === 'no') {
-                        $qb->leftJoin('u.programs', 'pro')
-                            ->andWhere('u not in (:attendees)')
-                            ->setParameter('attendees', $this->program->getAttendees());
+                        $qb->leftJoin('u.programApplications', 'pa')
+                            ->andWhere('pa.alternate = false')
+                            ->andWhere('pa.id = null')
+                            ->andWhere('pa.program = :program')
+                            ->setParameter('program', $this->program);
                     }
                 })
                 ->setTranslateOptions();
@@ -170,13 +174,17 @@ class ProgramAttendeesGridControl extends Control
                 $grid->addAction('register', 'admin.program.blocks_attendees_register', 'register!')
                     ->setClass('btn btn-xs btn-success ajax');
                 $grid->allowRowsAction('register', function ($item) {
-                    return ! $this->program->isAttendee($item);
+                    $userPrograms = $this->queryBus->handle(new UserProgramsQuery($item));
+
+                    return ! $userPrograms->contains($this->program);
                 });
 
                 $grid->addAction('unregister', 'admin.program.blocks_attendees_unregister', 'unregister!')
                     ->setClass('btn btn-xs btn-danger ajax');
                 $grid->allowRowsAction('unregister', function ($item) {
-                    return $this->program->isAttendee($item);
+                    $userPrograms = $this->queryBus->handle(new UserProgramsQuery($item));
+
+                    return $userPrograms->contains($this->program);
                 });
             }
         }
@@ -198,7 +206,7 @@ class ProgramAttendeesGridControl extends Control
 
         if (! $this->isAllowedModifyProgram($program)) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
-        } elseif ($user->hasProgramBlock($program->getBlock())) {
+        } elseif ($this->queryBus->handle(new UserProgramBlocksQuery($user))->contains($program->getBlock())) {
             $p->flashMessage('admin.program.blocks_attendees_already_has_block', 'danger');
         } else {
             $this->commandBus->handle(new RegisterProgram($user, $program, false, true));
@@ -259,7 +267,8 @@ class ProgramAttendeesGridControl extends Control
         } else {
             foreach ($ids as $id) {
                 $user = $this->userRepository->findById($id);
-                if (! $user->hasProgramBlock($this->program->getBlock())) {
+                $userBlocks = $this->queryBus->handle(new UserProgramBlocksQuery($user));
+                if (! $userBlocks->contains($this->program->getBlock())) {
                     $this->commandBus->handle(new RegisterProgram($user, $this->program, false, true));
                 }
             }
@@ -292,7 +301,8 @@ class ProgramAttendeesGridControl extends Control
         } else {
             foreach ($ids as $id) {
                 $user = $this->userRepository->findById($id);
-                if ($user->hasProgramBlock($this->program->getBlock())) {
+                $userBlocks = $this->queryBus->handle(new UserProgramBlocksQuery($user));
+                if ($userBlocks->contains($this->program->getBlock())) {
                     $this->commandBus->handle(new UnregisterProgram($user, $this->program, true));
                 }
             }

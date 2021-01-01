@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\Program\Program;
+use App\Model\Program\Queries\ProgramAttendeesCountQuery;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
+use eGen\MessageBus\Bus\QueryBus;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -37,16 +39,20 @@ class RoomScheduleGridControl extends Control
 
     private ExcelExportService $excelExportService;
 
+    private QueryBus $queryBus;
+
     public function __construct(
         ITranslator $translator,
         RoomRepository $roomRepository,
         ProgramRepository $programRepository,
-        ExcelExportService $excelExportService
+        ExcelExportService $excelExportService,
+        QueryBus $queryBus
     ) {
         $this->translator         = $translator;
         $this->roomRepository     = $roomRepository;
         $this->programRepository  = $programRepository;
         $this->excelExportService = $excelExportService;
+        $this->queryBus           = $queryBus;
     }
 
     /**
@@ -85,13 +91,11 @@ class RoomScheduleGridControl extends Control
 
         $grid->addColumnText('occupancy', 'admin.program.rooms_schedule_occupancy')
             ->setRenderer(
-                function (Program $row) {
+                function (Program $program) {
                     $capacity = $this->room->getCapacity();
-                    if ($capacity === null) {
-                        return $row->getAttendeesCount();
-                    }
+                    $attendeesCount = $this->queryBus->handle(new ProgramAttendeesCountQuery($program));
 
-                    return $row->getAttendeesCount() . '/' . $capacity;
+                    return $capacity === null ? $attendeesCount : $attendeesCount . '/' . $capacity;
                 }
             );
 

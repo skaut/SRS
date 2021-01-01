@@ -137,23 +137,6 @@ class Block
     }
 
     /**
-     * Vrací seznam účastníků bloku.
-     *
-     * @return Collection|User[]
-     */
-    public function getAttendees() : Collection
-    {
-        $attendees = new ArrayCollection();
-        foreach ($this->programs as $program) {
-            foreach ($program->getAttendees() as $attendee) {
-                $attendees->add($attendee);
-            }
-        }
-
-        return $attendees;
-    }
-
-    /**
      * Vrací počet programů bloku.
      */
     public function getProgramsCount() : int
@@ -301,19 +284,5 @@ class Block
         }
 
         return $result;
-    }
-
-    /**
-     * Účastní se uživatel programu bloku?
-     */
-    public function isAttendee(User $user) : bool
-    {
-        foreach ($this->programs as $program) {
-            if ($program->isAttendee($user)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

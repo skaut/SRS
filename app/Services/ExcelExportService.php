@@ -9,6 +9,8 @@ use App\Model\CustomInput\CustomCheckboxValue;
 use App\Model\CustomInput\CustomInput;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Program\Block;
+use App\Model\Program\Queries\ProgramAttendeesCountQuery;
+use App\Model\Program\Queries\ProgramAttendeesQuery;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Room;
@@ -241,6 +243,8 @@ class ExcelExportService
             $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
             foreach ($room->getPrograms() as $program) {
+                $attendeesCount = $this->queryBus->handle(new ProgramAttendeesCountQuery($program));
+
                 $row++;
                 $column = 1;
 
@@ -248,8 +252,8 @@ class ExcelExportService
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd()->format('j. n. H:i'));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getName());
                 $sheet->setCellValueByColumnAndRow($column++, $row, $room->getCapacity() !== null
-                    ? $program->getAttendeesCount() . '/' . $room->getCapacity()
-                    : $program->getAttendeesCount());
+                    ? $attendeesCount . '/' . $room->getCapacity()
+                    : $attendeesCount);
             }
         }
 
@@ -348,11 +352,6 @@ class ExcelExportService
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
 
-//        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.not_registared_mandatory_blocks'));
-//        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
-//        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-//        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
-
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $width = null;
 
@@ -431,8 +430,6 @@ class ExcelExportService
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->isAttended()
                 ? $this->translator->translate('common.export.common.yes')
                 : $this->translator->translate('common.export.common.no'));
-
-//            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getNotRegisteredMandatoryBlocksText());
 
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $user->getCustomInputValue($customInput);
@@ -578,9 +575,10 @@ class ExcelExportService
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth(40);
 
+            $attendees = $this->queryBus->handle(new BlockAttendeesQuery($block));
             $criteria = Criteria::create()->orderBy(['displayName' => 'ASC']);
 
-            foreach ($block->getAttendees()->matching($criteria) as $attendee) {
+            foreach ($attendees->matching($criteria) as $attendee) {
                 $row++;
                 $column = 1;
 

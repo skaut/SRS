@@ -16,6 +16,9 @@ use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
+use App\Model\Program\Queries\ProgramAlternatesQuery;
+use App\Model\Program\Queries\ProgramAttendeesCountQuery;
+use App\Model\Program\Queries\ProgramAttendeesQuery;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Repositories\RoomRepository;
@@ -25,6 +28,7 @@ use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Queries\UserAllowedProgramsQuery;
+use App\Model\User\Queries\UserProgramBlocksQuery;
 use App\Model\User\Queries\UserProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
@@ -127,16 +131,19 @@ class ScheduleService
      */
     public function getProgramsWeb() : array
     {
-        $programs = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user));
+        $userAllowedPrograms = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user));
 
         /** @var ProgramDetailDto[] $programDetailDtos */
         $programDetailDtos = [];
-        foreach ($programs as $program) {
+        foreach ($userAllowedPrograms as $program) {
+            $programAttendees  = $this->queryBus->handle(new ProgramAttendeesQuery($program));
+            $programAlternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));
+
             $programDetailDto = $this->convertProgramToProgramDetailDto($program);
-            $programDetailDto->setAttendeesCount($program->getAttendeesCount());
-            $programDetailDto->setAlternatesCount(0); //todo
-            $programDetailDto->setUserAttends($program->isAttendee($this->user));
-            $programDetailDto->setUserAlternates(false); //todo
+            $programDetailDto->setAttendeesCount($programAttendees->count());
+            $programDetailDto->setAlternatesCount($programAlternates->count());
+            $programDetailDto->setUserAttends($programAttendees->cointains($this->user));
+            $programDetailDto->setUserAlternates($programAlternates->contains($this->user));
             $programDetailDto->setBlocks($this->programRepository->findBlockedProgramsIdsByProgram($program));
             $programDetailDto->setBlocked(false);
             $programDetailDto->setPaid($this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
@@ -349,7 +356,7 @@ class ScheduleService
             throw new ApiException($this->translator->translate('common.api.schedule.program_not_found'));
         } elseif ($this->queryBus->handle(new UserProgramsQuery($this->user))->contains($program)) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_already_registered'));
-        } elseif ($program->getCapacity() !== null && $program->getCapacity() <= $program->getAttendeesCount()) {
+        } elseif ($program->getCapacity() !== null && $program->getCapacity() <= $this->queryBus->handle(new ProgramAttendeesCountQuery($program))) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_no_vacancies'));
         } elseif (! $this->queryBus->handle(new UserAllowedProgramsQuery($this->user))->contains($program)) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_category_not_allowed'));
@@ -368,7 +375,7 @@ class ScheduleService
             $responseDto->setStatus('success');
 
             $programDetailDto = $this->convertProgramToProgramDetailDto($program);
-            $programDetailDto->setAttendeesCount($program->getAttendeesCount());
+            $programDetailDto->setAttendeesCount($this->queryBus->handle(new ProgramAttendeesCountQuery($program)));
 
             $responseDto->setProgram($programDetailDto);
         }
@@ -400,7 +407,7 @@ class ScheduleService
             $responseDto->setStatus('success');
 
             $programDetailDto = $this->convertProgramToProgramDetailDto($program);
-            $programDetailDto->setAttendeesCount($program->getAttendeesCount());
+            $programDetailDto->setAttendeesCount($this->queryBus->handle(new ProgramAttendeesCountQuery($program)));
 
             $responseDto->setProgram($programDetailDto);
         }
@@ -431,6 +438,8 @@ class ScheduleService
      */
     private function convertBlockToBlockDetailDto(Block $block) : BlockDetailDto
     {
+        $userBlocks = $this->queryBus->handle(new UserProgramBlocksQuery($this->user));
+
         $blockDetailDto = new BlockDetailDto();
 
         $blockDetailDto->setId($block->getId());
@@ -447,7 +456,7 @@ class ScheduleService
         $blockDetailDto->setPerex($block->getPerex());
         $blockDetailDto->setDescription($block->getDescription());
         $blockDetailDto->setProgramsCount($block->getProgramsCount());
-        $blockDetailDto->setUserAttends($block->isAttendee($this->user));
+        $blockDetailDto->setUserAttends($userBlocks->contains($block));
         $blockDetailDto->setUserAllowed($block->isAllowed($this->user));
 
         return $blockDetailDto;

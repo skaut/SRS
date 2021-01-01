@@ -8,6 +8,7 @@ use App\Model\Acl\Permission;
 use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
+use App\Model\Program\Program;
 use App\Model\User\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -233,6 +234,58 @@ class UserRepository extends EntityRepository
         }
 
         return new ArrayCollection($qb->getQuery()->getResult());
+    }
+
+    /**
+     * @return Collection<User>
+     */
+    public function findProgramAttendees(Program $program) : Collection
+    {
+        $result = $this->createQueryBuilder('u')
+            ->leftJoin('u.programApplications', 'a')
+            ->where('a.program = :program')->setParameter('program', $program)
+            ->andWhere('a.alternate = false')
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    public function countProgramAttendees(Program $program) : int
+    {
+        return $this->createQueryBuilder('u')
+            ->select('count(u)')
+            ->leftJoin('u.programApplications', 'a')
+            ->where('a.program = :program')->setParameter('program', $program)
+            ->andWhere('a.alternate = false')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return Collection<User>
+     */
+    public function findProgramAlternates(Program $program) : Collection
+    {
+        $result = $this->createQueryBuilder('u')
+            ->leftJoin('u.programApplications', 'a')
+            ->where('a.program = :program')->setParameter('program', $program)
+            ->andWhere('a.alternate = true')
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    public function countProgramAlternates(Program $program) : int
+    {
+        return $this->createQueryBuilder('u')
+            ->select('count(u)')
+            ->leftJoin('u.programApplications', 'a')
+            ->where('a.program = :program')->setParameter('program', $program)
+            ->andWhere('a.alternate = true')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**
