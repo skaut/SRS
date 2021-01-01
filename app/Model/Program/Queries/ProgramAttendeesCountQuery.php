@@ -15,7 +15,7 @@ class ProgramAttendeesCountQuery
         $this->program = $program;
     }
 
-    public function getProgram(): Program
+    public function getProgram() : Program
     {
         return $this->program;
     }

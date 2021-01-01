@@ -267,8 +267,7 @@ class ProgramAttendeesGridControl extends Control
         } else {
             foreach ($ids as $id) {
                 $user = $this->userRepository->findById($id);
-                $userBlocks = $this->queryBus->handle(new UserProgramBlocksQuery($user));
-                if (! $userBlocks->contains($this->program->getBlock())) {
+                if (! $this->queryBus->handle(new UserProgramBlocksQuery($user))->contains($this->program->getBlock())) {
                     $this->commandBus->handle(new RegisterProgram($user, $this->program, false, true));
                 }
             }
@@ -301,8 +300,7 @@ class ProgramAttendeesGridControl extends Control
         } else {
             foreach ($ids as $id) {
                 $user = $this->userRepository->findById($id);
-                $userBlocks = $this->queryBus->handle(new UserProgramBlocksQuery($user));
-                if ($userBlocks->contains($this->program->getBlock())) {
+                if ($this->queryBus->handle(new UserProgramBlocksQuery($user))->contains($this->program->getBlock())) {
                     $this->commandBus->handle(new UnregisterProgram($user, $this->program, true));
                 }
             }

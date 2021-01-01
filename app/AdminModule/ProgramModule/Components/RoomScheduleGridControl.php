@@ -92,7 +92,7 @@ class RoomScheduleGridControl extends Control
         $grid->addColumnText('occupancy', 'admin.program.rooms_schedule_occupancy')
             ->setRenderer(
                 function (Program $program) {
-                    $capacity = $this->room->getCapacity();
+                    $capacity       = $this->room->getCapacity();
                     $attendeesCount = $this->queryBus->handle(new ProgramAttendeesCountQuery($program));
 
                     return $capacity === null ? $attendeesCount : $attendeesCount . '/' . $capacity;
