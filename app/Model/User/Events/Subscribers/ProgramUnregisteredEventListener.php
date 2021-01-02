@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Model\User\Events\Subscribers;
 
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
+use App\Model\Settings\Settings;
 use App\Model\User\Events\ProgramUnregisteredEvent;
 use App\Services\MailService;
 use App\Services\SettingsService;
+use Doctrine\Common\Collections\ArrayCollection;
 use eGen\MessageBus\Bus\QueryBus;
 
 class ProgramUnregisteredEventListener
@@ -34,6 +38,13 @@ class ProgramUnregisteredEventListener
 
     public function __invoke(ProgramUnregisteredEvent $event) : void
     {
-        //todo
+        if ($event->isNotifyUser()) {
+            $this->mailService->sendMailFromTemplate(new ArrayCollection([$event->getUser()]), null, Template::PROGRAM_UNREGISTERED, [
+                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::PROGRAM_NAME => $event->getProgram()->getBlock()->getName(),
+            ]);
+        }
+
+        // todo prihlaseni nahradniku
     }
 }

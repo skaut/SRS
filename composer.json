@@ -40,6 +40,7 @@
         "doctrine/common": "<3.0.0",
         "dg/mysql-dump": "^1.5",
 
+        "fmasa/auto-di": "^2.0",
         "egen/message-bus": "^2.1",
 
         "nextras/form-components": "^1.0",

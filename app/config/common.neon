@@ -8,6 +8,17 @@ application:
 session:
     expiration: 14 days
 
+autoDI:
+    services:
+        - class: App\Model\*\Events\Subscribers\*Listener
+          tags: [eventBus.subscriber]
+
+        - class: App\Model\*\Commands\Handlers\*Handler
+          tags: [commandBus.handler]
+
+        - class: App\Model\*\Queries\Handlers\*Handler
+          tags: [queryBus.handler]
+
 services:
     - App\Router\RouterFactory
     router: @App\Router\RouterFactory::createRouter
@@ -39,49 +50,6 @@ services:
     - App\Commands\ClearCacheCommand(%appDir%/..)
     - App\ApiModule\Services\ScheduleService
     - App\Utils\Validators
-
-    - class: App\Model\User\Commands\Handlers\RegisterProgramHandler
-      tags: [commandBus.handler]
-    - class: App\Model\User\Commands\Handlers\UnregisterProgramHandler
-      tags: [commandBus.handler]
-    - class: App\Model\User\Commands\Handlers\UpdateUsersProgramsHandler
-      tags: [commandBus.handler]
-
-    - class: App\Model\Program\Queries\Handlers\BlockAttendeesQueryHandler
-      tags: [queryBus.handler]
-    - class: App\Model\Program\Queries\Handlers\ProgramAlternatesCountQueryHandler
-      tags: [queryBus.handler]
-    - class: App\Model\Program\Queries\Handlers\ProgramAlternatesQueryHandler
-      tags: [queryBus.handler]
-    - class: App\Model\Program\Queries\Handlers\ProgramAttendeesCountQueryHandler
-      tags: [queryBus.handler]
-    - class: App\Model\Program\Queries\Handlers\ProgramAttendeesQueryHandler
-      tags: [queryBus.handler]
-    - class: App\Model\User\Queries\Handlers\UserAllowedProgramsQueryHandler
-      tags: [queryBus.handler]
-    - class: App\Model\User\Queries\Handlers\UserProgramBlocksQueryHandler
-      tags: [queryBus.handler]
-    - class: App\Model\User\Queries\Handlers\UserProgramsQueryHandler
-      tags: [queryBus.handler]
-
-    - class: App\Model\Acl\Events\Subscribers\CategoryUpdatedEventListener
-      tags: [eventBus.subscriber]
-    - class: App\Model\Acl\Events\Subscribers\RoleUpdatedEventListener
-      tags: [eventBus.subscriber]
-    - class: App\Model\Mailing\Events\Subscribers\ProgramRegisteredEventMailListener
-      tags: [eventBus.subscriber]
-    - class: App\Model\Mailing\Events\Subscribers\ProgramUnregisteredEventMailListener
-      tags: [eventBus.subscriber]
-    - class: App\Model\Program\Events\Subscribers\BlockUpdatedEventListener
-      tags: [eventBus.subscriber]
-    - class: App\Model\Program\Events\Subscribers\ProgramCreatedEventListener
-      tags: [eventBus.subscriber]
-    - class: App\Model\User\Events\Subscribers\ProgramRegisteredEventListener
-      tags: [eventBus.subscriber]
-    - class: App\Model\User\Events\Subscribers\ProgramUnregisteredEventListener
-      tags: [eventBus.subscriber]
-    - class: App\Model\User\Events\Subscribers\UserApplicationUpdatedEventListener
-      tags: [eventBus.subscriber]
 
     permissionRepository:
         class: App\Model\Acl\Repositories\PermissionRepository
@@ -169,7 +137,6 @@ services:
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Discount)
     subeventRepository:
         class: App\Model\Structure\Repositories\SubeventRepository
-        inject: yes
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Subevent)
     userRepository:
         class: App\Model\User\Repositories\UserRepository
@@ -285,6 +252,7 @@ extensions:
     mailing: Ublaboo\Mailing\DI\MailingExtension
     recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
     messageBus: eGen\MessageBus\DI\MessageBusExtension
+    autoDI: Fmasa\AutoDI\DI\AutoDIExtension
 
 console:
     name: SRS

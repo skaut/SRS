@@ -102,7 +102,8 @@ class ProgramAttendeesGridControl extends Control
             $grid->setTranslator($this->translator);
 
             $qb = $this->userRepository->createQueryBuilder('u')
-                ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid') // todo: fix
+                ->leftJoin('u.programApplications', 'pa')
+                ->innerJoin('pa.program', 'p', 'WITH', 'p.id = :pid')
                 ->innerJoin('u.roles', 'r')
                 ->innerJoin('r.permissions', 'per')
                 ->innerJoin('u.applications', 'a')
@@ -148,16 +149,9 @@ class ProgramAttendeesGridControl extends Control
                     if ($value === '') {
                         return;
                     } elseif ($value === 'yes') {
-                        $qb->innerJoin('u.programApplications', 'pa')
-                            ->andWhere('pa.alternate = false')
-                            ->andWhere('pa.program = :program')
-                            ->setParameter('program', $this->program);
+                        $qb->andWhere('pa.alternate = false');
                     } elseif ($value === 'no') {
-                        $qb->leftJoin('u.programApplications', 'pa')
-                            ->andWhere('pa.alternate = false')
-                            ->andWhere('pa.id = null')
-                            ->andWhere('pa.program = :program')
-                            ->setParameter('program', $this->program);
+                        $qb->andWhere('pa.id = null');
                     }
                 })
                 ->setTranslateOptions();

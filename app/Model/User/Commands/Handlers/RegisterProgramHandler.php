@@ -33,5 +33,7 @@ class RegisterProgramHandler
         $this->programApplicationRepository->save(new ProgramApplication($command->getUser(), $command->getProgram(), $command->isAlternate()));
 
         $this->eventBus->handle(new ProgramRegisteredEvent($command->getUser(), $command->getProgram(), $command->isAlternate(), $command->isNotifyUser()));
+
+        // todo: zruseni nahradniku
     }
 }
