@@ -15,7 +15,7 @@ class UnregisterProgram
 
     private bool $notifyUser;
 
-    public function __construct(User $user, Program $program, bool $notifyUser = false)
+    public function __construct(User $user, Program $program, bool $notifyUser = true)
     {
         $this->user       = $user;
         $this->program    = $program;

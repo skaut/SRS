@@ -35,7 +35,7 @@ class ProgramCreatedEventListener
             $block = $event->getProgram()->getBlock();
             if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
                 foreach ($this->userRepository->findBlockAllowed($block) as $user) {
-                    $this->commandBus->handle(new RegisterProgram($user, $event->getProgram(), false, true));
+                    $this->commandBus->handle(new RegisterProgram($user, $event->getProgram()));
                 }
             }
         });

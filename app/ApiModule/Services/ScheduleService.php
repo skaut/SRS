@@ -379,7 +379,7 @@ class ScheduleService
         // todo
 
         try {
-            $this->commandBus->handle(new RegisterProgram($this->user, $program));
+            $this->commandBus->handle(new RegisterProgram($this->user, $program, false));
 
             $responseDto = new ResponseDto();
             $responseDto->setMessage($this->translator->translate('common.api.schedule.program_registered'));
@@ -426,7 +426,7 @@ class ScheduleService
         // todo
 
         try {
-            $this->commandBus->handle(new UnregisterProgram($this->user, $program));
+            $this->commandBus->handle(new UnregisterProgram($this->user, $program, false));
 
             $responseDto = new ResponseDto();
             $responseDto->setMessage($this->translator->translate('common.api.schedule.program_unregistered'));

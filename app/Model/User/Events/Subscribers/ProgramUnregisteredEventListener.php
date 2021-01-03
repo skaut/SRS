@@ -47,7 +47,7 @@ class ProgramUnregisteredEventListener
     {
         if (! $event->isAlternate()) {
             $alternate = $this->userRepository->findProgramFirstAlternate($event->getProgram());
-            $this->commandBus->handle(new RegisterProgram($alternate, $event->getProgram(), true));
+            $this->commandBus->handle(new RegisterProgram($alternate, $event->getProgram()));
 
             if ($event->isNotifyUser()) {
                 $this->mailService->sendMailFromTemplate(new ArrayCollection([$event->getUser()]), null, Template::PROGRAM_UNREGISTERED, [

@@ -39,14 +39,14 @@ class UpdateUsersProgramsHandler
                 // odhlášení programů, na které nemá po změně nárok
                 foreach ($userPrograms as $program) {
                     if (! $userAllowedPrograms->contains($program)) {
-                        $this->commandBus->handle(new UnregisterProgram($user, $program, true));
+                        $this->commandBus->handle(new UnregisterProgram($user, $program));
                     }
                 }
 
                 // přihlášení automaticky přihlašovaných programů, na které neměl před změnou nárok
                 foreach ($userAllowedPrograms as $program) {
                     if ($program->getBlock()->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED && ! $userPrograms->contains($program)) {
-                        $this->commandBus->handle(new RegisterProgram($user, $program, false, true));
+                        $this->commandBus->handle(new RegisterProgram($user, $program));
                     }
                 }
             }

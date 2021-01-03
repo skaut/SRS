@@ -17,7 +17,7 @@ class ProgramUnregisteredEvent
 
     private bool $notifyUser;
 
-    public function __construct(User $user, Program $program, bool $alternate, bool $notifyUser = false)
+    public function __construct(User $user, Program $program, bool $alternate, bool $notifyUser)
     {
         $this->user       = $user;
         $this->program    = $program;

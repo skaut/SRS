@@ -203,7 +203,7 @@ class ProgramAttendeesGridControl extends Control
         } elseif ($this->queryBus->handle(new UserProgramBlocksQuery($user))->contains($program->getBlock())) {
             $p->flashMessage('admin.program.blocks_attendees_already_has_block', 'danger');
         } else {
-            $this->commandBus->handle(new RegisterProgram($user, $program, false, true));
+            $this->commandBus->handle(new RegisterProgram($user, $program));
             $p->flashMessage('admin.program.blocks_attendees_registered', 'success');
         }
 
@@ -232,7 +232,7 @@ class ProgramAttendeesGridControl extends Control
         if (! $this->isAllowedModifyProgram($program)) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         } else {
-            $this->commandBus->handle(new UnregisterProgram($user, $program, true));
+            $this->commandBus->handle(new UnregisterProgram($user, $program));
             $p->flashMessage('admin.program.blocks_attendees_unregistered', 'success');
         }
 
@@ -262,7 +262,7 @@ class ProgramAttendeesGridControl extends Control
             foreach ($ids as $id) {
                 $user = $this->userRepository->findById($id);
                 if (! $this->queryBus->handle(new UserProgramBlocksQuery($user))->contains($this->program->getBlock())) {
-                    $this->commandBus->handle(new RegisterProgram($user, $this->program, false, true));
+                    $this->commandBus->handle(new RegisterProgram($user, $this->program));
                 }
             }
 
@@ -295,7 +295,7 @@ class ProgramAttendeesGridControl extends Control
             foreach ($ids as $id) {
                 $user = $this->userRepository->findById($id);
                 if ($this->queryBus->handle(new UserProgramBlocksQuery($user))->contains($this->program->getBlock())) {
-                    $this->commandBus->handle(new UnregisterProgram($user, $this->program, true));
+                    $this->commandBus->handle(new UnregisterProgram($user, $this->program));
                 }
             }
 

@@ -60,13 +60,13 @@ class BlockUpdatedEventListener
                     $programAttendees = $this->queryBus->handle(new ProgramAttendeesQuery($program));
                     foreach ($programAttendees as $user) {
                         if (! $allowedUsers->contains($user)) {
-                            $this->commandBus->handle(new UnregisterProgram($user, $program, true));
+                            $this->commandBus->handle(new UnregisterProgram($user, $program));
                         }
                     }
 
                     if ($mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
                         foreach ($allowedUsers as $user) {
-                            $this->commandBus->handle(new RegisterProgram($user, $program, false, true));
+                            $this->commandBus->handle(new RegisterProgram($user, $program));
                         }
                     }
                 }
@@ -77,7 +77,7 @@ class BlockUpdatedEventListener
                 foreach ($block->getPrograms() as $program) {
                     $programAttendees = $this->queryBus->handle(new ProgramAttendeesQuery($program));
                     foreach ($programAttendees as $user) {
-                        $this->commandBus->handle(new UnregisterProgram($user, $program, true));
+                        $this->commandBus->handle(new UnregisterProgram($user, $program));
                     }
                 }
             }
@@ -86,7 +86,7 @@ class BlockUpdatedEventListener
             if ($originalMandatory !== ProgramMandatoryType::AUTO_REGISTERED && $mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
                 foreach ($block->getPrograms() as $program) {
                     foreach ($allowedUsers as $user) {
-                        $this->commandBus->handle(new RegisterProgram($user, $program, false, true));
+                        $this->commandBus->handle(new RegisterProgram($user, $program));
                     }
                 }
             }
