@@ -6,7 +6,6 @@ namespace App\Model\User\Commands\Handlers;
 
 use App\Model\Program\Exceptions\UserNotAllowedProgramException;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
-use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramRegisteredEvent;
 use App\Model\User\Queries\UserAllowedProgramsQuery;

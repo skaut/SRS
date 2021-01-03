@@ -382,7 +382,7 @@ class ScheduleService
             $responseDto->setMessage($this->translator->translate('common.api.schedule.program_registered'));
             $responseDto->setStatus('success');
 
-            $programAttendees = $this->queryBus->handle(new ProgramAttendeesQuery($program));
+            $programAttendees  = $this->queryBus->handle(new ProgramAttendeesQuery($program));
             $programAlternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));
 
             $programDetailDto = $this->convertProgramToProgramDetailDto($program);
@@ -394,8 +394,8 @@ class ScheduleService
             $responseDto->setProgram($programDetailDto);
 
             return $responseDto;
-        } catch (Exception $e) {
-            throw new ApiException("");
+        } catch (Throwable $e) {
+            throw new ApiException('');
         }
     }
 
@@ -442,8 +442,8 @@ class ScheduleService
             $responseDto->setProgram($programDetailDto);
 
             return $responseDto;
-        } catch (Exception $e) {
-            throw new ApiException("");
+        } catch (Throwable $e) {
+            throw new ApiException('');
         }
     }
 

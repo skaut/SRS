@@ -196,22 +196,6 @@ class SchedulePresenter extends ApiBasePresenter
         $this->sendResponse($response);
     }
 
-    public function actionAlternateProgram(int $id) : void
-    {
-        try {
-            $data = $this->scheduleService->alternateProgram($id);
-        } catch (ApiException $e) {
-            $this->getHttpResponse()->setCode(400);
-            $data = new ResponseDto();
-            $data->setMessage($e->getMessage());
-            $data->setStatus('danger');
-        }
-
-        $json     = $this->serializer->serialize($data, 'json');
-        $response = new JsonResponse($json);
-        $this->sendResponse($response);
-    }
-
     /**
      * Odhlásí program uživateli.
      *
