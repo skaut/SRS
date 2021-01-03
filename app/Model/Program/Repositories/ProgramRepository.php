@@ -108,68 +108,6 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
-     * Vrací programy zablokované (programy stejného bloku a překrývající se programy) přihlášením se na program.
-     *
-     * @return int[]
-     *
-     * @throws Exception
-     */
-    public function findBlockedProgramsIdsByProgram(Program $program) : array
-    {
-        return array_merge(
-            $this->findOtherProgramsWithSameBlockIds($program),
-            $this->findOverlappingProgramsIds($program)
-        );
-    }
-
-    /**
-     * Vrací programy stejného bloku.
-     *
-     * @return int[]
-     */
-    public function findOtherProgramsWithSameBlockIds(Program $program) : array
-    {
-        $programs = $this->createQueryBuilder('p')
-            ->select('p.id')
-            ->join('p.block', 'b')
-            ->where('b.id = :bid')->setParameter('bid', $program->getBlock()->getId())
-            ->andWhere('p.id != :pid')->setParameter('pid', $program->getId())
-            ->getQuery()
-            ->getScalarResult();
-
-        return array_map('intval', array_map('current', $programs));
-    }
-
-    /**
-     * Vrací programy s překrývajícím se časem.
-     *
-     * @return int[]
-     *
-     * @throws Exception
-     */
-    public function findOverlappingProgramsIds(Program $program) : array
-    {
-        $start = $program->getStart();
-        $end   = $program->getEnd();
-
-        $programs = $this->createQueryBuilder('p')
-            ->select('p.id')
-            ->join('p.block', 'b')
-            ->where($this->createQueryBuilder('p')->expr()->orX(
-                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
-                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
-            ))
-            ->andWhere('p.id != :pid')
-            ->setParameter('start', $start)
-            ->setParameter('end', $end)
-            ->setParameter('pid', $program->getId())
-            ->getQuery()
-            ->getScalarResult();
-
-        return array_map('intval', array_map('current', $programs));
-    }
-
-    /**
      * Překrývá se program s jiným programem?
      */
     public function hasOverlappingProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool

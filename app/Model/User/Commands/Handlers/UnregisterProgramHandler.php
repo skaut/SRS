@@ -23,13 +23,7 @@ class UnregisterProgramHandler
 
     public function __invoke(UnregisterProgram $command) : void
     {
-        $programApplication = $this->programApplicationRepository->findByUserAndProgram($command->getUser(), $command->getProgram());
-
-        if ($programApplication === null) {
-            return; // todo: exception
-        }
-
-        $this->programApplicationRepository->remove($programApplication);
+        $this->programApplicationRepository->removeUserProgramApplication($command->getUser(), $command->getProgram()->getId());
 
         $this->eventBus->handle(new ProgramUnregisteredEvent($command->getUser(), $command->getProgram(), $command->isNotifyUser()));
     }

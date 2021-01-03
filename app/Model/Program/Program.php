@@ -91,6 +91,11 @@ class Program
         return $this->occupancy;
     }
 
+    public function setOccupancy(int $occupancy) : void
+    {
+        $this->occupancy = $occupancy;
+    }
+
     public function getRoom() : ?Room
     {
         return $this->room;
