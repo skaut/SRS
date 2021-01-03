@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace App\Model\User\Commands\Handlers;
 
+use App\Model\Program\Exceptions\UserNotAllowedProgramException;
 use App\Model\Program\ProgramApplication;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramRegisteredEvent;
-use Doctrine\DBAL\LockMode;
+use App\Model\User\Queries\UserAllowedProgramsQuery;
 use eGen\MessageBus\Bus\EventBus;
-use http\Client\Curl\User;
+use eGen\MessageBus\Bus\QueryBus;
 use Nettrine\ORM\EntityManagerDecorator;
 
 class RegisterProgramHandler
 {
+    private QueryBus $queryBus;
+
     private EventBus $eventBus;
 
     private EntityManagerDecorator $em;
@@ -25,21 +28,31 @@ class RegisterProgramHandler
     private ProgramApplicationRepository $programApplicationRepository;
 
     public function __construct(
+        QueryBus $queryBus,
         EventBus $eventBus,
         EntityManagerDecorator $em,
         ProgramRepository $programRepository,
         ProgramApplicationRepository $programApplicationRepository
     ) {
+        $this->queryBus                     = $queryBus;
         $this->eventBus                     = $eventBus;
         $this->em                           = $em;
         $this->programRepository            = $programRepository;
         $this->programApplicationRepository = $programApplicationRepository;
     }
 
+    /**
+     * @throws UserNotAllowedProgramException
+     */
     public function __invoke(RegisterProgram $command) : void
     {
-        $this->programApplicationRepository->saveUserProgramApplication($command->getUser(), $command->getProgram()->getId());
+        if (! $this->queryBus->handle(new UserAllowedProgramsQuery($command->getUser()))->contains($command->getProgram())) {
+            throw new UserNotAllowedProgramException();
+        }
 
-        $this->eventBus->handle(new ProgramRegisteredEvent($command->getUser(), $command->getProgram(), $command->isAlternate(), $command->isNotifyUser()));
+        $this->em->transactional(function () use ($command) : void {
+            $programApplication = $this->programApplicationRepository->saveUserProgramApplication($command->getUser(), $command->getProgram());
+            $this->eventBus->handle(new ProgramRegisteredEvent($command->getUser(), $command->getProgram(), $programApplication->isAlternate(), $command->isNotifyUser()));
+        });
     }
 }

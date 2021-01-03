@@ -38,7 +38,7 @@ class ProgramRegisteredEventListener
 
     public function __invoke(ProgramRegisteredEvent $event) : void
     {
-        if ($event->isNotifyUser()) {
+        if (! $event->isAlternate() && $event->isNotifyUser()) {
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$event->getUser()]), null, Template::PROGRAM_REGISTERED, [
                 TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
                 TemplateVariable::PROGRAM_NAME => $event->getProgram()->getBlock()->getName(),

@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace App\Model\Program\Repositories;
 
 use App\Model\Program\Block;
+use App\Model\Program\Exceptions\ProgramCapacityOccupiedException;
+use App\Model\Program\Exceptions\UserAlreadyAttendsBlockException;
+use App\Model\Program\Exceptions\UserAlreadyAttendsProgramException;
+use App\Model\Program\Exceptions\UserAttendsConflictingProgramException;
+use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramApplication;
 use App\Model\User\User;
@@ -13,6 +18,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\PessimisticLockException;
+use Throwable;
 use function assert;
 
 /**
@@ -22,92 +29,87 @@ use function assert;
  */
 class ProgramApplicationRepository extends EntityRepository
 {
-    public function saveUserProgramApplication(User $user, int $programId) : void
+    public function findUserProgramApplication(User $user, Program $program) : ?ProgramApplication
     {
-        $updated = false;
-        do {
-            try {
-                $this->getEntityManager()->transactional(function (EntityManager $em) use ($user, $programId) : void {
-                    $program = $em->getRepository(Program::class)->find($programId, LockMode::PESSIMISTIC_WRITE);
-                    assert($program instanceof Program);
-
-                    $capacity = $program->getCapacity();
-                    $occupancy = $program->getOccupancy();
-
-                    $alternate = false;
-
-                    if ($capacity !== null && $occupancy >= $capacity && !$program->getBlock()->isAlternatesAllowed()) {
-                        throw new Full;
-                    } else if ($capacity !== null && $occupancy >= $capacity) {
-                        $alternate = true;
-                    }
-
-                    if ($this->findOneBy(['user' => $user, 'program' => $program, 'alternate' => false]) !== null) {
-                        throw new AlredyRegistered;
-                    }
-
-                    if ($this->userAttendsSameBlockProgram($user, $program->getBlock())) {
-                        throw new AlredyHasBlock;
-                    }
-
-                    if ($this->userAttendsOrAlternatesConflictingProgram($user, $program)) {
-                        throw new HasSameTimeProgram;
-                    }
-
-                    //todo: ma program povolen?
-
-                    $this->_em->persist(new ProgramApplication($user, $program, $alternate));
-
-                    if (! $alternate) {
-                        $program->setOccupancy($occupancy + 1);
-                        $this->_em->persist($program);
-
-                        foreach ($this->findUserAlternatesSameBlockPrograms($user, $program->getBlock()) as $programApplication) {
-                            $this->_em->remove($programApplication);
-                        }
-                    }
-                });
-
-                $updated = true;
-            } catch (Lock $e) {
-                wait;
-            }
-        } while (! $updated);
+        return $this->findOneBy(['user' => $user, 'program' => $program]);
     }
 
-    public function removeUserProgramApplication(User $user, int $programId) : void
+    /**
+     * @throws Throwable
+     */
+    public function saveUserProgramApplication(User $user, Program $program) : ?ProgramApplication
     {
-        $updated = false;
-        do {
-            try {
-                $this->getEntityManager()->transactional(function (EntityManager $em) use ($user, $programId) : void {
-                    $program = $em->getRepository(Program::class)->find($programId, LockMode::PESSIMISTIC_WRITE);
-                    assert($program instanceof Program);
+        $programApplication = null;
 
-                    $occupancy = $program->getOccupancy();
+        $this->getEntityManager()->transactional(function (EntityManager $em) use ($user, $program, $programApplication): void {
+            $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
+            assert($program instanceof Program);
 
-                    $programApplication = $this->findOneBy(['user' => $user, 'program' => $program]) !== null;
-                    assert($programApplication instanceof ProgramApplication);
+            $capacity = $program->getCapacity();
+            $occupancy = $program->getOccupancy();
 
-                    if ($programApplication === null) {
-                        throw new NotRegistered;
-                    }
+            $alternate = false;
 
-                    $alternate = $programApplication->isAlternate();
-
-                    $this->_em->remove($programApplication);
-
-                    if (! $alternate) {
-                        $program->setOccupancy($occupancy - 1);
-                        $this->_em->persist($program);
-                    }
-                });
-
-                $updated = true;
-            } catch (Lock $e) {
-                wait;
+            if ($capacity !== null && $occupancy >= $capacity /*&& ! $program->getBlock()->isAlternatesAllowed()*/) {
+                throw new ProgramCapacityOccupiedException();
+            } else if ($capacity !== null && $occupancy >= $capacity) {
+                $alternate = true;
             }
-        } while (! $updated);
+
+            if ($this->findUserProgramApplication($user, $program) !== null) {
+                throw new UserAlreadyAttendsProgramException();
+            }
+
+            if ($this->userAttendsSameBlockProgram($user, $program->getBlock())) {
+                throw new UserAlreadyAttendsBlockException();
+            }
+
+            if ($this->userAttendsOrAlternatesConflictingProgram($user, $program)) {
+                throw new UserAttendsConflictingProgramException();
+            }
+
+            $programApplication = new ProgramApplication($user, $program, $alternate);
+            $this->_em->persist($programApplication);
+
+            if (!$alternate) {
+                $program->setOccupancy($occupancy + 1);
+                $this->_em->persist($program);
+
+                foreach ($this->findUserAlternatesSameBlockPrograms($user, $program->getBlock()) as $pa) {
+                    $this->_em->remove($pa);
+                }
+            }
+        });
+
+        return $programApplication;
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function removeUserProgramApplication(User $user, Program $program) : void
+    {
+        $this->getEntityManager()->transactional(function (EntityManager $em) use ($user, $program) : void {
+            $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
+            assert($program instanceof Program);
+
+            $occupancy = $program->getOccupancy();
+
+            $programApplication = $this->findUserProgramApplication($user, $program);
+
+            if ($programApplication === null) {
+                throw new UserNotAttendsProgramException();
+            }
+
+            $alternate = $programApplication->isAlternate();
+
+            $this->_em->remove($programApplication);
+
+            if (! $alternate) {
+                $program->setOccupancy($occupancy - 1);
+                $this->_em->persist($program);
+            }
+        });
     }
 
     /**

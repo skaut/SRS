@@ -293,6 +293,20 @@ class UserRepository extends EntityRepository
         return new ArrayCollection($result);
     }
 
+    public function findProgramFirstAlternate(Program $program) : ?User
+    {
+        $result = $this->createQueryBuilder('u')
+            ->leftJoin('u.programApplications', 'a')
+            ->where('a.program = :program')->setParameter('program', $program)
+            ->andWhere('a.alternate = true')
+            ->orderBy('pa.createdAt')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+
+        return count($result) === 1 ? $result[0] : null;
+    }
+
     public function countProgramAlternates(Program $program) : int
     {
         return $this->createQueryBuilder('u')

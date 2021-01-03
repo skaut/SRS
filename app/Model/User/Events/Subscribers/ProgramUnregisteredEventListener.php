@@ -8,28 +8,35 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Settings\Settings;
+use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramUnregisteredEvent;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\MailService;
 use App\Services\SettingsService;
 use Doctrine\Common\Collections\ArrayCollection;
+use eGen\MessageBus\Bus\CommandBus;
 use eGen\MessageBus\Bus\QueryBus;
 
 class ProgramUnregisteredEventListener
 {
+    private CommandBus $commandBus;
+
     private QueryBus $queryBus;
 
-    private ProgramApplicationRepository $programApplicationRepository;
+    private UserRepository $userRepository;
 
     private MailService $mailService;
 
     private SettingsService $settingsService;
 
     public function __construct(
+        CommandBus $commandBus,
         QueryBus $queryBus,
         ProgramApplicationRepository $programApplicationRepository,
         MailService $mailService,
         SettingsService $settingsService
     ) {
+        $this->commandBus                    = $commandBus;
         $this->queryBus                      = $queryBus;
         $this->programApplicationRepository  = $programApplicationRepository;
         $this->mailService                   = $mailService;
@@ -38,13 +45,16 @@ class ProgramUnregisteredEventListener
 
     public function __invoke(ProgramUnregisteredEvent $event) : void
     {
-        if ($event->isNotifyUser()) {
-            $this->mailService->sendMailFromTemplate(new ArrayCollection([$event->getUser()]), null, Template::PROGRAM_UNREGISTERED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-                TemplateVariable::PROGRAM_NAME => $event->getProgram()->getBlock()->getName(),
-            ]);
-        }
+        if (! $event->isAlternate()) {
+            $alternate = $this->userRepository->findProgramFirstAlternate($event->getProgram());
+            $this->commandBus->handle(new RegisterProgram($alternate, $event->getProgram(), true));
 
-        // todo prihlaseni nahradniku
+            if ($event->isNotifyUser()) {
+                $this->mailService->sendMailFromTemplate(new ArrayCollection([$event->getUser()]), null, Template::PROGRAM_UNREGISTERED, [
+                    TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                    TemplateVariable::PROGRAM_NAME => $event->getProgram()->getBlock()->getName(),
+                ]);
+            }
+        }
     }
 }

@@ -13,15 +13,12 @@ class RegisterProgram
 
     private Program $program;
 
-    private bool $alternate;
-
     private bool $notifyUser;
 
-    public function __construct(User $user, Program $program, bool $alternate = false, bool $notifyUser = false)
+    public function __construct(User $user, Program $program, bool $notifyUser = false)
     {
         $this->user       = $user;
         $this->program    = $program;
-        $this->alternate  = $alternate;
         $this->notifyUser = $notifyUser;
     }
 
@@ -33,11 +30,6 @@ class RegisterProgram
     public function getProgram() : Program
     {
         return $this->program;
-    }
-
-    public function isAlternate() : bool
-    {
-        return $this->alternate;
     }
 
     public function isNotifyUser() : bool
