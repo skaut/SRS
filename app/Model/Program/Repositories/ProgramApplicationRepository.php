@@ -18,7 +18,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\PessimisticLockException;
 use Throwable;
 use function assert;
 
@@ -41,18 +40,18 @@ class ProgramApplicationRepository extends EntityRepository
     {
         $programApplication = null;
 
-        $this->getEntityManager()->transactional(function (EntityManager $em) use ($user, $program, $programApplication): void {
+        $this->getEntityManager()->transactional(function (EntityManager $em) use ($user, $program, $programApplication) : void {
             $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 
-            $capacity = $program->getCapacity();
+            $capacity  = $program->getCapacity();
             $occupancy = $program->getOccupancy();
 
             $alternate = false;
 
             if ($capacity !== null && $occupancy >= $capacity /*&& ! $program->getBlock()->isAlternatesAllowed()*/) {
                 throw new ProgramCapacityOccupiedException();
-            } else if ($capacity !== null && $occupancy >= $capacity) {
+            } elseif ($capacity !== null && $occupancy >= $capacity) {
                 $alternate = true;
             }
 
@@ -71,7 +70,7 @@ class ProgramApplicationRepository extends EntityRepository
             $programApplication = new ProgramApplication($user, $program, $alternate);
             $this->_em->persist($programApplication);
 
-            if (!$alternate) {
+            if (! $alternate) {
                 $program->setOccupancy($occupancy + 1);
                 $this->_em->persist($program);
 
@@ -167,6 +166,4 @@ class ProgramApplicationRepository extends EntityRepository
 
         return $result !== 0;
     }
-
-
 }

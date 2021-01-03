@@ -17,7 +17,6 @@ use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Program\Queries\ProgramAlternatesQuery;
-use App\Model\Program\Queries\ProgramAttendeesCountQuery;
 use App\Model\Program\Queries\ProgramAttendeesQuery;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\ProgramRepository;
@@ -29,7 +28,6 @@ use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Queries\UserAllowedProgramsQuery;
 use App\Model\User\Queries\UserProgramBlocksQuery;
-use App\Model\User\Queries\UserProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ProgramService;
@@ -42,8 +40,6 @@ use Exception;
 use Nette;
 use Nette\Localization\ITranslator;
 use Throwable;
-use function array_intersect;
-use function count;
 use function in_array;
 use const DATE_ISO8601;
 
@@ -347,35 +343,36 @@ class ScheduleService
         if (! $program) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_not_found'));
         }
+
         if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
             throw new ApiException($this->translator->translate('common.api.schedule.user_not_allowed_register_programs'));
         }
+
         if (! $this->programService->isAllowedRegisterPrograms()) {
             throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));
         }
+
         if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) && ! $this->user->hasPaidSubevent($program->getBlock()->getSubevent())) {
             throw new ApiException($this->translator->translate('common.api.schedule.register_programs_before_payment_not_allowed'));
         }
 
-
-
         // todo
-        if (! $this->queryBus->handle(new UserAllowedProgramsQuery($this->user))->contains($program)) {
-            throw new ApiException($this->translator->translate('common.api.schedule.program_category_not_allowed'));
-        }
-        if ($this->queryBus->handle(new UserProgramsQuery($this->user))->contains($program)) {
-            throw new ApiException($this->translator->translate('common.api.schedule.program_already_registered'));
-        }
-        if ($program->getCapacity() !== null && $program->getCapacity() <= $this->queryBus->handle(new ProgramAttendeesCountQuery($program))) {
-            throw new ApiException($this->translator->translate('common.api.schedule.program_no_vacancies'));
-        }
-        if (count(array_intersect(
-                $this->programRepository->findBlockedProgramsIdsByProgram($program),
-                $this->programRepository->findProgramsIds($this->queryBus->handle(new UserProgramsQuery($this->user)))
-            )
-        )) {
-            throw new ApiException($this->translator->translate('common.api.schedule.program_blocked'));
-        }
+//        if (! $this->queryBus->handle(new UserAllowedProgramsQuery($this->user))->contains($program)) {
+//            throw new ApiException($this->translator->translate('common.api.schedule.program_category_not_allowed'));
+//        }
+//        if ($this->queryBus->handle(new UserProgramsQuery($this->user))->contains($program)) {
+//            throw new ApiException($this->translator->translate('common.api.schedule.program_already_registered'));
+//        }
+//        if ($program->getCapacity() !== null && $program->getCapacity() <= $this->queryBus->handle(new ProgramAttendeesCountQuery($program))) {
+//            throw new ApiException($this->translator->translate('common.api.schedule.program_no_vacancies'));
+//        }
+//        if (count(array_intersect(
+//                $this->programRepository->findBlockedProgramsIdsByProgram($program),
+//                $this->programRepository->findProgramsIds($this->queryBus->handle(new UserProgramsQuery($this->user)))
+//            )
+//        )) {
+//            throw new ApiException($this->translator->translate('common.api.schedule.program_blocked'));
+//        }
         // todo
 
         try {
@@ -415,14 +412,15 @@ class ScheduleService
         if (! $program) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_not_found'));
         }
+
         if (! $this->programService->isAllowedRegisterPrograms()) {
             throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));
         }
 
         // todo
-        elseif (! $this->queryBus->handle(new UserProgramsQuery($this->user, true))->contains($program)) {
-            throw new ApiException($this->translator->translate('common.api.schedule.program_not_registered'));
-        }
+//        elseif (! $this->queryBus->handle(new UserProgramsQuery($this->user, true))->contains($program)) {
+//            throw new ApiException($this->translator->translate('common.api.schedule.program_not_registered'));
+//        }
         // todo
 
         try {

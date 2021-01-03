@@ -145,7 +145,7 @@ class ProgramAttendeesGridControl extends Control
                         : $this->translator->translate('admin.common.no');
                 })
                 ->setFilterSelect(['' => 'admin.common.all', 'yes' => 'admin.common.yes', 'no' => 'admin.common.no'])
-                ->setCondition(function (QueryBuilder $qb, string $value) : void {
+                ->setCondition(static function (QueryBuilder $qb, string $value) : void {
                     if ($value === '') {
                         return;
                     } elseif ($value === 'yes') {

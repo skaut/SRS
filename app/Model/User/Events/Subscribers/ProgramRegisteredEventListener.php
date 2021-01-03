@@ -6,34 +6,22 @@ namespace App\Model\User\Events\Subscribers;
 
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Settings\Settings;
 use App\Model\User\Events\ProgramRegisteredEvent;
 use App\Services\MailService;
 use App\Services\SettingsService;
 use Doctrine\Common\Collections\ArrayCollection;
-use eGen\MessageBus\Bus\QueryBus;
 
 class ProgramRegisteredEventListener
 {
-    private QueryBus $queryBus;
-
-    private ProgramApplicationRepository $programApplicationRepository;
-
     private MailService $mailService;
 
     private SettingsService $settingsService;
 
-    public function __construct(
-        QueryBus $queryBus,
-        ProgramApplicationRepository $programApplicationRepository,
-        MailService $mailService,
-        SettingsService $settingsService
-    ) {
-        $this->queryBus                      = $queryBus;
-        $this->programApplicationRepository  = $programApplicationRepository;
-        $this->mailService                   = $mailService;
-        $this->settingsService               = $settingsService;
+    public function __construct(MailService $mailService, SettingsService $settingsService)
+    {
+        $this->mailService     = $mailService;
+        $this->settingsService = $settingsService;
     }
 
     public function __invoke(ProgramRegisteredEvent $event) : void

@@ -6,7 +6,6 @@ namespace App\Model\User\Events\Subscribers;
 
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramUnregisteredEvent;
@@ -15,13 +14,10 @@ use App\Services\MailService;
 use App\Services\SettingsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use eGen\MessageBus\Bus\CommandBus;
-use eGen\MessageBus\Bus\QueryBus;
 
 class ProgramUnregisteredEventListener
 {
     private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
 
     private UserRepository $userRepository;
 
@@ -31,16 +27,14 @@ class ProgramUnregisteredEventListener
 
     public function __construct(
         CommandBus $commandBus,
-        QueryBus $queryBus,
-        ProgramApplicationRepository $programApplicationRepository,
+        UserRepository $userRepository,
         MailService $mailService,
         SettingsService $settingsService
     ) {
-        $this->commandBus                    = $commandBus;
-        $this->queryBus                      = $queryBus;
-        $this->programApplicationRepository  = $programApplicationRepository;
-        $this->mailService                   = $mailService;
-        $this->settingsService               = $settingsService;
+        $this->commandBus      = $commandBus;
+        $this->userRepository  = $userRepository;
+        $this->mailService     = $mailService;
+        $this->settingsService = $settingsService;
     }
 
     public function __invoke(ProgramUnregisteredEvent $event) : void

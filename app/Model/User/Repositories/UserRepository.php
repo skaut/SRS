@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 use function array_map;
+use function count;
 
 /**
  * Třída spravující uživatele.

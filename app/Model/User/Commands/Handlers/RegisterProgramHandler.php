@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\User\Commands\Handlers;
 
 use App\Model\Program\Exceptions\UserNotAllowedProgramException;
-use App\Model\Program\ProgramApplication;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\User\Commands\RegisterProgram;
@@ -23,21 +22,17 @@ class RegisterProgramHandler
 
     private EntityManagerDecorator $em;
 
-    private ProgramRepository $programRepository;
-
     private ProgramApplicationRepository $programApplicationRepository;
 
     public function __construct(
         QueryBus $queryBus,
         EventBus $eventBus,
         EntityManagerDecorator $em,
-        ProgramRepository $programRepository,
         ProgramApplicationRepository $programApplicationRepository
     ) {
         $this->queryBus                     = $queryBus;
         $this->eventBus                     = $eventBus;
         $this->em                           = $em;
-        $this->programRepository            = $programRepository;
         $this->programApplicationRepository = $programApplicationRepository;
     }
 

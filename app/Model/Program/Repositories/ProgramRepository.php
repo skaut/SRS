@@ -14,9 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
-use Exception;
 use function array_map;
-use function array_merge;
 
 /**
  * Třída spravující programy.

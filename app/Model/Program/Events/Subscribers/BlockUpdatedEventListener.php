@@ -54,7 +54,8 @@ class BlockUpdatedEventListener
             if (($category === null && $originalCategory !== null)
                 || ($category !== null && $originalCategory === null)
                 || ($category !== null && $originalCategory !== null && $category->getId() !== $originalCategory->getId())
-                || ($subevent->getId() !== $originalSubevent->getId())) {
+                || ($subevent->getId() !== $originalSubevent->getId())
+            ) {
 
                 foreach ($block->getPrograms() as $program) {
                     $programAttendees = $this->queryBus->handle(new ProgramAttendeesQuery($program));
