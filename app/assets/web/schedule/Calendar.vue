@@ -44,12 +44,20 @@
                     </div>
 
                     <div class="modal-footer" v-show="userAllowedRegisterPrograms">
-                        <button @click="handleAttendEvent()" v-show="!selectedEventInfo.event.extendedProps.userAttends"
+                        <button @click="handleAttendEvent()"
+                                v-show="!(selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates) && !(selectedEventInfo.event.extendedProps.alternatesAllowed && selectedEventInfo.event.extendedProps.occupied)"
                                 :disabled="selectedEventInfo.event.extendedProps.blocked || selectedEventInfo.event.extendedProps.occupied || !selectedEventInfo.event.extendedProps.paid"
                                 class="btn btn-sm btn-success pull-left">
                             Přihlásit se na program
                         </button>
-                        <button @click="handleUnattendEvent()" v-show="selectedEventInfo.event.extendedProps.userAttends"
+                        <button @click="handleAttendEvent()"
+                                v-show="!(selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates) && (selectedEventInfo.event.extendedProps.alternatesAllowed && selectedEventInfo.event.extendedProps.occupied)"
+                                :disabled="selectedEventInfo.event.extendedProps.blocked || !selectedEventInfo.event.extendedProps.paid"
+                                class="btn btn-sm btn-success pull-left">
+                            Přihlásit se na program jako náhradník
+                        </button>
+                        <button @click="handleUnattendEvent()"
+                                v-show="selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates"
                                 :disabled="selectedEventInfo.event.extendedProps.block.autoRegistered"
                                 class="btn btn-sm btn-danger pull-left">
                             Odhlásit se z programu

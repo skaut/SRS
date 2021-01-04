@@ -87,6 +87,13 @@ class Block
     protected ?int $capacity = null;
 
     /**
+     * Povoleno přihlašování náhradníků?
+     *
+     * @ORM\Column(type="boolean")
+     */
+    protected bool $alternatesAllowed = true;
+
+    /**
      * Pomůcky.
      *
      * @ORM\Column(type="string", nullable=true)
@@ -218,6 +225,17 @@ class Block
     public function setCapacity(?int $capacity) : void
     {
         $this->capacity = $capacity;
+    }
+
+    public function isAlternatesAllowed(): bool
+    {
+        return true; // todo
+        return $this->alternatesAllowed;
+    }
+
+    public function setAlternatesAllowed(bool $alternatesAllowed): void
+    {
+        $this->alternatesAllowed = $alternatesAllowed;
     }
 
     public function getTools() : ?string

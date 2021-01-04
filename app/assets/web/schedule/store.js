@@ -48,31 +48,15 @@ export default new Vuex.Store({
         setEventsMap(state, eventsMap) {
             state.eventsMap = eventsMap;
         },
-        setEventUserAttends(state, info) {
+        setEventAttendance(state, info) {
             const event = state.eventsMap[info.eventId];
             if (event) {
                 event.extendedProps.userAttends = info.userAttends;
-                event.color = getColor(event);
-            }
-        },
-        setEventUserAlternates(state, info) {
-            const event = state.eventsMap[info.eventId];
-            if (event) {
                 event.extendedProps.userAlternates = info.userAlternates;
-                event.color = getColor(event);
-            }
-        },
-        setEventAttendeesCount(state, info) {
-            const event = state.eventsMap[info.eventId];
-            if (event) {
                 event.extendedProps.attendeesCount = info.attendeesCount;
-                event.extendedProps.occupied = event.extendedProps.block.capacity !== null && event.extendedProps.block.capacity <= info.attendeesCount;
-            }
-        },
-        setEventAlternatesCount(state, info) {
-            const event = state.eventsMap[info.eventId];
-            if (event) {
                 event.extendedProps.alternatesCount = info.alternatesCount;
+                event.extendedProps.occupied = event.extendedProps.block.capacity !== null && event.extendedProps.block.capacity <= info.attendeesCount;
+                event.color = getColor(event);
             }
         },
         setEventBlocked(state, info) {
@@ -218,15 +202,21 @@ export default new Vuex.Store({
             Vue.axios.put('attend-program/' + info.event.id)
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
+                    const userAttends = responseObject.program.user_attends;
 
-                    commit('setEventUserAttends', {eventId: info.event.id, userAttends: true});
-                    commit('setEventAttendeesCount', {eventId: info.event.id, attendeesCount: responseObject.program.attendees_count});
+                    commit('setEventAttendance', {
+                        eventId: info.event.id,
+                        userAttends: userAttends,
+                        userAlternates: responseObject.program.user_alterantes,
+                        attendeesCount: responseObject.program.attendees_count,
+                        alternatesCount: responseObject.program.alternates_count
+                    })
 
                     info.event.extendedProps.blocks.forEach(function(eventId) {
                         commit('setEventBlocked', {eventId: eventId, blocked: true});
                     });
 
-                    if (info.event.extendedProps.block.mandatory) {
+                    if (info.event.extendedProps.block.mandatory && userAttends) {
                         commit('decrementNotRegisteredMandatoryPrograms');
                     }
 
@@ -246,9 +236,15 @@ export default new Vuex.Store({
             Vue.axios.delete('unattend-program/' + info.event.id)
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
+                    const userAttends = responseObject.program.user_attends;
 
-                    commit('setEventUserAttends', {eventId: info.event.id, userAttends: false});
-                    commit('setEventAttendeesCount', {eventId: info.event.id, attendeesCount: responseObject.program.attendees_count});
+                    commit('setEventAttendance', {
+                        eventId: info.event.id,
+                        userAttends: userAttends,
+                        userAlternates: responseObject.program.user_alterantes,
+                        attendeesCount: responseObject.program.attendees_count,
+                        alternatesCount: responseObject.program.alternates_count
+                    })
 
                     state.events.forEach(function(event) {
                         commit('setEventBlocked', {eventId: event.id, blocked: false});
@@ -263,7 +259,7 @@ export default new Vuex.Store({
                         }
                     });
 
-                    if (info.event.extendedProps.block.mandatory) {
+                    if (info.event.extendedProps.block.mandatory && userAttends) {
                         commit('incrementNotRegisteredMandatoryPrograms');
                     }
 

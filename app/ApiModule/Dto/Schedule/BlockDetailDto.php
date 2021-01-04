@@ -41,6 +41,9 @@ class BlockDetailDto
     private ?int $capacity = null;
 
     /** @JMS\Type("boolean") */
+    private bool $alternatesAllowed;
+
+    /** @JMS\Type("boolean") */
     private bool $mandatory;
 
     /** @JMS\Type("boolean") */
@@ -135,6 +138,16 @@ class BlockDetailDto
     public function setCapacity(?int $capacity) : void
     {
         $this->capacity = $capacity;
+    }
+
+    public function isAlternatesAllowed(): bool
+    {
+        return $this->alternatesAllowed;
+    }
+
+    public function setAlternatesAllowed(bool $alternatesAllowed): void
+    {
+        $this->alternatesAllowed = $alternatesAllowed;
     }
 
     public function isMandatory() : bool

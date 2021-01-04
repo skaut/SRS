@@ -483,6 +483,7 @@ class ScheduleService
         $blockDetailDto->setLectorsNames($block->getLectorsText());
         $blockDetailDto->setDuration($block->getDuration());
         $blockDetailDto->setCapacity($block->getCapacity());
+        $blockDetailDto->setAlternatesAllowed($block->isAlternatesAllowed());
         $blockDetailDto->setMandatory($block->getMandatory() === ProgramMandatoryType::MANDATORY || $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED);
         $blockDetailDto->setAutoRegistered($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED);
         $blockDetailDto->setPerex($block->getPerex());
