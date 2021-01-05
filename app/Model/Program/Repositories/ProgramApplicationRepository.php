@@ -74,7 +74,7 @@ class ProgramApplicationRepository extends EntityRepository
                 $program->setOccupancy($occupancy + 1);
                 $this->_em->persist($program);
 
-                foreach ($this->findUserAlternatesSameBlockPrograms($user, $program->getBlock()) as $pa) {
+                foreach ($this->findUserAlternatesAndBlockPrograms($user, $program->getBlock()) as $pa) {
                     $this->_em->remove($pa);
                 }
             }
@@ -114,10 +114,11 @@ class ProgramApplicationRepository extends EntityRepository
     /**
      * @return Collection<Program>
      */
-    private function findUserAlternatesSameBlockPrograms(User $user, Block $block) : Collection
+    private function findUserAlternatesAndBlockPrograms(User $user, Block $block) : Collection
     {
         $result = $this->createQueryBuilder('pa')
-            ->innerJoin('pa.program', 'p', 'WITH', 'b = :block')
+            ->select('p')
+            ->join('pa.program', 'p', 'WITH', 'b = :block')
             ->where('pa.user = :user')
             ->andWhere('pa.alternate = true')
             ->setParameter('user', $user)
@@ -132,7 +133,7 @@ class ProgramApplicationRepository extends EntityRepository
     {
         $result = $this->createQueryBuilder('pa')
             ->select('count(pa)')
-            ->innerJoin('pa.program', 'p', 'WITH', 'b = :block')
+            ->join('pa.program', 'p', 'WITH', 'b = :block')
             ->where('pa.user = :user')
             ->andWhere('pa.alternate = false')
             ->setParameter('user', $user)
@@ -150,13 +151,11 @@ class ProgramApplicationRepository extends EntityRepository
 
         $result = $this->createQueryBuilder('pa')
             ->select('count(pa)')
-            ->innerJoin('pa.program', 'p')
+            ->join('pa.program', 'p')
             ->where('pa.user = :user')
             ->andWhere('p != :program')
-            ->andWhere($this->createQueryBuilder('p')->expr()->orX(
-                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
-                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
-            ))
+            ->andWhere('p.start < :end')
+            ->andWhere("DATE_ADD(p.start, (b.duration * 60), 'second') > :start")
             ->setParameter('user', $user)
             ->setParameter('program', $program)
             ->setParameter('start', $start)

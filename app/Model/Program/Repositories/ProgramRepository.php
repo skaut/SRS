@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Program\Repositories;
 
 use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Program\Block;
 use App\Model\Program\Category;
 use App\Model\Program\Program;
 use App\Model\Structure\Subevent;
@@ -12,6 +13,7 @@ use App\Model\User\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 use function array_map;
@@ -56,33 +58,15 @@ class ProgramRepository extends EntityRepository
     }
 
     /**
-     * Vrací id podle programů.
-     *
-     * @param Collection|Program[] $programs
-     *
-     * @return int[]
-     */
-    public function findProgramsIds(Collection $programs) : array
-    {
-        return array_map(static function (Program $o) {
-            return $o->getId();
-        }, $programs->toArray());
-    }
-
-    /**
      * @return Collection<Program>
      */
-    public function findUserRegistered(User $user, bool $includeAlternates = false) : Collection
+    public function findUserAttends(User $user) : Collection
     {
-        $qb = $this->createQueryBuilder('p')
-            ->leftJoin('p.programApplications', 'a')
-            ->where('a.user = :user')->setParameter('user', $user);
-
-        if ($includeAlternates === false) {
-            $qb = $qb->andWhere('a.alternate = true');
-        }
-
-        $result = $qb->getQuery()->getResult();
+        $result = $this->createQueryBuilder('p')
+            ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = false')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
 
         return new ArrayCollection($result);
     }
@@ -92,13 +76,60 @@ class ProgramRepository extends EntityRepository
      *
      * @return Collection<Program>
      */
-    public function findUserRegisteredAndInCategory(User $user, Category $category) : Collection
+    public function findUserAttendsAndCategory(User $user, Category $category) : Collection
     {
         $result = $this->createQueryBuilder('p')
-            ->leftJoin('p.block', 'b')
-            ->leftJoin('p.programApplications', 'a')
-            ->where('b.category = :category')->setParameter('category', $category)
-            ->andWhere('a.user = :user')->setParameter('user', $user)
+            ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = false')
+            ->join('p.block', 'b', 'WITH', 'b.category = :category')
+            ->setParameter('user', $user)
+            ->setParameter('category', $category)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
+     * Vrací programy povolené pro kategorie a podakce.
+     *
+     * @param Collection|Category[] $categories
+     * @param Collection|Subevent[] $subevents
+     *
+     * @return Collection|Program[]
+     */
+    public function findAllowedForCategoriesAndSubevents(Collection $categories, Collection $subevents) : Collection
+    {
+        $result = $this->createQueryBuilder('p')
+            ->select('p')
+            ->join('p.block', 'b')
+            ->leftJoin('b.category', 'c')
+            ->leftJoin('b.subevent', 's')
+            ->where('(b.category IS NULL OR c IN (:categories))')->setParameter('categories', $categories)
+            ->andWhere('s IN (:subevents)')->setParameter('subevents', $subevents)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
+     * Vrací programy zablokované (programy stejného bloku a překrývající se programy) přihlášením se na program.
+     *
+     * @return Collection<Program>
+     */
+    public function findBlockedByProgram(Program $program) : Collection
+    {
+        $start = $program->getStart();
+        $end   = $program->getEnd();
+
+        $result = $this->createQueryBuilder('p')
+            ->join('p.block', 'b')
+            ->where('p != :program')
+            ->andWhere("b = :block OR (p.start < :end AND DATE_ADD(p.start, (b.duration * 60), 'second') > :start)")
+            ->setParameter('program', $program)
+            ->setParameter('block', $program->getBlock())
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->getQuery()
             ->getResult();
 
@@ -153,28 +184,5 @@ class ProgramRepository extends EntityRepository
         }
 
         return ! empty($qb->getQuery()->getResult());
-    }
-
-    /**
-     * Vrací programy povolené pro kategorie a podakce.
-     *
-     * @param Collection|Category[] $categories
-     * @param Collection|Subevent[] $subevents
-     *
-     * @return Collection|Program[]
-     */
-    public function findAllowedForCategoriesAndSubevents(Collection $categories, Collection $subevents) : Collection
-    {
-        $result = $this->createQueryBuilder('p')
-            ->select('p')
-            ->join('p.block', 'b')
-            ->leftJoin('b.category', 'c')
-            ->leftJoin('b.subevent', 's')
-            ->where('(b.category IS NULL OR c IN (:categories))')->setParameter('categories', $categories)
-            ->andWhere('s IN (:subevents)')->setParameter('subevents', $subevents)
-            ->getQuery()
-            ->getResult();
-
-        return new ArrayCollection($result);
     }
 }

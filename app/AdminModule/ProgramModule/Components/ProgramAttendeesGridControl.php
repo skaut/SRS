@@ -103,11 +103,11 @@ class ProgramAttendeesGridControl extends Control
 
             $qb = $this->userRepository->createQueryBuilder('u')
                 ->leftJoin('u.programApplications', 'pa')
-                ->innerJoin('pa.program', 'p', 'WITH', 'p.id = :pid')
-                ->innerJoin('u.roles', 'r')
-                ->innerJoin('r.permissions', 'per')
-                ->innerJoin('u.applications', 'a')
-                ->innerJoin('a.subevents', 's')
+                ->join('pa.program', 'p', 'WITH', 'p.id = :pid')
+                ->join('u.roles', 'r')
+                ->join('r.permissions', 'per')
+                ->join('u.applications', 'a')
+                ->join('a.subevents', 's')
                 ->where('per.name = :permission')
                 ->andWhere('s.id = :sid')
                 ->andWhere('a.validTo IS NULL')
@@ -120,8 +120,8 @@ class ProgramAttendeesGridControl extends Control
 
             if ($this->program->getBlock()->getCategory()) {
                 $qb = $qb
-                    ->innerJoin('u.roles', 'rol')
-                    ->innerJoin('rol.registerableCategories', 'c')
+                    ->join('u.roles', 'rol')
+                    ->join('rol.registerableCategories', 'c')
                     ->andWhere('c.id = :cid')
                     ->setParameter('cid', $this->program->getBlock()->getCategory()->getId());
             }

@@ -529,7 +529,7 @@ class ExcelExportService
             foreach ($this->categoryRepository->findAll() as $category) {
                 $blocks = [];
                 $rooms  = [];
-                foreach ($this->programRepository->findUserRegisteredAndInCategory($user, $category) as $program) {
+                foreach ($this->programRepository->findUserAttendsAndCategory($user, $category) as $program) {
                     $blocks[] = $program->getBlock()->getName();
                     $rooms[]  = $program->getRoom() ? $program->getRoom()->getName() : '';
                 }

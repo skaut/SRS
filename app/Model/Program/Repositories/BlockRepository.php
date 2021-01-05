@@ -137,18 +137,14 @@ class BlockRepository extends EntityRepository
     /**
      * @return Collection<Block>
      */
-    public function findUserRegistered(User $user, bool $includeAlternates = false) : Collection
+    public function findUserAttends(User $user) : Collection
     {
-        $qb = $this->createQueryBuilder('b')
+        $result = $this->createQueryBuilder('b')
             ->leftJoin('b.programs', 'p')
             ->leftJoin('p.programApplications', 'a')
-            ->where('a.user = :user')->setParameter('user', $user);
-
-        if ($includeAlternates === false) {
-            $qb = $qb->andWhere('a.alternate = true');
-        }
-
-        $result = $qb->getQuery()->getResult();
+            ->where('a.user = :user')->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
 
         return new ArrayCollection($result);
     }

@@ -32,6 +32,7 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ProgramService;
 use App\Services\SettingsService;
+use App\Utils\Helpers;
 use DateInterval;
 use Doctrine\ORM\ORMException;
 use eGen\MessageBus\Bus\CommandBus;
@@ -140,7 +141,7 @@ class ScheduleService
             $programDetailDto->setAlternatesCount($programAlternates->count());
             $programDetailDto->setUserAttends($programAttendees->contains($this->user));
             $programDetailDto->setUserAlternates($programAlternates->contains($this->user));
-            $programDetailDto->setBlocks($this->programRepository->findBlockedProgramsIdsByProgram($program));
+            $programDetailDto->setBlocks(Helpers::getIds($this->programRepository->findBlockedByProgram($program)));
             $programDetailDto->setBlocked(false);
             $programDetailDto->setPaid($this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
                 || ($this->user->hasPaidSubevent($program->getBlock()->getSubevent()) && $this->user->hasPaidRolesApplication()));

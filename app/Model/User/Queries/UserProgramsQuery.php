@@ -10,21 +10,13 @@ class UserProgramsQuery
 {
     private User $user;
 
-    private bool $includeAlternates;
-
-    public function __construct(User $user, bool $includeAlternates = false)
+    public function __construct(User $user)
     {
-        $this->user              = $user;
-        $this->includeAlternates = $includeAlternates;
+        $this->user = $user;
     }
 
     public function getUser() : User
     {
         return $this->user;
-    }
-
-    public function isIncludeAlternates() : bool
-    {
-        return $this->includeAlternates;
     }
 }

@@ -23,6 +23,6 @@ class UserProgramBlocksQueryHandler
      */
     public function __invoke(UserProgramBlocksQuery $query) : Collection
     {
-        return $this->blockRepository->findUserRegistered($query->getUser(), $query->isIncludeAlternates());
+        return $this->blockRepository->findUserAttends($query->getUser());
     }
 }

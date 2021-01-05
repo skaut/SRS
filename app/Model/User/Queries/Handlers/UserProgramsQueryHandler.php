@@ -23,6 +23,6 @@ class UserProgramsQueryHandler
      */
     public function __invoke(UserProgramsQuery $query) : Collection
     {
-        return $this->programRepository->findUserRegistered($query->getUser(), $query->isIncludeAlternates());
+        return $this->programRepository->findUserAttends($query->getUser());
     }
 }

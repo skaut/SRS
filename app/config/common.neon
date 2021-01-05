@@ -8,17 +8,6 @@ application:
 session:
     expiration: 14 days
 
-autoDI:
-    services:
-        - class: App\Model\*\Events\Subscribers\*Listener
-          tags: [eventBus.subscriber]
-
-        - class: App\Model\*\Commands\Handlers\*Handler
-          tags: [commandBus.handler]
-
-        - class: App\Model\*\Queries\Handlers\*Handler
-          tags: [queryBus.handler]
-
 services:
     - App\Router\RouterFactory
     router: @App\Router\RouterFactory::createRouter
@@ -30,22 +19,8 @@ services:
             - $mpdfConfig([tempDir: %tempDir%/mpdf])
 
     - App\Services\Authorizator
-    - App\Services\AclService
-    - App\Services\ApplicationService
-    - App\Services\BankService
-    - App\Services\CmsService
     - App\Services\DatabaseService(%appDir%/..)
-    - App\Services\DiscountService
-    - App\Services\ExcelExportService
     - App\Services\FilesService(%wwwDir%/files)
-    - App\Services\MailService
-    - App\Services\ProgramService
-    - App\Services\SettingsService
-    - App\Services\SkautIsEventEducationService
-    - App\Services\SkautIsEventGeneralService
-    - App\Services\SkautIsService
-    - App\Services\SubeventService
-    - App\Services\UserService
 
     - App\Commands\ClearCacheCommand(%appDir%/..)
     - App\ApiModule\Services\ScheduleService
@@ -142,90 +117,14 @@ services:
         class: App\Model\User\Repositories\UserRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\User)
 
-    - App\WebModule\Components\IApplicationContentControlFactory
-    - App\WebModule\Components\IBlocksContentControlFactory
-    - App\WebModule\Components\ICapacitiesContentControlFactory
-    - App\WebModule\Components\IDocumentContentControlFactory
-    - App\WebModule\Components\IFaqContentControlFactory
-    - App\WebModule\Components\IHtmlContentControlFactory
-    - App\WebModule\Components\IImageContentControlFactory
-    - App\WebModule\Components\INewsContentControlFactory
-    - App\WebModule\Components\IPlaceContentControlFactory
-    - App\WebModule\Components\IProgramsContentControlFactory
-    - App\WebModule\Components\ITextContentControlFactory
-    - App\WebModule\Components\IUsersContentControlFactory
-    - App\WebModule\Components\ILectorsContentControlFactory
-    - App\WebModule\Components\IApplicationsGridControlFactory
-    - App\WebModule\Components\IOrganizerContentControlFactory
-    - App\WebModule\Components\IContactFormContentControlFactory
-
-    - App\WebModule\Forms\BaseFormFactory
-    - App\WebModule\Forms\IAdditionalInformationFormFactory
-    - App\WebModule\Forms\ApplicationFormFactory
-    - App\WebModule\Forms\FaqFormFactory
-    - App\WebModule\Forms\PersonalDetailsFormFactory
-    - App\WebModule\Forms\RolesFormFactory
-    - App\WebModule\Forms\IContactFormFactory
-
-    - App\AdminModule\Components\IApplicationsGridControlFactory
-    - App\AdminModule\Components\IRolesGridControlFactory
-    - App\AdminModule\Components\IUsersGridControlFactory
-    - App\AdminModule\CmsModule\Components\IDocumentsGridControlFactory
-    - App\AdminModule\CmsModule\Components\IDocumentTagsGridControlFactory
-    - App\AdminModule\CmsModule\Components\IFaqGridControlFactory
-    - App\AdminModule\CmsModule\Components\INewsGridControlFactory
-    - App\AdminModule\CmsModule\Components\IPagesGridControlFactory
-    - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
-    - App\AdminModule\ConfigurationModule\Components\IDiscountsGridControlFactory
-    - App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory
-    - App\AdminModule\ConfigurationModule\Components\ISkautIsEventEducationGridControlFactory
-    - App\AdminModule\ConfigurationModule\Components\ISubeventsGridControlFactory
-    - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
-    - App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory
-    - App\AdminModule\PaymentsModule\Components\IPaymentsGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IRoomScheduleGridControlFactory
-
-    - App\AdminModule\Forms\BaseFormFactory
-    - App\AdminModule\Forms\AddLectorFormFactory
-    - App\AdminModule\Forms\AddRoleFormFactory
-    - App\AdminModule\Forms\EditRoleFormFactory
-    - App\AdminModule\Forms\EditUserPersonalDetailsFormFactory
-    - App\AdminModule\Forms\EditUserSeminarFormFactory
-    - App\AdminModule\CmsModule\Forms\FaqFormFactory
     pageFormFactory:
         factory: App\AdminModule\CmsModule\Forms\PageForm(%id%, %area%, ...)
         implement: App\AdminModule\CmsModule\Forms\IPageFormFactory
         parameters: [id, area]
-    - App\AdminModule\CmsModule\Forms\NewsFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\ApplicationFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\BankFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\CustomInputFormFactory
     discountFormFactory:
         factory: App\AdminModule\ConfigurationModule\Forms\DiscountForm(%id%, ...)
         implement: App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory
         parameters: [id]
-    - App\AdminModule\ConfigurationModule\Forms\MailingFormFactory
-    paymentFormFactory:
-        factory: App\AdminModule\ConfigurationModule\Forms\PaymentForm
-        implement: App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\PlacePointFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\ProgramFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\SubeventFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\SubeventsFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\TicketsFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\WebFormFactory
-    - App\AdminModule\PaymentsModule\Forms\EditPaymentFormFactory
-    - App\AdminModule\ProgramModule\Forms\BlockFormFactory
-    - App\AdminModule\MailingModule\Forms\EditTemplateFormFactory
-    - App\AdminModule\MailingModule\Forms\SendFormFactory
 
 extensions:
     # Console
@@ -253,6 +152,27 @@ extensions:
     recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
     messageBus: eGen\MessageBus\DI\MessageBusExtension
     autoDI: Fmasa\AutoDI\DI\AutoDIExtension
+
+autoDI:
+    services:
+        - implement: App\**\Components\I*Factory
+
+        - implement: App\**\Forms\I*Factory
+
+        - class: App\**\Forms\*Factory
+          exclude:
+              - App\**\Forms\I*Factory
+
+        - class: App\Services\*Service
+
+        - class: App\Model\*\Events\Subscribers\*Listener
+          tags: [eventBus.subscriber]
+
+        - class: App\Model\*\Commands\Handlers\*Handler
+          tags: [commandBus.handler]
+
+        - class: App\Model\*\Queries\Handlers\*Handler
+          tags: [queryBus.handler]
 
 console:
     name: SRS

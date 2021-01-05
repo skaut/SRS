@@ -216,10 +216,10 @@ class UserRepository extends EntityRepository
     public function findBlockAllowed(Block $block) : Collection
     {
         $qb = $this->createQueryBuilder('u')
-            ->innerJoin('u.roles', 'r')
-            ->innerJoin('r.permissions', 'p')
-            ->innerJoin('u.applications', 'a')
-            ->innerJoin('a.subevents', 's')
+            ->join('u.roles', 'r')
+            ->join('r.permissions', 'p')
+            ->join('u.applications', 'a')
+            ->join('a.subevents', 's')
             ->where('p.name = :permission')
             ->andWhere('s.id = :sid')
             ->andWhere('a.validTo IS NULL')
@@ -229,7 +229,7 @@ class UserRepository extends EntityRepository
             ->setParameter('sid', $block->getSubevent()->getId());
 
         if ($block->getCategory()) {
-            $qb = $qb->innerJoin('r.registerableCategories', 'c')
+            $qb = $qb->join('r.registerableCategories', 'c')
                 ->andWhere('c.id = :cid')
                 ->setParameter('cid', $block->getCategory()->getId());
         }
