@@ -227,9 +227,8 @@ class Block
         $this->capacity = $capacity;
     }
 
-    public function isAlternatesAllowed(): bool
+    public function isAlternatesAllowed() : bool
     {
-        return true; // todo
         return $this->alternatesAllowed;
     }
 

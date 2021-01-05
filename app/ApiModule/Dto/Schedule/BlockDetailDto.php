@@ -140,12 +140,12 @@ class BlockDetailDto
         $this->capacity = $capacity;
     }
 
-    public function isAlternatesAllowed(): bool
+    public function isAlternatesAllowed() : bool
     {
         return $this->alternatesAllowed;
     }
 
-    public function setAlternatesAllowed(bool $alternatesAllowed): void
+    public function setAlternatesAllowed(bool $alternatesAllowed) : void
     {
         $this->alternatesAllowed = $alternatesAllowed;
     }
