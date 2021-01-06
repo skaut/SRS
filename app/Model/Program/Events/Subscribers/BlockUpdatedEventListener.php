@@ -10,11 +10,12 @@ use App\Model\Program\Queries\ProgramAttendeesQuery;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Repositories\UserRepository;
-use eGen\MessageBus\Bus\CommandBus;
-use eGen\MessageBus\Bus\QueryBus;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Nettrine\ORM\EntityManagerDecorator;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class BlockUpdatedEventListener
+class BlockUpdatedEventListener implements MessageHandlerInterface
 {
     private CommandBus $commandBus;
 

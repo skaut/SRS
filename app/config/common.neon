@@ -8,6 +8,51 @@ application:
 session:
     expiration: 14 days
 
+search:
+    forms:
+        in: %appDir%
+        classes: App\**\Forms\*FormFactory
+
+    components:
+        in: %appDir%
+        classes: App\**\Components\*ControlFactory
+
+    services:
+        in: %appDir%/Services
+        classes:
+            - *Service
+
+    commands:
+        in: %appDir%/Model
+        classes: App\Model\*\Commands\Handlers\*Handler
+        tags:
+            messenger.messageHandler:
+                bus: commandBus
+
+    queries:
+        in: %appDir%/Model
+        classes: App\Model\*\Queries\Handlers\*Handler
+        tags:
+            messenger.messageHandler:
+                bus: queryBus
+
+    events:
+        in: %appDir%/Model
+        classes: App\Model\*\Events\Subscribers\*Listener
+        tags:
+            messenger.messageHandler:
+                bus: eventBus
+
+#        - class: App\Model\*\Events\Subscribers\*Listener
+#          tags: [eventBus.subscriber]
+#
+#        - class: App\Model\*\Commands\Handlers\*Handler
+#          tags: [commandBus.handler]
+#
+#        - class: App\Model\*\Queries\Handlers\*Handler
+#          tags: [queryBus.handler]
+
+
 services:
     - App\Router\RouterFactory
     router: @App\Router\RouterFactory::createRouter
@@ -21,9 +66,12 @@ services:
     - App\Services\Authorizator
     - App\Services\DatabaseService(%appDir%/..)
     - App\Services\FilesService(%wwwDir%/files)
+    - App\Services\CommandBus(@messenger.commandBus.bus)
+    - App\Services\QueryBus(@messenger.queryBus.bus)
+    - App\Services\EventBus(@messenger.eventBus.bus)
 
-    - App\Commands\ClearCacheCommand(%appDir%/..)
     - App\ApiModule\Services\ScheduleService
+    - App\Commands\ClearCacheCommand(%appDir%/..)
     - App\Utils\Validators
 
     permissionRepository:
@@ -150,29 +198,7 @@ extensions:
     translation: Contributte\Translation\DI\TranslationExtension
     mailing: Ublaboo\Mailing\DI\MailingExtension
     recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
-    messageBus: eGen\MessageBus\DI\MessageBusExtension
-    autoDI: Fmasa\AutoDI\DI\AutoDIExtension
-
-autoDI:
-    services:
-        - implement: App\**\Components\I*Factory
-
-        - implement: App\**\Forms\I*Factory
-
-        - class: App\**\Forms\*Factory
-          exclude:
-              - App\**\Forms\I*Factory
-
-        - class: App\Services\*Service
-
-        - class: App\Model\*\Events\Subscribers\*Listener
-          tags: [eventBus.subscriber]
-
-        - class: App\Model\*\Commands\Handlers\*Handler
-          tags: [commandBus.handler]
-
-        - class: App\Model\*\Queries\Handlers\*Handler
-          tags: [queryBus.handler]
+    messenger: Fmasa\Messenger\DI\MessengerExtension
 
 console:
     name: SRS
@@ -213,10 +239,11 @@ translation:
     dirs:
         - %appDir%/lang
 
-messageBus:
-    commandBus:
-    eventBus:
-    queryBus:
+messenger:
+    buses:
+        commandBus:
+        eventBus:
+        queryBus:
 
 latte:
     macros:

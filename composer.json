@@ -18,7 +18,7 @@
 
         "nette/application": "^3.0",
         "nette/bootstrap": "^3.0",
-        "nette/caching": "^3.0",
+        "nette/caching": "<3.1.0",
         "nette/database": "^3.0",
         "nette/di": "^3.0",
         "nette/finder": "^2.5",
@@ -40,8 +40,7 @@
         "doctrine/common": "<3.0.0",
         "dg/mysql-dump": "^1.5",
 
-        "fmasa/auto-di": "^2.0",
-        "egen/message-bus": "^2.1",
+        "fmasa/messenger": "dev-master",
 
         "nextras/form-components": "^1.0",
         "nextras/forms-rendering": "^1.0",

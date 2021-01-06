@@ -20,7 +20,6 @@ use App\Model\User\User;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use eGen\MessageBus\Bus\QueryBus;
 use Exception;
 use InvalidArgumentException;
 use Nette;

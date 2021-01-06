@@ -10,12 +10,13 @@ use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramUnregisteredEvent;
 use App\Model\User\Repositories\UserRepository;
+use App\Services\CommandBus;
 use App\Services\MailService;
 use App\Services\SettingsService;
 use Doctrine\Common\Collections\ArrayCollection;
-use eGen\MessageBus\Bus\CommandBus;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class ProgramUnregisteredEventListener
+class ProgramUnregisteredEventListener implements MessageHandlerInterface
 {
     private CommandBus $commandBus;
 

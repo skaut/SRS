@@ -12,8 +12,9 @@ use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\User\Queries\UserAllowedProgramsQuery;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class UserAllowedProgramsQueryHandler
+class UserAllowedProgramsQueryHandler implements MessageHandlerInterface
 {
     private CategoryRepository $categoryRepository;
 

@@ -9,11 +9,12 @@ use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramRegisteredEvent;
 use App\Model\User\Queries\UserAllowedProgramsQuery;
-use eGen\MessageBus\Bus\EventBus;
-use eGen\MessageBus\Bus\QueryBus;
+use App\Services\EventBus;
+use App\Services\QueryBus;
 use Nettrine\ORM\EntityManagerDecorator;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class RegisterProgramHandler
+class RegisterProgramHandler implements MessageHandlerInterface
 {
     private QueryBus $queryBus;
 

@@ -11,8 +11,9 @@ use App\Model\User\Events\ProgramRegisteredEvent;
 use App\Services\MailService;
 use App\Services\SettingsService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class ProgramRegisteredEventListener
+class ProgramRegisteredEventListener implements MessageHandlerInterface
 {
     private MailService $mailService;
 

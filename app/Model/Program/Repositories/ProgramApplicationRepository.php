@@ -74,7 +74,9 @@ class ProgramApplicationRepository extends EntityRepository
                 $program->setOccupancy($occupancy + 1);
                 $this->_em->persist($program);
 
-                foreach ($this->findUserAlternatesAndBlockPrograms($user, $program->getBlock()) as $pa) {
+                $programRepository = $this->_em->getRepository('App\Model\Program\Program');
+                assert($programRepository instanceof ProgramRepository);
+                foreach ($programRepository->findUserAlternatesAndBlock($user, $program->getBlock()) as $pa) {
                     $this->_em->remove($pa);
                 }
             }
@@ -111,29 +113,11 @@ class ProgramApplicationRepository extends EntityRepository
         });
     }
 
-    /**
-     * @return Collection<Program>
-     */
-    private function findUserAlternatesAndBlockPrograms(User $user, Block $block) : Collection
-    {
-        $result = $this->createQueryBuilder('pa')
-            ->select('p')
-            ->join('pa.program', 'p', 'WITH', 'b = :block')
-            ->where('pa.user = :user')
-            ->andWhere('pa.alternate = true')
-            ->setParameter('user', $user)
-            ->setParameter('block', $block)
-            ->getQuery()
-            ->getResult();
-
-        return new ArrayCollection($result);
-    }
-
     private function userAttendsSameBlockProgram(User $user, Block $block) : bool
     {
         $result = $this->createQueryBuilder('pa')
             ->select('count(pa)')
-            ->join('pa.program', 'p', 'WITH', 'b = :block')
+            ->join('pa.program', 'p', 'WITH', 'p.block = :block')
             ->where('pa.user = :user')
             ->andWhere('pa.alternate = false')
             ->setParameter('user', $user)
@@ -152,6 +136,7 @@ class ProgramApplicationRepository extends EntityRepository
         $result = $this->createQueryBuilder('pa')
             ->select('count(pa)')
             ->join('pa.program', 'p')
+            ->join('p.block', 'b')
             ->where('pa.user = :user')
             ->andWhere('p != :program')
             ->andWhere('p.start < :end')

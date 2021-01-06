@@ -6,9 +6,10 @@ namespace App\Model\Acl\Events\Subscribers;
 
 use App\Model\Acl\Events\RoleUpdatedEvent;
 use App\Model\User\Commands\UpdateUsersPrograms;
-use eGen\MessageBus\Bus\CommandBus;
+use App\Services\CommandBus;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class RoleUpdatedEventListener
+class RoleUpdatedEventListener implements MessageHandlerInterface
 {
     private CommandBus $commandBus;
 

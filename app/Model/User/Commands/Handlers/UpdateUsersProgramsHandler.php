@@ -10,11 +10,12 @@ use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Commands\UpdateUsersPrograms;
 use App\Model\User\Queries\UserAllowedProgramsQuery;
 use App\Model\User\Queries\UserProgramsQuery;
-use eGen\MessageBus\Bus\CommandBus;
-use eGen\MessageBus\Bus\QueryBus;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Nettrine\ORM\EntityManagerDecorator;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class UpdateUsersProgramsHandler
+class UpdateUsersProgramsHandler implements MessageHandlerInterface
 {
     private QueryBus $queryBus;
 

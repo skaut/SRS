@@ -8,8 +8,9 @@ use App\Model\Program\Program;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\User\Queries\UserProgramsQuery;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class UserProgramsQueryHandler
+class UserProgramsQueryHandler implements MessageHandlerInterface
 {
     private ProgramRepository $programRepository;
 

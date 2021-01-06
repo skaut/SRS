@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Program\Repositories;
 
 use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Program\Block;
 use App\Model\Program\Category;
 use App\Model\Program\Program;
 use App\Model\Structure\Subevent;
@@ -80,6 +81,22 @@ class ProgramRepository extends EntityRepository
             ->join('p.block', 'b', 'WITH', 'b.category = :category')
             ->setParameter('user', $user)
             ->setParameter('category', $category)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
+     * @return Collection<Program>
+     */
+    public function findUserAlternatesAndBlock(User $user, Block $block) : Collection
+    {
+        $result = $this->createQueryBuilder('p')
+            ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = true')
+            ->where('p.block = :block')
+            ->setParameter('user', $user)
+            ->setParameter('block', $block)
             ->getQuery()
             ->getResult();
 

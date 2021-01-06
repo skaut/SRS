@@ -7,7 +7,7 @@ namespace App\ExportModule\Presenters;
 use App\Model\User\Queries\UserProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\IcalResponse;
-use eGen\MessageBus\Bus\QueryBus;
+use App\Services\QueryBus;
 use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event;
 use Eluceo\iCal\Property\Event\Organizer;

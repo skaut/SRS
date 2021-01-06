@@ -6,10 +6,11 @@ namespace App\Model\User\Events\Subscribers;
 
 use App\Model\User\Commands\UpdateUsersPrograms;
 use App\Model\User\Events\UserApplicationUpdatedEvent;
+use App\Services\CommandBus;
 use Doctrine\Common\Collections\ArrayCollection;
-use eGen\MessageBus\Bus\CommandBus;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class UserApplicationUpdatedEventListener
+class UserApplicationUpdatedEventListener implements MessageHandlerInterface
 {
     private CommandBus $commandBus;
 

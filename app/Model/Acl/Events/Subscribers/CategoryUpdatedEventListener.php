@@ -7,11 +7,12 @@ namespace App\Model\Acl\Events\Subscribers;
 use App\Model\Acl\Events\CategoryUpdatedEvent;
 use App\Model\User\Commands\UpdateUsersPrograms;
 use App\Model\User\Repositories\UserRepository;
+use App\Services\CommandBus;
 use Doctrine\Common\Collections\ArrayCollection;
-use eGen\MessageBus\Bus\CommandBus;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use function array_diff;
 
-class CategoryUpdatedEventListener
+class CategoryUpdatedEventListener implements MessageHandlerInterface
 {
     private CommandBus $commandBus;
 

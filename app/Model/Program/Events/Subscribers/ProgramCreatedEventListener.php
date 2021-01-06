@@ -8,10 +8,11 @@ use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Events\ProgramCreatedEvent;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Repositories\UserRepository;
-use eGen\MessageBus\Bus\CommandBus;
+use App\Services\CommandBus;
 use Nettrine\ORM\EntityManagerDecorator;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class ProgramCreatedEventListener
+class ProgramCreatedEventListener implements MessageHandlerInterface
 {
     private CommandBus $commandBus;
 

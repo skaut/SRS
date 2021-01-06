@@ -8,8 +8,9 @@ use App\Model\Program\Queries\BlockAttendeesQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class BlockAttendeesQueryHandler
+class BlockAttendeesQueryHandler implements MessageHandlerInterface
 {
     private UserRepository $userRepository;
 

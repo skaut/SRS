@@ -8,10 +8,11 @@ use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Events\ProgramUnregisteredEvent;
-use eGen\MessageBus\Bus\EventBus;
+use App\Services\EventBus;
 use Nettrine\ORM\EntityManagerDecorator;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class UnregisterProgramHandler
+class UnregisterProgramHandler implements MessageHandlerInterface
 {
     private EventBus $eventBus;
 

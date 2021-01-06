@@ -15,6 +15,11 @@ use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
+use App\Model\Program\Exceptions\ProgramCapacityOccupiedException;
+use App\Model\Program\Exceptions\UserAlreadyAttendsBlockException;
+use App\Model\Program\Exceptions\UserAlreadyAttendsProgramException;
+use App\Model\Program\Exceptions\UserAttendsConflictingProgramException;
+use App\Model\Program\Exceptions\UserNotAllowedProgramException;
 use App\Model\Program\Program;
 use App\Model\Program\Queries\ProgramAlternatesQuery;
 use App\Model\Program\Queries\ProgramAttendeesQuery;
@@ -30,16 +35,17 @@ use App\Model\User\Queries\UserAllowedProgramsQuery;
 use App\Model\User\Queries\UserProgramBlocksQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
+use App\Services\CommandBus;
 use App\Services\ProgramService;
+use App\Services\QueryBus;
 use App\Services\SettingsService;
 use App\Utils\Helpers;
 use DateInterval;
 use Doctrine\ORM\ORMException;
-use eGen\MessageBus\Bus\CommandBus;
-use eGen\MessageBus\Bus\QueryBus;
 use Exception;
 use Nette;
 use Nette\Localization\ITranslator;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 use function in_array;
 use const DATE_ISO8601;
@@ -357,25 +363,6 @@ class ScheduleService
             throw new ApiException($this->translator->translate('common.api.schedule.register_programs_before_payment_not_allowed'));
         }
 
-        // todo
-//        if (! $this->queryBus->handle(new UserAllowedProgramsQuery($this->user))->contains($program)) {
-//            throw new ApiException($this->translator->translate('common.api.schedule.program_category_not_allowed'));
-//        }
-//        if ($this->queryBus->handle(new UserProgramsQuery($this->user))->contains($program)) {
-//            throw new ApiException($this->translator->translate('common.api.schedule.program_already_registered'));
-//        }
-//        if ($program->getCapacity() !== null && $program->getCapacity() <= $this->queryBus->handle(new ProgramAttendeesCountQuery($program))) {
-//            throw new ApiException($this->translator->translate('common.api.schedule.program_no_vacancies'));
-//        }
-//        if (count(array_intersect(
-//                $this->programRepository->findBlockedProgramsIdsByProgram($program),
-//                $this->programRepository->findProgramsIds($this->queryBus->handle(new UserProgramsQuery($this->user)))
-//            )
-//        )) {
-//            throw new ApiException($this->translator->translate('common.api.schedule.program_blocked'));
-//        }
-        // todo
-
         try {
             $this->commandBus->handle(new RegisterProgram($this->user, $program, false));
 
@@ -395,8 +382,28 @@ class ScheduleService
             $responseDto->setProgram($programDetailDto);
 
             return $responseDto;
-        } catch (Throwable $e) {
-            throw new ApiException('');
+        } catch (HandlerFailedException $e) {
+            if ($e->getPrevious() instanceof UserNotAllowedProgramException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.program_category_not_allowed'));
+            }
+
+            if ($e->getPrevious() instanceof UserAlreadyAttendsProgramException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.program_already_registered'));
+            }
+
+            if ($e->getPrevious() instanceof UserAlreadyAttendsBlockException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.program_blocked'));
+            }
+
+            if ($e->getPrevious() instanceof ProgramCapacityOccupiedException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.program_no_vacancies'));
+            }
+
+            if ($e->getPrevious() instanceof UserAttendsConflictingProgramException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.program_blocked'));
+            }
+
+            throw $e;
         }
     }
 

@@ -23,7 +23,6 @@ use App\Model\User\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\ORMException;
-use eGen\MessageBus\Bus\EventBus;
 use Nette;
 use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;

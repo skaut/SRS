@@ -21,7 +21,7 @@ use App\Model\Enums\PaymentType;
 use App\Model\User\Queries\UserProgramsQuery;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
-use eGen\MessageBus\Bus\QueryBus;
+use App\Services\QueryBus;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use stdClass;

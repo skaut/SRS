@@ -8,8 +8,9 @@ use App\Model\Program\Block;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\User\Queries\UserProgramBlocksQuery;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class UserProgramBlocksQueryHandler
+class UserProgramBlocksQueryHandler implements MessageHandlerInterface
 {
     private BlockRepository $blockRepository;
 
