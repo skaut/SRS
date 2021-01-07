@@ -7,7 +7,6 @@ namespace App\Model\Infrastructure\Repositories;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\Persistence\ObjectRepository;
 
 /**
  * Třída spravující programy.
@@ -18,6 +17,7 @@ abstract class AbstractRepository
 {
     protected EntityManagerInterface $em;
 
+    /** @var class-string */
     private string $className;
 
     public function __construct(EntityManagerInterface $em, string $className)
@@ -28,7 +28,7 @@ abstract class AbstractRepository
 
     public function createQueryBuilder(string $alias) : QueryBuilder
     {
-        return $this->em->getRepository($this->className)->createQueryBuilder($alias);
+        return $this->getRepository()->createQueryBuilder($alias);
     }
 
     public function getRepository() : EntityRepository
