@@ -14,6 +14,8 @@ use App\Model\User\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Třída spravující programy.
@@ -24,12 +26,17 @@ use Doctrine\Common\Collections\Collection;
  */
 class ProgramRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Program::class);
+    }
+
     /**
      * @return Collection<Program>
      */
     public function findAll() : Collection
     {
-        $result = $this->em->getRepository(Program::class)->findAll();
+        $result = $this->getRepository()->findAll();
         return new ArrayCollection($result);
     }
 
@@ -38,7 +45,7 @@ class ProgramRepository extends AbstractRepository
      */
     public function findById(?int $id) : ?Program
     {
-        return $this->em->getRepository(Program::class)->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -46,8 +53,7 @@ class ProgramRepository extends AbstractRepository
      */
     public function findUserAttends(User $user) : Collection
     {
-        $result = $this->em->getRepository(Program::class)
-            ->createQueryBuilder('p')
+        $result = $this->createQueryBuilder('p')
             ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = false')
             ->setParameter('user', $user)
             ->getQuery()
@@ -63,8 +69,7 @@ class ProgramRepository extends AbstractRepository
      */
     public function findUserAttendsAndCategory(User $user, Category $category) : Collection
     {
-        $result = $this->em->getRepository(Program::class)
-            ->createQueryBuilder('p')
+        $result = $this->createQueryBuilder('p')
             ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = false')
             ->join('p.block', 'b', 'WITH', 'b.category = :category')
             ->setParameter('user', $user)
@@ -80,8 +85,7 @@ class ProgramRepository extends AbstractRepository
      */
     public function findUserAlternatesAndBlock(User $user, Block $block) : Collection
     {
-        $result = $this->em->getRepository(Program::class)
-            ->createQueryBuilder('p')
+        $result = $this->createQueryBuilder('p')
             ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = true')
             ->where('p.block = :block')
             ->setParameter('user', $user)
@@ -99,8 +103,7 @@ class ProgramRepository extends AbstractRepository
      */
     public function findUserAllowed(User $user) : Collection
     {
-        $result = $this->em->getRepository(Program::class)
-            ->createQueryBuilder('p')
+        $result = $this->createQueryBuilder('p')
             ->join('p.block', 'b')
             ->leftJoin('b.category', 'c')
             ->join('c.registerableRoles', 'r')
@@ -128,8 +131,7 @@ class ProgramRepository extends AbstractRepository
         $start = $program->getStart();
         $end   = $program->getEnd();
 
-        $result = $this->em->getRepository(Program::class)
-            ->createQueryBuilder('p')
+        $result = $this->createQueryBuilder('p')
             ->join('p.block', 'b')
             ->where('p != :program')
             ->andWhere("b = :block OR (p.start < :end AND DATE_ADD(p.start, (b.duration * 60), 'second') > :start)")
@@ -148,8 +150,7 @@ class ProgramRepository extends AbstractRepository
      */
     public function hasOverlappingProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool
     {
-        $result = $this->em->getRepository(Program::class)
-            ->createQueryBuilder('p')
+        $result = $this->createQueryBuilder('p')
             ->select('count(p)')
             ->join('p.block', 'b')
             ->where('p.id != :pid OR :pid IS NULL')
@@ -168,8 +169,7 @@ class ProgramRepository extends AbstractRepository
      */
     public function hasOverlappingAutoRegisteredProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool
     {
-        $result = $this->em->getRepository(Program::class)
-            ->createQueryBuilder('p')
+        $result = $this->createQueryBuilder('p')
             ->select('count(p)')
             ->join('p.block', 'b', 'WITH', 'b.mandatory = :autoRegistered')
             ->where('p.id != :pid OR :pid IS NULL')

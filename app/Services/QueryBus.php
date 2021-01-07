@@ -21,6 +21,8 @@ final class QueryBus
      */
     public function handle(object $query)
     {
-        return $this->bus->dispatch($query)->last(HandledStamp::class)->getResult();
+        $stamp = $this->bus->dispatch($query)->last(HandledStamp::class);
+        assert($stamp instanceof HandledStamp);
+        return $stamp->getResult();
     }
 }

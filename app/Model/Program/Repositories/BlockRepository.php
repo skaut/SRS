@@ -6,10 +6,12 @@ namespace App\Model\Program\Repositories;
 
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
+use App\Model\Program\Program;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -25,12 +27,17 @@ use function array_map;
  */
 class BlockRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Block::class);
+    }
+
     /**
      * @return Collection<Block>
      */
     public function findAll() : Collection
     {
-        $result = $this->em->getRepository(Block::class)->findAll();
+        $result = $this->getRepository()->findAll();
         return new ArrayCollection($result);
     }
 
@@ -39,7 +46,7 @@ class BlockRepository extends AbstractRepository
      */
     public function findById(?int $id) : ?Block
     {
-        return $this->em->getRepository(Block::class)->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -50,8 +57,7 @@ class BlockRepository extends AbstractRepository
      */
     public function findLastId() : int
     {
-        return (int) $this->em->getRepository(Block::class)
-            ->createQueryBuilder('b')
+        return (int) $this->createQueryBuilder('b')
             ->select('MAX(b.id)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -64,8 +70,7 @@ class BlockRepository extends AbstractRepository
      */
     public function findAllNames() : array
     {
-        $names = $this->em->getRepository(Block::class)
-            ->createQueryBuilder('b')
+        $names = $this->createQueryBuilder('b')
             ->select('b.name')
             ->getQuery()
             ->getScalarResult();
@@ -80,8 +85,7 @@ class BlockRepository extends AbstractRepository
      */
     public function findAllOrderedByName() : array
     {
-        return $this->em->getRepository(Block::class)
-            ->createQueryBuilder('b')
+        return $this->createQueryBuilder('b')
             ->orderBy('b.name')
             ->getQuery()
             ->getResult();
@@ -94,8 +98,7 @@ class BlockRepository extends AbstractRepository
      */
     public function findAllUncategorizedOrderedByName() : array
     {
-        return $this->em->getRepository(Block::class)
-            ->createQueryBuilder('b')
+        return $this->createQueryBuilder('b')
             ->where('b.category IS NULL')
             ->orderBy('b.name')
             ->getQuery()
@@ -109,8 +112,7 @@ class BlockRepository extends AbstractRepository
      */
     public function findOthersNames(int $id) : array
     {
-        $names = $this->em->getRepository(Block::class)
-            ->createQueryBuilder('b')
+        $names = $this->createQueryBuilder('b')
             ->select('b.name')
             ->where('b.id != :id')
             ->setParameter('id', $id)
@@ -132,7 +134,7 @@ class BlockRepository extends AbstractRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
 
-        return $this->em->getRepository(Block::class)->matching($criteria);
+        return $this->getRepository()->matching($criteria);
     }
 
     /**
@@ -140,8 +142,7 @@ class BlockRepository extends AbstractRepository
      */
     public function findUserAttends(User $user) : Collection
     {
-        $result = $this->em->getRepository(Block::class)
-            ->createQueryBuilder('b')
+        $result = $this->createQueryBuilder('b')
             ->leftJoin('b.programs', 'p')
             ->leftJoin('p.programApplications', 'a')
             ->where('a.user = :user')->setParameter('user', $user)

@@ -31,13 +31,13 @@ class ProgramApplicationRepository extends AbstractRepository
 
     public function __construct(EntityManagerInterface $em, ProgramRepository $programRepository)
     {
-        parent::__construct($em);
+        parent::__construct($em, ProgramApplication::class);
         $this->programRepository = $programRepository;
     }
 
     public function findUserProgramApplication(User $user, Program $program) : ?ProgramApplication
     {
-        return $this->em->getRepository(ProgramApplication::class)->findOneBy(['user' => $user, 'program' => $program]);
+        return $this->getRepository()->findOneBy(['user' => $user, 'program' => $program]);
     }
 
     /**
@@ -115,8 +115,7 @@ class ProgramApplicationRepository extends AbstractRepository
 
     private function userAttendsSameBlockProgram(User $user, Block $block) : bool
     {
-        $result = $this->em->getRepository(ProgramApplication::class)
-            ->createQueryBuilder('pa')
+        $result = $this->createQueryBuilder('pa')
             ->select('count(pa)')
             ->join('pa.program', 'p', 'WITH', 'p.block = :block')
             ->where('pa.user = :user')
@@ -134,8 +133,7 @@ class ProgramApplicationRepository extends AbstractRepository
         $start = $program->getStart();
         $end   = $program->getEnd();
 
-        $result = $this->em->getRepository(ProgramApplication::class)
-            ->createQueryBuilder('pa')
+        $result = $this->createQueryBuilder('pa')
             ->select('count(pa)')
             ->join('pa.program', 'p')
             ->join('p.block', 'b')
