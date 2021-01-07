@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Repositories;
 
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Category;
-use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 use function array_map;
 
@@ -18,14 +17,23 @@ use function array_map;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class CategoryRepository extends EntityRepository
+class CategoryRepository extends AbstractRepository
 {
+    /**
+     * @return Collection<Category>
+     */
+    public function findAll() : Collection
+    {
+        $result = $this->em->getRepository(Category::class)->findAll();
+        return new ArrayCollection($result);
+    }
+
     /**
      * Vrací kategorii podle id.
      */
     public function findById(?int $id) : ?Category
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->em->getRepository(Category::class)->findOneBy(['id' => $id]);
     }
 
     /**
@@ -35,7 +43,8 @@ class CategoryRepository extends EntityRepository
      */
     public function findAllOrderedByName() : array
     {
-        return $this->createQueryBuilder('c')
+        return $this->em->getRepository(Category::class)
+            ->createQueryBuilder('c')
             ->orderBy('c.name')
             ->getQuery()
             ->getResult();
@@ -48,7 +57,8 @@ class CategoryRepository extends EntityRepository
      */
     public function findAllNames() : array
     {
-        $names = $this->createQueryBuilder('c')
+        $names = $this->em->getRepository(Category::class)
+            ->createQueryBuilder('c')
             ->select('c.name')
             ->getQuery()
             ->getScalarResult();
@@ -63,7 +73,8 @@ class CategoryRepository extends EntityRepository
      */
     public function findOthersNames(int $id) : array
     {
-        $names = $this->createQueryBuilder('c')
+        $names = $this->em->getRepository(Category::class)
+            ->createQueryBuilder('c')
             ->select('c.name')
             ->where('c.id != :id')
             ->setParameter('id', $id)
@@ -74,30 +85,14 @@ class CategoryRepository extends EntityRepository
     }
 
     /**
-     * Vrací kategorie, ze kterých si uživatel může vybírat programy.
-     *
-     * @return Collection|Category[]
-     */
-    public function findUserAllowed(User $user) : Collection
-    {
-        $result = $this->createQueryBuilder('c')
-            ->join('c.registerableRoles', 'r')
-            ->join('r.users', 'u')
-            ->where('u = :user')->setParameter('user', $user)
-            ->getQuery()
-            ->getResult();
-
-        return new ArrayCollection($result);
-    }
-
-    /**
      * Vrací kategorie jako možnosti pro select.
      *
      * @return string[]
      */
     public function getCategoriesOptions() : array
     {
-        $categories = $this->createQueryBuilder('c')
+        $categories = $this->em->getRepository(Category::class)
+            ->createQueryBuilder('c')
             ->select('c.id, c.name')
             ->orderBy('c.name')
             ->getQuery()
@@ -118,8 +113,8 @@ class CategoryRepository extends EntityRepository
      */
     public function save(Category $category) : void
     {
-        $this->_em->persist($category);
-        $this->_em->flush();
+        $this->em->persist($category);
+        $this->em->flush();
     }
 
     /**
@@ -131,10 +126,10 @@ class CategoryRepository extends EntityRepository
     {
         foreach ($category->getBlocks() as $block) {
             $block->setCategory(null);
-            $this->_em->persist($block);
+            $this->em->persist($block);
         }
 
-        $this->_em->remove($category);
-        $this->_em->flush();
+        $this->em->remove($category);
+        $this->em->flush();
     }
 }

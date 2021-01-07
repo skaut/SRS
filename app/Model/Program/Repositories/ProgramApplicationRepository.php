@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Repositories;
 
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
 use App\Model\Program\Exceptions\ProgramCapacityOccupiedException;
 use App\Model\Program\Exceptions\UserAlreadyAttendsBlockException;
@@ -13,11 +14,9 @@ use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramApplication;
 use App\Model\User\User;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Throwable;
 use function assert;
 
@@ -26,21 +25,27 @@ use function assert;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ProgramApplicationRepository extends EntityRepository
+class ProgramApplicationRepository extends AbstractRepository
 {
+    private ProgramRepository $programRepository;
+
+    public function __construct(EntityManagerInterface $em, ProgramRepository $programRepository)
+    {
+        parent::__construct($em);
+        $this->programRepository = $programRepository;
+    }
+
     public function findUserProgramApplication(User $user, Program $program) : ?ProgramApplication
     {
-        return $this->findOneBy(['user' => $user, 'program' => $program]);
+        return $this->em->getRepository(ProgramApplication::class)->findOneBy(['user' => $user, 'program' => $program]);
     }
 
     /**
      * @throws Throwable
      */
-    public function saveUserProgramApplication(User $user, Program $program) : ?ProgramApplication
+    public function saveUserProgramApplication(User $user, Program $program) : void
     {
-        $programApplication = null;
-
-        $this->getEntityManager()->transactional(function (EntityManager $em) use ($user, $program, $programApplication) : void {
+        $this->em->transactional(function (EntityManager $em) use ($user, $program) : void {
             $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 
@@ -49,7 +54,7 @@ class ProgramApplicationRepository extends EntityRepository
 
             $alternate = false;
 
-            if ($capacity !== null && $occupancy >= $capacity /*&& ! $program->getBlock()->isAlternatesAllowed()*/) {
+            if ($capacity !== null && $occupancy >= $capacity && ! $program->getBlock()->isAlternatesAllowed()) {
                 throw new ProgramCapacityOccupiedException();
             } elseif ($capacity !== null && $occupancy >= $capacity) {
                 $alternate = true;
@@ -67,22 +72,17 @@ class ProgramApplicationRepository extends EntityRepository
                 throw new UserAttendsConflictingProgramException();
             }
 
-            $programApplication = new ProgramApplication($user, $program, $alternate);
-            $this->_em->persist($programApplication);
+            $this->em->persist(new ProgramApplication($user, $program, $alternate));
 
             if (! $alternate) {
                 $program->setOccupancy($occupancy + 1);
-                $this->_em->persist($program);
+                $this->em->persist($program);
 
-                $programRepository = $this->_em->getRepository('App\Model\Program\Program');
-                assert($programRepository instanceof ProgramRepository);
-                foreach ($programRepository->findUserAlternatesAndBlock($user, $program->getBlock()) as $pa) {
-                    $this->_em->remove($pa);
+                foreach ($this->programRepository->findUserAlternatesAndBlock($user, $program->getBlock()) as $pa) {
+                    $this->em->remove($pa);
                 }
             }
         });
-
-        return $programApplication;
     }
 
     /**
@@ -90,7 +90,7 @@ class ProgramApplicationRepository extends EntityRepository
      */
     public function removeUserProgramApplication(User $user, Program $program) : void
     {
-        $this->getEntityManager()->transactional(function (EntityManager $em) use ($user, $program) : void {
+        $this->em->transactional(function (EntityManager $em) use ($user, $program) : void {
             $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 
@@ -104,18 +104,19 @@ class ProgramApplicationRepository extends EntityRepository
 
             $alternate = $programApplication->isAlternate();
 
-            $this->_em->remove($programApplication);
+            $this->em->remove($programApplication);
 
             if (! $alternate) {
                 $program->setOccupancy($occupancy - 1);
-                $this->_em->persist($program);
+                $this->em->persist($program);
             }
         });
     }
 
     private function userAttendsSameBlockProgram(User $user, Block $block) : bool
     {
-        $result = $this->createQueryBuilder('pa')
+        $result = $this->em->getRepository(ProgramApplication::class)
+            ->createQueryBuilder('pa')
             ->select('count(pa)')
             ->join('pa.program', 'p', 'WITH', 'p.block = :block')
             ->where('pa.user = :user')
@@ -133,14 +134,14 @@ class ProgramApplicationRepository extends EntityRepository
         $start = $program->getStart();
         $end   = $program->getEnd();
 
-        $result = $this->createQueryBuilder('pa')
+        $result = $this->em->getRepository(ProgramApplication::class)
+            ->createQueryBuilder('pa')
             ->select('count(pa)')
             ->join('pa.program', 'p')
             ->join('p.block', 'b')
             ->where('pa.user = :user')
             ->andWhere('p != :program')
-            ->andWhere('p.start < :end')
-            ->andWhere("DATE_ADD(p.start, (b.duration * 60), 'second') > :start")
+            ->andWhere("p.start < :end AND DATE_ADD(p.start, (b.duration * 60), 'second') > :start")
             ->setParameter('user', $user)
             ->setParameter('program', $program)
             ->setParameter('start', $start)

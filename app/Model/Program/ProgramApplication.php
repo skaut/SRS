@@ -12,7 +12,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita přihlášky na program.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Program\Repositories\ProgramApplicationRepository")
+ * @ORM\Entity
  * @ORM\Table(name="program_application")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>

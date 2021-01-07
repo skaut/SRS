@@ -20,6 +20,7 @@ use App\Model\Program\Exceptions\UserAlreadyAttendsBlockException;
 use App\Model\Program\Exceptions\UserAlreadyAttendsProgramException;
 use App\Model\Program\Exceptions\UserAttendsConflictingProgramException;
 use App\Model\Program\Exceptions\UserNotAllowedProgramException;
+use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Program;
 use App\Model\Program\Queries\ProgramAlternatesQuery;
 use App\Model\Program\Queries\ProgramAttendeesQuery;
@@ -215,7 +216,6 @@ class ScheduleService
         $calendarConfigDto->setAllowedModifySchedule($this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
             && $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE));
 
-        /** @var Program[] $programs */
         $programs = $this->programRepository->findAll();
         if (empty($programs)) {
             $minTime = 0;
@@ -425,12 +425,6 @@ class ScheduleService
             throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));
         }
 
-        // todo
-//        elseif (! $this->queryBus->handle(new UserProgramsQuery($this->user, true))->contains($program)) {
-//            throw new ApiException($this->translator->translate('common.api.schedule.program_not_registered'));
-//        }
-        // todo
-
         try {
             $this->commandBus->handle(new UnregisterProgram($this->user, $program, false));
 
@@ -450,8 +444,12 @@ class ScheduleService
             $responseDto->setProgram($programDetailDto);
 
             return $responseDto;
-        } catch (Throwable $e) {
-            throw new ApiException('');
+        } catch (HandlerFailedException $e) {
+            if ($e->getPrevious() instanceof UserNotAttendsProgramException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.program_not_registered'));
+            }
+
+            throw $e;
         }
     }
 

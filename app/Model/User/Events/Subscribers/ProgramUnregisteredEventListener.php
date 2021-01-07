@@ -42,13 +42,16 @@ class ProgramUnregisteredEventListener implements MessageHandlerInterface
     {
         if (! $event->isAlternate()) {
             $alternate = $this->userRepository->findProgramFirstAlternate($event->getProgram());
-            $this->commandBus->handle(new RegisterProgram($alternate, $event->getProgram()));
 
-            if ($event->isNotifyUser()) {
-                $this->mailService->sendMailFromTemplate(new ArrayCollection([$event->getUser()]), null, Template::PROGRAM_UNREGISTERED, [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-                    TemplateVariable::PROGRAM_NAME => $event->getProgram()->getBlock()->getName(),
-                ]);
+            if ($alternate !== null) {
+                $this->commandBus->handle(new RegisterProgram($alternate, $event->getProgram()));
+
+                if ($event->isNotifyUser()) {
+                    $this->mailService->sendMailFromTemplate(new ArrayCollection([$event->getUser()]), null, Template::PROGRAM_UNREGISTERED, [
+                        TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                        TemplateVariable::PROGRAM_NAME => $event->getProgram()->getBlock()->getName(),
+                    ]);
+                }
             }
         }
     }

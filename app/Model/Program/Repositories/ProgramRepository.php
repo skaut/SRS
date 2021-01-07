@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Repositories;
 
+use App\Model\Enums\ApplicationState;
 use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
 use App\Model\Program\Category;
 use App\Model\Program\Program;
-use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující programy.
@@ -23,36 +22,23 @@ use Doctrine\ORM\ORMException;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class ProgramRepository extends EntityRepository
+class ProgramRepository extends AbstractRepository
 {
+    /**
+     * @return Collection<Program>
+     */
+    public function findAll() : Collection
+    {
+        $result = $this->em->getRepository(Program::class)->findAll();
+        return new ArrayCollection($result);
+    }
+
     /**
      * Vrací program podle id.
      */
     public function findById(?int $id) : ?Program
     {
-        return $this->findOneBy(['id' => $id]);
-    }
-
-    /**
-     * Uloží program.
-     *
-     * @throws ORMException
-     */
-    public function save(Program $program) : void
-    {
-        $this->_em->persist($program);
-        $this->_em->flush();
-    }
-
-    /**
-     * Odstraní program.
-     *
-     * @throws ORMException
-     */
-    public function remove(Program $program) : void
-    {
-        $this->_em->remove($program);
-        $this->_em->flush();
+        return $this->em->getRepository(Program::class)->findOneBy(['id' => $id]);
     }
 
     /**
@@ -60,7 +46,8 @@ class ProgramRepository extends EntityRepository
      */
     public function findUserAttends(User $user) : Collection
     {
-        $result = $this->createQueryBuilder('p')
+        $result = $this->em->getRepository(Program::class)
+            ->createQueryBuilder('p')
             ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = false')
             ->setParameter('user', $user)
             ->getQuery()
@@ -76,7 +63,8 @@ class ProgramRepository extends EntityRepository
      */
     public function findUserAttendsAndCategory(User $user, Category $category) : Collection
     {
-        $result = $this->createQueryBuilder('p')
+        $result = $this->em->getRepository(Program::class)
+            ->createQueryBuilder('p')
             ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = false')
             ->join('p.block', 'b', 'WITH', 'b.category = :category')
             ->setParameter('user', $user)
@@ -92,7 +80,8 @@ class ProgramRepository extends EntityRepository
      */
     public function findUserAlternatesAndBlock(User $user, Block $block) : Collection
     {
-        $result = $this->createQueryBuilder('p')
+        $result = $this->em->getRepository(Program::class)
+            ->createQueryBuilder('p')
             ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = true')
             ->where('p.block = :block')
             ->setParameter('user', $user)
@@ -106,20 +95,23 @@ class ProgramRepository extends EntityRepository
     /**
      * Vrací programy povolené pro kategorie a podakce.
      *
-     * @param Collection|Category[] $categories
-     * @param Collection|Subevent[] $subevents
-     *
-     * @return Collection|Program[]
+     * @return Collection<Program>
      */
-    public function findAllowedForCategoriesAndSubevents(Collection $categories, Collection $subevents) : Collection
+    public function findUserAllowed(User $user) : Collection
     {
-        $result = $this->createQueryBuilder('p')
-            ->select('p')
+        $result = $this->em->getRepository(Program::class)
+            ->createQueryBuilder('p')
             ->join('p.block', 'b')
             ->leftJoin('b.category', 'c')
-            ->leftJoin('b.subevent', 's')
-            ->where('(b.category IS NULL OR c IN (:categories))')->setParameter('categories', $categories)
-            ->andWhere('s IN (:subevents)')->setParameter('subevents', $subevents)
+            ->join('c.registerableRoles', 'r')
+            ->join('r.users', 'u')
+            ->join('b.subevent', 's')
+            ->join('s.applications', 'a', 'WITH', 'a.validTo IS NULL AND a.state != :stateCanceled AND a.state != :stateCanceledNotPaid')
+            ->where('u IS NULL OR u = :user')
+            ->andWhere('a.user = :user')
+            ->setParameter('user', $user)
+            ->setParameter('stateCanceled', ApplicationState::CANCELED)
+            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID)
             ->getQuery()
             ->getResult();
 
@@ -136,7 +128,8 @@ class ProgramRepository extends EntityRepository
         $start = $program->getStart();
         $end   = $program->getEnd();
 
-        $result = $this->createQueryBuilder('p')
+        $result = $this->em->getRepository(Program::class)
+            ->createQueryBuilder('p')
             ->join('p.block', 'b')
             ->where('p != :program')
             ->andWhere("b = :block OR (p.start < :end AND DATE_ADD(p.start, (b.duration * 60), 'second') > :start)")
@@ -155,48 +148,57 @@ class ProgramRepository extends EntityRepository
      */
     public function hasOverlappingProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool
     {
-        $qb = $this->createQueryBuilder('p')
-            ->select('p.id')
+        $result = $this->em->getRepository(Program::class)
+            ->createQueryBuilder('p')
+            ->select('count(p)')
             ->join('p.block', 'b')
-            ->where($this->createQueryBuilder('p')->expr()->orX(
-                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
-                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
-            ))
+            ->where('p.id != :pid OR :pid IS NULL')
+            ->andWhere("p.start < :end AND DATE_ADD(p.start, (b.duration * 60), 'second') > :start")
+            ->setParameter('pid', $programId)
             ->setParameter('start', $start)
-            ->setParameter('end', $end);
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getSingleScalarResult();
 
-        if ($programId) {
-            $qb = $qb
-                ->andWhere('p.id != :pid')
-                ->setParameter('pid', $programId);
-        }
-
-        return ! empty($qb->getQuery()->getResult());
+        return $result !== 0;
     }
 
     /**
-     * Překrývá se s jiným programem, který je automaticky zapisovaný.
+     * Překrývá se s jiným programem, který je automaticky zapisovaný?
      */
     public function hasOverlappingAutoRegisteredProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool
     {
-        $qb = $this->createQueryBuilder('p')
-            ->select('p.id')
-            ->join('p.block', 'b')
-            ->where($this->createQueryBuilder('p')->expr()->orX(
-                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
-                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
-            ))
-            ->andWhere('b.mandatory = :auto_registered')
+        $result = $this->em->getRepository(Program::class)
+            ->createQueryBuilder('p')
+            ->select('count(p)')
+            ->join('p.block', 'b', 'WITH', 'b.mandatory = :autoRegistered')
+            ->where('p.id != :pid OR :pid IS NULL')
+            ->andWhere("p.start < :end AND DATE_ADD(p.start, (b.duration * 60), 'second') > :start")
+            ->setParameter('pid', $programId)
             ->setParameter('start', $start)
             ->setParameter('end', $end)
-            ->setParameter('auto_registered', ProgramMandatoryType::AUTO_REGISTERED);
+            ->setParameter('autoRegistered', ProgramMandatoryType::AUTO_REGISTERED)
+            ->getQuery()
+            ->getSingleScalarResult();
 
-        if ($programId) {
-            $qb = $qb
-                ->andWhere('p.id != :pid')
-                ->setParameter('pid', $programId);
-        }
+        return $result !== 0;
+    }
 
-        return ! empty($qb->getQuery()->getResult());
+    /**
+     * Uloží program.
+     */
+    public function save(Program $program) : void
+    {
+        $this->em->persist($program);
+        $this->em->flush();
+    }
+
+    /**
+     * Odstraní program.
+     */
+    public function remove(Program $program) : void
+    {
+        $this->em->remove($program);
+        $this->em->flush();
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Repositories;
 
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,14 +23,23 @@ use function array_map;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class BlockRepository extends EntityRepository
+class BlockRepository extends AbstractRepository
 {
+    /**
+     * @return Collection<Block>
+     */
+    public function findAll() : Collection
+    {
+        $result = $this->em->getRepository(Block::class)->findAll();
+        return new ArrayCollection($result);
+    }
+
     /**
      * Vrací blok podle id.
      */
     public function findById(?int $id) : ?Block
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->em->getRepository(Block::class)->findOneBy(['id' => $id]);
     }
 
     /**
@@ -40,7 +50,8 @@ class BlockRepository extends EntityRepository
      */
     public function findLastId() : int
     {
-        return (int) $this->createQueryBuilder('b')
+        return (int) $this->em->getRepository(Block::class)
+            ->createQueryBuilder('b')
             ->select('MAX(b.id)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -53,7 +64,8 @@ class BlockRepository extends EntityRepository
      */
     public function findAllNames() : array
     {
-        $names = $this->createQueryBuilder('b')
+        $names = $this->em->getRepository(Block::class)
+            ->createQueryBuilder('b')
             ->select('b.name')
             ->getQuery()
             ->getScalarResult();
@@ -68,7 +80,8 @@ class BlockRepository extends EntityRepository
      */
     public function findAllOrderedByName() : array
     {
-        return $this->createQueryBuilder('b')
+        return $this->em->getRepository(Block::class)
+            ->createQueryBuilder('b')
             ->orderBy('b.name')
             ->getQuery()
             ->getResult();
@@ -81,7 +94,8 @@ class BlockRepository extends EntityRepository
      */
     public function findAllUncategorizedOrderedByName() : array
     {
-        return $this->createQueryBuilder('b')
+        return $this->em->getRepository(Block::class)
+            ->createQueryBuilder('b')
             ->where('b.category IS NULL')
             ->orderBy('b.name')
             ->getQuery()
@@ -95,7 +109,8 @@ class BlockRepository extends EntityRepository
      */
     public function findOthersNames(int $id) : array
     {
-        $names = $this->createQueryBuilder('b')
+        $names = $this->em->getRepository(Block::class)
+            ->createQueryBuilder('b')
             ->select('b.name')
             ->where('b.id != :id')
             ->setParameter('id', $id)
@@ -103,20 +118,6 @@ class BlockRepository extends EntityRepository
             ->getScalarResult();
 
         return array_map('current', $names);
-    }
-
-    /**
-     * Vrací id bloků.
-     *
-     * @param Collection|Block[] $blocks
-     *
-     * @return int[]
-     */
-    public function findBlocksIds(Collection $blocks) : array
-    {
-        return array_map(static function (Block $o) {
-            return $o->getId();
-        }, $blocks->toArray());
     }
 
     /**
@@ -131,7 +132,7 @@ class BlockRepository extends EntityRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
 
-        return $this->matching($criteria);
+        return $this->em->getRepository(Block::class)->matching($criteria);
     }
 
     /**
@@ -139,7 +140,8 @@ class BlockRepository extends EntityRepository
      */
     public function findUserAttends(User $user) : Collection
     {
-        $result = $this->createQueryBuilder('b')
+        $result = $this->em->getRepository(Block::class)
+            ->createQueryBuilder('b')
             ->leftJoin('b.programs', 'p')
             ->leftJoin('p.programApplications', 'a')
             ->where('a.user = :user')->setParameter('user', $user)
@@ -156,8 +158,8 @@ class BlockRepository extends EntityRepository
      */
     public function save(Block $block) : void
     {
-        $this->_em->persist($block);
-        $this->_em->flush();
+        $this->em->persist($block);
+        $this->em->flush();
     }
 
     /**
@@ -168,10 +170,10 @@ class BlockRepository extends EntityRepository
     public function remove(Block $block) : void
     {
         foreach ($block->getPrograms() as $program) {
-            $this->_em->remove($program);
+            $this->em->remove($program);
         }
 
-        $this->_em->remove($block);
-        $this->_em->flush();
+        $this->em->remove($block);
+        $this->em->flush();
     }
 }

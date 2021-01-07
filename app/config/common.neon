@@ -22,6 +22,10 @@ search:
         classes:
             - *Service
 
+    repositories:
+        in: %appDir%/Model
+        extends: App\Model\Infrastructure\Repositories\AbstractRepository
+
     commands:
         in: %appDir%/Model
         classes: App\Model\*\Commands\Handlers\*Handler
@@ -42,16 +46,6 @@ search:
         tags:
             messenger.messageHandler:
                 bus: eventBus
-
-#        - class: App\Model\*\Events\Subscribers\*Listener
-#          tags: [eventBus.subscriber]
-#
-#        - class: App\Model\*\Commands\Handlers\*Handler
-#          tags: [commandBus.handler]
-#
-#        - class: App\Model\*\Queries\Handlers\*Handler
-#          tags: [queryBus.handler]
-
 
 services:
     - App\Router\RouterFactory
@@ -131,21 +125,6 @@ services:
     paymentRepository:
         class: App\Model\Payment\Repositories\PaymentRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Payment\Payment)
-    blockRepository:
-        class: App\Model\Program\Repositories\BlockRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Block)
-    categoryRepository:
-        class: App\Model\Program\Repositories\CategoryRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Category)
-    programApplicationRepository:
-        class: App\Model\Program\Repositories\ProgramApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\ProgramApplication)
-    programRepository:
-        class: App\Model\Program\Repositories\ProgramRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Program)
-    roomRepository:
-        class: App\Model\Program\Repositories\RoomRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Room)
     placePointRepository:
         class: App\Model\Settings\Repositories\PlacePointRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\PlacePoint)

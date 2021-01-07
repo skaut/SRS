@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Repositories;
 
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Room;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 use function array_map;
 
@@ -18,14 +19,23 @@ use function array_map;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class RoomRepository extends EntityRepository
+class RoomRepository extends AbstractRepository
 {
+    /**
+     * @return Collection<Room>
+     */
+    public function findAll() : Collection
+    {
+        $result = $this->em->getRepository(Room::class)->findAll();
+        return new ArrayCollection($result);
+    }
+
     /**
      * Vrací místnost podle id.
      */
     public function findById(?int $id) : ?Room
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->em->getRepository(Room::class)->findOneBy(['id' => $id]);
     }
 
     /**
@@ -35,7 +45,8 @@ class RoomRepository extends EntityRepository
      */
     public function findAllNames() : array
     {
-        $names = $this->createQueryBuilder('r')
+        $names = $this->em->getRepository(Room::class)
+            ->createQueryBuilder('r')
             ->select('r.name')
             ->getQuery()
             ->getScalarResult();
@@ -50,7 +61,8 @@ class RoomRepository extends EntityRepository
      */
     public function findOthersNames(int $id) : array
     {
-        $names = $this->createQueryBuilder('r')
+        $names = $this->em->getRepository(Room::class)
+            ->createQueryBuilder('r')
             ->select('r.name')
             ->where('r.id != :id')
             ->setParameter('id', $id)
@@ -72,7 +84,7 @@ class RoomRepository extends EntityRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
 
-        return $this->matching($criteria);
+        return $this->em->getRepository(Room::class)->matching($criteria);
     }
 
     /**
@@ -82,8 +94,8 @@ class RoomRepository extends EntityRepository
      */
     public function save(Room $room) : void
     {
-        $this->_em->persist($room);
-        $this->_em->flush();
+        $this->em->persist($room);
+        $this->em->flush();
     }
 
     /**
@@ -95,11 +107,11 @@ class RoomRepository extends EntityRepository
     {
         foreach ($room->getPrograms() as $program) {
             $program->setRoom(null);
-            $this->_em->persist($program);
+            $this->em->persist($program);
         }
 
-        $this->_em->remove($room);
-        $this->_em->flush();
+        $this->em->remove($room);
+        $this->em->flush();
     }
 
     /**
@@ -107,21 +119,21 @@ class RoomRepository extends EntityRepository
      */
     public function hasOverlappingProgram(Room $room, ?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool
     {
-        $qb = $this->createQueryBuilder('r')
-            ->select('r.id')
+        $result = $this->em->getRepository(Room::class)
+            ->createQueryBuilder('r')
+            ->select('count(r)')
             ->join('r.programs', 'p')
             ->join('p.block', 'b')
-            ->where($this->createQueryBuilder('r')->expr()->orX(
-                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
-                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
-            ))
-            ->andWhere('r.id = :rid')
+            ->where("p.start < :end AND DATE_ADD(p.start, (b.duration * 60), 'second') > :start")
+            ->andWhere('r = :room')
             ->andWhere('p.id != :pid')
             ->setParameter('start', $start)
             ->setParameter('end', $end)
-            ->setParameter('rid', $room->getId())
-            ->setParameter('pid', $programId);
+            ->setParameter('room', $room)
+            ->setParameter('pid', $programId)
+            ->getQuery()
+            ->getSingleScalarResult();
 
-        return ! empty($qb->getQuery()->getResult());
+        return $result !== 0;
     }
 }

@@ -46,7 +46,8 @@ class RegisterProgramHandler implements MessageHandlerInterface
         }
 
         $this->em->transactional(function () use ($command) : void {
-            $programApplication = $this->programApplicationRepository->saveUserProgramApplication($command->getUser(), $command->getProgram());
+            $this->programApplicationRepository->saveUserProgramApplication($command->getUser(), $command->getProgram());
+            $programApplication = $this->programApplicationRepository->findUserProgramApplication($command->getUser(), $command->getProgram());
             $this->eventBus->handle(new ProgramRegisteredEvent($command->getUser(), $command->getProgram(), $programApplication->isAlternate(), $command->isNotifyUser()));
         });
     }

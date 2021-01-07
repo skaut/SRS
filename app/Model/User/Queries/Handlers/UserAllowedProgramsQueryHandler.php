@@ -35,9 +35,6 @@ class UserAllowedProgramsQueryHandler implements MessageHandlerInterface
             return new ArrayCollection();
         }
 
-        $allowedCategories = $this->categoryRepository->findUserAllowed($query->getUser());
-        $allowedSubevents  = $query->getUser()->getSubevents();
-
-        return $this->programRepository->findAllowedForCategoriesAndSubevents($allowedCategories, $allowedSubevents);
+        return $this->programRepository->findUserAllowed($query->getUser());
     }
 }

@@ -80,6 +80,7 @@
                         <h6>Typy programů</h6>
                         <ul class="list-group text-white">
                             <li class="list-group-item bg-success">Programy, které máte přihlášené.</li>
+                            <li class="list-group-item bg-warning">Programy, které máte přihlášené jako náhradník.</li>
                             <li class="list-group-item bg-primary">Programy, na které se lze přihlásit.</li>
                             <li class="list-group-item bg-danger">Programy, které jsou povinné.</li>
                             <li class="list-group-item bg-secondary">Programy, na které se nelze přihlásit (máte přihlášený stejný program, je obsazený nebo jej nemáte zaplacený).</li>

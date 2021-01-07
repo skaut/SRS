@@ -300,7 +300,7 @@ class UserRepository extends EntityRepository
             ->leftJoin('u.programApplications', 'a')
             ->where('a.program = :program')->setParameter('program', $program)
             ->andWhere('a.alternate = true')
-            ->orderBy('pa.createdAt')
+            ->orderBy('a.createdAt')
             ->setMaxResults(1)
             ->getQuery()
             ->getResult();
@@ -373,10 +373,7 @@ class UserRepository extends EntityRepository
             ->select('u.id')
             ->join('u.lecturersBlocks', 'b')
             ->join('b.programs', 'p')
-            ->where($this->createQueryBuilder('u')->expr()->orX(
-                "(p.start < :end) AND (DATE_ADD(p.start, (b.duration * 60), 'second') > :start)",
-                "(p.start < :end) AND (:start < (DATE_ADD(p.start, (b.duration * 60), 'second')))"
-            ))
+            ->where("p.start < :end AND DATE_ADD(p.start, (b.duration * 60), 'second') > :start")
             ->andWhere('u.id = :uid')
             ->andWhere('(p.id != :pid) or (:pid IS NULL)')
             ->setParameter('start', $start)
