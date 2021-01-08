@@ -21,8 +21,8 @@ class SaveBlockHandler implements MessageHandlerInterface
 
     public function __construct(EventBus $eventBus, EntityManagerDecorator $em, BlockRepository $blockRepository)
     {
-        $this->eventBus = $eventBus;
-        $this->em = $em;
+        $this->eventBus        = $eventBus;
+        $this->em              = $em;
         $this->blockRepository = $blockRepository;
     }
 
@@ -36,8 +36,8 @@ class SaveBlockHandler implements MessageHandlerInterface
             $this->em->transactional(function () use ($block) : void {
                 $originalBlock = $this->blockRepository->findById($block->getId());
 
-                $originalCategory = $originalBlock->getCategory();
-                $originalSubevent = $originalBlock->getSubevent();
+                $originalCategory  = $originalBlock->getCategory();
+                $originalSubevent  = $originalBlock->getSubevent();
                 $originalMandatory = $originalBlock->getMandatory();
 
                 $this->blockRepository->save($block);

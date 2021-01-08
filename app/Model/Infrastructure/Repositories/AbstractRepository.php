@@ -7,6 +7,7 @@ namespace App\Model\Infrastructure\Repositories;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use function assert;
 
 /**
  * Třída spravující programy.
@@ -35,6 +36,7 @@ abstract class AbstractRepository
     {
         $repository = $this->em->getRepository($this->className);
         assert($repository instanceof EntityRepository);
+
         return $repository;
     }
 }

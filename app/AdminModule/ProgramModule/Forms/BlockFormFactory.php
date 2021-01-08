@@ -28,7 +28,6 @@ use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Forms\Controls\TextInput;
 use stdClass;
 use Throwable;
-use function Symfony\Component\Translation\t;
 
 /**
  * Formulář pro úpravu programového bloku.

@@ -21,8 +21,8 @@ class SaveCategoryHandler implements MessageHandlerInterface
 
     public function __construct(EventBus $eventBus, EntityManagerDecorator $em, CategoryRepository $categoryRepository)
     {
-        $this->eventBus = $eventBus;
-        $this->em = $em;
+        $this->eventBus           = $eventBus;
+        $this->em                 = $em;
         $this->categoryRepository = $categoryRepository;
     }
 

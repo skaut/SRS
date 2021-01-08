@@ -6,6 +6,7 @@ namespace App\Services;
 
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
+use function assert;
 
 final class QueryBus
 {
@@ -23,6 +24,7 @@ final class QueryBus
     {
         $stamp = $this->bus->dispatch($query)->last(HandledStamp::class);
         assert($stamp instanceof HandledStamp);
+
         return $stamp->getResult();
     }
 }

@@ -6,7 +6,6 @@ namespace App\Model\Program\Repositories;
 
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Category;
-use App\Model\Program\Program;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,6 +31,7 @@ class CategoryRepository extends AbstractRepository
     public function findAll() : Collection
     {
         $result = $this->getRepository()->findAll();
+
         return new ArrayCollection($result);
     }
 

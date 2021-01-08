@@ -15,7 +15,6 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
 
 /**
  * Třída spravující programy.
@@ -37,6 +36,7 @@ class ProgramRepository extends AbstractRepository
     public function findAll() : Collection
     {
         $result = $this->getRepository()->findAll();
+
         return new ArrayCollection($result);
     }
 

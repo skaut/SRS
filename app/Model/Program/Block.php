@@ -246,7 +246,7 @@ class Block
         return $this->alternatesAllowed;
     }
 
-    public function setAlternatesAllowed(bool $alternatesAllowed): void
+    public function setAlternatesAllowed(bool $alternatesAllowed) : void
     {
         $this->alternatesAllowed = $alternatesAllowed;
     }

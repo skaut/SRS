@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\Program\Repositories;
 
 use App\Model\Infrastructure\Repositories\AbstractRepository;
-use App\Model\Program\Category;
 use App\Model\Program\Room;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -34,6 +33,7 @@ class RoomRepository extends AbstractRepository
     public function findAll() : Collection
     {
         $result = $this->getRepository()->findAll();
+
         return new ArrayCollection($result);
     }
 

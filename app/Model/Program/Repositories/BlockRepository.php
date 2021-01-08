@@ -6,13 +6,11 @@ namespace App\Model\Program\Repositories;
 
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
-use App\Model\Program\Program;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
@@ -38,6 +36,7 @@ class BlockRepository extends AbstractRepository
     public function findAll() : Collection
     {
         $result = $this->getRepository()->findAll();
+
         return new ArrayCollection($result);
     }
 

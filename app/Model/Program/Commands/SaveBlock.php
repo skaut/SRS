@@ -15,7 +15,7 @@ class SaveBlock
         $this->block = $block;
     }
 
-    public function getBlock(): Block
+    public function getBlock() : Block
     {
         return $this->block;
     }

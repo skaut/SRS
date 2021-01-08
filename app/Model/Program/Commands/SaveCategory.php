@@ -15,7 +15,7 @@ class SaveCategory
         $this->category = $category;
     }
 
-    public function getCategory(): Category
+    public function getCategory() : Category
     {
         return $this->category;
     }

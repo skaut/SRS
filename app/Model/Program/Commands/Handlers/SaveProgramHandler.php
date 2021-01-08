@@ -21,8 +21,8 @@ class SaveProgramHandler implements MessageHandlerInterface
 
     public function __construct(EventBus $eventBus, EntityManagerDecorator $em, ProgramRepository $programRepository)
     {
-        $this->eventBus = $eventBus;
-        $this->em = $em;
+        $this->eventBus          = $eventBus;
+        $this->em                = $em;
         $this->programRepository = $programRepository;
     }
 
