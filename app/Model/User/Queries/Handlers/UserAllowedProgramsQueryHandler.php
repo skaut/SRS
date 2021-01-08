@@ -7,7 +7,6 @@ namespace App\Model\User\Queries\Handlers;
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Program\Program;
-use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\User\Queries\UserAllowedProgramsQuery;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,13 +15,10 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UserAllowedProgramsQueryHandler implements MessageHandlerInterface
 {
-    private CategoryRepository $categoryRepository;
-
     private ProgramRepository $programRepository;
 
-    public function __construct(CategoryRepository $categoryRepository, ProgramRepository $programRepository)
+    public function __construct(ProgramRepository $programRepository)
     {
-        $this->categoryRepository = $categoryRepository;
         $this->programRepository  = $programRepository;
     }
 

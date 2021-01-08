@@ -14,7 +14,7 @@ use function assert;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-abstract class AbstractRepository
+class AbstractRepository
 {
     protected EntityManagerInterface $em;
 
@@ -27,12 +27,12 @@ abstract class AbstractRepository
         $this->className = $className;
     }
 
-    public function createQueryBuilder(string $alias) : QueryBuilder
+    protected function createQueryBuilder(string $alias) : QueryBuilder
     {
         return $this->getRepository()->createQueryBuilder($alias);
     }
 
-    public function getRepository() : EntityRepository
+    protected function getRepository() : EntityRepository
     {
         $repository = $this->em->getRepository($this->className);
         assert($repository instanceof EntityRepository);

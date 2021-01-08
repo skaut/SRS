@@ -134,7 +134,7 @@ class Block
         $this->lectors           = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId() : ?int
     {
         return $this->id;
     }
