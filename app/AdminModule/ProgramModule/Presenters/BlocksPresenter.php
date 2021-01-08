@@ -11,11 +11,12 @@ use App\AdminModule\ProgramModule\Components\ProgramBlocksGridControl;
 use App\AdminModule\ProgramModule\Forms\BlockFormFactory;
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
+use App\Model\Program\Commands\RemoveProgram;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Services\ProgramService;
+use App\Services\CommandBus;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
@@ -33,6 +34,9 @@ use Throwable;
 class BlocksPresenter extends ProgramBasePresenter
 {
     /** @inject */
+    public CommandBus $commandBus;
+
+    /** @inject */
     public BlockRepository $blockRepository;
 
     /** @inject */
@@ -49,9 +53,6 @@ class BlocksPresenter extends ProgramBasePresenter
 
     /** @inject */
     public Session $session;
-
-    /** @inject */
-    public ProgramService $programService;
 
     public function renderDefault() : void
     {
@@ -123,7 +124,7 @@ class BlocksPresenter extends ProgramBasePresenter
         ) {
             $this->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
         } else {
-            $this->programService->removeProgram($program);
+            $this->commandBus->handle(new RemoveProgram($program));
             $this->flashMessage('admin.program.blocks_program_deleted', 'success');
         }
 

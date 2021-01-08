@@ -11,9 +11,10 @@ use App\Model\Acl\SrsResource;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
-use App\Services\ProgramService;
+use App\Services\QueryBus;
 use App\Services\SettingsService;
 use Nette\Application\UI\Control;
 use Throwable;
@@ -26,24 +27,24 @@ use Throwable;
  */
 class ProgramsContentControl extends Control
 {
+    private QueryBus $queryBus;
+
     private UserRepository $userRepository;
 
     private RoleRepository $roleRepository;
 
     private SettingsService $settingsService;
 
-    private ProgramService $programService;
-
     public function __construct(
+        QueryBus $queryBus,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
-        SettingsService $settingsService,
-        ProgramService $programService
+        SettingsService $settingsService
     ) {
+        $this->queryBus        = $queryBus;
         $this->userRepository  = $userRepository;
         $this->roleRepository  = $roleRepository;
         $this->settingsService = $settingsService;
-        $this->programService  = $programService;
     }
 
     /**
@@ -59,7 +60,7 @@ class ProgramsContentControl extends Control
 
         $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
 
-        $template->registerProgramsAllowed       = $this->programService->isAllowedRegisterPrograms();
+        $template->registerProgramsAllowed       = $this->queryBus->handle(new IsAllowedRegisterProgramsQuery());
         $template->registerProgramsNotAllowed    = $this->settingsService->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::NOT_ALLOWED;
         $template->registerProgramsAllowedFromTo = $this->settingsService->getValue(Settings::REGISTER_PROGRAMS_TYPE) === ProgramRegistrationType::ALLOWED_FROM_TO;
         $template->registerProgramsFrom          = $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM);

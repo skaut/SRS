@@ -62,9 +62,11 @@ class Program
      */
     protected DateTimeImmutable $start;
 
-    public function __construct(Block $block)
+    public function __construct(Block $block, ?Room $room, DateTimeImmutable $start)
     {
         $this->block               = $block;
+        $this->room                = $room;
+        $this->start               = $start;
         $this->programApplications = new ArrayCollection();
     }
 
@@ -76,14 +78,6 @@ class Program
     public function getBlock() : Block
     {
         return $this->block;
-    }
-
-    /**
-     * Vrací kapacitu programového bloku.
-     */
-    public function getCapacity() : ?int
-    {
-        return $this->block->getCapacity();
     }
 
     public function getOccupancy() : int
@@ -114,6 +108,14 @@ class Program
     public function setStart(DateTimeImmutable $start) : void
     {
         $this->start = $start;
+    }
+
+    /**
+     * Vrací kapacitu programového bloku.
+     */
+    public function getBlockCapacity() : ?int
+    {
+        return $this->block->getCapacity();
     }
 
     /**

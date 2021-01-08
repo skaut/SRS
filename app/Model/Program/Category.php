@@ -49,8 +49,9 @@ class Category
      */
     protected Collection $blocks;
 
-    public function __construct()
+    public function __construct(string $name)
     {
+        $this->name              = $name;
         $this->registerableRoles = new ArrayCollection();
         $this->blocks            = new ArrayCollection();
     }

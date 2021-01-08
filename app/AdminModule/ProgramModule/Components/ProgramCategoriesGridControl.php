@@ -7,9 +7,11 @@ namespace App\AdminModule\ProgramModule\Components;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Program\Category;
+use App\Model\Program\Commands\RemoveCategory;
+use App\Model\Program\Commands\SaveCategory;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Services\AclService;
-use App\Services\ProgramService;
+use App\Services\CommandBus;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -29,27 +31,27 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class ProgramCategoriesGridControl extends Control
 {
+    private CommandBus $commandBus;
+
     private ITranslator $translator;
 
     private CategoryRepository $categoryRepository;
 
     private RoleRepository $roleRepository;
 
-    private ProgramService $programService;
-
     private AclService $aclService;
 
     public function __construct(
+        CommandBus $commandBus,
         ITranslator $translator,
         CategoryRepository $categoryRepository,
         RoleRepository $roleRepository,
-        ProgramService $programService,
         AclService $aclService
     ) {
+        $this->commandBus         = $commandBus;
         $this->translator         = $translator;
         $this->categoryRepository = $categoryRepository;
         $this->roleRepository     = $roleRepository;
-        $this->programService     = $programService;
         $this->aclService         = $aclService;
     }
 
@@ -128,7 +130,11 @@ class ProgramCategoriesGridControl extends Control
      */
     public function add(stdClass $values) : void
     {
-        $this->programService->createCategory($values->name, $this->roleRepository->findRolesByIds($values->registerableRoles));
+        $category = new Category($values->name);
+
+        $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values->registerableRoles));
+
+        $this->commandBus->handle(new SaveCategory($category));
 
         $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
 
@@ -145,7 +151,10 @@ class ProgramCategoriesGridControl extends Control
     {
         $category = $this->categoryRepository->findById((int) $id);
 
-        $this->programService->updateCategory($category, $values->name, $this->roleRepository->findRolesByIds($values->registerableRoles));
+        $category->setName($values->name);
+        $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values->registerableRoles));
+
+        $this->commandBus->handle(new SaveCategory($category));
 
         $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
         $this->redirect('this');
@@ -162,7 +171,7 @@ class ProgramCategoriesGridControl extends Control
         $category = $this->categoryRepository->findById($id);
 
         if ($category->getBlocks()->isEmpty()) {
-            $this->categoryRepository->remove($category);
+            $this->commandBus->handle(new RemoveCategory($category));
             $this->getPresenter()->flashMessage('admin.program.categories_deleted', 'success');
         } else {
             $this->getPresenter()->flashMessage('admin.program.categories_deleted_error', 'danger');

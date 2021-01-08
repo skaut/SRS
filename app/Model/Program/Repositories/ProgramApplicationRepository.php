@@ -49,7 +49,7 @@ class ProgramApplicationRepository extends AbstractRepository
             $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 
-            $capacity  = $program->getCapacity();
+            $capacity  = $program->getBlockCapacity();
             $occupancy = $program->getOccupancy();
 
             $alternate = false;

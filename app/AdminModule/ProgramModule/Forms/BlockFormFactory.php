@@ -9,13 +9,14 @@ use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
+use App\Model\Program\Commands\SaveBlock;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\ProgramService;
+use App\Services\CommandBus;
 use App\Services\SettingsService;
 use App\Services\SubeventService;
 use App\Utils\Validators;
@@ -27,6 +28,7 @@ use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Forms\Controls\TextInput;
 use stdClass;
 use Throwable;
+use function Symfony\Component\Translation\t;
 
 /**
  * Formulář pro úpravu programového bloku.
@@ -53,6 +55,8 @@ class BlockFormFactory
      */
     private bool $subeventsExists;
 
+    private CommandBus $commandBus;
+
     private BaseFormFactory $baseFormFactory;
 
     private BlockRepository $blockRepository;
@@ -65,30 +69,28 @@ class BlockFormFactory
 
     private SubeventRepository $subeventRepository;
 
-    private ProgramService $programService;
-
     private SubeventService $subeventService;
 
     private Validators $validators;
 
     public function __construct(
+        CommandBus $commandBus,
         BaseFormFactory $baseFormFactory,
         BlockRepository $blockRepository,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
         SettingsService $settingsService,
         SubeventRepository $subeventRepository,
-        ProgramService $programService,
         SubeventService $subeventService,
         Validators $validators
     ) {
+        $this->commandBus         = $commandBus;
         $this->baseFormFactory    = $baseFormFactory;
         $this->blockRepository    = $blockRepository;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->settingsService    = $settingsService;
         $this->subeventRepository = $subeventRepository;
-        $this->programService     = $programService;
         $this->subeventService    = $subeventService;
         $this->validators         = $validators;
     }
@@ -147,7 +149,11 @@ class BlockFormFactory
             ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks_capacity_note'))
             ->addCondition(Form::FILLED)
-            ->addRule(Form::INTEGER, 'admin.program.blocks_capacity_format');
+            ->addRule(Form::INTEGER, 'admin.program.blocks_capacity_format')
+            ->toggle('alternates-allowed');
+
+        $form->addCheckbox('alternatesAllowed', 'admin.program.blocks_alternates_allowed')
+            ->setOption('id', 'alternates-allowed');
 
         $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory_form')
             ->addCondition(Form::EQUAL, true)
@@ -191,6 +197,7 @@ class BlockFormFactory
                 'lectors' => $this->userRepository->findUsersIds($this->block->getLectors()),
                 'duration' => $this->block->getDuration(),
                 'capacity' => $this->block->getCapacity(),
+                'alternatesAllowed' => $this->block->isAlternatesAllowed(),
                 'mandatory' => $this->block->getMandatory() === ProgramMandatoryType::MANDATORY || $this->block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED,
                 'autoRegistered' => $this->block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED,
                 'perex' => $this->block->getPerex(),
@@ -230,12 +237,14 @@ class BlockFormFactory
             return;
         }
 
-        if (! $this->block) {
+        if ($this->block === null) {
             if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
-                return;
+                return; //todo: exception
             }
-        } elseif (! $this->user->isAllowedModifyBlock($this->block)) {
-            return;
+        } else {
+            if (! $this->user->isAllowedModifyBlock($this->block)) {
+                return; //todo: exception
+            }
         }
 
         if ($this->subeventsExists) {
@@ -249,11 +258,27 @@ class BlockFormFactory
         $capacity  = $values->capacity !== '' ? $values->capacity : null;
         $mandatory = $values->mandatory ? ($values->autoRegistered ? ProgramMandatoryType::AUTO_REGISTERED : ProgramMandatoryType::MANDATORY) : ProgramMandatoryType::VOLUNTARY;
 
-        if (! $this->block) {
-            $this->programService->createBlock($values->name, $subevent, $category, $lectors, $values->duration, $capacity, $mandatory, $values->perex, $values->description, $values->tools);
+        if ($this->block === null) {
+            $this->block = new Block($values->name, $values->duration, $capacity, $values->alternatesAllowed, $mandatory, $subevent, $category);
+            $this->block->setLectors($lectors);
+            $this->block->setPerex($values->perex);
+            $this->block->setDescription($values->description);
+            $this->block->setTools($values->tools);
         } else {
-            $this->programService->updateBlock($this->block, $values->name, $subevent, $category, $lectors, $values->duration, $capacity, $mandatory, $values->perex, $values->description, $values->tools);
+            $this->block->setName($values->name);
+            $this->block->setSubevent($subevent);
+            $this->block->setCategory($category);
+            $this->block->setLectors($lectors);
+            $this->block->setDuration($values->duration);
+            $this->block->setCapacity($capacity);
+            $this->block->setAlternatesAllowed($values->alternatesAllowed);
+            $this->block->setMandatory($mandatory);
+            $this->block->setPerex($values->perex);
+            $this->block->setDescription($values->description);
+            $this->block->setTools($values->tools);
         }
+
+        $this->commandBus->handle(new SaveBlock($this->block));
     }
 
     /**

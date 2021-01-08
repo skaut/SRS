@@ -91,7 +91,7 @@ class Block
      *
      * @ORM\Column(type="boolean")
      */
-    protected bool $alternatesAllowed = true;
+    protected bool $alternatesAllowed = false;
 
     /**
      * Pomůcky.
@@ -114,10 +114,24 @@ class Block
      */
     protected ?string $description = null;
 
-    public function __construct()
-    {
-        $this->programs = new ArrayCollection();
-        $this->lectors  = new ArrayCollection();
+    public function __construct(
+        string $name,
+        int $duration,
+        ?int $capacity,
+        bool $alternatesAllowed,
+        string $mandatory,
+        Subevent $subevent,
+        ?Category $category
+    ) {
+        $this->name              = $name;
+        $this->duration          = $duration;
+        $this->capacity          = $capacity;
+        $this->alternatesAllowed = $alternatesAllowed;
+        $this->mandatory         = $mandatory;
+        $this->subevent          = $subevent;
+        $this->category          = $category;
+        $this->programs          = new ArrayCollection();
+        $this->lectors           = new ArrayCollection();
     }
 
     public function getId() : int

@@ -9,13 +9,15 @@ use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
+use App\Model\Program\Commands\RemoveBlock;
+use App\Model\Program\Commands\SaveBlock;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
+use App\Services\CommandBus;
 use App\Services\ExcelExportService;
-use App\Services\ProgramService;
 use App\Services\SettingsService;
 use App\Services\SubeventService;
 use App\Utils\Validators;
@@ -41,6 +43,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class ProgramBlocksGridControl extends Control
 {
+    private CommandBus $commandBus;
+
     private ITranslator $translator;
 
     private BlockRepository $blockRepository;
@@ -53,8 +57,6 @@ class ProgramBlocksGridControl extends Control
 
     private ExcelExportService $excelExportService;
 
-    private ProgramService $programService;
-
     private Validators $validators;
 
     private Session $session;
@@ -64,24 +66,24 @@ class ProgramBlocksGridControl extends Control
     private SubeventService $subeventService;
 
     public function __construct(
+        CommandBus $commandBus,
         ITranslator $translator,
         BlockRepository $blockRepository,
         SettingsService $settingsService,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
         ExcelExportService $excelExportService,
-        ProgramService $programService,
         Validators $validators,
         SubeventService $subeventService,
         Session $session
     ) {
+        $this->commandBus         = $commandBus;
         $this->translator         = $translator;
         $this->blockRepository    = $blockRepository;
         $this->settingsService    = $settingsService;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->excelExportService = $excelExportService;
-        $this->programService     = $programService;
         $this->validators         = $validators;
         $this->subeventService    = $subeventService;
 
@@ -222,7 +224,7 @@ class ProgramBlocksGridControl extends Control
             $this->redirect('this');
         }
 
-        $this->programService->removeBlock($block);
+        $this->commandBus->handle(new RemoveBlock($block));
 
         $this->getPresenter()->flashMessage('admin.program.blocks_deleted', 'success');
 
@@ -246,7 +248,8 @@ class ProgramBlocksGridControl extends Control
             $p->flashMessage('admin.program.blocks_change_mandatory_auto_registered_not_allowed', 'danger');
         } else {
             try {
-                $this->programService->updateBlockMandatory($block, $mandatory);
+                $block->setMandatory($mandatory);
+                $this->commandBus->handle(new SaveBlock($block));
                 $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');
             } catch (Throwable $ex) {
                 Debugger::log($ex, ILogger::WARNING);

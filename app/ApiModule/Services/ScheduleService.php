@@ -15,6 +15,8 @@ use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
+use App\Model\Program\Commands\RemoveProgram;
+use App\Model\Program\Commands\SaveProgram;
 use App\Model\Program\Exceptions\ProgramCapacityOccupiedException;
 use App\Model\Program\Exceptions\UserAlreadyAttendsBlockException;
 use App\Model\Program\Exceptions\UserAlreadyAttendsProgramException;
@@ -29,6 +31,7 @@ use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
@@ -37,7 +40,6 @@ use App\Model\User\Queries\UserProgramBlocksQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
-use App\Services\ProgramService;
 use App\Services\QueryBus;
 use App\Services\SettingsService;
 use App\Utils\Helpers;
@@ -74,8 +76,6 @@ class ScheduleService
 
     private SettingsService $settingsService;
 
-    private ProgramService $programService;
-
     private CommandBus $commandBus;
 
     private QueryBus $queryBus;
@@ -87,7 +87,6 @@ class ScheduleService
         BlockRepository $blockRepository,
         RoomRepository $roomRepository,
         SettingsService $settingsService,
-        ProgramService $programService,
         CommandBus $commandBus,
         QueryBus $queryBus
     ) {
@@ -97,7 +96,6 @@ class ScheduleService
         $this->blockRepository   = $blockRepository;
         $this->roomRepository    = $roomRepository;
         $this->settingsService   = $settingsService;
-        $this->programService    = $programService;
         $this->commandBus        = $commandBus;
         $this->queryBus          = $queryBus;
     }
@@ -284,11 +282,13 @@ class ScheduleService
         } elseif ($this->programRepository->hasOverlappingAutoRegisteredProgram($programId, $start, $end)) {
             throw new ApiException($this->translator->translate('common.api.schedule.auto_registered_not_allowed'));
         } else {
-            if ($programId) {
-                $program = $this->programRepository->findById($programId);
-                $this->programService->updateProgram($program, $room, $start);
+            if ($programId === null) {
+                $this->commandBus->handle(new SaveProgram(new Program($block, $room, $start)));
             } else {
-                $program = $this->programService->createProgram($block, $room, $start);
+                $program = $this->programRepository->findById($programId);
+                $program->setRoom($room);
+                $program->setStart($start);
+                $this->commandBus->handle(new SaveProgram($program));
             }
 
             $responseDto = new ResponseDto();
@@ -326,7 +326,7 @@ class ScheduleService
             $programDetailDto = new ProgramDetailDto();
             $programDetailDto->setId($program->getId());
 
-            $this->programService->removeProgram($program);
+            $this->commandBus->handle(new RemoveProgram($program));
 
             $responseDto = new ResponseDto();
             $responseDto->setProgram($programDetailDto);
@@ -355,7 +355,7 @@ class ScheduleService
             throw new ApiException($this->translator->translate('common.api.schedule.user_not_allowed_register_programs'));
         }
 
-        if (! $this->programService->isAllowedRegisterPrograms()) {
+        if (! $this->queryBus->handle(new IsAllowedRegisterProgramsQuery())) {
             throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));
         }
 
@@ -421,7 +421,7 @@ class ScheduleService
             throw new ApiException($this->translator->translate('common.api.schedule.program_not_found'));
         }
 
-        if (! $this->programService->isAllowedRegisterPrograms()) {
+        if (! $this->queryBus->handle(new IsAllowedRegisterProgramsQuery())) {
             throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));
         }
 
