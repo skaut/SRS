@@ -27,12 +27,12 @@ class AbstractRepository
         $this->className = $className;
     }
 
-    protected function createQueryBuilder(string $alias) : QueryBuilder
+    public function createQueryBuilder(string $alias) : QueryBuilder
     {
         return $this->getRepository()->createQueryBuilder($alias);
     }
 
-    protected function getRepository() : EntityRepository
+    public function getRepository() : EntityRepository
     {
         $repository = $this->em->getRepository($this->className);
         assert($repository instanceof EntityRepository);

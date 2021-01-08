@@ -19,7 +19,7 @@ class UserAllowedProgramsQueryHandler implements MessageHandlerInterface
 
     public function __construct(ProgramRepository $programRepository)
     {
-        $this->programRepository  = $programRepository;
+        $this->programRepository = $programRepository;
     }
 
     /**
