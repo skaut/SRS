@@ -44,7 +44,6 @@ use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
 use function abs;
-use function array_diff;
 use function implode;
 use function str_pad;
 use function strval;
@@ -195,8 +194,9 @@ class ApplicationService
      */
     public function updateRoles(User $user, Collection $roles, ?User $createdBy, bool $approve = false) : void
     {
-        //pokud se role nezmenily, nic se neprovede
         $originalRoles = clone $user->getRoles();
+
+        //pokud se role nezmenily, nic se neprovede
         if ($roles->toArray() == $originalRoles->toArray()) { //todo: overeni
             return;
         }
@@ -366,8 +366,9 @@ class ApplicationService
             return;
         }
 
-        //pokud se podakce nezmenily, nic se neprovede
         $originalSubevents = clone $application->getSubevents();
+
+        //pokud se podakce nezmenily, nic se neprovede
         if ($subevents->toArray() == $originalSubevents->toArray()) { //todo: overit
             return;
         }

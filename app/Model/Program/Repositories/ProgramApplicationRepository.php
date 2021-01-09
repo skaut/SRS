@@ -10,7 +10,6 @@ use App\Model\Program\Exceptions\ProgramCapacityOccupiedException;
 use App\Model\Program\Exceptions\UserAlreadyAttendsBlockException;
 use App\Model\Program\Exceptions\UserAlreadyAttendsProgramException;
 use App\Model\Program\Exceptions\UserAttendsConflictingProgramException;
-use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramApplication;
 use App\Model\User\User;
