@@ -197,8 +197,8 @@ class ApplicationService
         $originalRoles = clone $user->getRoles();
 
         //pokud se role nezmenily, nic se neprovede
-        if ($roles->toArray() == $originalRoles->toArray()) { //todo: overeni
-            return;
+        if ($roles->toArray() == $originalRoles->toArray()) {
+            return; //todo: overit
         }
 
         $this->em->transactional(function () use ($user, $roles, $createdBy, $approve, $originalRoles) : void {
@@ -369,8 +369,8 @@ class ApplicationService
         $originalSubevents = clone $application->getSubevents();
 
         //pokud se podakce nezmenily, nic se neprovede
-        if ($subevents->toArray() == $originalSubevents->toArray()) { //todo: overit
-            return;
+        if ($subevents->toArray() == $originalSubevents->toArray()) {
+            return; //todo: overit
         }
 
         $this->em->transactional(function () use ($application, $subevents, $createdBy) : void {
