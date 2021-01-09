@@ -195,24 +195,14 @@ class ApplicationService
      */
     public function updateRoles(User $user, Collection $roles, ?User $createdBy, bool $approve = false) : void
     {
-        $oldRoles = clone $user->getRoles();
-
         //pokud se role nezmenily, nic se neprovede
-        if ($roles->count() === $oldRoles->count()) {
-            $rolesArray    = $roles->map(static function (Role $role) {
-                return $role->getId();
-            })->toArray();
-            $oldRolesArray = $oldRoles->map(static function (Role $role) {
-                return $role->getId();
-            })->toArray();
-
-            if (array_diff($rolesArray, $oldRolesArray) === array_diff($oldRolesArray, $rolesArray)) {
-                return;
-            }
+        $originalRoles = clone $user->getRoles();
+        if ($roles->toArray() == $originalRoles->toArray()) { //todo: overeni
+            return;
         }
 
-        $this->em->transactional(function () use ($user, $roles, $createdBy, $approve, $oldRoles) : void {
-            if ($oldRoles->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
+        $this->em->transactional(function () use ($user, $roles, $createdBy, $approve, $originalRoles) : void {
+            if ($originalRoles->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
                 $this->createRolesApplication($user, $roles, $createdBy, $approve);
                 $this->createSubeventsApplication($user, new ArrayCollection([$this->subeventRepository->findImplicit()]), $createdBy);
             } else {
@@ -225,8 +215,8 @@ class ApplicationService
                     return $role->isApprovedAfterRegistration();
                 })) {
                     $user->setApproved(true);
-                } elseif (! $approve && $roles->exists(static function (int $key, Role $role) use ($oldRoles) {
-                    return ! $role->isApprovedAfterRegistration() && ! $oldRoles->contains($role);
+                } elseif (! $approve && $roles->exists(static function (int $key, Role $role) use ($originalRoles) {
+                    return ! $role->isApprovedAfterRegistration() && ! $originalRoles->contains($role);
                 })) {
                     $user->setApproved(false);
                 }
@@ -376,20 +366,10 @@ class ApplicationService
             return;
         }
 
-        $oldSubevents = clone $application->getSubevents();
-
         //pokud se podakce nezmenily, nic se neprovede
-        if ($subevents->count() === $oldSubevents->count()) {
-            $subeventsArray    = $subevents->map(static function (Subevent $subevent) {
-                return $subevent->getId();
-            })->toArray();
-            $oldSubeventsArray = $oldSubevents->map(static function (Subevent $subevent) {
-                return $subevent->getId();
-            })->toArray();
-
-            if (array_diff($subeventsArray, $oldSubeventsArray) === array_diff($oldSubeventsArray, $subeventsArray)) {
-                return;
-            }
+        $originalSubevents = clone $application->getSubevents();
+        if ($subevents->toArray() == $originalSubevents->toArray()) { //todo: overit
+            return;
         }
 
         $this->em->transactional(function () use ($application, $subevents, $createdBy) : void {

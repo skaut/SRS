@@ -43,21 +43,20 @@ class ProgramApplicationRepository extends AbstractRepository
     /**
      * @throws Throwable
      */
-    public function saveUserProgramApplication(User $user, Program $program) : void
+    public function save(ProgramApplication $programApplication) : void
     {
-        $this->em->transactional(function (EntityManager $em) use ($user, $program) : void {
-            $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
+        $this->em->transactional(function (EntityManager $em) use ($programApplication) : void {
+            $program = $em->getRepository(Program::class)->find($programApplication->getProgram()->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 
+            $user      = $programApplication->getUser();
             $capacity  = $program->getBlockCapacity();
             $occupancy = $program->getOccupancy();
-
-            $alternate = false;
 
             if ($capacity !== null && $occupancy >= $capacity && ! $program->getBlock()->isAlternatesAllowed()) {
                 throw new ProgramCapacityOccupiedException();
             } elseif ($capacity !== null && $occupancy >= $capacity) {
-                $alternate = true;
+                $programApplication->setAlternate(true);
             }
 
             if ($this->findUserProgramApplication($user, $program) !== null) {
@@ -72,9 +71,9 @@ class ProgramApplicationRepository extends AbstractRepository
                 throw new UserAttendsConflictingProgramException();
             }
 
-            $this->em->persist(new ProgramApplication($user, $program, $alternate));
+            $this->em->persist($programApplication);
 
-            if (! $alternate) {
+            if (! $programApplication->isAlternate()) {
                 $program->setOccupancy($occupancy + 1);
                 $this->em->persist($program);
 
@@ -88,28 +87,20 @@ class ProgramApplicationRepository extends AbstractRepository
     /**
      * @throws Throwable
      */
-    public function removeUserProgramApplication(User $user, Program $program) : void
+    public function remove(ProgramApplication $programApplication) : void
     {
-        $this->em->transactional(function (EntityManager $em) use ($user, $program) : void {
-            $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
+        $this->em->transactional(function (EntityManager $em) use ($programApplication) : void {
+            $program = $em->getRepository(Program::class)->find($programApplication->getProgram()->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 
             $occupancy = $program->getOccupancy();
 
-            $programApplication = $this->findUserProgramApplication($user, $program);
-
-            if ($programApplication === null) {
-                throw new UserNotAttendsProgramException();
-            }
-
-            $alternate = $programApplication->isAlternate();
-
-            $this->em->remove($programApplication);
-
-            if (! $alternate) {
+            if (! $programApplication->isAlternate()) {
                 $program->setOccupancy($occupancy - 1);
                 $this->em->persist($program);
             }
+
+            $this->em->remove($programApplication);
         });
     }
 

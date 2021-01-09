@@ -164,7 +164,7 @@ class BlockFormFactory
             ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_registered_note'))
             ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_registered_not_allowed');
+            ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_registered_not_allowed'); //todo: nesmi mit omezenou kapacitu
 
         $form->addTextArea('perex', 'admin.program.blocks_perex_form')
             ->addCondition(Form::FILLED)

@@ -10,7 +10,6 @@ use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use function array_diff;
 
 class CategoryUpdatedEventListener implements MessageHandlerInterface
 {
@@ -32,7 +31,7 @@ class CategoryUpdatedEventListener implements MessageHandlerInterface
         $registerableRoles         = $event->getCategory()->getRegisterableRoles()->toArray();
         $originalRegisterableRoles = $event->getOriginalRegisterableRoles()->toArray();
 
-        if (! empty(array_diff($registerableRoles, $originalRegisterableRoles))) {
+        if ($registerableRoles != $originalRegisterableRoles) {
             $this->commandBus->handle(new UpdateUsersPrograms(new ArrayCollection($this->userRepository->findAll())));
         }
     }

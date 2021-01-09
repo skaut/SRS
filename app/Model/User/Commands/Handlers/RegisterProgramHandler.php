@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\User\Commands\Handlers;
 
 use App\Model\Program\Exceptions\UserNotAllowedProgramException;
+use App\Model\Program\ProgramApplication;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramRegisteredEvent;
@@ -46,8 +47,8 @@ class RegisterProgramHandler implements MessageHandlerInterface
         }
 
         $this->em->transactional(function () use ($command) : void {
-            $this->programApplicationRepository->saveUserProgramApplication($command->getUser(), $command->getProgram());
-            $programApplication = $this->programApplicationRepository->findUserProgramApplication($command->getUser(), $command->getProgram());
+            $programApplication = new ProgramApplication($command->getUser(), $command->getProgram());
+            $this->programApplicationRepository->save($programApplication);
             $this->eventBus->handle(new ProgramRegisteredEvent($command->getUser(), $command->getProgram(), $programApplication->isAlternate(), $command->isNotifyUser()));
         });
     }

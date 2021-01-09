@@ -37,6 +37,9 @@
             <div class="col-9">
                 {if $block->getCapacity() !== null}
                     {$block->getCapacity()}
+                    {if $block->isAlternatesAllowed()}
+                        {_admin.program.blocks_capacity_alternates_allowed}
+                    {/if}
                 {else}
                     {_admin.program.blocks_capacity_unlimited}
                 {/if}
@@ -117,7 +120,7 @@
                             {/if}
                         </td>
                         <td>
-                            {$program->getAttendeesCount()} {*todo replace*}
+                            {$program->getOccupancy()} {*todo: pocet nahradniku, prejmenovat occupancy na attendessCount, pridat alternatesCount*}
                         </td>
                         <td class="text-right" style="white-space: nowrap; width: 1%;">
                             {if $programId == $program->getId()}

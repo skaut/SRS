@@ -216,22 +216,21 @@ class UserRepository extends EntityRepository
     public function findBlockAllowed(Block $block) : Collection
     {
         $qb = $this->createQueryBuilder('u')
-            ->join('u.roles', 'r')
-            ->join('r.permissions', 'p')
-            ->join('u.applications', 'a')
+//            ->join('r.permissions', 'p')
+            ->join('u.applications', 'a', 'WITH', 'a.validTo IS NULL AND a.state != :stateCanceled AND a.state != :stateCanceledNotPaid')
             ->join('a.subevents', 's')
-            ->where('p.name = :permission')
-            ->andWhere('s.id = :sid')
-            ->andWhere('a.validTo IS NULL')
-            ->andWhere('(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::PAID_FREE
-                . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')')
-            ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
-            ->setParameter('sid', $block->getSubevent()->getId());
+//            ->where('p.name = :permission')
+            ->where('s = :subevent')
+//            ->setParameter('permission', Permission::CHOOSE_PROGRAMS) //todo: odstranit?
+            ->setParameter('subevent', $block->getSubevent())
+            ->setParameter('stateCanceled', ApplicationState::CANCELED)
+            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID);
 
-        if ($block->getCategory()) {
-            $qb = $qb->join('r.registerableCategories', 'c')
-                ->andWhere('c.id = :cid')
-                ->setParameter('cid', $block->getCategory()->getId());
+        if ($block->getCategory() !== null) {
+            $qb = $qb->join('u.roles', 'r')
+                ->join('r.registerableCategories', 'c')
+                ->andWhere('c = :category')
+                ->setParameter('category', $block->getCategory());
         }
 
         return new ArrayCollection($qb->getQuery()->getResult());
