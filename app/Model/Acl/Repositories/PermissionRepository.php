@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Model\Acl\Repositories;
 
 use App\Model\Acl\Permission;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
@@ -16,7 +16,7 @@ use Doctrine\ORM\NoResultException;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class PermissionRepository extends EntityRepository
+class PermissionRepository extends AbstractRepository
 {
     /**
      * Vrací oprávnění podle id.
@@ -25,7 +25,7 @@ class PermissionRepository extends EntityRepository
      *
      * @return Collection|Permission[]
      */
-    public function findPermissionsByIds(array $ids) : Collection
+    public function findPermissionsByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
@@ -41,7 +41,7 @@ class PermissionRepository extends EntityRepository
      *
      * @return int[]
      */
-    public function findPermissionsIds(Collection $permissions) : array
+    public function findPermissionsIds(Collection $permissions): array
     {
         return $permissions->map(static function (Permission $permission) {
             return $permission->getId();
@@ -54,7 +54,7 @@ class PermissionRepository extends EntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function findByPermissionAndResourceName(string $permissionName, string $resourceName) : ?Permission
+    public function findByPermissionAndResourceName(string $permissionName, string $resourceName): ?Permission
     {
         return $this->createQueryBuilder('p')
             ->select('p')

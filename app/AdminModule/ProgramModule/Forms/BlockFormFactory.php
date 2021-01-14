@@ -100,7 +100,7 @@ class BlockFormFactory
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function create(int $id, int $userId) : Form
+    public function create(int $id, int $userId): Form
     {
         $this->block = $this->blockRepository->findById($id);
         $this->user  = $this->userRepository->findById($userId);
@@ -230,7 +230,7 @@ class BlockFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;
@@ -283,7 +283,7 @@ class BlockFormFactory
     /**
      * Ověří, zda může být program automaticky přihlašovaný.
      */
-    public function validateAutoRegistered() : bool
+    public function validateAutoRegistered(): bool
     {
         if ($this->block) {
             return $this->validators->validateBlockAutoRegistered($this->block);

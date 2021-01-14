@@ -18,7 +18,7 @@ class RoleUpdatedEventListener implements MessageHandlerInterface
         $this->commandBus = $commandBus;
     }
 
-    public function __invoke(RoleUpdatedEvent $event) : void
+    public function __invoke(RoleUpdatedEvent $event): void
     {
         $this->commandBus->handle(new UpdateUsersPrograms($event->getRole()->getUsers())); // todo: není potřeba při každé změně role
     }

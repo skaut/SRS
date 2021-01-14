@@ -19,7 +19,7 @@ class TemplateRepository extends EntityRepository
     /**
      * Vrací šablonu podle id.
      */
-    public function findById(?int $id) : ?Template
+    public function findById(?int $id): ?Template
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -27,7 +27,7 @@ class TemplateRepository extends EntityRepository
     /**
      * Vrací šablonu podle typu.
      */
-    public function findByType(string $type) : ?Template
+    public function findByType(string $type): ?Template
     {
         return $this->findOneBy(['type' => $type]);
     }
@@ -37,7 +37,7 @@ class TemplateRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function save(Template $template) : void
+    public function save(Template $template): void
     {
         $this->_em->persist($template);
         $this->_em->flush();

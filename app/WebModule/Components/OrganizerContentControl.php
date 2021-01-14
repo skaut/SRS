@@ -14,7 +14,7 @@ use Nette\Application\UI\Control;
  */
 class OrganizerContentControl extends Control
 {
-    public function render(OrganizerContentDto $content) : void
+    public function render(OrganizerContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/organizer_content.latte');

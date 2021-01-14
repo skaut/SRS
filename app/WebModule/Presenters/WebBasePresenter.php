@@ -61,7 +61,7 @@ abstract class WebBasePresenter extends BasePresenter
     /**
      * Načte css podle konfigurace v common.neon.
      */
-    protected function createComponentCss() : CssLoader
+    protected function createComponentCss(): CssLoader
     {
         return $this->webLoader->createCssLoader('web');
     }
@@ -69,7 +69,7 @@ abstract class WebBasePresenter extends BasePresenter
     /**
      * Načte javascript podle konfigurace v common.neon.
      */
-    protected function createComponentJs() : JavaScriptLoader
+    protected function createComponentJs(): JavaScriptLoader
     {
         return $this->webLoader->createJavaScriptLoader('web');
     }
@@ -78,7 +78,7 @@ abstract class WebBasePresenter extends BasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
 
@@ -97,7 +97,7 @@ abstract class WebBasePresenter extends BasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function beforeRender() : void
+    public function beforeRender(): void
     {
         parent::beforeRender();
 
@@ -126,7 +126,7 @@ abstract class WebBasePresenter extends BasePresenter
      *
      * @throws AbortException
      */
-    public function actionExitRoleTest() : void
+    public function actionExitRoleTest(): void
     {
         $this->authenticator->updateRoles($this->user);
         $this->redirect(':Admin:Acl:default');
@@ -138,7 +138,7 @@ abstract class WebBasePresenter extends BasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    private function checkInstallation() : void
+    private function checkInstallation(): void
     {
         try {
             if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {

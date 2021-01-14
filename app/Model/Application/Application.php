@@ -17,13 +17,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
 use Numbers_Words;
+
 use function implode;
 use function str_replace;
 
 /**
  * Abstraktní entita přihláška.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Application\Repositories\ApplicationRepository")
+ * @ORM\Entity
  * @ORM\Table(name="application")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
@@ -182,32 +183,32 @@ abstract class Application
         }
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getApplicationId() : int
+    public function getApplicationId(): int
     {
         return $this->applicationId;
     }
 
-    public function setApplicationId(int $applicationId) : void
+    public function setApplicationId(int $applicationId): void
     {
         $this->applicationId = $applicationId;
     }
 
-    public function getType() : string
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function getUser() : User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUser(User $user) : void
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -215,7 +216,7 @@ abstract class Application
     /**
      * @return Collection|Role[]
      */
-    public function getRoles() : Collection
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
@@ -223,7 +224,7 @@ abstract class Application
     /**
      * Vrací názvy rolí oddělené čárkou.
      */
-    public function getRolesText() : string
+    public function getRolesText(): string
     {
         return implode(', ', $this->roles->map(static function (Role $role) {
             return $role->getName();
@@ -233,7 +234,7 @@ abstract class Application
     /**
      * @return Collection|Subevent[]
      */
-    public function getSubevents() : Collection
+    public function getSubevents(): Collection
     {
         return $this->subevents;
     }
@@ -241,14 +242,14 @@ abstract class Application
     /**
      * Vrací názvy podakcí oddělené čárkou.
      */
-    public function getSubeventsText() : string
+    public function getSubeventsText(): string
     {
         return implode(', ', $this->subevents->map(static function (Subevent $subevent) {
             return $subevent->getName();
         })->toArray());
     }
 
-    public function getFee() : int
+    public function getFee(): int
     {
         return $this->fee;
     }
@@ -256,7 +257,7 @@ abstract class Application
     /**
      * Vrací poplatek slovy.
      */
-    public function getFeeWords() : string
+    public function getFeeWords(): string
     {
         $numbersWords = new Numbers_Words();
         $feeWord      = $numbersWords->toWords($this->getFee(), 'cs');
@@ -265,12 +266,12 @@ abstract class Application
         return $feeWord;
     }
 
-    public function setFee(int $fee) : void
+    public function setFee(int $fee): void
     {
         $this->fee = $fee;
     }
 
-    public function getVariableSymbol() : VariableSymbol
+    public function getVariableSymbol(): VariableSymbol
     {
         return $this->variableSymbol;
     }
@@ -278,27 +279,27 @@ abstract class Application
     /**
      * Vrací text variabilního symbolu.
      */
-    public function getVariableSymbolText() : string
+    public function getVariableSymbolText(): string
     {
         return $this->variableSymbol->getVariableSymbol();
     }
 
-    public function setVariableSymbol(VariableSymbol $variableSymbol) : void
+    public function setVariableSymbol(VariableSymbol $variableSymbol): void
     {
         $this->variableSymbol = $variableSymbol;
     }
 
-    public function getApplicationDate() : DateTimeImmutable
+    public function getApplicationDate(): DateTimeImmutable
     {
         return $this->applicationDate;
     }
 
-    public function setApplicationDate(DateTimeImmutable $applicationDate) : void
+    public function setApplicationDate(DateTimeImmutable $applicationDate): void
     {
         $this->applicationDate = $applicationDate;
     }
 
-    public function getMaturityDate() : ?DateTimeImmutable
+    public function getMaturityDate(): ?DateTimeImmutable
     {
         return $this->maturityDate;
     }
@@ -306,27 +307,27 @@ abstract class Application
     /**
      * Vrací datum splastnosti jako text.
      */
-    public function getMaturityDateText() : ?string
+    public function getMaturityDateText(): ?string
     {
         return $this->maturityDate !== null ? $this->maturityDate->format(Helpers::DATE_FORMAT) : null;
     }
 
-    public function setMaturityDate(?DateTimeImmutable $maturityDate) : void
+    public function setMaturityDate(?DateTimeImmutable $maturityDate): void
     {
         $this->maturityDate = $maturityDate;
     }
 
-    public function getPaymentMethod() : ?string
+    public function getPaymentMethod(): ?string
     {
         return $this->paymentMethod;
     }
 
-    public function setPaymentMethod(?string $paymentMethod) : void
+    public function setPaymentMethod(?string $paymentMethod): void
     {
         $this->paymentMethod = $paymentMethod;
     }
 
-    public function getPaymentDate() : ?DateTimeImmutable
+    public function getPaymentDate(): ?DateTimeImmutable
     {
         return $this->paymentDate;
     }
@@ -334,97 +335,97 @@ abstract class Application
     /**
      * Vrací datum platby jako text.
      */
-    public function getPaymentDateText() : ?string
+    public function getPaymentDateText(): ?string
     {
         return $this->paymentDate !== null ? $this->paymentDate->format(Helpers::DATE_FORMAT) : null;
     }
 
-    public function setPaymentDate(?DateTimeImmutable $paymentDate) : void
+    public function setPaymentDate(?DateTimeImmutable $paymentDate): void
     {
         $this->paymentDate = $paymentDate;
     }
 
-    public function getPayment() : ?Payment
+    public function getPayment(): ?Payment
     {
         return $this->payment;
     }
 
-    public function setPayment(?Payment $payment) : void
+    public function setPayment(?Payment $payment): void
     {
         $this->payment = $payment;
     }
 
-    public function getIncomeProof() : ?IncomeProof
+    public function getIncomeProof(): ?IncomeProof
     {
         return $this->incomeProof;
     }
 
-    public function setIncomeProof(?IncomeProof $incomeProof) : void
+    public function setIncomeProof(?IncomeProof $incomeProof): void
     {
         $this->incomeProof = $incomeProof;
     }
 
-    public function getState() : ?string
+    public function getState(): ?string
     {
         return $this->state;
     }
 
-    public function setState(string $state) : void
+    public function setState(string $state): void
     {
         $this->state = $state;
     }
 
-    public function getCreatedBy() : ?User
+    public function getCreatedBy(): ?User
     {
         return $this->createdBy;
     }
 
-    public function setCreatedBy(?User $createdBy) : void
+    public function setCreatedBy(?User $createdBy): void
     {
         $this->createdBy = $createdBy;
     }
 
-    public function getValidFrom() : DateTimeImmutable
+    public function getValidFrom(): DateTimeImmutable
     {
         return $this->validFrom;
     }
 
-    public function setValidFrom(DateTimeImmutable $validFrom) : void
+    public function setValidFrom(DateTimeImmutable $validFrom): void
     {
         $this->validFrom = $validFrom;
     }
 
-    public function getValidTo() : ?DateTimeImmutable
+    public function getValidTo(): ?DateTimeImmutable
     {
         return $this->validTo;
     }
 
-    public function setValidTo(?DateTimeImmutable $validTo) : void
+    public function setValidTo(?DateTimeImmutable $validTo): void
     {
         $this->validTo = $validTo;
     }
 
-    public function isValid() : bool
+    public function isValid(): bool
     {
         return $this->validTo === null;
     }
 
-    public function isCanceled() : bool
+    public function isCanceled(): bool
     {
         return $this->state === ApplicationState::CANCELED || $this->state === ApplicationState::CANCELED_NOT_PAID;
     }
 
-    public function isPaid() : bool
+    public function isPaid(): bool
     {
         return $this->state == ApplicationState::PAID || $this->getState() == ApplicationState::PAID_FREE;
     }
 
-    public function isWaitingForPayment() : bool
+    public function isWaitingForPayment(): bool
     {
         return $this->state == ApplicationState::WAITING_FOR_PAYMENT;
     }
 
-    public function getPaymentQr(string $accountNumber, string $message) : string
+    public function getPaymentQr(string $accountNumber, string $message): string
     {
         $qrPlatba = new QRPlatba();
 

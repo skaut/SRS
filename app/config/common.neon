@@ -68,30 +68,6 @@ services:
     - App\Commands\ClearCacheCommand(%appDir%/..)
     - App\Utils\Validators
 
-    permissionRepository:
-        class: App\Model\Acl\Repositories\PermissionRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\Permission)
-    resourceRepository:
-        class: App\Model\Acl\Repositories\SrsResourceRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\SrsResource)
-    roleRepository:
-        class: App\Model\Acl\Repositories\RoleRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\Role)
-    applicationRepository:
-        class: App\Model\Application\Repositories\ApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Application\Application)
-    incomeProofRepository:
-        class: App\Model\Application\Repositories\IncomeProofRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Application\IncomeProof)
-    rolesApplicationRepository:
-        class: App\Model\Application\Repositories\RolesApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Application\RolesApplication)
-    subeventsApplicationRepository:
-        class: App\Model\Application\Repositories\SubeventsApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Application\SubeventsApplication)
-    variableSymbolRepository:
-        class: App\Model\Application\Repositories\VariableSymbolRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Application\VariableSymbol)
     contentRepository:
         class: App\Model\Cms\Repositories\ContentRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Content)
@@ -134,15 +110,6 @@ services:
     skautIsCourseRepository:
         class: App\Model\SkautIs\Repositories\SkautIsCourseRepository
         factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\SkautIs\SkautIsCourse)
-    discountRepository:
-        class: App\Model\Structure\Repositories\DiscountRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Discount)
-    subeventRepository:
-        class: App\Model\Structure\Repositories\SubeventRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Subevent)
-    userRepository:
-        class: App\Model\User\Repositories\UserRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\User)
 
     pageFormFactory:
         factory: App\AdminModule\CmsModule\Forms\PageForm(%id%, %area%, ...)

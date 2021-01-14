@@ -23,17 +23,17 @@ class CustomCheckboxValue extends CustomInputValue
      */
     protected ?bool $value = null;
 
-    public function getValue() : ?bool
+    public function getValue(): ?bool
     {
         return $this->value;
     }
 
-    public function setValue(bool $value) : void
+    public function setValue(bool $value): void
     {
         $this->value = $value;
     }
 
-    public function getValueText() : string
+    public function getValueText(): string
     {
         return $this->value ? (string) $this->value : '';
     }

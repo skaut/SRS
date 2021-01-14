@@ -20,7 +20,7 @@ class SchedulePresenter extends ProgramBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function renderDefault() : void
+    public function renderDefault(): void
     {
         $this->template->isAllowedModifySchedule = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
     }

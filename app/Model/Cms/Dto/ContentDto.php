@@ -27,12 +27,12 @@ class ContentDto
         $this->heading       = $heading;
     }
 
-    public function getComponentName() : string
+    public function getComponentName(): string
     {
         return $this->componentName;
     }
 
-    public function getHeading() : string
+    public function getHeading(): string
     {
         return $this->heading;
     }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Structure\Repositories;
 
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Structure\Discount;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 
 /**
@@ -14,12 +14,12 @@ use Doctrine\ORM\ORMException;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class DiscountRepository extends EntityRepository
+class DiscountRepository extends AbstractRepository
 {
     /**
      * Vrací slevu podle id.
      */
-    public function findById(?int $id) : ?Discount
+    public function findById(?int $id): ?Discount
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -29,7 +29,7 @@ class DiscountRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function save(Discount $discount) : void
+    public function save(Discount $discount): void
     {
         $this->_em->persist($discount);
         $this->_em->flush();
@@ -40,7 +40,7 @@ class DiscountRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function remove(Discount $discount) : void
+    public function remove(Discount $discount): void
     {
         $this->_em->remove($discount);
         $this->_em->flush();

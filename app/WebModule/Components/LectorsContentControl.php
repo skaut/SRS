@@ -27,7 +27,7 @@ class LectorsContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
-    public function render(ContentDto $content) : void
+    public function render(ContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/lectors_content.latte');

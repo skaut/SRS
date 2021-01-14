@@ -26,7 +26,7 @@ class BlocksContentControl extends Control
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function render(ContentDto $content) : void
+    public function render(ContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/blocks_content.latte');

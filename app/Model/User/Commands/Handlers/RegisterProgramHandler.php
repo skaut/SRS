@@ -40,13 +40,13 @@ class RegisterProgramHandler implements MessageHandlerInterface
     /**
      * @throws UserNotAllowedProgramException
      */
-    public function __invoke(RegisterProgram $command) : void
+    public function __invoke(RegisterProgram $command): void
     {
         if (! $this->queryBus->handle(new UserAllowedProgramsQuery($command->getUser()))->contains($command->getProgram())) {
             throw new UserNotAllowedProgramException();
         }
 
-        $this->em->transactional(function () use ($command) : void {
+        $this->em->transactional(function () use ($command): void {
             $programApplication = new ProgramApplication($command->getUser(), $command->getProgram());
             $this->programApplicationRepository->save($programApplication);
             $this->eventBus->handle(new ProgramRegisteredEvent($command->getUser(), $command->getProgram(), $programApplication->isAlternate(), $command->isNotifyUser()));

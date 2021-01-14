@@ -30,7 +30,7 @@ class MailingPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function renderDefault() : void
+    public function renderDefault(): void
     {
         $this->template->waiting = $this->settingsService->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE) !== null;
     }
@@ -39,11 +39,11 @@ class MailingPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentMailingForm() : Form
+    protected function createComponentMailingForm(): Form
     {
         $form = $this->mailingFormFactory->create($this->user->getId());
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

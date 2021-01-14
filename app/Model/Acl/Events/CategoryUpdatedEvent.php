@@ -24,7 +24,7 @@ class CategoryUpdatedEvent
         $this->originalRegisterableRoles = $originalRegisterableRoles;
     }
 
-    public function getCategory() : Category
+    public function getCategory(): Category
     {
         return $this->category;
     }
@@ -32,7 +32,7 @@ class CategoryUpdatedEvent
     /**
      * @return Collection<Role>
      */
-    public function getOriginalRegisterableRoles() : Collection
+    public function getOriginalRegisterableRoles(): Collection
     {
         return $this->originalRegisterableRoles;
     }

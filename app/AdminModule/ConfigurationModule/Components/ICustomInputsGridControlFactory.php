@@ -14,5 +14,5 @@ interface ICustomInputsGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : CustomInputsGridControl;
+    public function create(): CustomInputsGridControl;
 }

@@ -25,7 +25,7 @@ class DashboardPresenter extends AdminBasePresenter
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    public function beforeRender() : void
+    public function beforeRender(): void
     {
         parent::beforeRender();
 

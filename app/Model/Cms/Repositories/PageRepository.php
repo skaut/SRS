@@ -14,7 +14,9 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Throwable;
+
 use function array_map;
+
 use const PHP_INT_MAX;
 
 /**
@@ -29,7 +31,7 @@ class PageRepository extends EntityRepository
     /**
      * Vrací stránku podle id.
      */
-    public function findById(?int $id) : ?Page
+    public function findById(?int $id): ?Page
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -39,7 +41,7 @@ class PageRepository extends EntityRepository
      *
      * @throws Throwable
      */
-    public function findPublishedBySlug(string $slug) : ?Page
+    public function findPublishedBySlug(string $slug): ?Page
     {
         return $this->findOneBy(['public' => true, 'slug' => $slug]);
     }
@@ -49,7 +51,7 @@ class PageRepository extends EntityRepository
      *
      * @return Page[]
      */
-    public function findPublishedOrderedByPosition() : array
+    public function findPublishedOrderedByPosition(): array
     {
         return $this->findBy(['public' => true], ['position' => 'ASC']);
     }
@@ -60,7 +62,7 @@ class PageRepository extends EntityRepository
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function findLastPosition() : int
+    public function findLastPosition(): int
     {
         return (int) $this->createQueryBuilder('p')
             ->select('MAX(p.position)')
@@ -73,7 +75,7 @@ class PageRepository extends EntityRepository
      *
      * @return string[]
      */
-    public function findAllSlugs() : array
+    public function findAllSlugs(): array
     {
         $slugs = $this->createQueryBuilder('p')
             ->select('p.slug')
@@ -88,7 +90,7 @@ class PageRepository extends EntityRepository
      *
      * @return string[]
      */
-    public function findOthersSlugs(int $id) : array
+    public function findOthersSlugs(int $id): array
     {
         $slugs = $this->createQueryBuilder('p')
             ->select('p.slug')
@@ -107,7 +109,7 @@ class PageRepository extends EntityRepository
      *
      * @return int[]
      */
-    public function findPagesIds(Collection $pages) : array
+    public function findPagesIds(Collection $pages): array
     {
         return array_map(static function (Page $o) {
             return $o->getId();
@@ -121,7 +123,7 @@ class PageRepository extends EntityRepository
      *
      * @return Collection|Page[]
      */
-    public function findPagesBySlugs(array $slugs) : Collection
+    public function findPagesBySlugs(array $slugs): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('slug', $slugs))
@@ -137,7 +139,7 @@ class PageRepository extends EntityRepository
      *
      * @return string[]
      */
-    public function findPagesSlugs(Collection $pages) : array
+    public function findPagesSlugs(Collection $pages): array
     {
         return array_map(static function (Page $o) {
             return $o->getSlug();
@@ -149,7 +151,7 @@ class PageRepository extends EntityRepository
      *
      * @return string[]
      */
-    public function getPagesOptions() : array
+    public function getPagesOptions(): array
     {
         $pages = $this->createQueryBuilder('p')
             ->select('p.slug, p.name')
@@ -172,7 +174,7 @@ class PageRepository extends EntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function save(Page $page) : void
+    public function save(Page $page): void
     {
         if (! $page->getPosition()) {
             $page->setPosition($this->findLastPosition() + 1);
@@ -189,7 +191,7 @@ class PageRepository extends EntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Page $page) : void
+    public function remove(Page $page): void
     {
         foreach ($page->getContents() as $content) {
             $this->_em->remove($content);
@@ -205,7 +207,7 @@ class PageRepository extends EntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function sort(int $itemId, int $prevId, int $nextId) : void
+    public function sort(int $itemId, int $prevId, int $nextId): void
     {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : null;

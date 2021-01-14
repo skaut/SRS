@@ -1,0 +1,11 @@
+services:
+    - App\Model\Program\Repositories\BlockRepository
+    - App\Model\Program\Repositories\ProgramApplicationRepository
+    - App\Model\Program\Repositories\ProgramRepository
+    - class: App\Model\User\Commands\Handlers\UnregisterProgramHandler
+      tags:
+        messenger.messageHandler:
+        bus: commandBus
+    
+includes:
+- ../../config/doctrine.neon

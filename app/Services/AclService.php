@@ -18,6 +18,7 @@ use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\Localization\ITranslator;
 use Throwable;
+
 use function array_map;
 
 /**
@@ -67,7 +68,7 @@ class AclService
      *
      * @throws Throwable
      */
-    public function findAllRoleNames() : array
+    public function findAllRoleNames(): array
     {
         $names = $this->roleNamesCache->load(null);
         if ($names === null) {
@@ -88,7 +89,7 @@ class AclService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function saveRole(Role $role) : void
+    public function saveRole(Role $role): void
     {
         $this->roleRepository->save($role);
         $this->roleNamesCache->clean([Cache::NAMESPACES => ['RoleNames']]);
@@ -101,7 +102,7 @@ class AclService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function removeRole(Role $role) : void
+    public function removeRole(Role $role): void
     {
         $this->roleRepository->remove($role);
         $this->roleNamesCache->clean([Cache::NAMESPACES => ['RoleNames']]);
@@ -112,7 +113,7 @@ class AclService
      *
      * @return string[]
      */
-    public function getRolesWithoutRoleOptions(int $roleId) : array
+    public function getRolesWithoutRoleOptions(int $roleId): array
     {
         $roles = $this->roleRepository->createQueryBuilder('r')
             ->select('r.id, r.name')
@@ -136,7 +137,7 @@ class AclService
      *
      * @return string[]
      */
-    public function getRolesWithoutRolesOptions(array $withoutRoles) : array
+    public function getRolesWithoutRolesOptions(array $withoutRoles): array
     {
         if (empty($withoutRoles)) {
             $roles = $this->roleRepository->createQueryBuilder('r')
@@ -169,7 +170,7 @@ class AclService
      *
      * @return string[]
      */
-    public function getRolesWithoutRolesOptionsWithCapacity(array $withoutRoles) : array
+    public function getRolesWithoutRolesOptionsWithCapacity(array $withoutRoles): array
     {
         if (empty($withoutRoles)) {
             $roles = $this->roleRepository->createQueryBuilder('r')
@@ -208,7 +209,7 @@ class AclService
      *
      * @return string[]
      */
-    public function getRolesWithoutRolesOptionsWithApprovedUsersCount(array $withoutRoles) : array
+    public function getRolesWithoutRolesOptionsWithApprovedUsersCount(array $withoutRoles): array
     {
         if (empty($withoutRoles)) {
             $roles = $this->roleRepository->createQueryBuilder('r')
@@ -243,7 +244,7 @@ class AclService
      *
      * @return string[]
      */
-    public function getRolesOptionsWithCapacity(bool $registerableNowOnly, bool $includeUsers, ?User $user = null) : array
+    public function getRolesOptionsWithCapacity(bool $registerableNowOnly, bool $includeUsers, ?User $user = null): array
     {
         $roles = $this->roleRepository->findFilteredRoles($registerableNowOnly, false, $includeUsers, $user);
 
@@ -270,7 +271,7 @@ class AclService
      *
      * @throws Throwable
      */
-    public function findAllPermissionNames() : Collection
+    public function findAllPermissionNames(): Collection
     {
         $names = $this->permissionNamesCache->load(null);
         if ($names === null) {
@@ -293,7 +294,7 @@ class AclService
      *
      * @throws Throwable
      */
-    public function findAllResourceNames() : array
+    public function findAllResourceNames(): array
     {
         $names = $this->resourceNamesCache->load(null);
         if ($names === null) {

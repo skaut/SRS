@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
+
 use function array_map;
 
 /**
@@ -28,7 +29,7 @@ class CategoryRepository extends AbstractRepository
     /**
      * @return Collection<Category>
      */
-    public function findAll() : Collection
+    public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
 
@@ -38,7 +39,7 @@ class CategoryRepository extends AbstractRepository
     /**
      * Vrací kategorii podle id.
      */
-    public function findById(?int $id) : ?Category
+    public function findById(?int $id): ?Category
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -48,7 +49,7 @@ class CategoryRepository extends AbstractRepository
      *
      * @return Category[]
      */
-    public function findAllOrderedByName() : array
+    public function findAllOrderedByName(): array
     {
         return $this->createQueryBuilder('c')
             ->orderBy('c.name')
@@ -61,7 +62,7 @@ class CategoryRepository extends AbstractRepository
      *
      * @return string[]
      */
-    public function findAllNames() : array
+    public function findAllNames(): array
     {
         $names = $this->createQueryBuilder('c')
             ->select('c.name')
@@ -76,7 +77,7 @@ class CategoryRepository extends AbstractRepository
      *
      * @return string[]
      */
-    public function findOthersNames(int $id) : array
+    public function findOthersNames(int $id): array
     {
         $names = $this->createQueryBuilder('c')
             ->select('c.name')
@@ -93,7 +94,7 @@ class CategoryRepository extends AbstractRepository
      *
      * @return string[]
      */
-    public function getCategoriesOptions() : array
+    public function getCategoriesOptions(): array
     {
         $categories = $this->createQueryBuilder('c')
             ->select('c.id, c.name')
@@ -114,7 +115,7 @@ class CategoryRepository extends AbstractRepository
      *
      * @throws ORMException
      */
-    public function save(Category $category) : void
+    public function save(Category $category): void
     {
         $this->em->persist($category);
         $this->em->flush();
@@ -125,7 +126,7 @@ class CategoryRepository extends AbstractRepository
      *
      * @throws ORMException
      */
-    public function remove(Category $category) : void
+    public function remove(Category $category): void
     {
         foreach ($category->getBlocks() as $block) {
             $block->setCategory(null);

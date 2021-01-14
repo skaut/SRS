@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
+
 use function array_map;
 use function implode;
 use function in_array;
@@ -84,47 +85,47 @@ class Page
         $this->contents = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getSlug() : string
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    public function setSlug(string $slug) : void
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
     }
 
-    public function getPosition() : int
+    public function getPosition(): int
     {
         return $this->position;
     }
 
-    public function setPosition(int $position) : void
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }
 
-    public function isPublic() : bool
+    public function isPublic(): bool
     {
         return $this->public;
     }
 
-    public function setPublic(bool $public) : void
+    public function setPublic(bool $public): void
     {
         $this->public = $public;
     }
@@ -132,12 +133,12 @@ class Page
     /**
      * @return Collection|Role[]
      */
-    public function getRoles() : Collection
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
 
-    public function getRolesText() : string
+    public function getRolesText(): string
     {
         return implode(', ', $this->roles->map(static function (Role $role) {
             return $role->getName();
@@ -147,7 +148,7 @@ class Page
     /**
      * @param Collection|Role[] $roles
      */
-    public function setRoles(Collection $roles) : void
+    public function setRoles(Collection $roles): void
     {
         $this->roles->clear();
         foreach ($roles as $role) {
@@ -155,7 +156,7 @@ class Page
         }
     }
 
-    public function addRole(Role $role) : void
+    public function addRole(Role $role): void
     {
         $this->roles->add($role);
     }
@@ -167,7 +168,7 @@ class Page
      *
      * @throws PageException
      */
-    public function getContents(?string $area = null) : Collection
+    public function getContents(?string $area = null): Collection
     {
         if ($area === null) {
             return $this->contents;
@@ -187,7 +188,7 @@ class Page
     /**
      * @throws PageException
      */
-    public function convertToDto() : PageDto
+    public function convertToDto(): PageDto
     {
         $allowedRoles = array_map(static function (Role $role) {
             return $role->getName();

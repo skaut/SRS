@@ -22,7 +22,7 @@ class UsersContentControl extends Control
         $this->userRepository = $userRepository;
     }
 
-    public function render(UsersContentDto $content) : void
+    public function render(UsersContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/users_content.latte');

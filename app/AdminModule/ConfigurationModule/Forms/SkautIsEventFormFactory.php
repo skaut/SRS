@@ -23,6 +23,7 @@ use Nette\Application\UI\Form;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
+
 use function count;
 
 /**
@@ -69,7 +70,7 @@ class SkautIsEventFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -122,7 +123,7 @@ class SkautIsEventFormFactory
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         $eventId   = null;
         $eventName = null;

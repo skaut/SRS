@@ -6,6 +6,7 @@ namespace App\Services;
 
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
+
 use function assert;
 
 final class QueryBus

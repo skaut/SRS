@@ -14,5 +14,5 @@ interface IApplicationsGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : ApplicationsGridControl;
+    public function create(): ApplicationsGridControl;
 }

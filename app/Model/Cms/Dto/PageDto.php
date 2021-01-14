@@ -57,12 +57,12 @@ class PageDto
         $this->hasSidebar      = $hasSidebar;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getSlug() : string
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -70,7 +70,7 @@ class PageDto
     /**
      * @return string[]
      */
-    public function getAllowedRoles() : array
+    public function getAllowedRoles(): array
     {
         return $this->allowedRoles;
     }
@@ -78,7 +78,7 @@ class PageDto
     /**
      * @return ContentDto[]
      */
-    public function getMainContents() : array
+    public function getMainContents(): array
     {
         return $this->mainContents;
     }
@@ -86,12 +86,12 @@ class PageDto
     /**
      * @return ContentDto[]
      */
-    public function getSidebarContents() : array
+    public function getSidebarContents(): array
     {
         return $this->sidebarContents;
     }
 
-    public function hasSidebar() : bool
+    public function hasSidebar(): bool
     {
         return $this->hasSidebar;
     }
@@ -101,7 +101,7 @@ class PageDto
      *
      * @param string[] $userRoles
      */
-    public function isAllowedForRoles(array $userRoles) : bool
+    public function isAllowedForRoles(array $userRoles): bool
     {
         foreach ($userRoles as $userRole) {
             foreach ($this->allowedRoles as $allowedRole) {

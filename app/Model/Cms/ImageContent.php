@@ -17,7 +17,9 @@ use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nette\Utils\UnknownImageFileException;
 use stdClass;
+
 use function file_exists;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -85,7 +87,7 @@ class ImageContent extends Content implements IContent
 
     private FilesService $filesService;
 
-    public function injectFilesService(FilesService $filesService) : void
+    public function injectFilesService(FilesService $filesService): void
     {
         $this->filesService = $filesService;
     }
@@ -93,7 +95,7 @@ class ImageContent extends Content implements IContent
     /**
      * @return string[]
      */
-    public static function getAligns() : array
+    public static function getAligns(): array
     {
         return self::$aligns;
     }
@@ -101,47 +103,47 @@ class ImageContent extends Content implements IContent
     /**
      * @param string[] $aligns
      */
-    public static function setAligns(array $aligns) : void
+    public static function setAligns(array $aligns): void
     {
         self::$aligns = $aligns;
     }
 
-    public function getImage() : ?string
+    public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function setImage(?string $image) : void
+    public function setImage(?string $image): void
     {
         $this->image = $image;
     }
 
-    public function getAlign() : ?string
+    public function getAlign(): ?string
     {
         return $this->align;
     }
 
-    public function setAlign(?string $align) : void
+    public function setAlign(?string $align): void
     {
         $this->align = $align;
     }
 
-    public function getWidth() : ?int
+    public function getWidth(): ?int
     {
         return $this->width;
     }
 
-    public function setWidth(?int $width) : void
+    public function setWidth(?int $width): void
     {
         $this->width = $width;
     }
 
-    public function getHeight() : ?int
+    public function getHeight(): ?int
     {
         return $this->height;
     }
 
-    public function setHeight(?int $height) : void
+    public function setHeight(?int $height): void
     {
         $this->height = $height;
     }
@@ -149,7 +151,7 @@ class ImageContent extends Content implements IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
-    public function addContentForm(Form $form) : Form
+    public function addContentForm(Form $form): Form
     {
         parent::addContentForm($form);
 
@@ -196,7 +198,7 @@ class ImageContent extends Content implements IContent
      * @throws UnknownImageFileException
      * @throws ImageException
      */
-    public function contentFormSucceeded(Form $form, stdClass $values) : void
+    public function contentFormSucceeded(Form $form, stdClass $values): void
     {
         parent::contentFormSucceeded($form, $values);
 
@@ -252,7 +254,7 @@ class ImageContent extends Content implements IContent
      *
      * @return string[]
      */
-    private function prepareAlignOptions() : array
+    private function prepareAlignOptions(): array
     {
         $options = [];
         foreach (self::$aligns as $align) {
@@ -265,12 +267,12 @@ class ImageContent extends Content implements IContent
     /**
      * Vygeneruje cestu pro uložení obrázku.
      */
-    private function generatePath(FileUpload $file) : string
+    private function generatePath(FileUpload $file): string
     {
         return '/images/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }
 
-    public function convertToDto() : ContentDto
+    public function convertToDto(): ContentDto
     {
         return new ImageContentDto($this->getComponentName(), $this->heading, $this->image, $this->align, $this->width, $this->height);
     }

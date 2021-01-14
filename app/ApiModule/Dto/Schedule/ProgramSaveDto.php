@@ -29,42 +29,42 @@ class ProgramSaveDto
     /** @JMS\Type("DateTimeImmutable<'Y-m-d\TH:i:s.v\Z'>") */
     private DateTimeImmutable $start;
 
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id) : void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    public function getBlockId() : int
+    public function getBlockId(): int
     {
         return $this->blockId;
     }
 
-    public function setBlockId(int $blockId) : void
+    public function setBlockId(int $blockId): void
     {
         $this->blockId = $blockId;
     }
 
-    public function getRoomId() : ?int
+    public function getRoomId(): ?int
     {
         return $this->roomId;
     }
 
-    public function setRoomId(?int $roomId) : void
+    public function setRoomId(?int $roomId): void
     {
         $this->roomId = $roomId;
     }
 
-    public function getStart() : DateTimeImmutable
+    public function getStart(): DateTimeImmutable
     {
         return $this->start;
     }
 
-    public function setStart(DateTimeImmutable $start) : void
+    public function setStart(DateTimeImmutable $start): void
     {
         $this->start = $start;
     }

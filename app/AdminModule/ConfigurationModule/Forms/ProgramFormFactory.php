@@ -44,7 +44,7 @@ class ProgramFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -110,7 +110,7 @@ class ProgramFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values->isAllowedAddBlock);
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values->isAllowedModifySchedule);
@@ -126,7 +126,7 @@ class ProgramFormFactory
      *
      * @param DateTime[]|null[] $args
      */
-    public function validateRegisterProgramsFrom(DateTimeControl $field, array $args) : bool
+    public function validateRegisterProgramsFrom(DateTimeControl $field, array $args): bool
     {
         if ($args[0] === null || $args[1] === null) {
             return true;
@@ -140,7 +140,7 @@ class ProgramFormFactory
      *
      * @param DateTime[]|null[] $args
      */
-    public function validateRegisterProgramsTo(DateTimeControl $field, array $args) : bool
+    public function validateRegisterProgramsTo(DateTimeControl $field, array $args): bool
     {
         if ($args[0] === null || $args[1] === null) {
             return true;
@@ -154,7 +154,7 @@ class ProgramFormFactory
      *
      * @return string[]
      */
-    private function prepareRegisterProgramsTypeOptions() : array
+    private function prepareRegisterProgramsTypeOptions(): array
     {
         $options = [];
         foreach (ProgramRegistrationType::$types as $type) {

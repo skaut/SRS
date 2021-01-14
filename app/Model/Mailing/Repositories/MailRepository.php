@@ -21,7 +21,7 @@ class MailRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function save(Mail $mail) : void
+    public function save(Mail $mail): void
     {
         $this->_em->persist($mail);
         $this->_em->flush();

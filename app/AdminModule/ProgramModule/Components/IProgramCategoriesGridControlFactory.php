@@ -14,5 +14,5 @@ interface IProgramCategoriesGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : ProgramCategoriesGridControl;
+    public function create(): ProgramCategoriesGridControl;
 }

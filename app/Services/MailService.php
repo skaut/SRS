@@ -25,6 +25,7 @@ use Nette\Localization\ITranslator;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Ublaboo\Mailing\MailFactory;
+
 use function in_array;
 use function str_replace;
 
@@ -85,7 +86,7 @@ class MailService
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function sendMail(?Collection $recipientsRoles, ?Collection $recipientsSubevents, ?Collection $recipientsUsers, ?Collection $recipientEmails, string $subject, string $text, bool $automatic = false) : void
+    public function sendMail(?Collection $recipientsRoles, ?Collection $recipientsSubevents, ?Collection $recipientsUsers, ?Collection $recipientEmails, string $subject, string $text, bool $automatic = false): void
     {
         $recipients = [];
 
@@ -163,7 +164,7 @@ class MailService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function sendMailFromTemplate(?Collection $recipientsUsers, ?Collection $recipientsEmails, string $type, array $parameters) : void
+    public function sendMailFromTemplate(?Collection $recipientsUsers, ?Collection $recipientsEmails, string $type, array $parameters): void
     {
         $template = $this->templateRepository->findByType($type);
 

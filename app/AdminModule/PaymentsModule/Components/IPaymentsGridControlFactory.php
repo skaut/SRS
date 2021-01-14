@@ -14,5 +14,5 @@ interface IPaymentsGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : PaymentsGridControl;
+    public function create(): PaymentsGridControl;
 }

@@ -19,7 +19,7 @@ class CustomInputValueRepository extends EntityRepository
     /**
      * Vrací hodnotu vlastního pole přihlášky podle id.
      */
-    public function findById(?int $id) : ?CustomInputValue
+    public function findById(?int $id): ?CustomInputValue
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -29,7 +29,7 @@ class CustomInputValueRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function save(CustomInputValue $value) : void
+    public function save(CustomInputValue $value): void
     {
         $this->_em->persist($value);
         $this->_em->flush();
@@ -40,7 +40,7 @@ class CustomInputValueRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function remove(CustomInputValue $value) : void
+    public function remove(CustomInputValue $value): void
     {
         $this->_em->remove($value);
         $this->_em->flush();

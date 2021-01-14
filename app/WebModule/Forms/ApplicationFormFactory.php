@@ -56,10 +56,12 @@ use stdClass;
 use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
+
 use function array_keys;
 use function count;
 use function in_array;
 use function property_exists;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -152,7 +154,7 @@ class ApplicationFormFactory
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -235,9 +237,9 @@ class ApplicationFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
-        $this->em->transactional(function () use ($values) : void {
+        $this->em->transactional(function () use ($values): void {
             if (property_exists($values, 'sex')) {
                 $this->user->setSex($values->sex);
             }
@@ -352,7 +354,7 @@ class ApplicationFormFactory
     /**
      * Přidá vlastní pole přihlášky.
      */
-    private function addCustomInputs(Form $form) : void
+    private function addCustomInputs(Form $form): void
     {
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $customInputId   = 'custom' . $customInput->getId();
@@ -410,7 +412,7 @@ class ApplicationFormFactory
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    private function addSubeventsSelect(Form $form) : void
+    private function addSubeventsSelect(Form $form): void
     {
         if (! $this->subeventRepository->explicitSubeventsExists()) {
             return;
@@ -465,7 +467,7 @@ class ApplicationFormFactory
     /**
      * Přidá select pro výběr rolí.
      */
-    private function addRolesSelect(Form $form) : void
+    private function addRolesSelect(Form $form): void
     {
         $registerableOptions = $this->aclService->getRolesOptionsWithCapacity(true, false);
 
@@ -520,7 +522,7 @@ class ApplicationFormFactory
     /**
      * Ověří kapacity podakcí.
      */
-    public function validateSubeventsCapacities(MultiSelectBox $field) : bool
+    public function validateSubeventsCapacities(MultiSelectBox $field): bool
     {
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($field->getVaLue());
 
@@ -530,7 +532,7 @@ class ApplicationFormFactory
     /**
      * Ověří kapacity rolí.
      */
-    public function validateRolesCapacities(MultiSelectBox $field) : bool
+    public function validateRolesCapacities(MultiSelectBox $field): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
@@ -542,7 +544,7 @@ class ApplicationFormFactory
      *
      * @param Subevent[] $args
      */
-    public function validateSubeventsIncompatible(MultiSelectBox $field, array $args) : bool
+    public function validateSubeventsIncompatible(MultiSelectBox $field, array $args): bool
     {
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($field->getValue());
         $testSubevent      = $args[0];
@@ -555,7 +557,7 @@ class ApplicationFormFactory
      *
      * @param Subevent[] $args
      */
-    public function validateSubeventsRequired(MultiSelectBox $field, array $args) : bool
+    public function validateSubeventsRequired(MultiSelectBox $field, array $args): bool
     {
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($field->getValue());
         $testSubevent      = $args[0];
@@ -568,7 +570,7 @@ class ApplicationFormFactory
      *
      * @param Role[] $args
      */
-    public function validateRolesIncompatible(MultiSelectBox $field, array $args) : bool
+    public function validateRolesIncompatible(MultiSelectBox $field, array $args): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $testRole      = $args[0];
@@ -581,7 +583,7 @@ class ApplicationFormFactory
      *
      * @param Role[] $args
      */
-    public function validateRolesRequired(MultiSelectBox $field, array $args) : bool
+    public function validateRolesRequired(MultiSelectBox $field, array $args): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $testRole      = $args[0];
@@ -592,7 +594,7 @@ class ApplicationFormFactory
     /**
      * Ověří registrovatelnost rolí.
      */
-    public function validateRolesRegisterable(MultiSelectBox $field) : bool
+    public function validateRolesRegisterable(MultiSelectBox $field): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
@@ -605,7 +607,7 @@ class ApplicationFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function validateRolesMinimumAge(MultiSelectBox $field) : bool
+    public function validateRolesMinimumAge(MultiSelectBox $field): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
@@ -617,7 +619,7 @@ class ApplicationFormFactory
 
      * @param int[] $rolesWithSubevents
      */
-    public static function toggleSubeventsRequired(MultiSelectBox $field, array $rolesWithSubevents) : bool
+    public static function toggleSubeventsRequired(MultiSelectBox $field, array $rolesWithSubevents): bool
     {
         foreach ($field->getValue() as $roleId) {
             if (in_array($roleId, $rolesWithSubevents)) {
@@ -633,7 +635,7 @@ class ApplicationFormFactory
      *
      * @param array<string,int[]> $customInput
      */
-    public static function toggleCustomInputRequired(MultiSelectBox $field, array $customInput) : bool
+    public static function toggleCustomInputRequired(MultiSelectBox $field, array $customInput): bool
     {
         foreach ($field->getValue() as $roleId) {
             if (in_array($roleId, $customInput['roles'])) {
@@ -650,7 +652,7 @@ class ApplicationFormFactory
      *
      * @param int[] $customInputRoles
      */
-    public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles) : bool
+    public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles): bool
     {
         return false;
     }
@@ -658,7 +660,7 @@ class ApplicationFormFactory
     /**
      * Vygeneruje cestu souboru.
      */
-    private function generatePath(FileUpload $file) : string
+    private function generatePath(FileUpload $file): string
     {
         return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

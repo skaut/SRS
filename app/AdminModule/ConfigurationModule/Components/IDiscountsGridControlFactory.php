@@ -14,5 +14,5 @@ interface IDiscountsGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : DiscountsGridControl;
+    public function create(): DiscountsGridControl;
 }

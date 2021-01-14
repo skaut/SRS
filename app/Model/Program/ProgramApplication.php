@@ -57,47 +57,47 @@ class ProgramApplication
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getUser() : User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUser(User $user) : void
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
-    public function getProgram() : Program
+    public function getProgram(): Program
     {
         return $this->program;
     }
 
-    public function setProgram(Program $program) : void
+    public function setProgram(Program $program): void
     {
         $this->program = $program;
     }
 
-    public function isAlternate() : bool
+    public function isAlternate(): bool
     {
         return $this->alternate;
     }
 
-    public function setAlternate(bool $alternate) : void
+    public function setAlternate(bool $alternate): void
     {
         $this->alternate = $alternate;
     }
 
-    public function getCreatedAt() : DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt) : void
+    public function setCreatedAt(DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
     }

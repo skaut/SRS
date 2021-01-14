@@ -25,7 +25,7 @@ class UserAllowedProgramsQueryHandler implements MessageHandlerInterface
     /**
      * @return Collection<Program>
      */
-    public function __invoke(UserAllowedProgramsQuery $query) : Collection
+    public function __invoke(UserAllowedProgramsQuery $query): Collection
     {
         if (! $query->getUser()->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
             return new ArrayCollection();

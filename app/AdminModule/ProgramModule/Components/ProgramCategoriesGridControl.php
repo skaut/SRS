@@ -58,7 +58,7 @@ class ProgramCategoriesGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/program_categories_grid.latte');
         $this->template->render();
@@ -69,7 +69,7 @@ class ProgramCategoriesGridControl extends Control
      *
      * @throws DataGridException
      */
-    public function createComponentProgramCategoriesGrid(string $name) : void
+    public function createComponentProgramCategoriesGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -83,7 +83,7 @@ class ProgramCategoriesGridControl extends Control
 
         $rolesOptions = $this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions): void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());
@@ -93,14 +93,14 @@ class ProgramCategoriesGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($rolesOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($rolesOptions): void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty');
 
             $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Category $item) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Category $item): void {
             /** @var TextInput $nameText */
             $nameText = $container['name'];
             $nameText->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findOthersNames($item->getId()));
@@ -128,7 +128,7 @@ class ProgramCategoriesGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function add(stdClass $values) : void
+    public function add(stdClass $values): void
     {
         $category = new Category($values->name);
 
@@ -147,7 +147,7 @@ class ProgramCategoriesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function edit(string $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values): void
     {
         $category = $this->categoryRepository->findById((int) $id);
 
@@ -166,7 +166,7 @@ class ProgramCategoriesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $category = $this->categoryRepository->findById($id);
 

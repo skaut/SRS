@@ -31,7 +31,7 @@ class SchedulePresenter extends ExportBasePresenter
      * @throws AbortException
      * @throws Exception
      */
-    public function actionIcal(int $id) : void
+    public function actionIcal(int $id): void
     {
         $calendar = new Calendar('-//Junák - český skaut//SRS//CS');
 

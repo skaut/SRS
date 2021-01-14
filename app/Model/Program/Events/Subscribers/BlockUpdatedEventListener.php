@@ -37,9 +37,9 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
         $this->userRepository = $userRepository;
     }
 
-    public function __invoke(BlockUpdatedEvent $event) : void
+    public function __invoke(BlockUpdatedEvent $event): void
     {
-        $this->em->transactional(function () use ($event) : void {
+        $this->em->transactional(function () use ($event): void {
             $block     = $event->getBlock();
             $category  = $block->getCategory();
             $subevent  = $block->getSubevent();
@@ -52,7 +52,8 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
             $allowedUsers = $this->userRepository->findBlockAllowed($block);
 
             //aktualizace ucastniku pri zmene kategorie nebo podakce
-            if (($category === null && $originalCategory !== null)
+            if (
+                ($category === null && $originalCategory !== null)
                 || ($category !== null && $originalCategory === null)
                 || ($category !== null && $originalCategory !== null && $category->getId() !== $originalCategory->getId())
                 || ($subevent->getId() !== $originalSubevent->getId())

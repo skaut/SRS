@@ -59,7 +59,7 @@ class DatabaseService
      *
      * @throws Throwable
      */
-    public function update() : void
+    public function update(): void
     {
         if ($this->databaseCache->load('updated') === null) {
             $this->databaseCache->save('lock', function () {
@@ -89,7 +89,7 @@ class DatabaseService
      *
      * @throws Exception
      */
-    public function backup() : void
+    public function backup(): void
     {
         $host     = $this->em->getConnection()->getHost();
         $user     = $this->em->getConnection()->getUsername();

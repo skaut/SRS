@@ -14,5 +14,5 @@ interface IPagesGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : PagesGridControl;
+    public function create(): PagesGridControl;
 }

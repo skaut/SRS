@@ -27,7 +27,7 @@ class IcalResponse implements IResponse
         $this->filename = $filename;
     }
 
-    public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse) : void
+    public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse): void
     {
         $httpResponse->setContentType('text/calendar', 'utf-8');
         $httpResponse->setHeader('Content-Disposition', 'attachment;filename=' . $this->filename);

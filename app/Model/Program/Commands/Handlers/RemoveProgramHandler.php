@@ -17,7 +17,7 @@ class RemoveProgramHandler implements MessageHandlerInterface
         $this->programRepository = $programRepository;
     }
 
-    public function __invoke(RemoveProgram $command) : void
+    public function __invoke(RemoveProgram $command): void
     {
         $this->programRepository->remove($command->getProgram());
     }

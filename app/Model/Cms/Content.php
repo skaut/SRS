@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 use stdClass;
+
 use function lcfirst;
 use function str_replace;
 use function ucwords;
@@ -203,57 +204,57 @@ abstract class Content implements IContent
         $this->position = $contentsCount + 1;
     }
 
-    public function getType() : string
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function getComponentName() : string
+    public function getComponentName(): string
     {
         return lcfirst(str_replace('_', '', ucwords($this->type, '_'))) . 'Content';
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getHeading() : string
+    public function getHeading(): string
     {
         return $this->heading;
     }
 
-    public function setHeading(string $heading) : void
+    public function setHeading(string $heading): void
     {
         $this->heading = $heading;
     }
 
-    public function getPage() : Page
+    public function getPage(): Page
     {
         return $this->page;
     }
 
-    public function setPage(Page $page) : void
+    public function setPage(Page $page): void
     {
         $this->page = $page;
     }
 
-    public function getArea() : string
+    public function getArea(): string
     {
         return $this->area;
     }
 
-    public function setArea(string $area) : void
+    public function setArea(string $area): void
     {
         $this->area = $area;
     }
 
-    public function getPosition() : int
+    public function getPosition(): int
     {
         return $this->position;
     }
 
-    public function setPosition(int $position) : void
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }
@@ -261,7 +262,7 @@ abstract class Content implements IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
-    public function addContentForm(Form $form) : Form
+    public function addContentForm(Form $form): Form
     {
         $formName      = $this->getContentFormName();
         $formContainer = $form->addContainer($formName);
@@ -287,7 +288,7 @@ abstract class Content implements IContent
         return $form;
     }
 
-    public function getContentFormName() : string
+    public function getContentFormName(): string
     {
         return $this->type . '_' . $this->id;
     }
@@ -295,7 +296,7 @@ abstract class Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(Form $form, stdClass $values) : void
+    public function contentFormSucceeded(Form $form, stdClass $values): void
     {
         $formName       = $this->getContentFormName();
         $values         = $values->$formName;
@@ -303,7 +304,7 @@ abstract class Content implements IContent
         $this->heading  = $values->heading;
     }
 
-    public function convertToDto() : ContentDto
+    public function convertToDto(): ContentDto
     {
         return new ContentDto($this->getComponentName(), $this->heading);
     }

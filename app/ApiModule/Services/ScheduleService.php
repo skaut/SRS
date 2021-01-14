@@ -50,7 +50,9 @@ use Nette;
 use Nette\Localization\ITranslator;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
+
 use function in_array;
+
 use const DATE_ISO8601;
 
 /**
@@ -100,7 +102,7 @@ class ScheduleService
         $this->queryBus          = $queryBus;
     }
 
-    public function setUser(int $userId) : void
+    public function setUser(int $userId): void
     {
         $this->user = $this->userRepository->findById($userId);
     }
@@ -112,7 +114,7 @@ class ScheduleService
      *
      * @throws Exception
      */
-    public function getProgramsAdmin() : array
+    public function getProgramsAdmin(): array
     {
         $programs               = $this->programRepository->findAll();
         $programAdminDetailDtos = [];
@@ -131,7 +133,7 @@ class ScheduleService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getProgramsWeb() : array
+    public function getProgramsWeb(): array
     {
         $userAllowedPrograms = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user));
 
@@ -169,7 +171,7 @@ class ScheduleService
      *
      * @return BlockDetailDto[]
      */
-    public function getBlocks() : array
+    public function getBlocks(): array
     {
         $blocks          = $this->blockRepository->findAll();
         $blockDetailDtos = [];
@@ -185,7 +187,7 @@ class ScheduleService
      *
      * @return RoomDetailDto[]
      */
-    public function getRooms() : array
+    public function getRooms(): array
     {
         $rooms          = $this->roomRepository->findAll();
         $roomDetailDtos = [];
@@ -202,7 +204,7 @@ class ScheduleService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getCalendarConfig() : CalendarConfigDto
+    public function getCalendarConfig(): CalendarConfigDto
     {
         $calendarConfigDto = new CalendarConfigDto();
 
@@ -253,7 +255,7 @@ class ScheduleService
      * @throws ORMException
      * @throws Throwable
      */
-    public function saveProgram(ProgramSaveDto $programSaveDto) : ResponseDto
+    public function saveProgram(ProgramSaveDto $programSaveDto): ResponseDto
     {
         $programId = $programSaveDto->getId();
         $block     = $this->blockRepository->findById($programSaveDto->getBlockId());
@@ -310,7 +312,7 @@ class ScheduleService
      * @throws ApiException
      * @throws Throwable
      */
-    public function removeProgram(int $programId) : ResponseDto
+    public function removeProgram(int $programId): ResponseDto
     {
         $program = $this->programRepository->findById($programId);
 
@@ -341,7 +343,7 @@ class ScheduleService
      * @throws ApiException
      * @throws Throwable
      */
-    public function attendProgram(int $programId) : ResponseDto
+    public function attendProgram(int $programId): ResponseDto
     {
         $program = $this->programRepository->findById($programId);
 
@@ -411,7 +413,7 @@ class ScheduleService
      * @throws ApiException
      * @throws Throwable
      */
-    public function unattendProgram(int $programId) : ResponseDto
+    public function unattendProgram(int $programId): ResponseDto
     {
         $program = $this->programRepository->findById($programId);
 
@@ -456,7 +458,7 @@ class ScheduleService
      *
      * @throws Exception
      */
-    private function convertProgramToProgramDetailDto(Program $program) : ProgramDetailDto
+    private function convertProgramToProgramDetailDto(Program $program): ProgramDetailDto
     {
         $programDetailDto = new ProgramDetailDto();
 
@@ -472,7 +474,7 @@ class ScheduleService
     /**
      * Převede Block na BlockDetailDto.
      */
-    private function convertBlockToBlockDetailDto(Block $block) : BlockDetailDto
+    private function convertBlockToBlockDetailDto(Block $block): BlockDetailDto
     {
         $userBlocks = $this->queryBus->handle(new UserProgramBlocksQuery($this->user));
 
@@ -502,7 +504,7 @@ class ScheduleService
     /**
      * Převede User na LectorDetailDto.
      */
-    private function convertUserToLectorDetailDto(User $lector) : LectorDetailDto
+    private function convertUserToLectorDetailDto(User $lector): LectorDetailDto
     {
         $lectorDetailDto = new LectorDetailDto();
 
@@ -517,7 +519,7 @@ class ScheduleService
     /**
      * Převede Room na RoomDetailDto.
      */
-    private function convertRoomToRoomDetailDto(Room $room) : RoomDetailDto
+    private function convertRoomToRoomDetailDto(Room $room): RoomDetailDto
     {
         $roomDetailDto = new RoomDetailDto();
 

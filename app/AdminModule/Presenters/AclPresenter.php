@@ -43,14 +43,14 @@ class AclPresenter extends AdminBasePresenter
     /**
      * @throws AbortException
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
 
         $this->checkPermission(Permission::MANAGE);
     }
 
-    public function renderEdit(int $id) : void
+    public function renderEdit(int $id): void
     {
         $role = $this->roleRepository->findById($id);
 
@@ -62,7 +62,7 @@ class AclPresenter extends AdminBasePresenter
      *
      * @throws AbortException
      */
-    public function actionTest(int $id) : void
+    public function actionTest(int $id): void
     {
         $role = $this->roleRepository->findById($id);
 
@@ -71,7 +71,7 @@ class AclPresenter extends AdminBasePresenter
         $this->redirect(':Web:Page:default');
     }
 
-    protected function createComponentRolesGrid() : RolesGridControl
+    protected function createComponentRolesGrid(): RolesGridControl
     {
         return $this->rolesGridControlFactory->create();
     }
@@ -79,11 +79,11 @@ class AclPresenter extends AdminBasePresenter
     /**
      * @throws Throwable
      */
-    protected function createComponentAddRoleForm() : Form
+    protected function createComponentAddRoleForm(): Form
     {
         $form = $this->addRoleFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Acl:default');
             }
@@ -101,11 +101,11 @@ class AclPresenter extends AdminBasePresenter
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    protected function createComponentEditRoleForm() : Form
+    protected function createComponentEditRoleForm(): Form
     {
         $form = $this->editRoleFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Acl:default');
             }

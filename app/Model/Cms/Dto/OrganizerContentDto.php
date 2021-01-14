@@ -22,7 +22,7 @@ class OrganizerContentDto extends ContentDto
         $this->organizer = $organizer;
     }
 
-    public function getOrganizer() : ?string
+    public function getOrganizer(): ?string
     {
         return $this->organizer;
     }

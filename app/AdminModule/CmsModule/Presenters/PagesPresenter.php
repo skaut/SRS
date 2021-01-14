@@ -28,7 +28,7 @@ class PagesPresenter extends CmsBasePresenter
     /** @inject */
     public PageRepository $pagesRepository;
 
-    public function renderContent(int $id, string $area) : void
+    public function renderContent(int $id, string $area): void
     {
         $page = $this->pagesRepository->findById($id);
 
@@ -37,19 +37,19 @@ class PagesPresenter extends CmsBasePresenter
         $this->template->area = $area;
     }
 
-    protected function createComponentPagesGrid() : PagesGridControl
+    protected function createComponentPagesGrid(): PagesGridControl
     {
         return $this->pagesGridControlFactory->create();
     }
 
-    protected function createComponentPageForm() : PageForm
+    protected function createComponentPageForm(): PageForm
     {
         $id   = (int) $this->getParameter('id');
         $area = $this->getParameter('area');
 
         $control = $this->pageFormFactory->create($id, $area);
 
-        $control->onPageSave[] = function (PageForm $control, $submitName) : void {
+        $control->onPageSave[] = function (PageForm $control, $submitName): void {
             $this->flashMessage('admin.cms.pages_content_saved', 'success');
 
             switch ($submitName) {
@@ -68,7 +68,7 @@ class PagesPresenter extends CmsBasePresenter
             }
         };
 
-        $control->onPageSaveError[] = function (PageForm $control) : void {
+        $control->onPageSaveError[] = function (PageForm $control): void {
             $this->flashMessage('admin.cms.pages_content_save_error', 'danger');
             $this->redirect('Pages:content', ['id' => $control->id, 'area' => $control->area]);
         };

@@ -37,7 +37,7 @@ class TicketsFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -74,7 +74,7 @@ class TicketsFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($values->ticketsAllowed) {
             $this->settingsService->setDateTimeValue(Settings::TICKETS_FROM, $values->ticketsFrom);

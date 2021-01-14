@@ -14,5 +14,5 @@ interface IProgramBlocksGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : ProgramBlocksGridControl;
+    public function create(): ProgramBlocksGridControl;
 }

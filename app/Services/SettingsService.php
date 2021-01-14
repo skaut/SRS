@@ -12,9 +12,11 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Throwable;
+
 use function filter_var;
 use function serialize;
 use function unserialize;
+
 use const FILTER_VALIDATE_BOOLEAN;
 use const FILTER_VALIDATE_INT;
 
@@ -43,7 +45,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getValue(string $item) : ?string
+    public function getValue(string $item): ?string
     {
         $value = $this->settingsCache->load($item);
 
@@ -66,7 +68,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function setValue(string $item, ?string $value) : void
+    public function setValue(string $item, ?string $value): void
     {
         $settings = $this->settingsRepository->findByItem($item);
         if ($settings === null) {
@@ -84,7 +86,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getIntValue(string $item) : ?int
+    public function getIntValue(string $item): ?int
     {
         $value = $this->getValue($item);
         if ($value === null) {
@@ -100,7 +102,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function setIntValue(string $item, ?int $value) : void
+    public function setIntValue(string $item, ?int $value): void
     {
         if ($value === null) {
             $this->setValue($item, null);
@@ -115,7 +117,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getBoolValue(string $item) : ?bool
+    public function getBoolValue(string $item): ?bool
     {
         $value = $this->getValue($item);
         if ($value === null) {
@@ -131,7 +133,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function setBoolValue(string $item, ?bool $value) : void
+    public function setBoolValue(string $item, ?bool $value): void
     {
         if ($value === null) {
             $this->setValue($item, null);
@@ -146,7 +148,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getDateTimeValue(string $item) : ?DateTimeImmutable
+    public function getDateTimeValue(string $item): ?DateTimeImmutable
     {
         $value = $this->getValue($item);
         if ($value === null) {
@@ -162,7 +164,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getDateTimeValueText(string $item) : ?string
+    public function getDateTimeValueText(string $item): ?string
     {
         $value = $this->getValue($item);
         if ($value === null) {
@@ -178,7 +180,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function setDateTimeValue(string $item, ?DateTimeImmutable $value) : void
+    public function setDateTimeValue(string $item, ?DateTimeImmutable $value): void
     {
         if ($value === null) {
             $this->setValue($item, null);
@@ -193,7 +195,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getDateValue(string $item) : ?DateTimeImmutable
+    public function getDateValue(string $item): ?DateTimeImmutable
     {
         $value = $this->getValue($item);
         if ($value === null) {
@@ -209,7 +211,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getDateValueText(string $item) : ?string
+    public function getDateValueText(string $item): ?string
     {
         $value = $this->getValue($item);
         if ($value === null) {
@@ -225,7 +227,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function setDateValue(string $item, ?DateTimeImmutable $value) : void
+    public function setDateValue(string $item, ?DateTimeImmutable $value): void
     {
         if ($value === null) {
             $this->setValue($item, null);
@@ -242,7 +244,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getArrayValue(string $item) : array
+    public function getArrayValue(string $item): array
     {
         return unserialize($this->getValue($item));
     }
@@ -255,7 +257,7 @@ class SettingsService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function setArrayValue(string $item, array $value) : void
+    public function setArrayValue(string $item, array $value): void
     {
         $this->setValue($item, serialize($value));
     }

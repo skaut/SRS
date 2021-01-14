@@ -30,7 +30,7 @@ class BankPresenter extends ActionBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function actionCheck() : void
+    public function actionCheck(): void
     {
         $from = $this->settingsService->getDateValue(Settings::BANK_DOWNLOAD_FROM);
         $this->bankService->downloadTransactions($from);

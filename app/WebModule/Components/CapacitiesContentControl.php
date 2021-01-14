@@ -22,7 +22,7 @@ class CapacitiesContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
-    public function render(CapacitiesContentDto $content) : void
+    public function render(CapacitiesContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/capacities_content.latte');

@@ -16,6 +16,7 @@ use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
+
 use function property_exists;
 
 /**
@@ -47,7 +48,7 @@ class PaymentForm extends UI\Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/payment_form.latte');
         $this->template->render();
@@ -59,7 +60,7 @@ class PaymentForm extends UI\Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function createComponentForm() : Form
+    public function createComponentForm(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -138,7 +139,7 @@ class PaymentForm extends UI\Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         $this->settingsService->setValue(Settings::ACCOUNT_NUMBER, $values->accountNumber);
         $this->settingsService->setValue(Settings::VARIABLE_SYMBOL_CODE, $values->variableSymbolCode);
@@ -184,7 +185,7 @@ class PaymentForm extends UI\Control
      *
      * @return string[]
      */
-    private function prepareMaturityTypeOptions() : array
+    private function prepareMaturityTypeOptions(): array
     {
         $options = [];
         foreach (MaturityType::$types as $type) {

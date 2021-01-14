@@ -30,7 +30,7 @@ class SystemPresenter extends ConfigurationBasePresenter
      *
      * @throws Exception
      */
-    public function handleClearCache() : void
+    public function handleClearCache(): void
     {
         $output = new BufferedOutput();
         $input  = new ArrayInput(['command' => 'app:cache:clear']);

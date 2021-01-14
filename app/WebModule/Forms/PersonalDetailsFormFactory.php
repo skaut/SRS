@@ -16,6 +16,7 @@ use Skautis\Wsdl\WsdlException;
 use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
+
 use function property_exists;
 
 /**
@@ -53,7 +54,7 @@ class PersonalDetailsFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -127,7 +128,7 @@ class PersonalDetailsFormFactory
      *
      * @throws ORMException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if (property_exists($values, 'sex')) {
             $this->user->setSex($values->sex);

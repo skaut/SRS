@@ -18,6 +18,7 @@ use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
+
 use function count;
 
 /**
@@ -46,7 +47,7 @@ class CustomInputsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/custom_inputs_grid.latte');
         $this->template->render();
@@ -58,7 +59,7 @@ class CustomInputsGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentCustomInputsGrid(string $name) : void
+    public function createComponentCustomInputsGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -118,7 +119,7 @@ class CustomInputsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $input = $this->customInputRepository->findById($id);
         $this->customInputRepository->remove($input);
@@ -134,7 +135,7 @@ class CustomInputsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id) : void
+    public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id): void
     {
         $this->customInputRepository->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
@@ -158,7 +159,7 @@ class CustomInputsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function changeMandatory(string $id, string $mandatory) : void
+    public function changeMandatory(string $id, string $mandatory): void
     {
         $customInput = $this->customInputRepository->findById((int) $id);
         $customInput->setMandatory((bool) $mandatory);

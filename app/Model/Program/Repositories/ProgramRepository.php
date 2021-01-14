@@ -33,7 +33,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * @return Collection<Program>
      */
-    public function findAll() : Collection
+    public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
 
@@ -43,7 +43,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * Vrací program podle id.
      */
-    public function findById(?int $id) : ?Program
+    public function findById(?int $id): ?Program
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -51,7 +51,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * @return Collection<Program>
      */
-    public function findUserAttends(User $user) : Collection
+    public function findUserAttends(User $user): Collection
     {
         $result = $this->createQueryBuilder('p')
             ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = false')
@@ -67,7 +67,7 @@ class ProgramRepository extends AbstractRepository
      *
      * @return Collection<Program>
      */
-    public function findUserAttendsAndCategory(User $user, Category $category) : Collection
+    public function findUserAttendsAndCategory(User $user, Category $category): Collection
     {
         $result = $this->createQueryBuilder('p')
             ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = false')
@@ -83,7 +83,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * @return Collection<Program>
      */
-    public function findUserAlternatesAndBlock(User $user, Block $block) : Collection
+    public function findUserAlternatesAndBlock(User $user, Block $block): Collection
     {
         $result = $this->createQueryBuilder('p')
             ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = true')
@@ -101,7 +101,7 @@ class ProgramRepository extends AbstractRepository
      *
      * @return Collection<Program>
      */
-    public function findUserAllowed(User $user) : Collection
+    public function findUserAllowed(User $user): Collection
     {
         $result = $this->createQueryBuilder('p')
             ->join('p.block', 'b')
@@ -125,7 +125,7 @@ class ProgramRepository extends AbstractRepository
      *
      * @return Collection<Program>
      */
-    public function findBlockedByProgram(Program $program) : Collection
+    public function findBlockedByProgram(Program $program): Collection
     {
         $start = $program->getStart();
         $end   = $program->getEnd();
@@ -147,7 +147,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * Překrývá se program s jiným programem?
      */
-    public function hasOverlappingProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool
+    public function hasOverlappingProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end): bool
     {
         $result = $this->createQueryBuilder('p')
             ->select('count(p)')
@@ -166,7 +166,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * Překrývá se s jiným programem, který je automaticky zapisovaný?
      */
-    public function hasOverlappingAutoRegisteredProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool
+    public function hasOverlappingAutoRegisteredProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end): bool
     {
         $result = $this->createQueryBuilder('p')
             ->select('count(p)')
@@ -186,7 +186,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * Uloží program.
      */
-    public function save(Program $program) : void
+    public function save(Program $program): void
     {
         $this->em->persist($program);
         $this->em->flush();
@@ -195,7 +195,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * Odstraní program.
      */
-    public function remove(Program $program) : void
+    public function remove(Program $program): void
     {
         $this->em->remove($program);
         $this->em->flush();

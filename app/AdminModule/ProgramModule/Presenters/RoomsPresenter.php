@@ -31,26 +31,26 @@ class RoomsPresenter extends ProgramBasePresenter
     /**
      * @throws AbortException
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
 
         $this->checkPermission(Permission::MANAGE_ROOMS);
     }
 
-    public function renderDetail(int $id) : void
+    public function renderDetail(int $id): void
     {
         $room = $this->roomRepository->findById($id);
 
         $this->template->room = $room;
     }
 
-    protected function createComponentRoomsGrid() : RoomsGridControl
+    protected function createComponentRoomsGrid(): RoomsGridControl
     {
         return $this->roomsGridControlFactory->create();
     }
 
-    protected function createComponentRoomScheduleGrid() : RoomScheduleGridControl
+    protected function createComponentRoomScheduleGrid(): RoomScheduleGridControl
     {
         return $this->roomScheduleGridControlFactory->create();
     }

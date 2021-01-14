@@ -40,22 +40,22 @@ class ImageContentDto extends ContentDto
         $this->height = $height;
     }
 
-    public function getImage() : ?string
+    public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function getAlign() : ?string
+    public function getAlign(): ?string
     {
         return $this->align;
     }
 
-    public function getWidth() : ?int
+    public function getWidth(): ?int
     {
         return $this->width;
     }
 
-    public function getHeight() : ?int
+    public function getHeight(): ?int
     {
         return $this->height;
     }

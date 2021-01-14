@@ -7,6 +7,7 @@ namespace App\Model\Infrastructure\Repositories;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+
 use function assert;
 
 /**
@@ -27,12 +28,12 @@ class AbstractRepository
         $this->className = $className;
     }
 
-    public function createQueryBuilder(string $alias) : QueryBuilder
+    public function createQueryBuilder(string $alias): QueryBuilder
     {
         return $this->getRepository()->createQueryBuilder($alias);
     }
 
-    public function getRepository() : EntityRepository
+    public function getRepository(): EntityRepository
     {
         $repository = $this->em->getRepository($this->className);
         assert($repository instanceof EntityRepository);

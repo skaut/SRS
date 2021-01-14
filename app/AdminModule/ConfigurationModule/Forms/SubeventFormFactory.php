@@ -17,6 +17,7 @@ use Nette\Forms\Controls\MultiSelectBox;
 use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
+
 use function md5;
 use function mt_rand;
 use function uniqid;
@@ -59,7 +60,7 @@ class SubeventFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->subevent = $this->subeventRepository->findById($id);
 
@@ -161,7 +162,7 @@ class SubeventFormFactory
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;
@@ -193,7 +194,7 @@ class SubeventFormFactory
      * @throws OptimisticLockException
      * @throws ConnectionException
      */
-    public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args) : bool
+    public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args): bool
     {
         $incompatibleSubevents = $this->subeventRepository->findSubeventsByIds($args[0]);
         $requiredSubevents     = $this->subeventRepository->findSubeventsByIds($args[1]);

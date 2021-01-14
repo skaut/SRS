@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\CustomInput;
 
 use Doctrine\ORM\Mapping as ORM;
+
 use function implode;
 
 /**
@@ -29,7 +30,7 @@ class CustomMultiSelectValue extends CustomInputValue
     /**
      * @return string[]
      */
-    public function getValue() : array
+    public function getValue(): array
     {
         return $this->value;
     }
@@ -37,7 +38,7 @@ class CustomMultiSelectValue extends CustomInputValue
     /**
      * @param string[] $value
      */
-    public function setValue(array $value) : void
+    public function setValue(array $value): void
     {
         $this->value = $value;
     }
@@ -45,7 +46,7 @@ class CustomMultiSelectValue extends CustomInputValue
     /**
      * Vrátí název vybrané možnosti.
      */
-    public function getValueText() : string
+    public function getValueText(): string
     {
         /** @var CustomMultiSelect $input */
         $input = $this->getInput();

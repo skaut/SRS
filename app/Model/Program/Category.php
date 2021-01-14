@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
+
 use function implode;
 
 /**
@@ -56,17 +57,17 @@ class Category
         $this->blocks            = new ArrayCollection();
     }
 
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -74,12 +75,12 @@ class Category
     /**
      * @return Collection|Role[]
      */
-    public function getRegisterableRoles() : Collection
+    public function getRegisterableRoles(): Collection
     {
         return $this->registerableRoles;
     }
 
-    public function getRegisterableRolesText() : string
+    public function getRegisterableRolesText(): string
     {
         return implode(', ', $this->registerableRoles->map(static function (Role $role) {
             return $role->getName();
@@ -89,7 +90,7 @@ class Category
     /**
      * @param Collection|Role[] $registerableRoles
      */
-    public function setRegisterableRoles(Collection $registerableRoles) : void
+    public function setRegisterableRoles(Collection $registerableRoles): void
     {
         $this->registerableRoles->clear();
         foreach ($registerableRoles as $registerableRole) {
@@ -97,7 +98,7 @@ class Category
         }
     }
 
-    public function addRole(Role $role) : void
+    public function addRole(Role $role): void
     {
         if (! $this->registerableRoles->contains($role)) {
             $this->registerableRoles->add($role);
@@ -107,7 +108,7 @@ class Category
     /**
      * @return Collection|Block[]
      */
-    public function getBlocks() : Collection
+    public function getBlocks(): Collection
     {
         return $this->blocks;
     }

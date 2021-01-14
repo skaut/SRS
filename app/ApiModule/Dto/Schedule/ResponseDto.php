@@ -25,32 +25,32 @@ class ResponseDto
     /** @JMS\Type("App\ApiModule\Dto\Schedule\ProgramDetailDto") */
     private ?ProgramDetailDto $program = null;
 
-    public function getMessage() : string
+    public function getMessage(): string
     {
         return $this->message;
     }
 
-    public function setMessage(string $message) : void
+    public function setMessage(string $message): void
     {
         $this->message = $message;
     }
 
-    public function getStatus() : string
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    public function setStatus(string $status) : void
+    public function setStatus(string $status): void
     {
         $this->status = $status;
     }
 
-    public function getProgram() : ?ProgramDetailDto
+    public function getProgram(): ?ProgramDetailDto
     {
         return $this->program;
     }
 
-    public function setProgram(ProgramDetailDto $program) : void
+    public function setProgram(ProgramDetailDto $program): void
     {
         $this->program = $program;
     }

@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
+
 use function implode;
 
 /**
@@ -134,17 +135,17 @@ class Block
         $this->lectors           = new ArrayCollection();
     }
 
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -152,7 +153,7 @@ class Block
     /**
      * @return Collection|Program[]
      */
-    public function getPrograms() : Collection
+    public function getPrograms(): Collection
     {
         return $this->programs;
     }
@@ -160,7 +161,7 @@ class Block
     /**
      * Vrací počet programů bloku.
      */
-    public function getProgramsCount() : int
+    public function getProgramsCount(): int
     {
         return $this->programs->count();
     }
@@ -168,12 +169,12 @@ class Block
     /**
      * @return Collection|User[]
      */
-    public function getLectors() : Collection
+    public function getLectors(): Collection
     {
         return $this->lectors;
     }
 
-    public function getLectorsText() : string
+    public function getLectorsText(): string
     {
         return implode(', ', $this->lectors->map(static function (User $lector) {
             return $lector->getDisplayName();
@@ -183,7 +184,7 @@ class Block
     /**
      * @param Collection|User[] $lectors
      */
-    public function setLectors(Collection $lectors) : void
+    public function setLectors(Collection $lectors): void
     {
         $this->lectors->clear();
         foreach ($lectors as $lector) {
@@ -191,92 +192,92 @@ class Block
         }
     }
 
-    public function getCategory() : ?Category
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    public function setCategory(?Category $category) : void
+    public function setCategory(?Category $category): void
     {
         $this->category = $category;
     }
 
-    public function getSubevent() : ?Subevent
+    public function getSubevent(): ?Subevent
     {
         return $this->subevent;
     }
 
-    public function setSubevent(Subevent $subevent) : void
+    public function setSubevent(Subevent $subevent): void
     {
         $this->subevent = $subevent;
     }
 
-    public function getMandatory() : string
+    public function getMandatory(): string
     {
         return $this->mandatory;
     }
 
-    public function setMandatory(string $mandatory) : void
+    public function setMandatory(string $mandatory): void
     {
         $this->mandatory = $mandatory;
     }
 
-    public function getDuration() : int
+    public function getDuration(): int
     {
         return $this->duration;
     }
 
-    public function setDuration(int $duration) : void
+    public function setDuration(int $duration): void
     {
         $this->duration = $duration;
     }
 
-    public function getCapacity() : ?int
+    public function getCapacity(): ?int
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity) : void
+    public function setCapacity(?int $capacity): void
     {
         $this->capacity = $capacity;
     }
 
-    public function isAlternatesAllowed() : bool
+    public function isAlternatesAllowed(): bool
     {
         return $this->alternatesAllowed;
     }
 
-    public function setAlternatesAllowed(bool $alternatesAllowed) : void
+    public function setAlternatesAllowed(bool $alternatesAllowed): void
     {
         $this->alternatesAllowed = $alternatesAllowed;
     }
 
-    public function getTools() : ?string
+    public function getTools(): ?string
     {
         return $this->tools;
     }
 
-    public function setTools(?string $tools) : void
+    public function setTools(?string $tools): void
     {
         $this->tools = $tools;
     }
 
-    public function getPerex() : ?string
+    public function getPerex(): ?string
     {
         return $this->perex;
     }
 
-    public function setPerex(?string $perex) : void
+    public function setPerex(?string $perex): void
     {
         $this->perex = $perex;
     }
 
-    public function getDescription() : ?string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(?string $description) : void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
@@ -284,7 +285,7 @@ class Block
     /**
      * Je uživatel oprávněn přihlašovat se na programy bloku?
      */
-    public function isAllowed(User $user) : bool
+    public function isAllowed(User $user): bool
     {
         $result = true;
 

@@ -31,12 +31,12 @@ class NewsContent extends Content implements IContent
      */
     protected ?int $count = null;
 
-    public function getCount() : ?int
+    public function getCount(): ?int
     {
         return $this->count;
     }
 
-    public function setCount(?int $count) : void
+    public function setCount(?int $count): void
     {
         $this->count = $count;
     }
@@ -44,7 +44,7 @@ class NewsContent extends Content implements IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
-    public function addContentForm(Form $form) : Form
+    public function addContentForm(Form $form): Form
     {
         parent::addContentForm($form);
 
@@ -63,7 +63,7 @@ class NewsContent extends Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(Form $form, stdClass $values) : void
+    public function contentFormSucceeded(Form $form, stdClass $values): void
     {
         parent::contentFormSucceeded($form, $values);
         $formName    = $this->getContentFormName();
@@ -71,7 +71,7 @@ class NewsContent extends Content implements IContent
         $this->count = $values->count !== '' ? $values->count : null;
     }
 
-    public function convertToDto() : ContentDto
+    public function convertToDto(): ContentDto
     {
         return new NewsContentDto($this->getComponentName(), $this->heading, $this->count);
     }

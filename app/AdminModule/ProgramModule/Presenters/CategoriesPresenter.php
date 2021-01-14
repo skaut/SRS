@@ -22,14 +22,14 @@ class CategoriesPresenter extends ProgramBasePresenter
     /**
      * @throws AbortException
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
 
         $this->checkPermission(Permission::MANAGE_CATEGORIES);
     }
 
-    protected function createComponentProgramCategoriesGrid() : ProgramCategoriesGridControl
+    protected function createComponentProgramCategoriesGrid(): ProgramCategoriesGridControl
     {
         return $this->programCategoriesGridControlFactory->create();
     }

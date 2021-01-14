@@ -23,6 +23,7 @@ use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
+
 use function get_class;
 use function str_replace;
 use function ucwords;
@@ -109,7 +110,7 @@ class PageForm extends UI\Control
      *
      * @throws PageException
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/page_form.latte');
 
@@ -124,7 +125,7 @@ class PageForm extends UI\Control
      *
      * @throws PageException
      */
-    public function createComponentForm() : Form
+    public function createComponentForm(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -164,7 +165,7 @@ class PageForm extends UI\Control
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         $form->onSuccess[] = [$this, 'processForm'];
 
-        $form->onError[] = function () : void {
+        $form->onError[] = function (): void {
             $this->onPageSaveError($this);
         };
 
@@ -178,7 +179,7 @@ class PageForm extends UI\Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         $page = $this->pageRepository->findById((int) $values->id);
 
@@ -223,7 +224,7 @@ class PageForm extends UI\Control
      *
      * @return string[]
      */
-    private function prepareContentTypesOptions() : array
+    private function prepareContentTypesOptions(): array
     {
         $options = [];
         foreach (Content::$types as $type) {

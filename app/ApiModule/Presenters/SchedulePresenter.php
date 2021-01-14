@@ -15,6 +15,7 @@ use JMS\Serializer\SerializerInterface;
 use Nette\Application\AbortException;
 use Nette\Application\Responses\JsonResponse;
 use Throwable;
+
 use function file_get_contents;
 
 /**
@@ -33,7 +34,7 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * @throws AbortException
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
 
@@ -58,7 +59,7 @@ class SchedulePresenter extends ApiBasePresenter
      * @throws Exception
      * @throws AbortException
      */
-    public function actionGetProgramsAdmin() : void
+    public function actionGetProgramsAdmin(): void
     {
         $data = $this->scheduleService->getProgramsAdmin();
 
@@ -74,7 +75,7 @@ class SchedulePresenter extends ApiBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionGetProgramsWeb() : void
+    public function actionGetProgramsWeb(): void
     {
         $data = $this->scheduleService->getProgramsWeb();
 
@@ -88,7 +89,7 @@ class SchedulePresenter extends ApiBasePresenter
      *
      * @throws AbortException
      */
-    public function actionGetBlocks() : void
+    public function actionGetBlocks(): void
     {
         $data = $this->scheduleService->getBlocks();
 
@@ -102,7 +103,7 @@ class SchedulePresenter extends ApiBasePresenter
      *
      * @throws AbortException
      */
-    public function actionGetRooms() : void
+    public function actionGetRooms(): void
     {
         $data = $this->scheduleService->getRooms();
 
@@ -118,7 +119,7 @@ class SchedulePresenter extends ApiBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionGetCalendarConfig() : void
+    public function actionGetCalendarConfig(): void
     {
         $data = $this->scheduleService->getCalendarConfig();
 
@@ -133,7 +134,7 @@ class SchedulePresenter extends ApiBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionSaveProgram() : void
+    public function actionSaveProgram(): void
     {
         /** @var ProgramSaveDto $programSaveDto */
         $programSaveDto = $this->serializer->deserialize(file_get_contents('php://input'), ProgramSaveDto::class, 'json');
@@ -158,7 +159,7 @@ class SchedulePresenter extends ApiBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionRemoveProgram(int $id) : void
+    public function actionRemoveProgram(int $id): void
     {
         try {
             $data = $this->scheduleService->removeProgram($id);
@@ -180,7 +181,7 @@ class SchedulePresenter extends ApiBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionAttendProgram(int $id) : void
+    public function actionAttendProgram(int $id): void
     {
         try {
             $data = $this->scheduleService->attendProgram($id);
@@ -202,7 +203,7 @@ class SchedulePresenter extends ApiBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionUnattendProgram(int $id) : void
+    public function actionUnattendProgram(int $id): void
     {
         try {
             $data = $this->scheduleService->unattendProgram($id);

@@ -16,8 +16,10 @@ use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
+
 use function getimagesizefromstring;
 use function image_type_to_extension;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -52,7 +54,7 @@ class AddLectorFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -112,7 +114,7 @@ class AddLectorFormFactory
      * @throws ORMException
      * @throws Exception
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

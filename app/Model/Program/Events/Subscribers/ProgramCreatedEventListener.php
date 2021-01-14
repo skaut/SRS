@@ -30,9 +30,9 @@ class ProgramCreatedEventListener implements MessageHandlerInterface
     /**
      * Pokud je nový program automaticky zapisovaný, je přidán všem oprávněným uživatelům.
      */
-    public function __invoke(ProgramCreatedEvent $event) : void
+    public function __invoke(ProgramCreatedEvent $event): void
     {
-        $this->em->transactional(function () use ($event) : void {
+        $this->em->transactional(function () use ($event): void {
             $block = $event->getProgram()->getBlock();
             if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
                 foreach ($this->userRepository->findBlockAllowed($block) as $user) {

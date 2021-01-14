@@ -23,7 +23,7 @@ class NewsContentControl extends Control
         $this->newsRepository = $newsRepository;
     }
 
-    public function render(NewsContentDto $content) : void
+    public function render(NewsContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/news_content.latte');

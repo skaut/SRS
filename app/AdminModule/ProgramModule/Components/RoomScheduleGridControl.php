@@ -58,7 +58,7 @@ class RoomScheduleGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/room_schedule_grid.latte');
         $this->template->render();
@@ -69,7 +69,7 @@ class RoomScheduleGridControl extends Control
      *
      * @throws DataGridException
      */
-    public function createComponentRoomScheduleGrid(string $name) : void
+    public function createComponentRoomScheduleGrid(string $name): void
     {
         $this->room = $this->roomRepository->findById((int) $this->getPresenter()->getParameter('id'));
 
@@ -106,7 +106,7 @@ class RoomScheduleGridControl extends Control
      * @throws AbortException
      * @throws Exception
      */
-    public function handleExportRoomsSchedule() : void
+    public function handleExportRoomsSchedule(): void
     {
         $this->room = $this->roomRepository->findById((int) $this->getPresenter()->getParameter('id'));
 

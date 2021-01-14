@@ -12,5 +12,5 @@ namespace App\WebModule\Components;
  */
 interface IFaqContentControlFactory
 {
-    public function create() : FaqContentControl;
+    public function create(): FaqContentControl;
 }

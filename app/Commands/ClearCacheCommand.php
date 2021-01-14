@@ -9,6 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
+
 use function array_diff;
 use function is_dir;
 use function is_file;
@@ -38,7 +39,7 @@ class ClearCacheCommand extends Command
     /**
      * Nastavuje příkaz.
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setName('app:cache:clear');
         $this->setDescription('Clears cache, proxies and webtemp directories.');
@@ -47,7 +48,7 @@ class ClearCacheCommand extends Command
     /**
      * Spouští příkaz.
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $cacheDir   = $this->dir . '/temp/cache';
         $proxiesDir = $this->dir . '/temp/proxies';
@@ -78,7 +79,7 @@ class ClearCacheCommand extends Command
     /**
      * Maže složku.
      */
-    private function deleteDir(string $path) : bool
+    private function deleteDir(string $path): bool
     {
         if (is_dir($path) === true) {
             $files = array_diff(scandir($path), ['.', '..']);

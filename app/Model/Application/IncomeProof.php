@@ -12,7 +12,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita příjmového dokladu.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Application\Repositories\IncomeProofRepository")
+ * @ORM\Entity
  * @ORM\Table(name="income_proof")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
@@ -33,12 +33,12 @@ class IncomeProof
         $this->date = new DateTimeImmutable();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getDate() : DateTimeImmutable
+    public function getDate(): DateTimeImmutable
     {
         return $this->date;
     }
@@ -46,12 +46,12 @@ class IncomeProof
     /**
      * Vrací datum vytištění dokladu jako text.
      */
-    public function getDateText() : string
+    public function getDateText(): string
     {
         return $this->date->format(Helpers::DATE_FORMAT);
     }
 
-    public function setDate(DateTimeImmutable $date) : void
+    public function setDate(DateTimeImmutable $date): void
     {
         $this->date = $date;
     }

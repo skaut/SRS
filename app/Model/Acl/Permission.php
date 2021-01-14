@@ -12,7 +12,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita oprávnění.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Acl\Repositories\PermissionRepository")
+ * @ORM\Entity
  * @ORM\Table(name="permission")
  *
  * @author Michal Májský
@@ -101,12 +101,12 @@ class Permission
         $this->roles    = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -114,12 +114,12 @@ class Permission
     /**
      * @return Collection|Role[]
      */
-    public function getRoles() : Collection
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
 
-    public function getResource() : SrsResource
+    public function getResource(): SrsResource
     {
         return $this->resource;
     }

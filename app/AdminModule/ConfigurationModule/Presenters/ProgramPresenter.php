@@ -25,11 +25,11 @@ class ProgramPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentProgramForm() : Form
+    protected function createComponentProgramForm(): Form
     {
         $form = $this->programFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

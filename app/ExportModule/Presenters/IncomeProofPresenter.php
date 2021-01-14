@@ -23,6 +23,7 @@ use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Bridges\ApplicationLatte\Template;
 use Throwable;
+
 use function random_bytes;
 
 /**
@@ -50,7 +51,7 @@ class IncomeProofPresenter extends ExportBasePresenter
     /**
      * @throws ForbiddenRequestException
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
 
@@ -65,7 +66,7 @@ class IncomeProofPresenter extends ExportBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionApplication(int $id) : void
+    public function actionApplication(int $id): void
     {
         $applications = new ArrayCollection();
         $application  = $this->applicationRepository->findById($id);
@@ -83,7 +84,7 @@ class IncomeProofPresenter extends ExportBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionApplications() : void
+    public function actionApplications(): void
     {
         $ids          = $this->session->getSection('srs')->applicationIds;
         $applications = $this->applicationRepository->findApplicationsByIds($ids)->filter(static function (Application $application) {
@@ -99,7 +100,7 @@ class IncomeProofPresenter extends ExportBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionUsers() : void
+    public function actionUsers(): void
     {
         $ids          = $this->session->getSection('srs')->userIds;
         $users        = $this->userRepository->findUsersByIds($ids);
@@ -122,7 +123,7 @@ class IncomeProofPresenter extends ExportBasePresenter
      * @throws Throwable
      * @throws NonUniqueResultException
      */
-    private function generateIncomeProofs(Collection $applications) : void
+    private function generateIncomeProofs(Collection $applications): void
     {
         $createdBy           = $this->userRepository->findById($this->user->id);
         $updatedApplications = new ArrayCollection();

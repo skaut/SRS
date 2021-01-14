@@ -14,5 +14,5 @@ interface IAdditionalInformationFormFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : AdditionalInformationForm;
+    public function create(): AdditionalInformationForm;
 }

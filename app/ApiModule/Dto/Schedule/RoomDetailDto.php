@@ -25,32 +25,32 @@ class RoomDetailDto
     /** @JMS\Type("integer") */
     private ?int $capacity = null;
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId(int $id) : void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getCapacity() : ?int
+    public function getCapacity(): ?int
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity) : void
+    public function setCapacity(?int $capacity): void
     {
         $this->capacity = $capacity;
     }

@@ -69,6 +69,6 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
     {
         $this->tester->useConfigFiles([__DIR__ . '/SaveBlockHandlerTest.neon']);
         parent::_before();
-        $this->cashbooks = $this->tester->grabService(BlockRepository::class);
+        $this->blockRepository = $this->tester->grabService(BlockRepository::class);
     }
 }

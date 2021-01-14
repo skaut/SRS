@@ -55,92 +55,92 @@ class ProgramDetailDto
     /** @JMS\Type("boolean") */
     private ?bool $paid = null;
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId(int $id) : void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    public function getStart() : string
+    public function getStart(): string
     {
         return $this->start;
     }
 
-    public function setStart(string $start) : void
+    public function setStart(string $start): void
     {
         $this->start = $start;
     }
 
-    public function getEnd() : string
+    public function getEnd(): string
     {
         return $this->end;
     }
 
-    public function setEnd(string $end) : void
+    public function setEnd(string $end): void
     {
         $this->end = $end;
     }
 
-    public function getBlockId() : int
+    public function getBlockId(): int
     {
         return $this->blockId;
     }
 
-    public function setBlockId(int $blockId) : void
+    public function setBlockId(int $blockId): void
     {
         $this->blockId = $blockId;
     }
 
-    public function getRoomId() : ?int
+    public function getRoomId(): ?int
     {
         return $this->roomId;
     }
 
-    public function setRoomId(?int $roomId) : void
+    public function setRoomId(?int $roomId): void
     {
         $this->roomId = $roomId;
     }
 
-    public function getAttendeesCount() : int
+    public function getAttendeesCount(): int
     {
         return $this->attendeesCount;
     }
 
-    public function setAttendeesCount(int $attendeesCount) : void
+    public function setAttendeesCount(int $attendeesCount): void
     {
         $this->attendeesCount = $attendeesCount;
     }
 
-    public function getAlternatesCount() : ?int
+    public function getAlternatesCount(): ?int
     {
         return $this->alternatesCount;
     }
 
-    public function setAlternatesCount(int $alternatesCount) : void
+    public function setAlternatesCount(int $alternatesCount): void
     {
         $this->alternatesCount = $alternatesCount;
     }
 
-    public function isUserAttends() : bool
+    public function isUserAttends(): bool
     {
         return $this->userAttends;
     }
 
-    public function setUserAttends(bool $userAttends) : void
+    public function setUserAttends(bool $userAttends): void
     {
         $this->userAttends = $userAttends;
     }
 
-    public function getUserAlternates() : ?bool
+    public function getUserAlternates(): ?bool
     {
         return $this->userAlternates;
     }
 
-    public function setUserAlternates(bool $userAlternates) : void
+    public function setUserAlternates(bool $userAlternates): void
     {
         $this->userAlternates = $userAlternates;
     }
@@ -148,7 +148,7 @@ class ProgramDetailDto
     /**
      * @return int[]
      */
-    public function getBlocks() : array
+    public function getBlocks(): array
     {
         return $this->blocks;
     }
@@ -156,27 +156,27 @@ class ProgramDetailDto
     /**
      * @param int[] $blocks
      */
-    public function setBlocks(array $blocks) : void
+    public function setBlocks(array $blocks): void
     {
         $this->blocks = $blocks;
     }
 
-    public function isBlocked() : bool
+    public function isBlocked(): bool
     {
         return $this->blocked;
     }
 
-    public function setBlocked(bool $blocked) : void
+    public function setBlocked(bool $blocked): void
     {
         $this->blocked = $blocked;
     }
 
-    public function isPaid() : bool
+    public function isPaid(): bool
     {
         return $this->paid;
     }
 
-    public function setPaid(bool $paid) : void
+    public function setPaid(bool $paid): void
     {
         $this->paid = $paid;
     }

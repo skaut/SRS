@@ -71,7 +71,7 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/program_attendees_grid.latte');
         $this->template->render();
@@ -82,7 +82,7 @@ class ProgramAttendeesGridControl extends Control
      *
      * @throws DataGridException
      */
-    public function createComponentProgramAttendeesGrid(string $name) : void
+    public function createComponentProgramAttendeesGrid(string $name): void
     {
         $programId = (int) $this->getPresenter()->getParameter('programId');
         if (! $programId) {
@@ -145,7 +145,7 @@ class ProgramAttendeesGridControl extends Control
                         : $this->translator->translate('admin.common.no');
                 })
                 ->setFilterSelect(['' => 'admin.common.all', 'yes' => 'admin.common.yes', 'no' => 'admin.common.no'])
-                ->setCondition(static function (QueryBuilder $qb, string $value) : void {
+                ->setCondition(static function (QueryBuilder $qb, string $value): void {
                     if ($value === '') {
                         return;
                     } elseif ($value === 'yes') {
@@ -190,7 +190,7 @@ class ProgramAttendeesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleRegister(int $id) : void
+    public function handleRegister(int $id): void
     {
         $user = $this->userRepository->findById($id);
 
@@ -221,7 +221,7 @@ class ProgramAttendeesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleUnregister(int $id) : void
+    public function handleUnregister(int $id): void
     {
         $user = $this->userRepository->findById($id);
 
@@ -252,7 +252,7 @@ class ProgramAttendeesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function groupRegister(array $ids) : void
+    public function groupRegister(array $ids): void
     {
         $p = $this->getPresenter();
 
@@ -285,7 +285,7 @@ class ProgramAttendeesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function groupUnregister(array $ids) : void
+    public function groupUnregister(array $ids): void
     {
         $p = $this->getPresenter();
 
@@ -310,7 +310,7 @@ class ProgramAttendeesGridControl extends Control
         }
     }
 
-    private function isAllowedModifyProgram(Program $program) : bool
+    private function isAllowedModifyProgram(Program $program): bool
     {
         $user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
 

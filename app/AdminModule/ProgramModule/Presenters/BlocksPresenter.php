@@ -54,7 +54,7 @@ class BlocksPresenter extends ProgramBasePresenter
     /** @inject */
     public Session $session;
 
-    public function renderDefault() : void
+    public function renderDefault(): void
     {
         $this->template->emptyUserInfo = empty($this->dbuser->getAbout());
 
@@ -65,7 +65,7 @@ class BlocksPresenter extends ProgramBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function renderDetail(int $id) : void
+    public function renderDetail(int $id): void
     {
         $block = $this->blockRepository->findById($id);
 
@@ -78,7 +78,7 @@ class BlocksPresenter extends ProgramBasePresenter
     /**
      * @throws AbortException
      */
-    public function renderEdit(int $id) : void
+    public function renderEdit(int $id): void
     {
         $block = $this->blockRepository->findById($id);
 
@@ -95,7 +95,7 @@ class BlocksPresenter extends ProgramBasePresenter
      *
      * @throws AbortException
      */
-    public function handleShowAttendees(int $programId) : void
+    public function handleShowAttendees(int $programId): void
     {
         $this->session->getSection('srs')->programId = $programId;
 
@@ -115,11 +115,12 @@ class BlocksPresenter extends ProgramBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleDeleteProgram(int $programId) : void
+    public function handleDeleteProgram(int $programId): void
     {
         $program = $this->programRepository->findById($programId);
 
-        if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
+        if (
+            ! $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
             ! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
         ) {
             $this->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
@@ -131,12 +132,12 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->redirect('this');
     }
 
-    protected function createComponentProgramBlocksGrid() : ProgramBlocksGridControl
+    protected function createComponentProgramBlocksGrid(): ProgramBlocksGridControl
     {
         return $this->programBlocksGridControlFactory->create();
     }
 
-    protected function createComponentProgramAttendeesGrid() : ProgramAttendeesGridControl
+    protected function createComponentProgramAttendeesGrid(): ProgramAttendeesGridControl
     {
         return $this->programAttendeesGridControlFactory->create();
     }
@@ -145,11 +146,11 @@ class BlocksPresenter extends ProgramBasePresenter
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    protected function createComponentBlockForm() : Form
+    protected function createComponentBlockForm(): Form
     {
         $form = $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getUser()->getId());
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Blocks:default');
             }

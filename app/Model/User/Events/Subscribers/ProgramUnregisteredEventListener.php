@@ -38,7 +38,7 @@ class ProgramUnregisteredEventListener implements MessageHandlerInterface
         $this->settingsService = $settingsService;
     }
 
-    public function __invoke(ProgramUnregisteredEvent $event) : void
+    public function __invoke(ProgramUnregisteredEvent $event): void
     {
         if (! $event->isAlternate()) {
             $alternate = $this->userRepository->findProgramFirstAlternate($event->getProgram());

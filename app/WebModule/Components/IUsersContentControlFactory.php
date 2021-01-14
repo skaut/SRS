@@ -11,5 +11,5 @@ namespace App\WebModule\Components;
  */
 interface IUsersContentControlFactory
 {
-    public function create() : UsersContentControl;
+    public function create(): UsersContentControl;
 }

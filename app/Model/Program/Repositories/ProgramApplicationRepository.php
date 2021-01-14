@@ -17,6 +17,7 @@ use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Throwable;
+
 use function assert;
 
 /**
@@ -34,7 +35,7 @@ class ProgramApplicationRepository extends AbstractRepository
         $this->programRepository = $programRepository;
     }
 
-    public function findUserProgramApplication(User $user, Program $program) : ?ProgramApplication
+    public function findUserProgramApplication(User $user, Program $program): ?ProgramApplication
     {
         return $this->getRepository()->findOneBy(['user' => $user, 'program' => $program]);
     }
@@ -42,9 +43,9 @@ class ProgramApplicationRepository extends AbstractRepository
     /**
      * @throws Throwable
      */
-    public function save(ProgramApplication $programApplication) : void
+    public function save(ProgramApplication $programApplication): void
     {
-        $this->em->transactional(function (EntityManager $em) use ($programApplication) : void {
+        $this->em->transactional(function (EntityManager $em) use ($programApplication): void {
             $program = $em->getRepository(Program::class)->find($programApplication->getProgram()->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 
@@ -86,9 +87,9 @@ class ProgramApplicationRepository extends AbstractRepository
     /**
      * @throws Throwable
      */
-    public function remove(ProgramApplication $programApplication) : void
+    public function remove(ProgramApplication $programApplication): void
     {
-        $this->em->transactional(function (EntityManager $em) use ($programApplication) : void {
+        $this->em->transactional(function (EntityManager $em) use ($programApplication): void {
             $program = $em->getRepository(Program::class)->find($programApplication->getProgram()->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 
@@ -103,7 +104,7 @@ class ProgramApplicationRepository extends AbstractRepository
         });
     }
 
-    private function userAttendsSameBlockProgram(User $user, Block $block) : bool
+    private function userAttendsSameBlockProgram(User $user, Block $block): bool
     {
         $result = $this->createQueryBuilder('pa')
             ->select('count(pa)')
@@ -118,7 +119,7 @@ class ProgramApplicationRepository extends AbstractRepository
         return $result !== 0;
     }
 
-    private function userAttendsOrAlternatesConflictingProgram(User $user, Program $program) : bool
+    private function userAttendsOrAlternatesConflictingProgram(User $user, Program $program): bool
     {
         $start = $program->getStart();
         $end   = $program->getEnd();

@@ -18,7 +18,7 @@ class MemberPresenter extends WebBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
 
@@ -28,7 +28,7 @@ class MemberPresenter extends WebBasePresenter
         }
     }
 
-    public function renderDefault() : void
+    public function renderDefault(): void
     {
         $this->template->pageName = $this->translator->translate('web.member.title');
     }

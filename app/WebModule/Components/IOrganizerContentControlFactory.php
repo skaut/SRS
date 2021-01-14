@@ -11,5 +11,5 @@ namespace App\WebModule\Components;
  */
 interface IOrganizerContentControlFactory
 {
-    public function create() : OrganizerContentControl;
+    public function create(): OrganizerContentControl;
 }

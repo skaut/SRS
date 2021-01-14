@@ -36,7 +36,7 @@ class FaqContentControl extends Control
         $this->roleRepository = $roleRepository;
     }
 
-    public function render(ContentDto $content) : void
+    public function render(ContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/faq_content.latte');
@@ -52,11 +52,11 @@ class FaqContentControl extends Control
         $template->render();
     }
 
-    public function createComponentFaqForm() : Form
+    public function createComponentFaqForm(): Form
     {
         $form = $this->faqFormFactory->create($this->getPresenter()->getUser()->id);
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->getPresenter()->flashMessage('web.faq_content.add_question_successful', 'success');
 
             $this->getPresenter()->redirect('this');

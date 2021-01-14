@@ -19,7 +19,7 @@ final class RouterFactory
         $this->cmsService = $cmsService;
     }
 
-    public function createRouter() : RouteList
+    public function createRouter(): RouteList
     {
         $router = new RouteList();
 

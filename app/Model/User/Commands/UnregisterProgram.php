@@ -22,17 +22,17 @@ class UnregisterProgram
         $this->notifyUser = $notifyUser;
     }
 
-    public function getUser() : User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function getProgram() : Program
+    public function getProgram(): Program
     {
         return $this->program;
     }
 
-    public function isNotifyUser() : bool
+    public function isNotifyUser(): bool
     {
         return $this->notifyUser;
     }

@@ -57,7 +57,7 @@ class EditPaymentFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->payment = $this->paymentRepository->findById($id);
 
@@ -122,7 +122,7 @@ class EditPaymentFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() !== $form['cancel']) {
             $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);

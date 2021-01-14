@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\CustomInput;
 
 use Doctrine\ORM\Mapping as ORM;
+
 use function count;
 use function implode;
 
@@ -32,7 +33,7 @@ class CustomSelect extends CustomInput
     /**
      * @return string[]
      */
-    public function getOptions() : array
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -40,7 +41,7 @@ class CustomSelect extends CustomInput
     /**
      * @param string[] $options
      */
-    public function setOptions(array $options) : void
+    public function setOptions(array $options): void
     {
         $this->options = $options;
     }
@@ -50,7 +51,7 @@ class CustomSelect extends CustomInput
      *
      * @return string[]
      */
-    public function getSelectOptions() : array
+    public function getSelectOptions(): array
     {
         $options = [];
 
@@ -59,7 +60,7 @@ class CustomSelect extends CustomInput
         }
 
         for ($i = 0; $i < count($this->options); $i++) {
-            $options[$i+1] = $this->options[$i];
+            $options[$i + 1] = $this->options[$i];
         }
 
         return $options;
@@ -70,18 +71,18 @@ class CustomSelect extends CustomInput
      *
      * @return string[]
      */
-    public function getFilterOptions() : array
+    public function getFilterOptions(): array
     {
         $options = [];
 
         for ($i = 0; $i < count($this->options); $i++) {
-            $options[$i+1] = $this->options[$i];
+            $options[$i + 1] = $this->options[$i];
         }
 
         return $options;
     }
 
-    public function getOptionsText() : string
+    public function getOptionsText(): string
     {
         return implode(', ', $this->options);
     }

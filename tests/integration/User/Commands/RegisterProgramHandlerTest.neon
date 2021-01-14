@@ -1,0 +1,14 @@
+services:
+    - App\Model\Program\Repositories\BlockRepository
+    - App\Model\Structure\Repositories\SubeventRepository
+    - App\Model\User\Repositories\UserRepository
+    - App\Model\Program\Repositories\CategoryRepository
+    - App\Model\Acl\Repositories\RoleRepository
+    - App\Model\Program\Repositories\ProgramRepository
+    - class: App\Model\User\Commands\Handlers\RegisterProgramHandler
+      tags:
+        messenger.messageHandler:
+        bus: commandBus
+    
+includes:
+- ../../config/doctrine.neon

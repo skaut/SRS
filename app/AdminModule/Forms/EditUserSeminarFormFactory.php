@@ -48,8 +48,10 @@ use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
+
 use function array_key_exists;
 use function assert;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -127,7 +129,7 @@ class EditUserSeminarFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -260,7 +262,7 @@ class EditUserSeminarFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;
@@ -268,7 +270,7 @@ class EditUserSeminarFormFactory
 
         $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
-        $this->em->transactional(function () use ($values, $loggedUser) : void {
+        $this->em->transactional(function () use ($values, $loggedUser): void {
             $customInputValueChanged = false;
 
             if (! $this->user->isExternalLector()) {
@@ -356,7 +358,7 @@ class EditUserSeminarFormFactory
     /**
      * Ověří, že není vybrána role "Neregistrovaný".
      */
-    public function validateRolesNonregistered(MultiSelectBox $field) : bool
+    public function validateRolesNonregistered(MultiSelectBox $field): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
@@ -366,7 +368,7 @@ class EditUserSeminarFormFactory
     /**
      * Ověří kapacitu rolí.
      */
-    public function validateRolesCapacities(MultiSelectBox $field) : bool
+    public function validateRolesCapacities(MultiSelectBox $field): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
@@ -379,7 +381,7 @@ class EditUserSeminarFormFactory
      *
      * @param int[] $customInputRoles
      */
-    public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles) : bool
+    public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles): bool
     {
         return false;
     }
@@ -387,7 +389,7 @@ class EditUserSeminarFormFactory
     /**
      * Vygeneruje cestu souboru.
      */
-    private function generatePath(FileUpload $file) : string
+    private function generatePath(FileUpload $file): string
     {
         return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

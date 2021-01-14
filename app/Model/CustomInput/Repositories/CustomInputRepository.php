@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
+
 use const PHP_INT_MAX;
 
 /**
@@ -24,7 +25,7 @@ class CustomInputRepository extends EntityRepository
     /**
      * Vrací pole podle id.
      */
-    public function findById(?int $id) : ?CustomInput
+    public function findById(?int $id): ?CustomInput
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -34,7 +35,7 @@ class CustomInputRepository extends EntityRepository
      *
      * @return CustomInput[]
      */
-    public function findAllOrderedByPosition() : array
+    public function findAllOrderedByPosition(): array
     {
         return $this->createQueryBuilder('i')
             ->orderBy('i.position')
@@ -49,7 +50,7 @@ class CustomInputRepository extends EntityRepository
      *
      * @return CustomInput[]
      */
-    public function findByRolesOrderedByPosition(Collection $roles) : array
+    public function findByRolesOrderedByPosition(Collection $roles): array
     {
         return $this->createQueryBuilder('i')
             ->join('i.roles', 'r')
@@ -65,7 +66,7 @@ class CustomInputRepository extends EntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function findLastPosition() : int
+    public function findLastPosition(): int
     {
         return (int) $this->createQueryBuilder('i')
             ->select('MAX(i.position)')
@@ -79,7 +80,7 @@ class CustomInputRepository extends EntityRepository
      * @throws NonUniqueResultException
      * @throws ORMException
      */
-    public function save(CustomInput $input) : void
+    public function save(CustomInput $input): void
     {
         if (! $input->getPosition()) {
             $input->setPosition($this->findLastPosition() + 1);
@@ -94,7 +95,7 @@ class CustomInputRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function remove(CustomInput $input) : void
+    public function remove(CustomInput $input): void
     {
         foreach ($input->getCustomInputValues() as $customInputValue) {
             $this->_em->remove($customInputValue);
@@ -109,7 +110,7 @@ class CustomInputRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function sort(int $itemId, int $prevId, int $nextId) : void
+    public function sort(int $itemId, int $prevId, int $nextId): void
     {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : null;

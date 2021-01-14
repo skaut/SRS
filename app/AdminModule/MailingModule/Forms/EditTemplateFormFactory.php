@@ -39,7 +39,7 @@ class EditTemplateFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->template = $this->templateRepository->findById($id);
 
@@ -80,7 +80,7 @@ class EditTemplateFormFactory
      *
      * @throws ORMException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

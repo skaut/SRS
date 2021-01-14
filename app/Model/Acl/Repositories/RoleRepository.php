@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace App\Model\Acl\Repositories;
 
 use App\Model\Acl\Role;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\User\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+
 use function array_map;
 
 /**
@@ -23,12 +24,12 @@ use function array_map;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class RoleRepository extends EntityRepository
+class RoleRepository extends AbstractRepository
 {
     /**
      * Vrací roli podle id.
      */
-    public function findById(?int $id) : ?Role
+    public function findById(?int $id): ?Role
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -36,7 +37,7 @@ class RoleRepository extends EntityRepository
     /**
      * Vrací systémovou roli podle systémového názvu.
      */
-    public function findBySystemName(string $name) : Role
+    public function findBySystemName(string $name): Role
     {
         return $this->findOneBy(['systemName' => $name]);
     }
@@ -47,7 +48,7 @@ class RoleRepository extends EntityRepository
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function findLastId() : ?int
+    public function findLastId(): ?int
     {
         return (int) $this->createQueryBuilder('r')
             ->select('MAX(r.id)')
@@ -60,7 +61,7 @@ class RoleRepository extends EntityRepository
      *
      * @return string[]
      */
-    public function findOthersNames(int $id) : array
+    public function findOthersNames(int $id): array
     {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')
@@ -79,7 +80,7 @@ class RoleRepository extends EntityRepository
      *
      * @return Collection|Role[]
      */
-    public function findRolesByIds(array $ids) : Collection
+    public function findRolesByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
@@ -95,7 +96,7 @@ class RoleRepository extends EntityRepository
      *
      * @return string[][]
      */
-    public function countUsersInRoles(array $rolesIds) : array
+    public function countUsersInRoles(array $rolesIds): array
     {
         return $this->createQueryBuilder('r')
             ->select('r.name, r.capacity, COUNT(u.id) AS usersCount')
@@ -114,7 +115,7 @@ class RoleRepository extends EntityRepository
      *
      * @return int[]
      */
-    public function findRolesIds(Collection $roles) : array
+    public function findRolesIds(Collection $roles): array
     {
         return array_map(static function (Role $o) {
             return $o->getId();
@@ -126,7 +127,7 @@ class RoleRepository extends EntityRepository
      *
      * @return Collection|Role[]
      */
-    public function findFilteredRoles(bool $registerableNowOnly, bool $subeventsRoleOnly, bool $includeUsers, ?User $user = null) : Collection
+    public function findFilteredRoles(bool $registerableNowOnly, bool $subeventsRoleOnly, bool $includeUsers, ?User $user = null): Collection
     {
         $qb = $this->createQueryBuilder('r');
 
@@ -163,14 +164,14 @@ class RoleRepository extends EntityRepository
         return new ArrayCollection($result);
     }
 
-    public function incrementOccupancy(Role $role) : void
+    public function incrementOccupancy(Role $role): void
     {
         $this->_em->createQuery('UPDATE App\Model\Acl\Role r SET r.occupancy = r.occupancy + 1 WHERE r.id = :rid')
             ->setParameter('rid', $role->getId())
             ->getResult();
     }
 
-    public function decrementOccupancy(Role $role) : void
+    public function decrementOccupancy(Role $role): void
     {
         $this->_em->createQuery('UPDATE App\Model\Acl\Role r SET r.occupancy = r.occupancy - 1 WHERE r.id = :rid')
             ->setParameter('rid', $role->getId())
@@ -180,7 +181,7 @@ class RoleRepository extends EntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function getRegistrationStart() : ?DateTimeImmutable
+    public function getRegistrationStart(): ?DateTimeImmutable
     {
         $result = $this->createQueryBuilder('r')
             ->select('r.registerableFrom')
@@ -197,7 +198,7 @@ class RoleRepository extends EntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function getRegistrationEnd() : ?DateTimeImmutable
+    public function getRegistrationEnd(): ?DateTimeImmutable
     {
         $result = $this->createQueryBuilder('r')
             ->select('r.registerableTo')
@@ -217,7 +218,7 @@ class RoleRepository extends EntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function save(Role $role) : void
+    public function save(Role $role): void
     {
         $this->_em->persist($role);
         $this->_em->flush();
@@ -229,7 +230,7 @@ class RoleRepository extends EntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Role $role) : void
+    public function remove(Role $role): void
     {
         $this->_em->remove($role);
         $this->_em->flush();

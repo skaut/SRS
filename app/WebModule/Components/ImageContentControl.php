@@ -15,7 +15,7 @@ use Nette\Application\UI\Control;
  */
 class ImageContentControl extends Control
 {
-    public function render(ImageContentDto $content) : void
+    public function render(ImageContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/image_content.latte');

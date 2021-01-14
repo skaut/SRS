@@ -20,6 +20,7 @@ use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
+
 use function nl2br;
 use function str_replace;
 
@@ -69,7 +70,7 @@ class ContactForm extends UI\Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/contact_form.latte');
         $this->template->render();
@@ -78,7 +79,7 @@ class ContactForm extends UI\Control
     /**
      * Vytvoří formulář.
      */
-    public function createComponentForm() : Form
+    public function createComponentForm(): Form
     {
         $this->user = $this->userRepository->findById($this->presenter->user->getId());
 
@@ -126,7 +127,7 @@ class ContactForm extends UI\Control
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         $recipientsUsers  = new ArrayCollection();
         $recipientsEmails = new ArrayCollection();

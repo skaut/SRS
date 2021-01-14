@@ -21,6 +21,7 @@ use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
+
 use function array_map;
 use function explode;
 use function implode;
@@ -70,7 +71,7 @@ class MailingFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -110,7 +111,7 @@ class MailingFormFactory
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($this->settingsService->getValue(Settings::SEMINAR_EMAIL) !== $values->seminarEmail) {
             $this->settingsService->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values->seminarEmail);
@@ -145,7 +146,7 @@ class MailingFormFactory
     /**
      * Ověří seznam e-mailů oddělených ','.
      */
-    public function validateEmails(TextInput $field) : bool
+    public function validateEmails(TextInput $field): bool
     {
         return $this->validators->validateEmails($field->getValue());
     }

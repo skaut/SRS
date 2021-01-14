@@ -28,6 +28,7 @@ use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+
 use function implode;
 use function preg_replace;
 
@@ -84,7 +85,7 @@ class ExcelExportService
      *
      * @throws Exception
      */
-    public function exportUsersRoles(Collection $users, Collection $roles, string $filename) : ExcelResponse
+    public function exportUsersRoles(Collection $users, Collection $roles, string $filename): ExcelResponse
     {
         $sheet = $this->spreadsheet->getSheet(0);
 
@@ -124,7 +125,7 @@ class ExcelExportService
      *
      * @throws Exception
      */
-    public function exportUserSchedule(User $user, string $filename) : ExcelResponse
+    public function exportUserSchedule(User $user, string $filename): ExcelResponse
     {
         return $this->exportUsersSchedules(new ArrayCollection([$user]), $filename);
     }
@@ -137,7 +138,7 @@ class ExcelExportService
      * @throws Exception
      * @throws Exception
      */
-    public function exportUsersSchedules(Collection $users, string $filename) : ExcelResponse
+    public function exportUsersSchedules(Collection $users, string $filename): ExcelResponse
     {
         $this->spreadsheet->removeSheetByIndex(0);
         $sheetNumber = 0;
@@ -196,7 +197,7 @@ class ExcelExportService
      *
      * @throws Exception
      */
-    public function exportRoomSchedule(Room $room, string $filename) : ExcelResponse
+    public function exportRoomSchedule(Room $room, string $filename): ExcelResponse
     {
         return $this->exportRoomsSchedules(new ArrayCollection([$room]), $filename);
     }
@@ -208,7 +209,7 @@ class ExcelExportService
      *
      * @throws Exception
      */
-    public function exportRoomsSchedules(Collection $rooms, string $filename) : ExcelResponse
+    public function exportRoomsSchedules(Collection $rooms, string $filename): ExcelResponse
     {
         $this->spreadsheet->removeSheetByIndex(0);
         $sheetNumber = 0;
@@ -263,7 +264,7 @@ class ExcelExportService
      *
      * @throws Exception
      */
-    public function exportUsersList(Collection $users, string $filename) : ExcelResponse
+    public function exportUsersList(Collection $users, string $filename): ExcelResponse
     {
         $sheet = $this->spreadsheet->getSheet(0);
 
@@ -460,7 +461,7 @@ class ExcelExportService
      *
      * @throws Exception
      */
-    public function exportUsersSubeventsAndCategories(Collection $users, string $filename) : ExcelResponse
+    public function exportUsersSubeventsAndCategories(Collection $users, string $filename): ExcelResponse
     {
         $sheet = $this->spreadsheet->getSheet(0);
 
@@ -546,7 +547,7 @@ class ExcelExportService
      *
      * @throws Exception
      */
-    public function exportBlocksAttendees(Collection $blocks, string $filename) : ExcelResponse
+    public function exportBlocksAttendees(Collection $blocks, string $filename): ExcelResponse
     {
         $this->spreadsheet->removeSheetByIndex(0);
         $sheetNumber = 0;
@@ -592,7 +593,7 @@ class ExcelExportService
      * Odstraní z názvu listu zakázané znaky a zkrátí jej.
      * Excel podporuje 31 znaků, při duplicitních názvech doplní na poslední pozici číslo.
      */
-    private static function cleanSheetName(string $name) : string
+    private static function cleanSheetName(string $name): string
     {
         $name = preg_replace('#[]]#', ')', $name);
         $name = preg_replace('#[[]#', '(', $name);

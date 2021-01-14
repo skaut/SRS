@@ -49,7 +49,7 @@ class DocumentContent extends Content implements IContent
         $this->tags = new ArrayCollection();
     }
 
-    public function injectTagRepository(TagRepository $tagRepository) : void
+    public function injectTagRepository(TagRepository $tagRepository): void
     {
         $this->tagRepository = $tagRepository;
     }
@@ -57,7 +57,7 @@ class DocumentContent extends Content implements IContent
     /**
      * @return Collection|Tag[]
      */
-    public function getTags() : Collection
+    public function getTags(): Collection
     {
         return $this->tags;
     }
@@ -65,7 +65,7 @@ class DocumentContent extends Content implements IContent
     /**
      * @param Collection|Tag[] $tags
      */
-    public function setTags(Collection $tags) : void
+    public function setTags(Collection $tags): void
     {
         $this->tags->clear();
         foreach ($tags as $tag) {
@@ -76,7 +76,7 @@ class DocumentContent extends Content implements IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
-    public function addContentForm(Form $form) : Form
+    public function addContentForm(Form $form): Form
     {
         parent::addContentForm($form);
 
@@ -91,7 +91,7 @@ class DocumentContent extends Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(Form $form, stdClass $values) : void
+    public function contentFormSucceeded(Form $form, stdClass $values): void
     {
         parent::contentFormSucceeded($form, $values);
         $formName   = $this->getContentFormName();
@@ -99,7 +99,7 @@ class DocumentContent extends Content implements IContent
         $this->tags = $this->tagRepository->findTagsByIds($values->tags);
     }
 
-    public function convertToDto() : ContentDto
+    public function convertToDto(): ContentDto
     {
         return new DocumentContentDto($this->getComponentName(), $this->heading, Helpers::getIds($this->tags));
     }

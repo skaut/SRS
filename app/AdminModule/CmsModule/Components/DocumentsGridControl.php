@@ -23,6 +23,7 @@ use Nette\Utils\Strings;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -55,7 +56,7 @@ class DocumentsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/documents_grid.latte');
         $this->template->render();
@@ -66,7 +67,7 @@ class DocumentsGridControl extends Control
      *
      * @throws DataGridException
      */
-    public function createComponentDocumentsGrid(string $name) : void
+    public function createComponentDocumentsGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -108,7 +109,7 @@ class DocumentsGridControl extends Control
 
         $tagsOptions = $this->tagRepository->getTagsOptions();
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = static function (Container $container) use ($tagsOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = static function (Container $container) use ($tagsOptions): void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
@@ -122,7 +123,7 @@ class DocumentsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($tagsOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($tagsOptions): void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
 
@@ -133,7 +134,7 @@ class DocumentsGridControl extends Control
 
             $container->addText('description', '');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Document $item) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Document $item): void {
             $container->setDefaults([
                 'name' => $item->getName(),
                 'tags' => $this->tagRepository->findTagsIds($item->getTags()),
@@ -158,7 +159,7 @@ class DocumentsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function add(stdClass $values) : void
+    public function add(stdClass $values): void
     {
         $file = $values->file;
         $path = $this->generatePath($file);
@@ -185,7 +186,7 @@ class DocumentsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function edit(string $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values): void
     {
         $document = $this->documentRepository->findById((int) $id);
 
@@ -217,7 +218,7 @@ class DocumentsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $document = $this->documentRepository->findById($id);
         $this->filesService->delete($document->getFile());
@@ -231,7 +232,7 @@ class DocumentsGridControl extends Control
     /**
      * Vygeneruje cestu dokumentu.
      */
-    private function generatePath(FileUpload $file) : string
+    private function generatePath(FileUpload $file): string
     {
         return Document::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

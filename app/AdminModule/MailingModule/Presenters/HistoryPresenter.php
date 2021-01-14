@@ -17,7 +17,7 @@ class HistoryPresenter extends MailingBasePresenter
     /** @inject */
     public IMailHistoryGridControlFactory $mailHistoryGridControlFactory;
 
-    protected function createComponentMailHistoryGrid() : MailHistoryGridControl
+    protected function createComponentMailHistoryGrid(): MailHistoryGridControl
     {
         return $this->mailHistoryGridControlFactory->create();
     }

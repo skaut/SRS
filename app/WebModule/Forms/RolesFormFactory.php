@@ -80,7 +80,7 @@ class RolesFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -153,9 +153,11 @@ class RolesFormFactory
             $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.download_ticket')
                 ->setHtmlAttribute('class', 'btn-secondary');
 
-            if ($this->user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
+            if (
+                $this->user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
                 || ! $this->user->hasPaidEveryApplication()
-                || $ticketDownloadFrom > new DateTimeImmutable()) {
+                || $ticketDownloadFrom > new DateTimeImmutable()
+            ) {
                 $downloadTicketButton
                     ->setDisabled()
                     ->setHtmlAttribute('data-toggle', 'tooltip')
@@ -178,7 +180,7 @@ class RolesFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['submit']) {
             $selectedRoles = $this->roleRepository->findRolesByIds($values->roles);
@@ -191,7 +193,7 @@ class RolesFormFactory
     /**
      * Ověří kapacitu rolí.
      */
-    public function validateRolesCapacities(MultiSelectBox $field) : bool
+    public function validateRolesCapacities(MultiSelectBox $field): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
@@ -203,7 +205,7 @@ class RolesFormFactory
      *
      * @param Role[] $args
      */
-    public function validateRolesIncompatible(MultiSelectBox $field, array $args) : bool
+    public function validateRolesIncompatible(MultiSelectBox $field, array $args): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $testRole      = $args[0];
@@ -216,7 +218,7 @@ class RolesFormFactory
      *
      * @param Role[] $args
      */
-    public function validateRolesRequired(MultiSelectBox $field, array $args) : bool
+    public function validateRolesRequired(MultiSelectBox $field, array $args): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
         $testRole      = $args[0];
@@ -227,7 +229,7 @@ class RolesFormFactory
     /**
      * Ověří registrovatelnost rolí.
      */
-    public function validateRolesRegisterable(MultiSelectBox $field) : bool
+    public function validateRolesRegisterable(MultiSelectBox $field): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
@@ -240,7 +242,7 @@ class RolesFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function validateRolesMinimumAge(MultiSelectBox $field) : bool
+    public function validateRolesMinimumAge(MultiSelectBox $field): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 

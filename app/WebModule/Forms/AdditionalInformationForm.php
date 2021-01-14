@@ -42,11 +42,13 @@ use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
+
 use function array_key_exists;
 use function array_slice;
 use function array_values;
 use function assert;
 use function explode;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -113,7 +115,7 @@ class AdditionalInformationForm extends UI\Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/additional_information_form.latte');
         $this->template->render();
@@ -125,7 +127,7 @@ class AdditionalInformationForm extends UI\Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function createComponentForm() : Form
+    public function createComponentForm(): Form
     {
         $this->user                = $this->userRepository->findById($this->presenter->user->getId());
         $isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
@@ -247,9 +249,9 @@ class AdditionalInformationForm extends UI\Control
      *
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
-        $this->em->transactional(function () use ($values) : void {
+        $this->em->transactional(function () use ($values): void {
             $customInputValueChanged = false;
 
             if ($this->applicationService->isAllowedEditCustomInputs()) {
@@ -331,7 +333,7 @@ class AdditionalInformationForm extends UI\Control
     /**
      * Vygeneruje cestu souboru.
      */
-    private function generatePath(FileUpload $file) : string
+    private function generatePath(FileUpload $file): string
     {
         return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

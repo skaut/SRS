@@ -50,27 +50,27 @@ class Room
         $this->programs = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getCapacity() : ?int
+    public function getCapacity(): ?int
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity) : void
+    public function setCapacity(?int $capacity): void
     {
         $this->capacity = $capacity;
     }
@@ -78,7 +78,7 @@ class Room
     /**
      * @return Collection|Program[]
      */
-    public function getPrograms() : Collection
+    public function getPrograms(): Collection
     {
         return $this->programs;
     }

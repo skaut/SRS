@@ -13,6 +13,7 @@ use Skautis\Wsdl\WsdlException;
 use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
+
 use function array_key_exists;
 
 /**
@@ -37,7 +38,7 @@ class SkautIsEventEducationService extends SkautIsEventService
         $this->subeventRepository      = $subeventRepository;
     }
 
-    public function isEventDraft(int $eventId) : bool
+    public function isEventDraft(int $eventId): bool
     {
         return true;
 
@@ -47,7 +48,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     /**
      * @param Collection|User[] $users
      */
-    public function insertParticipants(int $eventId, Collection $users, bool $accept = false) : bool
+    public function insertParticipants(int $eventId, Collection $users, bool $accept = false): bool
     {
         try {
             $participants = [];
@@ -89,7 +90,7 @@ class SkautIsEventEducationService extends SkautIsEventService
         return true;
     }
 
-    protected function getEventDetail(int $eventId) : stdClass
+    protected function getEventDetail(int $eventId): stdClass
     {
         return $this->skautIs->event->EventEducationDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -100,7 +101,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     /**
      * @return stdClass[]
      */
-    protected function getDraftEvents() : array
+    protected function getDraftEvents(): array
     {
         $events = $this->skautIs->event->EventEducationAllMyActions([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -124,7 +125,7 @@ class SkautIsEventEducationService extends SkautIsEventService
      *
      * @return stdClass[]
      */
-    public function getEventCourses(int $eventId) : array
+    public function getEventCourses(int $eventId): array
     {
         $courses = $this->skautIs->event->EventEducationCourseAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -141,7 +142,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     /**
      * Je nastaveno propojení alespoň jedné podakce se skautIS kurzem?
      */
-    public function isSubeventConnected() : bool
+    public function isSubeventConnected(): bool
     {
         foreach ($this->subeventRepository->findAll() as $subevent) {
             if (! $subevent->getSkautIsCourses()->isEmpty()) {
@@ -157,7 +158,7 @@ class SkautIsEventEducationService extends SkautIsEventService
      *
      * @return stdClass[]
      */
-    private function getAllParticipants(int $eventId, int $courseId) : array
+    private function getAllParticipants(int $eventId, int $courseId): array
     {
         $participants = $this->skautIs->event->ParticipantEducationAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -176,7 +177,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     /**
      * Přidá účastníka kurzu.
      */
-    private function insertParticipant(int $eventId, int $courseId, int $personId) : int
+    private function insertParticipant(int $eventId, int $courseId, int $personId): int
     {
         $response = $this->skautIs->event->ParticipantEducationInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -191,7 +192,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     /**
      * Aktualizuje přijetí účastníka.
      */
-    private function updateParticipant(int $participantId, bool $accept) : void
+    private function updateParticipant(int $participantId, bool $accept): void
     {
         $this->skautIs->event->ParticipantEducationUpdate([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),

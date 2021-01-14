@@ -23,6 +23,7 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
+
 use function array_keys;
 use function array_map;
 use function explode;
@@ -65,7 +66,7 @@ class CustomInputFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->customInput = $this->customInputRepository->findById($id);
 
@@ -126,7 +127,7 @@ class CustomInputFormFactory
      * @throws NonUniqueResultException
      * @throws ORMException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;
@@ -190,7 +191,7 @@ class CustomInputFormFactory
      *
      * @return string[]
      */
-    private function prepareCustomInputTypesOptions() : array
+    private function prepareCustomInputTypesOptions(): array
     {
         $options = [];
         foreach (CustomInput::$types as $type) {

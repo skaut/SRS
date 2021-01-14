@@ -17,7 +17,7 @@ class RemoveCategoryHandler implements MessageHandlerInterface
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function __invoke(RemoveCategory $command) : void
+    public function __invoke(RemoveCategory $command): void
     {
         $this->categoryRepository->remove($command->getCategory());
     }

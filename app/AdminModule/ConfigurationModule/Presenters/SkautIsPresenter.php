@@ -37,7 +37,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function renderDefault() : void
+    public function renderDefault(): void
     {
         $eventId = $this->settingsService->getValue(Settings::SKAUTIS_EVENT_ID);
         if ($eventId !== null) {
@@ -56,7 +56,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleDisconnect() : void
+    public function handleDisconnect(): void
     {
         $this->settingsService->setValue(Settings::SKAUTIS_EVENT_ID, null);
         $this->settingsService->setValue(Settings::SKAUTIS_EVENT_NAME, null);
@@ -74,11 +74,11 @@ class SkautIsPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentSkautIsEventForm() : Form
+    protected function createComponentSkautIsEventForm(): Form
     {
         $form = $this->skautIsEventFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('admin.configuration.skautis_event_connect_successful', 'success');
 
             $this->redirect('this');
@@ -87,7 +87,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentSkautIsEventEducationGrid() : SkautIsEventEducationGridControl
+    protected function createComponentSkautIsEventEducationGrid(): SkautIsEventEducationGridControl
     {
         return $this->skautISEventEducationGridControlFactory->create();
     }

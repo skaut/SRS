@@ -30,7 +30,7 @@ class UsersContentDto extends ContentDto
     /**
      * @return int[]
      */
-    public function getRoles() : array
+    public function getRoles(): array
     {
         return $this->roles;
     }

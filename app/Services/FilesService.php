@@ -9,6 +9,7 @@ use Nette\Http\FileUpload;
 use Nette\Utils\Image;
 use Nette\Utils\ImageException;
 use Nette\Utils\UnknownImageFileException;
+
 use function dirname;
 use function fclose;
 use function file_exists;
@@ -37,7 +38,7 @@ class FilesService
     /**
      * Uloží soubor.
      */
-    public function save(FileUpload $file, string $path) : void
+    public function save(FileUpload $file, string $path): void
     {
         $file->move($this->dir . $path);
     }
@@ -45,7 +46,7 @@ class FilesService
     /**
      * Odstraní soubor.
      */
-    public function delete(string $path) : void
+    public function delete(string $path): void
     {
         $file = $this->dir . $path;
         if (file_exists($file)) {
@@ -56,7 +57,7 @@ class FilesService
     /**
      * Vytvoří soubor s daným obsahem.
      */
-    public function create(string $path, string $content) : void
+    public function create(string $path, string $content): void
     {
         $absPath = $this->dir . $path;
         $dirname = dirname($absPath);
@@ -76,7 +77,7 @@ class FilesService
      * @throws ImageException
      * @throws UnknownImageFileException
      */
-    public function resizeImage(string $path, ?int $width, ?int $height) : void
+    public function resizeImage(string $path, ?int $width, ?int $height): void
     {
         $image = Image::fromFile($this->dir . $path);
         $image->resize($width, $height);
@@ -90,7 +91,7 @@ class FilesService
      * @throws UnknownImageFileException
      * @throws ImageException
      */
-    public function resizeAndCropImage(string $path, ?int $width, ?int $height) : void
+    public function resizeAndCropImage(string $path, ?int $width, ?int $height): void
     {
         $image = Image::fromFile($this->dir . $path);
 
@@ -108,7 +109,7 @@ class FilesService
     /**
      * Vrací cestu ke složce pro nahrávání souborů.
      */
-    public function getDir() : string
+    public function getDir(): string
     {
         return $this->dir;
     }

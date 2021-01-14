@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
+
 use const PHP_INT_MAX;
 
 /**
@@ -23,7 +24,7 @@ class FaqRepository extends EntityRepository
     /**
      * Vrací otázku podle id.
      */
-    public function findById(?int $id) : ?Faq
+    public function findById(?int $id): ?Faq
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -34,7 +35,7 @@ class FaqRepository extends EntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function findLastId() : int
+    public function findLastId(): int
     {
         return (int) $this->createQueryBuilder('f')
             ->select('MAX(f.id)')
@@ -48,7 +49,7 @@ class FaqRepository extends EntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function findLastPosition() : int
+    public function findLastPosition(): int
     {
         return (int) $this->createQueryBuilder('f')
             ->select('MAX(f.position)')
@@ -61,7 +62,7 @@ class FaqRepository extends EntityRepository
      *
      * @return Faq[]
      */
-    public function findPublishedOrderedByPosition() : array
+    public function findPublishedOrderedByPosition(): array
     {
         return $this->findBy(['public' => true], ['position' => 'ASC']);
     }
@@ -72,7 +73,7 @@ class FaqRepository extends EntityRepository
      * @throws NonUniqueResultException
      * @throws ORMException
      */
-    public function save(Faq $faq) : void
+    public function save(Faq $faq): void
     {
         if (! $faq->getPosition()) {
             $faq->setPosition($this->findLastPosition() + 1);
@@ -87,7 +88,7 @@ class FaqRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function remove(Faq $faq) : void
+    public function remove(Faq $faq): void
     {
         $this->_em->remove($faq);
         $this->_em->flush();
@@ -98,7 +99,7 @@ class FaqRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function sort(int $itemId, int $prevId, int $nextId) : void
+    public function sort(int $itemId, int $prevId, int $nextId): void
     {
         $item = $this->find($itemId);
         $prev = $prevId ? $this->find($prevId) : null;

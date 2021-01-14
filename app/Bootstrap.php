@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App;
 
 use Nette\Configurator;
+
 use function getenv;
 use function umask;
 
 class Bootstrap
 {
-    public static function boot() : Configurator
+    public static function boot(): Configurator
     {
         umask(0002);
 

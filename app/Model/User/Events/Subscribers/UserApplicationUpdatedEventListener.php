@@ -19,7 +19,7 @@ class UserApplicationUpdatedEventListener implements MessageHandlerInterface
         $this->commandBus = $commandBus;
     }
 
-    public function __invoke(UserApplicationUpdatedEvent $event) : void
+    public function __invoke(UserApplicationUpdatedEvent $event): void
     {
         $this->commandBus->handle(new UpdateUsersPrograms(new ArrayCollection([$event->getUser()])));
     }

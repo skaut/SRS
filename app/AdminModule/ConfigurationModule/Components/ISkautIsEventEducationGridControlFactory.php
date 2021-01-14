@@ -14,5 +14,5 @@ interface ISkautIsEventEducationGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : SkautIsEventEducationGridControl;
+    public function create(): SkautIsEventEducationGridControl;
 }

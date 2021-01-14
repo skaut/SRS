@@ -94,7 +94,7 @@ class ProgramBlocksGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/program_blocks_grid.latte');
         $this->template->render();
@@ -108,7 +108,7 @@ class ProgramBlocksGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentProgramBlocksGrid(string $name) : void
+    public function createComponentProgramBlocksGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -137,7 +137,7 @@ class ProgramBlocksGridControl extends Control
 
         $grid->addColumnText('lectors', 'admin.program.blocks_lectors', 'lectorsText')
             ->setFilterMultiSelect($this->userRepository->getLectorsOptions())
-            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values) : void {
+            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
                 $qb->join('b.lectors', 'l')
                     ->andWhere('l.id IN (:lids)')
                     ->setParameter('lids', (array) $values);
@@ -183,7 +183,8 @@ class ProgramBlocksGridControl extends Control
                 return $row->getProgramsCount();
             });
 
-        if (($this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
+        if (
+            ($this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
                 $this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
             $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)
         ) {
@@ -215,7 +216,7 @@ class ProgramBlocksGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $block = $this->blockRepository->findById($id);
 
@@ -236,7 +237,7 @@ class ProgramBlocksGridControl extends Control
      *
      * @throws AbortException
      */
-    public function changeMandatory(string $id, string $mandatory) : void
+    public function changeMandatory(string $id, string $mandatory): void
     {
         $block = $this->blockRepository->findById((int) $id);
 
@@ -274,7 +275,7 @@ class ProgramBlocksGridControl extends Control
      *
      * @throws AbortException
      */
-    public function groupExportBlocksAttendees(array $ids) : void
+    public function groupExportBlocksAttendees(array $ids): void
     {
         $this->sessionSection->blockIds = $ids;
         $this->redirect('exportblocksattendees'); //presmerovani kvuli zruseni ajax
@@ -286,7 +287,7 @@ class ProgramBlocksGridControl extends Control
      * @throws AbortException
      * @throws Exception
      */
-    public function handleExportBlocksAttendees() : void
+    public function handleExportBlocksAttendees(): void
     {
         $ids = $this->session->getSection('srs')->blockIds;
 
@@ -300,7 +301,7 @@ class ProgramBlocksGridControl extends Control
     /**
      * Vrací true, pokud je uživatel oprávněn upravovat programový blok.
      */
-    public function isAllowedModifyBlock(Block $block) : bool
+    public function isAllowedModifyBlock(Block $block): bool
     {
         /** @var AdminBasePresenter $presenter */
         $presenter = $this->getPresenter();

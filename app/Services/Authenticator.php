@@ -64,7 +64,7 @@ class Authenticator implements IAuthenticator
      * @throws ORMException
      * @throws Exception
      */
-    public function authenticate(array $credentials) : IIdentity
+    public function authenticate(array $credentials): IIdentity
     {
         $skautISUser = $this->skautIsService->getUserDetail();
 
@@ -104,7 +104,7 @@ class Authenticator implements IAuthenticator
      *
      * @throws Exception
      */
-    private function updateUserFromSkautIS(User $user, stdClass $skautISUser) : void
+    private function updateUserFromSkautIS(User $user, stdClass $skautISUser): void
     {
         $skautISPerson = $this->skautIsService->getPersonDetail($skautISUser->ID_Person);
 
@@ -151,7 +151,7 @@ class Authenticator implements IAuthenticator
     /**
      * Aktualizuje role přihlášeného uživatele.
      */
-    public function updateRoles(NS\User $user, ?Role $testedRole = null) : void
+    public function updateRoles(NS\User $user, ?Role $testedRole = null): void
     {
         $dbuser = $this->userRepository->findById($user->id);
 

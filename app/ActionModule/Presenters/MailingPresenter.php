@@ -29,7 +29,7 @@ class MailingPresenter extends ActionBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionVerify(string $code) : void
+    public function actionVerify(string $code): void
     {
         if ($code === $this->settingsService->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE)) {
             $newEmail = $this->settingsService->getValue(Settings::SEMINAR_EMAIL_UNVERIFIED);

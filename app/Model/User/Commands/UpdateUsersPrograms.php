@@ -23,7 +23,7 @@ class UpdateUsersPrograms
     /**
      * @return Collection<User>
      */
-    public function getUsers() : Collection
+    public function getUsers(): Collection
     {
         return $this->users;
     }

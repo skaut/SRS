@@ -55,7 +55,7 @@ class MaturityPresenter extends ActionBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function actionCancelApplications() : void
+    public function actionCancelApplications(): void
     {
         $cancelRegistration = $this->settingsService->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY);
         if ($cancelRegistration !== null) {
@@ -65,7 +65,7 @@ class MaturityPresenter extends ActionBasePresenter
         }
 
         foreach ($this->userRepository->findAllWithWaitingForPaymentApplication() as $user) {
-            $this->em->transactional(function () use ($user, $cancelRegistrationDate) : void {
+            $this->em->transactional(function () use ($user, $cancelRegistrationDate): void {
                 // odhlášení účastníků s nezaplacnou přihláškou rolí
                 foreach ($user->getWaitingForPaymentRolesApplications() as $application) {
                     $maturityDate = $application->getMaturityDate();
@@ -113,7 +113,7 @@ class MaturityPresenter extends ActionBasePresenter
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function actionSendReminders() : void
+    public function actionSendReminders(): void
     {
         $maturityReminder = $this->settingsService->getIntValue(Settings::MATURITY_REMINDER);
         if ($maturityReminder !== null) {

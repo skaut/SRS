@@ -10,7 +10,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita sleva.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Structure\Repositories\DiscountRepository")
+ * @ORM\Entity
  * @ORM\Table(name="discount")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
@@ -39,27 +39,27 @@ class Discount
      */
     protected int $discount;
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getDiscountCondition() : string
+    public function getDiscountCondition(): string
     {
         return $this->discountCondition;
     }
 
-    public function setDiscountCondition(string $discountCondition) : void
+    public function setDiscountCondition(string $discountCondition): void
     {
         $this->discountCondition = $discountCondition;
     }
 
-    public function getDiscount() : int
+    public function getDiscount(): int
     {
         return $this->discount;
     }
 
-    public function setDiscount(int $discount) : void
+    public function setDiscount(int $discount): void
     {
         $this->discount = $discount;
     }

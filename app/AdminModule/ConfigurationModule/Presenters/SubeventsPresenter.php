@@ -33,23 +33,23 @@ class SubeventsPresenter extends ConfigurationBasePresenter
     /** @inject */
     public SubeventRepository $subeventRepository;
 
-    public function renderEdit(int $id) : void
+    public function renderEdit(int $id): void
     {
         $subevent = $this->subeventRepository->findById($id);
 
         $this->template->editedSubevent = $subevent;
     }
 
-    protected function createComponentSubeventsGrid() : SubeventsGridControl
+    protected function createComponentSubeventsGrid(): SubeventsGridControl
     {
         return $this->subeventsGridControlFactory->create();
     }
 
-    protected function createComponentSubeventForm() : Form
+    protected function createComponentSubeventForm(): Form
     {
         $form = $this->subeventFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.configuration.subevents_saved', 'success');
             }
@@ -64,11 +64,11 @@ class SubeventsPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentSubeventsForm() : Form
+    protected function createComponentSubeventsForm(): Form
     {
         $form = $this->subeventsFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
             $this->redirect('this');
         };

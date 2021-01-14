@@ -22,7 +22,7 @@ class NewsRepository extends EntityRepository
     /**
      * Vrací aktualitu podle id.
      */
-    public function findById(?int $id) : ?News
+    public function findById(?int $id): ?News
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -33,7 +33,7 @@ class NewsRepository extends EntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function findLastId() : int
+    public function findLastId(): int
     {
         return (int) $this->createQueryBuilder('n')
             ->select('MAX(n.id)')
@@ -46,7 +46,7 @@ class NewsRepository extends EntityRepository
      *
      * @return News[]
      */
-    public function findPublishedOrderedByPinnedAndDate(?int $maxCount) : array
+    public function findPublishedOrderedByPinnedAndDate(?int $maxCount): array
     {
         return $this->createQueryBuilder('n')
             ->where($this->createQueryBuilder('n')->expr()->lte('n.published', 'CURRENT_TIMESTAMP()'))
@@ -62,7 +62,7 @@ class NewsRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function save(News $news) : void
+    public function save(News $news): void
     {
         $this->_em->persist($news);
         $this->_em->flush();
@@ -73,7 +73,7 @@ class NewsRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function remove(News $document) : void
+    public function remove(News $document): void
     {
         $this->_em->remove($document);
         $this->_em->flush();

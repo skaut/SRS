@@ -26,22 +26,22 @@ class BlockUpdatedEvent
         $this->originalMandatory = $originalMandatory;
     }
 
-    public function getBlock() : Block
+    public function getBlock(): Block
     {
         return $this->block;
     }
 
-    public function getOriginalCategory() : ?Category
+    public function getOriginalCategory(): ?Category
     {
         return $this->originalCategory;
     }
 
-    public function getOriginalSubevent() : Subevent
+    public function getOriginalSubevent(): Subevent
     {
         return $this->originalSubevent;
     }
 
-    public function getOriginalMandatory() : string
+    public function getOriginalMandatory(): string
     {
         return $this->originalMandatory;
     }

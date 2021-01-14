@@ -12,6 +12,7 @@ use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
+
 use function abs;
 use function number_format;
 
@@ -35,7 +36,7 @@ class PlacePointsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/place_points_grid.latte');
         $this->template->render();
@@ -46,7 +47,7 @@ class PlacePointsGridControl extends Control
      *
      * @throws DataGridException
      */
-    public function createComponentPlacePointsGrid(string $name) : void
+    public function createComponentPlacePointsGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -87,7 +88,7 @@ class PlacePointsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $input = $this->placePointRepository->findById($id);
         $this->placePointRepository->remove($input);

@@ -26,14 +26,14 @@ class SaveBlockHandler implements MessageHandlerInterface
         $this->blockRepository = $blockRepository;
     }
 
-    public function __invoke(SaveBlock $command) : void
+    public function __invoke(SaveBlock $command): void
     {
         $block = $command->getBlock();
 
         if ($block->getId() === null) {
             $this->blockRepository->save($block);
         } else {
-            $this->em->transactional(function () use ($block) : void {
+            $this->em->transactional(function () use ($block): void {
                 $originalBlock = $this->blockRepository->findById($block->getId());
 
                 $originalCategory  = $originalBlock->getCategory();

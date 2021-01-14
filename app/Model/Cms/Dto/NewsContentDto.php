@@ -22,7 +22,7 @@ class NewsContentDto extends ContentDto
         $this->count = $count;
     }
 
-    public function getCount() : ?int
+    public function getCount(): ?int
     {
         return $this->count;
     }

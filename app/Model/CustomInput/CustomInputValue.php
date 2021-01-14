@@ -45,30 +45,30 @@ abstract class CustomInputValue
      */
     protected User $user;
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getInput() : CustomInput
+    public function getInput(): CustomInput
     {
         return $this->input;
     }
 
-    public function setInput(CustomInput $input) : void
+    public function setInput(CustomInput $input): void
     {
         $this->input = $input;
     }
 
-    public function getUser() : User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUser(User $user) : void
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
-    abstract public function getValueText() : string;
+    abstract public function getValueText(): string;
 }

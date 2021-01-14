@@ -69,7 +69,7 @@ class Document
         $this->tags = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -77,7 +77,7 @@ class Document
     /**
      * @return Collection|Tag[]
      */
-    public function getTags() : Collection
+    public function getTags(): Collection
     {
         return $this->tags;
     }
@@ -85,7 +85,7 @@ class Document
     /**
      * @param Collection|Tag[] $tags
      */
-    public function setTags(Collection $tags) : void
+    public function setTags(Collection $tags): void
     {
         $this->tags->clear();
         foreach ($tags as $tag) {
@@ -93,42 +93,42 @@ class Document
         }
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getFile() : string
+    public function getFile(): string
     {
         return $this->file;
     }
 
-    public function setFile(string $file) : void
+    public function setFile(string $file): void
     {
         $this->file = $file;
     }
 
-    public function getDescription() : ?string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(?string $description) : void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
 
-    public function getTimestamp() : DateTimeImmutable
+    public function getTimestamp(): DateTimeImmutable
     {
         return $this->timestamp;
     }
 
-    public function setTimestamp(DateTimeImmutable $timestamp) : void
+    public function setTimestamp(DateTimeImmutable $timestamp): void
     {
         $this->timestamp = $timestamp;
     }

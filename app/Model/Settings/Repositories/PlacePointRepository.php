@@ -16,7 +16,7 @@ use Doctrine\ORM\ORMException;
  */
 class PlacePointRepository extends EntityRepository
 {
-    public function findById(?int $id) : ?PlacePoint
+    public function findById(?int $id): ?PlacePoint
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -24,7 +24,7 @@ class PlacePointRepository extends EntityRepository
     /**
      * @throws ORMException
      */
-    public function save(PlacePoint $placePoint) : void
+    public function save(PlacePoint $placePoint): void
     {
         $this->_em->persist($placePoint);
         $this->_em->flush();
@@ -33,7 +33,7 @@ class PlacePointRepository extends EntityRepository
     /**
      * @throws ORMException
      */
-    public function remove(PlacePoint $placePoint) : void
+    public function remove(PlacePoint $placePoint): void
     {
         $this->_em->remove($placePoint);
         $this->_em->flush();

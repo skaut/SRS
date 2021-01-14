@@ -45,7 +45,7 @@ class FaqFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -67,7 +67,7 @@ class FaqFormFactory
      * @throws NonUniqueResultException
      * @throws ORMException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         $faq = new Faq();
 

@@ -16,6 +16,7 @@ use Doctrine\ORM\ORMException;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Throwable;
+
 use function array_map;
 
 /**
@@ -50,7 +51,7 @@ class CmsService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function savePage(Page $page) : void
+    public function savePage(Page $page): void
     {
         $this->pageRepository->save($page);
         $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);
@@ -64,7 +65,7 @@ class CmsService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function removePage(Page $page) : void
+    public function removePage(Page $page): void
     {
         $this->pageRepository->remove($page);
         $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);
@@ -77,7 +78,7 @@ class CmsService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function sort(int $itemId, int $prevId, int $nextId) : void
+    public function sort(int $itemId, int $prevId, int $nextId): void
     {
         $this->pageRepository->sort($itemId, $prevId, $nextId);
         $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);
@@ -89,7 +90,7 @@ class CmsService
      *
      * @throws Throwable
      */
-    public function findPublishedBySlugDto(string $slug) : ?PageDto
+    public function findPublishedBySlugDto(string $slug): ?PageDto
     {
         $pageDto = $this->pageCache->load($slug);
         if ($pageDto === null) {
@@ -110,7 +111,7 @@ class CmsService
      *
      * @throws Throwable
      */
-    public function findPublishedOrderedByPositionDto() : array
+    public function findPublishedOrderedByPositionDto(): array
     {
         $pagesDto = $this->menuCache->load(null);
         if ($pagesDto === null) {
@@ -132,7 +133,7 @@ class CmsService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function saveContent(Content $content) : void
+    public function saveContent(Content $content): void
     {
         $this->contentRepository->save($content);
         $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);
@@ -145,7 +146,7 @@ class CmsService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function removeContent(Content $content) : void
+    public function removeContent(Content $content): void
     {
         $this->contentRepository->remove($content);
         $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);

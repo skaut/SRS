@@ -51,7 +51,7 @@ class ProgramsContentControl extends Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function render(ContentDto $content) : void
+    public function render(ContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/programs_content.latte');

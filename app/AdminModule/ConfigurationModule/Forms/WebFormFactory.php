@@ -17,7 +17,9 @@ use Nette\Utils\Strings;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
+
 use function array_key_exists;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -56,7 +58,7 @@ class WebFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -100,7 +102,7 @@ class WebFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         /** @var FileUpload $logo */
         $logo = $values->logo;

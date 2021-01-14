@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
+
 use function implode;
 
 /**
@@ -129,42 +130,42 @@ abstract class CustomInput
         $this->customInputValues = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function isMandatory() : bool
+    public function isMandatory(): bool
     {
         return $this->mandatory;
     }
 
-    public function setMandatory(bool $mandatory) : void
+    public function setMandatory(bool $mandatory): void
     {
         $this->mandatory = $mandatory;
     }
 
-    public function getPosition() : int
+    public function getPosition(): int
     {
         return $this->position;
     }
 
-    public function setPosition(int $position) : void
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }
 
-    public function getType() : string
+    public function getType(): string
     {
         return $this->type;
     }
@@ -172,7 +173,7 @@ abstract class CustomInput
     /**
      * @return Collection|CustomInputValue[]
      */
-    public function getCustomInputValues() : Collection
+    public function getCustomInputValues(): Collection
     {
         return $this->customInputValues;
     }
@@ -180,7 +181,7 @@ abstract class CustomInput
     /**
      * @return Role[]|Collection
      */
-    public function getRoles() : Collection
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
@@ -188,12 +189,12 @@ abstract class CustomInput
     /**
      * @param Role[]|Collection $roles
      */
-    public function setRoles(Collection $roles) : void
+    public function setRoles(Collection $roles): void
     {
         $this->roles = $roles;
     }
 
-    public function getRolesText() : string
+    public function getRolesText(): string
     {
         return implode(', ', $this->roles->map(static function (Role $role) {
             return $role->getName();

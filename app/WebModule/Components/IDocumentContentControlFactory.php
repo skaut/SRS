@@ -12,5 +12,5 @@ namespace App\WebModule\Components;
  */
 interface IDocumentContentControlFactory
 {
-    public function create() : DocumentContentControl;
+    public function create(): DocumentContentControl;
 }

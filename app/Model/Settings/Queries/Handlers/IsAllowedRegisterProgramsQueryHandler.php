@@ -20,7 +20,7 @@ class IsAllowedRegisterProgramsQueryHandler implements MessageHandlerInterface
         $this->settingsService = $settingsService;
     }
 
-    public function __invoke(IsAllowedRegisterProgramsQuery $query) : bool
+    public function __invoke(IsAllowedRegisterProgramsQuery $query): bool
     {
         $registerProgramsType = $this->settingsService->getValue(Settings::REGISTER_PROGRAMS_TYPE);
 

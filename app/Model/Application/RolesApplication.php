@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entita přihláška rolí.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Application\Repositories\RolesApplicationRepository")
+ * @ORM\Entity
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
@@ -22,7 +22,7 @@ class RolesApplication extends Application
     /**
      * @param Collection|Role[] $roles
      */
-    public function setRoles(Collection $roles) : void
+    public function setRoles(Collection $roles): void
     {
         $this->roles->clear();
         foreach ($roles as $role) {

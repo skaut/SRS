@@ -21,7 +21,7 @@ class DocumentRepository extends EntityRepository
     /**
      * Vrátí dokument podle id.
      */
-    public function findById(?int $id) : ?Document
+    public function findById(?int $id): ?Document
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -34,7 +34,7 @@ class DocumentRepository extends EntityRepository
      *
      * @return Collection|Document[]
      */
-    public function findRolesAllowedByTagsOrderedByName(array $rolesIds, array $tagsIds) : Collection
+    public function findRolesAllowedByTagsOrderedByName(array $rolesIds, array $tagsIds): Collection
     {
         $result = $this->createQueryBuilder('d')
             ->select('d')
@@ -56,7 +56,7 @@ class DocumentRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function save(Document $document) : void
+    public function save(Document $document): void
     {
         $this->_em->persist($document);
         $this->_em->flush();
@@ -67,7 +67,7 @@ class DocumentRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function remove(Document $document) : void
+    public function remove(Document $document): void
     {
         $this->_em->remove($document);
         $this->_em->flush();

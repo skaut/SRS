@@ -19,6 +19,7 @@ use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
+
 use function assert;
 use function strpos;
 
@@ -51,7 +52,7 @@ class AuthPresenter extends BasePresenter
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function actionLogin(string $backlink = '') : void
+    public function actionLogin(string $backlink = ''): void
     {
         if (empty($this->getHttpRequest()->getPost())) {
             $loginUrl = $this->skautIsService->getLoginUrl($backlink);
@@ -81,7 +82,7 @@ class AuthPresenter extends BasePresenter
      *
      * @throws AbortException
      */
-    public function actionLogout() : void
+    public function actionLogout(): void
     {
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
@@ -99,7 +100,7 @@ class AuthPresenter extends BasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    private function redirectAfterLogin(?string $returnUrl) : void
+    private function redirectAfterLogin(?string $returnUrl): void
     {
         if ($returnUrl) {
             if (strpos($returnUrl, ':') !== false) {

@@ -52,12 +52,12 @@ class CapacitiesContent extends Content implements IContent
         $this->roles = new ArrayCollection();
     }
 
-    public function injectRoleRepository(RoleRepository $roleRepository) : void
+    public function injectRoleRepository(RoleRepository $roleRepository): void
     {
         $this->roleRepository = $roleRepository;
     }
 
-    public function injectAclService(AclService $aclService) : void
+    public function injectAclService(AclService $aclService): void
     {
         $this->aclService = $aclService;
     }
@@ -65,7 +65,7 @@ class CapacitiesContent extends Content implements IContent
     /**
      * @return Collection|Role[]
      */
-    public function getRoles() : Collection
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
@@ -73,7 +73,7 @@ class CapacitiesContent extends Content implements IContent
     /**
      * @param Collection|Role[] $roles
      */
-    public function setRoles(Collection $roles) : void
+    public function setRoles(Collection $roles): void
     {
         $this->roles->clear();
         foreach ($roles as $role) {
@@ -84,7 +84,7 @@ class CapacitiesContent extends Content implements IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
-    public function addContentForm(Form $form) : Form
+    public function addContentForm(Form $form): Form
     {
         parent::addContentForm($form);
 
@@ -103,7 +103,7 @@ class CapacitiesContent extends Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(Form $form, stdClass $values) : void
+    public function contentFormSucceeded(Form $form, stdClass $values): void
     {
         parent::contentFormSucceeded($form, $values);
         $formName    = $this->getContentFormName();
@@ -111,7 +111,7 @@ class CapacitiesContent extends Content implements IContent
         $this->roles = $this->roleRepository->findRolesByIds($values->roles);
     }
 
-    public function convertToDto() : ContentDto
+    public function convertToDto(): ContentDto
     {
         return new CapacitiesContentDto($this->getComponentName(), $this->heading, Helpers::getIds($this->roles));
     }

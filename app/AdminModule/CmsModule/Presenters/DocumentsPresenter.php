@@ -23,12 +23,12 @@ class DocumentsPresenter extends CmsBasePresenter
     /** @inject */
     public IDocumentTagsGridControlFactory $documentTagsGridControlFactory;
 
-    protected function createComponentDocumentsGrid() : DocumentsGridControl
+    protected function createComponentDocumentsGrid(): DocumentsGridControl
     {
         return $this->documentsGridControlFactory->create();
     }
 
-    protected function createComponentDocumentTagsGrid() : DocumentTagsGridControl
+    protected function createComponentDocumentTagsGrid(): DocumentTagsGridControl
     {
         return $this->documentTagsGridControlFactory->create();
     }

@@ -17,7 +17,7 @@ class RemoveBlockHandler implements MessageHandlerInterface
         $this->blockRepository = $blockRepository;
     }
 
-    public function __invoke(RemoveBlock $command) : void
+    public function __invoke(RemoveBlock $command): void
     {
         $this->blockRepository->remove($command->getBlock());
     }

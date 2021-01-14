@@ -24,6 +24,7 @@ use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
+
 use function array_key_exists;
 use function in_array;
 
@@ -81,7 +82,7 @@ class EditRoleFormFactory
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->role = $this->roleRepository->findById($id);
 
@@ -211,13 +212,13 @@ class EditRoleFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;
         }
 
-        $this->em->transactional(function () use ($values) : void {
+        $this->em->transactional(function () use ($values): void {
             $capacity = $values->capacity !== '' ? $values->capacity : null;
 
             $this->role->setName($values->name);
@@ -254,7 +255,7 @@ class EditRoleFormFactory
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    private function preparePermissionsOptions() : array
+    private function preparePermissionsOptions(): array
     {
         $options = [];
 
@@ -289,7 +290,7 @@ class EditRoleFormFactory
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    private function preparePermissionOption(?array &$optionsGroup, string $permissionName, string $resourceName) : void
+    private function preparePermissionOption(?array &$optionsGroup, string $permissionName, string $resourceName): void
     {
         $permission                         = $this->permissionRepository->findByPermissionAndResourceName($permissionName, $resourceName);
         $optionsGroup[$permission->getId()] = 'common.permission_name.' . $permissionName . '.' . $resourceName;
@@ -302,7 +303,7 @@ class EditRoleFormFactory
      *
      * @throws ConnectionException
      */
-    public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args) : bool
+    public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args): bool
     {
         $incompatibleRoles = $this->roleRepository->findRolesByIds($args[0]);
         $requiredRoles     = $this->roleRepository->findRolesByIds($args[1]);
@@ -337,7 +338,7 @@ class EditRoleFormFactory
      *
      * @param string[][] $args
      */
-    public function validateRedirectAllowed(SelectBox $field, array $args) : bool
+    public function validateRedirectAllowed(SelectBox $field, array $args): bool
     {
         return in_array($field->getValue(), $args[0]);
     }

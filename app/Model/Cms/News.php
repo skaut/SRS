@@ -42,37 +42,37 @@ class News
      */
     protected bool $pinned = false;
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getText() : string
+    public function getText(): string
     {
         return $this->text;
     }
 
-    public function setText(string $text) : void
+    public function setText(string $text): void
     {
         $this->text = $text;
     }
 
-    public function getPublished() : DateTimeImmutable
+    public function getPublished(): DateTimeImmutable
     {
         return $this->published;
     }
 
-    public function setPublished(DateTimeImmutable $published) : void
+    public function setPublished(DateTimeImmutable $published): void
     {
         $this->published = $published;
     }
 
-    public function isPinned() : bool
+    public function isPinned(): bool
     {
         return $this->pinned;
     }
 
-    public function setPinned(bool $pinned) : void
+    public function setPinned(bool $pinned): void
     {
         $this->pinned = $pinned;
     }

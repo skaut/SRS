@@ -16,6 +16,7 @@ use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Bridges\ApplicationLatte\Template;
 use Throwable;
+
 use function random_bytes;
 
 /**
@@ -47,7 +48,7 @@ class TicketPresenter extends ExportBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function actionPdf() : void
+    public function actionPdf(): void
     {
         if (! $this->user->isLoggedIn()) {
             throw new ForbiddenRequestException();

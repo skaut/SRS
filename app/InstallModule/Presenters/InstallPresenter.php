@@ -65,7 +65,7 @@ class InstallPresenter extends InstallBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function renderDefault() : void
+    public function renderDefault(): void
     {
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
@@ -88,7 +88,7 @@ class InstallPresenter extends InstallBasePresenter
      *
      * @throws Exception
      */
-    public function handleImportSchema() : void
+    public function handleImportSchema(): void
     {
         $this->consoleApplication->add(new MigrateCommand());
         $this->consoleApplication->setAutoExit(false);
@@ -113,7 +113,7 @@ class InstallPresenter extends InstallBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function renderAdmin() : void
+    public function renderAdmin(): void
     {
         try {
             if ($this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
@@ -130,7 +130,7 @@ class InstallPresenter extends InstallBasePresenter
             return;
         }
 
-        $this->em->transactional(function () : void {
+        $this->em->transactional(function (): void {
             $user = $this->userRepository->findById($this->user->id);
             $this->userRepository->save($user);
 
@@ -158,7 +158,7 @@ class InstallPresenter extends InstallBasePresenter
      *
      * @throws AbortException
      */
-    public function handleCreateAdmin() : void
+    public function handleCreateAdmin(): void
     {
         if ($this->checkSkautISConnection()) {
             $this->redirect(':Auth:login', ['backlink' => ':Install:Install:admin']);
@@ -173,7 +173,7 @@ class InstallPresenter extends InstallBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function renderFinish() : void
+    public function renderFinish(): void
     {
         try {
             if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
@@ -192,7 +192,7 @@ class InstallPresenter extends InstallBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function renderInstalled() : void
+    public function renderInstalled(): void
     {
         try {
             if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
@@ -208,7 +208,7 @@ class InstallPresenter extends InstallBasePresenter
     /**
      * Vyzkouší připojení ke skautIS pomocí anonymní funkce.
      */
-    private function checkSkautISConnection() : bool
+    private function checkSkautISConnection(): bool
     {
         try {
             $this->skautIs->org->UnitAllRegistryBasic();

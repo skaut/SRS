@@ -26,14 +26,14 @@ class SaveCategoryHandler implements MessageHandlerInterface
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function __invoke(SaveCategory $command) : void
+    public function __invoke(SaveCategory $command): void
     {
         $category = $command->getCategory();
 
         if ($category->getId() === null) {
             $this->categoryRepository->save($category);
         } else {
-            $this->em->transactional(function () use ($category) : void {
+            $this->em->transactional(function () use ($category): void {
                 $originalCategory = $this->categoryRepository->findById($category->getId());
 
                 $originalRegisterableRoles = clone $originalCategory->getRegisterableRoles();

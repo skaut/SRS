@@ -27,7 +27,7 @@ class TemplatesPresenter extends MailingBasePresenter
     /** @inject */
     public EditTemplateFormFactory $editTemplateFormFactory;
 
-    public function renderEdit(int $id) : void
+    public function renderEdit(int $id): void
     {
         $template = $this->templateRepository->findById($id);
 
@@ -35,16 +35,16 @@ class TemplatesPresenter extends MailingBasePresenter
         $this->template->translator     = $this->translator;
     }
 
-    protected function createComponentMailTemplatesGrid() : MailTemplatesGridControl
+    protected function createComponentMailTemplatesGrid(): MailTemplatesGridControl
     {
         return $this->mailTemplatesGridControlFactory->create();
     }
 
-    protected function createComponentEditTemplateForm() : Form
+    protected function createComponentEditTemplateForm(): Form
     {
         $form = $this->editTemplateFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Templates:default');
             }

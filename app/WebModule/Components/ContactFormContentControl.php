@@ -42,7 +42,7 @@ class ContactFormContentControl extends Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function render(ContentDto $content) : void
+    public function render(ContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/contact_form_content.latte');
@@ -58,11 +58,11 @@ class ContactFormContentControl extends Control
         $template->render();
     }
 
-    public function createComponentContactForm() : ContactForm
+    public function createComponentContactForm(): ContactForm
     {
         $form = $this->contactFormFactory->create();
 
-        $form->onSave[] = function () : void {
+        $form->onSave[] = function (): void {
             $this->getPresenter()->flashMessage('web.contact_form_content.send_message_successful', 'success');
 
             $this->getPresenter()->redirect('this');

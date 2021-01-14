@@ -25,7 +25,7 @@ class ProgramRegisteredEventListener implements MessageHandlerInterface
         $this->settingsService = $settingsService;
     }
 
-    public function __invoke(ProgramRegisteredEvent $event) : void
+    public function __invoke(ProgramRegisteredEvent $event): void
     {
         if (! $event->isAlternate() && $event->isNotifyUser()) {
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$event->getUser()]), null, Template::PROGRAM_REGISTERED, [

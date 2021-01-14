@@ -30,14 +30,14 @@ class UnregisterProgramHandler implements MessageHandlerInterface
         $this->programApplicationRepository = $programApplicationRepository;
     }
 
-    public function __invoke(UnregisterProgram $command) : void
+    public function __invoke(UnregisterProgram $command): void
     {
         $programApplication = $this->programApplicationRepository->findUserProgramApplication($command->getUser(), $command->getProgram());
         if ($programApplication === null) {
             throw new UserNotAttendsProgramException();
         }
 
-        $this->em->transactional(function () use ($command, $programApplication) : void {
+        $this->em->transactional(function () use ($command, $programApplication): void {
             $alternate = $programApplication->isAlternate();
             $this->programApplicationRepository->remove($programApplication);
             $this->eventBus->handle(new ProgramUnregisteredEvent($command->getUser(), $command->getProgram(), $alternate, $command->isNotifyUser()));

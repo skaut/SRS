@@ -50,7 +50,7 @@ class BankFormFactory
      *
      * @throws Throwable
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -83,7 +83,7 @@ class BankFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         $token = $values->bankToken;
         $from  = $values->bankDownloadFrom;
@@ -102,7 +102,7 @@ class BankFormFactory
     /**
      * Ověří, že datum počátku stahování transakcí je v minulosti.
      */
-    public function validateBankDownloadFromDate(DateControl $field) : bool
+    public function validateBankDownloadFromDate(DateControl $field): bool
     {
         return $field->getValue() <= new DateTimeImmutable();
     }

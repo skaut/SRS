@@ -33,7 +33,7 @@ class CalendarView
      *
      * @return string[]
      */
-    public static function getCalendarViewsOptions() : array
+    public static function getCalendarViewsOptions(): array
     {
         $options = [];
         foreach (self::$views as $view) {

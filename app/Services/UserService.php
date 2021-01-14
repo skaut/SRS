@@ -47,7 +47,7 @@ class UserService
     /**
      * Vrací informaci o členství jako text.
      */
-    public function getMembershipText(User $user) : string
+    public function getMembershipText(User $user): string
     {
         if ($user->getUnit() !== null) {
             return $user->getUnit();
@@ -67,7 +67,7 @@ class UserService
     /**
      * Vrací platební metodu uživatele.
      */
-    public function getPaymentMethod(User $user) : ?string
+    public function getPaymentMethod(User $user): ?string
     {
         $paymentMethod = null;
 
@@ -94,7 +94,7 @@ class UserService
      *
      * @throws ORMException
      */
-    public function approveUser(User $user) : void
+    public function approveUser(User $user): void
     {
         if ($user->isApproved()) {
             return;
@@ -113,7 +113,7 @@ class UserService
      *
      * @throws ORMException
      */
-    public function unapproveUser(User $user) : void
+    public function unapproveUser(User $user): void
     {
         if (! $user->isApproved()) {
             return;
@@ -128,7 +128,7 @@ class UserService
      *
      * @throws ORMException
      */
-    public function setApproved(User $user, bool $approved) : void
+    public function setApproved(User $user, bool $approved): void
     {
         if ($approved) {
             $this->approveUser($user);

@@ -12,5 +12,5 @@ namespace App\WebModule\Components;
  */
 interface INewsContentControlFactory
 {
-    public function create() : NewsContentControl;
+    public function create(): NewsContentControl;
 }

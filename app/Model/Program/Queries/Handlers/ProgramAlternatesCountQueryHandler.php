@@ -17,7 +17,7 @@ class ProgramAlternatesCountQueryHandler implements MessageHandlerInterface
         $this->userRepository = $userRepository;
     }
 
-    public function __invoke(ProgramAlternatesCountQuery $query) : int
+    public function __invoke(ProgramAlternatesCountQuery $query): int
     {
         return $this->userRepository->countProgramAlternates($query->getProgram());
     }

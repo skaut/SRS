@@ -25,17 +25,17 @@ class CustomDateValue extends CustomInputValue
      */
     protected ?DateTimeImmutable $value = null;
 
-    public function getValue() : ?DateTimeImmutable
+    public function getValue(): ?DateTimeImmutable
     {
         return $this->value;
     }
 
-    public function setValue(?DateTimeImmutable $value) : void
+    public function setValue(?DateTimeImmutable $value): void
     {
         $this->value = $value;
     }
 
-    public function getValueText() : string
+    public function getValueText(): string
     {
         return $this->value ? $this->value->format(Helpers::DATE_FORMAT) : '';
     }

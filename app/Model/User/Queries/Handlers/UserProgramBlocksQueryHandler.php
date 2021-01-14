@@ -22,7 +22,7 @@ class UserProgramBlocksQueryHandler implements MessageHandlerInterface
     /**
      * @return Collection<Block>
      */
-    public function __invoke(UserProgramBlocksQuery $query) : Collection
+    public function __invoke(UserProgramBlocksQuery $query): Collection
     {
         return $this->blockRepository->findUserAttends($query->getUser());
     }

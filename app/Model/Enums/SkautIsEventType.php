@@ -27,7 +27,7 @@ class SkautIsEventType
      *
      * @return string[]
      */
-    public static function getSkautIsEventTypesOptions() : array
+    public static function getSkautIsEventTypesOptions(): array
     {
         $options = [];
         foreach (self::$types as $type) {

@@ -29,12 +29,12 @@ class Recipient
         $this->name  = $name;
     }
 
-    public function getEmail() : string
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function getName() : ?string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -42,7 +42,7 @@ class Recipient
     /**
      * Vytvoří objekt na základě údajů uživatele.
      */
-    public static function createFromUser(User $user) : Recipient
+    public static function createFromUser(User $user): Recipient
     {
         return new Recipient($user->getEmail(), $user->getDisplayName());
     }

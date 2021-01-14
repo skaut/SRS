@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
+
 use function array_map;
 
 /**
@@ -22,7 +23,7 @@ class SkautIsCourseRepository extends EntityRepository
     /**
      * Vrací skautIS kurz podle id.
      */
-    public function findById(?int $id) : ?SkautIsCourse
+    public function findById(?int $id): ?SkautIsCourse
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -32,7 +33,7 @@ class SkautIsCourseRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function save(SkautIsCourse $skautIsCourse) : void
+    public function save(SkautIsCourse $skautIsCourse): void
     {
         $this->_em->persist($skautIsCourse);
         $this->_em->flush();
@@ -43,7 +44,7 @@ class SkautIsCourseRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function remove(SkautIsCourse $skautIsCourse) : void
+    public function remove(SkautIsCourse $skautIsCourse): void
     {
         $this->_em->remove($skautIsCourse);
         $this->_em->flush();
@@ -54,7 +55,7 @@ class SkautIsCourseRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function removeAll() : void
+    public function removeAll(): void
     {
         foreach ($this->findAll() as $skautIsCourse) {
             $this->_em->remove($skautIsCourse);
@@ -70,7 +71,7 @@ class SkautIsCourseRepository extends EntityRepository
      *
      * @return int[]
      */
-    public function findSkautIsCoursesIds(Collection $skautIsCourses) : array
+    public function findSkautIsCoursesIds(Collection $skautIsCourses): array
     {
         return array_map(static function (SkautIsCourse $skautIsCourse) {
             return $skautIsCourse->getId();
@@ -84,7 +85,7 @@ class SkautIsCourseRepository extends EntityRepository
      *
      * @return Collection|SkautIsCourse[]
      */
-    public function findSkautIsCoursesByIds(array $ids) : Collection
+    public function findSkautIsCoursesByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
@@ -98,7 +99,7 @@ class SkautIsCourseRepository extends EntityRepository
      *
      * @return string[]
      */
-    public function getSkautIsCoursesOptions() : array
+    public function getSkautIsCoursesOptions(): array
     {
         $skautIsCourses = $this->createQueryBuilder('c')
             ->select('c.id, c.name')

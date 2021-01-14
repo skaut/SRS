@@ -26,7 +26,7 @@ class WebPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function renderDefault() : void
+    public function renderDefault(): void
     {
         $this->template->logo = $this->settingsService->getValue(Settings::LOGO);
     }
@@ -35,11 +35,11 @@ class WebPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentSettingsForm() : Form
+    protected function createComponentSettingsForm(): Form
     {
         $form = $this->webFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');

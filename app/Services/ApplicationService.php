@@ -43,10 +43,12 @@ use ReflectionException;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
+
 use function abs;
 use function implode;
 use function str_pad;
 use function strval;
+
 use const STR_PAD_LEFT;
 
 /**
@@ -137,7 +139,7 @@ class ApplicationService
         Collection $subevents,
         User $createdBy,
         bool $approve = false
-    ) : void {
+    ): void {
         $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
         $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
 
@@ -192,7 +194,7 @@ class ApplicationService
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function updateRoles(User $user, Collection $roles, ?User $createdBy, bool $approve = false) : void
+    public function updateRoles(User $user, Collection $roles, ?User $createdBy, bool $approve = false): void
     {
         $originalRoles = clone $user->getRoles();
 
@@ -201,7 +203,7 @@ class ApplicationService
             return; //todo: overit
         }
 
-        $this->em->transactional(function () use ($user, $roles, $createdBy, $approve, $originalRoles) : void {
+        $this->em->transactional(function () use ($user, $roles, $createdBy, $approve, $originalRoles): void {
             if ($originalRoles->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
                 $this->createRolesApplication($user, $roles, $createdBy, $approve);
                 $this->createSubeventsApplication($user, new ArrayCollection([$this->subeventRepository->findImplicit()]), $createdBy);
@@ -211,13 +213,17 @@ class ApplicationService
                 $user->setRoles($roles);
                 $this->userRepository->save($user);
 
-                if ($roles->forAll(static function (int $key, Role $role) {
-                    return $role->isApprovedAfterRegistration();
-                })) {
+                if (
+                    $roles->forAll(static function (int $key, Role $role) {
+                        return $role->isApprovedAfterRegistration();
+                    })
+                ) {
                     $user->setApproved(true);
-                } elseif (! $approve && $roles->exists(static function (int $key, Role $role) use ($originalRoles) {
-                    return ! $role->isApprovedAfterRegistration() && ! $originalRoles->contains($role);
-                })) {
+                } elseif (
+                    ! $approve && $roles->exists(static function (int $key, Role $role) use ($originalRoles) {
+                        return ! $role->isApprovedAfterRegistration() && ! $originalRoles->contains($role);
+                    })
+                ) {
                     $user->setApproved(false);
                 }
 
@@ -275,9 +281,9 @@ class ApplicationService
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function cancelRegistration(User $user, string $state, ?User $createdBy) : void
+    public function cancelRegistration(User $user, string $state, ?User $createdBy): void
     {
-        $this->em->transactional(function () use ($user, $state, $createdBy) : void {
+        $this->em->transactional(function () use ($user, $state, $createdBy): void {
             $user->setApproved(true);
             $user->getRoles()->clear();
             $user->setRolesApplicationDate(null);
@@ -334,9 +340,9 @@ class ApplicationService
      *
      * @throws Throwable
      */
-    public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy) : void
+    public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy): void
     {
-        $this->em->transactional(function () use ($user, $subevents, $createdBy) : void {
+        $this->em->transactional(function () use ($user, $subevents, $createdBy): void {
             $this->incrementSubeventsOccupancy($subevents);
 
             $this->createSubeventsApplication($user, $subevents, $createdBy);
@@ -360,7 +366,7 @@ class ApplicationService
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function updateSubeventsApplication(SubeventsApplication $application, Collection $subevents, User $createdBy) : void
+    public function updateSubeventsApplication(SubeventsApplication $application, Collection $subevents, User $createdBy): void
     {
         if (! $application->isValid()) {
             return;
@@ -373,7 +379,7 @@ class ApplicationService
             return; //todo: overit
         }
 
-        $this->em->transactional(function () use ($application, $subevents, $createdBy) : void {
+        $this->em->transactional(function () use ($application, $subevents, $createdBy): void {
             $this->incrementSubeventsOccupancy($subevents);
 
             $user = $application->getUser();
@@ -408,13 +414,13 @@ class ApplicationService
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function cancelSubeventsApplication(SubeventsApplication $application, string $state, ?User $createdBy) : void
+    public function cancelSubeventsApplication(SubeventsApplication $application, string $state, ?User $createdBy): void
     {
         if (! $application->isValid()) {
             return;
         }
 
-        $this->em->transactional(function () use ($application, $state, $createdBy) : void {
+        $this->em->transactional(function () use ($application, $state, $createdBy): void {
             $user = $application->getUser();
 
             $newApplication = clone $application;
@@ -458,7 +464,7 @@ class ApplicationService
         ?DateTimeImmutable $paymentDate,
         ?DateTimeImmutable $maturityDate,
         ?User $createdBy
-    ) : void {
+    ): void {
         $oldPaymentMethod = $application->getPaymentMethod();
         $oldPaymentDate   = $application->getPaymentDate();
         $oldMaturityDate  = $application->getMaturityDate();
@@ -468,7 +474,7 @@ class ApplicationService
             return;
         }
 
-        $this->em->transactional(function () use ($application, $paymentMethod, $paymentDate, $maturityDate, $createdBy) : void {
+        $this->em->transactional(function () use ($application, $paymentMethod, $paymentDate, $maturityDate, $createdBy): void {
             $user = $application->getUser();
 
             $newApplication = clone $application;
@@ -500,9 +506,9 @@ class ApplicationService
      *
      * @throws Throwable
      */
-    public function createPayment(DateTimeImmutable $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null) : void
+    public function createPayment(DateTimeImmutable $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null): void
     {
-        $this->em->transactional(function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy) : void {
+        $this->em->transactional(function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy): void {
             $payment = new Payment();
 
             $payment->setDate($date);
@@ -540,7 +546,7 @@ class ApplicationService
      *
      * @throws Throwable
      */
-    public function createPaymentManual(DateTimeImmutable $date, float $amount, string $variableSymbol, User $createdBy) : void
+    public function createPaymentManual(DateTimeImmutable $date, float $amount, string $variableSymbol, User $createdBy): void
     {
         $this->createPayment($date, $amount, $variableSymbol, null, null, null, null, $createdBy);
     }
@@ -552,9 +558,9 @@ class ApplicationService
      *
      * @throws Throwable
      */
-    public function updatePayment(Payment $payment, ?DateTimeImmutable $date, ?float $amount, ?string $variableSymbol, Collection $pairedApplications, User $createdBy) : void
+    public function updatePayment(Payment $payment, ?DateTimeImmutable $date, ?float $amount, ?string $variableSymbol, Collection $pairedApplications, User $createdBy): void
     {
-        $this->em->transactional(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy) : void {
+        $this->em->transactional(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy): void {
             if ($date !== null) {
                 $payment->setDate($date);
             }
@@ -605,9 +611,9 @@ class ApplicationService
      *
      * @throws Throwable
      */
-    public function removePayment(Payment $payment, User $createdBy) : void
+    public function removePayment(Payment $payment, User $createdBy): void
     {
-        $this->em->transactional(function () use ($payment, $createdBy) : void {
+        $this->em->transactional(function () use ($payment, $createdBy): void {
             foreach ($payment->getPairedValidApplications() as $pairedApplication) {
                 $this->updateApplicationPayment($pairedApplication, null, null, $pairedApplication->getMaturityDate(), $createdBy);
             }
@@ -619,13 +625,13 @@ class ApplicationService
     /**
      * Vytvoří příjmový doklad a provede historizaci přihlášky.
      */
-    public function createIncomeProof(Application $application, User $createdBy) : void
+    public function createIncomeProof(Application $application, User $createdBy): void
     {
         if ($application->getPaymentMethod() !== PaymentType::CASH) {
             return;
         }
 
-        $this->em->transactional(function () use ($application, $createdBy) : void {
+        $this->em->transactional(function () use ($application, $createdBy): void {
             $incomeProof = new IncomeProof();
             $this->incomeProofRepository->save($incomeProof);
 
@@ -643,7 +649,7 @@ class ApplicationService
     /**
      * Vrací stav přihlášky jako text.
      */
-    public function getStateText(Application $application) : string
+    public function getStateText(Application $application): string
     {
         $state = $this->translator->translate('common.application_state.' . $application->getState());
 
@@ -660,7 +666,7 @@ class ApplicationService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function isAllowedEditRegistration(User $user) : bool
+    public function isAllowedEditRegistration(User $user): bool
     {
         return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
             && ! $user->hasPaidAnyApplication()
@@ -673,7 +679,7 @@ class ApplicationService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function isAllowedEditApplication(Application $application) : bool
+    public function isAllowedEditApplication(Application $application): bool
     {
         return $application->getType() === Application::SUBEVENTS && ! $application->isCanceled()
             && $application->getState() !== ApplicationState::PAID
@@ -686,7 +692,7 @@ class ApplicationService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function isAllowedAddApplication(User $user) : bool
+    public function isAllowedAddApplication(User $user): bool
     {
         return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
             && $user->hasPaidEveryApplication()
@@ -700,7 +706,7 @@ class ApplicationService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function isAllowedEditCustomInputs() : bool
+    public function isAllowedEditCustomInputs(): bool
     {
         return $this->settingsService->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new DateTimeImmutable())->setTime(0, 0);
     }
@@ -714,7 +720,7 @@ class ApplicationService
      * @throws ReflectionException
      * @throws Throwable
      */
-    private function createRolesApplication(User $user, Collection $roles, User $createdBy, bool $approve = false) : RolesApplication
+    private function createRolesApplication(User $user, Collection $roles, User $createdBy, bool $approve = false): RolesApplication
     {
         if (! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
             throw new InvalidArgumentException('User is already registered.');
@@ -723,9 +729,11 @@ class ApplicationService
         $this->incrementRolesOccupancy($roles);
 
         $user->setApproved(true);
-        if (! $approve && $roles->exists(static function (int $key, Role $role) {
-            return ! $role->isApprovedAfterRegistration();
-        })) {
+        if (
+            ! $approve && $roles->exists(static function (int $key, Role $role) {
+                return ! $role->isApprovedAfterRegistration();
+            })
+        ) {
             $user->setApproved(false);
         }
 
@@ -768,7 +776,7 @@ class ApplicationService
         User $user,
         Collection $subevents,
         User $createdBy
-    ) : SubeventsApplication {
+    ): SubeventsApplication {
         $this->incrementSubeventsOccupancy($subevents);
 
         $application = new SubeventsApplication();
@@ -793,7 +801,7 @@ class ApplicationService
      * @throws SettingsException
      * @throws Throwable
      */
-    private function generateVariableSymbol() : VariableSymbol
+    private function generateVariableSymbol(): VariableSymbol
     {
         $variableSymbolCode = $this->settingsService->getValue(Settings::VARIABLE_SYMBOL_CODE);
 
@@ -815,13 +823,15 @@ class ApplicationService
      * @throws ReflectionException
      * @throws Throwable
      */
-    private function countMaturityDate() : ?DateTimeImmutable
+    private function countMaturityDate(): ?DateTimeImmutable
     {
         switch ($this->settingsService->getValue(Settings::MATURITY_TYPE)) {
             case MaturityType::DATE:
                 return $this->settingsService->getDateValue(Settings::MATURITY_DATE);
+
             case MaturityType::DAYS:
                 return (new DateTimeImmutable())->modify('+' . $this->settingsService->getIntValue(Settings::MATURITY_DAYS) . ' days');
+
             case MaturityType::WORK_DAYS:
                 $workDays = $this->settingsService->getIntValue(Settings::MATURITY_WORK_DAYS);
                 $date     = new DateTimeImmutable();
@@ -846,7 +856,7 @@ class ApplicationService
      *
      * @param Collection|Role[] $roles
      */
-    private function countRolesFee(Collection $roles) : int
+    private function countRolesFee(Collection $roles): int
     {
         $fee = 0;
 
@@ -867,7 +877,7 @@ class ApplicationService
      * @param Collection|Role[]     $roles
      * @param Collection|Subevent[] $subevents
      */
-    private function countSubeventsFee(Collection $roles, Collection $subevents) : int
+    private function countSubeventsFee(Collection $roles, Collection $subevents): int
     {
         $fee = 0;
 
@@ -895,7 +905,7 @@ class ApplicationService
     /**
      * Určí stav přihlášky.
      */
-    private function getApplicationState(Application $application) : string
+    private function getApplicationState(Application $application): string
     {
         if ($application->getState() === ApplicationState::CANCELED) {
             return ApplicationState::CANCELED;
@@ -924,7 +934,7 @@ class ApplicationService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function incrementRolesOccupancy(Collection $roles) : void
+    private function incrementRolesOccupancy(Collection $roles): void
     {
         foreach ($roles as $role) {
             $this->roleRepository->incrementOccupancy($role);
@@ -940,7 +950,7 @@ class ApplicationService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function decrementRolesOccupancy(Collection $roles) : void
+    private function decrementRolesOccupancy(Collection $roles): void
     {
         foreach ($roles as $role) {
             $this->roleRepository->decrementOccupancy($role);
@@ -956,7 +966,7 @@ class ApplicationService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function incrementSubeventsOccupancy(Collection $subevents) : void
+    private function incrementSubeventsOccupancy(Collection $subevents): void
     {
         foreach ($subevents as $subevent) {
             $this->subeventRepository->incrementOccupancy($subevent);
@@ -972,7 +982,7 @@ class ApplicationService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function decrementSubeventsOccupancy(Collection $subevents) : void
+    private function decrementSubeventsOccupancy(Collection $subevents): void
     {
         foreach ($subevents as $subevent) {
             $this->subeventRepository->decrementOccupancy($subevent);
@@ -983,7 +993,7 @@ class ApplicationService
     /**
      * @throws ORMException
      */
-    private function updateUserPaymentInfo(User $user) : void
+    private function updateUserPaymentInfo(User $user): void
     {
         $fee = 0;
         foreach ($user->getNotCanceledApplications() as $application) {

@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
+
 use function array_map;
 
 /**
@@ -33,7 +34,7 @@ class BlockRepository extends AbstractRepository
     /**
      * @return Collection<Block>
      */
-    public function findAll() : Collection
+    public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
 
@@ -43,7 +44,7 @@ class BlockRepository extends AbstractRepository
     /**
      * Vrací blok podle id.
      */
-    public function findById(?int $id) : ?Block
+    public function findById(?int $id): ?Block
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -54,7 +55,7 @@ class BlockRepository extends AbstractRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function findLastId() : int
+    public function findLastId(): int
     {
         return (int) $this->createQueryBuilder('b')
             ->select('MAX(b.id)')
@@ -67,7 +68,7 @@ class BlockRepository extends AbstractRepository
      *
      * @return string[]
      */
-    public function findAllNames() : array
+    public function findAllNames(): array
     {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
@@ -82,7 +83,7 @@ class BlockRepository extends AbstractRepository
      *
      * @return Block[]
      */
-    public function findAllOrderedByName() : array
+    public function findAllOrderedByName(): array
     {
         return $this->createQueryBuilder('b')
             ->orderBy('b.name')
@@ -95,7 +96,7 @@ class BlockRepository extends AbstractRepository
      *
      * @return Block[]
      */
-    public function findAllUncategorizedOrderedByName() : array
+    public function findAllUncategorizedOrderedByName(): array
     {
         return $this->createQueryBuilder('b')
             ->where('b.category IS NULL')
@@ -109,7 +110,7 @@ class BlockRepository extends AbstractRepository
      *
      * @return string[]
      */
-    public function findOthersNames(int $id) : array
+    public function findOthersNames(int $id): array
     {
         $names = $this->createQueryBuilder('b')
             ->select('b.name')
@@ -128,7 +129,7 @@ class BlockRepository extends AbstractRepository
      *
      * @return Collection|Block[]
      */
-    public function findBlocksByIds(array $ids) : Collection
+    public function findBlocksByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
@@ -139,7 +140,7 @@ class BlockRepository extends AbstractRepository
     /**
      * @return Collection<Block>
      */
-    public function findUserAttends(User $user) : Collection
+    public function findUserAttends(User $user): Collection
     {
         $result = $this->createQueryBuilder('b')
             ->leftJoin('b.programs', 'p')
@@ -156,7 +157,7 @@ class BlockRepository extends AbstractRepository
      *
      * @throws ORMException
      */
-    public function save(Block $block) : void
+    public function save(Block $block): void
     {
         $this->em->persist($block);
         $this->em->flush();
@@ -167,7 +168,7 @@ class BlockRepository extends AbstractRepository
      *
      * @throws ORMException
      */
-    public function remove(Block $block) : void
+    public function remove(Block $block): void
     {
         foreach ($block->getPrograms() as $program) {
             $this->em->remove($program);

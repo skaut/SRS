@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
+
 use function implode;
 
 /**
@@ -88,7 +89,7 @@ class Mail
         $this->recipientUsers     = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -96,7 +97,7 @@ class Mail
     /**
      * @return Collection|Role[]
      */
-    public function getRecipientRoles() : Collection
+    public function getRecipientRoles(): Collection
     {
         return $this->recipientRoles;
     }
@@ -104,7 +105,7 @@ class Mail
     /**
      * @param Collection|Role[] $recipientRoles
      */
-    public function setRecipientRoles(Collection $recipientRoles) : void
+    public function setRecipientRoles(Collection $recipientRoles): void
     {
         $this->recipientRoles->clear();
         foreach ($recipientRoles as $recipientRole) {
@@ -115,7 +116,7 @@ class Mail
     /**
      * Vrací příjemce (role) oddělené čárkou.
      */
-    public function getRecipientRolesText() : string
+    public function getRecipientRolesText(): string
     {
         return implode(', ', $this->recipientRoles->map(static function (Role $role) {
             return $role->getName();
@@ -125,7 +126,7 @@ class Mail
     /**
      * @return Collection|Subevent[]
      */
-    public function getRecipientSubevents() : Collection
+    public function getRecipientSubevents(): Collection
     {
         return $this->recipientSubevents;
     }
@@ -133,7 +134,7 @@ class Mail
     /**
      * @param Collection|Subevent[] $recipientSubevents
      */
-    public function setRecipientSubevents(Collection $recipientSubevents) : void
+    public function setRecipientSubevents(Collection $recipientSubevents): void
     {
         $this->recipientSubevents->clear();
         foreach ($recipientSubevents as $recipientSubevent) {
@@ -144,7 +145,7 @@ class Mail
     /**
      * Vrací příjemce (podakce) oddělené čárkou.
      */
-    public function getRecipientSubeventsText() : string
+    public function getRecipientSubeventsText(): string
     {
         return implode(', ', $this->recipientSubevents->map(static function (Subevent $subevent) {
             return $subevent->getName();
@@ -154,7 +155,7 @@ class Mail
     /**
      * @return Collection|User[]
      */
-    public function getRecipientUsers() : Collection
+    public function getRecipientUsers(): Collection
     {
         return $this->recipientUsers;
     }
@@ -162,7 +163,7 @@ class Mail
     /**
      * @param Collection|User[] $recipientUsers
      */
-    public function setRecipientUsers(Collection $recipientUsers) : void
+    public function setRecipientUsers(Collection $recipientUsers): void
     {
         $this->recipientUsers->clear();
         foreach ($recipientUsers as $recipientUser) {
@@ -173,49 +174,49 @@ class Mail
     /**
      * Vrací příjemce (uživatele) oddělené čárkou.
      */
-    public function getRecipientUsersText() : string
+    public function getRecipientUsersText(): string
     {
         return implode(', ', $this->recipientUsers->map(static function (User $user) {
             return $user->getDisplayName();
         })->toArray());
     }
 
-    public function getSubject() : string
+    public function getSubject(): string
     {
         return $this->subject;
     }
 
-    public function setSubject(string $subject) : void
+    public function setSubject(string $subject): void
     {
         $this->subject = $subject;
     }
 
-    public function getText() : string
+    public function getText(): string
     {
         return $this->text;
     }
 
-    public function setText(string $text) : void
+    public function setText(string $text): void
     {
         $this->text = $text;
     }
 
-    public function getDatetime() : DateTimeImmutable
+    public function getDatetime(): DateTimeImmutable
     {
         return $this->datetime;
     }
 
-    public function setDatetime(DateTimeImmutable $datetime) : void
+    public function setDatetime(DateTimeImmutable $datetime): void
     {
         $this->datetime = $datetime;
     }
 
-    public function isAutomatic() : bool
+    public function isAutomatic(): bool
     {
         return $this->automatic;
     }
 
-    public function setAutomatic(bool $automatic) : void
+    public function setAutomatic(bool $automatic): void
     {
         $this->automatic = $automatic;
     }

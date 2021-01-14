@@ -10,7 +10,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita variabilní symbol.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Application\Repositories\VariableSymbolRepository")
+ * @ORM\Entity
  * @ORM\Table(name="variable_symbol")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
@@ -26,17 +26,17 @@ class VariableSymbol
      */
     protected ?string $variableSymbol = null;
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getVariableSymbol() : ?string
+    public function getVariableSymbol(): ?string
     {
         return $this->variableSymbol;
     }
 
-    public function setVariableSymbol(?string $variableSymbol) : void
+    public function setVariableSymbol(?string $variableSymbol): void
     {
         $this->variableSymbol = $variableSymbol;
     }

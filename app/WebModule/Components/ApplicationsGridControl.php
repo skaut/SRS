@@ -90,7 +90,7 @@ class ApplicationsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/applications_grid.latte');
         $this->template->render();
@@ -104,7 +104,7 @@ class ApplicationsGridControl extends Control
      * @throws Throwable
      * @throws DataGridException
      */
-    public function createComponentApplicationsGrid(string $name) : void
+    public function createComponentApplicationsGrid(string $name): void
     {
         $this->user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
 
@@ -157,7 +157,7 @@ class ApplicationsGridControl extends Control
 
         if ($explicitSubeventsExists) {
             if ($this->applicationService->isAllowedAddApplication($this->user)) {
-                $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) : void {
+                $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container): void {
                     $options = $this->subeventService->getSubeventsOptionsWithCapacity(true, true, true, false, $this->user);
                     $container->addMultiSelect('subevents', '', $options)
                         ->setHtmlAttribute('class', 'datagrid-multiselect')
@@ -167,14 +167,14 @@ class ApplicationsGridControl extends Control
                 $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
             }
 
-            $grid->addInlineEdit()->onControlAdd[] = function (Container $container) : void {
+            $grid->addInlineEdit()->onControlAdd[] = function (Container $container): void {
                 $options = $this->subeventService->getSubeventsOptionsWithCapacity(true, true, false, true, $this->user);
                 $container->addMultiSelect('subevents', '', $options)
                     ->setHtmlAttribute('class', 'datagrid-multiselect')
                     ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
             };
             $grid->getInlineEdit()->setText($this->translator->translate('web.profile.applications_edit'));
-            $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, SubeventsApplication $item) : void {
+            $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, SubeventsApplication $item): void {
                 $container->setDefaults([
                     'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
                 ]);
@@ -220,7 +220,7 @@ class ApplicationsGridControl extends Control
             return $item->isCanceled() ? 0 : $item->getFee();
         });
 
-        $grid->setRowCallback(static function (Application $application, Html $tr) : void {
+        $grid->setRowCallback(static function (Application $application, Html $tr): void {
             if ($application->isCanceled()) {
                 $tr->addClass('disabled');
             }
@@ -233,7 +233,7 @@ class ApplicationsGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function add(stdClass $values) : void
+    public function add(stdClass $values): void
     {
         $selectedSubevents         = $this->subeventRepository->findSubeventsByIds($values->subevents);
         $selectedAndUsersSubevents = clone $this->user->getSubevents();
@@ -284,7 +284,7 @@ class ApplicationsGridControl extends Control
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function edit(string $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values): void
     {
         $application = $this->applicationRepository->findById((int) $id);
 
@@ -340,7 +340,7 @@ class ApplicationsGridControl extends Control
      *
      * @throws AbortException
      */
-    public function handleGeneratePaymentProofBank(int $id) : void
+    public function handleGeneratePaymentProofBank(int $id): void
     {
         $this->presenter->redirect(':Export:IncomeProof:application', ['id' => $id]);
     }
@@ -352,7 +352,7 @@ class ApplicationsGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleCancelApplication(int $id) : void
+    public function handleCancelApplication(int $id): void
     {
         $application = $this->applicationRepository->findById($id);
 

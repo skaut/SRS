@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Model\Structure\Repositories;
 
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+
 use function array_map;
 
 /**
@@ -22,12 +23,12 @@ use function array_map;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class SubeventRepository extends EntityRepository
+class SubeventRepository extends AbstractRepository
 {
     /**
      * Vrací podakci podle id.
      */
-    public function findById(?int $id) : ?Subevent
+    public function findById(?int $id): ?Subevent
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -35,7 +36,7 @@ class SubeventRepository extends EntityRepository
     /**
      * Vrací implicitní podakci.
      */
-    public function findImplicit() : Subevent
+    public function findImplicit(): Subevent
     {
         return $this->findOneBy(['implicit' => true]);
     }
@@ -45,7 +46,7 @@ class SubeventRepository extends EntityRepository
      *
      * @return string[]
      */
-    public function findAllNames() : array
+    public function findAllNames(): array
     {
         $names = $this->createQueryBuilder('s')
             ->select('s.name')
@@ -60,7 +61,7 @@ class SubeventRepository extends EntityRepository
      *
      * @return Collection|Subevent[]
      */
-    public function findFilteredSubevents(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null) : Collection
+    public function findFilteredSubevents(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null): Collection
     {
         $qb = $this->createQueryBuilder('s');
 
@@ -105,7 +106,7 @@ class SubeventRepository extends EntityRepository
      *
      * @return string[]
      */
-    public function findOthersNames(int $id) : array
+    public function findOthersNames(int $id): array
     {
         $names = $this->createQueryBuilder('s')
             ->select('s.name')
@@ -124,7 +125,7 @@ class SubeventRepository extends EntityRepository
      *
      * @return Collection|Subevent[]
      */
-    public function findSubeventsByIds(array $ids) : Collection
+    public function findSubeventsByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
@@ -140,7 +141,7 @@ class SubeventRepository extends EntityRepository
      *
      * @return int[]
      */
-    public function findSubeventsIds(Collection $subevents) : array
+    public function findSubeventsIds(Collection $subevents): array
     {
         return array_map(static function (Subevent $o) {
             return $o->getId();
@@ -153,7 +154,7 @@ class SubeventRepository extends EntityRepository
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function countExplicitSubevents() : int
+    public function countExplicitSubevents(): int
     {
         return (int) $this->createQueryBuilder('s')
             ->select('COUNT(s.id)')
@@ -168,7 +169,7 @@ class SubeventRepository extends EntityRepository
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function explicitSubeventsExists() : bool
+    public function explicitSubeventsExists(): bool
     {
         return $this->countExplicitSubevents() > 0;
     }
@@ -179,7 +180,7 @@ class SubeventRepository extends EntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function save(Subevent $subevent) : void
+    public function save(Subevent $subevent): void
     {
         $this->_em->persist($subevent);
         $this->_em->flush();
@@ -191,20 +192,20 @@ class SubeventRepository extends EntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Subevent $subevent) : void
+    public function remove(Subevent $subevent): void
     {
         $this->_em->remove($subevent);
         $this->_em->flush();
     }
 
-    public function incrementOccupancy(Subevent $subevent) : void
+    public function incrementOccupancy(Subevent $subevent): void
     {
         $this->_em->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy + 1 WHERE s.id = :sid')
             ->setParameter('sid', $subevent->getId())
             ->getResult();
     }
 
-    public function decrementOccupancy(Subevent $subevent) : void
+    public function decrementOccupancy(Subevent $subevent): void
     {
         $this->_em->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy - 1 WHERE s.id = :sid')
             ->setParameter('sid', $subevent->getId())

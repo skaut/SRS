@@ -22,7 +22,7 @@ class ContentRepository extends EntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function save(Content $content) : void
+    public function save(Content $content): void
     {
         $this->_em->persist($content);
         $this->_em->flush();
@@ -34,7 +34,7 @@ class ContentRepository extends EntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Content $content) : void
+    public function remove(Content $content): void
     {
         $this->_em->remove($content);
         $this->_em->flush();

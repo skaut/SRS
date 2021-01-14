@@ -22,7 +22,7 @@ class BlockAttendeesQueryHandler implements MessageHandlerInterface
     /**
      * @return Collection<User>
      */
-    public function __invoke(BlockAttendeesQuery $query) : Collection
+    public function __invoke(BlockAttendeesQuery $query): Collection
     {
         return $this->userRepository->findBlockAttendees($query->getBlock());
     }

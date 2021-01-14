@@ -36,7 +36,7 @@ class SkautIsService
     /**
      * Vratí url přihlašovací stránky skautIS.
      */
-    public function getLoginUrl(string $backlink) : string
+    public function getLoginUrl(string $backlink): string
     {
         return $this->skautIs->getLoginUrl($backlink);
     }
@@ -44,7 +44,7 @@ class SkautIsService
     /**
      * Vrátí url odhlašovací stránky skautIS.
      */
-    public function getLogoutUrl() : string
+    public function getLogoutUrl(): string
     {
         return $this->skautIs->getLogoutUrl();
     }
@@ -52,7 +52,7 @@ class SkautIsService
     /**
      * Vrátí stav přihlášení uživatele, každých 5 minut obnoví přihlášení.
      */
-    public function isLoggedIn() : bool
+    public function isLoggedIn(): bool
     {
         $logoutTime = clone($this->skautIs->getUser()->getLogoutDate());
         $hardCheck  = $logoutTime->diff(new DateTimeImmutable())->i < 25; //pokud od posledniho obnoveni prihlaseni ubehlo 5 minut
@@ -65,7 +65,7 @@ class SkautIsService
      *
      * @param string[] $data
      */
-    public function setLoginData(array $data) : void
+    public function setLoginData(array $data): void
     {
         $this->skautIs->setLoginData($data);
     }
@@ -77,7 +77,7 @@ class SkautIsService
      *
      * @throws Throwable
      */
-    public function getUserRoles(int $userId) : array
+    public function getUserRoles(int $userId): array
     {
         $roles = $this->userRolesCache->load($userId);
 
@@ -99,7 +99,7 @@ class SkautIsService
     /**
      * Vrátí id aktuální skautIS role uživatele.
      */
-    public function getUserRoleId() : ?int
+    public function getUserRoleId(): ?int
     {
         return $this->skautIs->getUser()->getRoleId();
     }
@@ -107,7 +107,7 @@ class SkautIsService
     /**
      * Změní skautIS roli uživatele.
      */
-    public function updateUserRole(int $roleId) : void
+    public function updateUserRole(int $roleId): void
     {
         $response = $this->skautIs->usr->LoginUpdate([
             'ID' => $this->skautIs->getUser()->getLoginId(),
@@ -121,7 +121,7 @@ class SkautIsService
     /**
      * Vrátí údaje o uživateli.
      */
-    public function getUserDetail() : stdClass
+    public function getUserDetail(): stdClass
     {
         return $this->skautIs->usr->UserDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -131,7 +131,7 @@ class SkautIsService
     /**
      * Vrátí údaje o osobě.
      */
-    public function getPersonDetail(int $personId) : stdClass
+    public function getPersonDetail(int $personId): stdClass
     {
         return $this->skautIs->org->PersonDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -139,7 +139,7 @@ class SkautIsService
         ]);
     }
 
-    public function getPersonPhoto(int $personId, string $size) : stdClass
+    public function getPersonPhoto(int $personId, string $size): stdClass
     {
         return $this->skautIs->org->PersonPhoto([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -151,7 +151,7 @@ class SkautIsService
     /**
      * Aktualizuje údaje o osobě.
      */
-    public function updatePersonBasic(int $personId, string $sex, DateTimeImmutable $birthday, string $firstName, string $lastName, string $nickName) : void
+    public function updatePersonBasic(int $personId, string $sex, DateTimeImmutable $birthday, string $firstName, string $lastName, string $nickName): void
     {
         $this->skautIs->org->PersonUpdateBasic([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -167,7 +167,7 @@ class SkautIsService
     /**
      * Aktualizuje adresu osoby.
      */
-    public function updatePersonAddress(int $personId, string $street, string $city, string $postcode, string $state) : void
+    public function updatePersonAddress(int $personId, string $street, string $city, string $postcode, string $state): void
     {
         $skautISPerson = $this->getPersonDetail($personId);
 
@@ -189,7 +189,7 @@ class SkautIsService
     /**
      * Vrací id jednotky podle aktuální role uživatele.
      */
-    public function getUnitId() : ?int
+    public function getUnitId(): ?int
     {
         return $this->skautIs->getUser()->getUnitId();
     }
@@ -197,7 +197,7 @@ class SkautIsService
     /**
      * Vrací platné členství typu "řádné" nebo "čestné", pokud osoba žádné nemá vrací null.
      */
-    public function getValidMembership(int $personId) : ?stdClass
+    public function getValidMembership(int $personId): ?stdClass
     {
         $membership = $this->skautIs->org->MembershipAllPerson([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -225,7 +225,7 @@ class SkautIsService
     /**
      * Vrací údaje o jednotce.
      */
-    public function getUnitDetail(int $unitId) : stdClass
+    public function getUnitDetail(int $unitId): stdClass
     {
         return $this->skautIs->org->UnitDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),

@@ -15,7 +15,7 @@ final class EventBus
         $this->bus = $bus;
     }
 
-    public function handle(object $event) : void
+    public function handle(object $event): void
     {
         $this->bus->dispatch($event);
     }

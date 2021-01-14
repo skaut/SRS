@@ -28,7 +28,7 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
     /**
      * @throws AbortException
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
 
@@ -40,7 +40,7 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    public function beforeRender() : void
+    public function beforeRender(): void
     {
         parent::beforeRender();
 

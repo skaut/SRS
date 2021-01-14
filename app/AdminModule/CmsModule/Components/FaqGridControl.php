@@ -34,7 +34,7 @@ class FaqGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/faq_grid.latte');
         $this->template->render();
@@ -46,7 +46,7 @@ class FaqGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentFaqGrid(string $name) : void
+    public function createComponentFaqGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -96,7 +96,7 @@ class FaqGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $faq = $this->faqRepository->findById($id);
         $this->faqRepository->remove($faq);
@@ -112,7 +112,7 @@ class FaqGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id) : void
+    public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id): void
     {
         $this->faqRepository->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
@@ -136,7 +136,7 @@ class FaqGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function changeStatus(string $id, string $public) : void
+    public function changeStatus(string $id, string $public): void
     {
         $faq = $this->faqRepository->findById((int) $id);
         $faq->setPublic((bool) $public);

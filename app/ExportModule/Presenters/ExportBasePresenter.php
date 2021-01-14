@@ -17,7 +17,7 @@ abstract class ExportBasePresenter extends BasePresenter
     /**
      * Načte css podle konfigurace v common.neon.
      */
-    protected function createComponentCss() : CssLoader
+    protected function createComponentCss(): CssLoader
     {
         return $this->webLoader->createCssLoader('export');
     }

@@ -6,12 +6,13 @@ namespace App\Model\Application\Repositories;
 
 use App\Model\Application\Application;
 use App\Model\Enums\ApplicationState;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+
 use function array_map;
 
 /**
@@ -19,12 +20,12 @@ use function array_map;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ApplicationRepository extends EntityRepository
+class ApplicationRepository extends AbstractRepository
 {
     /**
      * Vrací přihlášku podle id.
      */
-    public function findById(?int $id) : ?Application
+    public function findById(?int $id): ?Application
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -34,7 +35,7 @@ class ApplicationRepository extends EntityRepository
      *
      * @return Collection|Application[]
      */
-    public function findByApplicationId(int $id) : Collection
+    public function findByApplicationId(int $id): Collection
     {
         $result = $this->findBy(['applicationId' => $id]);
 
@@ -44,7 +45,7 @@ class ApplicationRepository extends EntityRepository
     /**
      * @return Collection|Application[]
      */
-    public function findValid() : Collection
+    public function findValid(): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->isNull('validTo'));
@@ -55,7 +56,7 @@ class ApplicationRepository extends EntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function findValidByVariableSymbol(?string $variableSymbol) : ?Application
+    public function findValidByVariableSymbol(?string $variableSymbol): ?Application
     {
         $variableSymbolRegex = '^0*' . $variableSymbol . '$';
 
@@ -73,7 +74,7 @@ class ApplicationRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function save(Application $application) : void
+    public function save(Application $application): void
     {
         $this->_em->persist($application);
         $this->_em->flush();
@@ -84,7 +85,7 @@ class ApplicationRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function remove(Application $application) : void
+    public function remove(Application $application): void
     {
         $this->_em->remove($application);
         $this->_em->flush();
@@ -97,7 +98,7 @@ class ApplicationRepository extends EntityRepository
      *
      * @return Collection|Application[]
      */
-    public function findApplicationsByIds(array $ids) : Collection
+    public function findApplicationsByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
@@ -112,7 +113,7 @@ class ApplicationRepository extends EntityRepository
      *
      * @return int[]
      */
-    public function findApplicationsIds(Collection $applications) : array
+    public function findApplicationsIds(Collection $applications): array
     {
         return array_map(static function (Application $o) {
             return $o->getId();
@@ -124,7 +125,7 @@ class ApplicationRepository extends EntityRepository
      *
      * @return Collection|Application[]
      */
-    public function findWaitingForPaymentOrPairedApplications(Collection $pairedApplications) : Collection
+    public function findWaitingForPaymentOrPairedApplications(Collection $pairedApplications): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->isNull('validTo'))
@@ -142,7 +143,7 @@ class ApplicationRepository extends EntityRepository
     /**
      * @return string[]
      */
-    public function getApplicationsVariableSymbolsOptions() : array
+    public function getApplicationsVariableSymbolsOptions(): array
     {
         $options = [];
         foreach ($this->findValid() as $application) {
@@ -157,7 +158,7 @@ class ApplicationRepository extends EntityRepository
      *
      * @return string[]
      */
-    public function getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions(Collection $pairedApplications) : array
+    public function getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions(Collection $pairedApplications): array
     {
         $options = [];
         foreach ($this->findWaitingForPaymentOrPairedApplications($pairedApplications) as $application) {

@@ -17,7 +17,7 @@ class ProgramAttendeesCountQueryHandler implements MessageHandlerInterface
         $this->userRepository = $userRepository;
     }
 
-    public function __invoke(ProgramAttendeesCountQuery $query) : int
+    public function __invoke(ProgramAttendeesCountQuery $query): int
     {
         return $this->userRepository->countProgramAttendees($query->getProgram());
     }

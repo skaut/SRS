@@ -22,7 +22,7 @@ class ProgramAlternatesQueryHandler implements MessageHandlerInterface
     /**
      * @return Collection<User>
      */
-    public function __invoke(ProgramAlternatesQuery $query) : Collection
+    public function __invoke(ProgramAlternatesQuery $query): Collection
     {
         return $this->userRepository->findProgramAlternates($query->getProgram());
     }

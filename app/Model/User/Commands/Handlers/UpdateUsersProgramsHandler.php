@@ -30,9 +30,9 @@ class UpdateUsersProgramsHandler implements MessageHandlerInterface
         $this->em         = $em;
     }
 
-    public function __invoke(UpdateUsersPrograms $command) : void
+    public function __invoke(UpdateUsersPrograms $command): void
     {
-        $this->em->transactional(function () use ($command) : void {
+        $this->em->transactional(function () use ($command): void {
             foreach ($command->getUsers() as $user) {
                 $userPrograms        = $this->queryBus->handle(new UserProgramsQuery($user));
                 $userAllowedPrograms = $this->queryBus->handle(new UserAllowedProgramsQuery($user));

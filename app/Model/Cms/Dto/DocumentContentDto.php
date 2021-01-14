@@ -30,7 +30,7 @@ class DocumentContentDto extends ContentDto
     /**
      * @return int[]
      */
-    public function getTags() : array
+    public function getTags(): array
     {
         return $this->tags;
     }

@@ -70,42 +70,42 @@ class Program
         $this->programApplications = new ArrayCollection();
     }
 
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getBlock() : Block
+    public function getBlock(): Block
     {
         return $this->block;
     }
 
-    public function getOccupancy() : int
+    public function getOccupancy(): int
     {
         return $this->occupancy;
     }
 
-    public function setOccupancy(int $occupancy) : void
+    public function setOccupancy(int $occupancy): void
     {
         $this->occupancy = $occupancy;
     }
 
-    public function getRoom() : ?Room
+    public function getRoom(): ?Room
     {
         return $this->room;
     }
 
-    public function setRoom(?Room $room) : void
+    public function setRoom(?Room $room): void
     {
         $this->room = $room;
     }
 
-    public function getStart() : DateTimeImmutable
+    public function getStart(): DateTimeImmutable
     {
         return $this->start;
     }
 
-    public function setStart(DateTimeImmutable $start) : void
+    public function setStart(DateTimeImmutable $start): void
     {
         $this->start = $start;
     }
@@ -113,7 +113,7 @@ class Program
     /**
      * Vrací kapacitu programového bloku.
      */
-    public function getBlockCapacity() : ?int
+    public function getBlockCapacity(): ?int
     {
         return $this->block->getCapacity();
     }
@@ -123,7 +123,7 @@ class Program
      *
      * @throws Exception
      */
-    public function getEnd() : DateTimeImmutable
+    public function getEnd(): DateTimeImmutable
     {
         return $this->start->add(new DateInterval('PT' . $this->block->getDuration() . 'M'));
     }

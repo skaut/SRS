@@ -14,5 +14,5 @@ interface IRoomScheduleGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : RoomScheduleGridControl;
+    public function create(): RoomScheduleGridControl;
 }

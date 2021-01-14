@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
+
 use function array_map;
 
 /**
@@ -30,7 +31,7 @@ class RoomRepository extends AbstractRepository
     /**
      * @return Collection<Room>
      */
-    public function findAll() : Collection
+    public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
 
@@ -40,7 +41,7 @@ class RoomRepository extends AbstractRepository
     /**
      * Vrací místnost podle id.
      */
-    public function findById(?int $id) : ?Room
+    public function findById(?int $id): ?Room
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -50,7 +51,7 @@ class RoomRepository extends AbstractRepository
      *
      * @return string[]
      */
-    public function findAllNames() : array
+    public function findAllNames(): array
     {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')
@@ -65,7 +66,7 @@ class RoomRepository extends AbstractRepository
      *
      * @return string[]
      */
-    public function findOthersNames(int $id) : array
+    public function findOthersNames(int $id): array
     {
         $names = $this->createQueryBuilder('r')
             ->select('r.name')
@@ -84,7 +85,7 @@ class RoomRepository extends AbstractRepository
      *
      * @return Collection|Room[]
      */
-    public function findRoomsByIds(array $ids) : Collection
+    public function findRoomsByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
@@ -95,7 +96,7 @@ class RoomRepository extends AbstractRepository
     /**
      * Je v místnosti jiný program ve stejnou dobu?
      */
-    public function hasOverlappingProgram(Room $room, ?int $programId, DateTimeImmutable $start, DateTimeImmutable $end) : bool
+    public function hasOverlappingProgram(Room $room, ?int $programId, DateTimeImmutable $start, DateTimeImmutable $end): bool
     {
         $result = $this->createQueryBuilder('r')
             ->select('count(r)')
@@ -119,7 +120,7 @@ class RoomRepository extends AbstractRepository
      *
      * @throws ORMException
      */
-    public function save(Room $room) : void
+    public function save(Room $room): void
     {
         $this->em->persist($room);
         $this->em->flush();
@@ -130,7 +131,7 @@ class RoomRepository extends AbstractRepository
      *
      * @throws ORMException
      */
-    public function remove(Room $room) : void
+    public function remove(Room $room): void
     {
         foreach ($room->getPrograms() as $program) {
             $program->setRoom(null);

@@ -19,7 +19,7 @@ class PaymentRepository extends EntityRepository
     /**
      * Vrací platbu podle id.
      */
-    public function findById(?int $id) : ?Payment
+    public function findById(?int $id): ?Payment
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -27,7 +27,7 @@ class PaymentRepository extends EntityRepository
     /**
      * Vrací platbu podle id transakce.
      */
-    public function findByTransactionId(string $transactionId) : ?Payment
+    public function findByTransactionId(string $transactionId): ?Payment
     {
         return $this->findOneBy(['transactionId' => $transactionId]);
     }
@@ -37,7 +37,7 @@ class PaymentRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function save(Payment $payment) : void
+    public function save(Payment $payment): void
     {
         $this->_em->persist($payment);
         $this->_em->flush();
@@ -48,7 +48,7 @@ class PaymentRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function remove(Payment $payment) : void
+    public function remove(Payment $payment): void
     {
         foreach ($payment->getPairedApplications() as $pairedApplication) {
             $pairedApplication->setPayment(null);

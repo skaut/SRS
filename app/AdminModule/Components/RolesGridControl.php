@@ -41,7 +41,7 @@ class RolesGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/roles_grid.latte');
         $this->template->render();
@@ -53,7 +53,7 @@ class RolesGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentRolesGrid(string $name) : void
+    public function createComponentRolesGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -121,7 +121,7 @@ class RolesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $role = $this->roleRepository->findById($id);
 
@@ -142,7 +142,7 @@ class RolesGridControl extends Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function changeRegisterable(string $id, string $registerable) : void
+    public function changeRegisterable(string $id, string $registerable): void
     {
         $role = $this->roleRepository->findById((int) $id);
 

@@ -51,7 +51,7 @@ class FaqFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(?int $id, int $userId) : Form
+    public function create(?int $id, int $userId): Form
     {
         $this->faq  = $id === null ? null : $this->faqRepository->findById($id);
         $this->user = $this->userRepository->findById($userId);
@@ -99,7 +99,7 @@ class FaqFormFactory
      * @throws NonUniqueResultException
      * @throws ORMException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

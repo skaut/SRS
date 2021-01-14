@@ -26,12 +26,12 @@ class SaveProgramHandler implements MessageHandlerInterface
         $this->programRepository = $programRepository;
     }
 
-    public function __invoke(SaveProgram $command) : void
+    public function __invoke(SaveProgram $command): void
     {
         $program = $command->getProgram();
 
         if ($program->getId() === null) {
-            $this->em->transactional(function () use ($program) : void {
+            $this->em->transactional(function () use ($program): void {
                 $this->programRepository->save($program);
                 $this->eventBus->handle(new ProgramCreatedEvent($program));
             });

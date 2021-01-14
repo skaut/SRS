@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entita přihláška podakcí.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Application\Repositories\SubeventsApplicationRepository")
+ * @ORM\Entity
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
@@ -22,7 +22,7 @@ class SubeventsApplication extends Application
     /**
      * @param Collection|Subevent[] $subevents
      */
-    public function setSubevents(Collection $subevents) : void
+    public function setSubevents(Collection $subevents): void
     {
         $this->subevents->clear();
         foreach ($subevents as $subevent) {

@@ -70,7 +70,7 @@ class ApplicationContentControl extends Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function render(?ContentDto $content = null) : void
+    public function render(?ContentDto $content = null): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/application_content.latte');
@@ -118,11 +118,11 @@ class ApplicationContentControl extends Control
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    protected function createComponentApplicationForm() : Form
+    protected function createComponentApplicationForm(): Form
     {
         $form = $this->applicationFormFactory->create($this->getPresenter()->user->id);
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->getPresenter()->flashMessage('web.application_content.register_successful', 'success');
 
             $this->authenticator->updateRoles($this->getPresenter()->user);
@@ -130,14 +130,14 @@ class ApplicationContentControl extends Control
             $this->getPresenter()->redirect('this');
         };
 
-        $this->applicationFormFactory->onSkautIsError[] = function () : void {
+        $this->applicationFormFactory->onSkautIsError[] = function (): void {
             $this->getPresenter()->flashMessage('web.application_content.register_synchronization_failed', 'danger');
         };
 
         return $form;
     }
 
-    protected function createComponentApplicationsGrid() : ApplicationsGridControl
+    protected function createComponentApplicationsGrid(): ApplicationsGridControl
     {
         return $this->applicationsGridControlFactory->create();
     }

@@ -19,7 +19,7 @@ class SettingsRepository extends EntityRepository
     /**
      * Vrací položku nastavení podle názvu.
      */
-    public function findByItem(?string $item) : ?Settings
+    public function findByItem(?string $item): ?Settings
     {
         return $this->findOneBy(['item' => $item]);
     }
@@ -27,7 +27,7 @@ class SettingsRepository extends EntityRepository
     /**
      * @throws ORMException
      */
-    public function save(Settings $settings) : void
+    public function save(Settings $settings): void
     {
         $this->_em->persist($settings);
         $this->_em->flush();

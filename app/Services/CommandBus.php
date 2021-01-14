@@ -15,7 +15,7 @@ final class CommandBus
         $this->bus = $bus;
     }
 
-    public function handle(object $command) : void
+    public function handle(object $command): void
     {
         $this->bus->dispatch($command);
     }

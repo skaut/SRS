@@ -73,7 +73,7 @@ class SendFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -137,7 +137,7 @@ class SendFormFactory
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         try {
             $recipientsRoles     = $this->roleRepository->findRolesByIds($values->recipientRoles);

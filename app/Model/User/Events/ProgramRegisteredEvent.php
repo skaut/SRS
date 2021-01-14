@@ -25,22 +25,22 @@ class ProgramRegisteredEvent
         $this->notifyUser = $notifyUser;
     }
 
-    public function getUser() : User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function getProgram() : Program
+    public function getProgram(): Program
     {
         return $this->program;
     }
 
-    public function isAlternate() : bool
+    public function isAlternate(): bool
     {
         return $this->alternate;
     }
 
-    public function isNotifyUser() : bool
+    public function isNotifyUser(): bool
     {
         return $this->notifyUser;
     }

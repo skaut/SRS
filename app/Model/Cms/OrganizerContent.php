@@ -30,12 +30,12 @@ class OrganizerContent extends Content implements IContent
      */
     protected ?string $organizer = null;
 
-    public function getOrganizer() : ?string
+    public function getOrganizer(): ?string
     {
         return $this->organizer;
     }
 
-    public function setOrganizer(?string $organizer) : void
+    public function setOrganizer(?string $organizer): void
     {
         $this->organizer = $organizer;
     }
@@ -43,7 +43,7 @@ class OrganizerContent extends Content implements IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
-    public function addContentForm(Form $form) : Form
+    public function addContentForm(Form $form): Form
     {
         parent::addContentForm($form);
 
@@ -58,7 +58,7 @@ class OrganizerContent extends Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(Form $form, stdClass $values) : void
+    public function contentFormSucceeded(Form $form, stdClass $values): void
     {
         parent::contentFormSucceeded($form, $values);
         $formName        = $this->getContentFormName();
@@ -66,7 +66,7 @@ class OrganizerContent extends Content implements IContent
         $this->organizer = $values->organizer;
     }
 
-    public function convertToDto() : ContentDto
+    public function convertToDto(): ContentDto
     {
         return new OrganizerContentDto($this->getComponentName(), $this->heading, $this->organizer);
     }

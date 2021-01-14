@@ -31,12 +31,12 @@ class HtmlContent extends Content implements IContent
      */
     protected ?string $text = null;
 
-    public function getText() : ?string
+    public function getText(): ?string
     {
         return $this->text;
     }
 
-    public function setText(?string $text) : void
+    public function setText(?string $text): void
     {
         $this->text = $text;
     }
@@ -44,7 +44,7 @@ class HtmlContent extends Content implements IContent
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
-    public function addContentForm(Form $form) : Form
+    public function addContentForm(Form $form): Form
     {
         parent::addContentForm($form);
 
@@ -60,7 +60,7 @@ class HtmlContent extends Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
-    public function contentFormSucceeded(Form $form, stdClass $values) : void
+    public function contentFormSucceeded(Form $form, stdClass $values): void
     {
         parent::contentFormSucceeded($form, $values);
         $formName   = $this->getContentFormName();
@@ -68,7 +68,7 @@ class HtmlContent extends Content implements IContent
         $this->text = $values->text;
     }
 
-    public function convertToDto() : ContentDto
+    public function convertToDto(): ContentDto
     {
         return new HtmlContentDto($this->getComponentName(), $this->heading, $this->text);
     }

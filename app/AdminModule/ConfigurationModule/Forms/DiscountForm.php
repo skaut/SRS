@@ -73,7 +73,7 @@ class DiscountForm extends UI\Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/discount_form.latte');
 
@@ -85,7 +85,7 @@ class DiscountForm extends UI\Control
     /**
      * Vytvoří formulář.
      */
-    public function createComponentForm() : Form
+    public function createComponentForm(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -125,7 +125,7 @@ class DiscountForm extends UI\Control
      *
      * @throws ORMException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         $this->id = (int) $values->id;
 

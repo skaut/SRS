@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
+
 use function array_map;
 
 /**
@@ -22,7 +23,7 @@ class TagRepository extends EntityRepository
     /**
      * Vrátí tag podle id.
      */
-    public function findById(?int $id) : ?Tag
+    public function findById(?int $id): ?Tag
     {
         return $this->findOneBy(['id' => $id]);
     }
@@ -34,7 +35,7 @@ class TagRepository extends EntityRepository
      *
      * @return Collection|Tag[]
      */
-    public function findTagsByIds(array $ids) : Collection
+    public function findTagsByIds(array $ids): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids))
@@ -50,7 +51,7 @@ class TagRepository extends EntityRepository
      *
      * @return int[]
      */
-    public function findTagsIds(Collection $tags) : array
+    public function findTagsIds(Collection $tags): array
     {
         return array_map(static function (Tag $o) {
             return $o->getId();
@@ -62,7 +63,7 @@ class TagRepository extends EntityRepository
      *
      * @return string[]
      */
-    public function findAllNames() : array
+    public function findAllNames(): array
     {
         $names = $this->createQueryBuilder('t')
             ->select('t.name')
@@ -77,7 +78,7 @@ class TagRepository extends EntityRepository
      *
      * @return string[]
      */
-    public function findOthersNames(int $id) : array
+    public function findOthersNames(int $id): array
     {
         $names = $this->createQueryBuilder('t')
             ->select('t.name')
@@ -94,7 +95,7 @@ class TagRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function save(Tag $tag) : void
+    public function save(Tag $tag): void
     {
         $this->_em->persist($tag);
         $this->_em->flush();
@@ -105,7 +106,7 @@ class TagRepository extends EntityRepository
      *
      * @throws ORMException
      */
-    public function remove(Tag $tag) : void
+    public function remove(Tag $tag): void
     {
         $this->_em->remove($tag);
         $this->_em->flush();
@@ -116,7 +117,7 @@ class TagRepository extends EntityRepository
      *
      * @return string[]
      */
-    public function getTagsOptions() : array
+    public function getTagsOptions(): array
     {
         $tags = $this->createQueryBuilder('t')
             ->select('t.id, t.name')

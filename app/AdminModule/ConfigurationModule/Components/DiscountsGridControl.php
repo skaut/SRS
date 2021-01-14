@@ -41,7 +41,7 @@ class DiscountsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/discounts_grid.latte');
         $this->template->render();
@@ -52,7 +52,7 @@ class DiscountsGridControl extends Control
      *
      * @throws DataGridException
      */
-    public function createComponentDiscountsGrid(string $name) : void
+    public function createComponentDiscountsGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -93,7 +93,7 @@ class DiscountsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $discount = $this->discountRepository->findById($id);
         $this->discountRepository->remove($discount);

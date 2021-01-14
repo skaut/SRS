@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Application\Repositories;
 
 use App\Model\Application\IncomeProof;
-use Doctrine\ORM\EntityRepository;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\ORM\ORMException;
 
 /**
@@ -13,14 +13,14 @@ use Doctrine\ORM\ORMException;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class IncomeProofRepository extends EntityRepository
+class IncomeProofRepository extends AbstractRepository
 {
     /**
      * Uloží příjmový doklad.
      *
      * @throws ORMException
      */
-    public function save(IncomeProof $incomeProof) : void
+    public function save(IncomeProof $incomeProof): void
     {
         $this->_em->persist($incomeProof);
         $this->_em->flush();

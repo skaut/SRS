@@ -34,62 +34,62 @@ class CalendarConfigDto
     /** @JMS\Type("string") */
     private string $initialView;
 
-    public function getSeminarFromDate() : string
+    public function getSeminarFromDate(): string
     {
         return $this->seminarFromDate;
     }
 
-    public function setSeminarFromDate(string $seminarFromDate) : void
+    public function setSeminarFromDate(string $seminarFromDate): void
     {
         $this->seminarFromDate = $seminarFromDate;
     }
 
-    public function getSeminarToDate() : string
+    public function getSeminarToDate(): string
     {
         return $this->seminarToDate;
     }
 
-    public function setSeminarToDate(string $seminarToDate) : void
+    public function setSeminarToDate(string $seminarToDate): void
     {
         $this->seminarToDate = $seminarToDate;
     }
 
-    public function getMinTime() : string
+    public function getMinTime(): string
     {
         return $this->minTime;
     }
 
-    public function setMinTime(string $minTime) : void
+    public function setMinTime(string $minTime): void
     {
         $this->minTime = $minTime;
     }
 
-    public function getMaxTime() : string
+    public function getMaxTime(): string
     {
         return $this->maxTime;
     }
 
-    public function setMaxTime(string $maxTime) : void
+    public function setMaxTime(string $maxTime): void
     {
         $this->maxTime = $maxTime;
     }
 
-    public function isAllowedModifySchedule() : bool
+    public function isAllowedModifySchedule(): bool
     {
         return $this->allowedModifySchedule;
     }
 
-    public function setAllowedModifySchedule(bool $allowedModifySchedule) : void
+    public function setAllowedModifySchedule(bool $allowedModifySchedule): void
     {
         $this->allowedModifySchedule = $allowedModifySchedule;
     }
 
-    public function getInitialView() : string
+    public function getInitialView(): string
     {
         return $this->initialView;
     }
 
-    public function setInitialView(string $initialView) : void
+    public function setInitialView(string $initialView): void
     {
         $this->initialView = $initialView;
     }
