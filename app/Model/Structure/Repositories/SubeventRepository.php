@@ -32,6 +32,16 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
+     * @return Collection<Subevent>
+     */
+    public function findAll(): Collection
+    {
+        $result = $this->getRepository()->findAll();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
      * Vrací podakci podle id.
      */
     public function findById(?int $id): ?Subevent

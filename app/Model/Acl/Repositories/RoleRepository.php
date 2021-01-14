@@ -33,6 +33,16 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
+     * @return Collection<Role>
+     */
+    public function findAll(): Collection
+    {
+        $result = $this->getRepository()->findAll();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
      * Vrací roli podle id.
      */
     public function findById(?int $id): ?Role

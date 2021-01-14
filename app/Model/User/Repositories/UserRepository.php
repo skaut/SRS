@@ -35,6 +35,16 @@ class UserRepository extends AbstractRepository
     }
 
     /**
+     * @return Collection<User>
+     */
+    public function findAll(): Collection
+    {
+        $result = $this->getRepository()->findAll();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
      * Vrací uživatele podle id.
      */
     public function findById(?int $id): ?User
