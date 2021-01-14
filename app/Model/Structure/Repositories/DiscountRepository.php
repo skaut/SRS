@@ -27,7 +27,7 @@ class DiscountRepository extends AbstractRepository
      */
     public function findById(?int $id): ?Discount
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**

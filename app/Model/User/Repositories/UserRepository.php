@@ -39,7 +39,7 @@ class UserRepository extends AbstractRepository
      */
     public function findById(?int $id): ?User
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -47,7 +47,7 @@ class UserRepository extends AbstractRepository
      */
     public function findBySkautISUserId(int $skautISUserId): ?User
     {
-        return $this->findOneBy(['skautISUserId' => $skautISUserId]);
+        return $this->getRepository()->findOneBy(['skautISUserId' => $skautISUserId]);
     }
 
     /**
@@ -62,7 +62,7 @@ class UserRepository extends AbstractRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
 
-        return $this->matching($criteria);
+        return $this->getRepository()->matching($criteria);
     }
 
     /**

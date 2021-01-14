@@ -37,7 +37,7 @@ class RoleRepository extends AbstractRepository
      */
     public function findById(?int $id): ?Role
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -45,7 +45,7 @@ class RoleRepository extends AbstractRepository
      */
     public function findBySystemName(string $name): Role
     {
-        return $this->findOneBy(['systemName' => $name]);
+        return $this->getRepository()->findOneBy(['systemName' => $name]);
     }
 
     /**
@@ -92,7 +92,7 @@ class RoleRepository extends AbstractRepository
             ->where(Criteria::expr()->in('id', $ids))
             ->orderBy(['name' => 'ASC']);
 
-        return $this->matching($criteria);
+        return $this->getRepository()->matching($criteria);
     }
 
     /**
@@ -172,14 +172,14 @@ class RoleRepository extends AbstractRepository
 
     public function incrementOccupancy(Role $role): void
     {
-        $this->_em->createQuery('UPDATE App\Model\Acl\Role r SET r.occupancy = r.occupancy + 1 WHERE r.id = :rid')
+        $this->em->createQuery('UPDATE App\Model\Acl\Role r SET r.occupancy = r.occupancy + 1 WHERE r.id = :rid')
             ->setParameter('rid', $role->getId())
             ->getResult();
     }
 
     public function decrementOccupancy(Role $role): void
     {
-        $this->_em->createQuery('UPDATE App\Model\Acl\Role r SET r.occupancy = r.occupancy - 1 WHERE r.id = :rid')
+        $this->em->createQuery('UPDATE App\Model\Acl\Role r SET r.occupancy = r.occupancy - 1 WHERE r.id = :rid')
             ->setParameter('rid', $role->getId())
             ->getResult();
     }
@@ -226,8 +226,8 @@ class RoleRepository extends AbstractRepository
      */
     public function save(Role $role): void
     {
-        $this->_em->persist($role);
-        $this->_em->flush();
+        $this->em->persist($role);
+        $this->em->flush();
     }
 
     /**
@@ -238,7 +238,7 @@ class RoleRepository extends AbstractRepository
      */
     public function remove(Role $role): void
     {
-        $this->_em->remove($role);
-        $this->_em->flush();
+        $this->em->remove($role);
+        $this->em->flush();
     }
 }

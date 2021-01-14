@@ -37,7 +37,7 @@ class PermissionRepository extends AbstractRepository
             ->where(Criteria::expr()->in('id', $ids))
             ->orderBy(['name' => 'ASC']);
 
-        return $this->matching($criteria);
+        return $this->getRepository()->matching($criteria);
     }
 
     /**

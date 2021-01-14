@@ -33,7 +33,7 @@ class ApplicationRepository extends AbstractRepository
      */
     public function findById(?int $id): ?Application
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -43,7 +43,7 @@ class ApplicationRepository extends AbstractRepository
      */
     public function findByApplicationId(int $id): Collection
     {
-        $result = $this->findBy(['applicationId' => $id]);
+        $result = $this->getRepository()->findBy(['applicationId' => $id]);
 
         return new ArrayCollection($result);
     }
@@ -56,7 +56,7 @@ class ApplicationRepository extends AbstractRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->isNull('validTo'));
 
-        return $this->matching($criteria);
+        return $this->getRepository()->matching($criteria);
     }
 
     /**
@@ -109,7 +109,7 @@ class ApplicationRepository extends AbstractRepository
         $criteria = Criteria::create()
             ->where(Criteria::expr()->in('id', $ids));
 
-        return $this->matching($criteria);
+        return $this->getRepository()->matching($criteria);
     }
 
     /**
@@ -143,7 +143,7 @@ class ApplicationRepository extends AbstractRepository
                     ->toArray())
             ));
 
-        return $this->matching($criteria);
+        return $this->getRepository()->matching($criteria);
     }
 
     /**

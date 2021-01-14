@@ -36,7 +36,7 @@ class SubeventRepository extends AbstractRepository
      */
     public function findById(?int $id): ?Subevent
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -44,7 +44,7 @@ class SubeventRepository extends AbstractRepository
      */
     public function findImplicit(): Subevent
     {
-        return $this->findOneBy(['implicit' => true]);
+        return $this->getRepository()->findOneBy(['implicit' => true]);
     }
 
     /**
@@ -137,7 +137,7 @@ class SubeventRepository extends AbstractRepository
             ->where(Criteria::expr()->in('id', $ids))
             ->orderBy(['name' => 'ASC']);
 
-        return $this->matching($criteria);
+        return $this->getRepository()->matching($criteria);
     }
 
     /**
