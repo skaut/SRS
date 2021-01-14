@@ -8,6 +8,7 @@ use App\Model\Acl\Permission;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
@@ -18,6 +19,11 @@ use Doctrine\ORM\NoResultException;
  */
 class PermissionRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Permission::class);
+    }
+
     /**
      * Vrací oprávnění podle id.
      *

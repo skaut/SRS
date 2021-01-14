@@ -6,6 +6,7 @@ namespace App\Model\Structure\Repositories;
 
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Structure\Discount;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
 /**
@@ -16,6 +17,11 @@ use Doctrine\ORM\ORMException;
  */
 class DiscountRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Discount::class);
+    }
+
     /**
      * Vrací slevu podle id.
      */
@@ -31,8 +37,8 @@ class DiscountRepository extends AbstractRepository
      */
     public function save(Discount $discount): void
     {
-        $this->_em->persist($discount);
-        $this->_em->flush();
+        $this->em->persist($discount);
+        $this->em->flush();
     }
 
     /**
@@ -42,7 +48,7 @@ class DiscountRepository extends AbstractRepository
      */
     public function remove(Discount $discount): void
     {
-        $this->_em->remove($discount);
-        $this->_em->flush();
+        $this->em->remove($discount);
+        $this->em->flush();
     }
 }

@@ -10,6 +10,7 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 
@@ -22,6 +23,11 @@ use function array_map;
  */
 class ApplicationRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Application::class);
+    }
+
     /**
      * Vrací přihlášku podle id.
      */
@@ -76,8 +82,8 @@ class ApplicationRepository extends AbstractRepository
      */
     public function save(Application $application): void
     {
-        $this->_em->persist($application);
-        $this->_em->flush();
+        $this->em->persist($application);
+        $this->em->flush();
     }
 
     /**
@@ -87,8 +93,8 @@ class ApplicationRepository extends AbstractRepository
      */
     public function remove(Application $application): void
     {
-        $this->_em->remove($application);
-        $this->_em->flush();
+        $this->em->remove($application);
+        $this->em->flush();
     }
 
     /**

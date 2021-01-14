@@ -10,6 +10,7 @@ use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
@@ -25,6 +26,11 @@ use function array_map;
  */
 class SubeventRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Subevent::class);
+    }
+
     /**
      * Vrací podakci podle id.
      */
@@ -182,8 +188,8 @@ class SubeventRepository extends AbstractRepository
      */
     public function save(Subevent $subevent): void
     {
-        $this->_em->persist($subevent);
-        $this->_em->flush();
+        $this->em->persist($subevent);
+        $this->em->flush();
     }
 
     /**
@@ -194,20 +200,20 @@ class SubeventRepository extends AbstractRepository
      */
     public function remove(Subevent $subevent): void
     {
-        $this->_em->remove($subevent);
-        $this->_em->flush();
+        $this->em->remove($subevent);
+        $this->em->flush();
     }
 
     public function incrementOccupancy(Subevent $subevent): void
     {
-        $this->_em->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy + 1 WHERE s.id = :sid')
+        $this->em->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy + 1 WHERE s.id = :sid')
             ->setParameter('sid', $subevent->getId())
             ->getResult();
     }
 
     public function decrementOccupancy(Subevent $subevent): void
     {
-        $this->_em->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy - 1 WHERE s.id = :sid')
+        $this->em->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy - 1 WHERE s.id = :sid')
             ->setParameter('sid', $subevent->getId())
             ->getResult();
     }

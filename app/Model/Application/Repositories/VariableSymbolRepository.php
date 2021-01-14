@@ -6,6 +6,7 @@ namespace App\Model\Application\Repositories;
 
 use App\Model\Application\VariableSymbol;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
 /**
@@ -16,6 +17,11 @@ use Doctrine\ORM\ORMException;
  */
 class VariableSymbolRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, VariableSymbol::class);
+    }
+
     /**
      * Uloží variabilní symbol.
      *
@@ -23,7 +29,7 @@ class VariableSymbolRepository extends AbstractRepository
      */
     public function save(VariableSymbol $variableSymbol): void
     {
-        $this->_em->persist($variableSymbol);
-        $this->_em->flush();
+        $this->em->persist($variableSymbol);
+        $this->em->flush();
     }
 }

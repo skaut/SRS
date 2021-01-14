@@ -14,6 +14,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
 use function array_map;
@@ -28,6 +29,11 @@ use function count;
  */
 class UserRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, User::class);
+    }
+
     /**
      * Vrací uživatele podle id.
      */
@@ -390,8 +396,8 @@ class UserRepository extends AbstractRepository
      */
     public function save(User $user): void
     {
-        $this->_em->persist($user);
-        $this->_em->flush();
+        $this->em->persist($user);
+        $this->em->flush();
     }
 
     /**
@@ -402,14 +408,14 @@ class UserRepository extends AbstractRepository
     public function remove(User $user): void
     {
         foreach ($user->getCustomInputValues() as $customInputValue) {
-            $this->_em->remove($customInputValue);
+            $this->em->remove($customInputValue);
         }
 
         foreach ($user->getApplications() as $application) {
-            $this->_em->remove($application);
+            $this->em->remove($application);
         }
 
-        $this->_em->remove($user);
-        $this->_em->flush();
+        $this->em->remove($user);
+        $this->em->flush();
     }
 }

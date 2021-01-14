@@ -6,6 +6,7 @@ namespace App\Model\Application\Repositories;
 
 use App\Model\Application\IncomeProof;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
 /**
@@ -15,6 +16,11 @@ use Doctrine\ORM\ORMException;
  */
 class IncomeProofRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, IncomeProof::class);
+    }
+
     /**
      * Uloží příjmový doklad.
      *
@@ -22,7 +28,7 @@ class IncomeProofRepository extends AbstractRepository
      */
     public function save(IncomeProof $incomeProof): void
     {
-        $this->_em->persist($incomeProof);
-        $this->_em->flush();
+        $this->em->persist($incomeProof);
+        $this->em->flush();
     }
 }
