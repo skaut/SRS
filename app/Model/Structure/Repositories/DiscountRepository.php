@@ -6,6 +6,8 @@ namespace App\Model\Structure\Repositories;
 
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Structure\Discount;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
@@ -20,6 +22,16 @@ class DiscountRepository extends AbstractRepository
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em, Discount::class);
+    }
+
+    /**
+     * @return Collection<Discount>
+     */
+    public function findAll(): Collection
+    {
+        $result = $this->getRepository()->findAll();
+
+        return new ArrayCollection($result);
     }
 
     /**

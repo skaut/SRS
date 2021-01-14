@@ -813,7 +813,7 @@ class UsersGridControl extends Control
         $users = $this->userRepository->findUsersByIds($ids);
         $roles = $this->roleRepository->findAll();
 
-        $response = $this->excelExportService->exportUsersRoles($users, new ArrayCollection($roles), 'role-uzivatelu.xlsx');
+        $response = $this->excelExportService->exportUsersRoles($users, $roles, 'role-uzivatelu.xlsx');
 
         $this->getPresenter()->sendResponse($response);
     }

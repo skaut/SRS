@@ -68,49 +68,6 @@ services:
     - App\Commands\ClearCacheCommand(%appDir%/..)
     - App\Utils\Validators
 
-    contentRepository:
-        class: App\Model\Cms\Repositories\ContentRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Content)
-    documentRepository:
-        class: App\Model\Cms\Repositories\DocumentRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Document)
-    faqRepository:
-        class: App\Model\Cms\Repositories\FaqRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Faq)
-    newsRepository:
-        class: App\Model\Cms\Repositories\NewsRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\News)
-    pageRepository:
-        class: App\Model\Cms\Repositories\PageRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Page)
-    tagRepository:
-        class: App\Model\Cms\Repositories\TagRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Tag)
-    customInputRepository:
-        class: App\Model\CustomInput\Repositories\CustomInputRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CustomInput\CustomInput)
-    customInputValueRepository:
-        class: App\Model\CustomInput\Repositories\CustomInputValueRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\CustomInput\CustomInputValue)
-    mailRepository:
-        class: App\Model\Mailing\Repositories\MailRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Mail)
-    templateRepository:
-        class: App\Model\Mailing\Repositories\TemplateRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Template)
-    paymentRepository:
-        class: App\Model\Payment\Repositories\PaymentRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Payment\Payment)
-    placePointRepository:
-        class: App\Model\Settings\Repositories\PlacePointRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\PlacePoint)
-    settingsRepository:
-        class: App\Model\Settings\Repositories\SettingsRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\Settings)
-    skautIsCourseRepository:
-        class: App\Model\SkautIs\Repositories\SkautIsCourseRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\SkautIs\SkautIsCourse)
-
     pageFormFactory:
         factory: App\AdminModule\CmsModule\Forms\PageForm(%id%, %area%, ...)
         implement: App\AdminModule\CmsModule\Forms\IPageFormFactory

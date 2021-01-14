@@ -32,7 +32,7 @@ class CategoryUpdatedEventListener implements MessageHandlerInterface
         $originalRegisterableRoles = $event->getOriginalRegisterableRoles()->toArray();
 
         if ($registerableRoles != $originalRegisterableRoles) {
-            $this->commandBus->handle(new UpdateUsersPrograms(new ArrayCollection($this->userRepository->findAll())));
+            $this->commandBus->handle(new UpdateUsersPrograms($this->userRepository->findAll()));
         }
     }
 }
