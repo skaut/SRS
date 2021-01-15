@@ -7,6 +7,7 @@ namespace App\Model\CustomInput\Repositories;
 use App\Model\Acl\Role;
 use App\Model\CustomInput\CustomInput;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -26,6 +27,16 @@ class CustomInputRepository extends AbstractRepository
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em, CustomInput::class);
+    }
+
+    /**
+     * @return Collection<CustomInput>
+     */
+    public function findAll(): Collection
+    {
+        $result = $this->getRepository()->findAll();
+
+        return new ArrayCollection($result);
     }
 
     /**

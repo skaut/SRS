@@ -6,6 +6,7 @@ namespace App\Model\SkautIs\Repositories;
 
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\SkautIs\SkautIsCourse;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,6 +25,16 @@ class SkautIsCourseRepository extends AbstractRepository
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em, SkautIsCourse::class);
+    }
+
+    /**
+     * @return Collection<SkautIsCourse>
+     */
+    public function findAll(): Collection
+    {
+        $result = $this->getRepository()->findAll();
+
+        return new ArrayCollection($result);
     }
 
     /**

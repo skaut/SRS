@@ -193,7 +193,7 @@ class DocumentsGridControl extends Control
         /** @var FileUpload $file */
         $file = $values->file;
         if ($file->getError() == UPLOAD_ERR_OK) {
-            $this->filesService->delete($this->documentRepository->find((int) $id)->getFile());
+            $this->filesService->delete($this->documentRepository->findById((int) $id)->getFile());
             $path = $this->generatePath($file);
             $this->filesService->save($file, $path);
 
