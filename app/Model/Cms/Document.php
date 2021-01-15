@@ -13,7 +13,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita dokumentu.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Cms\Repositories\DocumentRepository")
+ * @ORM\Entity
  * @ORM\Table(name="document")
  *
  * @author Michal Májský

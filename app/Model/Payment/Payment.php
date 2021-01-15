@@ -19,7 +19,7 @@ use function implode;
 /**
  * Entita platba.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Payment\Repositories\PaymentRepository")
+ * @ORM\Entity
  * @ORM\Table(name="payment")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>

@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Model\Cms\Repositories;
 
 use App\Model\Cms\Faq;
-use Doctrine\ORM\EntityRepository;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
@@ -19,14 +20,19 @@ use const PHP_INT_MAX;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class FaqRepository extends EntityRepository
+class FaqRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Faq::class);
+    }
+
     /**
      * Vrací otázku podle id.
      */
     public function findById(?int $id): ?Faq
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -64,7 +70,7 @@ class FaqRepository extends EntityRepository
      */
     public function findPublishedOrderedByPosition(): array
     {
-        return $this->findBy(['public' => true], ['position' => 'ASC']);
+        return $this->getRepository()->findBy(['public' => true], ['position' => 'ASC']);
     }
 
     /**
@@ -79,8 +85,8 @@ class FaqRepository extends EntityRepository
             $faq->setPosition($this->findLastPosition() + 1);
         }
 
-        $this->_em->persist($faq);
-        $this->_em->flush();
+        $this->em->persist($faq);
+        $this->em->flush();
     }
 
     /**
@@ -90,8 +96,8 @@ class FaqRepository extends EntityRepository
      */
     public function remove(Faq $faq): void
     {
-        $this->_em->remove($faq);
-        $this->_em->flush();
+        $this->em->remove($faq);
+        $this->em->flush();
     }
 
     /**
@@ -101,9 +107,9 @@ class FaqRepository extends EntityRepository
      */
     public function sort(int $itemId, int $prevId, int $nextId): void
     {
-        $item = $this->find($itemId);
-        $prev = $prevId ? $this->find($prevId) : null;
-        $next = $nextId ? $this->find($nextId) : null;
+        $item = $this->getRepository()->find($itemId);
+        $prev = $prevId ? $this->getRepository()->find($prevId) : null;
+        $next = $nextId ? $this->getRepository()->find($nextId) : null;
 
         $itemsToMoveUp = $this->createQueryBuilder('i')
             ->where('i.position <= :position')
@@ -115,7 +121,7 @@ class FaqRepository extends EntityRepository
 
         foreach ($itemsToMoveUp as $t) {
             $t->setPosition($t->getPosition() - 1);
-            $this->_em->persist($t);
+            $this->em->persist($t);
         }
 
         $itemsToMoveDown = $this->createQueryBuilder('i')
@@ -128,7 +134,7 @@ class FaqRepository extends EntityRepository
 
         foreach ($itemsToMoveDown as $t) {
             $t->setPosition($t->getPosition() + 1);
-            $this->_em->persist($t);
+            $this->em->persist($t);
         }
 
         if ($prev) {
@@ -139,7 +145,7 @@ class FaqRepository extends EntityRepository
             $item->setPosition(1);
         }
 
-        $this->_em->persist($item);
-        $this->_em->flush();
+        $this->em->persist($item);
+        $this->em->flush();
     }
 }

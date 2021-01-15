@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Model\Cms\Repositories;
 
 use App\Model\Cms\Document;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
 /**
@@ -16,14 +17,19 @@ use Doctrine\ORM\ORMException;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class DocumentRepository extends EntityRepository
+class DocumentRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Document::class);
+    }
+
     /**
      * Vrátí dokument podle id.
      */
     public function findById(?int $id): ?Document
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -58,8 +64,8 @@ class DocumentRepository extends EntityRepository
      */
     public function save(Document $document): void
     {
-        $this->_em->persist($document);
-        $this->_em->flush();
+        $this->em->persist($document);
+        $this->em->flush();
     }
 
     /**
@@ -69,7 +75,7 @@ class DocumentRepository extends EntityRepository
      */
     public function remove(Document $document): void
     {
-        $this->_em->remove($document);
-        $this->_em->flush();
+        $this->em->remove($document);
+        $this->em->flush();
     }
 }

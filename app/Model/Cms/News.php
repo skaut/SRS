@@ -11,7 +11,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita aktuality.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Cms\Repositories\NewsRepository")
+ * @ORM\Entity
  * @ORM\Table(name="news")
  *
  * @author Michal Májský

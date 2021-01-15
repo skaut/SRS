@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\Settings\Repositories;
 
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Settings\Settings;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
 /**
@@ -14,14 +15,19 @@ use Doctrine\ORM\ORMException;
  * @author Michal Májský
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SettingsRepository extends EntityRepository
+class SettingsRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Settings::class);
+    }
+
     /**
      * Vrací položku nastavení podle názvu.
      */
     public function findByItem(?string $item): ?Settings
     {
-        return $this->findOneBy(['item' => $item]);
+        return $this->getRepository()->findOneBy(['item' => $item]);
     }
 
     /**
@@ -29,7 +35,7 @@ class SettingsRepository extends EntityRepository
      */
     public function save(Settings $settings): void
     {
-        $this->_em->persist($settings);
-        $this->_em->flush();
+        $this->em->persist($settings);
+        $this->em->flush();
     }
 }

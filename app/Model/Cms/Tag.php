@@ -15,7 +15,7 @@ use function implode;
 /**
  * Entita tagu pro dokumenty.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Cms\Repositories\TagRepository")
+ * @ORM\Entity
  * @ORM\Table(name="tag")
  *
  * @author Michal Májský

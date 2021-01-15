@@ -11,7 +11,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita FAQ.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Cms\Repositories\FaqRepository")
+ * @ORM\Entity
  * @ORM\Table(name="faq")
  *
  * @author Michal Májský

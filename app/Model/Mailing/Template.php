@@ -12,7 +12,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita šablona automatického e-mailu.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Mailing\Repositories\TemplateRepository")
+ * @ORM\Entity
  * @ORM\Table(name="mail_template")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>

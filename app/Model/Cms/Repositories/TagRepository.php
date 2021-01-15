@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Model\Cms\Repositories;
 
 use App\Model\Cms\Tag;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
 use function array_map;
@@ -18,14 +19,19 @@ use function array_map;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class TagRepository extends EntityRepository
+class TagRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Tag::class);
+    }
+
     /**
      * Vrátí tag podle id.
      */
     public function findById(?int $id): ?Tag
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -41,7 +47,7 @@ class TagRepository extends EntityRepository
             ->where(Criteria::expr()->in('id', $ids))
             ->orderBy(['name' => 'ASC']);
 
-        return $this->matching($criteria);
+        return $this->getRepository()->matching($criteria);
     }
 
     /**
@@ -97,8 +103,8 @@ class TagRepository extends EntityRepository
      */
     public function save(Tag $tag): void
     {
-        $this->_em->persist($tag);
-        $this->_em->flush();
+        $this->em->persist($tag);
+        $this->em->flush();
     }
 
     /**
@@ -108,8 +114,8 @@ class TagRepository extends EntityRepository
      */
     public function remove(Tag $tag): void
     {
-        $this->_em->remove($tag);
-        $this->_em->flush();
+        $this->em->remove($tag);
+        $this->em->flush();
     }
 
     /**

@@ -10,7 +10,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita mapového bodu.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Settings\Repositories\PlacePointRepository")
+ * @ORM\Entity
  * @ORM\Table(name="place_point")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>

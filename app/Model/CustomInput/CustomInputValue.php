@@ -11,7 +11,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Abstraktní entita hodnota vlastního pole přihlášky.
  *
- * @ORM\Entity(repositoryClass="\App\Model\CustomInput\Repositories\CustomInputValueRepository")
+ * @ORM\Entity
  * @ORM\Table(name="custom_input_value")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")

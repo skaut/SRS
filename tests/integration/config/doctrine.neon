@@ -10,7 +10,7 @@ extensions:
 
 nettrine.dbal:
     connection:
-        host: mysql
+        host: mysql-test
         driver: mysqli
         dbname: srs
         user: root

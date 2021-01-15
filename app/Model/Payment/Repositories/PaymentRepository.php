@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\Payment\Repositories;
 
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Payment\Payment;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
 /**
@@ -14,14 +15,19 @@ use Doctrine\ORM\ORMException;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class PaymentRepository extends EntityRepository
+class PaymentRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Payment::class);
+    }
+
     /**
      * Vrací platbu podle id.
      */
     public function findById(?int $id): ?Payment
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -29,7 +35,7 @@ class PaymentRepository extends EntityRepository
      */
     public function findByTransactionId(string $transactionId): ?Payment
     {
-        return $this->findOneBy(['transactionId' => $transactionId]);
+        return $this->getRepository()->findOneBy(['transactionId' => $transactionId]);
     }
 
     /**
@@ -39,8 +45,8 @@ class PaymentRepository extends EntityRepository
      */
     public function save(Payment $payment): void
     {
-        $this->_em->persist($payment);
-        $this->_em->flush();
+        $this->em->persist($payment);
+        $this->em->flush();
     }
 
     /**
@@ -52,10 +58,10 @@ class PaymentRepository extends EntityRepository
     {
         foreach ($payment->getPairedApplications() as $pairedApplication) {
             $pairedApplication->setPayment(null);
-            $this->_em->persist($pairedApplication);
+            $this->em->persist($pairedApplication);
         }
 
-        $this->_em->remove($payment);
-        $this->_em->flush();
+        $this->em->remove($payment);
+        $this->em->flush();
     }
 }

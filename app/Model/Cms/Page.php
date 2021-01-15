@@ -20,7 +20,7 @@ use function in_array;
 /**
  * Entita stránky.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Cms\Repositories\PageRepository")
+ * @ORM\Entity
  * @ORM\Table(name="page")
  *
  * @author Michal Májský

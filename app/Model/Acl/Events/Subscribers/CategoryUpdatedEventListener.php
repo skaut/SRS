@@ -8,7 +8,6 @@ use App\Model\Acl\Events\CategoryUpdatedEvent;
 use App\Model\User\Commands\UpdateUsersPrograms;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class CategoryUpdatedEventListener implements MessageHandlerInterface

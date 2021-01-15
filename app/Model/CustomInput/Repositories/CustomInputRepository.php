@@ -6,8 +6,9 @@ namespace App\Model\CustomInput\Repositories;
 
 use App\Model\Acl\Role;
 use App\Model\CustomInput\CustomInput;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
@@ -20,14 +21,19 @@ use const PHP_INT_MAX;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class CustomInputRepository extends EntityRepository
+class CustomInputRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, CustomInput::class);
+    }
+
     /**
      * Vrací pole podle id.
      */
     public function findById(?int $id): ?CustomInput
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -86,8 +92,8 @@ class CustomInputRepository extends EntityRepository
             $input->setPosition($this->findLastPosition() + 1);
         }
 
-        $this->_em->persist($input);
-        $this->_em->flush();
+        $this->em->persist($input);
+        $this->em->flush();
     }
 
     /**
@@ -98,11 +104,11 @@ class CustomInputRepository extends EntityRepository
     public function remove(CustomInput $input): void
     {
         foreach ($input->getCustomInputValues() as $customInputValue) {
-            $this->_em->remove($customInputValue);
+            $this->em->remove($customInputValue);
         }
 
-        $this->_em->remove($input);
-        $this->_em->flush();
+        $this->em->remove($input);
+        $this->em->flush();
     }
 
     /**
@@ -112,9 +118,9 @@ class CustomInputRepository extends EntityRepository
      */
     public function sort(int $itemId, int $prevId, int $nextId): void
     {
-        $item = $this->find($itemId);
-        $prev = $prevId ? $this->find($prevId) : null;
-        $next = $nextId ? $this->find($nextId) : null;
+        $item = $this->getRepository()->find($itemId);
+        $prev = $prevId ? $this->getRepository()->find($prevId) : null;
+        $next = $nextId ? $this->getRepository()->find($nextId) : null;
 
         $itemsToMoveUp = $this->createQueryBuilder('i')
             ->where('i.position <= :position')
@@ -126,7 +132,7 @@ class CustomInputRepository extends EntityRepository
 
         foreach ($itemsToMoveUp as $t) {
             $t->setPosition($t->getPosition() - 1);
-            $this->_em->persist($t);
+            $this->em->persist($t);
         }
 
         $itemsToMoveDown = $this->createQueryBuilder('i')
@@ -139,7 +145,7 @@ class CustomInputRepository extends EntityRepository
 
         foreach ($itemsToMoveDown as $t) {
             $t->setPosition($t->getPosition() + 1);
-            $this->_em->persist($t);
+            $this->em->persist($t);
         }
 
         if ($prev) {
@@ -150,7 +156,7 @@ class CustomInputRepository extends EntityRepository
             $item->setPosition(1);
         }
 
-        $this->_em->persist($item);
-        $this->_em->flush();
+        $this->em->persist($item);
+        $this->em->flush();
     }
 }

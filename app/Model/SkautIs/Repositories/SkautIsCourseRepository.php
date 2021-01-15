@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Model\SkautIs\Repositories;
 
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\SkautIs\SkautIsCourse;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
 use function array_map;
@@ -18,14 +19,19 @@ use function array_map;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class SkautIsCourseRepository extends EntityRepository
+class SkautIsCourseRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, SkautIsCourse::class);
+    }
+
     /**
      * Vrací skautIS kurz podle id.
      */
     public function findById(?int $id): ?SkautIsCourse
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -35,8 +41,8 @@ class SkautIsCourseRepository extends EntityRepository
      */
     public function save(SkautIsCourse $skautIsCourse): void
     {
-        $this->_em->persist($skautIsCourse);
-        $this->_em->flush();
+        $this->em->persist($skautIsCourse);
+        $this->em->flush();
     }
 
     /**
@@ -46,8 +52,8 @@ class SkautIsCourseRepository extends EntityRepository
      */
     public function remove(SkautIsCourse $skautIsCourse): void
     {
-        $this->_em->remove($skautIsCourse);
-        $this->_em->flush();
+        $this->em->remove($skautIsCourse);
+        $this->em->flush();
     }
 
     /**
@@ -57,11 +63,11 @@ class SkautIsCourseRepository extends EntityRepository
      */
     public function removeAll(): void
     {
-        foreach ($this->findAll() as $skautIsCourse) {
-            $this->_em->remove($skautIsCourse);
+        foreach ($this->getRepository()->findAll() as $skautIsCourse) {
+            $this->em->remove($skautIsCourse);
         }
 
-        $this->_em->flush();
+        $this->em->flush();
     }
 
     /**
@@ -91,7 +97,7 @@ class SkautIsCourseRepository extends EntityRepository
             ->where(Criteria::expr()->in('id', $ids))
             ->orderBy(['name' => 'ASC']);
 
-        return $this->matching($criteria);
+        return $this->getRepository()->matching($criteria);
     }
 
     /**

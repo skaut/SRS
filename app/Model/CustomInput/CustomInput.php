@@ -15,7 +15,7 @@ use function implode;
 /**
  * Abstraktní entita vlastní pole přihlášky.
  *
- * @ORM\Entity(repositoryClass="\App\Model\CustomInput\Repositories\CustomInputRepository")
+ * @ORM\Entity
  * @ORM\Table(name="custom_input")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")

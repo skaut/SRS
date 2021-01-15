@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Model\Cms\Repositories;
 
 use App\Model\Cms\News;
-use Doctrine\ORM\EntityRepository;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
@@ -17,14 +18,19 @@ use Doctrine\ORM\ORMException;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class NewsRepository extends EntityRepository
+class NewsRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, News::class);
+    }
+
     /**
      * Vrací aktualitu podle id.
      */
     public function findById(?int $id): ?News
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -64,8 +70,8 @@ class NewsRepository extends EntityRepository
      */
     public function save(News $news): void
     {
-        $this->_em->persist($news);
-        $this->_em->flush();
+        $this->em->persist($news);
+        $this->em->flush();
     }
 
     /**
@@ -75,7 +81,7 @@ class NewsRepository extends EntityRepository
      */
     public function remove(News $document): void
     {
-        $this->_em->remove($document);
-        $this->_em->flush();
+        $this->em->remove($document);
+        $this->em->flush();
     }
 }

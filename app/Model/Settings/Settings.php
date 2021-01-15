@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entita nastavení.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Settings\Repositories\SettingsRepository")
+ * @ORM\Entity
  * @ORM\Table(name="settings")
  *
  * @author Michal Májský

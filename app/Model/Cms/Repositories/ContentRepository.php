@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Model\Cms\Repositories;
 
 use App\Model\Cms\Content;
-use Doctrine\ORM\EntityRepository;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
@@ -14,8 +15,13 @@ use Doctrine\ORM\ORMException;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class ContentRepository extends EntityRepository
+class ContentRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Content::class);
+    }
+
     /**
      * Uloží obsah.
      *
@@ -24,8 +30,8 @@ class ContentRepository extends EntityRepository
      */
     public function save(Content $content): void
     {
-        $this->_em->persist($content);
-        $this->_em->flush();
+        $this->em->persist($content);
+        $this->em->flush();
     }
 
     /**
@@ -36,7 +42,7 @@ class ContentRepository extends EntityRepository
      */
     public function remove(Content $content): void
     {
-        $this->_em->remove($content);
-        $this->_em->flush();
+        $this->em->remove($content);
+        $this->em->flush();
     }
 }

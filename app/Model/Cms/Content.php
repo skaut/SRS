@@ -18,7 +18,7 @@ use function ucwords;
 /**
  * Abstraktní entita obsahu.
  *
- * @ORM\Entity(repositoryClass="\App\Model\Cms\Repositories\ContentRepository")
+ * @ORM\Entity
  * @ORM\Table(name="content")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")

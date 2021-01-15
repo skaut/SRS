@@ -33,7 +33,6 @@ use App\Services\SubeventService;
 use App\Services\UserService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Exception;

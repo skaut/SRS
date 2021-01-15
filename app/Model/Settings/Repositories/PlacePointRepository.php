@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\Settings\Repositories;
 
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Settings\PlacePoint;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
 /**
@@ -14,11 +15,16 @@ use Doctrine\ORM\ORMException;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class PlacePointRepository extends EntityRepository
+class PlacePointRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, PlacePoint::class);
+    }
+
     public function findById(?int $id): ?PlacePoint
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -26,8 +32,8 @@ class PlacePointRepository extends EntityRepository
      */
     public function save(PlacePoint $placePoint): void
     {
-        $this->_em->persist($placePoint);
-        $this->_em->flush();
+        $this->em->persist($placePoint);
+        $this->em->flush();
     }
 
     /**
@@ -35,7 +41,7 @@ class PlacePointRepository extends EntityRepository
      */
     public function remove(PlacePoint $placePoint): void
     {
-        $this->_em->remove($placePoint);
-        $this->_em->flush();
+        $this->em->remove($placePoint);
+        $this->em->flush();
     }
 }

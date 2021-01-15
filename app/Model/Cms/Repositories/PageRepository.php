@@ -6,9 +6,10 @@ namespace App\Model\Cms\Repositories;
 
 use App\Model\Cms\Exceptions\PageException;
 use App\Model\Cms\Page;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
@@ -26,14 +27,19 @@ use const PHP_INT_MAX;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class PageRepository extends EntityRepository
+class PageRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Page::class);
+    }
+
     /**
      * Vrací stránku podle id.
      */
     public function findById(?int $id): ?Page
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -43,7 +49,7 @@ class PageRepository extends EntityRepository
      */
     public function findPublishedBySlug(string $slug): ?Page
     {
-        return $this->findOneBy(['public' => true, 'slug' => $slug]);
+        return $this->getRepository()->findOneBy(['public' => true, 'slug' => $slug]);
     }
 
     /**
@@ -53,7 +59,7 @@ class PageRepository extends EntityRepository
      */
     public function findPublishedOrderedByPosition(): array
     {
-        return $this->findBy(['public' => true], ['position' => 'ASC']);
+        return $this->getRepository()->findBy(['public' => true], ['position' => 'ASC']);
     }
 
     /**
@@ -129,7 +135,7 @@ class PageRepository extends EntityRepository
             ->where(Criteria::expr()->in('slug', $slugs))
             ->orderBy(['name' => 'ASC']);
 
-        return $this->matching($criteria);
+        return $this->getRepository()->matching($criteria);
     }
 
     /**
@@ -180,8 +186,8 @@ class PageRepository extends EntityRepository
             $page->setPosition($this->findLastPosition() + 1);
         }
 
-        $this->_em->persist($page);
-        $this->_em->flush();
+        $this->em->persist($page);
+        $this->em->flush();
     }
 
     /**
@@ -194,11 +200,11 @@ class PageRepository extends EntityRepository
     public function remove(Page $page): void
     {
         foreach ($page->getContents() as $content) {
-            $this->_em->remove($content);
+            $this->em->remove($content);
         }
 
-        $this->_em->remove($page);
-        $this->_em->flush();
+        $this->em->remove($page);
+        $this->em->flush();
     }
 
     /**
@@ -209,9 +215,9 @@ class PageRepository extends EntityRepository
      */
     public function sort(int $itemId, int $prevId, int $nextId): void
     {
-        $item = $this->find($itemId);
-        $prev = $prevId ? $this->find($prevId) : null;
-        $next = $nextId ? $this->find($nextId) : null;
+        $item = $this->getRepository()->find($itemId);
+        $prev = $prevId ? $this->getRepository()->find($prevId) : null;
+        $next = $nextId ? $this->getRepository()->find($nextId) : null;
 
         $itemsToMoveUp = $this->createQueryBuilder('i')
             ->where('i.position <= :position')
@@ -223,7 +229,7 @@ class PageRepository extends EntityRepository
 
         foreach ($itemsToMoveUp as $t) {
             $t->setPosition($t->getPosition() - 1);
-            $this->_em->persist($t);
+            $this->em->persist($t);
         }
 
         $itemsToMoveDown = $this->createQueryBuilder('i')
@@ -236,7 +242,7 @@ class PageRepository extends EntityRepository
 
         foreach ($itemsToMoveDown as $t) {
             $t->setPosition($t->getPosition() + 1);
-            $this->_em->persist($t);
+            $this->em->persist($t);
         }
 
         if ($prev) {
@@ -247,7 +253,7 @@ class PageRepository extends EntityRepository
             $item->setPosition(1);
         }
 
-        $this->_em->persist($item);
-        $this->_em->flush();
+        $this->em->persist($item);
+        $this->em->flush();
     }
 }

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\Mailing\Repositories;
 
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Mailing\Template;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
 /**
@@ -14,14 +15,19 @@ use Doctrine\ORM\ORMException;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class TemplateRepository extends EntityRepository
+class TemplateRepository extends AbstractRepository
 {
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em, Template::class);
+    }
+
     /**
      * Vrací šablonu podle id.
      */
     public function findById(?int $id): ?Template
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -29,7 +35,7 @@ class TemplateRepository extends EntityRepository
      */
     public function findByType(string $type): ?Template
     {
-        return $this->findOneBy(['type' => $type]);
+        return $this->getRepository()->findOneBy(['type' => $type]);
     }
 
     /**
@@ -39,7 +45,7 @@ class TemplateRepository extends EntityRepository
      */
     public function save(Template $template): void
     {
-        $this->_em->persist($template);
-        $this->_em->flush();
+        $this->em->persist($template);
+        $this->em->flush();
     }
 }
