@@ -35,9 +35,10 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
 
     private ProgramRepository $programRepository;
 
-    public function testSaveBlock(): void
+    public function testRegisterProgram(): void
     {
         $subevent = new Subevent();
+        $subevent->setName("subevent");
         $this->subeventRepository->save($subevent);
 
         $category = new Category("category");
@@ -69,14 +70,20 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $this->roleRepository->save($roleNoCategory);
 
         $userRoleCategory = new User();
+        $userRoleCategory->setFirstName('First');
+        $userRoleCategory->setLastName('Last');
         $userRoleCategory->addRole($roleCategory);
         $this->userRepository->save($userRoleCategory);
 
         $userRoleNoCategory = new User();
+        $userRoleNoCategory->setFirstName('First');
+        $userRoleNoCategory->setLastName('Last');
         $userRoleNoCategory->addRole($roleNoCategory);
         $this->userRepository->save($userRoleNoCategory);
 
         $userNoRole = new User();
+        $userNoRole->setFirstName('First');
+        $userNoRole->setLastName('Last');
         $this->userRepository->save($userNoRole);
 
         $this->commandBus->handle(new RegisterProgram($userRoleCategory, $programBlockAlternates, false));

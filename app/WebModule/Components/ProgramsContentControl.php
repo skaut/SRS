@@ -70,7 +70,6 @@ class ProgramsContentControl extends Control
         $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
 
         if ($user->isLoggedIn()) {
-            $template->userHasPermission     = $user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS);
             $template->userWaitingForPayment = ! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
                 && $this->userRepository->findById($user->getId())->getWaitingForPaymentApplications()->count() > 0;
         }

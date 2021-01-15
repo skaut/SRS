@@ -55,11 +55,6 @@ class Permission
      */
     public const MANAGE_CATEGORIES = 'manage_categories';
 
-    /**
-     * Oprávnění přihlašovat se na programy.
-     */
-    public const CHOOSE_PROGRAMS = 'choose_programs';
-
     /** @var string[] */
     public static array $permissions = [
         self::MANAGE,
@@ -67,7 +62,6 @@ class Permission
         self::MANAGE_OWN_PROGRAMS,
         self::MANAGE_ALL_PROGRAMS,
         self::MANAGE_SCHEDULE,
-        self::CHOOSE_PROGRAMS,
     ];
     use Id;
 

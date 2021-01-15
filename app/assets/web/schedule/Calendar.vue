@@ -43,7 +43,7 @@
                         <div v-html="selectedEventInfo.event.extendedProps.block.description"></div>
                     </div>
 
-                    <div class="modal-footer" v-show="userAllowedRegisterPrograms">
+                    <div class="modal-footer" v-show="registerProgramsAllowed">
                         <button @click="handleAttendEvent()"
                                 v-show="!(selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates) && !(selectedEventInfo.event.extendedProps.alternatesAllowed && selectedEventInfo.event.extendedProps.occupied)"
                                 :disabled="selectedEventInfo.event.extendedProps.blocked || selectedEventInfo.event.extendedProps.occupied || !selectedEventInfo.event.extendedProps.paid"
@@ -156,7 +156,7 @@
             return {
                 initialView: localStorage.getItem('fcInitialView') || 'timeGridSeminar',
                 selectedEventInfo: null,
-                userAllowedRegisterPrograms: userAllowedRegisterPrograms,
+                registerProgramsAllowed: registerProgramsAllowed,
                 basePath: basePath
             }
         },

@@ -259,25 +259,19 @@ class EditRoleFormFactory
     {
         $options = [];
 
-        $groupWebName    = 'common.permission_group.web';
-        $optionsGroupWeb = &$options[$groupWebName];
-        $this->preparePermissionOption($optionsGroupWeb, Permission::CHOOSE_PROGRAMS, SrsResource::PROGRAM);
-
-        $groupAdminName    = 'common.permission_group.admin';
-        $optionsGroupAdmin = &$options[$groupAdminName];
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::ACCESS, SrsResource::ADMIN);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::CMS);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::ACCESS, SrsResource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_OWN_PROGRAMS, SrsResource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_ALL_PROGRAMS, SrsResource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_SCHEDULE, SrsResource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_CATEGORIES, SrsResource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_ROOMS, SrsResource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::USERS);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::PAYMENTS);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::ACL);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::MAILING);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::CONFIGURATION);
+        $this->preparePermissionOption($options, Permission::ACCESS, SrsResource::ADMIN);
+        $this->preparePermissionOption($options, Permission::MANAGE, SrsResource::CMS);
+        $this->preparePermissionOption($options, Permission::ACCESS, SrsResource::PROGRAM);
+        $this->preparePermissionOption($options, Permission::MANAGE_OWN_PROGRAMS, SrsResource::PROGRAM);
+        $this->preparePermissionOption($options, Permission::MANAGE_ALL_PROGRAMS, SrsResource::PROGRAM);
+        $this->preparePermissionOption($options, Permission::MANAGE_SCHEDULE, SrsResource::PROGRAM);
+        $this->preparePermissionOption($options, Permission::MANAGE_CATEGORIES, SrsResource::PROGRAM);
+        $this->preparePermissionOption($options, Permission::MANAGE_ROOMS, SrsResource::PROGRAM);
+        $this->preparePermissionOption($options, Permission::MANAGE, SrsResource::USERS);
+        $this->preparePermissionOption($options, Permission::MANAGE, SrsResource::PAYMENTS);
+        $this->preparePermissionOption($options, Permission::MANAGE, SrsResource::ACL);
+        $this->preparePermissionOption($options, Permission::MANAGE, SrsResource::MAILING);
+        $this->preparePermissionOption($options, Permission::MANAGE, SrsResource::CONFIGURATION);
 
         return $options;
     }
@@ -285,15 +279,15 @@ class EditRoleFormFactory
     /**
      * Připraví oprávnění jako možnost pro select.
      *
-     * @param string[] $optionsGroup
+     * @param string[] $options
      *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    private function preparePermissionOption(?array &$optionsGroup, string $permissionName, string $resourceName): void
+    private function preparePermissionOption(?array &$options, string $permissionName, string $resourceName): void
     {
-        $permission                         = $this->permissionRepository->findByPermissionAndResourceName($permissionName, $resourceName);
-        $optionsGroup[$permission->getId()] = 'common.permission_name.' . $permissionName . '.' . $resourceName;
+        $permission                    = $this->permissionRepository->findByPermissionAndResourceName($permissionName, $resourceName);
+        $options[$permission->getId()] = 'common.permission_name.' . $permissionName . '.' . $resourceName;
     }
 
     /**

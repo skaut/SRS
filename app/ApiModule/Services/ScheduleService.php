@@ -351,10 +351,6 @@ class ScheduleService
             throw new ApiException($this->translator->translate('common.api.schedule.program_not_found'));
         }
 
-        if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
-            throw new ApiException($this->translator->translate('common.api.schedule.user_not_allowed_register_programs'));
-        }
-
         if (! $this->queryBus->handle(new IsAllowedRegisterProgramsQuery())) {
             throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));
         }

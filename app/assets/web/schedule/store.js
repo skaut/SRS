@@ -287,7 +287,7 @@ function getColor(event) {
         return COLOR_ATTENDS;
     } else if (event.extendedProps.userAlternates) {
         return COLOR_ALTERNATES;
-    } else if (!userAllowedRegisterPrograms || event.extendedProps.occupied || event.extendedProps.blocked || !event.extendedProps.paid) {
+    } else if (!registerProgramsAllowed || event.extendedProps.occupied || event.extendedProps.blocked || !event.extendedProps.paid) {
         return COLOR_BLOCKED;
     } else if (event.extendedProps.block.mandatory) {
         return COLOR_MANDATORY;

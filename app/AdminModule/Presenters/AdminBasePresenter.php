@@ -119,7 +119,6 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->permissionManageSchedule    = Permission::MANAGE_SCHEDULE;
         $this->template->permissionManageRooms       = Permission::MANAGE_ROOMS;
         $this->template->permissionManageCategories  = Permission::MANAGE_CATEGORIES;
-        $this->template->permissionChoosePrograms    = Permission::CHOOSE_PROGRAMS;
 
         $this->template->footer      = $this->settingsService->getValue(Settings::FOOTER);
         $this->template->seminarName = $this->settingsService->getValue(Settings::SEMINAR_NAME);

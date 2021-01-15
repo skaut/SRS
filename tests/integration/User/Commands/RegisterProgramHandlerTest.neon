@@ -5,10 +5,15 @@ services:
     - App\Model\Program\Repositories\CategoryRepository
     - App\Model\Acl\Repositories\RoleRepository
     - App\Model\Program\Repositories\ProgramRepository
+    - App\Model\Program\Repositories\ProgramApplicationRepository
     - class: App\Model\User\Commands\Handlers\RegisterProgramHandler
       tags:
         messenger.messageHandler:
         bus: commandBus
+    - class: App\Model\User\Queries\Handlers\UserAllowedProgramsQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
     
 includes:
 - ../../config/doctrine.neon

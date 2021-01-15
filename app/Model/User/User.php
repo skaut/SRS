@@ -738,14 +738,6 @@ class User
     }
 
     /**
-     * Je uživatel oprávněn zapisovat se na programy?
-     */
-    public function isAllowedRegisterPrograms(): bool
-    {
-        return $this->isApproved() && $this->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS);
-    }
-
-    /**
      * @return Collection|Application[]
      */
     public function getApplications(): Collection
