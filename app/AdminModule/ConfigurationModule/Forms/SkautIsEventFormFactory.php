@@ -14,7 +14,6 @@ use App\Model\Structure\Repositories\SubeventRepository;
 use App\Services\SettingsService;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -151,7 +150,7 @@ class SkautIsEventFormFactory
 
                 if (count($courses) === 1 && ! $this->subeventRepository->explicitSubeventsExists()) {
                     $subevent = $this->subeventRepository->findImplicit();
-                    $subevent->setSkautIsCourses(new ArrayCollection($this->skautIsCourseRepository->findAll()));
+                    $subevent->setSkautIsCourses($this->skautIsCourseRepository->findAll());
                     $this->subeventRepository->save($subevent);
                 }
 
