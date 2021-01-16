@@ -63,7 +63,7 @@ class ApplicationService
 
     private EntityManagerDecorator $em;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private ApplicationRepository $applicationRepository;
 
@@ -93,7 +93,7 @@ class ApplicationService
 
     public function __construct(
         EntityManagerDecorator $em,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
         AclService $aclService,

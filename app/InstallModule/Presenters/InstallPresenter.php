@@ -11,7 +11,7 @@ use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Contributte\Console\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\TableNotFoundException;
@@ -42,7 +42,7 @@ class InstallPresenter extends InstallBasePresenter
     public EntityManagerDecorator $em;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /** @inject */
     public RoleRepository $roleRepository;

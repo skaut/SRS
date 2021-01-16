@@ -26,7 +26,7 @@ use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use App\Services\SubeventService;
@@ -68,7 +68,7 @@ class UsersGridControl extends Control
 
     private UserRepository $userRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private CustomInputRepository $customInputRepository;
 
@@ -96,7 +96,7 @@ class UsersGridControl extends Control
         ITranslator $translator,
         EntityManagerDecorator $em,
         UserRepository $userRepository,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         CustomInputRepository $customInputRepository,
         RoleRepository $roleRepository,
         ExcelExportService $excelExportService,

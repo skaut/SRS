@@ -9,8 +9,8 @@ use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Queries\UserProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
+use App\Services\ISettingsService;
 use App\Services\QueryBus;
-use App\Services\SettingsService;
 use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
@@ -30,7 +30,7 @@ class TicketPresenter extends ExportBasePresenter
     public PdfResponse $pdfResponse;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /** @inject */
     public SubeventRepository $subeventRepository;

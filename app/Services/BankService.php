@@ -29,14 +29,14 @@ class BankService
 
     private EntityManagerDecorator $em;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private PaymentRepository $paymentRepository;
 
     public function __construct(
         ApplicationService $applicationService,
         EntityManagerDecorator $em,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         PaymentRepository $paymentRepository
     ) {
         $this->applicationService = $applicationService;

@@ -40,8 +40,8 @@ use App\Model\User\Queries\UserProgramBlocksQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
+use App\Services\ISettingsService;
 use App\Services\QueryBus;
-use App\Services\SettingsService;
 use App\Utils\Helpers;
 use DateInterval;
 use Doctrine\ORM\ORMException;
@@ -76,7 +76,7 @@ class ScheduleService
 
     private RoomRepository $roomRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private CommandBus $commandBus;
 
@@ -88,7 +88,7 @@ class ScheduleService
         ProgramRepository $programRepository,
         BlockRepository $blockRepository,
         RoomRepository $roomRepository,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         CommandBus $commandBus,
         QueryBus $queryBus
     ) {

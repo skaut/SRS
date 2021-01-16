@@ -8,18 +8,18 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
 use App\Model\User\Events\ProgramRegisteredEvent;
-use App\Services\MailService;
-use App\Services\SettingsService;
+use App\Services\IMailService;
+use App\Services\ISettingsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class ProgramRegisteredEventListener implements MessageHandlerInterface
 {
-    private MailService $mailService;
+    private IMailService $mailService;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
-    public function __construct(MailService $mailService, SettingsService $settingsService)
+    public function __construct(IMailService $mailService, ISettingsService $settingsService)
     {
         $this->mailService     = $mailService;
         $this->settingsService = $settingsService;

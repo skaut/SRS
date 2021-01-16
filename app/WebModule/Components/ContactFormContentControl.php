@@ -9,7 +9,7 @@ use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\WebModule\Forms\ContactForm;
 use App\WebModule\Forms\IContactFormFactory;
 use Nette\Application\UI\Control;
@@ -26,12 +26,12 @@ class ContactFormContentControl extends Control
 
     private RoleRepository $roleRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     public function __construct(
         IContactFormFactory $contactFormFactory,
         RoleRepository $roleRepository,
-        SettingsService $settingsService
+        ISettingsService $settingsService
     ) {
         $this->contactFormFactory = $contactFormFactory;
         $this->roleRepository     = $roleRepository;

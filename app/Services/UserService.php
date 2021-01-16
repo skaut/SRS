@@ -30,13 +30,13 @@ class UserService
 
     private MailService $mailService;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     public function __construct(
         ITranslator $translator,
         UserRepository $userRepository,
         MailService $mailService,
-        SettingsService $settingsService
+        ISettingsService $settingsService
     ) {
         $this->translator      = $translator;
         $this->userRepository  = $userRepository;

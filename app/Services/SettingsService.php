@@ -25,7 +25,7 @@ use const FILTER_VALIDATE_INT;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SettingsService
+class SettingsService implements ISettingsService
 {
     use Nette\SmartObject;
 

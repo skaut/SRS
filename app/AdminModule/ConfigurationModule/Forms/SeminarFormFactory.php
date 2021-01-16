@@ -8,7 +8,7 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
@@ -31,13 +31,13 @@ class SeminarFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private SubeventRepository $subeventRepository;
 
     public function __construct(
         BaseFormFactory $baseForm,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         SubeventRepository $subeventRepository
     ) {
         $this->baseFormFactory    = $baseForm;

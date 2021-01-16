@@ -9,7 +9,7 @@ use App\Model\Cms\Repositories\PageRepository;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Services\FilesService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
@@ -36,14 +36,14 @@ class WebFormFactory
 
     private PageRepository $pageRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private FilesService $filesService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
         PageRepository $pageRepository,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         FilesService $filesService
     ) {
         $this->baseFormFactory = $baseFormFactory;

@@ -60,6 +60,7 @@ services:
     - App\Services\Authorizator
     - App\Services\DatabaseService(%appDir%/..)
     - App\Services\FilesService(%wwwDir%/files)
+
     - App\Services\CommandBus(@messenger.commandBus.bus)
     - App\Services\QueryBus(@messenger.queryBus.bus)
     - App\Services\EventBus(@messenger.eventBus.bus)

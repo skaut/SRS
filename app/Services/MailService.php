@@ -34,13 +34,13 @@ use function str_replace;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class MailService
+class MailService implements IMailService
 {
     use Nette\SmartObject;
 
     private MailFactory $mailFactory;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private MailRepository $mailRepository;
 
@@ -56,7 +56,7 @@ class MailService
 
     public function __construct(
         MailFactory $mailFactory,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         MailRepository $mailRepository,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
@@ -77,10 +77,10 @@ class MailService
     /**
      * Rozešle e-mail.
      *
-     * @param Collection|Role[]|null     $recipientsRoles
-     * @param Collection|Subevent[]|null $recipientsSubevents
-     * @param Collection|User[]|null     $recipientsUsers
-     * @param Collection|string[]|null   $recipientEmails
+     * @param Collection<Role>|null     $recipientsRoles
+     * @param Collection<Subevent>|null $recipientsSubevents
+     * @param Collection<User>|null     $recipientsUsers
+     * @param Collection<string>|null   $recipientEmails
      *
      * @throws SettingsException
      * @throws Throwable
@@ -156,9 +156,9 @@ class MailService
     /**
      * Rozešle e-mail podle šablony.
      *
-     * @param Collection|User[]|null   $recipientsUsers
-     * @param Collection|string[]|null $recipientsEmails
-     * @param string[]                 $parameters
+     * @param Collection<User>|null   $recipientsUsers
+     * @param Collection<string>|null $recipientsEmails
+     * @param string[]                $parameters
      *
      * @throws MailingMailCreationException
      * @throws SettingsException

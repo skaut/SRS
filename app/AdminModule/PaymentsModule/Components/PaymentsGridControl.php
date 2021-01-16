@@ -12,7 +12,7 @@ use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\BankService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\Utils\Helpers;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -39,7 +39,7 @@ class PaymentsGridControl extends Control
 
     private UserRepository $userRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private ApplicationService $applicationService;
 
@@ -51,7 +51,7 @@ class PaymentsGridControl extends Control
         ITranslator $translator,
         PaymentRepository $paymentRepository,
         UserRepository $userRepository,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         ApplicationService $applicationService,
         BankService $bankService,
         Session $session

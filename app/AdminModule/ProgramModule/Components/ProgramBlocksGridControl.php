@@ -18,7 +18,7 @@ use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
 use App\Services\ExcelExportService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\Services\SubeventService;
 use App\Utils\Validators;
 use Doctrine\ORM\QueryBuilder;
@@ -49,7 +49,7 @@ class ProgramBlocksGridControl extends Control
 
     private BlockRepository $blockRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private UserRepository $userRepository;
 
@@ -69,7 +69,7 @@ class ProgramBlocksGridControl extends Control
         CommandBus $commandBus,
         ITranslator $translator,
         BlockRepository $blockRepository,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
         ExcelExportService $excelExportService,

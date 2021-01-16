@@ -10,5 +10,5 @@ modules:
                 - config/doctrine.neon
             newContainerForEachTest: true
             removeDefaultExtensions: true
-
+        
         - Mockery

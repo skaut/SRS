@@ -28,8 +28,8 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
-use App\Services\MailService;
-use App\Services\SettingsService;
+use App\Services\IMailService;
+use App\Services\ISettingsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use InvalidArgumentException;
 use Nette\Application\UI;
@@ -86,9 +86,9 @@ class AdditionalInformationForm extends UI\Control
 
     private FilesService $filesService;
 
-    private MailService $mailService;
+    private IMailService $mailService;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
@@ -98,8 +98,8 @@ class AdditionalInformationForm extends UI\Control
         ApplicationService $applicationService,
         CustomInputValueRepository $customInputValueRepository,
         FilesService $filesService,
-        MailService $mailService,
-        SettingsService $settingsService
+        IMailService $mailService,
+        ISettingsService $settingsService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
         $this->em                         = $em;

@@ -10,8 +10,8 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\MailService;
-use App\Services\SettingsService;
+use App\Services\IMailService;
+use App\Services\ISettingsService;
 use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Application\AbortException;
@@ -35,13 +35,13 @@ class AuthPresenter extends BasePresenter
     public SkautIsService $skautIsService;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /** @inject */
     public UserRepository $userRepository;
 
     /** @inject */
-    public MailService $mailService;
+    public IMailService $mailService;
 
     /**
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.

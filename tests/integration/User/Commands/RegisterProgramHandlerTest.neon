@@ -6,6 +6,7 @@ services:
     - App\Model\Acl\Repositories\RoleRepository
     - App\Model\Program\Repositories\ProgramRepository
     - App\Model\Program\Repositories\ProgramApplicationRepository
+    - App\Model\Application\Repositories\ApplicationRepository
     - class: App\Model\User\Commands\Handlers\RegisterProgramHandler
       tags:
         messenger.messageHandler:
@@ -14,6 +15,10 @@ services:
       tags:
         messenger.messageHandler:
         bus: queryBus
+    - class: App\Model\User\Events\Subscribers\ProgramRegisteredEventListener
+      tags:
+        messenger.messageHandler:
+        bus: eventBus
     
 includes:
-- ../../config/doctrine.neon
+- ../../config/common.neon

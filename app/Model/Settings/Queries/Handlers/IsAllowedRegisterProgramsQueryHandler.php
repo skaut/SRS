@@ -7,15 +7,15 @@ namespace App\Model\Settings\Queries\Handlers;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
 use App\Model\Settings\Settings;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use DateTimeImmutable;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class IsAllowedRegisterProgramsQueryHandler implements MessageHandlerInterface
 {
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
-    public function __construct(SettingsService $settingsService)
+    public function __construct(ISettingsService $settingsService)
     {
         $this->settingsService = $settingsService;
     }

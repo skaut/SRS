@@ -10,8 +10,8 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\MailService;
-use App\Services\SettingsService;
+use App\Services\IMailService;
+use App\Services\ISettingsService;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
 use Contributte\ReCaptcha\ReCaptchaProvider;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -49,16 +49,16 @@ class ContactForm extends UI\Control
 
     private ReCaptchaProvider $recaptchaProvider;
 
-    private MailService $mailService;
+    private IMailService $mailService;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
         UserRepository $userRepository,
         ReCaptchaProvider $recaptchaProvider,
-        MailService $mailService,
-        SettingsService $settingsService
+        IMailService $mailService,
+        ISettingsService $settingsService
     ) {
         $this->baseFormFactory   = $baseFormFactory;
         $this->userRepository    = $userRepository;

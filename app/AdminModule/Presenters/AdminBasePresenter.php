@@ -13,7 +13,7 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Presenters\BasePresenter;
 use App\Services\Authorizator;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\Services\SkautIsService;
 use Nette\Application\AbortException;
 use stdClass;
@@ -40,7 +40,7 @@ abstract class AdminBasePresenter extends BasePresenter
     public RoleRepository $roleRepository;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /** @inject */
     public UserRepository $userRepository;

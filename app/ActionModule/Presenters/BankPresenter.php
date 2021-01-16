@@ -7,7 +7,7 @@ namespace App\ActionModule\Presenters;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Services\BankService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Nette\Application\Responses\TextResponse;
 use Throwable;
 
@@ -22,7 +22,7 @@ class BankPresenter extends ActionBasePresenter
     public BankService $bankService;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /**
      * Zkontroluje splatnost přihlášek.

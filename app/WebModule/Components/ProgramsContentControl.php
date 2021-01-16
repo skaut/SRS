@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\Acl\Permission;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\SrsResource;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
+use App\Services\ISettingsService;
 use App\Services\QueryBus;
-use App\Services\SettingsService;
 use Nette\Application\UI\Control;
 use Throwable;
 
@@ -33,13 +31,13 @@ class ProgramsContentControl extends Control
 
     private RoleRepository $roleRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     public function __construct(
         QueryBus $queryBus,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
-        SettingsService $settingsService
+        ISettingsService $settingsService
     ) {
         $this->queryBus        = $queryBus;
         $this->userRepository  = $userRepository;

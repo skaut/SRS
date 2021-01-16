@@ -6,4 +6,4 @@ services:
         bus: commandBus
     
 includes:
-- ../../config/doctrine.neon
+- ../../config/common.neon

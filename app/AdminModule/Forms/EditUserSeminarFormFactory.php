@@ -30,8 +30,8 @@ use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
-use App\Services\MailService;
-use App\Services\SettingsService;
+use App\Services\IMailService;
+use App\Services\ISettingsService;
 use App\Services\UserService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
@@ -88,9 +88,9 @@ class EditUserSeminarFormFactory
 
     private FilesService $filesService;
 
-    private MailService $mailService;
+    private IMailService $mailService;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private AclService $aclService;
 
@@ -106,8 +106,8 @@ class EditUserSeminarFormFactory
         ApplicationService $applicationService,
         Validators $validators,
         FilesService $filesService,
-        MailService $mailService,
-        SettingsService $settingsService,
+        IMailService $mailService,
+        ISettingsService $settingsService,
         AclService $aclService,
         UserService $userService
     ) {

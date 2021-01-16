@@ -11,7 +11,7 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\AclService;
-use App\Services\MailService;
+use App\Services\IMailService;
 use App\Services\SubeventService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
@@ -40,7 +40,7 @@ class SendFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private MailService $mailService;
+    private IMailService $mailService;
 
     private RoleRepository $roleRepository;
 
@@ -54,7 +54,7 @@ class SendFormFactory
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
-        MailService $mailService,
+        IMailService $mailService,
         RoleRepository $roleRepository,
         UserRepository $userRepository,
         SubeventRepository $subeventRepository,

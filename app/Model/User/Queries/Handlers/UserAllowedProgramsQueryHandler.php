@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\User\Queries\Handlers;
 
-use App\Model\Acl\Permission;
-use App\Model\Acl\SrsResource;
 use App\Model\Program\Program;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\User\Queries\UserAllowedProgramsQuery;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 

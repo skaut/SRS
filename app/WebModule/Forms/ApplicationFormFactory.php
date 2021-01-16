@@ -32,7 +32,7 @@ use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\Services\SkautIsService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
@@ -97,7 +97,7 @@ class ApplicationFormFactory
 
     private SkautIsService $skautIsService;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private SubeventRepository $subeventRepository;
 
@@ -121,7 +121,7 @@ class ApplicationFormFactory
         CustomInputRepository $customInputRepository,
         CustomInputValueRepository $customInputValueRepository,
         SkautIsService $skautIsService,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         SubeventRepository $subeventRepository,
         AclService $aclService,
         ApplicationService $applicationService,

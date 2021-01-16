@@ -8,7 +8,7 @@ use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Nette\Application\AbortException;
 use Throwable;
 
@@ -20,7 +20,7 @@ use Throwable;
 class MailingPresenter extends ActionBasePresenter
 {
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /**
      * Ověří e-mail semináře.

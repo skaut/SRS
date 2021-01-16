@@ -8,7 +8,7 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\MaturityType;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use DateTimeImmutable;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
@@ -37,9 +37,9 @@ class PaymentForm extends UI\Control
 
     private BaseFormFactory $baseFormFactory;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
-    public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
+    public function __construct(BaseFormFactory $baseForm, ISettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
         $this->settingsService = $settingsService;

@@ -7,7 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\ConfigurationModule\Forms\MailingFormFactory;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
@@ -24,7 +24,7 @@ class MailingPresenter extends ConfigurationBasePresenter
     public MailingFormFactory $mailingFormFactory;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /**
      * @throws SettingsException

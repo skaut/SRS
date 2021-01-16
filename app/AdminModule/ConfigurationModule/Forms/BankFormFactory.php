@@ -8,7 +8,7 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Services\BankService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use DateTimeImmutable;
 use FioApi\Exceptions\InternalErrorException;
 use Nette;
@@ -31,13 +31,13 @@ class BankFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private BankService $bankService;
 
     public function __construct(
         BaseFormFactory $baseForm,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         BankService $bankService
     ) {
         $this->baseFormFactory = $baseForm;

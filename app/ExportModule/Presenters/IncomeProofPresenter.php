@@ -12,7 +12,7 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -46,7 +46,7 @@ class IncomeProofPresenter extends ExportBasePresenter
     public UserRepository $userRepository;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /**
      * @throws ForbiddenRequestException

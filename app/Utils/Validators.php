@@ -14,7 +14,7 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Doctrine\Common\Collections\Collection;
 use Throwable;
 
@@ -33,12 +33,12 @@ class Validators
 
     private ProgramRepository $programRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     public function __construct(
         RoleRepository $roleRepository,
         ProgramRepository $programRepository,
-        SettingsService $settingsService
+        ISettingsService $settingsService
     ) {
         $this->roleRepository    = $roleRepository;
         $this->programRepository = $programRepository;

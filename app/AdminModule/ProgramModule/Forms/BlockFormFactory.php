@@ -17,7 +17,7 @@ use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\Services\SubeventService;
 use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
@@ -64,7 +64,7 @@ class BlockFormFactory
 
     private CategoryRepository $categoryRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private SubeventRepository $subeventRepository;
 
@@ -78,7 +78,7 @@ class BlockFormFactory
         BlockRepository $blockRepository,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         SubeventRepository $subeventRepository,
         SubeventService $subeventService,
         Validators $validators

@@ -17,7 +17,7 @@ use App\Services\Authenticator;
 use App\Services\Authorizator;
 use App\Services\CmsService;
 use App\Services\DatabaseService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\Services\SkautIsService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette\Application\AbortException;
@@ -45,7 +45,7 @@ abstract class WebBasePresenter extends BasePresenter
     public CmsService $cmsService;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /** @inject */
     public UserRepository $userRepository;
