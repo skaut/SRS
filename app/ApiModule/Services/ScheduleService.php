@@ -21,6 +21,7 @@ use App\Model\Program\Exceptions\ProgramCapacityOccupiedException;
 use App\Model\Program\Exceptions\UserAlreadyAttendsBlockException;
 use App\Model\Program\Exceptions\UserAlreadyAttendsProgramException;
 use App\Model\Program\Exceptions\UserAttendsConflictingProgramException;
+use App\Model\Program\Exceptions\UserNotAllowedProgramBeforePaymentException;
 use App\Model\Program\Exceptions\UserNotAllowedProgramException;
 use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Program;
@@ -355,10 +356,6 @@ class ScheduleService
             throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));
         }
 
-        if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) && ! $this->user->hasPaidSubevent($program->getBlock()->getSubevent())) {
-            throw new ApiException($this->translator->translate('common.api.schedule.register_programs_before_payment_not_allowed'));
-        }
-
         try {
             $this->commandBus->handle(new RegisterProgram($this->user, $program, false));
 
@@ -381,6 +378,10 @@ class ScheduleService
         } catch (HandlerFailedException $e) {
             if ($e->getPrevious() instanceof UserNotAllowedProgramException) {
                 throw new ApiException($this->translator->translate('common.api.schedule.program_category_not_allowed'));
+            }
+
+            if ($e->getPrevious() instanceof UserNotAllowedProgramBeforePaymentException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.register_programs_before_payment_not_allowed'));
             }
 
             if ($e->getPrevious() instanceof UserAlreadyAttendsProgramException) {

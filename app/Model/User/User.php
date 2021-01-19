@@ -745,6 +745,12 @@ class User
         return $this->applications;
     }
 
+    public function addApplication(Application $application): void
+    {
+        $this->applications->add($application);
+        $application->setUser($this);
+    }
+
     /**
      * Vrátí platné přihlášky.
      *

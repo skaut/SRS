@@ -211,6 +211,9 @@ abstract class Application
     public function setUser(User $user): void
     {
         $this->user = $user;
+        if (! $user->getApplications()->contains($this)) {
+            $user->addApplication($this);
+        }
     }
 
     /**
