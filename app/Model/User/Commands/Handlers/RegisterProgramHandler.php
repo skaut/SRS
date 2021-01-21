@@ -53,7 +53,8 @@ class RegisterProgramHandler implements MessageHandlerInterface
             throw new UserNotAllowedProgramException();
         }
 
-        if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
+        if (
+            ! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
             && (! $command->getUser()->hasPaidSubevent($command->getProgram()->getBlock()->getSubevent()) || ! $command->getUser()->hasPaidRolesApplication())
         ) {
             throw new UserNotAllowedProgramBeforePaymentException();
