@@ -56,6 +56,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
 
     private ProgramApplicationRepository $programApplicationRepository;
 
+    /**
+     * 1. uživatel se na program registruje jako poslední, 2. se stává náhradník.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function testAlternatesAllowed(): void
     {
         $subevent = new Subevent();
@@ -104,6 +110,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $this->assertTrue($programApplication2->isAlternate());
     }
 
+    /**
+     * 1. uživatel se na program registruje jako poslední, 2. se registrovat nemůže (náhradníci nejsou povoleni).
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function testAlterantesNotAllowed(): void
     {
         $subevent = new Subevent();
@@ -153,6 +165,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         }
     }
 
+    /**
+     * Role uživatele není mezi povolenými pro kategorii.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function testWrongRole(): void
     {
         $subevent = new Subevent();
@@ -189,6 +207,89 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         }
     }
 
+    /**
+     * Uživatel není na akci přihlášený (NONREGISTERED role, chybějící přihláška podakcí).
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function testNonRegisteredRole(): void
+    {
+        $subevent = new Subevent();
+        $subevent->setName("subevent");
+        $this->subeventRepository->save($subevent);
+
+        $block = new Block("block", 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $this->blockRepository->save($block);
+
+        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $this->programRepository->save($program);
+
+        $role = new Role(Role::NONREGISTERED);
+        $this->roleRepository->save($role);
+
+        $user = new User();
+        $user->setFirstName('First');
+        $user->setLastName('Last');
+        $user->addRole($role);
+        $user->setApproved(true);
+        $this->userRepository->save($user);
+
+        $this->createRolesApplication($user, $role);
+
+        $this->expectException(UserNotAllowedProgramException::class);
+        try {
+            $this->commandBus->handle(new RegisterProgram($user, $program, false));
+        } catch (HandlerFailedException $e) {
+            throw $e->getPrevious();
+        }
+    }
+
+    /**
+     * Uživatel není schválený.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function testNotApproved(): void
+    {
+        $subevent = new Subevent();
+        $subevent->setName("subevent");
+        $this->subeventRepository->save($subevent);
+
+        $block = new Block("block", 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $this->blockRepository->save($block);
+
+        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $this->programRepository->save($program);
+
+        $role = new Role("role");
+        $this->roleRepository->save($role);
+
+        $user = new User();
+        $user->setFirstName('First');
+        $user->setLastName('Last');
+        $user->addRole($role);
+        $user->setApproved(false);
+        $this->userRepository->save($user);
+
+        $this->createRolesApplication($user, $role);
+        $this->createSubeventsApplication($user, $subevent);
+
+        $this->expectException(UserNotAllowedProgramException::class);
+        try {
+            $this->commandBus->handle(new RegisterProgram($user, $program, false));
+        } catch (HandlerFailedException $e) {
+            throw $e->getPrevious();
+        }
+    }
+
+    /**
+     * Uživatel není přihlášen na správnou podakci.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function testWrongSubevent(): void
     {
         $subevent = new Subevent();
@@ -221,6 +322,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         }
     }
 
+    /**
+     * Uživatel nemá příslušnou podakci zaplacenou a není povoleno přihlašování před zaplacením.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function testNotPaidSubevent(): void
     {
         $subevent = new Subevent();
@@ -246,6 +353,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $this->createRolesApplication($user, $role);
         $this->createSubeventsApplication($user, $subevent, ApplicationState::WAITING_FOR_PAYMENT);
 
+        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
+
         $this->expectException(UserNotAllowedProgramBeforePaymentException::class);
         try {
             $this->commandBus->handle(new RegisterProgram($user, $program, false));
@@ -254,6 +363,51 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         }
     }
 
+    /**
+     * Uživatel nemá příslušnou podakci zaplacenou, ale je povoleno přihlašování před zaplacením.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function testNotPaidSubeventAllowed(): void
+    {
+        $subevent = new Subevent();
+        $subevent->setName("subevent");
+        $this->subeventRepository->save($subevent);
+
+        $block = new Block("block", 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $this->blockRepository->save($block);
+
+        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $this->programRepository->save($program);
+
+        $role = new Role("role");
+        $this->roleRepository->save($role);
+
+        $user = new User();
+        $user->setFirstName('First');
+        $user->setLastName('Last');
+        $user->addRole($role);
+        $user->setApproved(true);
+        $this->userRepository->save($user);
+
+        $this->createRolesApplication($user, $role);
+        $this->createSubeventsApplication($user, $subevent, ApplicationState::WAITING_FOR_PAYMENT);
+
+        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, true);
+
+        $this->commandBus->handle(new RegisterProgram($user, $program, false));
+        $programApplication = $this->programApplicationRepository->findUserProgramApplication($user, $program);
+        $this->assertEquals($user, $programApplication->getUser());
+        $this->assertEquals($program, $programApplication->getProgram());
+    }
+
+    /**
+     * Uživatel už se stejného programu účastní.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function testAlreadyAttendsProgram(): void
     {
         $subevent = new Subevent();
@@ -293,6 +447,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         }
     }
 
+    /**
+     * Uživatel už se stejného programového bloku účastní.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function testAlreadyAttendsBlock(): void
     {
         $subevent = new Subevent();
@@ -335,6 +495,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         }
     }
 
+    /**
+     * Uživatel má zapsaný program, který se časově překrývá.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function testAttendsConflictingProgram(): void
     {
         $subevent = new Subevent();
@@ -350,8 +516,14 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $block2 = new Block("block-2", 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block2);
 
-        $program2 = new Program($block2, null, new DateTimeImmutable('2020-01-01 08:30'));
+        $program2 = new Program($block2, null, new DateTimeImmutable('2020-01-01 09:00'));
         $this->programRepository->save($program2);
+
+        $block3 = new Block("block-3", 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $this->blockRepository->save($block3);
+
+        $program3 = new Program($block3, null, new DateTimeImmutable('2020-01-01 09:30'));
+        $this->programRepository->save($program3);
 
         $role = new Role("role");
         $this->roleRepository->save($role);
@@ -372,28 +544,18 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $this->assertEquals($program1, $programApplication1->getProgram());
         $this->assertFalse($programApplication1->isAlternate());
 
+        $this->commandBus->handle(new RegisterProgram($user, $program2, false));
+        $programApplication2 = $this->programApplicationRepository->findUserProgramApplication($user, $program2);
+        $this->assertEquals($user, $programApplication2->getUser());
+        $this->assertEquals($program2, $programApplication2->getProgram());
+        $this->assertFalse($programApplication2->isAlternate());
+
         $this->expectException(UserAttendsConflictingProgramException::class);
         try {
-            $this->commandBus->handle(new RegisterProgram($user, $program2, false));
+            $this->commandBus->handle(new RegisterProgram($user, $program3, false));
         } catch (HandlerFailedException $e) {
             throw $e->getPrevious();
         }
-    }
-
-    public function testNonRegistered(): void
-    {
-//        $role = new Role(Role::NONREGISTERED);
-//        $this->roleRepository->save($role);
-    }
-
-    public function testNotApproved(): void
-    {
-        //        $userNotApproved = new User();
-//        $userNotApproved->setFirstName('First');
-//        $userNotApproved->setLastName('Last');
-//        $userNotApproved->addRole($roleCategory);
-//        $userNotApproved->setApproved(false);
-//        $this->userRepository->save($userNotApproved);
     }
 
     private function createRolesApplication(User $user, Role $role, string $state = ApplicationState::PAID_FREE): RolesApplication
