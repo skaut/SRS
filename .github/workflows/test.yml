@@ -22,6 +22,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
       - run: composer install
+      - name: Remove development docker-compose override
+        run: rm docker-compose.override.yml
       - name: Create tarball
         run: tar -czpf /tmp/workdir.tar.gz . && mv /tmp/workdir.tar.gz .
       - name: Upload workdir
