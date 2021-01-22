@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User\Events;
+namespace App\Model\Application\Events;
 
 use App\Model\User\User;
 
-class UserApplicationUpdatedEvent
+class ApplicationUpdatedEvent
 {
     private User $user;
 

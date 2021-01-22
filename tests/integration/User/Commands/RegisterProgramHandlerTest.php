@@ -6,9 +6,8 @@ namespace App\Model\User\Commands\Handlers;
 
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
+use App\Model\Application\ApplicationFactory;
 use App\Model\Application\Repositories\ApplicationRepository;
-use App\Model\Application\RolesApplication;
-use App\Model\Application\SubeventsApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
@@ -17,7 +16,6 @@ use App\Model\Program\Exceptions\ProgramCapacityOccupiedException;
 use App\Model\Program\Exceptions\UserAlreadyAttendsBlockException;
 use App\Model\Program\Exceptions\UserAlreadyAttendsProgramException;
 use App\Model\Program\Exceptions\UserAttendsConflictingProgramException;
-use App\Model\Program\Exceptions\UserNotAllowedProgramBeforePaymentException;
 use App\Model\Program\Exceptions\UserNotAllowedProgramException;
 use App\Model\Program\Program;
 use App\Model\Program\Repositories\BlockRepository;
@@ -33,7 +31,6 @@ use App\Model\User\User;
 use App\Services\ISettingsService;
 use CommandHandlerTest;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 
 final class RegisterProgramHandlerTest extends CommandHandlerTest
@@ -84,8 +81,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user1->setApproved(true);
         $this->userRepository->save($user1);
 
-        $this->createRolesApplication($user1, $role);
-        $this->createSubeventsApplication($user1, $subevent);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user1, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user1, $subevent);
 
         $user2 = new User();
         $user2->setFirstName('First');
@@ -94,8 +91,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user2->setApproved(true);
         $this->userRepository->save($user2);
 
-        $this->createRolesApplication($user2, $role);
-        $this->createSubeventsApplication($user2, $subevent);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user2, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user2, $subevent);
 
         $this->commandBus->handle(new RegisterProgram($user1, $program, false));
         $programApplication1 = $this->programApplicationRepository->findUserProgramApplication($user1, $program);
@@ -138,8 +135,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user1->setApproved(true);
         $this->userRepository->save($user1);
 
-        $this->createRolesApplication($user1, $role);
-        $this->createSubeventsApplication($user1, $subevent);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user1, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user1, $subevent);
 
         $user2 = new User();
         $user2->setFirstName('First');
@@ -148,8 +145,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user2->setApproved(true);
         $this->userRepository->save($user2);
 
-        $this->createRolesApplication($user2, $role);
-        $this->createSubeventsApplication($user2, $subevent);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user2, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user2, $subevent);
 
         $this->commandBus->handle(new RegisterProgram($user1, $program, false));
         $programApplication1 = $this->programApplicationRepository->findUserProgramApplication($user1, $program);
@@ -196,8 +193,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user->setApproved(true);
         $this->userRepository->save($user);
 
-        $this->createRolesApplication($user, $role);
-        $this->createSubeventsApplication($user, $subevent);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent);
 
         $this->expectException(UserNotAllowedProgramException::class);
         try {
@@ -235,7 +232,7 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user->setApproved(true);
         $this->userRepository->save($user);
 
-        $this->createRolesApplication($user, $role);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
 
         $this->expectException(UserNotAllowedProgramException::class);
         try {
@@ -273,8 +270,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user->setApproved(false);
         $this->userRepository->save($user);
 
-        $this->createRolesApplication($user, $role);
-        $this->createSubeventsApplication($user, $subevent);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent);
 
         $this->expectException(UserNotAllowedProgramException::class);
         try {
@@ -283,6 +280,46 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
             throw $e->getPrevious();
         }
     }
+
+    /**
+     * Uživatel nemá zaplacenou registraci a není povoleno přihlašování před zaplacením.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function testNotPaid(): void
+    {
+        $subevent = new Subevent();
+        $subevent->setName("subevent");
+        $this->subeventRepository->save($subevent);
+
+        $block = new Block("block", 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $this->blockRepository->save($block);
+
+        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $this->programRepository->save($program);
+
+        $role = new Role("role");
+        $this->roleRepository->save($role);
+
+        $user = new User();
+        $user->setFirstName('First');
+        $user->setLastName('Last');
+        $user->addRole($role);
+        $user->setApproved(true);
+        $this->userRepository->save($user);
+
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role, ApplicationState::WAITING_FOR_PAYMENT);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent);
+
+        $this->expectException(UserNotAllowedProgramException::class);
+        try {
+            $this->commandBus->handle(new RegisterProgram($user, $program, false));
+        } catch (HandlerFailedException $e) {
+            throw $e->getPrevious();
+        }
+    }
+
 
     /**
      * Uživatel není přihlášen na správnou podakci.
@@ -312,7 +349,7 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user->setApproved(true);
         $this->userRepository->save($user);
 
-        $this->createRolesApplication($user, $role);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
 
         $this->expectException(UserNotAllowedProgramException::class);
         try {
@@ -350,12 +387,10 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user->setApproved(true);
         $this->userRepository->save($user);
 
-        $this->createRolesApplication($user, $role);
-        $this->createSubeventsApplication($user, $subevent, ApplicationState::WAITING_FOR_PAYMENT);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent, ApplicationState::WAITING_FOR_PAYMENT);
 
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
-
-        $this->expectException(UserNotAllowedProgramBeforePaymentException::class);
+        $this->expectException(UserNotAllowedProgramException::class);
         try {
             $this->commandBus->handle(new RegisterProgram($user, $program, false));
         } catch (HandlerFailedException $e) {
@@ -391,8 +426,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user->setApproved(true);
         $this->userRepository->save($user);
 
-        $this->createRolesApplication($user, $role);
-        $this->createSubeventsApplication($user, $subevent, ApplicationState::WAITING_FOR_PAYMENT);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent, ApplicationState::WAITING_FOR_PAYMENT);
 
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, true);
 
@@ -430,8 +465,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user->setApproved(true);
         $this->userRepository->save($user);
 
-        $this->createRolesApplication($user, $role);
-        $this->createSubeventsApplication($user, $subevent);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent);
 
         $this->commandBus->handle(new RegisterProgram($user, $program, false));
         $programApplication1 = $this->programApplicationRepository->findUserProgramApplication($user, $program);
@@ -478,8 +513,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user->setApproved(true);
         $this->userRepository->save($user);
 
-        $this->createRolesApplication($user, $role);
-        $this->createSubeventsApplication($user, $subevent);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent);
 
         $this->commandBus->handle(new RegisterProgram($user, $program1, false));
         $programApplication1 = $this->programApplicationRepository->findUserProgramApplication($user, $program1);
@@ -535,8 +570,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $user->setApproved(true);
         $this->userRepository->save($user);
 
-        $this->createRolesApplication($user, $role);
-        $this->createSubeventsApplication($user, $subevent);
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent);
 
         $this->commandBus->handle(new RegisterProgram($user, $program1, false));
         $programApplication1 = $this->programApplicationRepository->findUserProgramApplication($user, $program1);
@@ -558,44 +593,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         }
     }
 
-    private function createRolesApplication(User $user, Role $role, string $state = ApplicationState::PAID_FREE): RolesApplication
-    {
-        $rolesApplication = new RolesApplication();
-        $rolesApplication->setUser($user);
-        $rolesApplication->setRoles(new ArrayCollection([$role]));
-        $rolesApplication->setFee(0);
-        $rolesApplication->setApplicationDate(new DateTimeImmutable());
-        $rolesApplication->setState($state);
-        $rolesApplication->setValidFrom(new DateTimeImmutable());
-        $this->applicationRepository->save($rolesApplication);
-        $rolesApplication->setApplicationId($rolesApplication->getId());
-        $this->applicationRepository->save($rolesApplication);
-
-        return $rolesApplication;
-    }
-
-    private function createSubeventsApplication(User $user, Subevent $subevent, string $state = ApplicationState::PAID): SubeventsApplication
-    {
-        $subeventsApplication = new SubeventsApplication();
-        $subeventsApplication->setUser($user);
-        $subeventsApplication->setSubevents(new ArrayCollection([$subevent]));
-        $subeventsApplication->setFee(100);
-        $subeventsApplication->setApplicationDate(new DateTimeImmutable());
-        $subeventsApplication->setState($state);
-        $subeventsApplication->setValidFrom(new DateTimeImmutable());
-        $this->applicationRepository->save($subeventsApplication);
-        $subeventsApplication->setApplicationId($subeventsApplication->getId());
-        $this->applicationRepository->save($subeventsApplication);
-
-        return $subeventsApplication;
-    }
-
     /**
      * @return string[]
      */
     protected function getTestedAggregateRoots(): array
     {
-        return [Block::class, Settings::class];
+        return [User::class];
     }
 
     protected function _before(): void

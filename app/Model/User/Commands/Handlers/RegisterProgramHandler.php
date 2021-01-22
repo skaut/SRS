@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\User\Commands\Handlers;
 
-use App\Model\Program\Exceptions\UserNotAllowedProgramBeforePaymentException;
 use App\Model\Program\Exceptions\UserNotAllowedProgramException;
 use App\Model\Program\ProgramApplication;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
@@ -49,15 +48,9 @@ class RegisterProgramHandler implements MessageHandlerInterface
      */
     public function __invoke(RegisterProgram $command): void
     {
-        if (! $this->queryBus->handle(new UserAllowedProgramsQuery($command->getUser()))->contains($command->getProgram())) {
+        $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+        if (! $this->queryBus->handle(new UserAllowedProgramsQuery($command->getUser(), ! $registrationBeforePaymentAllowed))->contains($command->getProgram())) {
             throw new UserNotAllowedProgramException();
-        }
-
-        if (
-            ! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
-            && (! $command->getUser()->hasPaidSubevent($command->getProgram()->getBlock()->getSubevent()) || ! $command->getUser()->hasPaidRolesApplication())
-        ) {
-            throw new UserNotAllowedProgramBeforePaymentException();
         }
 
         $this->em->transactional(function () use ($command): void {

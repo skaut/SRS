@@ -6,9 +6,11 @@ namespace App\Model\Program\Events\Subscribers;
 
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Events\ProgramCreatedEvent;
+use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
+use App\Services\SettingsService;
 use Nettrine\ORM\EntityManagerDecorator;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -20,11 +22,18 @@ class ProgramCreatedEventListener implements MessageHandlerInterface
 
     private UserRepository $userRepository;
 
-    public function __construct(CommandBus $commandBus, EntityManagerDecorator $em, UserRepository $userRepository)
-    {
-        $this->commandBus     = $commandBus;
-        $this->em             = $em;
-        $this->userRepository = $userRepository;
+    private SettingsService $settingsService;
+
+    public function __construct(
+        CommandBus $commandBus,
+        EntityManagerDecorator $em,
+        UserRepository $userRepository,
+        SettingsService $settingsService
+    ) {
+        $this->commandBus      = $commandBus;
+        $this->em              = $em;
+        $this->userRepository  = $userRepository;
+        $this->settingsService = $settingsService;
     }
 
     /**
@@ -34,8 +43,11 @@ class ProgramCreatedEventListener implements MessageHandlerInterface
     {
         $this->em->transactional(function () use ($event): void {
             $block = $event->getProgram()->getBlock();
+
             if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
-                foreach ($this->userRepository->findBlockAllowed($block) as $user) {
+                $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+
+                foreach ($this->userRepository->findBlockAllowed($block, !$registrationBeforePaymentAllowed) as $user) {
                     $this->commandBus->handle(new RegisterProgram($user, $event->getProgram()));
                 }
             }

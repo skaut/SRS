@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\Acl\Events;
+namespace App\Model\Program\Events;
 
 use App\Model\Acl\Role;
 use App\Model\Program\Category;

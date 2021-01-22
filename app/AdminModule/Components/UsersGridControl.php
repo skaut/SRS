@@ -566,7 +566,7 @@ class UsersGridControl extends Control
 
         $this->em->transactional(function () use ($users): void {
             foreach ($users as $user) {
-                $this->userService->approveUser($user);
+                $this->userService->setApproved($user, true);
             }
         });
 

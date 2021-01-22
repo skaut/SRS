@@ -1,0 +1,9 @@
+services:
+    - App\Model\Program\Repositories\BlockRepository
+    - class: App\Model\Program\Commands\Handlers\SaveBlockHandler
+      tags:
+        messenger.messageHandler:
+        bus: commandBus
+    
+includes:
+- ../../config/common.neon

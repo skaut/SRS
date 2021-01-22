@@ -242,8 +242,6 @@ class EditRoleFormFactory
             }
 
             $this->aclService->saveRole($this->role);
-
-            $this->eventBus->handle(new RoleUpdatedEvent($this->role));
         });
     }
 

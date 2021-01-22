@@ -13,6 +13,8 @@ use App\Model\Program\Exceptions\UserAttendsConflictingProgramException;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramApplication;
 use App\Model\User\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,12 +29,9 @@ use function assert;
  */
 class ProgramApplicationRepository extends AbstractRepository
 {
-    private ProgramRepository $programRepository;
-
-    public function __construct(EntityManagerInterface $em, ProgramRepository $programRepository)
+    public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em, ProgramApplication::class);
-        $this->programRepository = $programRepository;
     }
 
     public function findUserProgramApplication(User $user, Program $program): ?ProgramApplication
@@ -59,7 +58,7 @@ class ProgramApplicationRepository extends AbstractRepository
                 $programApplication->setAlternate(true);
             }
 
-            if ($this->findUserProgramApplication($user, $program) !== null) {
+            if ($this->userAttendsSameProgram($user, $program)) {
                 throw new UserAlreadyAttendsProgramException();
             }
 
@@ -77,7 +76,7 @@ class ProgramApplicationRepository extends AbstractRepository
                 $program->setOccupancy($occupancy + 1);
                 $this->em->persist($program);
 
-                foreach ($this->programRepository->findUserAlternatesAndBlock($user, $program->getBlock()) as $pa) {
+                foreach ($this->findByUserAlternateAndBlock($user, $program->getBlock()) as $pa) {
                     $this->em->remove($pa);
                 }
             }
@@ -102,6 +101,38 @@ class ProgramApplicationRepository extends AbstractRepository
 
             $this->em->remove($programApplication);
         });
+    }
+
+    /**
+     * @return Collection<ProgramApplication>
+     */
+    private function findByUserAlternateAndBlock(User $user, Block $block): Collection
+    {
+        $result = $this->createQueryBuilder('pa')
+            ->join('pa.program', 'p', 'WITH', 'p.block = :block')
+            ->where('pa.user = :user')
+            ->andWhere('pa.alternate = true')
+            ->setParameter('block', $block)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    private function userAttendsSameProgram(User $user, Program $program): bool
+    {
+        $result = $this->createQueryBuilder('pa')
+            ->select('count(pa)')
+            ->where('pa.user = :user')
+            ->andWhere('pa.program = :program')
+            ->andWhere('pa.alternate = false')
+            ->setParameter('user', $user)
+            ->setParameter('program', $program)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result !== 0;
     }
 
     private function userAttendsSameBlockProgram(User $user, Block $block): bool

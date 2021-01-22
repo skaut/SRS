@@ -229,12 +229,13 @@ class UserRepository extends AbstractRepository
      *
      * @return Collection|User[]
      */
-    public function findBlockAllowed(Block $block): Collection
+    public function findBlockAllowed(Block $block, bool $paidOnly): Collection
     {
         $qb = $this->createQueryBuilder('u')
-            ->join('u.applications', 'a', 'WITH', 'a.validTo IS NULL AND a.state != :stateCanceled AND a.state != :stateCanceledNotPaid')
-            ->join('a.subevents', 's')
-            ->where('s = :subevent')
+            ->join('u.applications', 'sa', 'WITH', 'sa.validTo IS NULL AND sa.state != :stateCanceled AND sa.state != :stateCanceledNotPaid')
+            ->join('sa.subevents', 's')
+            ->where('u.approved = true')
+            ->andWhere('s = :subevent')
             ->setParameter('subevent', $block->getSubevent())
             ->setParameter('stateCanceled', ApplicationState::CANCELED)
             ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID);
@@ -244,6 +245,13 @@ class UserRepository extends AbstractRepository
                 ->join('r.registerableCategories', 'c')
                 ->andWhere('c = :category')
                 ->setParameter('category', $block->getCategory());
+        }
+
+        if ($paidOnly) {
+            $qb = $qb->join('u.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND ra.state != :stateWaitingForPayment')
+                ->join('ra.roles', 'rar')
+                ->andWhere('sa.state != :stateWaitingForPayment')
+                ->setParameter('stateWaitingForPayment', ApplicationState::WAITING_FOR_PAYMENT);
         }
 
         return new ArrayCollection($qb->getQuery()->getResult());

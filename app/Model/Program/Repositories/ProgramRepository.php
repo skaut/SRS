@@ -81,45 +81,34 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Program>
-     */
-    public function findUserAlternatesAndBlock(User $user, Block $block): Collection
-    {
-        $result = $this->createQueryBuilder('p')
-            ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = true')
-            ->where('p.block = :block')
-            ->setParameter('user', $user)
-            ->setParameter('block', $block)
-            ->getQuery()
-            ->getResult();
-
-        return new ArrayCollection($result);
-    }
-
-    /**
-     * Vrací programy povolené pro kategorie a podakce.
+     * Vrací programy povolené pro uživatele.
      *
      * @return Collection<Program>
      */
-    public function findUserAllowed(User $user): Collection
+    public function findUserAllowed(User $user, bool $paidOnly): Collection
     {
-        $result = $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')
             ->join('p.block', 'b')
             ->leftJoin('b.category', 'c')
             ->leftJoin('c.registerableRoles', 'r')
             ->leftJoin('r.users', 'u1')
             ->join('b.subevent', 's')
-            ->join('s.applications', 'a', 'WITH', 'a.validTo IS NULL AND a.state != :stateCanceled AND a.state != :stateCanceledNotPaid')
-            ->join('a.user', 'u2', 'WITH', 'u2.approved = TRUE')
+            ->join('s.applications', 'sa', 'WITH', 'sa.validTo IS NULL AND sa.state != :stateCanceled AND sa.state != :stateCanceledNotPaid')
+            ->join('sa.user', 'u2', 'WITH', 'u2.approved = TRUE')
             ->where('c IS NULL OR u1 = :user')
             ->andWhere('u2 = :user')
             ->setParameter('user', $user)
             ->setParameter('stateCanceled', ApplicationState::CANCELED)
-            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID);
 
-        return new ArrayCollection($result);
+        if ($paidOnly) {
+            $qb = $qb->join('u2.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND ra.state != :stateWaitingForPayment')
+                ->join('ra.roles', 'rar')
+                ->andWhere('sa.state != :stateWaitingForPayment')
+                ->setParameter('stateWaitingForPayment', ApplicationState::WAITING_FOR_PAYMENT);
+        }
+
+        return new ArrayCollection($qb->getQuery()->getResult());
     }
 
     /**

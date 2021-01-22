@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Model\Acl\Events\Subscribers;
+namespace App\Model\Program\Events\Subscribers;
 
-use App\Model\Acl\Events\CategoryUpdatedEvent;
+use App\Model\Program\Events\CategoryUpdatedEvent;
 use App\Model\User\Commands\UpdateUsersPrograms;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;

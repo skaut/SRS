@@ -7,11 +7,13 @@ namespace App\Model\Program\Events\Subscribers;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Events\BlockUpdatedEvent;
 use App\Model\Program\Queries\ProgramAttendeesQuery;
+use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
+use App\Services\SettingsService;
 use Nettrine\ORM\EntityManagerDecorator;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -25,16 +27,20 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
 
     private UserRepository $userRepository;
 
+    private SettingsService $settingsService;
+
     public function __construct(
         CommandBus $commandBus,
         QueryBus $queryBus,
         EntityManagerDecorator $em,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        SettingsService $settingsService
     ) {
-        $this->commandBus     = $commandBus;
-        $this->queryBus       = $queryBus;
-        $this->em             = $em;
-        $this->userRepository = $userRepository;
+        $this->commandBus      = $commandBus;
+        $this->queryBus        = $queryBus;
+        $this->em              = $em;
+        $this->userRepository  = $userRepository;
+        $this->settingsService = $settingsService;
     }
 
     public function __invoke(BlockUpdatedEvent $event): void
@@ -49,7 +55,8 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
             $originalSubevent  = $event->getOriginalSubevent();
             $originalMandatory = $event->getOriginalMandatory();
 
-            $allowedUsers = $this->userRepository->findBlockAllowed($block);
+            $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+            $allowedUsers = $this->userRepository->findBlockAllowed($block, ! $registrationBeforePaymentAllowed);
 
             //aktualizace ucastniku pri zmene kategorie nebo podakce
             if (

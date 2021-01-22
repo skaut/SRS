@@ -24,6 +24,6 @@ class UserAllowedProgramsQueryHandler implements MessageHandlerInterface
      */
     public function __invoke(UserAllowedProgramsQuery $query): Collection
     {
-        return $this->programRepository->findUserAllowed($query->getUser());
+        return $this->programRepository->findUserAllowed($query->getUser(), $query->isPaidOnly());
     }
 }
