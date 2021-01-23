@@ -8,29 +8,25 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Application\ApplicationFactory;
 use App\Model\Application\Repositories\ApplicationRepository;
-use App\Model\Application\RolesApplication;
-use App\Model\Application\SubeventsApplication;
-use App\Model\Enums\ApplicationState;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramApplication;
 use App\Model\Program\Repositories\BlockRepository;
-use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
-use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ISettingsService;
 use CommandHandlerTest;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 
 final class UnregisterProgramHandlerTest extends CommandHandlerTest
@@ -43,8 +39,6 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
 
     private UserRepository $userRepository;
 
-    private CategoryRepository $categoryRepository;
-
     private RoleRepository $roleRepository;
 
     private ProgramRepository $programRepository;
@@ -56,16 +50,16 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Odhlášení uživatelé jsou nahrazeni prvními náhradníky, přihlášení jako náhradník se registrací na program ruší.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testRegisterAlternate(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block("block", 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block);
 
         $program1 = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
@@ -74,7 +68,7 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $program2 = new Program($block, null, new DateTimeImmutable('2020-01-01 10:00'));
         $this->programRepository->save($program2);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user1 = new User();
@@ -173,22 +167,22 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel není účastníkem programu.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testNotAttends(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block("block", 60, 1, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->programRepository->save($program);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user = new User();
@@ -222,14 +216,13 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $this->tester->useConfigFiles([__DIR__ . '/UnregisterProgramHandlerTest.neon']);
         parent::_before();
 
-        $this->settingsService = $this->tester->grabService(ISettingsService::class);
-        $this->blockRepository = $this->tester->grabService(BlockRepository::class);
-        $this->subeventRepository = $this->tester->grabService(SubeventRepository::class);
-        $this->userRepository = $this->tester->grabService(UserRepository::class);
-        $this->categoryRepository = $this->tester->grabService(CategoryRepository::class);
-        $this->roleRepository = $this->tester->grabService(RoleRepository::class);
-        $this->programRepository = $this->tester->grabService(ProgramRepository::class);
-        $this->applicationRepository = $this->tester->grabService(ApplicationRepository::class);
+        $this->settingsService              = $this->tester->grabService(ISettingsService::class);
+        $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
+        $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);
+        $this->userRepository               = $this->tester->grabService(UserRepository::class);
+        $this->roleRepository               = $this->tester->grabService(RoleRepository::class);
+        $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
+        $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
 
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);

@@ -31,6 +31,8 @@ use App\Model\User\User;
 use App\Services\ISettingsService;
 use CommandHandlerTest;
 use DateTimeImmutable;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 
 final class RegisterProgramHandlerTest extends CommandHandlerTest
@@ -56,22 +58,22 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * 1. uživatel se na program registruje jako poslední, 2. se stává náhradník.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testAlternatesAllowed(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block("block", 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->programRepository->save($program);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user1 = new User();
@@ -110,22 +112,22 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * 1. uživatel se na program registruje jako poslední, 2. se registrovat nemůže (náhradníci nejsou povoleni).
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testAlterantesNotAllowed(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block("block", 60, 1, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->programRepository->save($program);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user1 = new User();
@@ -165,25 +167,25 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Role uživatele není mezi povolenými pro kategorii.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testWrongRole(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $category = new Category("category");
+        $category = new Category('category');
         $this->categoryRepository->save($category);
 
-        $block = new Block("block", 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, $category);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, $category);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->programRepository->save($program);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user = new User();
@@ -207,16 +209,16 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel není na akci přihlášený (NONREGISTERED role, chybějící přihláška podakcí).
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testNonRegisteredRole(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block("block", 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
@@ -245,22 +247,22 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel není schválený.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testNotApproved(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block("block", 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->programRepository->save($program);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user = new User();
@@ -284,22 +286,22 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel nemá zaplacenou registraci a není povoleno přihlašování před zaplacením.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testNotPaid(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block("block", 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->programRepository->save($program);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user = new User();
@@ -320,26 +322,25 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         }
     }
 
-
     /**
      * Uživatel není přihlášen na správnou podakci.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testWrongSubevent(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block("block", 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->programRepository->save($program);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user = new User();
@@ -362,22 +363,22 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel nemá příslušnou podakci zaplacenou a není povoleno přihlašování před zaplacením.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testNotPaidSubevent(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block("block", 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->programRepository->save($program);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user = new User();
@@ -401,22 +402,22 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel nemá příslušnou podakci zaplacenou, ale je povoleno přihlašování před zaplacením.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testNotPaidSubeventAllowed(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block("block", 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->programRepository->save($program);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user = new User();
@@ -440,22 +441,22 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel už se stejného programu účastní.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testAlreadyAttendsProgram(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block("block", 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->programRepository->save($program);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user = new User();
@@ -485,16 +486,16 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel už se stejného programového bloku účastní.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testAlreadyAttendsBlock(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block("block", 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block);
 
         $program1 = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
@@ -503,7 +504,7 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $program2 = new Program($block, null, new DateTimeImmutable('2020-01-01 10:00'));
         $this->programRepository->save($program2);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user = new User();
@@ -533,34 +534,34 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel má zapsaný program, který se časově překrývá.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testAttendsConflictingProgram(): void
     {
         $subevent = new Subevent();
-        $subevent->setName("subevent");
+        $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block1 = new Block("block-1", 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block1 = new Block('block-1', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block1);
 
         $program1 = new Program($block1, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->programRepository->save($program1);
 
-        $block2 = new Block("block-2", 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block2 = new Block('block-2', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block2);
 
         $program2 = new Program($block2, null, new DateTimeImmutable('2020-01-01 09:00'));
         $this->programRepository->save($program2);
 
-        $block3 = new Block("block-3", 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block3 = new Block('block-3', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
         $this->blockRepository->save($block3);
 
         $program3 = new Program($block3, null, new DateTimeImmutable('2020-01-01 09:30'));
         $this->programRepository->save($program3);
 
-        $role = new Role("role");
+        $role = new Role('role');
         $this->roleRepository->save($role);
 
         $user = new User();
@@ -606,14 +607,14 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $this->tester->useConfigFiles([__DIR__ . '/RegisterProgramHandlerTest.neon']);
         parent::_before();
 
-        $this->settingsService = $this->tester->grabService(ISettingsService::class);
-        $this->blockRepository = $this->tester->grabService(BlockRepository::class);
-        $this->subeventRepository = $this->tester->grabService(SubeventRepository::class);
-        $this->userRepository = $this->tester->grabService(UserRepository::class);
-        $this->categoryRepository = $this->tester->grabService(CategoryRepository::class);
-        $this->roleRepository = $this->tester->grabService(RoleRepository::class);
-        $this->programRepository = $this->tester->grabService(ProgramRepository::class);
-        $this->applicationRepository = $this->tester->grabService(ApplicationRepository::class);
+        $this->settingsService              = $this->tester->grabService(ISettingsService::class);
+        $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
+        $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);
+        $this->userRepository               = $this->tester->grabService(UserRepository::class);
+        $this->categoryRepository           = $this->tester->grabService(CategoryRepository::class);
+        $this->roleRepository               = $this->tester->grabService(RoleRepository::class);
+        $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
+        $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
 
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);

@@ -77,7 +77,7 @@ class Permission
      *
      * @ORM\ManyToMany(targetEntity="Role", mappedBy="permissions", cascade={"persist"})
      *
-     * @var Collection|Role[]
+     * @var Collection<Role>
      */
     protected Collection $roles;
 
@@ -106,7 +106,7 @@ class Permission
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
     public function getRoles(): Collection
     {

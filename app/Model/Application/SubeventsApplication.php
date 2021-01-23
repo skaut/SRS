@@ -20,7 +20,7 @@ class SubeventsApplication extends Application
     protected string $type = Application::SUBEVENTS;
 
     /**
-     * @param Collection|Subevent[] $subevents
+     * @param Collection<Subevent> $subevents
      */
     public function setSubevents(Collection $subevents): void
     {

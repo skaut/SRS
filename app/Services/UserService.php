@@ -106,12 +106,12 @@ class UserService
      */
     public function setApproved(User $user, bool $approved): void
     {
-        $this->em->transactional(function () use ($user, $approved) {
-            $approvedOrig = $user->isApproved();
+        $this->em->transactional(function () use ($user, $approved): void {
+            $originalApproved = $user->isApproved();
             $user->setApproved($approved);
             $this->userRepository->save($user);
 
-            $this->eventBus->handle(new UserUpdatedEvent($user, $approvedOrig));
+            $this->eventBus->handle(new UserUpdatedEvent($user, $originalApproved));
 
             if ($approved) {
                 $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_APPROVED, [

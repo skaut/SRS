@@ -65,7 +65,7 @@ class UserRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection|User[]
+     * @return Collection<User>
      */
     public function findUsersByIds(array $ids): Collection
     {
@@ -78,7 +78,7 @@ class UserRepository extends AbstractRepository
     /**
      * Vrací id uživatelů.
      *
-     * @param Collection|User[] $users
+     * @param Collection<User> $users
      *
      * @return int[]
      */
@@ -188,7 +188,7 @@ class UserRepository extends AbstractRepository
      *
      * @param int[] $subeventsIds
      *
-     * @return Collection|User[]
+     * @return Collection<User>
      */
     public function findAllWithSubevents(array $subeventsIds): Collection
     {
@@ -209,7 +209,7 @@ class UserRepository extends AbstractRepository
     /**
      * Vrací uživatele s přihláškou čekající na zaplacení.
      *
-     * @return Collection|User[]
+     * @return Collection<User>
      */
     public function findAllWithWaitingForPaymentApplication(): Collection
     {
@@ -227,7 +227,7 @@ class UserRepository extends AbstractRepository
     /**
      * Vrací uživatele, kteří se mohou na program přihlásit.
      *
-     * @return Collection|User[]
+     * @return Collection<User>
      */
     public function findBlockAllowed(Block $block, bool $paidOnly): Collection
     {

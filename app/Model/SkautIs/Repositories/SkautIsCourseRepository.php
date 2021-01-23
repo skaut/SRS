@@ -84,7 +84,7 @@ class SkautIsCourseRepository extends AbstractRepository
     /**
      * Vrací id skautIS kurzů.
      *
-     * @param Collection|SkautIsCourse[] $skautIsCourses
+     * @param Collection<SkautIsCourse> $skautIsCourses
      *
      * @return int[]
      */
@@ -100,7 +100,7 @@ class SkautIsCourseRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection|SkautIsCourse[]
+     * @return Collection<SkautIsCourse>
      */
     public function findSkautIsCoursesByIds(array $ids): Collection
     {

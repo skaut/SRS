@@ -80,8 +80,8 @@ class ExcelExportService
     /**
      * Vyexportuje matici uživatelů a rolí.
      *
-     * @param Collection|User[] $users
-     * @param Collection|Role[] $roles
+     * @param Collection<User> $users
+     * @param Collection<Role> $roles
      *
      * @throws Exception
      */
@@ -133,7 +133,7 @@ class ExcelExportService
     /**
      * Vyexportuje harmonogramy uživatelů, každý uživatel na zvlástním listu.
      *
-     * @param Collection|User[] $users
+     * @param Collection<User> $users
      *
      * @throws Exception
      * @throws Exception
@@ -205,7 +205,7 @@ class ExcelExportService
     /**
      * Vyexportuje harmonogramy místností.
      *
-     * @param Collection|Room[] $rooms
+     * @param Collection<Room> $rooms
      *
      * @throws Exception
      */
@@ -260,7 +260,7 @@ class ExcelExportService
     }
 
     /**
-     * @param Collection|User[] $users
+     * @param Collection<User> $users
      *
      * @throws Exception
      */
@@ -457,7 +457,7 @@ class ExcelExportService
     }
 
     /**
-     * @param Collection|User[] $users
+     * @param Collection<User> $users
      *
      * @throws Exception
      */
@@ -543,7 +543,7 @@ class ExcelExportService
     }
 
     /**
-     * @param Collection|Block[] $blocks
+     * @param Collection<Block> $blocks
      *
      * @throws Exception
      */

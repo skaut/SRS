@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
-use App\Model\Acl\Events\RoleUpdatedEvent;
 use App\Model\Acl\Permission;
 use App\Model\Acl\Repositories\PermissionRepository;
 use App\Model\Acl\Repositories\RoleRepository;
@@ -12,7 +11,6 @@ use App\Model\Acl\Role;
 use App\Model\Acl\SrsResource;
 use App\Model\Cms\Repositories\PageRepository;
 use App\Services\AclService;
-use App\Services\EventBus;
 use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -56,16 +54,13 @@ class EditRoleFormFactory
 
     private PermissionRepository $permissionRepository;
 
-    private EventBus $eventBus;
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
         EntityManagerDecorator $em,
         AclService $aclService,
         RoleRepository $roleRepository,
         PageRepository $pageRepository,
-        PermissionRepository $permissionRepository,
-        EventBus $eventBus
+        PermissionRepository $permissionRepository
     ) {
         $this->baseFormFactory      = $baseFormFactory;
         $this->em                   = $em;
@@ -73,7 +68,6 @@ class EditRoleFormFactory
         $this->roleRepository       = $roleRepository;
         $this->pageRepository       = $pageRepository;
         $this->permissionRepository = $permissionRepository;
-        $this->eventBus             = $eventBus;
     }
 
     /**

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Commands\Handlers;
 
-use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Program\Repositories\BlockRepository;
 use CommandHandlerTest;

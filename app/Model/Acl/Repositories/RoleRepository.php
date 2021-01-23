@@ -94,7 +94,7 @@ class RoleRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
     public function findRolesByIds(array $ids): Collection
     {
@@ -127,7 +127,7 @@ class RoleRepository extends AbstractRepository
     /**
      * Vrací id rolí.
      *
-     * @param Collection|Role[] $roles
+     * @param Collection<Role> $roles
      *
      * @return int[]
      */
@@ -141,7 +141,7 @@ class RoleRepository extends AbstractRepository
     /**
      * Vrací role splňující podmínku seřazené podle názvu.
      *
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
     public function findFilteredRoles(bool $registerableNowOnly, bool $subeventsRoleOnly, bool $includeUsers, ?User $user = null): Collection
     {

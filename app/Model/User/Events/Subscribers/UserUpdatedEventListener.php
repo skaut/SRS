@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\User\Events\Subscribers;
 
 use App\Model\User\Commands\UpdateUsersPrograms;
-use App\Model\User\Events\UserApplicationUpdatedEvent;
 use App\Model\User\Events\UserUpdatedEvent;
 use App\Services\CommandBus;
 use Doctrine\Common\Collections\ArrayCollection;

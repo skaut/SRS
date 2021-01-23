@@ -116,7 +116,7 @@ class IncomeProofPresenter extends ExportBasePresenter
     }
 
     /**
-     * @param Collection|Application[] $applications
+     * @param Collection<Application> $applications
      *
      * @throws AbortException
      * @throws SettingsException

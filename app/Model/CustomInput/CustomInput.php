@@ -112,7 +112,7 @@ abstract class CustomInput
      *
      * @ORM\OneToMany(targetEntity="CustomInputValue", mappedBy="input", cascade={"persist"})
      *
-     * @var Collection|CustomInputValue[]
+     * @var Collection<CustomInputValue>
      */
     protected Collection $customInputValues;
 
@@ -121,7 +121,7 @@ abstract class CustomInput
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
      *
-     * @var Collection|Role[]
+     * @var Collection<Role>
      */
     protected Collection $roles;
 
@@ -171,7 +171,7 @@ abstract class CustomInput
     }
 
     /**
-     * @return Collection|CustomInputValue[]
+     * @return Collection<CustomInputValue>
      */
     public function getCustomInputValues(): Collection
     {
@@ -179,7 +179,7 @@ abstract class CustomInput
     }
 
     /**
-     * @return Role[]|Collection
+     * @return Collection<Role>
      */
     public function getRoles(): Collection
     {
@@ -187,7 +187,7 @@ abstract class CustomInput
     }
 
     /**
-     * @param Role[]|Collection $roles
+     * @param Collection<Role> $roles
      */
     public function setRoles(Collection $roles): void
     {

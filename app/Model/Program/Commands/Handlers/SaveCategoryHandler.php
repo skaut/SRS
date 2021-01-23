@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Commands\Handlers;
 
-use App\Model\Acl\Events\CategoryUpdatedEvent;
 use App\Model\Program\Commands\SaveCategory;
+use App\Model\Program\Events\CategoryUpdatedEvent;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Services\EventBus;
 use Nettrine\ORM\EntityManagerDecorator;

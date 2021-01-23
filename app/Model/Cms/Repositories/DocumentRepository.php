@@ -38,7 +38,7 @@ class DocumentRepository extends AbstractRepository
      * @param int[] $rolesIds pole id rolí
      * @param int[] $tagsIds
      *
-     * @return Collection|Document[]
+     * @return Collection<Document>
      */
     public function findRolesAllowedByTagsOrderedByName(array $rolesIds, array $tagsIds): Collection
     {

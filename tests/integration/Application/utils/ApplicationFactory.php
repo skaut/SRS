@@ -12,8 +12,8 @@ use App\Model\User\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class ApplicationFactory {
-
+class ApplicationFactory
+{
     public static function createRolesApplication(
         ApplicationRepository $applicationRepository,
         User $user,

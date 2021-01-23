@@ -82,7 +82,7 @@ class Payment
      *
      * @ORM\OneToMany(targetEntity="\App\Model\Application\Application", mappedBy="payment", cascade={"persist"})
      *
-     * @var Collection|Application[]
+     * @var Collection<Application>
      */
     protected Collection $pairedApplications;
 
@@ -174,7 +174,7 @@ class Payment
     }
 
     /**
-     * @return Application[]|Collection
+     * @return Collection<Application>
      */
     public function getPairedApplications(): Collection
     {
@@ -182,7 +182,7 @@ class Payment
     }
 
     /**
-     * @return Application[]|Collection
+     * @return Collection<Application>
      */
     public function getPairedValidApplications(): Collection
     {

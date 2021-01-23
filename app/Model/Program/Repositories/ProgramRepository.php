@@ -7,7 +7,6 @@ namespace App\Model\Program\Repositories;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
-use App\Model\Program\Block;
 use App\Model\Program\Category;
 use App\Model\Program\Program;
 use App\Model\User\User;

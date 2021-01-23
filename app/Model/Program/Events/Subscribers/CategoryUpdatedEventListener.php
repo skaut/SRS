@@ -27,10 +27,10 @@ class CategoryUpdatedEventListener implements MessageHandlerInterface
      */
     public function __invoke(CategoryUpdatedEvent $event): void
     {
-        $registerableRoles         = $event->getCategory()->getRegisterableRoles()->toArray();
-        $originalRegisterableRoles = $event->getOriginalRegisterableRoles()->toArray();
+        $registerableRoles    = $event->getCategory()->getRegisterableRoles()->toArray();
+        $registerableRolesOld = $event->getRegisterableRolesOld()->toArray();
 
-        if ($registerableRoles != $originalRegisterableRoles) {
+        if ($registerableRoles != $registerableRolesOld) {
             $this->commandBus->handle(new UpdateUsersPrograms($this->userRepository->findAll()));
         }
     }

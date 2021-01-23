@@ -39,7 +39,7 @@ class TagRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection|Tag[]
+     * @return Collection<Tag>
      */
     public function findTagsByIds(array $ids): Collection
     {
@@ -53,7 +53,7 @@ class TagRepository extends AbstractRepository
     /**
      * Vrátí id tagů.
      *
-     * @param Collection|Tag[] $tags
+     * @param Collection<Tag> $tags
      *
      * @return int[]
      */

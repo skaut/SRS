@@ -39,7 +39,7 @@ class ApplicationRepository extends AbstractRepository
     /**
      * Vrací přihlášky podle id, které mají společné všechny verze přihlášky.
      *
-     * @return Collection|Application[]
+     * @return Collection<Application>
      */
     public function findByApplicationId(int $id): Collection
     {
@@ -49,7 +49,7 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection|Application[]
+     * @return Collection<Application>
      */
     public function findValid(): Collection
     {
@@ -102,7 +102,7 @@ class ApplicationRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection|Application[]
+     * @return Collection<Application>
      */
     public function findApplicationsByIds(array $ids): Collection
     {
@@ -115,7 +115,7 @@ class ApplicationRepository extends AbstractRepository
     /**
      * Vrací id přihlášek.
      *
-     * @param Collection|Application[] $applications
+     * @param Collection<Application> $applications
      *
      * @return int[]
      */
@@ -127,9 +127,9 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * @param Collection|Application[] $pairedApplications
+     * @param Collection<Application> $pairedApplications
      *
-     * @return Collection|Application[]
+     * @return Collection<Application>
      */
     public function findWaitingForPaymentOrPairedApplications(Collection $pairedApplications): Collection
     {
@@ -160,7 +160,7 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * @param Collection|Application[] $pairedApplications
+     * @param Collection<Application> $pairedApplications
      *
      * @return string[]
      */

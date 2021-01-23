@@ -3,8 +3,7 @@ parameters:
         - %rootDir%/../../../app
         - %rootDir%/../../../code-quality
 
-    checkGenericClassInNonGenericObjectType: false
-    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false # todo: odstranit
 
 includes:
     - vendor/phpstan/phpstan-nette/extension.neon

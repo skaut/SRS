@@ -29,7 +29,7 @@ class PermissionRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection|Permission[]
+     * @return Collection<Permission>
      */
     public function findPermissionsByIds(array $ids): Collection
     {
@@ -43,7 +43,7 @@ class PermissionRepository extends AbstractRepository
     /**
      * Vrací id oprávnění.
      *
-     * @param Collection|Permission[] $permissions
+     * @param Collection<Permission> $permissions
      *
      * @return int[]
      */

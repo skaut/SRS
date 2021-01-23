@@ -32,7 +32,7 @@ class Mail
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
      *
-     * @var Collection|Role[]
+     * @var Collection<Role>
      */
     protected Collection $recipientRoles;
 
@@ -41,7 +41,7 @@ class Mail
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent")
      *
-     * @var Collection|Subevent[]
+     * @var Collection<Subevent>
      */
     protected Collection $recipientSubevents;
 
@@ -50,7 +50,7 @@ class Mail
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User")
      *
-     * @var Collection|User[]
+     * @var Collection<User>
      */
     protected Collection $recipientUsers;
 
@@ -95,7 +95,7 @@ class Mail
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
     public function getRecipientRoles(): Collection
     {
@@ -103,7 +103,7 @@ class Mail
     }
 
     /**
-     * @param Collection|Role[] $recipientRoles
+     * @param Collection<Role> $recipientRoles
      */
     public function setRecipientRoles(Collection $recipientRoles): void
     {
@@ -124,7 +124,7 @@ class Mail
     }
 
     /**
-     * @return Collection|Subevent[]
+     * @return Collection<Subevent>
      */
     public function getRecipientSubevents(): Collection
     {
@@ -132,7 +132,7 @@ class Mail
     }
 
     /**
-     * @param Collection|Subevent[] $recipientSubevents
+     * @param Collection<Subevent> $recipientSubevents
      */
     public function setRecipientSubevents(Collection $recipientSubevents): void
     {
@@ -153,7 +153,7 @@ class Mail
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection<User>
      */
     public function getRecipientUsers(): Collection
     {
@@ -161,7 +161,7 @@ class Mail
     }
 
     /**
-     * @param Collection|User[] $recipientUsers
+     * @param Collection<User> $recipientUsers
      */
     public function setRecipientUsers(Collection $recipientUsers): void
     {

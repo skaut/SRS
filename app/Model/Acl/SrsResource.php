@@ -85,7 +85,7 @@ class SrsResource
      *
      * @ORM\OneToMany(targetEntity="Permission", mappedBy="resource", cascade={"persist"})
      *
-     * @var Collection|Permission[]
+     * @var Collection<Permission>
      */
     protected Collection $permissions;
 
@@ -106,7 +106,7 @@ class SrsResource
     }
 
     /**
-     * @return Collection|Permission[]
+     * @return Collection<Permission>
      */
     public function getPermissions(): Collection
     {

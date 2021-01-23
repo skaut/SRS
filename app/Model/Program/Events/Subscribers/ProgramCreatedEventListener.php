@@ -47,7 +47,7 @@ class ProgramCreatedEventListener implements MessageHandlerInterface
             if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
                 $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
 
-                foreach ($this->userRepository->findBlockAllowed($block, !$registrationBeforePaymentAllowed) as $user) {
+                foreach ($this->userRepository->findBlockAllowed($block, ! $registrationBeforePaymentAllowed) as $user) {
                     $this->commandBus->handle(new RegisterProgram($user, $event->getProgram()));
                 }
             }

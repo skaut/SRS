@@ -127,7 +127,7 @@ class BlockRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection|Block[]
+     * @return Collection<Block>
      */
     public function findBlocksByIds(array $ids): Collection
     {

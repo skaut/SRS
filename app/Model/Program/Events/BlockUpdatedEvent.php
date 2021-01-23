@@ -12,18 +12,18 @@ class BlockUpdatedEvent
 {
     private Block $block;
 
-    private ?Category $originalCategory;
+    private ?Category $categoryOld;
 
-    private Subevent $originalSubevent;
+    private Subevent $subeventOld;
 
-    private string $originalMandatory;
+    private string $mandatoryOld;
 
-    public function __construct(Block $block, ?Category $originalCategory, Subevent $originalSubevent, string $originalMandatory)
+    public function __construct(Block $block, ?Category $categoryOld, Subevent $subeventOld, string $mandatoryOld)
     {
-        $this->block             = $block;
-        $this->originalCategory  = $originalCategory;
-        $this->originalSubevent  = $originalSubevent;
-        $this->originalMandatory = $originalMandatory;
+        $this->block        = $block;
+        $this->categoryOld  = $categoryOld;
+        $this->subeventOld  = $subeventOld;
+        $this->mandatoryOld = $mandatoryOld;
     }
 
     public function getBlock(): Block
@@ -31,18 +31,18 @@ class BlockUpdatedEvent
         return $this->block;
     }
 
-    public function getOriginalCategory(): ?Category
+    public function getCategoryOld(): ?Category
     {
-        return $this->originalCategory;
+        return $this->categoryOld;
     }
 
-    public function getOriginalSubevent(): Subevent
+    public function getSubeventOld(): Subevent
     {
-        return $this->originalSubevent;
+        return $this->subeventOld;
     }
 
-    public function getOriginalMandatory(): string
+    public function getMandatoryOld(): string
     {
-        return $this->originalMandatory;
+        return $this->mandatoryOld;
     }
 }

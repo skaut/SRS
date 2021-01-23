@@ -111,7 +111,7 @@ class PageRepository extends AbstractRepository
     /**
      * Vrací id podle stránek.
      *
-     * @param Collection|Page[] $pages
+     * @param Collection<Page> $pages
      *
      * @return int[]
      */
@@ -127,7 +127,7 @@ class PageRepository extends AbstractRepository
      *
      * @param string[] $slugs
      *
-     * @return Collection|Page[]
+     * @return Collection<Page>
      */
     public function findPagesBySlugs(array $slugs): Collection
     {
@@ -141,7 +141,7 @@ class PageRepository extends AbstractRepository
     /**
      * Vrací cesty podle stránek.
      *
-     * @param Collection|Page[] $pages
+     * @param Collection<Page> $pages
      *
      * @return string[]
      */

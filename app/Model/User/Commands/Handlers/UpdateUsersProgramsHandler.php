@@ -31,7 +31,7 @@ class UpdateUsersProgramsHandler implements MessageHandlerInterface
         QueryBus $queryBus,
         CommandBus $commandBus,
         EntityManagerDecorator $em,
-        SettingsService  $settingsService
+        SettingsService $settingsService
     ) {
         $this->queryBus        = $queryBus;
         $this->commandBus      = $commandBus;

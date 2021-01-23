@@ -44,7 +44,7 @@ class Helpers
     /**
      * Vrátí id prvků v kolekci.
      *
-     * @param Collection|object[] $collection
+     * @param Collection<object> $collection
      *
      * @return int[]
      */

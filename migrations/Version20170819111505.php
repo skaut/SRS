@@ -1,20 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Migrations;
 
-use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
 class Version20170819111505 extends AbstractMigration
 {
-    /**
-     * @param Schema $schema
-     */
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
@@ -60,10 +58,7 @@ class Version20170819111505 extends AbstractMigration
         $this->addSql('INSERT INTO `template_template_variable` (`template_id`, `template_variable_id`) VALUES (\'9\', \'6\')');
     }
 
-    /**
-     * @param Schema $schema
-     */
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
     }
 }

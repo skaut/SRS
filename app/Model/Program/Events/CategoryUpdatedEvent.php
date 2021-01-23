@@ -13,15 +13,15 @@ class CategoryUpdatedEvent
     private Category $category;
 
     /** @var Collection<Role> */
-    private Collection $originalRegisterableRoles;
+    private Collection $registerableRolesOld;
 
     /**
-     * @param Collection<Role> $originalRegisterableRoles
+     * @param Collection<Role> $registerableRolesOld
      */
-    public function __construct(Category $category, Collection $originalRegisterableRoles)
+    public function __construct(Category $category, Collection $registerableRolesOld)
     {
-        $this->category                  = $category;
-        $this->originalRegisterableRoles = $originalRegisterableRoles;
+        $this->category             = $category;
+        $this->registerableRolesOld = $registerableRolesOld;
     }
 
     public function getCategory(): Category
@@ -32,8 +32,8 @@ class CategoryUpdatedEvent
     /**
      * @return Collection<Role>
      */
-    public function getOriginalRegisterableRoles(): Collection
+    public function getRegisterableRolesOld(): Collection
     {
-        return $this->originalRegisterableRoles;
+        return $this->registerableRolesOld;
     }
 }

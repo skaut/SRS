@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -6,8 +7,16 @@ namespace App\Services;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 
-class SettingsServiceStub implements ISettingsService {
+use function filter_var;
+use function serialize;
+use function unserialize;
 
+use const FILTER_VALIDATE_BOOLEAN;
+use const FILTER_VALIDATE_INT;
+
+class SettingsServiceStub implements ISettingsService
+{
+    /** @var string[] */
     private array $values;
 
     public function getValue(string $item): ?string
@@ -116,11 +125,17 @@ class SettingsServiceStub implements ISettingsService {
         }
     }
 
+    /**
+     * @return object[]
+     */
     public function getArrayValue(string $item): array
     {
         return unserialize($this->getValue($item));
     }
 
+    /**
+     * @param object[] $value
+     */
     public function setArrayValue(string $item, array $value): void
     {
         $this->setValue($item, serialize($value));

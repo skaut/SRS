@@ -51,19 +51,19 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
             $subevent  = $block->getSubevent();
             $mandatory = $block->getMandatory();
 
-            $originalCategory  = $event->getOriginalCategory();
-            $originalSubevent  = $event->getOriginalSubevent();
-            $originalMandatory = $event->getOriginalMandatory();
+            $categoryOld  = $event->getCategoryOld();
+            $subeventOld  = $event->getSubeventOld();
+            $mandatoryOld = $event->getMandatoryOld();
 
             $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
-            $allowedUsers = $this->userRepository->findBlockAllowed($block, ! $registrationBeforePaymentAllowed);
+            $allowedUsers                     = $this->userRepository->findBlockAllowed($block, ! $registrationBeforePaymentAllowed);
 
             //aktualizace ucastniku pri zmene kategorie nebo podakce
             if (
-                ($category === null && $originalCategory !== null)
-                || ($category !== null && $originalCategory === null)
-                || ($category !== null && $originalCategory !== null && $category->getId() !== $originalCategory->getId())
-                || ($subevent->getId() !== $originalSubevent->getId())
+                ($category === null && $categoryOld !== null)
+                || ($category !== null && $categoryOld === null)
+                || ($category !== null && $categoryOld !== null && $category->getId() !== $categoryOld->getId())
+                || ($subevent->getId() !== $subeventOld->getId())
             ) {
                 foreach ($block->getPrograms() as $program) {
                     $programAttendees = $this->queryBus->handle(new ProgramAttendeesQuery($program));
@@ -82,7 +82,7 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
             }
 
             //odstraneni ucastniku, pokud se odstrani automaticke prihlasovani
-            if ($originalMandatory === ProgramMandatoryType::AUTO_REGISTERED && $mandatory !== ProgramMandatoryType::AUTO_REGISTERED) {
+            if ($mandatoryOld === ProgramMandatoryType::AUTO_REGISTERED && $mandatory !== ProgramMandatoryType::AUTO_REGISTERED) {
                 foreach ($block->getPrograms() as $program) {
                     $programAttendees = $this->queryBus->handle(new ProgramAttendeesQuery($program));
                     foreach ($programAttendees as $user) {
@@ -92,7 +92,7 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
             }
 
             //pridani ucastniku, pokud je pridano automaticke prihlaseni
-            if ($originalMandatory !== ProgramMandatoryType::AUTO_REGISTERED && $mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
+            if ($mandatoryOld !== ProgramMandatoryType::AUTO_REGISTERED && $mandatory === ProgramMandatoryType::AUTO_REGISTERED) {
                 foreach ($block->getPrograms() as $program) {
                     foreach ($allowedUsers as $user) {
                         $this->commandBus->handle(new RegisterProgram($user, $program));

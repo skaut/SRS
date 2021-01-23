@@ -10,6 +10,10 @@
     <arg value="nps"/>
 
     <file>app</file>
+    <file>tests</file>
+    <file>migrations</file>
+
+    <exclude-pattern>tests/_*</exclude-pattern>
 
     <rule ref="Doctrine">
         <!-- Zakazuje pouziti @author anotace -->
@@ -33,12 +37,19 @@
         <exclude name="SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable"/>
 
         <!-- Rozpor s phpstan -->
-        <exclude name="SlevomatCodingStandard.PHP.RequireExplicitAssertion.RequiredExplicitAssertion"/>
+<!--        <exclude name="SlevomatCodingStandard.PHP.RequireExplicitAssertion.RequiredExplicitAssertion"/>-->
 
         <!-- skautIS property -->
         <exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
     </rule>
+
+    <!-- Metoda _before v testech   -->
+    <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
+        <exclude-pattern>/tests/*</exclude-pattern>
+    </rule>
+
     <rule ref="SlevomatCodingStandard.Variables.UnusedVariable"/>
+
     <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements">
         <properties>
             <property name="alwaysUsedPropertiesAnnotations" type="array">

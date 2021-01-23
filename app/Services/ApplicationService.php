@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Application\Application;
+use App\Model\Application\Events\ApplicationUpdatedEvent;
 use App\Model\Application\IncomeProof;
 use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Application\Repositories\IncomeProofRepository;
@@ -26,7 +27,6 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
-use App\Model\User\Events\UserApplicationUpdatedEvent;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Utils\Helpers;
@@ -128,8 +128,8 @@ class ApplicationService
     /**
      * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci).
      *
-     * @param Collection|Role[]     $roles
-     * @param Collection|Subevent[] $subevents
+     * @param Collection<Role>     $roles
+     * @param Collection<Subevent> $subevents
      *
      * @throws Throwable
      */
@@ -143,7 +143,7 @@ class ApplicationService
         $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
         $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
 
-        $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
+        $this->eventBus->handle(new ApplicationUpdatedEvent($user));
         $this->updateUserPaymentInfo($user);
 
         $applicatonMaturity        = '-';
@@ -188,7 +188,7 @@ class ApplicationService
     /**
      * Změní role uživatele a provede historizaci přihlášky.
      *
-     * @param Collection|Role[] $roles
+     * @param Collection<Role> $roles
      *
      * @throws SettingsException
      * @throws Throwable
@@ -262,7 +262,7 @@ class ApplicationService
                 $this->decrementRolesOccupancy($user->getRolesApplication()->getRoles());
             }
 
-            $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
+            $this->eventBus->handle(new ApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
 
@@ -318,7 +318,7 @@ class ApplicationService
 
             $this->userRepository->save($user);
 
-            $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
+            $this->eventBus->handle(new ApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
 
@@ -336,7 +336,7 @@ class ApplicationService
     /**
      * Vytvoří novou přihlášku na podakce a provede její historizaci.
      *
-     * @param Collection|Subevent[] $subevents
+     * @param Collection<Subevent> $subevents
      *
      * @throws Throwable
      */
@@ -347,7 +347,7 @@ class ApplicationService
 
             $this->createSubeventsApplication($user, $subevents, $createdBy);
 
-            $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
+            $this->eventBus->handle(new ApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
 
@@ -360,7 +360,7 @@ class ApplicationService
     /**
      * Aktualizuje podakce přihlášky a provede její historizaci.
      *
-     * @param Collection|Subevent[] $subevents
+     * @param Collection<Subevent> $subevents
      *
      * @throws SettingsException
      * @throws Throwable
@@ -395,7 +395,7 @@ class ApplicationService
             $application->setValidTo(new DateTimeImmutable());
             $this->applicationRepository->save($application);
 
-            $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
+            $this->eventBus->handle(new ApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
 
             $this->decrementSubeventsOccupancy($application->getSubevents());
@@ -441,7 +441,7 @@ class ApplicationService
             $application->setValidTo(new DateTimeImmutable());
             $this->applicationRepository->save($application);
 
-            $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
+            $this->eventBus->handle(new ApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
 
             $this->decrementSubeventsOccupancy($application->getSubevents());
@@ -489,7 +489,7 @@ class ApplicationService
             $application->setValidTo(new DateTimeImmutable());
             $this->applicationRepository->save($application);
 
-            $this->eventBus->handle(new UserApplicationUpdatedEvent($user));
+            $this->eventBus->handle(new ApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
 
@@ -554,7 +554,7 @@ class ApplicationService
     /**
      * Aktualizuje platbu a stav spárovaných přihlášek.
      *
-     * @param Collection|Application[] $pairedApplications
+     * @param Collection<Application> $pairedApplications
      *
      * @throws Throwable
      */
@@ -712,7 +712,7 @@ class ApplicationService
     }
 
     /**
-     * @param Collection|Role[] $roles
+     * @param Collection<Role> $roles
      *
      * @throws SettingsException
      * @throws ORMException
@@ -764,7 +764,7 @@ class ApplicationService
     }
 
     /**
-     * @param Collection|Subevent[] $subevents
+     * @param Collection<Subevent> $subevents
      *
      * @throws SettingsException
      * @throws ORMException
@@ -854,7 +854,7 @@ class ApplicationService
     /**
      * Vypočítá poplatek za role.
      *
-     * @param Collection|Role[] $roles
+     * @param Collection<Role> $roles
      */
     private function countRolesFee(Collection $roles): int
     {
@@ -874,8 +874,8 @@ class ApplicationService
     /**
      * Vypočítá poplatek za podakce přihlášky.
      *
-     * @param Collection|Role[]     $roles
-     * @param Collection|Subevent[] $subevents
+     * @param Collection<Role>     $roles
+     * @param Collection<Subevent> $subevents
      */
     private function countSubeventsFee(Collection $roles, Collection $subevents): int
     {
@@ -929,7 +929,7 @@ class ApplicationService
     /**
      * Zvýší obsazenost rolí.
      *
-     * @param Collection|Role[] $roles
+     * @param Collection<Role> $roles
      *
      * @throws ORMException
      * @throws OptimisticLockException
@@ -945,7 +945,7 @@ class ApplicationService
     /**
      * Sníží obsazenost rolí.
      *
-     * @param Collection|Role[] $roles
+     * @param Collection<Role> $roles
      *
      * @throws ORMException
      * @throws OptimisticLockException
@@ -961,7 +961,7 @@ class ApplicationService
     /**
      * Zvýší obsazenost podakcí.
      *
-     * @param Collection|Subevent[] $subevents
+     * @param Collection<Subevent> $subevents
      *
      * @throws ORMException
      * @throws OptimisticLockException
@@ -977,7 +977,7 @@ class ApplicationService
     /**
      * Sníží obsazenost podakcí.
      *
-     * @param Collection|Subevent[] $subevents
+     * @param Collection<Subevent> $subevents
      *
      * @throws ORMException
      * @throws OptimisticLockException

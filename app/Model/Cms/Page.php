@@ -63,7 +63,7 @@ class Page
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="pages", cascade={"persist"})
      *
-     * @var Collection|Role[]
+     * @var Collection<Role>
      */
     protected Collection $roles;
 
@@ -73,7 +73,7 @@ class Page
      * @ORM\OneToMany(targetEntity="Content", mappedBy="page", cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
      *
-     * @var Collection|Content[]
+     * @var Collection<Content>
      */
     protected Collection $contents;
 
@@ -131,7 +131,7 @@ class Page
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
     public function getRoles(): Collection
     {
@@ -146,7 +146,7 @@ class Page
     }
 
     /**
-     * @param Collection|Role[] $roles
+     * @param Collection<Role> $roles
      */
     public function setRoles(Collection $roles): void
     {
@@ -164,7 +164,7 @@ class Page
     /**
      * Vrací obsahy v oblasti.
      *
-     * @return Collection|Content[]
+     * @return Collection<Content>
      *
      * @throws PageException
      */
