@@ -32,7 +32,7 @@ class UnregisterProgramHandler implements MessageHandlerInterface
 
     public function __invoke(UnregisterProgram $command): void
     {
-        $programApplication = $this->programApplicationRepository->findUserProgramApplication($command->getUser(), $command->getProgram());
+        $programApplication = $this->programApplicationRepository->findByUserAndProgram($command->getUser(), $command->getProgram());
         if ($programApplication === null) {
             throw new UserNotAttendsProgramException();
         }

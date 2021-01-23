@@ -92,16 +92,28 @@ class Category
      */
     public function setRegisterableRoles(Collection $registerableRoles): void
     {
-        $this->registerableRoles->clear();
+        foreach ($this->registerableRoles as $registerableRole) {
+            $this->removeRegisterableRole($registerableRole);
+        }
+
         foreach ($registerableRoles as $registerableRole) {
-            $this->registerableRoles->add($registerableRole);
+            $this->addRegisterableRole($registerableRole);
         }
     }
 
-    public function addRole(Role $role): void
+    public function addRegisterableRole(Role $role): void
     {
         if (! $this->registerableRoles->contains($role)) {
             $this->registerableRoles->add($role);
+            $role->addRegisterableCategory($this);
+        }
+    }
+
+    public function removeRegisterableRole(Role $role): void
+    {
+        if ($this->registerableRoles->contains($role)) {
+            $this->registerableRoles->removeElement($role);
+            $role->removeRegisterableCategory($this);
         }
     }
 
@@ -111,5 +123,21 @@ class Category
     public function getBlocks(): Collection
     {
         return $this->blocks;
+    }
+
+    public function addBlock(Block $block): void
+    {
+        if (! $this->blocks->contains($block)) {
+            $this->blocks->add($block);
+            $block->setCategory($this);
+        }
+    }
+
+    public function removeBlock(Block $block): void
+    {
+        if ($this->blocks->contains($block)) {
+            $this->blocks->removeElement($block);
+            $block->setCategory(null);
+        }
     }
 }

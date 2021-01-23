@@ -178,6 +178,13 @@ abstract class CustomInput
         return $this->customInputValues;
     }
 
+    public function addCustomInputValue(CustomInputValue $value): void
+    {
+        if (! $this->customInputValues->contains($value)) {
+            $this->customInputValues->add($value);
+        }
+    }
+
     /**
      * @return Collection<Role>
      */

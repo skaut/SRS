@@ -82,4 +82,20 @@ class Room
     {
         return $this->programs;
     }
+
+    public function addProgram(Program $program): void
+    {
+        if (! $this->programs->contains($program)) {
+            $this->programs->add($program);
+            $program->setRoom($this);
+        }
+    }
+
+    public function removeProgram(Program $program): void
+    {
+        if ($this->programs->contains($program)) {
+            $this->programs->removeElement($program);
+            $program->setRoom(null);
+        }
+    }
 }

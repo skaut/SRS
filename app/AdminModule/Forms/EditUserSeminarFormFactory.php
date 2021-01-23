@@ -288,27 +288,27 @@ class EditUserSeminarFormFactory
 
                     if ($customInput instanceof CustomText) {
                         /** @var CustomTextValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomTextValue();
+                        $customInputValue = $customInputValue ?: new CustomTextValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomCheckbox) {
                         /** @var CustomCheckboxValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomCheckboxValue();
+                        $customInputValue = $customInputValue ?: new CustomCheckboxValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomSelect) {
                         /** @var CustomSelectValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomSelectValue();
+                        $customInputValue = $customInputValue ?: new CustomSelectValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomMultiSelect) {
                         /** @var CustomMultiSelectValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomMultiSelectValue();
+                        $customInputValue = $customInputValue ?: new CustomMultiSelectValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomFile) {
                         /** @var CustomFileValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomFileValue();
+                        $customInputValue = $customInputValue ?: new CustomFileValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         /** @var FileUpload $newValue */
                         $newValue = $values->$customInputId;
@@ -319,18 +319,16 @@ class EditUserSeminarFormFactory
                         }
                     } elseif ($customInput instanceof CustomDate) {
                         /** @var CustomDateValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomDateValue();
+                        $customInputValue = $customInputValue ?: new CustomDateValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomDateTime) {
                         /** @var CustomDateTimeValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomDateTimeValue();
+                        $customInputValue = $customInputValue ?: new CustomDateTimeValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     }
 
-                    $customInputValue->setUser($this->user);
-                    $customInputValue->setInput($customInput);
                     $this->customInputValueRepository->save($customInputValue);
 
                     if ($oldValue !== $newValue) {

@@ -70,7 +70,7 @@ abstract class Application
     /**
      * Role.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
      *
      * @var Collection<Role>
      */
@@ -169,8 +169,9 @@ abstract class Application
      */
     protected ?DateTimeImmutable $validTo = null;
 
-    public function __construct()
+    public function __construct(User $user)
     {
+        $this->user      = $user;
         $this->roles     = new ArrayCollection();
         $this->subevents = new ArrayCollection();
     }
@@ -206,14 +207,6 @@ abstract class Application
     public function getUser(): User
     {
         return $this->user;
-    }
-
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        if (! $user->getApplications()->contains($this)) {
-            $user->addApplication($this);
-        }
     }
 
     /**
@@ -355,6 +348,14 @@ abstract class Application
 
     public function setPayment(?Payment $payment): void
     {
+        if ($this->payment != null) {
+            $this->payment->removePairedApplication($this);
+        }
+
+        if ($payment !== null) {
+            $payment->addPairedApplication($this);
+        }
+
         $this->payment = $payment;
     }
 

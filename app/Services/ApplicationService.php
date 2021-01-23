@@ -198,9 +198,9 @@ class ApplicationService
     {
         $originalRoles = clone $user->getRoles();
 
-        //pokud se role nezmenily, nic se neprovede
+        // pokud se role nezmenily, nic se neprovede
         if ($roles->toArray() == $originalRoles->toArray()) {
-            return; //todo: overit
+            return; // todo: overit
         }
 
         $this->em->transactional(function () use ($user, $roles, $createdBy, $approve, $originalRoles): void {
@@ -374,9 +374,9 @@ class ApplicationService
 
         $originalSubevents = clone $application->getSubevents();
 
-        //pokud se podakce nezmenily, nic se neprovede
+        // pokud se podakce nezmenily, nic se neprovede
         if ($subevents->toArray() == $originalSubevents->toArray()) {
-            return; //todo: overit
+            return; // todo: overit
         }
 
         $this->em->transactional(function () use ($application, $subevents, $createdBy): void {
@@ -469,7 +469,7 @@ class ApplicationService
         $oldPaymentDate   = $application->getPaymentDate();
         $oldMaturityDate  = $application->getMaturityDate();
 
-        //pokud neni zmena, nic se neprovede
+        // pokud neni zmena, nic se neprovede
         if ($paymentMethod === $oldPaymentMethod && $paymentDate == $oldPaymentDate && $maturityDate == $oldMaturityDate) {
             return;
         }
@@ -745,8 +745,7 @@ class ApplicationService
             throw new InvalidArgumentException('User is already registered.');
         }
 
-        $application = new RolesApplication();
-        $application->setUser($user);
+        $application = new RolesApplication($user);
         $application->setRoles($roles);
         $application->setApplicationDate(new DateTimeImmutable());
         $application->setFee($this->countRolesFee($roles));
@@ -779,8 +778,7 @@ class ApplicationService
     ): SubeventsApplication {
         $this->incrementSubeventsOccupancy($subevents);
 
-        $application = new SubeventsApplication();
-        $application->setUser($user);
+        $application = new SubeventsApplication($user);
         $application->setSubevents($subevents);
         $application->setApplicationDate(new DateTimeImmutable());
         $application->setFee($this->countSubeventsFee($user->getRoles(), $subevents));

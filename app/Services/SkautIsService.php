@@ -55,7 +55,7 @@ class SkautIsService
     public function isLoggedIn(): bool
     {
         $logoutTime = clone($this->skautIs->getUser()->getLogoutDate());
-        $hardCheck  = $logoutTime->diff(new DateTimeImmutable())->i < 25; //pokud od posledniho obnoveni prihlaseni ubehlo 5 minut
+        $hardCheck  = $logoutTime->diff(new DateTimeImmutable())->i < 25; // pokud od posledniho obnoveni prihlaseni ubehlo 5 minut
 
         return $this->skautIs->getUser()->isLoggedIn($hardCheck);
     }

@@ -22,7 +22,7 @@ class Authorizator extends Nette\Security\Permission
      */
     public function __construct(AclService $aclService)
     {
-        $this->addRole(Role::TEST); //role pouzivana pri testovani jine role
+        $this->addRole(Role::TEST); // role pouzivana pri testovani jine role
 
         try {
             foreach ($aclService->findAllResourceNames() as $resourceName) {
@@ -37,7 +37,7 @@ class Authorizator extends Nette\Security\Permission
                 $this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);
             }
         } catch (TableNotFoundException $ex) {
-            //prvni spusteni pred vytvorenim databaze
+            // prvni spusteni pred vytvorenim databaze
         }
     }
 }

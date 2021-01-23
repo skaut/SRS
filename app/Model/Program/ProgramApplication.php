@@ -66,19 +66,9 @@ class ProgramApplication
         return $this->user;
     }
 
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
     public function getProgram(): Program
     {
         return $this->program;
-    }
-
-    public function setProgram(Program $program): void
-    {
-        $this->program = $program;
     }
 
     public function isAlternate(): bool
@@ -94,10 +84,5 @@ class ProgramApplication
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): void
-    {
-        $this->createdAt = $createdAt;
     }
 }

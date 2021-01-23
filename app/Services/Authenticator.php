@@ -82,7 +82,7 @@ class Authenticator implements IAuthenticator
 
         $this->userRepository->save($user);
 
-        //nacteni schvalenych roli v SRS
+        // nacteni schvalenych roli v SRS
         $netteRoles = [];
         if ($user->isApproved()) {
             foreach ($user->getRoles() as $role) {
@@ -93,7 +93,7 @@ class Authenticator implements IAuthenticator
             $netteRoles[$roleUnapproved->getId()] = $roleUnapproved->getName();
         }
 
-        //invalidace cache roli ze skautIS
+        // invalidace cache roli ze skautIS
         $this->userRolesCache->remove($user->getSkautISUserId());
 
         return new Identity($user->getId(), $netteRoles, ['firstLogin' => $firstLogin]);

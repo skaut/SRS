@@ -10,13 +10,21 @@ class SaveBlock
 {
     private Block $block;
 
-    public function __construct(Block $block)
+    private ?Block $blockOld;
+
+    public function __construct(Block $block, ?Block $blockOld = null)
     {
-        $this->block = $block;
+        $this->block    = $block;
+        $this->blockOld = $blockOld;
     }
 
     public function getBlock(): Block
     {
         return $this->block;
+    }
+
+    public function getBlockOld(): ?Block
+    {
+        return $this->blockOld;
     }
 }

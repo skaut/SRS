@@ -488,7 +488,7 @@ class ScheduleService
         $blockDetailDto->setDescription($block->getDescription());
         $blockDetailDto->setProgramsCount($block->getProgramsCount());
         $blockDetailDto->setUserAttends($userBlocks->contains($block));
-        $blockDetailDto->setUserAllowed($block->isAllowed($this->user));
+        $blockDetailDto->setUserAllowed($block->isAllowed($this->user)); // todo: nahradit
 
         return $blockDetailDto;
     }

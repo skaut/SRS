@@ -589,13 +589,13 @@ class UsersGridControl extends Control
 
         $p = $this->getPresenter();
 
-        //neni vybrana zadna role
+        // neni vybrana zadna role
         if ($selectedRoles->isEmpty()) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_empty', 'danger');
             $this->redirect('this');
         }
 
-        //v rolich musi byt dostatek volnych mist
+        // v rolich musi byt dostatek volnych mist
         $capacitiesOk = $selectedRoles->forAll(static function (int $key, Role $role) use ($users) {
             if (! $role->hasLimitedCapacity()) {
                 return true;
@@ -766,7 +766,7 @@ class UsersGridControl extends Control
     public function groupExportUsers(array $ids): void
     {
         $this->sessionSection->userIds = $ids;
-        $this->redirect('exportusers'); //presmerovani kvuli zruseni ajax
+        $this->redirect('exportusers'); // presmerovani kvuli zruseni ajax
     }
 
     /**
@@ -796,7 +796,7 @@ class UsersGridControl extends Control
     public function groupExportRoles(array $ids): void
     {
         $this->sessionSection->userIds = $ids;
-        $this->redirect('exportroles'); //presmerovani kvuli zruseni ajax
+        $this->redirect('exportroles'); // presmerovani kvuli zruseni ajax
     }
 
     /**
@@ -827,7 +827,7 @@ class UsersGridControl extends Control
     public function groupExportSubeventsAndCategories(array $ids): void
     {
         $this->sessionSection->userIds = $ids;
-        $this->redirect('exportsubeventsandcategories'); //presmerovani kvuli zruseni ajax
+        $this->redirect('exportsubeventsandcategories'); // presmerovani kvuli zruseni ajax
     }
 
     /**
@@ -857,7 +857,7 @@ class UsersGridControl extends Control
     public function groupExportSchedules(array $ids): void
     {
         $this->sessionSection->userIds = $ids;
-        $this->redirect('exportschedules'); //presmerovani kvuli zruseni ajax
+        $this->redirect('exportschedules'); // presmerovani kvuli zruseni ajax
     }
 
     /**

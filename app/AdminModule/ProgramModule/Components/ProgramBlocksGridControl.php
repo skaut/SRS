@@ -249,8 +249,9 @@ class ProgramBlocksGridControl extends Control
             $p->flashMessage('admin.program.blocks_change_mandatory_auto_registered_not_allowed', 'danger');
         } else {
             try {
+                $blockOld = clone $block;
                 $block->setMandatory($mandatory);
-                $this->commandBus->handle(new SaveBlock($block));
+                $this->commandBus->handle(new SaveBlock($block, $blockOld));
                 $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');
             } catch (Throwable $ex) {
                 Debugger::log($ex, ILogger::WARNING);
@@ -278,7 +279,7 @@ class ProgramBlocksGridControl extends Control
     public function groupExportBlocksAttendees(array $ids): void
     {
         $this->sessionSection->blockIds = $ids;
-        $this->redirect('exportblocksattendees'); //presmerovani kvuli zruseni ajax
+        $this->redirect('exportblocksattendees'); // presmerovani kvuli zruseni ajax
     }
 
     /**

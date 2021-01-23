@@ -69,6 +69,22 @@ class Tag
         return $this->documents;
     }
 
+    public function addDocument(Document $document): void
+    {
+        if (! $this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->addTag($this);
+        }
+    }
+
+    public function removeDocument(Document $document): void
+    {
+        if ($this->documents->contains($document)) {
+            $this->documents->removeElement($document);
+            $document->removeTag($this);
+        }
+    }
+
     public function getName(): string
     {
         return $this->name;
@@ -99,9 +115,12 @@ class Tag
      */
     public function setRoles(Collection $roles): void
     {
-        $this->roles->clear();
+        foreach ($this->roles as $role) {
+            $this->removeRole($role);
+        }
+
         foreach ($roles as $role) {
-            $this->roles->add($role);
+            $this->addRole($role);
         }
     }
 
@@ -109,6 +128,15 @@ class Tag
     {
         if (! $this->roles->contains($role)) {
             $this->roles->add($role);
+            $role->addTag($this);
+        }
+    }
+
+    public function removeRole(Role $role): void
+    {
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
+            $role->removeTag($this);
         }
     }
 }

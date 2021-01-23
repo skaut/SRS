@@ -1,7 +1,7 @@
 {block head}
     <script>
         $(function () {
-            //otevreni accordion podle url
+            // otevreni accordion podle url
             if (location.hash != null && location.hash != "") {
                 $('.collapse').removeClass('show');
                 $(location.hash + '.collapse').collapse('show');

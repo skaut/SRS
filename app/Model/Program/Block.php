@@ -166,6 +166,13 @@ class Block
         return $this->programs->count();
     }
 
+    public function addProgram(Program $program): void
+    {
+        if (! $this->programs->contains($program)) {
+            $this->programs->add($program);
+        }
+    }
+
     /**
      * @return Collection<User>
      */
@@ -186,9 +193,28 @@ class Block
      */
     public function setLectors(Collection $lectors): void
     {
-        $this->lectors->clear();
+        foreach ($this->lectors as $lector) {
+            $this->removeLector($lector);
+        }
+
         foreach ($lectors as $lector) {
+            $this->addLector($lector);
+        }
+    }
+
+    public function addLector(User $lector): void
+    {
+        if (! $this->lectors->contains($lector)) {
             $this->lectors->add($lector);
+            $lector->addLecturersBlock($this);
+        }
+    }
+
+    public function removeLector(User $lector): void
+    {
+        if ($this->lectors->contains($lector)) {
+            $this->lectors->removeElement($lector);
+            $lector->removeLecturersBlock($this);
         }
     }
 
@@ -199,6 +225,14 @@ class Block
 
     public function setCategory(?Category $category): void
     {
+        if ($this->category !== null) {
+            $this->category->removeBlock($this);
+        }
+
+        if ($category !== null) {
+            $category->addBlock($this);
+        }
+
         $this->category = $category;
     }
 
@@ -209,6 +243,8 @@ class Block
 
     public function setSubevent(Subevent $subevent): void
     {
+        $this->subevent->removeBlock($this);
+        $subevent->addBlock($this);
         $this->subevent = $subevent;
     }
 
@@ -280,41 +316,5 @@ class Block
     public function setDescription(?string $description): void
     {
         $this->description = $description;
-    }
-
-    /**
-     * Je uživatel oprávněn přihlašovat se na programy bloku?
-     */
-    public function isAllowed(User $user): bool
-    {
-        $result = true;
-
-        if ($this->category) {
-            $tmp = false;
-            foreach ($user->getRoles() as $role) {
-                if ($role->getRegisterableCategories()->contains($this->category)) {
-                    $tmp = true;
-                    break;
-                }
-            }
-
-            if (! $tmp) {
-                $result = false;
-            }
-        }
-
-        $tmp = false;
-        foreach ($user->getNotCanceledSubeventsApplications() as $application) {
-            if ($application->getSubevents()->contains($this->subevent)) {
-                $tmp = true;
-                break;
-            }
-        }
-
-        if (! $tmp) {
-            $result = false;
-        }
-
-        return $result;
     }
 }

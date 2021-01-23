@@ -113,6 +113,22 @@ class Permission
         return $this->roles;
     }
 
+    public function addRole(Role $role): void
+    {
+        if (! $this->roles->contains($role)) {
+            $this->roles->add($role);
+            $role->addPermission($this);
+        }
+    }
+
+    public function removeRole(Role $role): void
+    {
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
+            $role->removePermission($this);
+        }
+    }
+
     public function getResource(): SrsResource
     {
         return $this->resource;

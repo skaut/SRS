@@ -265,37 +265,37 @@ class ApplicationFormFactory
             $this->user->setPostcode($values->postcode);
             $this->user->setState($values->state);
 
-            //role
+            // role
             if (property_exists($values, 'roles')) {
                 $roles = $this->roleRepository->findRolesByIds($values->roles);
             } else {
                 $roles = $this->roleRepository->findFilteredRoles(true, false, false);
             }
 
-            //vlastni pole
+            // vlastni pole
             foreach ($this->customInputRepository->findByRolesOrderedByPosition($roles) as $customInput) {
                 $customInputId    = 'custom' . $customInput->getId();
                 $customInputValue = $this->user->getCustomInputValue($customInput);
 
                 if ($customInput instanceof CustomText) {
                     /** @var CustomTextValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomTextValue();
+                    $customInputValue = $customInputValue ?: new CustomTextValue($customInput, $this->user);
                     $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomCheckbox) {
                     /** @var CustomCheckboxValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomCheckboxValue();
+                    $customInputValue = $customInputValue ?: new CustomCheckboxValue($customInput, $this->user);
                     $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomSelect) {
                     /** @var CustomSelectValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomSelectValue();
+                    $customInputValue = $customInputValue ?: new CustomSelectValue($customInput, $this->user);
                     $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomMultiSelect) {
                     /** @var CustomMultiSelectValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomMultiSelectValue();
+                    $customInputValue = $customInputValue ?: new CustomMultiSelectValue($customInput, $this->user);
                     $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomFile) {
                     /** @var CustomFileValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomFileValue();
+                    $customInputValue = $customInputValue ?: new CustomFileValue($customInput, $this->user);
                     /** @var FileUpload $file */
                     $file = $values->$customInputId;
                     if ($file->getError() == UPLOAD_ERR_OK) {
@@ -305,25 +305,23 @@ class ApplicationFormFactory
                     }
                 } elseif ($customInput instanceof CustomDate) {
                     /** @var CustomDateValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomDateValue();
+                    $customInputValue = $customInputValue ?: new CustomDateValue($customInput, $this->user);
                     $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomDateTime) {
                     /** @var CustomDateTimeValue $customInputValue */
-                    $customInputValue = $customInputValue ?: new CustomDateTimeValue();
+                    $customInputValue = $customInputValue ?: new CustomDateTimeValue($customInput, $this->user);
                     $customInputValue->setValue($values->$customInputId);
                 }
 
-                $customInputValue->setUser($this->user);
-                $customInputValue->setInput($customInput);
                 $this->customInputValueRepository->save($customInputValue);
             }
 
-            //podakce
+            // podakce
             $subevents = $this->subeventRepository->explicitSubeventsExists() && ! empty($values->subevents)
                 ? $this->subeventRepository->findSubeventsByIds($values->subevents)
                 : new ArrayCollection([$this->subeventRepository->findImplicit()]);
 
-            //aktualizace udaju ve skautIS
+            // aktualizace udaju ve skautIS
             try {
                 $this->skautIsService->updatePersonBasic(
                     $this->user->getSkautISPersonId(),
@@ -346,7 +344,7 @@ class ApplicationFormFactory
                 $this->onSkautIsError();
             }
 
-            //vytvoreni prihlasky
+            // vytvoreni prihlasky
             $this->applicationService->register($this->user, $roles, $subevents, $this->user);
         });
     }
@@ -436,7 +434,7 @@ class ApplicationFormFactory
             Helpers::getIds($this->roleRepository->findFilteredRoles(false, true, false))
         )->addRule(Form::FILLED, 'web.application_content.subevents_empty');
 
-        //generovani chybovych hlasek pro vsechny kombinace podakci
+        // generovani chybovych hlasek pro vsechny kombinace podakci
         foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
             if (! $subevent->getIncompatibleSubevents()->isEmpty()) {
                 $subeventsSelect->addRule(
@@ -479,7 +477,7 @@ class ApplicationFormFactory
             ->addRule([$this, 'validateRolesRegisterable'], 'web.application_content.roles_not_registerable')
             ->addRule([$this, 'validateRolesMinimumAge'], 'web.application_content.roles_require_minimum_age');
 
-        //generovani chybovych hlasek pro vsechny kombinace roli
+        // generovani chybovych hlasek pro vsechny kombinace roli
         foreach ($this->roleRepository->findFilteredRoles(true, false, true, $this->user) as $role) {
             if (! $role->getIncompatibleRoles()->isEmpty()) {
                 $rolesSelect->addRule(
@@ -512,7 +510,7 @@ class ApplicationFormFactory
                 ->toggle('form-group-' . $customInputId);
         }
 
-        //pokud je na vyber jen jedna role, je oznacena
+        // pokud je na vyber jen jedna role, je oznacena
         if (count($registerableOptions) === 1) {
             $rolesSelect->setDisabled(true);
             $rolesSelect->setDefaultValue(array_keys($registerableOptions));

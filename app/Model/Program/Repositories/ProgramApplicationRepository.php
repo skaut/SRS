@@ -34,7 +34,7 @@ class ProgramApplicationRepository extends AbstractRepository
         parent::__construct($em, ProgramApplication::class);
     }
 
-    public function findUserProgramApplication(User $user, Program $program): ?ProgramApplication
+    public function findByUserAndProgram(User $user, Program $program): ?ProgramApplication
     {
         return $this->getRepository()->findOneBy(['user' => $user, 'program' => $program]);
     }

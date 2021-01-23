@@ -56,13 +56,13 @@ class PagesPresenter extends CmsBasePresenter
                 case 'submitAndContinue':
                 case 'submitAdd':
                     $this->redirect('Pages:content', ['id' => $control->id, 'area' => $control->area]);
-                    //redirect
+                    // redirect
                 case 'submitMain':
                     $this->redirect('Pages:content', ['id' => $control->id, 'area' => Content::MAIN]);
-                    //redirect
+                    // redirect
                 case 'submitSidebar':
                     $this->redirect('Pages:content', ['id' => $control->id, 'area' => Content::SIDEBAR]);
-                    //redirect
+                    // redirect
                 default:
                     $this->redirect('Pages:default');
             }

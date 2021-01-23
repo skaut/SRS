@@ -134,7 +134,7 @@ class ProgramCategoriesGridControl extends Control
 
         $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values->registerableRoles));
 
-        $this->commandBus->handle(new SaveCategory($category));
+        $this->commandBus->handle(new SaveCategory($category, null));
 
         $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
 
@@ -150,11 +150,12 @@ class ProgramCategoriesGridControl extends Control
     public function edit(string $id, stdClass $values): void
     {
         $category = $this->categoryRepository->findById((int) $id);
+        $categoryOld = clone $category;
 
         $category->setName($values->name);
         $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values->registerableRoles));
 
-        $this->commandBus->handle(new SaveCategory($category));
+        $this->commandBus->handle(new SaveCategory($category, $categoryOld));
 
         $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
         $this->redirect('this');

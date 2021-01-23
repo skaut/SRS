@@ -198,7 +198,7 @@ class RoomsGridControl extends Control
     public function groupExportRoomsSchedules(array $ids): void
     {
         $this->sessionSection->roomIds = $ids;
-        $this->redirect('exportroomsschedules'); //presmerovani kvuli zruseni ajax
+        $this->redirect('exportroomsschedules'); // presmerovani kvuli zruseni ajax
     }
 
     /**

@@ -2,14 +2,14 @@
 
 <script>
     $(function () {
-        //nastaveni trid a identifikatoru pro spravnou funkcnost mazani a razeni contentu
+        // nastaveni trid a identifikatoru pro spravnou funkcnost mazani a razeni contentu
         $('.contents-item').each(function () {
             var id = $(this).find('input.id').val();
             $(this).attr('id', 'content-' + id);
             $(this).find('.delete-content').attr('href', '#content-' + id);
         });
 
-        //razeni contentu
+        // razeni contentu
         $('#contents').sortable({
             delay: 300,
             update: function (event, ui) {
@@ -29,7 +29,7 @@
             }
         });
 
-        //mazani contentu
+        // mazani contentu
         $('.delete-content').click(function (event) {
             event.preventDefault();
 

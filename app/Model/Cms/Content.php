@@ -234,19 +234,9 @@ abstract class Content implements IContent
         return $this->page;
     }
 
-    public function setPage(Page $page): void
-    {
-        $this->page = $page;
-    }
-
     public function getArea(): string
     {
         return $this->area;
-    }
-
-    public function setArea(string $area): void
-    {
-        $this->area = $area;
     }
 
     public function getPosition(): int

@@ -164,7 +164,7 @@ class BlockFormFactory
             ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_registered_note'))
             ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_registered_not_allowed'); //todo: nesmi mit omezenou kapacitu
+            ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_registered_not_allowed'); // todo: nesmi mit omezenou kapacitu
 
         $form->addTextArea('perex', 'admin.program.blocks_perex_form')
             ->addCondition(Form::FILLED)
@@ -238,11 +238,11 @@ class BlockFormFactory
 
         if ($this->block === null) {
             if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
-                return; //todo: exception
+                return; // todo: exception
             }
         } else {
             if (! $this->user->isAllowedModifyBlock($this->block)) {
-                return; //todo: exception
+                return; // todo: exception
             }
         }
 
@@ -256,6 +256,8 @@ class BlockFormFactory
         $lectors   = $this->userRepository->findUsersByIds($values->lectors);
         $capacity  = $values->capacity !== '' ? $values->capacity : null;
         $mandatory = $values->mandatory ? ($values->autoRegistered ? ProgramMandatoryType::AUTO_REGISTERED : ProgramMandatoryType::MANDATORY) : ProgramMandatoryType::VOLUNTARY;
+
+        $blockOld = clone $this->block;
 
         if ($this->block === null) {
             $this->block = new Block($values->name, $values->duration, $capacity, $values->alternatesAllowed, $mandatory, $subevent, $category);
@@ -277,7 +279,7 @@ class BlockFormFactory
             $this->block->setTools($values->tools);
         }
 
-        $this->commandBus->handle(new SaveBlock($this->block));
+        $this->commandBus->handle(new SaveBlock($this->block, $blockOld));
     }
 
     /**

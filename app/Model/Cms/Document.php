@@ -87,9 +87,28 @@ class Document
      */
     public function setTags(Collection $tags): void
     {
-        $this->tags->clear();
+        foreach ($this->tags as $tag) {
+            $this->removeTag($tag);
+        }
+
         foreach ($tags as $tag) {
+            $this->addTag($tag);
+        }
+    }
+
+    public function addTag(Tag $tag): void
+    {
+        if (! $this->tags->contains($tag)) {
             $this->tags->add($tag);
+            $tag->addDocument($this);
+        }
+    }
+
+    public function removeTag(Tag $tag): void
+    {
+        if ($this->tags->contains($tag)) {
+            $this->tags->removeElement($tag);
+            $tag->removeDocument($this);
         }
     }
 

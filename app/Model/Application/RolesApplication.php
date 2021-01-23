@@ -26,6 +26,13 @@ class RolesApplication extends Application
     {
         $this->roles->clear();
         foreach ($roles as $role) {
+            $this->addRole($role);
+        }
+    }
+
+    public function addRole(Role $role): void
+    {
+        if (! $this->roles->contains($role)) {
             $this->roles->add($role);
         }
     }

@@ -101,7 +101,7 @@ class ProgramAttendeesGridControl extends Control
 
             $grid->setTranslator($this->translator);
 
-            $qb = $this->userRepository->createQueryBuilder('u') //todo: nahradit volanim repository
+            $qb = $this->userRepository->createQueryBuilder('u') // todo: nahradit volanim repository
                 ->leftJoin('u.programApplications', 'pa')
                 ->join('pa.program', 'p', 'WITH', 'p.id = :pid')
                 ->join('u.applications', 'a')

@@ -298,6 +298,22 @@ class Role
         return $this->users;
     }
 
+    public function addUser(User $user): void
+    {
+        if (! $this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addRole($this);
+        }
+    }
+
+    public function removeUser(User $user): void
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            $user->removeRole($this);
+        }
+    }
+
     /**
      * @return Collection<Permission>
      */
@@ -311,15 +327,29 @@ class Role
      */
     public function setPermissions(Collection $permissions): void
     {
-        $this->permissions->clear();
+        foreach ($this->permissions as $permission) {
+            $this->removePermission($permission);
+        }
+
         foreach ($permissions as $permission) {
-            $this->permissions->add($permission);
+            $this->addPermission($permission);
         }
     }
 
     public function addPermission(Permission $permission): void
     {
-        $this->permissions->add($permission);
+        if (! $this->permissions->contains($permission)) {
+            $this->permissions->add($permission);
+            $permission->addRole($this);
+        }
+    }
+
+    public function removePermission(Permission $permission): void
+    {
+        if ($this->permissions->contains($permission)) {
+            $this->permissions->removeElement($permission);
+            $permission->removeRole($this);
+        }
     }
 
     /**
@@ -335,25 +365,28 @@ class Role
      */
     public function setPages(Collection $pages): void
     {
-        foreach ($this->getPages() as $page) {
-            if (! $pages->contains($page)) {
-                $page->getRoles()->removeElement($this);
-            }
+        foreach ($this->pages as $page) {
+            $this->removePage($page);
         }
 
         foreach ($pages as $page) {
-            if (! $page->getRoles()->contains($this)) {
-                $page->getRoles()->add($this);
-            }
+            $this->addPage($page);
         }
-
-        $this->pages = $pages;
     }
 
     public function addPage(Page $page): void
     {
         if (! $this->pages->contains($page)) {
+            $this->pages->add($page);
             $page->addRole($this);
+        }
+    }
+
+    public function removePage(Page $page): void
+    {
+        if ($this->pages->contains($page)) {
+            $this->pages->removeElement($page);
+            $page->removeRole($this);
         }
     }
 
@@ -482,19 +515,13 @@ class Role
      */
     public function setIncompatibleRoles(Collection $incompatibleRoles): void
     {
-        foreach ($this->getIncompatibleRoles() as $role) {
-            if (! $incompatibleRoles->contains($role)) {
-                $role->getIncompatibleRoles()->removeElement($this);
-            }
+        foreach ($this->incompatibleRoles as $role) {
+            $this->removeIncompatibleRole($role);
         }
 
         foreach ($incompatibleRoles as $role) {
-            if (! $role->getIncompatibleRoles()->contains($this)) {
-                $role->getIncompatibleRoles()->add($this);
-            }
+            $this->addIncompatibleRole($role);
         }
-
-        $this->incompatibleRoles = $incompatibleRoles;
     }
 
     /**
@@ -502,18 +529,24 @@ class Role
      */
     public function getIncompatibleRolesText(): string
     {
-        $incompatibleRolesNames = [];
-        foreach ($this->getIncompatibleRoles() as $incompatibleRole) {
-            $incompatibleRolesNames[] = $incompatibleRole->getName();
-        }
-
-        return implode(', ', $incompatibleRolesNames);
+        return implode(', ', $this->incompatibleRoles->map(static function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
     public function addIncompatibleRole(Role $role): void
     {
         if (! $this->incompatibleRoles->contains($role)) {
             $this->incompatibleRoles->add($role);
+            $role->addIncompatibleRole($this);
+        }
+    }
+
+    public function removeIncompatibleRole(Role $role): void
+    {
+        if ($this->incompatibleRoles->contains($role)) {
+            $this->incompatibleRoles->removeElement($role);
+            $role->removeIncompatibleRole($this);
         }
     }
 
@@ -523,6 +556,22 @@ class Role
     public function getRequiredByRole(): Collection
     {
         return $this->requiredByRole;
+    }
+
+    public function addRequiredByRole(Role $role): void
+    {
+        if (! $this->requiredByRole->contains($role)) {
+            $this->requiredByRole->add($role);
+            $role->addRequiredRole($this);
+        }
+    }
+
+    public function removeRequiredByRole(Role $role): void
+    {
+        if ($this->requiredByRole->contains($role)) {
+            $this->requiredByRole->removeElement($role);
+            $role->removeRequiredRole($this);
+        }
     }
 
     /**
@@ -567,9 +616,12 @@ class Role
      */
     public function setRequiredRoles(Collection $requiredRoles): void
     {
-        $this->requiredRoles->clear();
+        foreach ($this->requiredRoles as $requiredRole) {
+            $this->removeRequiredRole($requiredRole);
+        }
+
         foreach ($requiredRoles as $requiredRole) {
-            $this->requiredRoles->add($requiredRole);
+            $this->addRequiredRole($requiredRole);
         }
     }
 
@@ -577,6 +629,15 @@ class Role
     {
         if (! $this->requiredRoles->contains($role)) {
             $this->requiredRoles->add($role);
+            $role->addRequiredByRole($this);
+        }
+    }
+
+    public function removeRequiredRole(Role $role): void
+    {
+        if ($this->requiredRoles->contains($role)) {
+            $this->requiredRoles->removeElement($role);
+            $role->removeRequiredByRole($this);
         }
     }
 
@@ -614,12 +675,9 @@ class Role
      */
     public function getRequiredRolesTransitiveText(): string
     {
-        $requiredRolesNames = [];
-        foreach ($this->getRequiredRolesTransitive() as $requiredRole) {
-            $requiredRolesNames[] = $requiredRole->getName();
-        }
-
-        return implode(', ', $requiredRolesNames);
+        return implode(', ', $this->getRequiredRolesTransitive()->map(static function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
     /**
@@ -633,7 +691,16 @@ class Role
     public function addRegisterableCategory(Category $category): void
     {
         if (! $this->registerableCategories->contains($category)) {
-            $category->addRole($this);
+            $this->registerableCategories->add($category);
+            $category->addRegisterableRole($this);
+        }
+    }
+
+    public function removeRegisterableCategory(Category $category): void
+    {
+        if ($this->registerableCategories->contains($category)) {
+            $this->registerableCategories->removeElement($category);
+            $category->removeRegisterableRole($this);
         }
     }
 
@@ -653,6 +720,22 @@ class Role
     public function getTags(): Collection
     {
         return $this->tags;
+    }
+
+    public function addTag(Tag $tag): void
+    {
+        if (! $this->tags->contains($tag)) {
+            $this->tags->add($tag);
+            $tag->addRole($this);
+        }
+    }
+
+    public function removeTag(Tag $tag): void
+    {
+        if ($this->tags->contains($tag)) {
+            $this->tags->removeElement($tag);
+            $tag->removeRole($this);
+        }
     }
 
     public function countUsers(): int

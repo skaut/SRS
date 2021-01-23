@@ -10,13 +10,21 @@ class SaveCategory
 {
     private Category $category;
 
-    public function __construct(Category $category)
+    private ?Category $categoryOld;
+
+    public function __construct(Category $category, ?Category $categoryOld)
     {
-        $this->category = $category;
+        $this->category    = $category;
+        $this->categoryOld = $categoryOld;
     }
 
     public function getCategory(): Category
     {
         return $this->category;
+    }
+
+    public function getCategoryOld(): ?Category
+    {
+        return $this->categoryOld;
     }
 }

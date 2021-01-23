@@ -110,7 +110,7 @@ class AuthPresenter extends BasePresenter
             }
         }
 
-        //pokud neni navratova adresa, presmerovani podle role
+        // pokud neni navratova adresa, presmerovani podle role
         $user = $this->userRepository->findById($this->user->id);
 
         $redirectByRole    = null;
@@ -129,7 +129,7 @@ class AuthPresenter extends BasePresenter
             }
         }
 
-        //pokud nema role nastaveno presmerovani, nebo je uzivatel v rolich s ruznymi presmerovani, je presmerovan na vychozi stranku
+        // pokud nema role nastaveno presmerovani, nebo je uzivatel v rolich s ruznymi presmerovani, je presmerovan na vychozi stranku
         if ($redirectByRole && ! $multipleRedirects) {
             $slug = $redirectByRole;
         } else {

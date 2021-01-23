@@ -181,6 +181,22 @@ class Payment
         return $this->pairedApplications;
     }
 
+    public function addPairedApplication(Application $application): void
+    {
+        if (! $this->pairedApplications->contains($application)) {
+            $this->pairedApplications->add($application);
+            $application->setPayment($this);
+        }
+    }
+
+    public function removePairedApplication(Application $application): void
+    {
+        if ($this->pairedApplications->contains($application)) {
+            $this->pairedApplications->removeElement($application);
+            $application->setPayment(null);
+        }
+    }
+
     /**
      * @return Collection<Application>
      */

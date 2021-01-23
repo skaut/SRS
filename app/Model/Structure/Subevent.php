@@ -185,6 +185,21 @@ class Subevent
         return $this->blocks;
     }
 
+    public function addBlock(Block $block): void
+    {
+        if (! $this->blocks->contains($block)) {
+            $this->blocks->add($block);
+            $block->setSubevent($this);
+        }
+    }
+
+    public function removeBlock(Block $block): void
+    {
+        if ($this->blocks->contains($block)) {
+            $this->blocks->removeElement($block);
+        }
+    }
+
     public function getFee(): int
     {
         return $this->fee;
@@ -228,25 +243,28 @@ class Subevent
      */
     public function setIncompatibleSubevents(Collection $incompatibleSubevents): void
     {
-        foreach ($this->getIncompatibleSubevents() as $subevent) {
-            if (! $incompatibleSubevents->contains($subevent)) {
-                $subevent->getIncompatibleSubevents()->removeElement($this);
-            }
+        foreach ($this->incompatibleSubevents as $subevent) {
+            $this->removeIncompatibleSubevent($subevent);
         }
 
         foreach ($incompatibleSubevents as $subevent) {
-            if (! $subevent->getIncompatibleSubevents()->contains($this)) {
-                $subevent->getIncompatibleSubevents()->add($this);
-            }
+            $this->addIncompatibleSubevent($subevent);
         }
-
-        $this->incompatibleSubevents = $incompatibleSubevents;
     }
 
     public function addIncompatibleSubevent(Subevent $subevent): void
     {
         if (! $this->incompatibleSubevents->contains($subevent)) {
             $this->incompatibleSubevents->add($subevent);
+            $subevent->addIncompatibleSubevent($this);
+        }
+    }
+
+    public function removeIncompatibleSubevent(Subevent $subevent): void
+    {
+        if ($this->incompatibleSubevents->contains($subevent)) {
+            $this->incompatibleSubevents->removeElement($subevent);
+            $subevent->removeIncompatibleSubevent($this);
         }
     }
 
@@ -269,6 +287,22 @@ class Subevent
     public function getRequiredBySubevent(): Collection
     {
         return $this->requiredBySubevent;
+    }
+
+    public function addRequiredBySubevent(Subevent $subevent): void
+    {
+        if (! $this->requiredBySubevent->contains($subevent)) {
+            $this->requiredBySubevent->add($subevent);
+            $subevent->addRequiredSubevent($this);
+        }
+    }
+
+    public function removeRequiredBySubevent(Subevent $subevent): void
+    {
+        if ($this->requiredBySubevent->contains($subevent)) {
+            $this->requiredBySubevent->removeElement($subevent);
+            $subevent->removeRequiredSubevent($this);
+        }
     }
 
     /**
@@ -313,9 +347,28 @@ class Subevent
      */
     public function setRequiredSubevents(Collection $requiredSubevents): void
     {
-        $this->requiredSubevents->clear();
+        foreach ($this->requiredSubevents as $requiredSubevent) {
+            $this->removeRequiredSubevent($requiredSubevent);
+        }
+
         foreach ($requiredSubevents as $requiredSubevent) {
-            $this->requiredSubevents->add($requiredSubevent);
+            $this->addRequiredSubevent($requiredSubevent);
+        }
+    }
+
+    public function addRequiredSubevent(Subevent $subevent): void
+    {
+        if (! $this->requiredSubevents->contains($subevent)) {
+            $this->requiredSubevents->add($subevent);
+            $subevent->addRequiredBySubevent($this);
+        }
+    }
+
+    public function removeRequiredSubevent(Subevent $subevent): void
+    {
+        if ($this->requiredSubevents->contains($subevent)) {
+            $this->requiredSubevents->removeElement($subevent);
+            $subevent->removeRequiredBySubevent($this);
         }
     }
 
@@ -381,15 +434,28 @@ class Subevent
      */
     public function setSkautIsCourses(Collection $skautIsCourses): void
     {
-        $this->skautIsCourses->clear();
-        foreach ($skautIsCourses as $skautIsCourse) {
-            $this->skautIsCourses->add($skautIsCourse);
+        $this->skautIsCourses = $skautIsCourses;
+    }
+
+    public function addApplication(SubeventsApplication $application): void
+    {
+        if (! $this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->addSubevent($this);
+        }
+    }
+
+    public function removeApplication(SubeventsApplication $application): void
+    {
+        if ($this->applications->contains($application)) {
+            $this->applications->removeElement($application);
+            $application->removeSubevent($this);
         }
     }
 
     public function countUsers(): int
     {
-        //TODO: opravit
+        // TODO: opravit
 //        $criteria = Criteria::create()
 //            ->where(Criteria::expr()->andX(
 //                Criteria::expr()->isNull('validTo'),

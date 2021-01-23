@@ -663,16 +663,28 @@ class User
      */
     public function setRoles(Collection $roles): void
     {
-        $this->roles->clear();
+        foreach ($this->roles as $role) {
+            $this->removeRole($role);
+        }
+
         foreach ($roles as $role) {
-            $this->roles->add($role);
+            $this->addRole($role);
         }
     }
 
     public function addRole(Role $role): void
     {
-        if (! $this->isInRole($role)) {
+        if (! $this->roles->contains($role)) {
             $this->roles->add($role);
+            $role->addUser($this);
+        }
+    }
+
+    public function removeRole(Role $role): void
+    {
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
+            $role->removeUser($this);
         }
     }
 
@@ -681,9 +693,7 @@ class User
      */
     public function isInRole(Role $role): bool
     {
-        return $this->roles->filter(static function (Role $item) use ($role) {
-            return $item->getId() === $role->getId();
-        })->count() !== 0;
+        return $this->roles->contains($role);
     }
 
     /**
@@ -747,8 +757,9 @@ class User
 
     public function addApplication(Application $application): void
     {
-        $this->applications->add($application);
-        $application->setUser($this);
+        if (! $this->applications->contains($application)) {
+            $this->applications->add($application);
+        }
     }
 
     /**
@@ -917,6 +928,22 @@ class User
         return $this->lecturersBlocks;
     }
 
+    public function addLecturersBlock(Block $block): void
+    {
+        if (! $this->lecturersBlocks->contains($block)) {
+            $this->lecturersBlocks->add($block);
+            $block->addLector($this);
+        }
+    }
+
+    public function removeLecturersBlock(Block $block): void
+    {
+        if ($this->lecturersBlocks->contains($block)) {
+            $this->lecturersBlocks->removeElement($block);
+            $block->removeLector($this);
+        }
+    }
+
     public function getFee(): int
     {
         return $this->fee;
@@ -1014,6 +1041,13 @@ class User
     public function getCustomInputValues(): Collection
     {
         return $this->customInputValues;
+    }
+
+    public function addCustomInputValue(CustomInputValue $value): void
+    {
+        if (! $this->customInputValues->contains($value)) {
+            $this->customInputValues->add($value);
+        }
     }
 
     public function getCustomInputValue(CustomInput $customInput): ?CustomInputValue
