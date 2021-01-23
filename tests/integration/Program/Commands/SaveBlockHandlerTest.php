@@ -14,7 +14,6 @@ use App\Model\Program\Category;
 use App\Model\Program\Commands\SaveBlock;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramApplication;
-use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
@@ -26,12 +25,13 @@ use App\Model\User\User;
 use App\Services\ISettingsService;
 use CommandHandlerTest;
 use DateTimeImmutable;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Throwable;
 
 final class SaveBlockHandlerTest extends CommandHandlerTest
 {
     private ISettingsService $settingsService;
-
-    private BlockRepository $blockRepository;
 
     private SubeventRepository $subeventRepository;
 
@@ -50,9 +50,9 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
     /**
      * Změna kategorie bloku - neoprávnění uživatelé jsou odhlášeni.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Throwable
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testCategoryChanged(): void
     {
@@ -150,9 +150,9 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
     /**
      * Změna podakce automaticky zapisovaného bloku - neoprávnění uživatelé jsou odhlášeni, nově oprávnění přihlášeni.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Throwable
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testSubeventChanged(): void
     {
@@ -243,8 +243,8 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
     /**
      * Změna bloku na automaticky zapisovaný - oprávnění uživatelé jsou zapsáni.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testVoluntaryChangedToAutoRegistered(): void
     {
@@ -295,9 +295,9 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
     /**
      * Změna bloku z automaticky zapisovaného na povinný - uživatelé jsou odhlášeni.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Throwable
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testAutoRegisteredChangedToMandatory(): void
     {
@@ -363,7 +363,6 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         parent::_before();
 
         $this->settingsService              = $this->tester->grabService(ISettingsService::class);
-        $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
         $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);
         $this->userRepository               = $this->tester->grabService(UserRepository::class);
         $this->categoryRepository           = $this->tester->grabService(CategoryRepository::class);

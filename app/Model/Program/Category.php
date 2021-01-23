@@ -57,6 +57,11 @@ class Category
         $this->blocks            = new ArrayCollection();
     }
 
+    public function __clone()
+    {
+        $this->registerableRoles = clone $this->registerableRoles;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

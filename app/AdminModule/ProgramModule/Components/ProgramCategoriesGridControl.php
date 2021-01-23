@@ -149,7 +149,7 @@ class ProgramCategoriesGridControl extends Control
      */
     public function edit(string $id, stdClass $values): void
     {
-        $category = $this->categoryRepository->findById((int) $id);
+        $category    = $this->categoryRepository->findById((int) $id);
         $categoryOld = clone $category;
 
         $category->setName($values->name);

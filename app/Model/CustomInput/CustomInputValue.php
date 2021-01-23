@@ -48,7 +48,7 @@ abstract class CustomInputValue
     public function __construct(CustomInput $input, User $user)
     {
         $this->input = $input;
-        $this->user = $user;
+        $this->user  = $user;
     }
 
     public function getId(): int
