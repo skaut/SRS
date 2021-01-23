@@ -19,8 +19,7 @@
         <!-- Zakazuje pouziti @author anotace -->
         <exclude name="SlevomatCodingStandard.Commenting.ForbiddenAnnotations.AnnotationForbidden"/>
 
-        <!-- Chybejici typehints zatim nelze doplnit u funkcí volaných z AJAX nebo pretizenych funkci -->
-        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint"/>
+        <!-- Chybejici typehints zatim nelze doplnit u flashMessage -->
         <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint"/>
 
         <!-- Zneprehlednuje kod -->
@@ -37,7 +36,7 @@
         <exclude name="SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable"/>
 
         <!-- Rozpor s phpstan -->
-<!--        <exclude name="SlevomatCodingStandard.PHP.RequireExplicitAssertion.RequiredExplicitAssertion"/>-->
+        <exclude name="SlevomatCodingStandard.PHP.RequireExplicitAssertion.RequiredExplicitAssertion"/>
 
         <!-- skautIS property -->
         <exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
