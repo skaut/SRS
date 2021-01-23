@@ -97,16 +97,18 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user2, $subevent);
 
         $this->commandBus->handle(new RegisterProgram($user1, $program, false));
-        $programApplication1 = $this->programApplicationRepository->findUserProgramApplication($user1, $program);
+        $programApplication1 = $this->programApplicationRepository->findByUserAndProgram($user1, $program);
         $this->assertEquals($user1, $programApplication1->getUser());
         $this->assertEquals($program, $programApplication1->getProgram());
         $this->assertFalse($programApplication1->isAlternate());
+        $this->assertEquals(1, $program->getOccupancy());
 
         $this->commandBus->handle(new RegisterProgram($user2, $program, false));
-        $programApplication2 = $this->programApplicationRepository->findUserProgramApplication($user2, $program);
+        $programApplication2 = $this->programApplicationRepository->findByUserAndProgram($user2, $program);
         $this->assertEquals($user2, $programApplication2->getUser());
         $this->assertEquals($program, $programApplication2->getProgram());
         $this->assertTrue($programApplication2->isAlternate());
+        $this->assertEquals(1, $program->getOccupancy());
     }
 
     /**
@@ -151,7 +153,7 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user2, $subevent);
 
         $this->commandBus->handle(new RegisterProgram($user1, $program, false));
-        $programApplication1 = $this->programApplicationRepository->findUserProgramApplication($user1, $program);
+        $programApplication1 = $this->programApplicationRepository->findByUserAndProgram($user1, $program);
         $this->assertEquals($user1, $programApplication1->getUser());
         $this->assertEquals($program, $programApplication1->getProgram());
         $this->assertFalse($programApplication1->isAlternate());
@@ -427,7 +429,7 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, true);
 
         $this->commandBus->handle(new RegisterProgram($user, $program, false));
-        $programApplication = $this->programApplicationRepository->findUserProgramApplication($user, $program);
+        $programApplication = $this->programApplicationRepository->findByUserAndProgram($user, $program);
         $this->assertEquals($user, $programApplication->getUser());
         $this->assertEquals($program, $programApplication->getProgram());
     }
@@ -464,7 +466,7 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent);
 
         $this->commandBus->handle(new RegisterProgram($user, $program, false));
-        $programApplication1 = $this->programApplicationRepository->findUserProgramApplication($user, $program);
+        $programApplication1 = $this->programApplicationRepository->findByUserAndProgram($user, $program);
         $this->assertEquals($user, $programApplication1->getUser());
         $this->assertEquals($program, $programApplication1->getProgram());
         $this->assertFalse($programApplication1->isAlternate());
@@ -512,7 +514,7 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent);
 
         $this->commandBus->handle(new RegisterProgram($user, $program1, false));
-        $programApplication1 = $this->programApplicationRepository->findUserProgramApplication($user, $program1);
+        $programApplication1 = $this->programApplicationRepository->findByUserAndProgram($user, $program1);
         $this->assertEquals($user, $programApplication1->getUser());
         $this->assertEquals($program1, $programApplication1->getProgram());
         $this->assertFalse($programApplication1->isAlternate());
@@ -569,13 +571,13 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent);
 
         $this->commandBus->handle(new RegisterProgram($user, $program1, false));
-        $programApplication1 = $this->programApplicationRepository->findUserProgramApplication($user, $program1);
+        $programApplication1 = $this->programApplicationRepository->findByUserAndProgram($user, $program1);
         $this->assertEquals($user, $programApplication1->getUser());
         $this->assertEquals($program1, $programApplication1->getProgram());
         $this->assertFalse($programApplication1->isAlternate());
 
         $this->commandBus->handle(new RegisterProgram($user, $program2, false));
-        $programApplication2 = $this->programApplicationRepository->findUserProgramApplication($user, $program2);
+        $programApplication2 = $this->programApplicationRepository->findByUserAndProgram($user, $program2);
         $this->assertEquals($user, $programApplication2->getUser());
         $this->assertEquals($program2, $programApplication2->getProgram());
         $this->assertFalse($programApplication2->isAlternate());

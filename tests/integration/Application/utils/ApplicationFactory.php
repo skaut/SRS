@@ -20,8 +20,7 @@ class ApplicationFactory
         Role $role,
         string $state = ApplicationState::PAID_FREE
     ): RolesApplication {
-        $rolesApplication = new RolesApplication();
-        $rolesApplication->setUser($user);
+        $rolesApplication = new RolesApplication($user);
         $rolesApplication->setRoles(new ArrayCollection([$role]));
         $rolesApplication->setFee(0);
         $rolesApplication->setApplicationDate(new DateTimeImmutable());
@@ -40,8 +39,7 @@ class ApplicationFactory
         Subevent $subevent,
         string $state = ApplicationState::PAID
     ): SubeventsApplication {
-        $subeventsApplication = new SubeventsApplication();
-        $subeventsApplication->setUser($user);
+        $subeventsApplication = new SubeventsApplication($user);
         $subeventsApplication->setSubevents(new ArrayCollection([$subevent]));
         $subeventsApplication->setFee(100);
         $subeventsApplication->setApplicationDate(new DateTimeImmutable());

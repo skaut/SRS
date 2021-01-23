@@ -53,7 +53,7 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function testRegisterAlternate(): void
+    public function testReplaceByAlternates(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
@@ -117,51 +117,60 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $this->programApplicationRepository->save(new ProgramApplication($user4, $program1));
         $this->programApplicationRepository->save(new ProgramApplication($user4, $program2));
 
+        $this->assertEquals(1, $program1->getOccupancy());
+        $this->assertEquals(1, $program2->getOccupancy());
+
         // odhlášení uživatele 1 z 1. programu, uživatel 3 se stává účastníkem a už není prvním náhradníkem programu 2
         $this->commandBus->handle(new UnregisterProgram($user1, $program1, false));
 
-        $programApplication11 = $this->programApplicationRepository->findUserProgramApplication($user1, $program1);
+        $programApplication11 = $this->programApplicationRepository->findByUserAndProgram($user1, $program1);
         $this->assertNull($programApplication11);
 
-        $programApplication31 = $this->programApplicationRepository->findUserProgramApplication($user3, $program1);
+        $programApplication31 = $this->programApplicationRepository->findByUserAndProgram($user3, $program1);
         $this->assertEquals($user3, $programApplication31->getUser());
         $this->assertEquals($program1, $programApplication31->getProgram());
         $this->assertFalse($programApplication31->isAlternate());
 
-        $programApplication32 = $this->programApplicationRepository->findUserProgramApplication($user3, $program2);
+        $programApplication32 = $this->programApplicationRepository->findByUserAndProgram($user3, $program2);
         $this->assertNull($programApplication32);
 
-        $programApplication41 = $this->programApplicationRepository->findUserProgramApplication($user4, $program1);
+        $programApplication41 = $this->programApplicationRepository->findByUserAndProgram($user4, $program1);
         $this->assertEquals($user4, $programApplication41->getUser());
         $this->assertEquals($program1, $programApplication41->getProgram());
         $this->assertTrue($programApplication41->isAlternate());
 
-        $programApplication42 = $this->programApplicationRepository->findUserProgramApplication($user4, $program2);
+        $programApplication42 = $this->programApplicationRepository->findByUserAndProgram($user4, $program2);
         $this->assertEquals($user4, $programApplication42->getUser());
         $this->assertEquals($program2, $programApplication42->getProgram());
         $this->assertTrue($programApplication42->isAlternate());
 
+        $this->assertEquals(1, $program1->getOccupancy());
+        $this->assertEquals(1, $program2->getOccupancy());
+
         // odhlášení uživatele 2 z 2. programu, uživatel 4 se stává účastníkem
         $this->commandBus->handle(new UnregisterProgram($user2, $program2, false));
 
-        $programApplication22 = $this->programApplicationRepository->findUserProgramApplication($user2, $program2);
+        $programApplication22 = $this->programApplicationRepository->findByUserAndProgram($user2, $program2);
         $this->assertNull($programApplication22);
 
-        $programApplication31 = $this->programApplicationRepository->findUserProgramApplication($user3, $program1);
+        $programApplication31 = $this->programApplicationRepository->findByUserAndProgram($user3, $program1);
         $this->assertEquals($user3, $programApplication31->getUser());
         $this->assertEquals($program1, $programApplication31->getProgram());
         $this->assertFalse($programApplication31->isAlternate());
 
-        $programApplication32 = $this->programApplicationRepository->findUserProgramApplication($user3, $program2);
+        $programApplication32 = $this->programApplicationRepository->findByUserAndProgram($user3, $program2);
         $this->assertNull($programApplication32);
 
-        $programApplication41 = $this->programApplicationRepository->findUserProgramApplication($user4, $program1);
+        $programApplication41 = $this->programApplicationRepository->findByUserAndProgram($user4, $program1);
         $this->assertNull($programApplication41);
 
-        $programApplication42 = $this->programApplicationRepository->findUserProgramApplication($user4, $program2);
+        $programApplication42 = $this->programApplicationRepository->findByUserAndProgram($user4, $program2);
         $this->assertEquals($user4, $programApplication42->getUser());
         $this->assertEquals($program2, $programApplication42->getProgram());
         $this->assertFalse($programApplication42->isAlternate());
+
+        $this->assertEquals(1, $program1->getOccupancy());
+        $this->assertEquals(1, $program2->getOccupancy());
     }
 
     /**

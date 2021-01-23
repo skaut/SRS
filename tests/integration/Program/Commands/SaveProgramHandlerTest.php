@@ -28,10 +28,6 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Throwable;
 
-use function PHPUnit\Framework\assertEquals;
-use function PHPUnit\Framework\assertNotNull;
-use function PHPUnit\Framework\assertNull;
-
 final class SaveProgramHandlerTest extends CommandHandlerTest
 {
     private ISettingsService $settingsService;
@@ -89,9 +85,9 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->commandBus->handle(new SaveProgram($program));
 
-        assertNull($this->programApplicationRepository->findUserProgramApplication($user1, $program));
-        assertNull($this->programApplicationRepository->findUserProgramApplication($user2, $program));
-        assertEquals(0, $program->getOccupancy());
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
+        $this->assertEquals(0, $program->getOccupancy());
     }
 
     /**
@@ -142,13 +138,15 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user3, $role);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user3, $subevent, ApplicationState::WAITING_FOR_PAYMENT);
 
+        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
+
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->commandBus->handle(new SaveProgram($program));
 
-        assertNotNull($this->programApplicationRepository->findUserProgramApplication($user1, $program));
-        assertNotNull($this->programApplicationRepository->findUserProgramApplication($user2, $program));
-        assertNull($this->programApplicationRepository->findUserProgramApplication($user3, $program));
-        assertEquals(2, $program->getOccupancy());
+        $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
+        $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user3, $program));
+        $this->assertEquals(2, $program->getOccupancy());
     }
 
     /**
@@ -206,10 +204,10 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->commandBus->handle(new SaveProgram($program));
 
-        assertNotNull($this->programApplicationRepository->findUserProgramApplication($user1, $program));
-        assertNotNull($this->programApplicationRepository->findUserProgramApplication($user2, $program));
-        assertNotNull($this->programApplicationRepository->findUserProgramApplication($user3, $program));
-        assertEquals(3, $program->getOccupancy());
+        $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
+        $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
+        $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user3, $program));
+        $this->assertEquals(3, $program->getOccupancy());
     }
 
     /**
