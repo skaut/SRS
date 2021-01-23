@@ -12,8 +12,8 @@ use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
+use App\Services\ISettingsService;
 use App\Services\QueryBus;
-use App\Services\SettingsService;
 use Nettrine\ORM\EntityManagerDecorator;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -27,14 +27,14 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
 
     private UserRepository $userRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     public function __construct(
         CommandBus $commandBus,
         QueryBus $queryBus,
         EntityManagerDecorator $em,
         UserRepository $userRepository,
-        SettingsService $settingsService
+        ISettingsService $settingsService
     ) {
         $this->commandBus      = $commandBus;
         $this->queryBus        = $queryBus;

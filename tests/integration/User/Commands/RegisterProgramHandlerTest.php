@@ -207,12 +207,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     }
 
     /**
-     * Uživatel není na akci přihlášený (NONREGISTERED role, chybějící přihláška podakcí).
+     * Uživatel není na akci přihlášený (chybějící role, chybějící přihláška podakcí).
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function testNonRegisteredRole(): void
+    public function testNotRegistered(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
@@ -224,17 +224,11 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
         $this->programRepository->save($program);
 
-        $role = new Role(Role::NONREGISTERED);
-        $this->roleRepository->save($role);
-
         $user = new User();
         $user->setFirstName('First');
         $user->setLastName('Last');
-        $user->addRole($role);
         $user->setApproved(true);
         $this->userRepository->save($user);
-
-        ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
 
         $this->expectException(UserNotAllowedProgramException::class);
         try {

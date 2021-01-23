@@ -12,8 +12,8 @@ use App\Model\User\Commands\UpdateUsersPrograms;
 use App\Model\User\Queries\UserAllowedProgramsQuery;
 use App\Model\User\Queries\UserProgramsQuery;
 use App\Services\CommandBus;
+use App\Services\ISettingsService;
 use App\Services\QueryBus;
-use App\Services\SettingsService;
 use Nettrine\ORM\EntityManagerDecorator;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -25,13 +25,13 @@ class UpdateUsersProgramsHandler implements MessageHandlerInterface
 
     private EntityManagerDecorator $em;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     public function __construct(
         QueryBus $queryBus,
         CommandBus $commandBus,
         EntityManagerDecorator $em,
-        SettingsService $settingsService
+        ISettingsService $settingsService
     ) {
         $this->queryBus        = $queryBus;
         $this->commandBus      = $commandBus;
