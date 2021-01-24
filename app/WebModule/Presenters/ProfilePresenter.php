@@ -7,7 +7,7 @@ namespace App\WebModule\Presenters;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Structure\Repositories\SubeventRepository;
-use App\Model\User\Queries\UserProgramsQuery;
+use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\ExcelExportService;
@@ -86,7 +86,7 @@ class ProfilePresenter extends WebBasePresenter
         $this->template->pageName                  = $this->translator->translate('web.profile.title');
         $this->template->paymentMethodBank         = PaymentType::BANK;
         $this->template->isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
-        $this->template->userPrograms              = $this->queryBus->handle(new UserProgramsQuery($this->dbuser));
+        $this->template->userPrograms              = $this->queryBus->handle(new UserAttendsProgramsQuery($this->dbuser));
     }
 
     /**

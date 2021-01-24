@@ -18,8 +18,8 @@ use App\Services\ISettingsService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Nette\Application\Responses\TextResponse;
-use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
@@ -32,7 +32,7 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
 class MaturityPresenter extends ActionBasePresenter
 {
     /** @inject */
-    public EntityManagerDecorator $em;
+    public EntityManagerInterface $em;
 
     /** @inject */
     public UserRepository $userRepository;

@@ -12,13 +12,13 @@ use App\Model\Acl\SrsResource;
 use App\Model\Cms\Repositories\PageRepository;
 use App\Services\AclService;
 use Doctrine\DBAL\ConnectionException;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Forms\Controls\SelectBox;
-use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
@@ -44,7 +44,7 @@ class EditRoleFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private AclService $aclService;
 
@@ -56,7 +56,7 @@ class EditRoleFormFactory
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         AclService $aclService,
         RoleRepository $roleRepository,
         PageRepository $pageRepository,

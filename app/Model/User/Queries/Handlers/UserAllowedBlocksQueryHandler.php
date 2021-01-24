@@ -6,11 +6,11 @@ namespace App\Model\User\Queries\Handlers;
 
 use App\Model\Program\Block;
 use App\Model\Program\Repositories\BlockRepository;
-use App\Model\User\Queries\UserProgramBlocksQuery;
+use App\Model\User\Queries\UserAllowedBlocksQuery;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class UserProgramBlocksQueryHandler implements MessageHandlerInterface
+class UserAllowedBlocksQueryHandler implements MessageHandlerInterface
 {
     private BlockRepository $blockRepository;
 
@@ -22,8 +22,8 @@ class UserProgramBlocksQueryHandler implements MessageHandlerInterface
     /**
      * @return Collection<Block>
      */
-    public function __invoke(UserProgramBlocksQuery $query): Collection
+    public function __invoke(UserAllowedBlocksQuery $query): Collection
     {
-        return $this->blockRepository->findUserAttends($query->getUser());
+        return $this->blockRepository->findUserAllowed($query->getUser(), $query->isPaidOnly());
     }
 }

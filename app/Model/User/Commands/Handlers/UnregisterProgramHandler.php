@@ -9,20 +9,20 @@ use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Events\ProgramUnregisteredEvent;
 use App\Services\EventBus;
-use Nettrine\ORM\EntityManagerDecorator;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UnregisterProgramHandler implements MessageHandlerInterface
 {
     private EventBus $eventBus;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private ProgramApplicationRepository $programApplicationRepository;
 
     public function __construct(
         EventBus $eventBus,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         ProgramApplicationRepository $programApplicationRepository
     ) {
         $this->eventBus                     = $eventBus;

@@ -11,14 +11,14 @@ use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
 use App\Services\ISettingsService;
-use Nettrine\ORM\EntityManagerDecorator;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class ProgramCreatedEventListener implements MessageHandlerInterface
 {
     private CommandBus $commandBus;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
 
@@ -26,7 +26,7 @@ class ProgramCreatedEventListener implements MessageHandlerInterface
 
     public function __construct(
         CommandBus $commandBus,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         UserRepository $userRepository,
         ISettingsService $settingsService
     ) {

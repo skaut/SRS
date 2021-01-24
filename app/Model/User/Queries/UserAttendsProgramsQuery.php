@@ -6,7 +6,7 @@ namespace App\Model\User\Queries;
 
 use App\Model\User\User;
 
-class UserProgramsQuery
+class UserAttendsProgramsQuery
 {
     private User $user;
 

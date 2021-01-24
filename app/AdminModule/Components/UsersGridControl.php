@@ -33,6 +33,7 @@ use App\Services\SubeventService;
 use App\Services\UserService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
@@ -44,7 +45,6 @@ use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
-use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -64,7 +64,7 @@ class UsersGridControl extends Control
 {
     private ITranslator $translator;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
 
@@ -94,7 +94,7 @@ class UsersGridControl extends Control
 
     public function __construct(
         ITranslator $translator,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         UserRepository $userRepository,
         ISettingsService $settingsService,
         CustomInputRepository $customInputRepository,

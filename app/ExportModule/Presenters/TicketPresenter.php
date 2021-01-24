@@ -7,7 +7,7 @@ namespace App\ExportModule\Presenters;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
-use App\Model\User\Queries\UserProgramsQuery;
+use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ISettingsService;
 use App\Services\QueryBus;
@@ -55,7 +55,7 @@ class TicketPresenter extends ExportBasePresenter
         }
 
         $user         = $this->userRepository->findById($this->user->id);
-        $userPrograms = $this->queryBus->handle(new UserProgramsQuery($user));
+        $userPrograms = $this->queryBus->handle(new UserAttendsProgramsQuery($user));
 
         /** @var Template $template */
         $template = $this->createTemplate();

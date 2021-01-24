@@ -170,36 +170,34 @@
             {/if}
         </div>
 
-        {if $detailUser->isAllowed($resourceProgram, $permissionChoosePrograms)}
-            <h3>{_admin.users.users_detail_schedule}</h3>
-            <table class="table table-sm table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th class="text-right" style="width: 15%">{_admin.users.users_from}</th>
-                        <th class="text-right" style="width: 15%">{_admin.users.users_to}</th>
-                        <th style="width: 25%">{_admin.users.users_program_name}</th>
-                        <th style="width: 20%">{_admin.users.users_room}</th>
-                        <th style="width: 25%">{_admin.users.users_lectors}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr n:foreach="$detailUserPrograms as $program">
-                        <td class="text-right">
-                            {var $startDay = $program->getStart()->format('N')}
-                            {_common.day.$startDay}
-                            {$program->getStart()|date:"j. n. G:i"}
-                        </td>
-                        <td class="text-right">
-                            {var $endDay = $program->getEnd()->format('N')}
-                            {_common.day.$endDay}
-                            {$program->getEnd()|date:"j. n. G:i"}
-                        </td>
-                        <td>{$program->getBlock()->getName()}</td>
-                        <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
-                        <td>{$program->getBlock()->getLectorsText()}</td>
-                    </tr>
-                </tbody>
-            </table>
-        {/if}
+        <h3>{_admin.users.users_detail_schedule}</h3>
+        <table class="table table-sm table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th class="text-right" style="width: 15%">{_admin.users.users_from}</th>
+                    <th class="text-right" style="width: 15%">{_admin.users.users_to}</th>
+                    <th style="width: 25%">{_admin.users.users_program_name}</th>
+                    <th style="width: 20%">{_admin.users.users_room}</th>
+                    <th style="width: 25%">{_admin.users.users_lectors}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr n:foreach="$detailUserPrograms as $program">
+                    <td class="text-right">
+                        {var $startDay = $program->getStart()->format('N')}
+                        {_common.day.$startDay}
+                        {$program->getStart()|date:"j. n. G:i"}
+                    </td>
+                    <td class="text-right">
+                        {var $endDay = $program->getEnd()->format('N')}
+                        {_common.day.$endDay}
+                        {$program->getEnd()|date:"j. n. G:i"}
+                    </td>
+                    <td>{$program->getBlock()->getName()}</td>
+                    <td>{if $program->getRoom() !== null}{$program->getRoom()->getName()}{/if}</td>
+                    <td>{$program->getBlock()->getLectorsText()}</td>
+                </tr>
+            </tbody>
+        </table>
     {/snippet}
 {/block}

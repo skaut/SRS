@@ -553,6 +553,7 @@ configuration:
     subevents_heading: "Podakce"
     subevents_name: "Název"
     subevents_name_empty: "Zadejte název."
+    subevents_name_exists: "Podakce s tímto názvem již existuje."
     subevents_implicit: "Systémová"
     subevents_fee: "Cena"
     subevents_fee_empty: "Zadejte cenu."

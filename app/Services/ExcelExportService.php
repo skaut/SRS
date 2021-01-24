@@ -15,7 +15,7 @@ use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Room;
 use App\Model\Structure\Repositories\SubeventRepository;
-use App\Model\User\Queries\UserProgramsQuery;
+use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -175,7 +175,7 @@ class ExcelExportService
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth(25);
 
-            $userPrograms = $this->queryBus->handle(new UserProgramsQuery($user));
+            $userPrograms = $this->queryBus->handle(new UserAttendsProgramsQuery($user));
 
             foreach ($userPrograms as $program) {
                 $row++;

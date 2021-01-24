@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Repositories;
 
+use App\Model\Enums\ApplicationState;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
 use App\Model\User\User;
@@ -150,6 +151,36 @@ class BlockRepository extends AbstractRepository
             ->getResult();
 
         return new ArrayCollection($result);
+    }
+
+    /**
+     * Vrací bloky povolené pro uživatele.
+     *
+     * @return Collection<Block>
+     */
+    public function findUserAllowed(User $user, bool $paidOnly): Collection
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->leftJoin('b.category', 'c')
+            ->leftJoin('c.registerableRoles', 'r')
+            ->leftJoin('r.users', 'u1')
+            ->join('b.subevent', 's')
+            ->join('s.applications', 'sa', 'WITH', 'sa.validTo IS NULL AND sa.state != :stateCanceled AND sa.state != :stateCanceledNotPaid')
+            ->join('sa.user', 'u2', 'WITH', 'u2.approved = TRUE')
+            ->where('c IS NULL OR u1 = :user')
+            ->andWhere('u2 = :user')
+            ->setParameter('user', $user)
+            ->setParameter('stateCanceled', ApplicationState::CANCELED)
+            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID);
+
+        if ($paidOnly) {
+            $qb = $qb->join('u2.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND ra.state != :stateWaitingForPayment')
+                ->join('ra.roles', 'rar')
+                ->andWhere('sa.state != :stateWaitingForPayment')
+                ->setParameter('stateWaitingForPayment', ApplicationState::WAITING_FOR_PAYMENT);
+        }
+
+        return new ArrayCollection($qb->getQuery()->getResult());
     }
 
     /**

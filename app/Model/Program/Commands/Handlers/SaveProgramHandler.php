@@ -8,18 +8,18 @@ use App\Model\Program\Commands\SaveProgram;
 use App\Model\Program\Events\ProgramCreatedEvent;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Services\EventBus;
-use Nettrine\ORM\EntityManagerDecorator;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SaveProgramHandler implements MessageHandlerInterface
 {
     private EventBus $eventBus;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private ProgramRepository $programRepository;
 
-    public function __construct(EventBus $eventBus, EntityManagerDecorator $em, ProgramRepository $programRepository)
+    public function __construct(EventBus $eventBus, EntityManagerInterface $em, ProgramRepository $programRepository)
     {
         $this->eventBus          = $eventBus;
         $this->em                = $em;

@@ -8,18 +8,18 @@ use App\Model\Program\Commands\SaveCategory;
 use App\Model\Program\Events\CategoryUpdatedEvent;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Services\EventBus;
-use Nettrine\ORM\EntityManagerDecorator;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SaveCategoryHandler implements MessageHandlerInterface
 {
     private EventBus $eventBus;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private CategoryRepository $categoryRepository;
 
-    public function __construct(EventBus $eventBus, EntityManagerDecorator $em, CategoryRepository $categoryRepository)
+    public function __construct(EventBus $eventBus, EntityManagerInterface $em, CategoryRepository $categoryRepository)
     {
         $this->eventBus           = $eventBus;
         $this->em                 = $em;

@@ -45,13 +45,13 @@
 
                     <div class="modal-footer" v-show="registerProgramsAllowed">
                         <button @click="handleAttendEvent()"
-                                v-show="!(selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates) && !(selectedEventInfo.event.extendedProps.alternatesAllowed && selectedEventInfo.event.extendedProps.occupied)"
+                                v-show="!(selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates) && !(selectedEventInfo.event.extendedProps.block.alternatesAllowed && selectedEventInfo.event.extendedProps.occupied)"
                                 :disabled="selectedEventInfo.event.extendedProps.blocked || selectedEventInfo.event.extendedProps.occupied || !selectedEventInfo.event.extendedProps.paid"
                                 class="btn btn-sm btn-success pull-left">
                             Přihlásit se na program
                         </button>
                         <button @click="handleAttendEvent()"
-                                v-show="!(selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates) && (selectedEventInfo.event.extendedProps.alternatesAllowed && selectedEventInfo.event.extendedProps.occupied)"
+                                v-show="!(selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates) && (selectedEventInfo.event.extendedProps.block.alternatesAllowed && selectedEventInfo.event.extendedProps.occupied)"
                                 :disabled="selectedEventInfo.event.extendedProps.blocked || !selectedEventInfo.event.extendedProps.paid"
                                 class="btn btn-sm btn-success pull-left">
                             Přihlásit se na program jako náhradník

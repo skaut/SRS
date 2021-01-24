@@ -16,6 +16,7 @@ use App\Services\ApplicationService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
@@ -24,7 +25,6 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
-use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use Throwable;
@@ -41,7 +41,7 @@ class ApplicationsGridControl extends Control
 {
     private ITranslator $translator;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private ApplicationRepository $applicationRepository;
 
@@ -59,7 +59,7 @@ class ApplicationsGridControl extends Control
 
     public function __construct(
         ITranslator $translator,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
         SubeventRepository $subeventRepository,
@@ -109,7 +109,7 @@ class ApplicationsGridControl extends Control
             ->orderBy('a.applicationId'));
         $grid->setPagination(false);
 
-        $grid->setItemsDetail()
+        $grid->setItemsDetail() // todo: schovat, pokud neni nastaveno cislo uctu
             ->setTemplateParameters(['applicationRepository' => $this->applicationRepository]);
         $grid->setTemplateFile(__DIR__ . '/templates/applications_grid_detail.latte');
 

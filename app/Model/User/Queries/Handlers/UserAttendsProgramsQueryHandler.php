@@ -6,11 +6,11 @@ namespace App\Model\User\Queries\Handlers;
 
 use App\Model\Program\Program;
 use App\Model\Program\Repositories\ProgramRepository;
-use App\Model\User\Queries\UserProgramsQuery;
+use App\Model\User\Queries\UserAttendsProgramsQuery;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class UserProgramsQueryHandler implements MessageHandlerInterface
+class UserAttendsProgramsQueryHandler implements MessageHandlerInterface
 {
     private ProgramRepository $programRepository;
 
@@ -22,7 +22,7 @@ class UserProgramsQueryHandler implements MessageHandlerInterface
     /**
      * @return Collection<Program>
      */
-    public function __invoke(UserProgramsQuery $query): Collection
+    public function __invoke(UserAttendsProgramsQuery $query): Collection
     {
         return $this->programRepository->findUserAttends($query->getUser());
     }

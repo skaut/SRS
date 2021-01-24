@@ -8,18 +8,18 @@ use App\Model\Program\Commands\SaveBlock;
 use App\Model\Program\Events\BlockUpdatedEvent;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Services\EventBus;
-use Nettrine\ORM\EntityManagerDecorator;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SaveBlockHandler implements MessageHandlerInterface
 {
     private EventBus $eventBus;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private BlockRepository $blockRepository;
 
-    public function __construct(EventBus $eventBus, EntityManagerDecorator $em, BlockRepository $blockRepository)
+    public function __construct(EventBus $eventBus, EntityManagerInterface $em, BlockRepository $blockRepository)
     {
         $this->eventBus        = $eventBus;
         $this->em              = $em;

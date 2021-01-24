@@ -257,7 +257,7 @@ class BlockFormFactory
         $capacity  = $values->capacity !== '' ? $values->capacity : null;
         $mandatory = $values->mandatory ? ($values->autoRegistered ? ProgramMandatoryType::AUTO_REGISTERED : ProgramMandatoryType::MANDATORY) : ProgramMandatoryType::VOLUNTARY;
 
-        $blockOld = clone $this->block;
+        $blockOld = null;
 
         if ($this->block === null) {
             $this->block = new Block($values->name, $values->duration, $capacity, $values->alternatesAllowed, $mandatory, $subevent, $category);
@@ -266,6 +266,8 @@ class BlockFormFactory
             $this->block->setDescription($values->description);
             $this->block->setTools($values->tools);
         } else {
+            $blockOld = clone $this->block;
+
             $this->block->setName($values->name);
             $this->block->setSubevent($subevent);
             $this->block->setCategory($category);

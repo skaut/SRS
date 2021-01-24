@@ -35,8 +35,9 @@ use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
+use App\Model\User\Queries\UserAllowedBlocksQuery;
 use App\Model\User\Queries\UserAllowedProgramsQuery;
-use App\Model\User\Queries\UserProgramBlocksQuery;
+use App\Model\User\Queries\UserAttendsBlocksQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
@@ -135,11 +136,13 @@ class ScheduleService
      */
     public function getProgramsWeb(): array
     {
-        $userAllowedPrograms = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user, false));
+        $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+        $userAllowedPrograms              = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user, ! $registrationBeforePaymentAllowed));
+        $userAllowedProgramsWithNotPaid   = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user, false));
 
         /** @var ProgramDetailDto[] $programDetailDtos */
         $programDetailDtos = [];
-        foreach ($userAllowedPrograms as $program) {
+        foreach ($userAllowedProgramsWithNotPaid as $program) {
             $programAttendees  = $this->queryBus->handle(new ProgramAttendeesQuery($program));
             $programAlternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));
 
@@ -150,8 +153,7 @@ class ScheduleService
             $programDetailDto->setUserAlternates($programAlternates->contains($this->user));
             $programDetailDto->setBlocks(Helpers::getIds($this->programRepository->findBlockedByProgram($program)));
             $programDetailDto->setBlocked(false);
-            $programDetailDto->setPaid($this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
-                || ($this->user->hasPaidSubevent($program->getBlock()->getSubevent()) && $this->user->hasPaidRolesApplication()));
+            $programDetailDto->setPaid($userAllowedPrograms->contains($program));
             $programDetailDtos[] = $programDetailDto;
         }
 
@@ -468,7 +470,9 @@ class ScheduleService
      */
     private function convertBlockToBlockDetailDto(Block $block): BlockDetailDto
     {
-        $userBlocks = $this->queryBus->handle(new UserProgramBlocksQuery($this->user));
+        $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+        $userBlocks                       = $this->queryBus->handle(new UserAttendsBlocksQuery($this->user));
+        $userAllowedBlocks                = $this->queryBus->handle(new UserAllowedBlocksQuery($this->user, ! $registrationBeforePaymentAllowed));
 
         $blockDetailDto = new BlockDetailDto();
 
@@ -488,7 +492,7 @@ class ScheduleService
         $blockDetailDto->setDescription($block->getDescription());
         $blockDetailDto->setProgramsCount($block->getProgramsCount());
         $blockDetailDto->setUserAttends($userBlocks->contains($block));
-        $blockDetailDto->setUserAllowed($block->isAllowed($this->user)); // todo: nahradit
+        $blockDetailDto->setUserAllowed($userAllowedBlocks->contains($block));
 
         return $blockDetailDto;
     }

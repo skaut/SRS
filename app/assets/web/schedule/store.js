@@ -116,6 +116,7 @@ export default new Vuex.Store({
                             lectors: block.lectors,
                             lectorsNames: block.lectors_names,
                             capacity: block.capacity,
+                            alternatesAllowed: block.alternates_allowed,
                             mandatory: block.mandatory,
                             autoRegistered: block.auto_registered,
                             userAllowed: block.user_allowed,
@@ -202,22 +203,23 @@ export default new Vuex.Store({
             Vue.axios.put('attend-program/' + info.event.id)
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
-                    const userAttends = responseObject.program.user_attends;
 
                     commit('setEventAttendance', {
                         eventId: info.event.id,
-                        userAttends: userAttends,
-                        userAlternates: responseObject.program.user_alterantes,
+                        userAttends: responseObject.program.user_attends,
+                        userAlternates: responseObject.program.user_alternates,
                         attendeesCount: responseObject.program.attendees_count,
                         alternatesCount: responseObject.program.alternates_count
                     })
 
-                    info.event.extendedProps.blocks.forEach(function(eventId) {
-                        commit('setEventBlocked', {eventId: eventId, blocked: true});
-                    });
+                    if (info.event.extendedProps.userAttends) {
+                        info.event.extendedProps.blocks.forEach(function (eventId) {
+                            commit('setEventBlocked', {eventId: eventId, blocked: true});
+                        });
 
-                    if (info.event.extendedProps.block.mandatory && userAttends) {
-                        commit('decrementNotRegisteredMandatoryPrograms');
+                        if (info.event.extendedProps.block.mandatory) {
+                            commit('decrementNotRegisteredMandatoryPrograms');
+                        }
                     }
 
                     commit('setMessage', {type: responseObject.status, text: responseObject.message});
@@ -236,12 +238,11 @@ export default new Vuex.Store({
             Vue.axios.delete('unattend-program/' + info.event.id)
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
-                    const userAttends = responseObject.program.user_attends;
 
                     commit('setEventAttendance', {
                         eventId: info.event.id,
-                        userAttends: userAttends,
-                        userAlternates: responseObject.program.user_alterantes,
+                        userAttends: responseObject.program.user_attends,
+                        userAlternates: responseObject.program.user_alternates,
                         attendeesCount: responseObject.program.attendees_count,
                         alternatesCount: responseObject.program.alternates_count
                     })
@@ -259,7 +260,7 @@ export default new Vuex.Store({
                         }
                     });
 
-                    if (info.event.extendedProps.block.mandatory && userAttends) {
+                    if (info.event.extendedProps.block.mandatory && info.event.extendedProps.userAttends) {
                         commit('incrementNotRegisteredMandatoryPrograms');
                     }
 

@@ -33,12 +33,12 @@ use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Nette;
 use Nette\Localization\ITranslator;
-use Nettrine\ORM\EntityManagerDecorator;
 use ReflectionException;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
@@ -61,7 +61,7 @@ class ApplicationService
 {
     use Nette\SmartObject;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private ISettingsService $settingsService;
 
@@ -92,7 +92,7 @@ class ApplicationService
     private EventBus $eventBus;
 
     public function __construct(
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         ISettingsService $settingsService,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
@@ -751,9 +751,9 @@ class ApplicationService
         $application->setFee($this->countRolesFee($roles));
         $application->setMaturityDate($this->countMaturityDate());
         $application->setState($this->getApplicationState($application));
-        $application->setVariableSymbol($this->generateVariableSymbol());
         $application->setCreatedBy($createdBy);
         $application->setValidFrom(new DateTimeImmutable());
+        $application->setVariableSymbol($this->generateVariableSymbol());
         $this->applicationRepository->save($application);
 
         $application->setApplicationId($application->getId());
@@ -784,9 +784,9 @@ class ApplicationService
         $application->setFee($this->countSubeventsFee($user->getRoles(), $subevents));
         $application->setMaturityDate($this->countMaturityDate());
         $application->setState($this->getApplicationState($application));
-        $application->setVariableSymbol($this->generateVariableSymbol());
         $application->setCreatedBy($createdBy);
         $application->setValidFrom(new DateTimeImmutable());
+        $application->setVariableSymbol($this->generateVariableSymbol());
         $this->applicationRepository->save($application);
 
         $application->setApplicationId($application->getId());

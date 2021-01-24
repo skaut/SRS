@@ -16,9 +16,9 @@ use Contributte\Console\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Nette\Application\AbortException;
-use Nettrine\ORM\EntityManagerDecorator;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -39,7 +39,7 @@ class InstallPresenter extends InstallBasePresenter
     public Application $consoleApplication;
 
     /** @inject */
-    public EntityManagerDecorator $em;
+    public EntityManagerInterface $em;
 
     /** @inject */
     public ISettingsService $settingsService;

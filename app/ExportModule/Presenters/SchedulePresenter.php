@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ExportModule\Presenters;
 
-use App\Model\User\Queries\UserProgramsQuery;
+use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\IcalResponse;
 use App\Services\QueryBus;
@@ -36,7 +36,7 @@ class SchedulePresenter extends ExportBasePresenter
         $calendar = new Calendar('-//Junák - český skaut//SRS//CS');
 
         $user         = $this->userRepository->findById($id);
-        $userPrograms = $this->queryBus->handle(new UserProgramsQuery($user));
+        $userPrograms = $this->queryBus->handle(new UserAttendsProgramsQuery($user));
 
         foreach ($userPrograms as $program) {
             $event = new Event();

@@ -8,11 +8,11 @@ use App\Model\Payment\Repositories\PaymentRepository;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use FioApi\Downloader;
 use FioApi\TransactionList;
 use InvalidArgumentException;
 use Nette;
-use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
 
 /**
@@ -27,7 +27,7 @@ class BankService
 
     private ApplicationService $applicationService;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private ISettingsService $settingsService;
 
@@ -35,7 +35,7 @@ class BankService
 
     public function __construct(
         ApplicationService $applicationService,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         ISettingsService $settingsService,
         PaymentRepository $paymentRepository
     ) {

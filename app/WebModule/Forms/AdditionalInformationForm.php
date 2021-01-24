@@ -31,13 +31,13 @@ use App\Services\FilesService;
 use App\Services\IMailService;
 use App\Services\ISettingsService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
-use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
@@ -74,7 +74,7 @@ class AdditionalInformationForm extends UI\Control
 
     private BaseFormFactory $baseFormFactory;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
 
@@ -92,7 +92,7 @@ class AdditionalInformationForm extends UI\Control
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         UserRepository $userRepository,
         CustomInputRepository $customInputRepository,
         ApplicationService $applicationService,

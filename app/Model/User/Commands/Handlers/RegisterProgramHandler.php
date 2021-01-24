@@ -14,7 +14,7 @@ use App\Model\User\Queries\UserAllowedProgramsQuery;
 use App\Services\EventBus;
 use App\Services\ISettingsService;
 use App\Services\QueryBus;
-use Nettrine\ORM\EntityManagerDecorator;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class RegisterProgramHandler implements MessageHandlerInterface
@@ -23,7 +23,7 @@ class RegisterProgramHandler implements MessageHandlerInterface
 
     private EventBus $eventBus;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private ProgramApplicationRepository $programApplicationRepository;
 
@@ -32,7 +32,7 @@ class RegisterProgramHandler implements MessageHandlerInterface
     public function __construct(
         QueryBus $queryBus,
         EventBus $eventBus,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         ProgramApplicationRepository $programApplicationRepository,
         ISettingsService $settingsService
     ) {

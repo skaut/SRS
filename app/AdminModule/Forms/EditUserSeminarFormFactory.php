@@ -36,6 +36,7 @@ use App\Services\UserService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Nette;
 use Nette\Application\UI\Form;
@@ -43,7 +44,6 @@ use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
-use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
@@ -72,7 +72,7 @@ class EditUserSeminarFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
 
@@ -98,7 +98,7 @@ class EditUserSeminarFormFactory
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         UserRepository $userRepository,
         CustomInputRepository $customInputRepository,
         CustomInputValueRepository $customInputValueRepository,

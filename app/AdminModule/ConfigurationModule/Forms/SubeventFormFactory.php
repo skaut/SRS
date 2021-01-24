@@ -9,12 +9,12 @@ use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use App\Services\SubeventService;
 use Doctrine\DBAL\ConnectionException;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
-use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 
@@ -37,7 +37,7 @@ class SubeventFormFactory
      */
     private ?Subevent $subevent = null;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private BaseFormFactory $baseFormFactory;
 
@@ -46,7 +46,7 @@ class SubeventFormFactory
     private SubeventService $subeventService;
 
     public function __construct(
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         BaseFormFactory $baseFormFactory,
         SubeventRepository $subeventRepository,
         SubeventService $subeventService

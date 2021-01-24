@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User\Queries;
+namespace App\Model\User\Commands;
 
 use App\Model\User\User;
 
-class UserProgramBlocksQuery
+class UpdateUserPrograms
 {
     private User $user;
 

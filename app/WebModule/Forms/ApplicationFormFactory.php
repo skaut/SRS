@@ -38,6 +38,7 @@ use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use InvalidArgumentException;
@@ -48,7 +49,6 @@ use Nette\Http\FileUpload;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
-use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use Skautis\Wsdl\WsdlException;
@@ -85,7 +85,7 @@ class ApplicationFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
 
@@ -115,7 +115,7 @@ class ApplicationFormFactory
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
         CustomInputRepository $customInputRepository,
