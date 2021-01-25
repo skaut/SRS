@@ -42,11 +42,11 @@ class Program
     protected Collection $programApplications;
 
     /**
-     * Obsazenost.
+     * Počet účastníků.
      *
      * @ORM\Column(type="integer")
      */
-    protected int $occupancy = 0;
+    protected int $attendeesCount = 0;
 
     /**
      * Místnost.
@@ -80,14 +80,19 @@ class Program
         return $this->block;
     }
 
-    public function getOccupancy(): int
+    public function getAttendeesCount(): int
     {
-        return $this->occupancy;
+        return $this->attendeesCount;
     }
 
-    public function setOccupancy(int $occupancy): void
+    public function setAttendeesCount(int $attendeesCount): void
     {
-        $this->occupancy = $occupancy;
+        $this->attendeesCount = $attendeesCount;
+    }
+
+    public function getAlternatesCount(): int
+    {
+        return $this->alternatesCount;
     }
 
     public function getRoom(): ?Room

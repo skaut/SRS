@@ -242,8 +242,6 @@ class ExcelExportService
             $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
             foreach ($room->getPrograms() as $program) {
-                $attendeesCount = $this->queryBus->handle(new ProgramAttendeesCountQuery($program));
-
                 $row++;
                 $column = 1;
 
@@ -251,8 +249,8 @@ class ExcelExportService
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getEnd()->format('j. n. H:i'));
                 $sheet->setCellValueByColumnAndRow($column++, $row, $program->getBlock()->getName());
                 $sheet->setCellValueByColumnAndRow($column++, $row, $room->getCapacity() !== null
-                    ? $attendeesCount . '/' . $room->getCapacity()
-                    : $attendeesCount);
+                    ? $program->getAttendeesCount() . '/' . $room->getCapacity()
+                    : $program->getAttendeesCount());
             }
         }
 

@@ -51,11 +51,11 @@
                 {_admin.program.blocks_mandatory}
             </div>
             <div class="col-9">
-                {if $block->getMandatory() == 0}
+                {if $block->getMandatory() === $programMandatoryTypeVoluntary}
                     {_admin.program.blocks_mandatory_voluntary}
-                {elseif $block->getMandatory() == 1}
+                {elseif $block->getMandatory() == $programMandatoryTypeMandatory}
                     {_admin.program.blocks_mandatory_mandatory}
-                {else}
+                {elseif $block->getMandatory() == $programMandatoryTypeAutoRegistered}
                     {_admin.program.blocks_mandatory_auto_registered}
                 {/if}
             </div>
@@ -94,7 +94,8 @@
                     <th class="text-right">{_admin.program.blocks_program_start}</th>
                     <th class="text-right">{_admin.program.blocks_program_end}</th>
                     <th>{_admin.program.blocks_program_room}</th>
-                    <th>{_admin.program.blocks_program_occupancy}</th>
+                    <th>{_admin.program.blocks_program_attendees_count}</th>
+                    <th n:if="$block->isAlternatesAllowed()">{_admin.program.blocks_program_alternates_count}</th>
                     <th class="text-center" style="white-space: nowrap; width: 1%;">{_ublaboo_datagrid.action}</th>
                 </tr>
             </thead>
@@ -120,7 +121,10 @@
                             {/if}
                         </td>
                         <td>
-                            {$program->getOccupancy()} {*todo: pocet nahradniku, prejmenovat occupancy na attendessCount, pridat alternatesCount*}
+                            {$program->getAttendeesCount()}
+                        </td>
+                        <td n:if="$block->isAlternatesAllowed()">
+                            {$program->getAlternatesCount()}
                         </td>
                         <td class="text-right" style="white-space: nowrap; width: 1%;">
                             {if $programId == $program->getId()}

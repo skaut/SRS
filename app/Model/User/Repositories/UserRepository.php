@@ -10,6 +10,7 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\User\User;
+use App\Services\QueryBus;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,6 +18,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
+use Doctrine\ORM\QueryBuilder;
 use function array_map;
 use function count;
 
@@ -278,25 +280,9 @@ class UserRepository extends AbstractRepository
      */
     public function findProgramAttendees(Program $program): Collection
     {
-        $result = $this->createQueryBuilder('u')
-            ->leftJoin('u.programApplications', 'a')
-            ->where('a.program = :program')->setParameter('program', $program)
-            ->andWhere('a.alternate = false')
-            ->getQuery()
-            ->getResult();
+        $result = $this->programAttendeesQuery($program, false)->getQuery()->getResult();
 
         return new ArrayCollection($result);
-    }
-
-    public function countProgramAttendees(Program $program): int
-    {
-        return $this->createQueryBuilder('u')
-            ->select('count(u)')
-            ->leftJoin('u.programApplications', 'a')
-            ->where('a.program = :program')->setParameter('program', $program)
-            ->andWhere('a.alternate = false')
-            ->getQuery()
-            ->getSingleScalarResult();
     }
 
     /**
@@ -304,39 +290,20 @@ class UserRepository extends AbstractRepository
      */
     public function findProgramAlternates(Program $program): Collection
     {
-        $result = $this->createQueryBuilder('u')
-            ->leftJoin('u.programApplications', 'a')
-            ->where('a.program = :program')->setParameter('program', $program)
-            ->andWhere('a.alternate = true')
-            ->getQuery()
-            ->getResult();
+        $result = $this->programAttendeesQuery($program, true)->getQuery()->getResult();
 
         return new ArrayCollection($result);
     }
 
     public function findProgramFirstAlternate(Program $program): ?User
     {
-        $result = $this->createQueryBuilder('u')
-            ->leftJoin('u.programApplications', 'a')
-            ->where('a.program = :program')->setParameter('program', $program)
-            ->andWhere('a.alternate = true')
+        $result = $this->programAttendeesQuery($program, true)
             ->orderBy('a.createdAt')
             ->setMaxResults(1)
             ->getQuery()
             ->getResult();
 
         return count($result) === 1 ? $result[0] : null;
-    }
-
-    public function countProgramAlternates(Program $program): int
-    {
-        return $this->createQueryBuilder('u')
-            ->select('count(u)')
-            ->leftJoin('u.programApplications', 'a')
-            ->where('a.program = :program')->setParameter('program', $program)
-            ->andWhere('a.alternate = true')
-            ->getQuery()
-            ->getSingleScalarResult();
     }
 
     /**
@@ -432,5 +399,20 @@ class UserRepository extends AbstractRepository
 
         $this->em->remove($user);
         $this->em->flush();
+    }
+
+    private function programAttendeesQuery(Program $program, ?bool $alternate): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('count(u)')
+            ->leftJoin('u.programApplications', 'a')
+            ->where('a.program = :program')->setParameter('program', $program);
+
+        if ($alternate !== null) {
+            $qb = $qb->andWhere('a.alternate = :alternate')
+                ->setParameter('alternate', $alternate);
+        }
+
+        return $qb;
     }
 }

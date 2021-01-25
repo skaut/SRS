@@ -48,13 +48,13 @@ class ProgramApplicationRepository extends AbstractRepository
             $program = $em->getRepository(Program::class)->find($programApplication->getProgram()->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 
-            $user      = $programApplication->getUser();
-            $capacity  = $program->getBlockCapacity();
-            $occupancy = $program->getOccupancy();
+            $user           = $programApplication->getUser();
+            $capacity       = $program->getBlockCapacity();
+            $attendeesCount = $program->getAttendeesCount();
 
-            if ($capacity !== null && $occupancy >= $capacity && ! $program->getBlock()->isAlternatesAllowed()) {
+            if ($capacity !== null && $attendeesCount >= $capacity && ! $program->getBlock()->isAlternatesAllowed()) {
                 throw new ProgramCapacityOccupiedException();
-            } elseif ($capacity !== null && $occupancy >= $capacity) {
+            } elseif ($capacity !== null && $attendeesCount >= $capacity) {
                 $programApplication->setAlternate(true);
             }
 
@@ -73,7 +73,7 @@ class ProgramApplicationRepository extends AbstractRepository
             $this->em->persist($programApplication);
 
             if (! $programApplication->isAlternate()) {
-                $program->setOccupancy($occupancy + 1);
+                $program->setAttendeesCount($attendeesCount + 1);
                 $this->em->persist($program);
 
                 foreach ($this->findByUserAlternateAndBlock($user, $program->getBlock()) as $pa) {
@@ -92,10 +92,10 @@ class ProgramApplicationRepository extends AbstractRepository
             $program = $em->getRepository(Program::class)->find($programApplication->getProgram()->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 
-            $occupancy = $program->getOccupancy();
+            $attendeesCount  = $program->getAttendeesCount();
 
             if (! $programApplication->isAlternate()) {
-                $program->setOccupancy($occupancy - 1);
+                $program->setAttendeesCount($attendeesCount - 1);
                 $this->em->persist($program);
             }
 

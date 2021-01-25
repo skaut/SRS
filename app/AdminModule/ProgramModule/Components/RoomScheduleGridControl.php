@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\Program\Program;
-use App\Model\Program\Queries\ProgramAttendeesCountQuery;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
@@ -93,7 +92,7 @@ class RoomScheduleGridControl extends Control
             ->setRenderer(
                 function (Program $program) {
                     $capacity       = $this->room->getCapacity();
-                    $attendeesCount = $this->queryBus->handle(new ProgramAttendeesCountQuery($program));
+                    $attendeesCount = $program->getAttendeesCount();
 
                     return $capacity === null ? $attendeesCount : $attendeesCount . '/' . $capacity;
                 }
