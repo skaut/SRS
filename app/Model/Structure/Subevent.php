@@ -189,7 +189,6 @@ class Subevent
     {
         if (! $this->blocks->contains($block)) {
             $this->blocks->add($block);
-            $block->setSubevent($this);
         }
     }
 

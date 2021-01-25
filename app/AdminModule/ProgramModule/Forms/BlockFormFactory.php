@@ -24,6 +24,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Forms\Controls\TextInput;
 use stdClass;
@@ -143,16 +144,16 @@ class BlockFormFactory
             ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty')
             ->addRule(Form::INTEGER, 'admin.program.blocks_duration_format');
 
-        $form->addText('capacity', 'admin.program.blocks_capacity')
+        $capacityText = $form->addText('capacity', 'admin.program.blocks_capacity')
             ->setHtmlAttribute('data-toggle', 'tooltip')
             ->setHtmlAttribute('data-placement', 'bottom')
-            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks_capacity_note'))
-            ->addCondition(Form::FILLED)
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks_capacity_note'));
+        $capacityText->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.program.blocks_capacity_format')
-            ->toggle('alternates-allowed');
+            ->toggle('alternatesAllowedCheckbox');
 
         $form->addCheckbox('alternatesAllowed', 'admin.program.blocks_alternates_allowed')
-            ->setOption('id', 'alternates-allowed');
+            ->setOption('id', 'alternatesAllowedCheckbox');
 
         $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory_form')
             ->addCondition(Form::EQUAL, true)
@@ -164,7 +165,7 @@ class BlockFormFactory
             ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_registered_note'))
             ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_registered_not_allowed'); // todo: nesmi mit omezenou kapacitu
+            ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_registered_not_allowed', [$capacityText]);
 
         $form->addTextArea('perex', 'admin.program.blocks_perex_form')
             ->addCondition(Form::FILLED)
@@ -287,10 +288,12 @@ class BlockFormFactory
     /**
      * Ověří, zda může být program automaticky přihlašovaný.
      */
-    public function validateAutoRegistered(): bool
+    public function validateAutoRegistered(Checkbox $field, array $args): bool
     {
+        $capacity = $args[0] === '' ? null : $args[0];
+
         if ($this->block) {
-            return $this->validators->validateBlockAutoRegistered($this->block);
+            return $this->validators->validateBlockAutoRegistered($this->block, $capacity);
         }
 
         return true;

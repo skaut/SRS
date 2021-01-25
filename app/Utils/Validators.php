@@ -18,6 +18,7 @@ use App\Services\ISettingsService;
 use Doctrine\Common\Collections\Collection;
 use Throwable;
 
+use Yasumi\tests\Netherlands\thirdCarnivalDay;
 use function array_map;
 use function explode;
 use function trim;
@@ -234,18 +235,20 @@ class Validators
     /**
      * Ověří, zda může být program automaticky přihlašovaný.
      */
-    public function validateBlockAutoRegistered(Block $block): bool
+    public function validateBlockAutoRegistered(Block $block, ?int $capacity): bool
     {
-        return $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED
-            || ($block->getProgramsCount() <= 1
-                && ($block->getProgramsCount() !== 1
-                    || ! $this->programRepository->hasOverlappingProgram(
-                        $block->getPrograms()->first()->getId(),
-                        $block->getPrograms()->first()->getStart(),
-                        $block->getPrograms()->first()->getEnd()
-                    )
-                )
-            );
+        if ($capacity !== null) {
+            return false;
+        }
+
+        if ($block->getProgramsCount() === 0) {
+            return true;
+        } elseif ($block->getProgramsCount() === 1) {
+            $program = $block->getPrograms()->first();
+            return ! $this->programRepository->hasOverlappingProgram($program->getId(), $program->getStart(), $program->getEnd());
+        }
+
+        return false;
     }
 
     /**

@@ -245,7 +245,7 @@ class ProgramBlocksGridControl extends Control
 
         if (! $this->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_denied', 'danger');
-        } elseif ($mandatory  === ProgramMandatoryType::AUTO_REGISTERED && ! $this->validators->validateBlockAutoRegistered($block)) {
+        } elseif ($mandatory  === ProgramMandatoryType::AUTO_REGISTERED && ! $this->validators->validateBlockAutoRegistered($block, $block->getCapacity())) {
             $p->flashMessage('admin.program.blocks_change_mandatory_auto_registered_not_allowed', 'danger');
         } else {
             try {
