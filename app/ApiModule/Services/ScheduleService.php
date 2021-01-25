@@ -151,7 +151,8 @@ class ScheduleService
             $programDetailDto->setAlternatesCount($programAlternates->count());
             $programDetailDto->setUserAttends($programAttendees->contains($this->user));
             $programDetailDto->setUserAlternates($programAlternates->contains($this->user));
-            $programDetailDto->setBlocks(Helpers::getIds($this->programRepository->findBlockedByProgram($program)));
+            $programDetailDto->setSameBlockPrograms(Helpers::getIds($this->programRepository->findSameBlockPrograms($program)));
+            $programDetailDto->setOverlappingPrograms(Helpers::getIds($this->programRepository->findOverlappingPrograms($program)));
             $programDetailDto->setBlocked(false);
             $programDetailDto->setPaid($userAllowedPrograms->contains($program));
             $programDetailDtos[] = $programDetailDto;
@@ -159,8 +160,13 @@ class ScheduleService
 
         foreach ($programDetailDtos as $p1) {
             foreach ($programDetailDtos as $p2) {
-                if ($p1->getId() !== $p2->getId() && $p1->isUserAttends() && in_array($p2->getId(), $p1->getBlocks())) {
-                    $p2->setBlocked(true);
+                if ($p1->getId() !== $p2->getId()) {
+                    if (
+                        (($p1->getUserAttends() || $p1->getUserAlternates()) && in_array($p2->getId(), $p1->getOverlappingPrograms()))
+                        || ($p1->getUserAttends() && in_array($p2->getId(), $p1->getSameBlockPrograms())))
+                    {
+                        $p2->setBlocked(true);
+                    }
                 }
             }
         }

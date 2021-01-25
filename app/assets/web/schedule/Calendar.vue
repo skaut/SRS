@@ -23,6 +23,7 @@
                                 ? selectedEventInfo.event.extendedProps.attendeesCount + '/' + selectedEventInfo.event.extendedProps.block.capacity
                                 : selectedEventInfo.event.extendedProps.attendeesCount
                                 }}
+                                <span v-if="selectedEventInfo.event.extendedProps.block.alternatesAllowed">({{ selectedEventInfo.event.extendedProps.alternatesCount }} náhradníků)</span>
                             </li>
                         </ul>
 

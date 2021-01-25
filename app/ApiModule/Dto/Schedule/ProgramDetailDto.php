@@ -47,7 +47,13 @@ class ProgramDetailDto
      * @JMS\Type("array")
      * @var int[]
      */
-    private ?array $blocks = null;
+    private ?array $sameBlockPrograms = null;
+
+    /**
+     * @JMS\Type("array")
+     * @var int[]
+     */
+    private ?array $overlappingPrograms = null;
 
     /** @JMS\Type("boolean") */
     private ?bool $blocked = null;
@@ -125,12 +131,12 @@ class ProgramDetailDto
         $this->alternatesCount = $alternatesCount;
     }
 
-    public function isUserAttends(): bool
+    public function getUserAttends(): ?bool
     {
         return $this->userAttends;
     }
 
-    public function setUserAttends(bool $userAttends): void
+    public function setUserAttends(?bool $userAttends): void
     {
         $this->userAttends = $userAttends;
     }
@@ -140,7 +146,7 @@ class ProgramDetailDto
         return $this->userAlternates;
     }
 
-    public function setUserAlternates(bool $userAlternates): void
+    public function setUserAlternates(?bool $userAlternates): void
     {
         $this->userAlternates = $userAlternates;
     }
@@ -148,17 +154,33 @@ class ProgramDetailDto
     /**
      * @return int[]
      */
-    public function getBlocks(): array
+    public function getSameBlockPrograms(): ?array
     {
-        return $this->blocks;
+        return $this->sameBlockPrograms;
     }
 
     /**
-     * @param int[] $blocks
+     * @param int[] $sameBlockPrograms
      */
-    public function setBlocks(array $blocks): void
+    public function setSameBlockPrograms(?array $sameBlockPrograms): void
     {
-        $this->blocks = $blocks;
+        $this->sameBlockPrograms = $sameBlockPrograms;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getOverlappingPrograms(): ?array
+    {
+        return $this->overlappingPrograms;
+    }
+
+    /**
+     * @param int[] $overlappingPrograms
+     */
+    public function setOverlappingPrograms(?array $overlappingPrograms): void
+    {
+        $this->overlappingPrograms = $overlappingPrograms;
     }
 
     public function isBlocked(): bool

@@ -59,6 +59,18 @@ export default new Vuex.Store({
                 event.color = getColor(event);
             }
         },
+        setEventUserAlternates(state, info) {
+            const event = state.eventsMap[info.eventId];
+            if (event) {
+                if (event.extendedProps.userAlternates && !info.userAlternates) {
+                    event.extendedProps.alternatesCount--;
+                } else if (!event.extendedProps.userAlternates && info.userAlternates) {
+                    event.extendedProps.alternatesCount++;
+                }
+                event.extendedProps.userAlternates = info.userAlternates;
+                event.color = getColor(event);
+            }
+        },
         setEventBlocked(state, info) {
             const event = state.eventsMap[info.eventId];
             if (event) {
@@ -82,7 +94,7 @@ export default new Vuex.Store({
             state.notRegisteredMandatoryPrograms++;
         },
         decrementNotRegisteredMandatoryPrograms(state) {
-            state.notRegisteredMandatoryPrograms++;
+            state.notRegisteredMandatoryPrograms--;
         }
     },
     actions: {
@@ -169,7 +181,8 @@ export default new Vuex.Store({
                                 alternatesCount: program.alternates_count,
                                 userAttends: program.user_attends,
                                 userAlternates: program.user_alternates,
-                                blocks: program.blocks,
+                                sameBlockPrograms: program.same_block_programs,
+                                overlappingPrograms: program.overlapping_programs,
                                 blocked: program.blocked,
                                 paid: program.paid,
                                 occupied: block.capacity !== null && block.capacity <= program.attendees_count
@@ -204,22 +217,34 @@ export default new Vuex.Store({
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
 
+                    const userAttends = responseObject.program.user_attends;
+                    const userAlternates = responseObject.program.user_alternates;
+
                     commit('setEventAttendance', {
                         eventId: info.event.id,
-                        userAttends: responseObject.program.user_attends,
-                        userAlternates: responseObject.program.user_alternates,
+                        userAttends: userAttends,
+                        userAlternates: userAlternates,
                         attendeesCount: responseObject.program.attendees_count,
                         alternatesCount: responseObject.program.alternates_count
                     })
 
-                    if (info.event.extendedProps.userAttends) {
-                        info.event.extendedProps.blocks.forEach(function (eventId) {
+                    // pokud je ucastnik, zablokuje se ucast na programech stejneho bloku a odstrani nahradnik
+                    if (userAttends) {
+                        info.event.extendedProps.sameBlockPrograms.forEach(function (eventId) {
+                            commit('setEventUserAlternates', {eventId: eventId, userAlternates: false});
                             commit('setEventBlocked', {eventId: eventId, blocked: true});
                         });
 
                         if (info.event.extendedProps.block.mandatory) {
                             commit('decrementNotRegisteredMandatoryPrograms');
                         }
+                    }
+
+                    // pokud je ucastnik nebo nahradni, zablokuje se ucast na programech ve stejnem case
+                    if (userAttends || userAlternates) {
+                        info.event.extendedProps.overlappingPrograms.forEach(function (eventId) {
+                            commit('setEventBlocked', {eventId: eventId, blocked: true});
+                        });
                     }
 
                     commit('setMessage', {type: responseObject.status, text: responseObject.message});
@@ -247,12 +272,22 @@ export default new Vuex.Store({
                         alternatesCount: responseObject.program.alternates_count
                     })
 
+                    // nastaveni vsech programu jako neblokovanych
                     state.events.forEach(function(event) {
                         commit('setEventBlocked', {eventId: event.id, blocked: false});
                     });
+
+                    // projeti vsech udalosti a zablokovani blokovanych programu
                     state.events.forEach(function(event) {
                         if (event.extendedProps.userAttends) {
-                            event.extendedProps.blocks.forEach(function (eventId) {
+                            event.extendedProps.sameBlockPrograms.forEach(function (eventId) {
+                                if (event.id !== eventId) {
+                                    commit('setEventBlocked', {eventId: eventId, blocked: true});
+                                }
+                            });
+                        }
+                        if (event.extendedProps.userAttends || event.extendedProps.userAlternates) {
+                            event.extendedProps.overlappingPrograms.forEach(function (eventId) {
                                 if (event.id !== eventId) {
                                     commit('setEventBlocked', {eventId: eventId, blocked: true});
                                 }
@@ -260,7 +295,7 @@ export default new Vuex.Store({
                         }
                     });
 
-                    if (info.event.extendedProps.block.mandatory && info.event.extendedProps.userAttends) {
+                    if (info.event.extendedProps.block.mandatory) {
                         commit('incrementNotRegisteredMandatoryPrograms');
                     }
 

@@ -111,23 +111,38 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
-     * Vrací programy zablokované (programy stejného bloku a překrývající se programy) přihlášením se na program.
+     * Vrací programy se stejným blokem.
      *
      * @return Collection<Program>
      */
-    public function findBlockedByProgram(Program $program): Collection
+    public function findSameBlockPrograms(Program $program): Collection
     {
-        $start = $program->getStart();
-        $end   = $program->getEnd();
-
         $result = $this->createQueryBuilder('p')
             ->join('p.block', 'b')
             ->where('p != :program')
-            ->andWhere("b = :block OR (p.start < :end AND DATE_ADD(p.start, (b.duration * 60), 'second') > :start)")
+            ->andWhere("p.block = :block")
             ->setParameter('program', $program)
             ->setParameter('block', $program->getBlock())
-            ->setParameter('start', $start)
-            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
+     * Vrací programy překrývající se s programem.
+     *
+     * @return Collection<Program>
+     */
+    public function findOverlappingPrograms(Program $program): Collection
+    {
+        $result = $this->createQueryBuilder('p')
+            ->join('p.block', 'b')
+            ->where('p != :program')
+            ->andWhere("p.start < :end AND DATE_ADD(p.start, (b.duration * 60), 'second') > :start")
+            ->setParameter('program', $program)
+            ->setParameter('start', $program->getStart())
+            ->setParameter('end', $program->getEnd())
             ->getQuery()
             ->getResult();
 
