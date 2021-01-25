@@ -117,8 +117,10 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $this->programApplicationRepository->save(new ProgramApplication($user4, $program1));
         $this->programApplicationRepository->save(new ProgramApplication($user4, $program2));
 
-        $this->assertEquals(1, $program1->getOccupancy());
-        $this->assertEquals(1, $program2->getOccupancy());
+        $this->assertEquals(1, $program1->getAttendeesCount());
+        $this->assertEquals(2, $program1->getAlternatesCount());
+        $this->assertEquals(1, $program2->getAttendeesCount());
+        $this->assertEquals(2, $program2->getAlternatesCount());
 
         // odhlášení uživatele 1 z 1. programu, uživatel 3 se stává účastníkem a už není prvním náhradníkem programu 2
         $this->commandBus->handle(new UnregisterProgram($user1, $program1, false));
@@ -144,8 +146,10 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $this->assertEquals($program2, $programApplication42->getProgram());
         $this->assertTrue($programApplication42->isAlternate());
 
-        $this->assertEquals(1, $program1->getOccupancy());
-        $this->assertEquals(1, $program2->getOccupancy());
+        $this->assertEquals(1, $program1->getAttendeesCount());
+        $this->assertEquals(1, $program1->getAlternatesCount());
+        $this->assertEquals(1, $program2->getAttendeesCount());
+        $this->assertEquals(1, $program2->getAlternatesCount());
 
         // odhlášení uživatele 2 z 2. programu, uživatel 4 se stává účastníkem
         $this->commandBus->handle(new UnregisterProgram($user2, $program2, false));
@@ -169,8 +173,10 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $this->assertEquals($program2, $programApplication42->getProgram());
         $this->assertFalse($programApplication42->isAlternate());
 
-        $this->assertEquals(1, $program1->getOccupancy());
-        $this->assertEquals(1, $program2->getOccupancy());
+        $this->assertEquals(1, $program1->getAttendeesCount());
+        $this->assertEquals(0, $program1->getAlternatesCount());
+        $this->assertEquals(1, $program2->getAttendeesCount());
+        $this->assertEquals(0, $program2->getAlternatesCount());
     }
 
     /**

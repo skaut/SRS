@@ -101,14 +101,16 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $this->assertEquals($user1, $programApplication1->getUser());
         $this->assertEquals($program, $programApplication1->getProgram());
         $this->assertFalse($programApplication1->isAlternate());
-        $this->assertEquals(1, $program->getOccupancy());
+        $this->assertEquals(1, $program->getAttendeesCount());
+        $this->assertEquals(0, $program->getAlternatesCount());
 
         $this->commandBus->handle(new RegisterProgram($user2, $program, false));
         $programApplication2 = $this->programApplicationRepository->findByUserAndProgram($user2, $program);
         $this->assertEquals($user2, $programApplication2->getUser());
         $this->assertEquals($program, $programApplication2->getProgram());
         $this->assertTrue($programApplication2->isAlternate());
-        $this->assertEquals(1, $program->getOccupancy());
+        $this->assertEquals(1, $program->getAttendeesCount());
+        $this->assertEquals(1, $program->getAlternatesCount());
     }
 
     /**

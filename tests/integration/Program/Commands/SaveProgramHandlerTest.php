@@ -87,7 +87,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
 
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
-        $this->assertEquals(0, $program->getOccupancy());
+        $this->assertEquals(0, $program->getAttendeesCount());
     }
 
     /**
@@ -146,7 +146,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user3, $program));
-        $this->assertEquals(2, $program->getOccupancy());
+        $this->assertEquals(2, $program->getAttendeesCount());
     }
 
     /**
@@ -207,7 +207,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user3, $program));
-        $this->assertEquals(3, $program->getOccupancy());
+        $this->assertEquals(3, $program->getAttendeesCount());
     }
 
     /**
