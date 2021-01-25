@@ -14,6 +14,7 @@ use App\Services\ApplicationService;
 use App\Services\BankService;
 use App\Services\ISettingsService;
 use App\Utils\Helpers;
+use DateTimeImmutable;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -121,7 +122,8 @@ class PaymentsGridControl extends Control
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = static function (Container $container): void {
             $dateDate = new DateControl('');
-            $dateDate->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
+            $dateDate->setDefaultValue(new DateTimeImmutable())
+                ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
             $container->addComponent($dateDate, 'date');
 
             $container->addInteger('amount', '')
