@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\Payment\PaymentRepository;
+use App\Model\Payment\Repositories\PaymentRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use FioApi\Downloader;
 use FioApi\TransactionList;
 use InvalidArgumentException;
 use Nette;
-use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
 
 /**
@@ -27,16 +27,16 @@ class BankService
 
     private ApplicationService $applicationService;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private PaymentRepository $paymentRepository;
 
     public function __construct(
         ApplicationService $applicationService,
-        EntityManagerDecorator $em,
-        SettingsService $settingsService,
+        EntityManagerInterface $em,
+        ISettingsService $settingsService,
         PaymentRepository $paymentRepository
     ) {
         $this->applicationService = $applicationService;
@@ -49,7 +49,7 @@ class BankService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function downloadTransactions(DateTimeImmutable $from, ?string $token = null) : void
+    public function downloadTransactions(DateTimeImmutable $from, ?string $token = null): void
     {
         $token = $token ?: $this->settingsService->getValue(Settings::BANK_TOKEN);
         if ($token === null) {
@@ -65,10 +65,10 @@ class BankService
     /**
      * @throws Throwable
      */
-    private function createPayments(TransactionList $transactionList) : void
+    private function createPayments(TransactionList $transactionList): void
     {
         foreach ($transactionList->getTransactions() as $transaction) {
-            $this->em->transactional(function () use ($transaction) : void {
+            $this->em->transactional(function () use ($transaction): void {
                 $id = $transaction->getId();
 
                 if ($transaction->getAmount() > 0 && $this->paymentRepository->findByTransactionId($id) === null) {

@@ -11,5 +11,5 @@ namespace App\WebModule\Components;
  */
 interface IContactFormContentControlFactory
 {
-    public function create() : ContactFormContentControl;
+    public function create(): ContactFormContentControl;
 }

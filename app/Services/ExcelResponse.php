@@ -32,7 +32,7 @@ class ExcelResponse implements IResponse
     /**
      * @throws Exception
      */
-    public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse) : void
+    public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse): void
     {
         $httpResponse->setContentType('application/force-download');
         $httpResponse->setHeader('Content-Disposition', 'attachment;filename=' . $this->filename);

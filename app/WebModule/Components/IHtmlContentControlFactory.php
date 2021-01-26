@@ -12,5 +12,5 @@ namespace App\WebModule\Components;
  */
 interface IHtmlContentControlFactory
 {
-    public function create() : HtmlContentControl;
+    public function create(): HtmlContentControl;
 }

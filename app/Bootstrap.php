@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace App;
 
 use Nette\Configurator;
+
 use function getenv;
 use function umask;
 
 class Bootstrap
 {
-    public static function boot() : Configurator
+    public static function boot(): Configurator
     {
         umask(0002);
 
         $configurator = new Configurator();
 
-        //$configurator->setDebugMode('23.75.345.200'); // enable for your remote IP
+        // $configurator->setDebugMode('23.75.345.200'); // enable for your remote IP
         $configurator->setDebugMode(getenv('DEVELOPMENT_MACHINE') === 'true');
         $configurator->enableTracy(__DIR__ . '/../log');
 

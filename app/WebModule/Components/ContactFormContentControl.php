@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
-use App\Model\Cms\Content\ContentDto;
+use App\Model\Cms\Dto\ContentDto;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\WebModule\Forms\ContactForm;
 use App\WebModule\Forms\IContactFormFactory;
 use Nette\Application\UI\Control;
@@ -26,12 +26,12 @@ class ContactFormContentControl extends Control
 
     private RoleRepository $roleRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     public function __construct(
         IContactFormFactory $contactFormFactory,
         RoleRepository $roleRepository,
-        SettingsService $settingsService
+        ISettingsService $settingsService
     ) {
         $this->contactFormFactory = $contactFormFactory;
         $this->roleRepository     = $roleRepository;
@@ -42,7 +42,7 @@ class ContactFormContentControl extends Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function render(ContentDto $content) : void
+    public function render(ContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/contact_form_content.latte');
@@ -58,11 +58,11 @@ class ContactFormContentControl extends Control
         $template->render();
     }
 
-    public function createComponentContactForm() : ContactForm
+    public function createComponentContactForm(): ContactForm
     {
         $form = $this->contactFormFactory->create();
 
-        $form->onSave[] = function () : void {
+        $form->onSave[] = function (): void {
             $this->getPresenter()->flashMessage('web.contact_form_content.send_message_successful', 'success');
 
             $this->getPresenter()->redirect('this');

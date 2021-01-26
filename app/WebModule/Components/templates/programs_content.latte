@@ -21,11 +21,7 @@
                     <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.programs_content.login_required_link}</a>{_web.programs_content.login_required_end}
                 </div>
             {else}
-                {if !$userHasPermission}
-                    <div class="alert alert-warning alert-forever">
-                        {_web.programs_content.unapproved_register_programs}
-                    </div>
-                {elseif !$registerProgramsAllowed}
+                {if !$registerProgramsAllowed}
                     <div class="alert alert-warning alert-forever">
                         {if $registerProgramsNotAllowed}
                             {_web.programs_content.register_programs_not_allowed}
@@ -45,9 +41,8 @@
                     </div>
                 {/if}
 
-                {var $userAllowedRegisterPrograms = $registerProgramsAllowed && $userHasPermission}
                 <script>
-                    var userAllowedRegisterPrograms = {$userAllowedRegisterPrograms};
+                    var registerProgramsAllowed = {$registerProgramsAllowed};
                 </script>
 
                 <div id='calendar'></div>

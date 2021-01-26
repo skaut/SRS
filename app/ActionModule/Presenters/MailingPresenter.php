@@ -6,9 +6,9 @@ namespace App\ActionModule\Presenters;
 
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Nette\Application\AbortException;
 use Throwable;
 
@@ -20,7 +20,7 @@ use Throwable;
 class MailingPresenter extends ActionBasePresenter
 {
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /**
      * Ověří e-mail semináře.
@@ -29,7 +29,7 @@ class MailingPresenter extends ActionBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionVerify(string $code) : void
+    public function actionVerify(string $code): void
     {
         if ($code === $this->settingsService->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE)) {
             $newEmail = $this->settingsService->getValue(Settings::SEMINAR_EMAIL_UNVERIFIED);

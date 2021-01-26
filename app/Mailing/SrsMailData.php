@@ -47,7 +47,7 @@ class SrsMailData implements IMessageData
         $this->text       = $text;
     }
 
-    public function getFrom() : Recipient
+    public function getFrom(): Recipient
     {
         return $this->from;
     }
@@ -55,17 +55,17 @@ class SrsMailData implements IMessageData
     /**
      * @return Recipient[]
      */
-    public function getRecipients() : array
+    public function getRecipients(): array
     {
         return $this->recipients;
     }
 
-    public function getSubject() : string
+    public function getSubject(): string
     {
         return $this->subject;
     }
 
-    public function getText() : string
+    public function getText(): string
     {
         return $this->text;
     }

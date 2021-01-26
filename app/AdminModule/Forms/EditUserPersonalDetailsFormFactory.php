@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\FilesService;
 use Doctrine\ORM\ORMException;
 use Nette;
@@ -14,9 +14,11 @@ use Nette\Http\FileUpload;
 use Nette\Utils\ImageException;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
+
 use function getimagesizefromstring;
 use function image_type_to_extension;
 use function property_exists;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -49,7 +51,7 @@ class EditUserPersonalDetailsFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -131,7 +133,7 @@ class EditUserPersonalDetailsFormFactory
      * @throws ORMException
      * @throws ImageException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

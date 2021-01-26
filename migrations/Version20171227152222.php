@@ -1,19 +1,21 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Migrations;
 
-use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
+
 class Version20171227152222 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
-
         $this->addSql('UPDATE `mail_template` SET `text` = \'Byl/a jsi přihlášen/a na web akce: %nazev-seminare%. Toto přihlášení není registrací k účasti na akci. Pokud se chceš akce zúčastnit, tak se nezapomeň na webu zaregistrovat.\' WHERE `mail_template`.`id` = 1');
         $this->addSql('UPDATE `mail_template` SET `text` = \'Byl/a jsi zaregistrován/a na akci: %nazev-seminare%. Nezapomeň zaplatit registrační poplatek. Více informací o platbě najdeš na webu ve svém profilu. Zrušit svou registraci můžeš přes web do: %zmena-registrace-do%.\' WHERE `mail_template`.`id` = 2');
         $this->addSql('UPDATE `mail_template` SET `text` = \'Tvoje účast na akci: %nazev-seminare% byla zrušena. Pokud jde o omyl, tak se znovu zaregistruj na webu.\' WHERE `mail_template`.`id` = 3');
@@ -27,7 +29,7 @@ class Version20171227152222 extends AbstractMigration
         $this->addSql('DELETE FROM `template_template_variable` WHERE `template_template_variable`.`template_id` = 4 AND `template_template_variable`.`template_variable_id` = 4');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
     }
 }

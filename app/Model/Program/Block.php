@@ -10,12 +10,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
+
 use function implode;
 
 /**
  * Entita programový blok.
  *
- * @ORM\Entity(repositoryClass="BlockRepository")
+ * @ORM\Entity
  * @ORM\Table(name="block")
  *
  * @author Michal Májský
@@ -38,7 +39,7 @@ class Block
      * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
      *
-     * @var Collection|Program[]
+     * @var Collection<Program>
      */
     protected Collection $programs;
 
@@ -47,7 +48,7 @@ class Block
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks", cascade={"persist"})
      *
-     * @var Collection|User[]
+     * @var Collection<User>
      */
     protected Collection $lectors;
 
@@ -87,6 +88,13 @@ class Block
     protected ?int $capacity = null;
 
     /**
+     * Povoleno přihlašování náhradníků?
+     *
+     * @ORM\Column(type="boolean")
+     */
+    protected bool $alternatesAllowed = false;
+
+    /**
      * Pomůcky.
      *
      * @ORM\Column(type="string", nullable=true)
@@ -107,69 +115,73 @@ class Block
      */
     protected ?string $description = null;
 
-    public function __construct()
-    {
-        $this->programs = new ArrayCollection();
-        $this->lectors  = new ArrayCollection();
+    public function __construct(
+        string $name,
+        int $duration,
+        ?int $capacity,
+        bool $alternatesAllowed,
+        string $mandatory,
+        Subevent $subevent,
+        ?Category $category
+    ) {
+        $this->name              = $name;
+        $this->duration          = $duration;
+        $this->capacity          = $capacity;
+        $this->alternatesAllowed = $alternatesAllowed;
+        $this->mandatory         = $mandatory;
+        $this->subevent          = $subevent;
+        $this->category          = $category;
+        $this->programs          = new ArrayCollection();
+        $this->lectors           = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
     /**
-     * @return Collection|Program[]
+     * @return Collection<Program>
      */
-    public function getPrograms() : Collection
+    public function getPrograms(): Collection
     {
         return $this->programs;
     }
 
     /**
-     * Vrací seznam účastníků bloku.
-     *
-     * @return Collection|User[]
-     */
-    public function getAttendees() : Collection
-    {
-        $attendees = new ArrayCollection();
-        foreach ($this->programs as $program) {
-            foreach ($program->getAttendees() as $attendee) {
-                $attendees->add($attendee);
-            }
-        }
-
-        return $attendees;
-    }
-
-    /**
      * Vrací počet programů bloku.
      */
-    public function getProgramsCount() : int
+    public function getProgramsCount(): int
     {
         return $this->programs->count();
     }
 
+    public function addProgram(Program $program): void
+    {
+        if (! $this->programs->contains($program)) {
+            $this->programs->add($program);
+        }
+    }
+
     /**
-     * @return Collection|User[]
+     * @return Collection<User>
      */
-    public function getLectors() : Collection
+    public function getLectors(): Collection
     {
         return $this->lectors;
     }
 
-    public function getLectorsText() : string
+    public function getLectorsText(): string
     {
         return implode(', ', $this->lectors->map(static function (User $lector) {
             return $lector->getDisplayName();
@@ -177,143 +189,132 @@ class Block
     }
 
     /**
-     * @param Collection|User[] $lectors
+     * @param Collection<User> $lectors
      */
-    public function setLectors(Collection $lectors) : void
+    public function setLectors(Collection $lectors): void
     {
-        $this->lectors->clear();
+        foreach ($this->lectors as $lector) {
+            $this->removeLector($lector);
+        }
+
         foreach ($lectors as $lector) {
-            $this->lectors->add($lector);
+            $this->addLector($lector);
         }
     }
 
-    public function getCategory() : ?Category
+    public function addLector(User $lector): void
+    {
+        if (! $this->lectors->contains($lector)) {
+            $this->lectors->add($lector);
+            $lector->addLecturersBlock($this);
+        }
+    }
+
+    public function removeLector(User $lector): void
+    {
+        if ($this->lectors->contains($lector)) {
+            $this->lectors->removeElement($lector);
+            $lector->removeLecturersBlock($this);
+        }
+    }
+
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    public function setCategory(?Category $category) : void
+    public function setCategory(?Category $category): void
     {
+        if ($this->category !== null) {
+            $this->category->removeBlock($this);
+        }
+
+        if ($category !== null) {
+            $category->addBlock($this);
+        }
+
         $this->category = $category;
     }
 
-    public function getSubevent() : ?Subevent
+    public function getSubevent(): ?Subevent
     {
         return $this->subevent;
     }
 
-    public function setSubevent(Subevent $subevent) : void
+    public function setSubevent(Subevent $subevent): void
     {
+        $this->subevent->removeBlock($this);
+        $subevent->addBlock($this);
         $this->subevent = $subevent;
     }
 
-    public function getMandatory() : string
+    public function getMandatory(): string
     {
         return $this->mandatory;
     }
 
-    public function setMandatory(string $mandatory) : void
+    public function setMandatory(string $mandatory): void
     {
         $this->mandatory = $mandatory;
     }
 
-    public function getDuration() : int
+    public function getDuration(): int
     {
         return $this->duration;
     }
 
-    public function setDuration(int $duration) : void
+    public function setDuration(int $duration): void
     {
         $this->duration = $duration;
     }
 
-    public function getCapacity() : ?int
+    public function getCapacity(): ?int
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity) : void
+    public function setCapacity(?int $capacity): void
     {
         $this->capacity = $capacity;
     }
 
-    public function getTools() : ?string
+    public function isAlternatesAllowed(): bool
+    {
+        return $this->alternatesAllowed;
+    }
+
+    public function setAlternatesAllowed(bool $alternatesAllowed): void
+    {
+        $this->alternatesAllowed = $alternatesAllowed;
+    }
+
+    public function getTools(): ?string
     {
         return $this->tools;
     }
 
-    public function setTools(?string $tools) : void
+    public function setTools(?string $tools): void
     {
         $this->tools = $tools;
     }
 
-    public function getPerex() : ?string
+    public function getPerex(): ?string
     {
         return $this->perex;
     }
 
-    public function setPerex(?string $perex) : void
+    public function setPerex(?string $perex): void
     {
         $this->perex = $perex;
     }
 
-    public function getDescription() : ?string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(?string $description) : void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
-    }
-
-    /**
-     * Je uživatel oprávněn přihlašovat se na programy bloku?
-     */
-    public function isAllowed(User $user) : bool
-    {
-        $result = true;
-
-        if ($this->category) {
-            $tmp = false;
-            foreach ($user->getRoles() as $role) {
-                if ($role->getRegisterableCategories()->contains($this->category)) {
-                    $tmp = true;
-                    break;
-                }
-            }
-
-            if (! $tmp) {
-                $result = false;
-            }
-        }
-
-        $tmp = false;
-        foreach ($user->getNotCanceledSubeventsApplications() as $application) {
-            if ($application->getSubevents()->contains($this->subevent)) {
-                $tmp = true;
-                break;
-            }
-        }
-
-        if (! $tmp) {
-            $result = false;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Účastní se uživatel programu bloku?
-     */
-    public function isAttendee(User $user) : bool
-    {
-        foreach ($this->programs as $program) {
-            if ($program->isAttendee($user)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
+use App\Model\Application\Application;
+use App\Model\Application\Repositories\ApplicationRepository;
+use App\Model\Application\SubeventsApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\Application\Application;
-use App\Model\User\Application\ApplicationRepository;
-use App\Model\User\Application\SubeventsApplication;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
@@ -24,7 +25,6 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
-use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use Throwable;
@@ -41,7 +41,7 @@ class ApplicationsGridControl extends Control
 {
     private ITranslator $translator;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private ApplicationRepository $applicationRepository;
 
@@ -59,7 +59,7 @@ class ApplicationsGridControl extends Control
 
     public function __construct(
         ITranslator $translator,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
         SubeventRepository $subeventRepository,
@@ -80,7 +80,7 @@ class ApplicationsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/applications_grid.latte');
         $this->template->render();
@@ -93,7 +93,7 @@ class ApplicationsGridControl extends Control
      * @throws DataGridException
      * @throws NoResultException
      */
-    public function createComponentApplicationsGrid(string $name) : void
+    public function createComponentApplicationsGrid(string $name): void
     {
         $this->user = $this->userRepository->findById((int) $this->getPresenter()->getParameter('id'));
 
@@ -109,7 +109,7 @@ class ApplicationsGridControl extends Control
             ->orderBy('a.applicationId'));
         $grid->setPagination(false);
 
-        $grid->setItemsDetail()
+        $grid->setItemsDetail() // todo: schovat, pokud neni nastaveno cislo uctu
             ->setTemplateParameters(['applicationRepository' => $this->applicationRepository]);
         $grid->setTemplateFile(__DIR__ . '/templates/applications_grid_detail.latte');
 
@@ -145,7 +145,7 @@ class ApplicationsGridControl extends Control
             });
 
         if ($explicitSubeventsExists) {
-            $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) : void {
+            $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container): void {
                 $container->addMultiSelect(
                     'subevents',
                     '',
@@ -157,7 +157,7 @@ class ApplicationsGridControl extends Control
             $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
         }
 
-        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container): void {
             $container->addMultiSelect(
                 'subevents',
                 '',
@@ -181,7 +181,7 @@ class ApplicationsGridControl extends Control
             $maturityDateDate = new DateControl('');
             $container->addComponent($maturityDateDate, 'maturityDate');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Application $item) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Application $item): void {
             $container->setDefaults([
                 'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
                 'paymentMethod' => $item->getPaymentMethod(),
@@ -223,7 +223,7 @@ class ApplicationsGridControl extends Control
             return $item->isCanceled() ? 0 : $item->getFee();
         });
 
-        $grid->setRowCallback(static function (Application $application, Html $tr) : void {
+        $grid->setRowCallback(static function (Application $application, Html $tr): void {
             if ($application->isCanceled()) {
                 $tr->addClass('disabled');
             }
@@ -236,7 +236,7 @@ class ApplicationsGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function add(stdClass $values) : void
+    public function add(stdClass $values): void
     {
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values->subevents);
 
@@ -266,7 +266,7 @@ class ApplicationsGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function edit(string $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values): void
     {
         $application = $this->applicationRepository->findById((int) $id);
 
@@ -298,7 +298,7 @@ class ApplicationsGridControl extends Control
 
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
-        $this->em->transactional(function () use ($application, $selectedSubevents, $values, $loggedUser) : void {
+        $this->em->transactional(function () use ($application, $selectedSubevents, $values, $loggedUser): void {
             if ($application instanceof SubeventsApplication) {
                 $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $loggedUser);
             }
@@ -321,7 +321,7 @@ class ApplicationsGridControl extends Control
      *
      * @throws Throwable
      */
-    public function handleGeneratePaymentProofCash(int $id) : void
+    public function handleGeneratePaymentProofCash(int $id): void
     {
         $this->presenter->redirect(':Export:IncomeProof:application', ['id' => $id]);
     }
@@ -331,7 +331,7 @@ class ApplicationsGridControl extends Control
      *
      * @throws Throwable
      */
-    public function handleGeneratePaymentProofBank(int $id) : void
+    public function handleGeneratePaymentProofBank(int $id): void
     {
         $this->presenter->redirect(':Export:IncomeProof:application', ['id' => $id]);
     }
@@ -342,7 +342,7 @@ class ApplicationsGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleCancelApplication(int $id) : void
+    public function handleCancelApplication(int $id): void
     {
         $application = $this->applicationRepository->findById($id);
 
@@ -360,7 +360,7 @@ class ApplicationsGridControl extends Control
      *
      * @return string[]
      */
-    private function preparePaymentMethodOptions() : array
+    private function preparePaymentMethodOptions(): array
     {
         $options     = [];
         $options[''] = '';

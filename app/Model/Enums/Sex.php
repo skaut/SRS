@@ -27,7 +27,7 @@ class Sex
      *
      * @return string[]
      */
-    public static function getSexOptions() : array
+    public static function getSexOptions(): array
     {
         $options = [];
         foreach (self::$sex as $s) {

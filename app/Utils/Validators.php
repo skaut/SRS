@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
-use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Application\Application;
 use App\Model\Program\Block;
-use App\Model\Program\ProgramRepository;
+use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use App\Model\Structure\Subevent;
-use App\Model\User\Application\Application;
 use App\Model\User\User;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Doctrine\Common\Collections\Collection;
 use Throwable;
+
 use function array_map;
 use function explode;
 use function trim;
@@ -32,12 +32,12 @@ class Validators
 
     private ProgramRepository $programRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     public function __construct(
         RoleRepository $roleRepository,
         ProgramRepository $programRepository,
-        SettingsService $settingsService
+        ISettingsService $settingsService
     ) {
         $this->roleRepository    = $roleRepository;
         $this->programRepository = $programRepository;
@@ -47,9 +47,9 @@ class Validators
     /**
      * Ověří, že není vybrána role "Neregistrovaný".
      *
-     * @param Collection|Role[] $selectedRoles
+     * @param Collection<Role> $selectedRoles
      */
-    public function validateRolesNonregistered(Collection $selectedRoles, User $user) : bool
+    public function validateRolesNonregistered(Collection $selectedRoles, User $user): bool
     {
         $nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
 
@@ -63,9 +63,9 @@ class Validators
     /**
      * Ověří kapacitu rolí.
      *
-     * @param Collection|Role[] $selectedRoles
+     * @param Collection<Role> $selectedRoles
      */
-    public function validateRolesCapacities(Collection $selectedRoles, User $user) : bool
+    public function validateRolesCapacities(Collection $selectedRoles, User $user): bool
     {
         foreach ($selectedRoles as $role) {
             if ($role->hasLimitedCapacity() && ! $user->isInRole($role) && $role->countUnoccupied() < 1) {
@@ -79,9 +79,9 @@ class Validators
     /**
      * Ověří kompatibilitu rolí.
      *
-     * @param Collection|Role[] $selectedRoles
+     * @param Collection<Role> $selectedRoles
      */
-    public function validateRolesIncompatible(Collection $selectedRoles, Role $testRole) : bool
+    public function validateRolesIncompatible(Collection $selectedRoles, Role $testRole): bool
     {
         if (! $selectedRoles->contains($testRole)) {
             return true;
@@ -99,9 +99,9 @@ class Validators
     /**
      * Ověří výběr vyžadovaných rolí.
      *
-     * @param Collection|Role[] $selectedRoles
+     * @param Collection<Role> $selectedRoles
      */
-    public function validateRolesRequired(Collection $selectedRoles, Role $testRole) : bool
+    public function validateRolesRequired(Collection $selectedRoles, Role $testRole): bool
     {
         if (! $selectedRoles->contains($testRole)) {
             return true;
@@ -119,9 +119,9 @@ class Validators
     /**
      * Ověří registrovatelnost rolí.
      *
-     * @param Collection|Role[] $selectedRoles
+     * @param Collection<Role> $selectedRoles
      */
-    public function validateRolesRegisterable(Collection $selectedRoles, User $user) : bool
+    public function validateRolesRegisterable(Collection $selectedRoles, User $user): bool
     {
         foreach ($selectedRoles as $role) {
             if (! $role->isRegisterableNow() && ! $user->isInRole($role)) {
@@ -135,12 +135,12 @@ class Validators
     /**
      * Ověří požadovaný minimální věk.
      *
-     * @param Collection|Role[] $selectedRoles
+     * @param Collection<Role> $selectedRoles
      *
      * @throws SettingsException
      * @throws Throwable
      */
-    public function validateRolesMinimumAge(Collection $selectedRoles, User $user) : bool
+    public function validateRolesMinimumAge(Collection $selectedRoles, User $user): bool
     {
         $age = $this->settingsService->getDateValue(Settings::SEMINAR_FROM_DATE)->diff($user->getBirthdate())->y;
 
@@ -156,9 +156,9 @@ class Validators
     /**
      * Ověří kapacitu podakcí.
      *
-     * @param Collection|Subevent[] $selectedSubevents
+     * @param Collection<Subevent> $selectedSubevents
      */
-    public function validateSubeventsCapacities(Collection $selectedSubevents, User $user) : bool
+    public function validateSubeventsCapacities(Collection $selectedSubevents, User $user): bool
     {
         foreach ($selectedSubevents as $subevent) {
             if ($subevent->hasLimitedCapacity() && ! $user->hasSubevent($subevent) && $subevent->countUnoccupied() < 1) {
@@ -172,9 +172,9 @@ class Validators
     /**
      * Ověří kompatibilitu podakcí.
      *
-     * @param Collection|Subevent[] $selectedSubevents
+     * @param Collection<Subevent> $selectedSubevents
      */
-    public function validateSubeventsIncompatible(Collection $selectedSubevents, Subevent $testSubevent) : bool
+    public function validateSubeventsIncompatible(Collection $selectedSubevents, Subevent $testSubevent): bool
     {
         if (! $selectedSubevents->contains($testSubevent)) {
             return true;
@@ -192,9 +192,9 @@ class Validators
     /**
      * Ověří výběr vyžadovaných podakcí.
      *
-     * @param Collection|Subevent[] $selectedSubevents
+     * @param Collection<Subevent> $selectedSubevents
      */
-    public function validateSubeventsRequired(Collection $selectedSubevents, Subevent $testSubevent) : bool
+    public function validateSubeventsRequired(Collection $selectedSubevents, Subevent $testSubevent): bool
     {
         if (! $selectedSubevents->contains($testSubevent)) {
             return true;
@@ -212,13 +212,13 @@ class Validators
     /**
      * Ověří, zda uživatel podakci již nemá.
      *
-     * @param Collection|Subevent[] $selectedSubevents
+     * @param Collection<Subevent> $selectedSubevents
      */
     public function validateSubeventsRegistered(
         Collection $selectedSubevents,
         User $user,
         ?Application $editedApplication = null
-    ) : bool {
+    ): bool {
         foreach ($selectedSubevents as $subevent) {
             foreach ($user->getNotCanceledSubeventsApplications() as $application) {
                 if ($application !== $editedApplication && $application->getSubevents()->contains($subevent)) {
@@ -233,24 +233,27 @@ class Validators
     /**
      * Ověří, zda může být program automaticky přihlašovaný.
      */
-    public function validateBlockAutoRegistered(Block $block) : bool
+    public function validateBlockAutoRegistered(Block $block, ?int $capacity): bool
     {
-        return $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED
-            || ($block->getProgramsCount() <= 1
-                && ($block->getProgramsCount() !== 1
-                    || ! $this->programRepository->hasOverlappingProgram(
-                        $block->getPrograms()->first()->getId(),
-                        $block->getPrograms()->first()->getStart(),
-                        $block->getPrograms()->first()->getEnd()
-                    )
-                )
-            );
+        if ($capacity !== null) {
+            return false;
+        }
+
+        if ($block->getProgramsCount() === 0) {
+            return true;
+        } elseif ($block->getProgramsCount() === 1) {
+            $program = $block->getPrograms()->first();
+
+            return ! $this->programRepository->hasOverlappingProgram($program->getId(), $program->getStart(), $program->getEnd());
+        }
+
+        return false;
     }
 
     /**
      * Ověří seznam e-mailů oddělených ','.
      */
-    public function validateEmails(string $emails) : bool
+    public function validateEmails(string $emails): bool
     {
         $emails = array_map(
             static function (string $o) {

@@ -94,7 +94,7 @@ class PagePresenter extends WebBasePresenter
      * @throws BadRequestException
      * @throws Throwable
      */
-    public function renderDefault(?string $slug) : void
+    public function renderDefault(?string $slug): void
     {
         if ($slug === null) {
             $page = $this->cmsService->findPublishedBySlugDto('/');
@@ -124,77 +124,77 @@ class PagePresenter extends WebBasePresenter
         $this->template->pageName = $page->getName();
     }
 
-    protected function createComponentApplicationContent() : ApplicationContentControl
+    protected function createComponentApplicationContent(): ApplicationContentControl
     {
         return $this->applicationContentControlFactory->create();
     }
 
-    protected function createComponentBlocksContent() : BlocksContentControl
+    protected function createComponentBlocksContent(): BlocksContentControl
     {
         return $this->blocksContentControlFactory->create();
     }
 
-    protected function createComponentCapacitiesContent() : CapacitiesContentControl
+    protected function createComponentCapacitiesContent(): CapacitiesContentControl
     {
         return $this->capacitiesContentControlFactory->create();
     }
 
-    protected function createComponentDocumentContent() : DocumentContentControl
+    protected function createComponentDocumentContent(): DocumentContentControl
     {
         return $this->documentContentControlFactory->create();
     }
 
-    protected function createComponentFaqContent() : FaqContentControl
+    protected function createComponentFaqContent(): FaqContentControl
     {
         return $this->faqContentControlFactory->create();
     }
 
-    protected function createComponentHtmlContent() : HtmlContentControl
+    protected function createComponentHtmlContent(): HtmlContentControl
     {
         return $this->htmlContentControlFactory->create();
     }
 
-    protected function createComponentImageContent() : ImageContentControl
+    protected function createComponentImageContent(): ImageContentControl
     {
         return $this->imageContentControlFactory->create();
     }
 
-    protected function createComponentNewsContent() : NewsContentControl
+    protected function createComponentNewsContent(): NewsContentControl
     {
         return $this->newsContentControlFactory->create();
     }
 
-    protected function createComponentPlaceContent() : PlaceContentControl
+    protected function createComponentPlaceContent(): PlaceContentControl
     {
         return $this->placeContentControlFactory->create();
     }
 
-    protected function createComponentProgramsContent() : ProgramsContentControl
+    protected function createComponentProgramsContent(): ProgramsContentControl
     {
         return $this->programsContentControlFactory->create();
     }
 
-    protected function createComponentTextContent() : TextContentControl
+    protected function createComponentTextContent(): TextContentControl
     {
         return $this->textContentControlFactory->create();
     }
 
-    protected function createComponentUsersContent() : UsersContentControl
+    protected function createComponentUsersContent(): UsersContentControl
     {
         return $this->usersContentControlFactory->create();
     }
 
-    protected function createComponentLectorsContent() : LectorsContentControl
+    protected function createComponentLectorsContent(): LectorsContentControl
     {
         return $this->lectorsContentControlFactory->create();
     }
 
-    protected function createComponentOrganizerContent() : OrganizerContentControl
+    protected function createComponentOrganizerContent(): OrganizerContentControl
     {
         return $this->organizerContentControlFactory->create();
     }
 
-    protected function createComponentContactFormContent() : ContactFormContentControl
+    protected function createComponentContactFormContent(): ContactFormContentControl
     {
         return $this->contactFormContentFactory->create();
     }

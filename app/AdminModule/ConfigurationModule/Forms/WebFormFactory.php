@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\Cms\PageRepository;
+use App\Model\Cms\Repositories\PageRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use App\Services\FilesService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
@@ -17,7 +17,9 @@ use Nette\Utils\Strings;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
+
 use function array_key_exists;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -34,14 +36,14 @@ class WebFormFactory
 
     private PageRepository $pageRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private FilesService $filesService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
         PageRepository $pageRepository,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         FilesService $filesService
     ) {
         $this->baseFormFactory = $baseFormFactory;
@@ -56,7 +58,7 @@ class WebFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -100,7 +102,7 @@ class WebFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         /** @var FileUpload $logo */
         $logo = $values->logo;

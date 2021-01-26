@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace App\ExportModule\Presenters;
 
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\UserRepository;
-use App\Services\SettingsService;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Queries\UserAttendsProgramsQuery;
+use App\Model\User\Repositories\UserRepository;
+use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Bridges\ApplicationLatte\Template;
 use Throwable;
+
 use function random_bytes;
 
 /**
@@ -27,13 +30,16 @@ class TicketPresenter extends ExportBasePresenter
     public PdfResponse $pdfResponse;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /** @inject */
     public SubeventRepository $subeventRepository;
 
     /** @inject */
     public UserRepository $userRepository;
+
+    /** @inject */
+    public QueryBus $queryBus;
 
     /**
      * Vygeneruje vstupenku v PDF.
@@ -42,11 +48,14 @@ class TicketPresenter extends ExportBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function actionPdf() : void
+    public function actionPdf(): void
     {
         if (! $this->user->isLoggedIn()) {
             throw new ForbiddenRequestException();
         }
+
+        $user         = $this->userRepository->findById($this->user->id);
+        $userPrograms = $this->queryBus->handle(new UserAttendsProgramsQuery($user));
 
         /** @var Template $template */
         $template = $this->createTemplate();
@@ -54,7 +63,8 @@ class TicketPresenter extends ExportBasePresenter
 
         $template->logo                    = $this->settingsService->getValue(Settings::LOGO);
         $template->seminarName             = $this->settingsService->getValue(Settings::SEMINAR_NAME);
-        $template->ticketUser              = $this->userRepository->findById($this->user->id);
+        $template->ticketUser              = $user;
+        $template->ticketUserPrograms      = $userPrograms;
         $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         $this->pdfResponse->setTemplate($template);

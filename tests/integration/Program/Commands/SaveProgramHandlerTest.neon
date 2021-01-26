@@ -1,0 +1,31 @@
+services:
+    - App\Model\Program\Repositories\BlockRepository
+    - App\Model\Structure\Repositories\SubeventRepository
+    - App\Model\User\Repositories\UserRepository
+    - App\Model\Acl\Repositories\RoleRepository
+    - App\Model\Program\Repositories\ProgramRepository
+    - App\Model\Program\Repositories\ProgramApplicationRepository
+    - App\Model\Application\Repositories\ApplicationRepository
+    - class: App\Model\Program\Commands\Handlers\SaveProgramHandler
+      tags:
+        messenger.messageHandler:
+        bus: commandBus
+    - class: App\Model\User\Commands\Handlers\RegisterProgramHandler
+      tags:
+        messenger.messageHandler:
+        bus: commandBus
+    - class: App\Model\User\Queries\Handlers\UserAllowedProgramsQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+    - class: App\Model\Program\Events\Subscribers\ProgramCreatedEventListener
+      tags:
+        messenger.messageHandler:
+        bus: eventBus
+    - class: App\Model\User\Events\Subscribers\ProgramRegisteredEventListener
+      tags:
+        messenger.messageHandler:
+        bus: eventBus
+    
+includes:
+- ../../config/common.neon

@@ -6,14 +6,15 @@ namespace App\AdminModule\PaymentsModule\Components;
 
 use App\Model\Enums\PaymentState;
 use App\Model\Payment\Payment;
-use App\Model\Payment\PaymentRepository;
+use App\Model\Payment\Repositories\PaymentRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\User\UserRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\BankService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\Utils\Helpers;
+use DateTimeImmutable;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -39,7 +40,7 @@ class PaymentsGridControl extends Control
 
     private UserRepository $userRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private ApplicationService $applicationService;
 
@@ -51,7 +52,7 @@ class PaymentsGridControl extends Control
         ITranslator $translator,
         PaymentRepository $paymentRepository,
         UserRepository $userRepository,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         ApplicationService $applicationService,
         BankService $bankService,
         Session $session
@@ -68,7 +69,7 @@ class PaymentsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/payments_grid.latte');
         $this->template->render();
@@ -81,7 +82,7 @@ class PaymentsGridControl extends Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function createComponentPaymentsGrid(string $name) : void
+    public function createComponentPaymentsGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -119,9 +120,10 @@ class PaymentsGridControl extends Control
             ->setFilterMultiSelect($this->preparePaymentStatesOptions())
             ->setTranslateOptions();
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = static function (Container $container) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = static function (Container $container): void {
             $dateDate = new DateControl('');
-            $dateDate->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
+            $dateDate->setDefaultValue(new DateTimeImmutable())
+                ->addRule(Form::FILLED, 'admin.payments.payments.date_empty');
             $container->addComponent($dateDate, 'date');
 
             $container->addInteger('amount', '')
@@ -164,7 +166,7 @@ class PaymentsGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function add(stdClass $values) : void
+    public function add(stdClass $values): void
     {
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
@@ -179,7 +181,7 @@ class PaymentsGridControl extends Control
      *
      * @throws Throwable
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $payment = $this->paymentRepository->findById($id);
 
@@ -196,7 +198,7 @@ class PaymentsGridControl extends Control
      *
      * @throws Throwable
      */
-    public function handleGeneratePaymentProofBank(int $id) : void
+    public function handleGeneratePaymentProofBank(int $id): void
     {
         $this->session->getSection('srs')->applicationIds = Helpers::getIds(
             $this->paymentRepository->findById($id)->getPairedApplications()
@@ -210,7 +212,7 @@ class PaymentsGridControl extends Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function handleCheckPayments() : void
+    public function handleCheckPayments(): void
     {
         $from = $this->settingsService->getDateValue(Settings::BANK_DOWNLOAD_FROM);
         $this->bankService->downloadTransactions($from);
@@ -221,7 +223,7 @@ class PaymentsGridControl extends Control
      *
      * @return string[]
      */
-    private function preparePaymentStatesOptions() : array
+    private function preparePaymentStatesOptions(): array
     {
         $options = [];
         foreach (PaymentState::$states as $state) {

@@ -6,18 +6,18 @@ namespace App\Services;
 
 use App\Mailing\SrsMail;
 use App\Mailing\SrsMailData;
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
 use App\Model\Mailing\Mail;
-use App\Model\Mailing\MailRepository;
 use App\Model\Mailing\Recipient;
-use App\Model\Mailing\TemplateRepository;
+use App\Model\Mailing\Repositories\MailRepository;
+use App\Model\Mailing\Repositories\TemplateRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
+use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
-use App\Model\Structure\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Nette;
@@ -25,6 +25,7 @@ use Nette\Localization\ITranslator;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Ublaboo\Mailing\MailFactory;
+
 use function in_array;
 use function str_replace;
 
@@ -33,13 +34,13 @@ use function str_replace;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class MailService
+class MailService implements IMailService
 {
     use Nette\SmartObject;
 
     private MailFactory $mailFactory;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private MailRepository $mailRepository;
 
@@ -55,7 +56,7 @@ class MailService
 
     public function __construct(
         MailFactory $mailFactory,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         MailRepository $mailRepository,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
@@ -76,16 +77,16 @@ class MailService
     /**
      * Rozešle e-mail.
      *
-     * @param Collection|Role[]|null     $recipientsRoles
-     * @param Collection|Subevent[]|null $recipientsSubevents
-     * @param Collection|User[]|null     $recipientsUsers
-     * @param Collection|string[]|null   $recipientEmails
+     * @param Collection<Role>|null     $recipientsRoles
+     * @param Collection<Subevent>|null $recipientsSubevents
+     * @param Collection<User>|null     $recipientsUsers
+     * @param Collection<string>|null   $recipientEmails
      *
      * @throws SettingsException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function sendMail(?Collection $recipientsRoles, ?Collection $recipientsSubevents, ?Collection $recipientsUsers, ?Collection $recipientEmails, string $subject, string $text, bool $automatic = false) : void
+    public function sendMail(?Collection $recipientsRoles, ?Collection $recipientsSubevents, ?Collection $recipientsUsers, ?Collection $recipientEmails, string $subject, string $text, bool $automatic = false): void
     {
         $recipients = [];
 
@@ -155,15 +156,15 @@ class MailService
     /**
      * Rozešle e-mail podle šablony.
      *
-     * @param Collection|User[]|null   $recipientsUsers
-     * @param Collection|string[]|null $recipientsEmails
-     * @param string[]                 $parameters
+     * @param Collection<User>|null   $recipientsUsers
+     * @param Collection<string>|null $recipientsEmails
+     * @param string[]                $parameters
      *
      * @throws MailingMailCreationException
      * @throws SettingsException
      * @throws Throwable
      */
-    public function sendMailFromTemplate(?Collection $recipientsUsers, ?Collection $recipientsEmails, string $type, array $parameters) : void
+    public function sendMailFromTemplate(?Collection $recipientsUsers, ?Collection $recipientsEmails, string $type, array $parameters): void
     {
         $template = $this->templateRepository->findByType($type);
 

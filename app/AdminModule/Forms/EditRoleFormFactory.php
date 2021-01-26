@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace App\AdminModule\Forms;
 
 use App\Model\Acl\Permission;
-use App\Model\Acl\PermissionRepository;
+use App\Model\Acl\Repositories\PermissionRepository;
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
 use App\Model\Acl\SrsResource;
-use App\Model\Cms\PageRepository;
+use App\Model\Cms\Repositories\PageRepository;
 use App\Services\AclService;
-use App\Services\ProgramService;
 use Doctrine\DBAL\ConnectionException;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Forms\Controls\SelectBox;
-use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
+
 use function array_key_exists;
 use function in_array;
 
@@ -44,7 +44,7 @@ class EditRoleFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private AclService $aclService;
 
@@ -54,16 +54,13 @@ class EditRoleFormFactory
 
     private PermissionRepository $permissionRepository;
 
-    private ProgramService $programService;
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         AclService $aclService,
         RoleRepository $roleRepository,
         PageRepository $pageRepository,
-        PermissionRepository $permissionRepository,
-        ProgramService $programService
+        PermissionRepository $permissionRepository
     ) {
         $this->baseFormFactory      = $baseFormFactory;
         $this->em                   = $em;
@@ -71,7 +68,6 @@ class EditRoleFormFactory
         $this->roleRepository       = $roleRepository;
         $this->pageRepository       = $pageRepository;
         $this->permissionRepository = $permissionRepository;
-        $this->programService       = $programService;
     }
 
     /**
@@ -80,7 +76,7 @@ class EditRoleFormFactory
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->role = $this->roleRepository->findById($id);
 
@@ -210,13 +206,13 @@ class EditRoleFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;
         }
 
-        $this->em->transactional(function () use ($values) : void {
+        $this->em->transactional(function () use ($values): void {
             $capacity = $values->capacity !== '' ? $values->capacity : null;
 
             $this->role->setName($values->name);
@@ -240,8 +236,6 @@ class EditRoleFormFactory
             }
 
             $this->aclService->saveRole($this->role);
-
-            $this->programService->updateUsersPrograms($this->role->getUsers());
         });
     }
 
@@ -253,29 +247,23 @@ class EditRoleFormFactory
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    private function preparePermissionsOptions() : array
+    private function preparePermissionsOptions(): array
     {
         $options = [];
 
-        $groupWebName    = 'common.permission_group.web';
-        $optionsGroupWeb = &$options[$groupWebName];
-        $this->preparePermissionOption($optionsGroupWeb, Permission::CHOOSE_PROGRAMS, SrsResource::PROGRAM);
-
-        $groupAdminName    = 'common.permission_group.admin';
-        $optionsGroupAdmin = &$options[$groupAdminName];
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::ACCESS, SrsResource::ADMIN);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::CMS);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::ACCESS, SrsResource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_OWN_PROGRAMS, SrsResource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_ALL_PROGRAMS, SrsResource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_SCHEDULE, SrsResource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_CATEGORIES, SrsResource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE_ROOMS, SrsResource::PROGRAM);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::USERS);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::PAYMENTS);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::ACL);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::MAILING);
-        $this->preparePermissionOption($optionsGroupAdmin, Permission::MANAGE, SrsResource::CONFIGURATION);
+        $this->preparePermissionOption($options, Permission::ACCESS, SrsResource::ADMIN);
+        $this->preparePermissionOption($options, Permission::MANAGE, SrsResource::CMS);
+        $this->preparePermissionOption($options, Permission::ACCESS, SrsResource::PROGRAM);
+        $this->preparePermissionOption($options, Permission::MANAGE_OWN_PROGRAMS, SrsResource::PROGRAM);
+        $this->preparePermissionOption($options, Permission::MANAGE_ALL_PROGRAMS, SrsResource::PROGRAM);
+        $this->preparePermissionOption($options, Permission::MANAGE_SCHEDULE, SrsResource::PROGRAM);
+        $this->preparePermissionOption($options, Permission::MANAGE_CATEGORIES, SrsResource::PROGRAM);
+        $this->preparePermissionOption($options, Permission::MANAGE_ROOMS, SrsResource::PROGRAM);
+        $this->preparePermissionOption($options, Permission::MANAGE, SrsResource::USERS);
+        $this->preparePermissionOption($options, Permission::MANAGE, SrsResource::PAYMENTS);
+        $this->preparePermissionOption($options, Permission::MANAGE, SrsResource::ACL);
+        $this->preparePermissionOption($options, Permission::MANAGE, SrsResource::MAILING);
+        $this->preparePermissionOption($options, Permission::MANAGE, SrsResource::CONFIGURATION);
 
         return $options;
     }
@@ -283,15 +271,15 @@ class EditRoleFormFactory
     /**
      * Připraví oprávnění jako možnost pro select.
      *
-     * @param string[] $optionsGroup
+     * @param string[] $options
      *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    private function preparePermissionOption(?array &$optionsGroup, string $permissionName, string $resourceName) : void
+    private function preparePermissionOption(?array &$options, string $permissionName, string $resourceName): void
     {
-        $permission                         = $this->permissionRepository->findByPermissionAndResourceName($permissionName, $resourceName);
-        $optionsGroup[$permission->getId()] = 'common.permission_name.' . $permissionName . '.' . $resourceName;
+        $permission                    = $this->permissionRepository->findByPermissionAndResourceName($permissionName, $resourceName);
+        $options[$permission->getId()] = 'common.permission_name.' . $permissionName . '.' . $resourceName;
     }
 
     /**
@@ -301,7 +289,7 @@ class EditRoleFormFactory
      *
      * @throws ConnectionException
      */
-    public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args) : bool
+    public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args): bool
     {
         $incompatibleRoles = $this->roleRepository->findRolesByIds($args[0]);
         $requiredRoles     = $this->roleRepository->findRolesByIds($args[1]);
@@ -336,7 +324,7 @@ class EditRoleFormFactory
      *
      * @param string[][] $args
      */
-    public function validateRedirectAllowed(SelectBox $field, array $args) : bool
+    public function validateRedirectAllowed(SelectBox $field, array $args): bool
     {
         return in_array($field->getValue(), $args[0]);
     }

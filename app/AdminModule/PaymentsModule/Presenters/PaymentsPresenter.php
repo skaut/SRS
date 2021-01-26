@@ -24,11 +24,11 @@ class PaymentsPresenter extends PaymentsBasePresenter
     /** @inject */
     public EditPaymentFormFactory $editPaymentFormFactory;
 
-    public function renderEdit(int $id) : void
+    public function renderEdit(int $id): void
     {
     }
 
-    protected function createComponentPaymentsGrid() : PaymentsGridControl
+    protected function createComponentPaymentsGrid(): PaymentsGridControl
     {
         return $this->paymentsGridControlFactory->create();
     }
@@ -36,11 +36,11 @@ class PaymentsPresenter extends PaymentsBasePresenter
     /**
      * @throws Throwable
      */
-    protected function createComponentEditPaymentForm() : Form
+    protected function createComponentEditPaymentForm(): Form
     {
         $form = $this->editPaymentFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.payments.payments.saved', 'success');
             }

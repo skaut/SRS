@@ -6,12 +6,12 @@ namespace App\Presenters;
 
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
-use App\Services\MailService;
-use App\Services\SettingsService;
+use App\Services\IMailService;
+use App\Services\ISettingsService;
 use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Application\AbortException;
@@ -19,6 +19,7 @@ use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
+
 use function assert;
 use function strpos;
 
@@ -34,13 +35,13 @@ class AuthPresenter extends BasePresenter
     public SkautIsService $skautIsService;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /** @inject */
     public UserRepository $userRepository;
 
     /** @inject */
-    public MailService $mailService;
+    public IMailService $mailService;
 
     /**
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.
@@ -51,7 +52,7 @@ class AuthPresenter extends BasePresenter
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function actionLogin(string $backlink = '') : void
+    public function actionLogin(string $backlink = ''): void
     {
         if (empty($this->getHttpRequest()->getPost())) {
             $loginUrl = $this->skautIsService->getLoginUrl($backlink);
@@ -81,7 +82,7 @@ class AuthPresenter extends BasePresenter
      *
      * @throws AbortException
      */
-    public function actionLogout() : void
+    public function actionLogout(): void
     {
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
@@ -99,7 +100,7 @@ class AuthPresenter extends BasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    private function redirectAfterLogin(?string $returnUrl) : void
+    private function redirectAfterLogin(?string $returnUrl): void
     {
         if ($returnUrl) {
             if (strpos($returnUrl, ':') !== false) {
@@ -109,7 +110,7 @@ class AuthPresenter extends BasePresenter
             }
         }
 
-        //pokud neni navratova adresa, presmerovani podle role
+        // pokud neni navratova adresa, presmerovani podle role
         $user = $this->userRepository->findById($this->user->id);
 
         $redirectByRole    = null;
@@ -128,7 +129,7 @@ class AuthPresenter extends BasePresenter
             }
         }
 
-        //pokud nema role nastaveno presmerovani, nebo je uzivatel v rolich s ruznymi presmerovani, je presmerovan na vychozi stranku
+        // pokud nema role nastaveno presmerovani, nebo je uzivatel v rolich s ruznymi presmerovani, je presmerovan na vychozi stranku
         if ($redirectByRole && ! $multipleRedirects) {
             $slug = $redirectByRole;
         } else {

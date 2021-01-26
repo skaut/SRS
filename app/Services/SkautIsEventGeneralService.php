@@ -10,6 +10,7 @@ use Skautis\Wsdl\WsdlException;
 use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
+
 use function array_key_exists;
 
 /**
@@ -20,7 +21,7 @@ use function array_key_exists;
  */
 class SkautIsEventGeneralService extends SkautIsEventService
 {
-    public function isEventDraft(int $eventId) : bool
+    public function isEventDraft(int $eventId): bool
     {
         return $this->getEventDetail($eventId)->ID_EventGeneralState === 'draft';
     }
@@ -28,9 +29,9 @@ class SkautIsEventGeneralService extends SkautIsEventService
     /**
      * Vloží účastníky do skautIS.
      *
-     * @param Collection|User[] $users
+     * @param Collection<User> $users
      */
-    public function insertParticipants(int $eventId, Collection $users, bool $accept = false) : bool
+    public function insertParticipants(int $eventId, Collection $users, bool $accept = false): bool
     {
         try {
             $participants = [];
@@ -55,7 +56,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
         return true;
     }
 
-    protected function getEventDetail(int $eventId) : stdClass
+    protected function getEventDetail(int $eventId): stdClass
     {
         return $this->skautIs->event->EventGeneralDetail([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -66,7 +67,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
     /**
      * @return stdClass[]
      */
-    protected function getDraftEvents() : array
+    protected function getDraftEvents(): array
     {
         $events = $this->skautIs->event->EventGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -85,7 +86,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
      *
      * @return stdClass[]
      */
-    private function getAllParticipants(int $eventId) : array
+    private function getAllParticipants(int $eventId): array
     {
         $participants = $this->skautIs->event->ParticipantGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -102,7 +103,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
     /**
      * Přidá účastníka akce.
      */
-    private function insertParticipant(int $eventId, int $personId) : void
+    private function insertParticipant(int $eventId, int $personId): void
     {
         $this->skautIs->event->ParticipantGeneralInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),

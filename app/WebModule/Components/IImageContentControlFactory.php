@@ -12,5 +12,5 @@ namespace App\WebModule\Components;
  */
 interface IImageContentControlFactory
 {
-    public function create() : ImageContentControl;
+    public function create(): ImageContentControl;
 }

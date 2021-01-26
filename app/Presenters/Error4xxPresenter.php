@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Presenters;
 
 use Nette;
+
 use function is_file;
 
 final class Error4xxPresenter extends BasePresenter
@@ -12,7 +13,7 @@ final class Error4xxPresenter extends BasePresenter
     /**
      * @throws Nette\Application\BadRequestException
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
         if (! $this->getRequest()->isMethod(Nette\Application\Request::FORWARD)) {
@@ -20,7 +21,7 @@ final class Error4xxPresenter extends BasePresenter
         }
     }
 
-    public function renderDefault(Nette\Application\BadRequestException $exception) : void
+    public function renderDefault(Nette\Application\BadRequestException $exception): void
     {
         // load template 403.latte or 404.latte or ... 4xx.latte
         $file = __DIR__ . '/templates/Error/' . $exception->getCode() . '.latte';

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\Cms\Content\ContentDto;
-use App\Model\Settings\Place\PlacePointRepository;
+use App\Model\Cms\Dto\ContentDto;
+use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Repositories\PlacePointRepository;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Nette\Application\UI\Control;
 use Throwable;
 
@@ -19,11 +19,11 @@ use Throwable;
  */
 class PlaceContentControl extends Control
 {
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private PlacePointRepository $placePointRepository;
 
-    public function __construct(SettingsService $settingsService, PlacePointRepository $placePointRepository)
+    public function __construct(ISettingsService $settingsService, PlacePointRepository $placePointRepository)
     {
         $this->settingsService      = $settingsService;
         $this->placePointRepository = $placePointRepository;
@@ -33,7 +33,7 @@ class PlaceContentControl extends Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function render(ContentDto $content) : void
+    public function render(ContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/place_content.latte');

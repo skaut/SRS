@@ -15,26 +15,45 @@ use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
-use App\Model\Program\BlockRepository;
+use App\Model\Program\Commands\RemoveProgram;
+use App\Model\Program\Commands\SaveProgram;
+use App\Model\Program\Exceptions\ProgramCapacityOccupiedException;
+use App\Model\Program\Exceptions\UserAlreadyAttendsBlockException;
+use App\Model\Program\Exceptions\UserAlreadyAttendsProgramException;
+use App\Model\Program\Exceptions\UserAttendsConflictingProgramException;
+use App\Model\Program\Exceptions\UserNotAllowedProgramException;
+use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Program;
-use App\Model\Program\ProgramRepository;
+use App\Model\Program\Queries\ProgramAlternatesQuery;
+use App\Model\Program\Queries\ProgramAttendeesQuery;
+use App\Model\Program\Repositories\BlockRepository;
+use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
-use App\Model\Program\RoomRepository;
+use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
+use App\Model\User\Commands\RegisterProgram;
+use App\Model\User\Commands\UnregisterProgram;
+use App\Model\User\Queries\UserAllowedBlocksQuery;
+use App\Model\User\Queries\UserAllowedProgramsQuery;
+use App\Model\User\Queries\UserAttendsBlocksQuery;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
-use App\Services\ProgramService;
-use App\Services\SettingsService;
+use App\Services\CommandBus;
+use App\Services\ISettingsService;
+use App\Services\QueryBus;
+use App\Utils\Helpers;
 use DateInterval;
 use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;
 use Nette\Localization\ITranslator;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
-use function array_intersect;
-use function count;
+
 use function in_array;
+
 use const DATE_ISO8601;
 
 /**
@@ -58,9 +77,11 @@ class ScheduleService
 
     private RoomRepository $roomRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
-    private ProgramService $programService;
+    private CommandBus $commandBus;
+
+    private QueryBus $queryBus;
 
     public function __construct(
         ITranslator $translator,
@@ -68,8 +89,9 @@ class ScheduleService
         ProgramRepository $programRepository,
         BlockRepository $blockRepository,
         RoomRepository $roomRepository,
-        SettingsService $settingsService,
-        ProgramService $programService
+        ISettingsService $settingsService,
+        CommandBus $commandBus,
+        QueryBus $queryBus
     ) {
         $this->translator        = $translator;
         $this->userRepository    = $userRepository;
@@ -77,10 +99,11 @@ class ScheduleService
         $this->blockRepository   = $blockRepository;
         $this->roomRepository    = $roomRepository;
         $this->settingsService   = $settingsService;
-        $this->programService    = $programService;
+        $this->commandBus        = $commandBus;
+        $this->queryBus          = $queryBus;
     }
 
-    public function setUser(int $userId) : void
+    public function setUser(int $userId): void
     {
         $this->user = $this->userRepository->findById($userId);
     }
@@ -92,7 +115,7 @@ class ScheduleService
      *
      * @throws Exception
      */
-    public function getProgramsAdmin() : array
+    public function getProgramsAdmin(): array
     {
         $programs               = $this->programRepository->findAll();
         $programAdminDetailDtos = [];
@@ -111,27 +134,39 @@ class ScheduleService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getProgramsWeb() : array
+    public function getProgramsWeb(): array
     {
-        $programs = $this->programService->getUserAllowedPrograms($this->user);
+        $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+        $userAllowedPrograms              = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user, ! $registrationBeforePaymentAllowed));
+        $userAllowedProgramsWithNotPaid   = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user, false));
 
         /** @var ProgramDetailDto[] $programDetailDtos */
         $programDetailDtos = [];
-        foreach ($programs as $program) {
+        foreach ($userAllowedProgramsWithNotPaid as $program) {
+            $programAttendees  = $this->queryBus->handle(new ProgramAttendeesQuery($program));
+            $programAlternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));
+
             $programDetailDto = $this->convertProgramToProgramDetailDto($program);
-            $programDetailDto->setAttendeesCount($program->getAttendeesCount());
-            $programDetailDto->setUserAttends($program->isAttendee($this->user));
-            $programDetailDto->setBlocks($this->programRepository->findBlockedProgramsIdsByProgram($program));
+            $programDetailDto->setAttendeesCount($programAttendees->count());
+            $programDetailDto->setAlternatesCount($programAlternates->count());
+            $programDetailDto->setUserAttends($programAttendees->contains($this->user));
+            $programDetailDto->setUserAlternates($programAlternates->contains($this->user));
+            $programDetailDto->setSameBlockPrograms(Helpers::getIds($this->programRepository->findSameBlockPrograms($program)));
+            $programDetailDto->setOverlappingPrograms(Helpers::getIds($this->programRepository->findOverlappingPrograms($program)));
             $programDetailDto->setBlocked(false);
-            $programDetailDto->setPaid($this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)
-                || ($this->user->hasPaidSubevent($program->getBlock()->getSubevent()) && $this->user->hasPaidRolesApplication()));
+            $programDetailDto->setPaid($userAllowedPrograms->contains($program));
             $programDetailDtos[] = $programDetailDto;
         }
 
         foreach ($programDetailDtos as $p1) {
             foreach ($programDetailDtos as $p2) {
-                if ($p1->getId() !== $p2->getId() && $p1->isUserAttends() && in_array($p2->getId(), $p1->getBlocks())) {
-                    $p2->setBlocked(true);
+                if ($p1->getId() !== $p2->getId()) {
+                    if (
+                        (($p1->getUserAttends() || $p1->getUserAlternates()) && in_array($p2->getId(), $p1->getOverlappingPrograms()))
+                        || ($p1->getUserAttends() && in_array($p2->getId(), $p1->getSameBlockPrograms()))
+                    ) {
+                        $p2->setBlocked(true);
+                    }
                 }
             }
         }
@@ -144,7 +179,7 @@ class ScheduleService
      *
      * @return BlockDetailDto[]
      */
-    public function getBlocks() : array
+    public function getBlocks(): array
     {
         $blocks          = $this->blockRepository->findAll();
         $blockDetailDtos = [];
@@ -160,7 +195,7 @@ class ScheduleService
      *
      * @return RoomDetailDto[]
      */
-    public function getRooms() : array
+    public function getRooms(): array
     {
         $rooms          = $this->roomRepository->findAll();
         $roomDetailDtos = [];
@@ -177,7 +212,7 @@ class ScheduleService
      * @throws SettingsException
      * @throws Throwable
      */
-    public function getCalendarConfig() : CalendarConfigDto
+    public function getCalendarConfig(): CalendarConfigDto
     {
         $calendarConfigDto = new CalendarConfigDto();
 
@@ -189,7 +224,6 @@ class ScheduleService
         $calendarConfigDto->setAllowedModifySchedule($this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
             && $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE));
 
-        /** @var Program[] $programs */
         $programs = $this->programRepository->findAll();
         if (empty($programs)) {
             $minTime = 0;
@@ -229,7 +263,7 @@ class ScheduleService
      * @throws ORMException
      * @throws Throwable
      */
-    public function saveProgram(ProgramSaveDto $programSaveDto) : ResponseDto
+    public function saveProgram(ProgramSaveDto $programSaveDto): ResponseDto
     {
         $programId = $programSaveDto->getId();
         $block     = $this->blockRepository->findById($programSaveDto->getBlockId());
@@ -258,12 +292,12 @@ class ScheduleService
         } elseif ($this->programRepository->hasOverlappingAutoRegisteredProgram($programId, $start, $end)) {
             throw new ApiException($this->translator->translate('common.api.schedule.auto_registered_not_allowed'));
         } else {
-            if ($programId) {
-                $program = $this->programRepository->findById($programId);
-                $this->programService->updateProgram($program, $room, $start);
-            } else {
-                $program = $this->programService->createProgram($block, $room, $start);
-            }
+            $program = $programId === null ? new Program($block, $room, $start) : $this->programRepository->findById($programId);
+
+            $program->setRoom($room);
+            $program->setStart($start);
+
+            $this->commandBus->handle(new SaveProgram($program));
 
             $responseDto = new ResponseDto();
             $responseDto->setProgram($this->convertProgramToProgramDetailDto($program));
@@ -286,7 +320,7 @@ class ScheduleService
      * @throws ApiException
      * @throws Throwable
      */
-    public function removeProgram(int $programId) : ResponseDto
+    public function removeProgram(int $programId): ResponseDto
     {
         $program = $this->programRepository->findById($programId);
 
@@ -300,7 +334,7 @@ class ScheduleService
             $programDetailDto = new ProgramDetailDto();
             $programDetailDto->setId($program->getId());
 
-            $this->programService->removeProgram($program);
+            $this->commandBus->handle(new RemoveProgram($program));
 
             $responseDto = new ResponseDto();
             $responseDto->setProgram($programDetailDto);
@@ -317,47 +351,60 @@ class ScheduleService
      * @throws ApiException
      * @throws Throwable
      */
-    public function attendProgram(int $programId) : ResponseDto
+    public function attendProgram(int $programId): ResponseDto
     {
         $program = $this->programRepository->findById($programId);
 
-        if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS)) {
-            throw new ApiException($this->translator->translate('common.api.schedule.user_not_allowed_register_programs'));
-        } elseif (! $this->programService->isAllowedRegisterPrograms()) {
-            throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));
-        } elseif (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT) &&
-            ! $this->user->hasPaidSubevent($program->getBlock()->getSubevent())
-        ) {
-            throw new ApiException($this->translator->translate('common.api.schedule.register_programs_before_payment_not_allowed'));
-        } elseif (! $program) {
+        if (! $program) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_not_found'));
-        } elseif ($this->user->getPrograms()->contains($program)) {
-            throw new ApiException($this->translator->translate('common.api.schedule.program_already_registered'));
-        } elseif ($program->getCapacity() !== null && $program->getCapacity() <= $program->getAttendeesCount()) {
-            throw new ApiException($this->translator->translate('common.api.schedule.program_no_vacancies'));
-        } elseif (! $this->programService->getUserAllowedPrograms($this->user)->contains($program)) {
-            throw new ApiException($this->translator->translate('common.api.schedule.program_category_not_allowed'));
-        } elseif (count(
-            array_intersect(
-                $this->programRepository->findBlockedProgramsIdsByProgram($program),
-                $this->programRepository->findProgramsIds($this->user->getPrograms())
-            )
-        )) {
-            throw new ApiException($this->translator->translate('common.api.schedule.program_blocked'));
-        } else {
-            $this->programService->registerProgram($this->user, $program);
+        }
+
+        if (! $this->queryBus->handle(new IsAllowedRegisterProgramsQuery())) {
+            throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));
+        }
+
+        try {
+            $this->commandBus->handle(new RegisterProgram($this->user, $program, false));
 
             $responseDto = new ResponseDto();
             $responseDto->setMessage($this->translator->translate('common.api.schedule.program_registered'));
             $responseDto->setStatus('success');
 
+            $programAttendees  = $this->queryBus->handle(new ProgramAttendeesQuery($program));
+            $programAlternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));
+
             $programDetailDto = $this->convertProgramToProgramDetailDto($program);
-            $programDetailDto->setAttendeesCount($program->getAttendeesCount());
+            $programDetailDto->setAttendeesCount($programAttendees->count());
+            $programDetailDto->setAlternatesCount($programAlternates->count());
+            $programDetailDto->setUserAttends($programAttendees->contains($this->user));
+            $programDetailDto->setUserAlternates($programAlternates->contains($this->user));
 
             $responseDto->setProgram($programDetailDto);
-        }
 
-        return $responseDto;
+            return $responseDto;
+        } catch (HandlerFailedException $e) {
+            if ($e->getPrevious() instanceof UserNotAllowedProgramException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.program_not_allowed'));
+            }
+
+            if ($e->getPrevious() instanceof UserAlreadyAttendsProgramException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.program_already_registered'));
+            }
+
+            if ($e->getPrevious() instanceof UserAlreadyAttendsBlockException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.program_blocked'));
+            }
+
+            if ($e->getPrevious() instanceof ProgramCapacityOccupiedException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.program_no_vacancies'));
+            }
+
+            if ($e->getPrevious() instanceof UserAttendsConflictingProgramException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.program_blocked'));
+            }
+
+            throw $e;
+        }
     }
 
     /**
@@ -366,30 +413,44 @@ class ScheduleService
      * @throws ApiException
      * @throws Throwable
      */
-    public function unattendProgram(int $programId) : ResponseDto
+    public function unattendProgram(int $programId): ResponseDto
     {
         $program = $this->programRepository->findById($programId);
 
-        if (! $this->programService->isAllowedRegisterPrograms()) {
-            throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));
-        } elseif (! $program) {
+        if (! $program) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_not_found'));
-        } elseif (! $this->user->getPrograms()->contains($program)) {
-            throw new ApiException($this->translator->translate('common.api.schedule.program_not_registered'));
-        } else {
-            $this->programService->unregisterProgram($this->user, $program);
+        }
+
+        if (! $this->queryBus->handle(new IsAllowedRegisterProgramsQuery())) {
+            throw new ApiException($this->translator->translate('common.api.schedule.register_programs_not_allowed'));
+        }
+
+        try {
+            $this->commandBus->handle(new UnregisterProgram($this->user, $program, false));
 
             $responseDto = new ResponseDto();
             $responseDto->setMessage($this->translator->translate('common.api.schedule.program_unregistered'));
             $responseDto->setStatus('success');
 
+            $programAttendees  = $this->queryBus->handle(new ProgramAttendeesQuery($program));
+            $programAlternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));
+
             $programDetailDto = $this->convertProgramToProgramDetailDto($program);
-            $programDetailDto->setAttendeesCount($program->getAttendeesCount());
+            $programDetailDto->setAttendeesCount($programAttendees->count());
+            $programDetailDto->setAlternatesCount($programAlternates->count());
+            $programDetailDto->setUserAttends($programAttendees->contains($this->user));
+            $programDetailDto->setUserAlternates($programAlternates->contains($this->user));
 
             $responseDto->setProgram($programDetailDto);
-        }
 
-        return $responseDto;
+            return $responseDto;
+        } catch (HandlerFailedException $e) {
+            if ($e->getPrevious() instanceof UserNotAttendsProgramException) {
+                throw new ApiException($this->translator->translate('common.api.schedule.program_not_registered'));
+            }
+
+            throw $e;
+        }
     }
 
     /**
@@ -397,7 +458,7 @@ class ScheduleService
      *
      * @throws Exception
      */
-    private function convertProgramToProgramDetailDto(Program $program) : ProgramDetailDto
+    private function convertProgramToProgramDetailDto(Program $program): ProgramDetailDto
     {
         $programDetailDto = new ProgramDetailDto();
 
@@ -413,8 +474,12 @@ class ScheduleService
     /**
      * Převede Block na BlockDetailDto.
      */
-    private function convertBlockToBlockDetailDto(Block $block) : BlockDetailDto
+    private function convertBlockToBlockDetailDto(Block $block): BlockDetailDto
     {
+        $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+        $userBlocks                       = $this->queryBus->handle(new UserAttendsBlocksQuery($this->user));
+        $userAllowedBlocks                = $this->queryBus->handle(new UserAllowedBlocksQuery($this->user, ! $registrationBeforePaymentAllowed));
+
         $blockDetailDto = new BlockDetailDto();
 
         $blockDetailDto->setId($block->getId());
@@ -426,13 +491,14 @@ class ScheduleService
         $blockDetailDto->setLectorsNames($block->getLectorsText());
         $blockDetailDto->setDuration($block->getDuration());
         $blockDetailDto->setCapacity($block->getCapacity());
+        $blockDetailDto->setAlternatesAllowed($block->isAlternatesAllowed());
         $blockDetailDto->setMandatory($block->getMandatory() === ProgramMandatoryType::MANDATORY || $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED);
         $blockDetailDto->setAutoRegistered($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED);
         $blockDetailDto->setPerex($block->getPerex());
         $blockDetailDto->setDescription($block->getDescription());
         $blockDetailDto->setProgramsCount($block->getProgramsCount());
-        $blockDetailDto->setUserAttends($block->isAttendee($this->user));
-        $blockDetailDto->setUserAllowed($block->isAllowed($this->user));
+        $blockDetailDto->setUserAttends($userBlocks->contains($block));
+        $blockDetailDto->setUserAllowed($userAllowedBlocks->contains($block));
 
         return $blockDetailDto;
     }
@@ -440,7 +506,7 @@ class ScheduleService
     /**
      * Převede User na LectorDetailDto.
      */
-    private function convertUserToLectorDetailDto(User $lector) : LectorDetailDto
+    private function convertUserToLectorDetailDto(User $lector): LectorDetailDto
     {
         $lectorDetailDto = new LectorDetailDto();
 
@@ -455,7 +521,7 @@ class ScheduleService
     /**
      * Převede Room na RoomDetailDto.
      */
-    private function convertRoomToRoomDetailDto(Room $room) : RoomDetailDto
+    private function convertRoomToRoomDetailDto(Room $room): RoomDetailDto
     {
         $roomDetailDto = new RoomDetailDto();
 

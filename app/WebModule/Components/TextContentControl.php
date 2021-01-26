@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\Cms\Content\TextContentDto;
+use App\Model\Cms\Dto\TextContentDto;
 use Nette\Application\UI\Control;
 
 /**
@@ -15,7 +15,7 @@ use Nette\Application\UI\Control;
  */
 class TextContentControl extends Control
 {
-    public function render(TextContentDto $content) : void
+    public function render(TextContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/text_content.latte');

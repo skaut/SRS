@@ -8,8 +8,8 @@ use App\AdminModule\ConfigurationModule\Components\CustomInputsGridControl;
 use App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Forms\ApplicationFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\CustomInputFormFactory;
-use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\SettingsException;
+use App\Model\CustomInput\Repositories\CustomInputRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
@@ -33,12 +33,12 @@ class ApplicationPresenter extends ConfigurationBasePresenter
     /** @inject */
     public CustomInputFormFactory $customInputFormFactory;
 
-    public function renderEdit(int $id) : void
+    public function renderEdit(int $id): void
     {
         $this->template->customInput = $this->customInputRepository->findById($id);
     }
 
-    protected function createComponentCustomInputsGrid() : CustomInputsGridControl
+    protected function createComponentCustomInputsGrid(): CustomInputsGridControl
     {
         return $this->customInputsGridControlFactory->create();
     }
@@ -47,11 +47,11 @@ class ApplicationPresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentApplicationForm() : Form
+    protected function createComponentApplicationForm(): Form
     {
         $form = $this->applicationFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
@@ -60,11 +60,11 @@ class ApplicationPresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentCustomInputForm() : Form
+    protected function createComponentCustomInputForm(): Form
     {
         $form = $this->customInputFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.configuration.custom_inputs_saved', 'success');
             }

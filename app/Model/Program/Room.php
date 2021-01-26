@@ -12,7 +12,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita místnost.
  *
- * @ORM\Entity(repositoryClass="RoomRepository")
+ * @ORM\Entity
  * @ORM\Table(name="room")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
@@ -41,7 +41,7 @@ class Room
      * @ORM\OneToMany(targetEntity="Program", mappedBy="room", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
      *
-     * @var Collection|Program[]
+     * @var Collection<Program>
      */
     protected Collection $programs;
 
@@ -50,36 +50,52 @@ class Room
         $this->programs = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getCapacity() : ?int
+    public function getCapacity(): ?int
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity) : void
+    public function setCapacity(?int $capacity): void
     {
         $this->capacity = $capacity;
     }
 
     /**
-     * @return Collection|Program[]
+     * @return Collection<Program>
      */
-    public function getPrograms() : Collection
+    public function getPrograms(): Collection
     {
         return $this->programs;
+    }
+
+    public function addProgram(Program $program): void
+    {
+        if (! $this->programs->contains($program)) {
+            $this->programs->add($program);
+            $program->setRoom($this);
+        }
+    }
+
+    public function removeProgram(Program $program): void
+    {
+        if ($this->programs->contains($program)) {
+            $this->programs->removeElement($program);
+            $program->setRoom(null);
+        }
     }
 }

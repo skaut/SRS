@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\FilesService;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -16,8 +16,10 @@ use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
+
 use function getimagesizefromstring;
 use function image_type_to_extension;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -52,7 +54,7 @@ class AddLectorFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -112,7 +114,7 @@ class AddLectorFormFactory
      * @throws ORMException
      * @throws Exception
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Model\Cms;
 
 use App\Model\Acl\Role;
-use App\Model\Cms\Content\Content;
+use App\Model\Cms\Dto\PageDto;
+use App\Model\Cms\Exceptions\PageException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
+
 use function array_map;
 use function implode;
 use function in_array;
@@ -18,7 +20,7 @@ use function in_array;
 /**
  * Entita stránky.
  *
- * @ORM\Entity(repositoryClass="PageRepository")
+ * @ORM\Entity
  * @ORM\Table(name="page")
  *
  * @author Michal Májský
@@ -61,17 +63,17 @@ class Page
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="pages", cascade={"persist"})
      *
-     * @var Collection|Role[]
+     * @var Collection<Role>
      */
     protected Collection $roles;
 
     /**
      * Obsahy na stránce.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\Cms\Content\Content", mappedBy="page", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Content", mappedBy="page", cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
      *
-     * @var Collection|Content[]
+     * @var Collection<Content>
      */
     protected Collection $contents;
 
@@ -83,60 +85,60 @@ class Page
         $this->contents = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getSlug() : string
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    public function setSlug(string $slug) : void
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
     }
 
-    public function getPosition() : int
+    public function getPosition(): int
     {
         return $this->position;
     }
 
-    public function setPosition(int $position) : void
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }
 
-    public function isPublic() : bool
+    public function isPublic(): bool
     {
         return $this->public;
     }
 
-    public function setPublic(bool $public) : void
+    public function setPublic(bool $public): void
     {
         $this->public = $public;
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
-    public function getRoles() : Collection
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
 
-    public function getRolesText() : string
+    public function getRolesText(): string
     {
         return implode(', ', $this->roles->map(static function (Role $role) {
             return $role->getName();
@@ -144,29 +146,43 @@ class Page
     }
 
     /**
-     * @param Collection|Role[] $roles
+     * @param Collection<Role> $roles
      */
-    public function setRoles(Collection $roles) : void
+    public function setRoles(Collection $roles): void
     {
-        $this->roles->clear();
+        foreach ($this->roles as $role) {
+            $this->removeRole($role);
+        }
+
         foreach ($roles as $role) {
-            $this->roles->add($role);
+            $this->addRole($role);
         }
     }
 
-    public function addRole(Role $role) : void
+    public function addRole(Role $role): void
     {
-        $this->roles->add($role);
+        if (! $this->roles->contains($role)) {
+            $this->roles->add($role);
+            $role->addPage($this);
+        }
+    }
+
+    public function removeRole(Role $role): void
+    {
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
+            $role->removePage($this);
+        }
     }
 
     /**
      * Vrací obsahy v oblasti.
      *
-     * @return Collection|Content[]
+     * @return Collection<Content>
      *
      * @throws PageException
      */
-    public function getContents(?string $area = null) : Collection
+    public function getContents(?string $area = null): Collection
     {
         if ($area === null) {
             return $this->contents;
@@ -183,10 +199,17 @@ class Page
         return $this->contents->matching($criteria);
     }
 
+    public function addContent(Content $content): void
+    {
+        if (! $this->contents->contains($content)) {
+            $this->contents->add($content);
+        }
+    }
+
     /**
      * @throws PageException
      */
-    public function convertToDto() : PageDto
+    public function convertToDto(): PageDto
     {
         $allowedRoles = array_map(static function (Role $role) {
             return $role->getName();

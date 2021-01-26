@@ -19,7 +19,7 @@ class SrsMail extends AbstractMail implements IComposableMail
     /**
      * @param SrsMailData|null $mailData
      */
-    public function compose(Message $message, ?IMessageData $mailData = null) : void
+    public function compose(Message $message, ?IMessageData $mailData = null): void
     {
         $message->setFrom($mailData->getFrom()->getEmail(), $mailData->getFrom()->getName());
 

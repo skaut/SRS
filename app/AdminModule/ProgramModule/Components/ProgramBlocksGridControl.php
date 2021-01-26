@@ -9,14 +9,16 @@ use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
-use App\Model\Program\BlockRepository;
-use App\Model\Program\CategoryRepository;
+use App\Model\Program\Commands\RemoveBlock;
+use App\Model\Program\Commands\SaveBlock;
+use App\Model\Program\Repositories\BlockRepository;
+use App\Model\Program\Repositories\CategoryRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\User\UserRepository;
+use App\Model\User\Repositories\UserRepository;
+use App\Services\CommandBus;
 use App\Services\ExcelExportService;
-use App\Services\ProgramService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\Services\SubeventService;
 use App\Utils\Validators;
 use Doctrine\ORM\QueryBuilder;
@@ -41,19 +43,19 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class ProgramBlocksGridControl extends Control
 {
+    private CommandBus $commandBus;
+
     private ITranslator $translator;
 
     private BlockRepository $blockRepository;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private UserRepository $userRepository;
 
     private CategoryRepository $categoryRepository;
 
     private ExcelExportService $excelExportService;
-
-    private ProgramService $programService;
 
     private Validators $validators;
 
@@ -64,24 +66,24 @@ class ProgramBlocksGridControl extends Control
     private SubeventService $subeventService;
 
     public function __construct(
+        CommandBus $commandBus,
         ITranslator $translator,
         BlockRepository $blockRepository,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
         ExcelExportService $excelExportService,
-        ProgramService $programService,
         Validators $validators,
         SubeventService $subeventService,
         Session $session
     ) {
+        $this->commandBus         = $commandBus;
         $this->translator         = $translator;
         $this->blockRepository    = $blockRepository;
         $this->settingsService    = $settingsService;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->excelExportService = $excelExportService;
-        $this->programService     = $programService;
         $this->validators         = $validators;
         $this->subeventService    = $subeventService;
 
@@ -92,7 +94,7 @@ class ProgramBlocksGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/program_blocks_grid.latte');
         $this->template->render();
@@ -106,7 +108,7 @@ class ProgramBlocksGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentProgramBlocksGrid(string $name) : void
+    public function createComponentProgramBlocksGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -135,7 +137,7 @@ class ProgramBlocksGridControl extends Control
 
         $grid->addColumnText('lectors', 'admin.program.blocks_lectors', 'lectorsText')
             ->setFilterMultiSelect($this->userRepository->getLectorsOptions())
-            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values) : void {
+            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
                 $qb->join('b.lectors', 'l')
                     ->andWhere('l.id IN (:lids)')
                     ->setParameter('lids', (array) $values);
@@ -181,7 +183,8 @@ class ProgramBlocksGridControl extends Control
                 return $row->getProgramsCount();
             });
 
-        if (($this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
+        if (
+            ($this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
                 $this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
             $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)
         ) {
@@ -213,7 +216,7 @@ class ProgramBlocksGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $block = $this->blockRepository->findById($id);
 
@@ -222,7 +225,7 @@ class ProgramBlocksGridControl extends Control
             $this->redirect('this');
         }
 
-        $this->programService->removeBlock($block);
+        $this->commandBus->handle(new RemoveBlock($block));
 
         $this->getPresenter()->flashMessage('admin.program.blocks_deleted', 'success');
 
@@ -234,7 +237,7 @@ class ProgramBlocksGridControl extends Control
      *
      * @throws AbortException
      */
-    public function changeMandatory(string $id, string $mandatory) : void
+    public function changeMandatory(string $id, string $mandatory): void
     {
         $block = $this->blockRepository->findById((int) $id);
 
@@ -242,11 +245,13 @@ class ProgramBlocksGridControl extends Control
 
         if (! $this->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks_change_mandatory_denied', 'danger');
-        } elseif ($mandatory  === ProgramMandatoryType::AUTO_REGISTERED && ! $this->validators->validateBlockAutoRegistered($block)) {
+        } elseif ($mandatory  === ProgramMandatoryType::AUTO_REGISTERED && ! $this->validators->validateBlockAutoRegistered($block, $block->getCapacity())) {
             $p->flashMessage('admin.program.blocks_change_mandatory_auto_registered_not_allowed', 'danger');
         } else {
             try {
-                $this->programService->updateBlockMandatory($block, $mandatory);
+                $blockOld = clone $block;
+                $block->setMandatory($mandatory);
+                $this->commandBus->handle(new SaveBlock($block, $blockOld));
                 $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');
             } catch (Throwable $ex) {
                 Debugger::log($ex, ILogger::WARNING);
@@ -271,10 +276,10 @@ class ProgramBlocksGridControl extends Control
      *
      * @throws AbortException
      */
-    public function groupExportBlocksAttendees(array $ids) : void
+    public function groupExportBlocksAttendees(array $ids): void
     {
         $this->sessionSection->blockIds = $ids;
-        $this->redirect('exportblocksattendees'); //presmerovani kvuli zruseni ajax
+        $this->redirect('exportblocksattendees'); // presmerovani kvuli zruseni ajax
     }
 
     /**
@@ -283,7 +288,7 @@ class ProgramBlocksGridControl extends Control
      * @throws AbortException
      * @throws Exception
      */
-    public function handleExportBlocksAttendees() : void
+    public function handleExportBlocksAttendees(): void
     {
         $ids = $this->session->getSection('srs')->blockIds;
 
@@ -297,7 +302,7 @@ class ProgramBlocksGridControl extends Control
     /**
      * Vrací true, pokud je uživatel oprávněn upravovat programový blok.
      */
-    public function isAllowedModifyBlock(Block $block) : bool
+    public function isAllowedModifyBlock(Block $block): bool
     {
         /** @var AdminBasePresenter $presenter */
         $presenter = $this->getPresenter();

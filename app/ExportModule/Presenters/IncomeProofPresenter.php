@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\ExportModule\Presenters;
 
+use App\Model\Application\Application;
+use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\User\Application\Application;
-use App\Model\User\Application\ApplicationRepository;
-use App\Model\User\UserRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,6 +23,7 @@ use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Bridges\ApplicationLatte\Template;
 use Throwable;
+
 use function random_bytes;
 
 /**
@@ -45,12 +46,12 @@ class IncomeProofPresenter extends ExportBasePresenter
     public UserRepository $userRepository;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /**
      * @throws ForbiddenRequestException
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
 
@@ -65,7 +66,7 @@ class IncomeProofPresenter extends ExportBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionApplication(int $id) : void
+    public function actionApplication(int $id): void
     {
         $applications = new ArrayCollection();
         $application  = $this->applicationRepository->findById($id);
@@ -83,7 +84,7 @@ class IncomeProofPresenter extends ExportBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionApplications() : void
+    public function actionApplications(): void
     {
         $ids          = $this->session->getSection('srs')->applicationIds;
         $applications = $this->applicationRepository->findApplicationsByIds($ids)->filter(static function (Application $application) {
@@ -99,7 +100,7 @@ class IncomeProofPresenter extends ExportBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function actionUsers() : void
+    public function actionUsers(): void
     {
         $ids          = $this->session->getSection('srs')->userIds;
         $users        = $this->userRepository->findUsersByIds($ids);
@@ -115,14 +116,14 @@ class IncomeProofPresenter extends ExportBasePresenter
     }
 
     /**
-     * @param Collection|Application[] $applications
+     * @param Collection<Application> $applications
      *
      * @throws AbortException
      * @throws SettingsException
      * @throws Throwable
      * @throws NonUniqueResultException
      */
-    private function generateIncomeProofs(Collection $applications) : void
+    private function generateIncomeProofs(Collection $applications): void
     {
         $createdBy           = $this->userRepository->findById($this->user->id);
         $updatedApplications = new ArrayCollection();

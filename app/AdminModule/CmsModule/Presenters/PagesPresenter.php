@@ -8,8 +8,8 @@ use App\AdminModule\CmsModule\Components\IPagesGridControlFactory;
 use App\AdminModule\CmsModule\Components\PagesGridControl;
 use App\AdminModule\CmsModule\Forms\IPageFormFactory;
 use App\AdminModule\CmsModule\Forms\PageForm;
-use App\Model\Cms\Content\Content;
-use App\Model\Cms\PageRepository;
+use App\Model\Cms\Content;
+use App\Model\Cms\Repositories\PageRepository;
 
 /**
  * Presenter starající se o správu stránek.
@@ -28,7 +28,7 @@ class PagesPresenter extends CmsBasePresenter
     /** @inject */
     public PageRepository $pagesRepository;
 
-    public function renderContent(int $id, string $area) : void
+    public function renderContent(int $id, string $area): void
     {
         $page = $this->pagesRepository->findById($id);
 
@@ -37,38 +37,38 @@ class PagesPresenter extends CmsBasePresenter
         $this->template->area = $area;
     }
 
-    protected function createComponentPagesGrid() : PagesGridControl
+    protected function createComponentPagesGrid(): PagesGridControl
     {
         return $this->pagesGridControlFactory->create();
     }
 
-    protected function createComponentPageForm() : PageForm
+    protected function createComponentPageForm(): PageForm
     {
         $id   = (int) $this->getParameter('id');
         $area = $this->getParameter('area');
 
         $control = $this->pageFormFactory->create($id, $area);
 
-        $control->onPageSave[] = function (PageForm $control, $submitName) : void {
+        $control->onPageSave[] = function (PageForm $control, $submitName): void {
             $this->flashMessage('admin.cms.pages_content_saved', 'success');
 
             switch ($submitName) {
                 case 'submitAndContinue':
                 case 'submitAdd':
                     $this->redirect('Pages:content', ['id' => $control->id, 'area' => $control->area]);
-                    //redirect
+                    // redirect
                 case 'submitMain':
                     $this->redirect('Pages:content', ['id' => $control->id, 'area' => Content::MAIN]);
-                    //redirect
+                    // redirect
                 case 'submitSidebar':
                     $this->redirect('Pages:content', ['id' => $control->id, 'area' => Content::SIDEBAR]);
-                    //redirect
+                    // redirect
                 default:
                     $this->redirect('Pages:default');
             }
         };
 
-        $control->onPageSaveError[] = function (PageForm $control) : void {
+        $control->onPageSaveError[] = function (PageForm $control): void {
             $this->flashMessage('admin.cms.pages_content_save_error', 'danger');
             $this->redirect('Pages:content', ['id' => $control->id, 'area' => $control->area]);
         };

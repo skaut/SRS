@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\Structure\SubeventRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\User;
 use Nette;
 use Nette\Localization\ITranslator;
@@ -34,7 +34,7 @@ class SubeventService
      *
      * @return string[]
      */
-    public function getSubeventsOptions() : array
+    public function getSubeventsOptions(): array
     {
         $subevents = $this->subeventRepository->createQueryBuilder('s')
             ->select('s.id, s.name')
@@ -55,7 +55,7 @@ class SubeventService
      *
      * @return string[]
      */
-    public function getSubeventsWithoutSubeventOptions(int $subeventId) : array
+    public function getSubeventsWithoutSubeventOptions(int $subeventId): array
     {
         $subevents = $this->subeventRepository->createQueryBuilder('s')
             ->select('s.id, s.name')
@@ -77,7 +77,7 @@ class SubeventService
      *
      * @return string[]
      */
-    public function getSubeventsOptionsWithCapacity(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null) : array
+    public function getSubeventsOptionsWithCapacity(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null): array
     {
         $subevents = $this->subeventRepository->findFilteredSubevents($explicitOnly, $registerableNowOnly, $notRegisteredOnly, $includeUsers, $user);
 
@@ -102,7 +102,7 @@ class SubeventService
      *
      * @return string[]
      */
-    public function getSubeventsOptionsWithUsersCount() : array
+    public function getSubeventsOptionsWithUsersCount(): array
     {
         $subevents = $this->subeventRepository->findFilteredSubevents(false, false, false, false);
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\CmsModule\Components;
 
-use App\Model\Cms\NewsRepository;
+use App\Model\Cms\Repositories\NewsRepository;
 use App\Utils\Helpers;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
@@ -34,7 +34,7 @@ class NewsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/news_grid.latte');
         $this->template->render();
@@ -46,7 +46,7 @@ class NewsGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentNewsGrid(string $name) : void
+    public function createComponentNewsGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTemplateFile(__DIR__ . '/templates/news_grid_template.latte');
@@ -92,7 +92,7 @@ class NewsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $news = $this->newsRepository->findById($id);
         $this->newsRepository->remove($news);
@@ -108,7 +108,7 @@ class NewsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function changePinned(string $id, string $pinned) : void
+    public function changePinned(string $id, string $pinned): void
     {
         $news = $this->newsRepository->findById((int) $id);
         $news->setPinned((bool) $pinned);

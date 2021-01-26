@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\ExportModule\Presenters;
 
-use App\Model\User\UserRepository;
+use App\Model\User\Queries\UserAttendsProgramsQuery;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\IcalResponse;
+use App\Services\QueryBus;
 use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event;
 use Eluceo\iCal\Property\Event\Organizer;
@@ -22,18 +24,21 @@ class SchedulePresenter extends ExportBasePresenter
     /** @inject */
     public UserRepository $userRepository;
 
+    /** @inject  */
+    public QueryBus $queryBus;
+
     /**
      * @throws AbortException
      * @throws Exception
      */
-    public function actionIcal(int $id) : void
+    public function actionIcal(int $id): void
     {
         $calendar = new Calendar('-//Junák - český skaut//SRS//CS');
 
-        $user     = $this->userRepository->findById($id);
-        $programs = $user->getPrograms();
+        $user         = $this->userRepository->findById($id);
+        $userPrograms = $this->queryBus->handle(new UserAttendsProgramsQuery($user));
 
-        foreach ($programs as $program) {
+        foreach ($userPrograms as $program) {
             $event = new Event();
             $event->setDtStart($program->getStart())
                 ->setDtEnd($program->getEnd())

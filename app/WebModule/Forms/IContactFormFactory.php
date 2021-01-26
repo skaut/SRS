@@ -14,5 +14,5 @@ interface IContactFormFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : ContactForm;
+    public function create(): ContactForm;
 }

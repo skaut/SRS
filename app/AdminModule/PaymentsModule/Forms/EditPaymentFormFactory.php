@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\AdminModule\PaymentsModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Payment\Payment;
-use App\Model\Payment\PaymentRepository;
-use App\Model\User\Application\ApplicationRepository;
-use App\Model\User\UserRepository;
+use App\Model\Payment\Repositories\PaymentRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use Nette;
 use Nette\Application\UI\Form;
@@ -57,7 +57,7 @@ class EditPaymentFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->payment = $this->paymentRepository->findById($id);
 
@@ -122,7 +122,7 @@ class EditPaymentFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() !== $form['cancel']) {
             $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);

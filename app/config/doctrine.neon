@@ -1,0 +1,36 @@
+extensions:
+    # Common
+    nettrine.annotations: Nettrine\Annotations\DI\AnnotationsExtension
+    nettrine.cache: Nettrine\Cache\DI\CacheExtension
+    nettrine.migrations: Nettrine\Migrations\DI\MigrationsExtension
+
+    # DBAL
+    nettrine.dbal: Nettrine\DBAL\DI\DbalExtension
+    nettrine.dbal.console: Nettrine\DBAL\DI\DbalConsoleExtension
+
+    # ORM
+    nettrine.orm: Nettrine\ORM\DI\OrmExtension
+    nettrine.orm.cache: Nettrine\ORM\DI\OrmCacheExtension
+    nettrine.orm.console: Nettrine\ORM\DI\OrmConsoleExtension(%consoleMode%)
+    nettrine.orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
+
+nettrine.dbal:
+    debug:
+        panel: %debugMode%
+    connection:
+        charset: utf8mb4
+        default_table_options:
+            charset: utf8mb4
+            collate: utf8mb4_unicode_ci
+
+nettrine.orm:
+    configuration:
+        customStringFunctions:
+            regexp: DoctrineExtensions\Query\Mysql\Regexp
+
+nettrine.orm.annotations:
+    mapping:
+       App\Model: %appDir%/Model
+
+nettrine.migrations:
+    directory: %appDir%/../migrations

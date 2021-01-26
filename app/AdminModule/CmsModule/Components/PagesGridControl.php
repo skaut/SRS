@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\AdminModule\CmsModule\Components;
 
-use App\Model\Acl\RoleRepository;
+use App\Model\Acl\Repositories\RoleRepository;
+use App\Model\Cms\Exceptions\PageException;
 use App\Model\Cms\Page;
-use App\Model\Cms\PageException;
-use App\Model\Cms\PageRepository;
+use App\Model\Cms\Repositories\PageRepository;
 use App\Services\AclService;
 use App\Services\CmsService;
 use Doctrine\ORM\NonUniqueResultException;
@@ -23,6 +23,7 @@ use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
+
 use function array_keys;
 use function count;
 
@@ -60,7 +61,7 @@ class PagesGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/pages_grid.latte');
         $this->template->render();
@@ -72,7 +73,7 @@ class PagesGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentPagesGrid(string $name) : void
+    public function createComponentPagesGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -107,7 +108,7 @@ class PagesGridControl extends Control
             true => 'admin.cms.pages_public_public',
         ];
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions, $publicOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions, $publicOptions): void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
 
@@ -124,7 +125,7 @@ class PagesGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($rolesOptions, $publicOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($rolesOptions, $publicOptions): void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.cms.pages_name_empty');
 
@@ -137,7 +138,7 @@ class PagesGridControl extends Control
 
             $container->addSelect('public', '', $publicOptions);
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Page $item) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Page $item): void {
             /** @var TextInput $slugText */
             $slugText = $container['slug'];
             $slugText->addRule(Form::IS_NOT_IN, 'admin.cms.pages_slug_exists', $this->pageRepository->findOthersSlugs($item->getId()));
@@ -176,7 +177,7 @@ class PagesGridControl extends Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(stdClass $values) : void
+    public function add(stdClass $values): void
     {
         $page = new Page($values->name, $values->slug);
 
@@ -199,7 +200,7 @@ class PagesGridControl extends Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function edit(string $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values): void
     {
         $page = $this->pageRepository->findById((int) $id);
 
@@ -224,7 +225,7 @@ class PagesGridControl extends Control
      * @throws OptimisticLockException
      * @throws PageException
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $page = $this->pageRepository->findById($id);
         $this->cmsService->removePage($page);
@@ -241,7 +242,7 @@ class PagesGridControl extends Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id) : void
+    public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id): void
     {
         $this->cmsService->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
@@ -266,7 +267,7 @@ class PagesGridControl extends Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function changeStatus(string $id, string $public) : void
+    public function changeStatus(string $id, string $public): void
     {
         $p = $this->getPresenter();
 

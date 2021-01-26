@@ -4,49 +4,51 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
+use App\Model\CustomInput\CustomCheckbox;
+use App\Model\CustomInput\CustomCheckboxValue;
+use App\Model\CustomInput\CustomDate;
+use App\Model\CustomInput\CustomDateTime;
+use App\Model\CustomInput\CustomDateTimeValue;
+use App\Model\CustomInput\CustomDateValue;
+use App\Model\CustomInput\CustomFile;
+use App\Model\CustomInput\CustomFileValue;
+use App\Model\CustomInput\CustomMultiSelect;
+use App\Model\CustomInput\CustomMultiSelectValue;
+use App\Model\CustomInput\CustomSelect;
+use App\Model\CustomInput\CustomSelectValue;
+use App\Model\CustomInput\CustomText;
+use App\Model\CustomInput\CustomTextValue;
+use App\Model\CustomInput\Repositories\CustomInputRepository;
+use App\Model\CustomInput\Repositories\CustomInputValueRepository;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\CustomInput\CustomCheckbox;
-use App\Model\Settings\CustomInput\CustomDate;
-use App\Model\Settings\CustomInput\CustomDateTime;
-use App\Model\Settings\CustomInput\CustomFile;
-use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\CustomInput\CustomMultiSelect;
-use App\Model\Settings\CustomInput\CustomSelect;
-use App\Model\Settings\CustomInput\CustomText;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\User\CustomInputValue\CustomCheckboxValue;
-use App\Model\User\CustomInputValue\CustomDateTimeValue;
-use App\Model\User\CustomInputValue\CustomDateValue;
-use App\Model\User\CustomInputValue\CustomFileValue;
-use App\Model\User\CustomInputValue\CustomInputValueRepository;
-use App\Model\User\CustomInputValue\CustomMultiSelectValue;
-use App\Model\User\CustomInputValue\CustomSelectValue;
-use App\Model\User\CustomInputValue\CustomTextValue;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
-use App\Services\MailService;
-use App\Services\SettingsService;
+use App\Services\IMailService;
+use App\Services\ISettingsService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
-use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
+
 use function array_key_exists;
 use function array_slice;
 use function array_values;
 use function assert;
 use function explode;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -72,7 +74,7 @@ class AdditionalInformationForm extends UI\Control
 
     private BaseFormFactory $baseFormFactory;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
 
@@ -84,20 +86,20 @@ class AdditionalInformationForm extends UI\Control
 
     private FilesService $filesService;
 
-    private MailService $mailService;
+    private IMailService $mailService;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         UserRepository $userRepository,
         CustomInputRepository $customInputRepository,
         ApplicationService $applicationService,
         CustomInputValueRepository $customInputValueRepository,
         FilesService $filesService,
-        MailService $mailService,
-        SettingsService $settingsService
+        IMailService $mailService,
+        ISettingsService $settingsService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
         $this->em                         = $em;
@@ -113,7 +115,7 @@ class AdditionalInformationForm extends UI\Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/additional_information_form.latte');
         $this->template->render();
@@ -125,7 +127,7 @@ class AdditionalInformationForm extends UI\Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function createComponentForm() : Form
+    public function createComponentForm(): Form
     {
         $this->user                = $this->userRepository->findById($this->presenter->user->getId());
         $isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
@@ -247,9 +249,9 @@ class AdditionalInformationForm extends UI\Control
      *
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
-        $this->em->transactional(function () use ($values) : void {
+        $this->em->transactional(function () use ($values): void {
             $customInputValueChanged = false;
 
             if ($this->applicationService->isAllowedEditCustomInputs()) {
@@ -261,27 +263,27 @@ class AdditionalInformationForm extends UI\Control
 
                     if ($customInput instanceof CustomText) {
                         /** @var CustomTextValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomTextValue();
+                        $customInputValue = $customInputValue ?: new CustomTextValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomCheckbox) {
                         /** @var CustomCheckboxValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomCheckboxValue();
+                        $customInputValue = $customInputValue ?: new CustomCheckboxValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomSelect) {
                         /** @var CustomSelectValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomSelectValue();
+                        $customInputValue = $customInputValue ?: new CustomSelectValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomMultiSelect) {
                         /** @var CustomMultiSelectValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomMultiSelectValue();
+                        $customInputValue = $customInputValue ?: new CustomMultiSelectValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomFile) {
                         /** @var CustomFileValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomFileValue();
+                        $customInputValue = $customInputValue ?: new CustomFileValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         /** @var FileUpload $newValue */
                         $newValue = $values->$customInputId;
@@ -292,18 +294,16 @@ class AdditionalInformationForm extends UI\Control
                         }
                     } elseif ($customInput instanceof CustomDate) {
                         /** @var CustomDateValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomDateValue();
+                        $customInputValue = $customInputValue ?: new CustomDateValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomDateTime) {
                         /** @var CustomDateTimeValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomDateTimeValue();
+                        $customInputValue = $customInputValue ?: new CustomDateTimeValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     }
 
-                    $customInputValue->setUser($this->user);
-                    $customInputValue->setInput($customInput);
                     $this->customInputValueRepository->save($customInputValue);
 
                     if ($oldValue !== $newValue) {
@@ -331,7 +331,7 @@ class AdditionalInformationForm extends UI\Control
     /**
      * Vygeneruje cestu souboru.
      */
-    private function generatePath(FileUpload $file) : string
+    private function generatePath(FileUpload $file): string
     {
         return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

@@ -12,5 +12,5 @@ namespace App\WebModule\Components;
  */
 interface IProgramsContentControlFactory
 {
-    public function create() : ProgramsContentControl;
+    public function create(): ProgramsContentControl;
 }

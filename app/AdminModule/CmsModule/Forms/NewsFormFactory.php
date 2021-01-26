@@ -6,7 +6,7 @@ namespace App\AdminModule\CmsModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\News;
-use App\Model\Cms\NewsRepository;
+use App\Model\Cms\Repositories\NewsRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\ORMException;
 use Nette;
@@ -42,7 +42,7 @@ class NewsFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(?int $id) : Form
+    public function create(?int $id): Form
     {
         $this->news = $this->newsRepository->findById($id);
 
@@ -92,7 +92,7 @@ class NewsFormFactory
      *
      * @throws ORMException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

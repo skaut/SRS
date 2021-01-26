@@ -14,5 +14,5 @@ interface IProgramAttendeesGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : ProgramAttendeesGridControl;
+    public function create(): ProgramAttendeesGridControl;
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use Doctrine\Common\Collections\Collection;
+
 use function array_map;
 use function mb_strlen;
 use function mb_strrpos;
@@ -24,7 +25,7 @@ class Helpers
     /**
      * Zkrátí $text na maximálně $length znaků včetně '…'.
      */
-    public static function truncate(string $text, int $length) : string
+    public static function truncate(string $text, int $length): string
     {
         if (mb_strlen($text, 'UTF-8') > $length) {
             $text = mb_substr($text, 0, $length, 'UTF-8');
@@ -43,11 +44,11 @@ class Helpers
     /**
      * Vrátí id prvků v kolekci.
      *
-     * @param Collection|object[] $collection
+     * @param Collection<object> $collection
      *
      * @return int[]
      */
-    public static function getIds(Collection $collection) : array
+    public static function getIds(Collection $collection): array
     {
         return array_map(static function ($o) {
             return $o->getId();

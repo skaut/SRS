@@ -8,6 +8,7 @@ import VueAxios from 'vue-axios'
 var COLOR_VOLUNTARY = '#0077F7';
 var COLOR_MANDATORY = '#D53343';
 var COLOR_ATTENDS = '#27A243';
+var COLOR_ALTERNATES = '#F7BB07';
 var COLOR_BLOCKED = '#6C757D';
 
 Vue.use(Vuex);
@@ -47,18 +48,27 @@ export default new Vuex.Store({
         setEventsMap(state, eventsMap) {
             state.eventsMap = eventsMap;
         },
-        setEventUserAttends(state, info) {
+        setEventAttendance(state, info) {
             const event = state.eventsMap[info.eventId];
             if (event) {
                 event.extendedProps.userAttends = info.userAttends;
+                event.extendedProps.userAlternates = info.userAlternates;
+                event.extendedProps.attendeesCount = info.attendeesCount;
+                event.extendedProps.alternatesCount = info.alternatesCount;
+                event.extendedProps.occupied = event.extendedProps.block.capacity !== null && event.extendedProps.block.capacity <= info.attendeesCount;
                 event.color = getColor(event);
             }
         },
-        setEventAttendeesCount(state, info) {
+        setEventUserAlternates(state, info) {
             const event = state.eventsMap[info.eventId];
             if (event) {
-                event.extendedProps.attendeesCount = info.attendeesCount;
-                event.extendedProps.occupied = event.extendedProps.block.capacity !== null && event.extendedProps.block.capacity <= info.attendeesCount;
+                if (event.extendedProps.userAlternates && !info.userAlternates) {
+                    event.extendedProps.alternatesCount--;
+                } else if (!event.extendedProps.userAlternates && info.userAlternates) {
+                    event.extendedProps.alternatesCount++;
+                }
+                event.extendedProps.userAlternates = info.userAlternates;
+                event.color = getColor(event);
             }
         },
         setEventBlocked(state, info) {
@@ -84,7 +94,7 @@ export default new Vuex.Store({
             state.notRegisteredMandatoryPrograms++;
         },
         decrementNotRegisteredMandatoryPrograms(state) {
-            state.notRegisteredMandatoryPrograms++;
+            state.notRegisteredMandatoryPrograms--;
         }
     },
     actions: {
@@ -118,6 +128,7 @@ export default new Vuex.Store({
                             lectors: block.lectors,
                             lectorsNames: block.lectors_names,
                             capacity: block.capacity,
+                            alternatesAllowed: block.alternates_allowed,
                             mandatory: block.mandatory,
                             autoRegistered: block.auto_registered,
                             userAllowed: block.user_allowed,
@@ -167,8 +178,11 @@ export default new Vuex.Store({
                             extendedProps: {
                                 block: block,
                                 attendeesCount: program.attendees_count,
+                                alternatesCount: program.alternates_count,
                                 userAttends: program.user_attends,
-                                blocks: program.blocks,
+                                userAlternates: program.user_alternates,
+                                sameBlockPrograms: program.same_block_programs,
+                                overlappingPrograms: program.overlapping_programs,
                                 blocked: program.blocked,
                                 paid: program.paid,
                                 occupied: block.capacity !== null && block.capacity <= program.attendees_count
@@ -203,15 +217,34 @@ export default new Vuex.Store({
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
 
-                    commit('setEventUserAttends', {eventId: info.event.id, userAttends: true});
-                    commit('setEventAttendeesCount', {eventId: info.event.id, attendeesCount: responseObject.program.attendees_count});
+                    const userAttends = responseObject.program.user_attends;
+                    const userAlternates = responseObject.program.user_alternates;
 
-                    info.event.extendedProps.blocks.forEach(function(eventId) {
-                        commit('setEventBlocked', {eventId: eventId, blocked: true});
-                    });
+                    commit('setEventAttendance', {
+                        eventId: info.event.id,
+                        userAttends: userAttends,
+                        userAlternates: userAlternates,
+                        attendeesCount: responseObject.program.attendees_count,
+                        alternatesCount: responseObject.program.alternates_count
+                    })
 
-                    if (info.event.extendedProps.block.mandatory) {
-                        commit('decrementNotRegisteredMandatoryPrograms');
+                    // pokud je ucastnik, zablokuje se ucast na programech stejneho bloku a odstrani nahradnik
+                    if (userAttends) {
+                        info.event.extendedProps.sameBlockPrograms.forEach(function (eventId) {
+                            commit('setEventUserAlternates', {eventId: eventId, userAlternates: false});
+                            commit('setEventBlocked', {eventId: eventId, blocked: true});
+                        });
+
+                        if (info.event.extendedProps.block.mandatory) {
+                            commit('decrementNotRegisteredMandatoryPrograms');
+                        }
+                    }
+
+                    // pokud je ucastnik nebo nahradni, zablokuje se ucast na programech ve stejnem case
+                    if (userAttends || userAlternates) {
+                        info.event.extendedProps.overlappingPrograms.forEach(function (eventId) {
+                            commit('setEventBlocked', {eventId: eventId, blocked: true});
+                        });
                     }
 
                     commit('setMessage', {type: responseObject.status, text: responseObject.message});
@@ -231,15 +264,30 @@ export default new Vuex.Store({
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
 
-                    commit('setEventUserAttends', {eventId: info.event.id, userAttends: false});
-                    commit('setEventAttendeesCount', {eventId: info.event.id, attendeesCount: responseObject.program.attendees_count});
+                    commit('setEventAttendance', {
+                        eventId: info.event.id,
+                        userAttends: responseObject.program.user_attends,
+                        userAlternates: responseObject.program.user_alternates,
+                        attendeesCount: responseObject.program.attendees_count,
+                        alternatesCount: responseObject.program.alternates_count
+                    })
 
+                    // nastaveni vsech programu jako neblokovanych
                     state.events.forEach(function(event) {
                         commit('setEventBlocked', {eventId: event.id, blocked: false});
                     });
+
+                    // projeti vsech udalosti a zablokovani blokovanych programu
                     state.events.forEach(function(event) {
                         if (event.extendedProps.userAttends) {
-                            event.extendedProps.blocks.forEach(function (eventId) {
+                            event.extendedProps.sameBlockPrograms.forEach(function (eventId) {
+                                if (event.id !== eventId) {
+                                    commit('setEventBlocked', {eventId: eventId, blocked: true});
+                                }
+                            });
+                        }
+                        if (event.extendedProps.userAttends || event.extendedProps.userAlternates) {
+                            event.extendedProps.overlappingPrograms.forEach(function (eventId) {
                                 if (event.id !== eventId) {
                                     commit('setEventBlocked', {eventId: eventId, blocked: true});
                                 }
@@ -273,7 +321,9 @@ function handleError(commit, error) {
 function getColor(event) {
     if (event.extendedProps.userAttends) {
         return COLOR_ATTENDS;
-    } else if (!userAllowedRegisterPrograms || event.extendedProps.occupied || event.extendedProps.blocked || !event.extendedProps.paid) {
+    } else if (event.extendedProps.userAlternates) {
+        return COLOR_ALTERNATES;
+    } else if (!registerProgramsAllowed || event.extendedProps.occupied || event.extendedProps.blocked || !event.extendedProps.paid) {
         return COLOR_BLOCKED;
     } else if (event.extendedProps.block.mandatory) {
         return COLOR_MANDATORY;

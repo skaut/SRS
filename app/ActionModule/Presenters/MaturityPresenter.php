@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\ActionModule\Presenters;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\User\UserRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\MailService;
-use App\Services\SettingsService;
+use App\Services\IMailService;
+use App\Services\ISettingsService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Nette\Application\Responses\TextResponse;
-use Nettrine\ORM\EntityManagerDecorator;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
@@ -32,7 +32,7 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
 class MaturityPresenter extends ActionBasePresenter
 {
     /** @inject */
-    public EntityManagerDecorator $em;
+    public EntityManagerInterface $em;
 
     /** @inject */
     public UserRepository $userRepository;
@@ -41,13 +41,13 @@ class MaturityPresenter extends ActionBasePresenter
     public RoleRepository $roleRepository;
 
     /** @inject */
-    public MailService $mailService;
+    public IMailService $mailService;
 
     /** @inject */
     public ApplicationService $applicationService;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /**
      * Zruší přihlášky po splatnosti.
@@ -55,7 +55,7 @@ class MaturityPresenter extends ActionBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function actionCancelApplications() : void
+    public function actionCancelApplications(): void
     {
         $cancelRegistration = $this->settingsService->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY);
         if ($cancelRegistration !== null) {
@@ -65,7 +65,7 @@ class MaturityPresenter extends ActionBasePresenter
         }
 
         foreach ($this->userRepository->findAllWithWaitingForPaymentApplication() as $user) {
-            $this->em->transactional(function () use ($user, $cancelRegistrationDate) : void {
+            $this->em->transactional(function () use ($user, $cancelRegistrationDate): void {
                 // odhlášení účastníků s nezaplacnou přihláškou rolí
                 foreach ($user->getWaitingForPaymentRolesApplications() as $application) {
                     $maturityDate = $application->getMaturityDate();
@@ -113,7 +113,7 @@ class MaturityPresenter extends ActionBasePresenter
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function actionSendReminders() : void
+    public function actionSendReminders(): void
     {
         $maturityReminder = $this->settingsService->getIntValue(Settings::MATURITY_REMINDER);
         if ($maturityReminder !== null) {

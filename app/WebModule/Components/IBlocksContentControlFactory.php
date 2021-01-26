@@ -11,5 +11,5 @@ namespace App\WebModule\Components;
  */
 interface IBlocksContentControlFactory
 {
-    public function create() : BlocksContentControl;
+    public function create(): BlocksContentControl;
 }

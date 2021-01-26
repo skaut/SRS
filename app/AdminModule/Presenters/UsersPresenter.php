@@ -14,12 +14,14 @@ use App\AdminModule\Forms\EditUserSeminarFormFactory;
 use App\Model\Acl\Permission;
 use App\Model\Acl\Role;
 use App\Model\Acl\SrsResource;
+use App\Model\CustomInput\CustomInput;
+use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Settings\CustomInput\CustomInput;
-use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
+use App\Services\QueryBus;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -59,10 +61,13 @@ class UsersPresenter extends AdminBasePresenter
     /** @inject */
     public ApplicationService $applicationService;
 
+    /** @inject */
+    public QueryBus $queryBus;
+
     /**
      * @throws AbortException
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
 
@@ -74,11 +79,12 @@ class UsersPresenter extends AdminBasePresenter
         $this->template->editPayment         = false;
     }
 
-    public function renderDetail(int $id) : void
+    public function renderDetail(int $id): void
     {
         $user = $this->userRepository->findById($id);
 
-        $this->template->detailUser = $user;
+        $this->template->detailUser         = $user;
+        $this->template->detailUserPrograms = $this->queryBus->handle(new UserAttendsProgramsQuery($user));
 
         $this->template->customInputs            = $this->customInputRepository->findByRolesOrderedByPosition($user->getRoles());
         $this->template->customInputTypeCheckbox = CustomInput::CHECKBOX;
@@ -96,7 +102,7 @@ class UsersPresenter extends AdminBasePresenter
     /**
      * Zpracuje fulltext vyhledávání v displayName uživatelů.
      */
-    public function handleSearch(?string $text) : void
+    public function handleSearch(?string $text): void
     {
         $this->template->results = $this->userRepository->findNamesByLikeDisplayNameOrderedByDisplayName($text);
         $this->redrawControl('results');
@@ -107,7 +113,7 @@ class UsersPresenter extends AdminBasePresenter
      *
      * @throws AbortException
      */
-    public function handleEditPersonalDetails() : void
+    public function handleEditPersonalDetails(): void
     {
         $this->template->editPersonalDetails = true;
 
@@ -123,7 +129,7 @@ class UsersPresenter extends AdminBasePresenter
      *
      * @throws AbortException
      */
-    public function handleEditSeminar() : void
+    public function handleEditSeminar(): void
     {
         $this->template->editSeminar = true;
 
@@ -139,7 +145,7 @@ class UsersPresenter extends AdminBasePresenter
      *
      * @throws AbortException
      */
-    public function handleEditPayment() : void
+    public function handleEditPayment(): void
     {
         $this->template->editPayment = true;
 
@@ -153,7 +159,7 @@ class UsersPresenter extends AdminBasePresenter
     /**
      * @throws Throwable
      */
-    public function handleCancelRegistration() : void
+    public function handleCancelRegistration(): void
     {
         $user       = $this->userRepository->findById((int) $this->getParameter('id'));
         $loggedUser = $this->userRepository->findById($this->user->id);
@@ -164,16 +170,16 @@ class UsersPresenter extends AdminBasePresenter
         $this->redirect('this');
     }
 
-    protected function createComponentUsersGrid() : UsersGridControl
+    protected function createComponentUsersGrid(): UsersGridControl
     {
         return $this->usersGridControlFactory->create();
     }
 
-    protected function createComponentAddLectorForm() : Form
+    protected function createComponentAddLectorForm(): Form
     {
         $form = $this->addLectorFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Users:default');
             } else {
@@ -185,11 +191,11 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentEditUserPersonalDetailsForm() : Form
+    protected function createComponentEditUserPersonalDetailsForm(): Form
     {
         $form = $this->editUserPersonalDetailsFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('this');
             } else {
@@ -201,11 +207,11 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentEditUserSeminarForm() : Form
+    protected function createComponentEditUserSeminarForm(): Form
     {
         $form = $this->editUserSeminarFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onError[] = function (Form $form) : void {
+        $form->onError[] = function (Form $form): void {
             foreach ($form->errors as $error) {
                 $this->flashMessage($error, 'danger');
             }
@@ -213,7 +219,7 @@ class UsersPresenter extends AdminBasePresenter
             $this->redirect('this');
         };
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.users.users_saved', 'success');
             }
@@ -224,7 +230,7 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    protected function createComponentApplicationsGrid() : ApplicationsGridControl
+    protected function createComponentApplicationsGrid(): ApplicationsGridControl
     {
         return $this->applicationsGridControlFactory->create();
     }

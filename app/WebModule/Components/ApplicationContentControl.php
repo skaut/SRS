@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
-use App\Model\Cms\Content\ContentDto;
-use App\Model\Settings\CustomInput\CustomInputRepository;
+use App\Model\Cms\Dto\ContentDto;
+use App\Model\CustomInput\Repositories\CustomInputRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\UserRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\Authenticator;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\WebModule\Forms\ApplicationFormFactory;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\UI\Control;
@@ -37,7 +37,7 @@ class ApplicationContentControl extends Control
 
     private Authenticator $authenticator;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private SubeventRepository $subeventRepository;
 
@@ -50,7 +50,7 @@ class ApplicationContentControl extends Control
         Authenticator $authenticator,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         SubeventRepository $subeventRepository,
         IApplicationsGridControlFactory $applicationsGridControlFactory,
         CustomInputRepository $customInputRepository
@@ -70,7 +70,7 @@ class ApplicationContentControl extends Control
      * @throws SettingsException
      * @throws Throwable
      */
-    public function render(?ContentDto $content = null) : void
+    public function render(?ContentDto $content = null): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/application_content.latte');
@@ -118,11 +118,11 @@ class ApplicationContentControl extends Control
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    protected function createComponentApplicationForm() : Form
+    protected function createComponentApplicationForm(): Form
     {
         $form = $this->applicationFormFactory->create($this->getPresenter()->user->id);
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->getPresenter()->flashMessage('web.application_content.register_successful', 'success');
 
             $this->authenticator->updateRoles($this->getPresenter()->user);
@@ -130,14 +130,14 @@ class ApplicationContentControl extends Control
             $this->getPresenter()->redirect('this');
         };
 
-        $this->applicationFormFactory->onSkautIsError[] = function () : void {
+        $this->applicationFormFactory->onSkautIsError[] = function (): void {
             $this->getPresenter()->flashMessage('web.application_content.register_synchronization_failed', 'danger');
         };
 
         return $form;
     }
 
-    protected function createComponentApplicationsGrid() : ApplicationsGridControl
+    protected function createComponentApplicationsGrid(): ApplicationsGridControl
     {
         return $this->applicationsGridControlFactory->create();
     }

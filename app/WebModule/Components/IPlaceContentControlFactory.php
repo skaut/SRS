@@ -12,5 +12,5 @@ namespace App\WebModule\Components;
  */
 interface IPlaceContentControlFactory
 {
-    public function create() : PlaceContentControl;
+    public function create(): PlaceContentControl;
 }

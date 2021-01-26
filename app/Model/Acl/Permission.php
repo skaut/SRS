@@ -12,7 +12,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita oprávnění.
  *
- * @ORM\Entity(repositoryClass="PermissionRepository")
+ * @ORM\Entity
  * @ORM\Table(name="permission")
  *
  * @author Michal Májský
@@ -55,11 +55,6 @@ class Permission
      */
     public const MANAGE_CATEGORIES = 'manage_categories';
 
-    /**
-     * Oprávnění přihlašovat se na programy.
-     */
-    public const CHOOSE_PROGRAMS = 'choose_programs';
-
     /** @var string[] */
     public static array $permissions = [
         self::MANAGE,
@@ -67,7 +62,6 @@ class Permission
         self::MANAGE_OWN_PROGRAMS,
         self::MANAGE_ALL_PROGRAMS,
         self::MANAGE_SCHEDULE,
-        self::CHOOSE_PROGRAMS,
     ];
     use Id;
 
@@ -81,9 +75,9 @@ class Permission
     /**
      * Role s tímto oprávněním.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", mappedBy="permissions", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Role", mappedBy="permissions", cascade={"persist"})
      *
-     * @var Collection|Role[]
+     * @var Collection<Role>
      */
     protected Collection $roles;
 
@@ -101,25 +95,41 @@ class Permission
         $this->roles    = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
-    public function getRoles() : Collection
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
 
-    public function getResource() : SrsResource
+    public function addRole(Role $role): void
+    {
+        if (! $this->roles->contains($role)) {
+            $this->roles->add($role);
+            $role->addPermission($this);
+        }
+    }
+
+    public function removeRole(Role $role): void
+    {
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
+            $role->removePermission($this);
+        }
+    }
+
+    public function getResource(): SrsResource
     {
         return $this->resource;
     }

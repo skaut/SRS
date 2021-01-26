@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Acl\Role;
+use App\Model\CustomInput\CustomCheckboxValue;
+use App\Model\CustomInput\CustomInput;
+use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Program\Block;
-use App\Model\Program\CategoryRepository;
-use App\Model\Program\ProgramRepository;
+use App\Model\Program\Queries\BlockAttendeesQuery;
+use App\Model\Program\Repositories\CategoryRepository;
+use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Room;
-use App\Model\Settings\CustomInput\CustomInput;
-use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\CustomInputValue\CustomCheckboxValue;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
 use Exception;
 use InvalidArgumentException;
 use Nette;
@@ -26,6 +27,7 @@ use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+
 use function implode;
 use function preg_replace;
 
@@ -52,13 +54,16 @@ class ExcelExportService
 
     private ProgramRepository $programRepository;
 
+    private QueryBus $queryBus;
+
     public function __construct(
         ITranslator $translator,
         CustomInputRepository $customInputRepository,
         UserService $userService,
         SubeventRepository $subeventRepository,
         CategoryRepository $categoryRepository,
-        ProgramRepository $programRepository
+        ProgramRepository $programRepository,
+        QueryBus $queryBus
     ) {
         $this->spreadsheet = new Spreadsheet();
 
@@ -68,17 +73,18 @@ class ExcelExportService
         $this->subeventRepository    = $subeventRepository;
         $this->categoryRepository    = $categoryRepository;
         $this->programRepository     = $programRepository;
+        $this->queryBus              = $queryBus;
     }
 
     /**
      * Vyexportuje matici uživatelů a rolí.
      *
-     * @param Collection|User[] $users
-     * @param Collection|Role[] $roles
+     * @param Collection<User> $users
+     * @param Collection<Role> $roles
      *
      * @throws Exception
      */
-    public function exportUsersRoles(Collection $users, Collection $roles, string $filename) : ExcelResponse
+    public function exportUsersRoles(Collection $users, Collection $roles, string $filename): ExcelResponse
     {
         $sheet = $this->spreadsheet->getSheet(0);
 
@@ -118,7 +124,7 @@ class ExcelExportService
      *
      * @throws Exception
      */
-    public function exportUserSchedule(User $user, string $filename) : ExcelResponse
+    public function exportUserSchedule(User $user, string $filename): ExcelResponse
     {
         return $this->exportUsersSchedules(new ArrayCollection([$user]), $filename);
     }
@@ -126,12 +132,12 @@ class ExcelExportService
     /**
      * Vyexportuje harmonogramy uživatelů, každý uživatel na zvlástním listu.
      *
-     * @param Collection|User[] $users
+     * @param Collection<User> $users
      *
      * @throws Exception
      * @throws Exception
      */
-    public function exportUsersSchedules(Collection $users, string $filename) : ExcelResponse
+    public function exportUsersSchedules(Collection $users, string $filename): ExcelResponse
     {
         $this->spreadsheet->removeSheetByIndex(0);
         $sheetNumber = 0;
@@ -168,7 +174,9 @@ class ExcelExportService
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth(25);
 
-            foreach ($user->getPrograms() as $program) {
+            $userPrograms = $this->queryBus->handle(new UserAttendsProgramsQuery($user));
+
+            foreach ($userPrograms as $program) {
                 $row++;
                 $column = 1;
 
@@ -188,7 +196,7 @@ class ExcelExportService
      *
      * @throws Exception
      */
-    public function exportRoomSchedule(Room $room, string $filename) : ExcelResponse
+    public function exportRoomSchedule(Room $room, string $filename): ExcelResponse
     {
         return $this->exportRoomsSchedules(new ArrayCollection([$room]), $filename);
     }
@@ -196,11 +204,11 @@ class ExcelExportService
     /**
      * Vyexportuje harmonogramy místností.
      *
-     * @param Collection|Room[] $rooms
+     * @param Collection<Room> $rooms
      *
      * @throws Exception
      */
-    public function exportRoomsSchedules(Collection $rooms, string $filename) : ExcelResponse
+    public function exportRoomsSchedules(Collection $rooms, string $filename): ExcelResponse
     {
         $this->spreadsheet->removeSheetByIndex(0);
         $sheetNumber = 0;
@@ -249,11 +257,11 @@ class ExcelExportService
     }
 
     /**
-     * @param Collection|User[] $users
+     * @param Collection<User> $users
      *
      * @throws Exception
      */
-    public function exportUsersList(Collection $users, string $filename) : ExcelResponse
+    public function exportUsersList(Collection $users, string $filename): ExcelResponse
     {
         $sheet = $this->spreadsheet->getSheet(0);
 
@@ -340,11 +348,6 @@ class ExcelExportService
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
 
-//        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.not_registared_mandatory_blocks'));
-//        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
-//        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-//        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
-
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
             $width = null;
 
@@ -424,8 +427,6 @@ class ExcelExportService
                 ? $this->translator->translate('common.export.common.yes')
                 : $this->translator->translate('common.export.common.no'));
 
-//            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getNotRegisteredMandatoryBlocksText());
-
             foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
                 $customInputValue = $user->getCustomInputValue($customInput);
 
@@ -453,11 +454,11 @@ class ExcelExportService
     }
 
     /**
-     * @param Collection|User[] $users
+     * @param Collection<User> $users
      *
      * @throws Exception
      */
-    public function exportUsersSubeventsAndCategories(Collection $users, string $filename) : ExcelResponse
+    public function exportUsersSubeventsAndCategories(Collection $users, string $filename): ExcelResponse
     {
         $sheet = $this->spreadsheet->getSheet(0);
 
@@ -525,7 +526,7 @@ class ExcelExportService
             foreach ($this->categoryRepository->findAll() as $category) {
                 $blocks = [];
                 $rooms  = [];
-                foreach ($this->programRepository->findUserRegisteredAndInCategory($user, $category) as $program) {
+                foreach ($this->programRepository->findUserAttendsAndCategory($user, $category) as $program) {
                     $blocks[] = $program->getBlock()->getName();
                     $rooms[]  = $program->getRoom() ? $program->getRoom()->getName() : '';
                 }
@@ -539,11 +540,11 @@ class ExcelExportService
     }
 
     /**
-     * @param Collection|Block[] $blocks
+     * @param Collection<Block> $blocks
      *
      * @throws Exception
      */
-    public function exportBlocksAttendees(Collection $blocks, string $filename) : ExcelResponse
+    public function exportBlocksAttendees(Collection $blocks, string $filename): ExcelResponse
     {
         $this->spreadsheet->removeSheetByIndex(0);
         $sheetNumber = 0;
@@ -570,9 +571,9 @@ class ExcelExportService
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth(40);
 
-            $criteria = Criteria::create()->orderBy(['displayName' => 'ASC']);
+            $attendees = $this->queryBus->handle(new BlockAttendeesQuery($block));
 
-            foreach ($block->getAttendees()->matching($criteria) as $attendee) {
+            foreach ($attendees as $attendee) {
                 $row++;
                 $column = 1;
 
@@ -589,7 +590,7 @@ class ExcelExportService
      * Odstraní z názvu listu zakázané znaky a zkrátí jej.
      * Excel podporuje 31 znaků, při duplicitních názvech doplní na poslední pozici číslo.
      */
-    private static function cleanSheetName(string $name) : string
+    private static function cleanSheetName(string $name): string
     {
         $name = preg_replace('#[]]#', ')', $name);
         $name = preg_replace('#[[]#', '(', $name);

@@ -8,6 +8,45 @@ application:
 session:
     expiration: 14 days
 
+search:
+    forms:
+        in: %appDir%
+        classes: App\**\Forms\*FormFactory
+
+    components:
+        in: %appDir%
+        classes: App\**\Components\*ControlFactory
+
+    services:
+        in: %appDir%/Services
+        classes:
+            - *Service
+
+    repositories:
+        in: %appDir%/Model
+        extends: App\Model\Infrastructure\Repositories\AbstractRepository
+
+    commands:
+        in: %appDir%/Model
+        classes: App\Model\*\Commands\Handlers\*Handler
+        tags:
+            messenger.messageHandler:
+                bus: commandBus
+
+    queries:
+        in: %appDir%/Model
+        classes: App\Model\*\Queries\Handlers\*Handler
+        tags:
+            messenger.messageHandler:
+                bus: queryBus
+
+    events:
+        in: %appDir%/Model
+        classes: App\Model\*\Events\Subscribers\*Listener
+        tags:
+            messenger.messageHandler:
+                bus: eventBus
+
 services:
     - App\Router\RouterFactory
     router: @App\Router\RouterFactory::createRouter
@@ -19,252 +58,40 @@ services:
             - $mpdfConfig([tempDir: %tempDir%/mpdf])
 
     - App\Services\Authorizator
-    - App\Services\AclService
-    - App\Services\ApplicationService
-    - App\Services\BankService
-    - App\Services\CmsService
     - App\Services\DatabaseService(%appDir%/..)
-    - App\Services\DiscountService
-    - App\Services\ExcelExportService
     - App\Services\FilesService(%wwwDir%/files)
-    - App\Services\MailService
-    - App\Services\ProgramService
-    - App\Services\SettingsService
-    - App\Services\SkautIsEventEducationService
-    - App\Services\SkautIsEventGeneralService
-    - App\Services\SkautIsService
-    - App\Services\SubeventService
-    - App\Services\UserService
 
-    - App\Commands\ClearCacheCommand(%appDir%/..)
+    - App\Services\CommandBus(@messenger.commandBus.bus)
+    - App\Services\QueryBus(@messenger.queryBus.bus)
+    - App\Services\EventBus(@messenger.eventBus.bus)
+
     - App\ApiModule\Services\ScheduleService
+    - App\Commands\ClearCacheCommand(%appDir%/..)
     - App\Utils\Validators
 
-    permissionRepository:
-        class: App\Model\Acl\PermissionRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\Permission)
-    resourceRepository:
-        class: App\Model\Acl\SrsResourceRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\SrsResource)
-    roleRepository:
-        class: App\Model\Acl\RoleRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Acl\Role)
-    contentRepository:
-        class: App\Model\Cms\Content\ContentRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Content\Content)
-    documentRepository:
-        class: App\Model\Cms\Document\DocumentRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Document\Document)
-    tagRepository:
-        class: App\Model\Cms\Document\TagRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Document\Tag)
-    faqRepository:
-        class: App\Model\Cms\FaqRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Faq)
-    newsRepository:
-        class: App\Model\Cms\NewsRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\News)
-    pageRepository:
-        class: App\Model\Cms\PageRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Cms\Page)
-    mailRepository:
-        class: App\Model\Mailing\MailRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Mail)
-    templateRepository:
-        class: App\Model\Mailing\TemplateRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Mailing\Template)
-    paymentRepository:
-        class: App\Model\Payment\PaymentRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Payment\Payment)
-    blockRepository:
-        class: App\Model\Program\BlockRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Block)
-    categoryRepository:
-        class: App\Model\Program\CategoryRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Category)
-    programRepository:
-        class: App\Model\Program\ProgramRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Program)
-    roomRepository:
-        class: App\Model\Program\RoomRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Program\Room)
-    customInputRepository:
-        class: App\Model\Settings\CustomInput\CustomInputRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\CustomInput\CustomInput)
-    placePointRepository:
-        class: App\Model\Settings\Place\PlacePointRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\Place\PlacePoint)
-    settingsRepository:
-        class: App\Model\Settings\SettingsRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Settings\Settings)
-    skautIsCourseRepository:
-        class: App\Model\SkautIs\SkautIsCourseRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\SkautIs\SkautIsCourse)
-    discountRepository:
-        class: App\Model\Structure\DiscountRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Discount)
-    subeventRepository:
-        class: App\Model\Structure\SubeventRepository
-        inject: yes
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\Structure\Subevent)
-    applicationRepository:
-        class: App\Model\User\Application\ApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\Application)
-    rolesApplicationRepository:
-        class: App\Model\User\Application\RolesApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\RolesApplication)
-    subeventsApplicationRepository:
-        class: App\Model\User\Application\SubeventsApplicationRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\SubeventsApplication)
-    customInputValueRepository:
-        class: App\Model\User\CustomInputValue\CustomInputValueRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\CustomInputValue\CustomInputValue)
-    userRepository:
-        class: App\Model\User\UserRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\User)
-    incomeProofRepository:
-            class: App\Model\User\Application\IncomeProofRepository
-            factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\IncomeProof)
-    variableSymbolRepository:
-        class: App\Model\User\Application\VariableSymbolRepository
-        factory: @Doctrine\ORM\EntityManagerInterface::getRepository(App\Model\User\Application\VariableSymbol)
-
-    - App\WebModule\Components\IApplicationContentControlFactory
-    - App\WebModule\Components\IBlocksContentControlFactory
-    - App\WebModule\Components\ICapacitiesContentControlFactory
-    - App\WebModule\Components\IDocumentContentControlFactory
-    - App\WebModule\Components\IFaqContentControlFactory
-    - App\WebModule\Components\IHtmlContentControlFactory
-    - App\WebModule\Components\IImageContentControlFactory
-    - App\WebModule\Components\INewsContentControlFactory
-    - App\WebModule\Components\IPlaceContentControlFactory
-    - App\WebModule\Components\IProgramsContentControlFactory
-    - App\WebModule\Components\ITextContentControlFactory
-    - App\WebModule\Components\IUsersContentControlFactory
-    - App\WebModule\Components\ILectorsContentControlFactory
-    - App\WebModule\Components\IApplicationsGridControlFactory
-    - App\WebModule\Components\IOrganizerContentControlFactory
-    - App\WebModule\Components\IContactFormContentControlFactory
-
-    - App\WebModule\Forms\BaseFormFactory
-    - App\WebModule\Forms\IAdditionalInformationFormFactory
-    - App\WebModule\Forms\ApplicationFormFactory
-    - App\WebModule\Forms\FaqFormFactory
-    - App\WebModule\Forms\PersonalDetailsFormFactory
-    - App\WebModule\Forms\RolesFormFactory
-    - App\WebModule\Forms\IContactFormFactory
-
-    - App\AdminModule\Components\IApplicationsGridControlFactory
-    - App\AdminModule\Components\IRolesGridControlFactory
-    - App\AdminModule\Components\IUsersGridControlFactory
-    - App\AdminModule\CmsModule\Components\IDocumentsGridControlFactory
-    - App\AdminModule\CmsModule\Components\IDocumentTagsGridControlFactory
-    - App\AdminModule\CmsModule\Components\IFaqGridControlFactory
-    - App\AdminModule\CmsModule\Components\INewsGridControlFactory
-    - App\AdminModule\CmsModule\Components\IPagesGridControlFactory
-    - App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFactory
-    - App\AdminModule\ConfigurationModule\Components\IDiscountsGridControlFactory
-    - App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactory
-    - App\AdminModule\ConfigurationModule\Components\ISkautIsEventEducationGridControlFactory
-    - App\AdminModule\ConfigurationModule\Components\ISubeventsGridControlFactory
-    - App\AdminModule\MailingModule\Components\IMailHistoryGridControlFactory
-    - App\AdminModule\MailingModule\Components\IMailTemplatesGridControlFactory
-    - App\AdminModule\PaymentsModule\Components\IPaymentsGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IProgramBlocksGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IProgramAttendeesGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IRoomsGridControlFactory
-    - App\AdminModule\ProgramModule\Components\IRoomScheduleGridControlFactory
-
-    - App\AdminModule\Forms\BaseFormFactory
-    - App\AdminModule\Forms\AddLectorFormFactory
-    - App\AdminModule\Forms\AddRoleFormFactory
-    - App\AdminModule\Forms\EditRoleFormFactory
-    - App\AdminModule\Forms\EditUserPersonalDetailsFormFactory
-    - App\AdminModule\Forms\EditUserSeminarFormFactory
-    - App\AdminModule\CmsModule\Forms\FaqFormFactory
     pageFormFactory:
         factory: App\AdminModule\CmsModule\Forms\PageForm(%id%, %area%, ...)
         implement: App\AdminModule\CmsModule\Forms\IPageFormFactory
         parameters: [id, area]
-    - App\AdminModule\CmsModule\Forms\NewsFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\ApplicationFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\BankFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\CustomInputFormFactory
     discountFormFactory:
         factory: App\AdminModule\ConfigurationModule\Forms\DiscountForm(%id%, ...)
         implement: App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory
         parameters: [id]
-    - App\AdminModule\ConfigurationModule\Forms\MailingFormFactory
-    paymentFormFactory:
-        factory: App\AdminModule\ConfigurationModule\Forms\PaymentForm
-        implement: App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\PlacePointFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\ProgramFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\SubeventFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\SubeventsFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\TicketsFormFactory
-    - App\AdminModule\ConfigurationModule\Forms\WebFormFactory
-    - App\AdminModule\PaymentsModule\Forms\EditPaymentFormFactory
-    - App\AdminModule\ProgramModule\Forms\BlockFormFactory
-    - App\AdminModule\MailingModule\Forms\EditTemplateFormFactory
-    - App\AdminModule\MailingModule\Forms\SendFormFactory
 
 extensions:
-    # Console
     console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
-
-    # Common
-    nettrine.annotations: Nettrine\Annotations\DI\AnnotationsExtension
-    nettrine.cache: Nettrine\Cache\DI\CacheExtension
-    nettrine.migrations: Nettrine\Migrations\DI\MigrationsExtension
-
-    # DBAL
-    nettrine.dbal: Nettrine\DBAL\DI\DbalExtension
-    nettrine.dbal.console: Nettrine\DBAL\DI\DbalConsoleExtension
-
-    # ORM
-    nettrine.orm: Nettrine\ORM\DI\OrmExtension
-    nettrine.orm.cache: Nettrine\ORM\DI\OrmCacheExtension
-    nettrine.orm.console: Nettrine\ORM\DI\OrmConsoleExtension(%consoleMode%)
-    nettrine.orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
-
     webloader: WebLoader\Nette\Extension
     skautis: Skautis\Nette\SkautisExtension
     translation: Contributte\Translation\DI\TranslationExtension
     mailing: Ublaboo\Mailing\DI\MailingExtension
     recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
+    messenger: Fmasa\Messenger\DI\MessengerExtension
 
 console:
     name: SRS
     catchExceptions: true
     autoExit: true
     lazy: false
-
-nettrine.dbal:
-    debug:
-        panel: %debugMode%
-    connection:
-        charset: utf8mb4
-        default_table_options:
-            charset: utf8mb4
-            collate: utf8mb4_unicode_ci
-
-nettrine.orm:
-    configuration:
-        customStringFunctions:
-            regexp: DoctrineExtensions\Query\Mysql\Regexp
-
-nettrine.orm.annotations:
-    mapping:
-       App\Model: %appDir%/Model
-
-nettrine.migrations:
-    directory: %appDir%/../migrations
 
 mailing:
     do: both
@@ -277,6 +104,12 @@ translation:
         fallback: [cs]
     dirs:
         - %appDir%/lang
+
+messenger:
+    buses:
+        commandBus:
+        eventBus:
+        queryBus:
 
 latte:
     macros:
@@ -375,3 +208,6 @@ webloader:
             files:
                 - js/libs/jquery/jquery-3.4.1.min.js
                 - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js
+
+includes:
+    - doctrine.neon

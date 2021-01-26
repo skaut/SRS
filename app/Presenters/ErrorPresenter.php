@@ -8,6 +8,7 @@ use Nette;
 use Nette\Application\Responses;
 use Nette\Http;
 use Tracy\ILogger;
+
 use function preg_match;
 
 final class ErrorPresenter implements Nette\Application\IPresenter
@@ -21,7 +22,7 @@ final class ErrorPresenter implements Nette\Application\IPresenter
         $this->logger = $logger;
     }
 
-    public function run(Nette\Application\Request $request) : Nette\Application\IResponse
+    public function run(Nette\Application\Request $request): Nette\Application\IResponse
     {
         $e = $request->getParameter('exception');
         if ($e instanceof Nette\Application\BadRequestException) {
@@ -34,7 +35,7 @@ final class ErrorPresenter implements Nette\Application\IPresenter
 
         $this->logger->log($e, ILogger::EXCEPTION);
 
-        return new Responses\CallbackResponse(static function (Http\IRequest $httpRequest, Http\IResponse $httpResponse) : void {
+        return new Responses\CallbackResponse(static function (Http\IRequest $httpRequest, Http\IResponse $httpResponse): void {
             if (preg_match('#^text/html(?:;|$)#', $httpResponse->getHeader('Content-Type'))) {
                 require __DIR__ . '/templates/Error/500.phtml';
             }

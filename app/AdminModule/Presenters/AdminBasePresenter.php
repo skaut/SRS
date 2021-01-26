@@ -5,21 +5,22 @@ declare(strict_types=1);
 namespace App\AdminModule\Presenters;
 
 use App\Model\Acl\Permission;
-use App\Model\Acl\RoleRepository;
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\SrsResource;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Presenters\BasePresenter;
 use App\Services\Authorizator;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use App\Services\SkautIsService;
 use Nette\Application\AbortException;
 use stdClass;
 use Throwable;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
+
 use function array_filter;
 use function array_keys;
 
@@ -39,7 +40,7 @@ abstract class AdminBasePresenter extends BasePresenter
     public RoleRepository $roleRepository;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /** @inject */
     public UserRepository $userRepository;
@@ -55,7 +56,7 @@ abstract class AdminBasePresenter extends BasePresenter
     /**
      * Načte css podle konfigurace v common.neon.
      */
-    protected function createComponentCss() : CssLoader
+    protected function createComponentCss(): CssLoader
     {
         return $this->webLoader->createCssLoader('admin');
     }
@@ -63,7 +64,7 @@ abstract class AdminBasePresenter extends BasePresenter
     /**
      * Načte javascript podle konfigurace v common.neon.
      */
-    protected function createComponentJs() : JavaScriptLoader
+    protected function createComponentJs(): JavaScriptLoader
     {
         return $this->webLoader->createJavaScriptLoader('admin');
     }
@@ -71,7 +72,7 @@ abstract class AdminBasePresenter extends BasePresenter
     /**
      * @throws AbortException
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
 
@@ -97,7 +98,7 @@ abstract class AdminBasePresenter extends BasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function beforeRender() : void
+    public function beforeRender(): void
     {
         parent::beforeRender();
 
@@ -118,7 +119,6 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->permissionManageSchedule    = Permission::MANAGE_SCHEDULE;
         $this->template->permissionManageRooms       = Permission::MANAGE_ROOMS;
         $this->template->permissionManageCategories  = Permission::MANAGE_CATEGORIES;
-        $this->template->permissionChoosePrograms    = Permission::CHOOSE_PROGRAMS;
 
         $this->template->footer      = $this->settingsService->getValue(Settings::FOOTER);
         $this->template->seminarName = $this->settingsService->getValue(Settings::SEMINAR_NAME);
@@ -144,7 +144,7 @@ abstract class AdminBasePresenter extends BasePresenter
      *
      * @throws AbortException
      */
-    public function checkPermission(string $permission) : void
+    public function checkPermission(string $permission): void
     {
         if (! $this->user->isAllowed($this->resource, $permission)) {
             $this->flashMessage('admin.common.access_denied', 'danger', 'lock');
@@ -155,7 +155,7 @@ abstract class AdminBasePresenter extends BasePresenter
     /**
      * @throws AbortException
      */
-    public function handleChangeRole(int $roleId) : void
+    public function handleChangeRole(int $roleId): void
     {
         $this->skautIsService->updateUserRole($roleId);
         $this->redirect('this');

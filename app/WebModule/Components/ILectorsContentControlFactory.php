@@ -11,5 +11,5 @@ namespace App\WebModule\Components;
  */
 interface ILectorsContentControlFactory
 {
-    public function create() : LectorsContentControl;
+    public function create(): LectorsContentControl;
 }

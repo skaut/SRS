@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
 use App\Model\Program\Category;
-use App\Model\Program\CategoryRepository;
+use App\Model\Program\Commands\RemoveCategory;
+use App\Model\Program\Commands\SaveCategory;
+use App\Model\Program\Repositories\CategoryRepository;
 use App\Services\AclService;
-use App\Services\ProgramService;
+use App\Services\CommandBus;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -29,34 +31,34 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class ProgramCategoriesGridControl extends Control
 {
+    private CommandBus $commandBus;
+
     private ITranslator $translator;
 
     private CategoryRepository $categoryRepository;
 
     private RoleRepository $roleRepository;
 
-    private ProgramService $programService;
-
     private AclService $aclService;
 
     public function __construct(
+        CommandBus $commandBus,
         ITranslator $translator,
         CategoryRepository $categoryRepository,
         RoleRepository $roleRepository,
-        ProgramService $programService,
         AclService $aclService
     ) {
+        $this->commandBus         = $commandBus;
         $this->translator         = $translator;
         $this->categoryRepository = $categoryRepository;
         $this->roleRepository     = $roleRepository;
-        $this->programService     = $programService;
         $this->aclService         = $aclService;
     }
 
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/program_categories_grid.latte');
         $this->template->render();
@@ -67,7 +69,7 @@ class ProgramCategoriesGridControl extends Control
      *
      * @throws DataGridException
      */
-    public function createComponentProgramCategoriesGrid(string $name) : void
+    public function createComponentProgramCategoriesGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -81,7 +83,7 @@ class ProgramCategoriesGridControl extends Control
 
         $rolesOptions = $this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]);
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions): void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findAllNames());
@@ -91,14 +93,14 @@ class ProgramCategoriesGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($rolesOptions) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($rolesOptions): void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.categories_name_empty');
 
             $container->addMultiSelect('registerableRoles', '', $rolesOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.program.categories_registerable_roles_empty');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Category $item) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Category $item): void {
             /** @var TextInput $nameText */
             $nameText = $container['name'];
             $nameText->addRule(Form::IS_NOT_IN, 'admin.program.categories_name_exists', $this->categoryRepository->findOthersNames($item->getId()));
@@ -126,9 +128,13 @@ class ProgramCategoriesGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function add(stdClass $values) : void
+    public function add(stdClass $values): void
     {
-        $this->programService->createCategory($values->name, $this->roleRepository->findRolesByIds($values->registerableRoles));
+        $category = new Category($values->name);
+
+        $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values->registerableRoles));
+
+        $this->commandBus->handle(new SaveCategory($category, null));
 
         $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
 
@@ -141,11 +147,15 @@ class ProgramCategoriesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function edit(string $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values): void
     {
-        $category = $this->categoryRepository->findById((int) $id);
+        $category    = $this->categoryRepository->findById((int) $id);
+        $categoryOld = clone $category;
 
-        $this->programService->updateCategory($category, $values->name, $this->roleRepository->findRolesByIds($values->registerableRoles));
+        $category->setName($values->name);
+        $category->setRegisterableRoles($this->roleRepository->findRolesByIds($values->registerableRoles));
+
+        $this->commandBus->handle(new SaveCategory($category, $categoryOld));
 
         $this->getPresenter()->flashMessage('admin.program.categories_saved', 'success');
         $this->redirect('this');
@@ -157,12 +167,12 @@ class ProgramCategoriesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $category = $this->categoryRepository->findById($id);
 
         if ($category->getBlocks()->isEmpty()) {
-            $this->categoryRepository->remove($category);
+            $this->commandBus->handle(new RemoveCategory($category));
             $this->getPresenter()->flashMessage('admin.program.categories_deleted', 'success');
         } else {
             $this->getPresenter()->flashMessage('admin.program.categories_deleted_error', 'danger');

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Model\Payment;
 
-use App\Model\User\Application\Application;
+use App\Model\Application\Application;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
+
 use function array_key_exists;
 use function array_keys;
 use function implode;
@@ -18,7 +19,7 @@ use function implode;
 /**
  * Entita platba.
  *
- * @ORM\Entity(repositoryClass="PaymentRepository")
+ * @ORM\Entity
  * @ORM\Table(name="payment")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
@@ -79,9 +80,9 @@ class Payment
     /**
      * Spárované přihlášky.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\User\Application\Application", mappedBy="payment", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\App\Model\Application\Application", mappedBy="payment", cascade={"persist"})
      *
-     * @var Collection|Application[]
+     * @var Collection<Application>
      */
     protected Collection $pairedApplications;
 
@@ -97,93 +98,109 @@ class Payment
         $this->pairedApplications = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getTransactionId() : ?string
+    public function getTransactionId(): ?string
     {
         return $this->transactionId;
     }
 
-    public function setTransactionId(?string $transactionId) : void
+    public function setTransactionId(?string $transactionId): void
     {
         $this->transactionId = $transactionId;
     }
 
-    public function getDate() : DateTimeImmutable
+    public function getDate(): DateTimeImmutable
     {
         return $this->date;
     }
 
-    public function setDate(DateTimeImmutable $date) : void
+    public function setDate(DateTimeImmutable $date): void
     {
         $this->date = $date;
     }
 
-    public function getAmount() : float
+    public function getAmount(): float
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount) : void
+    public function setAmount(float $amount): void
     {
         $this->amount = $amount;
     }
 
-    public function getAccountNumber() : ?string
+    public function getAccountNumber(): ?string
     {
         return $this->accountNumber;
     }
 
-    public function setAccountNumber(?string $accountNumber) : void
+    public function setAccountNumber(?string $accountNumber): void
     {
         $this->accountNumber = $accountNumber;
     }
 
-    public function getAccountName() : ?string
+    public function getAccountName(): ?string
     {
         return $this->accountName;
     }
 
-    public function setAccountName(?string $accountName) : void
+    public function setAccountName(?string $accountName): void
     {
         $this->accountName = $accountName;
     }
 
-    public function getVariableSymbol() : ?string
+    public function getVariableSymbol(): ?string
     {
         return $this->variableSymbol;
     }
 
-    public function setVariableSymbol(?string $variableSymbol) : void
+    public function setVariableSymbol(?string $variableSymbol): void
     {
         $this->variableSymbol = $variableSymbol;
     }
 
-    public function getMessage() : ?string
+    public function getMessage(): ?string
     {
         return $this->message;
     }
 
-    public function setMessage(?string $message) : void
+    public function setMessage(?string $message): void
     {
         $this->message = $message;
     }
 
     /**
-     * @return Application[]|Collection
+     * @return Collection<Application>
      */
-    public function getPairedApplications() : Collection
+    public function getPairedApplications(): Collection
     {
         return $this->pairedApplications;
     }
 
+    public function addPairedApplication(Application $application): void
+    {
+        if (! $this->pairedApplications->contains($application)) {
+            $this->pairedApplications->add($application);
+            $application->setPayment($this);
+        }
+    }
+
+    public function removePairedApplication(Application $application): void
+    {
+        if ($this->pairedApplications->contains($application)) {
+            $this->pairedApplications->removeElement($application);
+            $application->setPayment(null);
+        }
+    }
+
     /**
-     * @return Application[]|Collection
+     * @return Collection<Application>
      */
-    public function getPairedValidApplications() : Collection
+    public function getPairedValidApplications(): Collection
     {
         $criteria = Criteria::create()->where(
             Criteria::expr()->isNull('validTo')
@@ -192,7 +209,7 @@ class Payment
         return $this->pairedApplications->matching($criteria);
     }
 
-    public function getPairedValidApplicationsText() : string
+    public function getPairedValidApplicationsText(): string
     {
         $usersVS    = [];
         $usersNames = [];
@@ -214,12 +231,12 @@ class Payment
         return implode(', ', $usersTexts);
     }
 
-    public function getState() : string
+    public function getState(): string
     {
         return $this->state;
     }
 
-    public function setState(string $state) : void
+    public function setState(string $state): void
     {
         $this->state = $state;
     }

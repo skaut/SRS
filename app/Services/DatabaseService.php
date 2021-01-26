@@ -7,6 +7,7 @@ namespace App\Services;
 use Contributte\Console\Application;
 use DateTimeImmutable;
 use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use MySQLDump;
 use mysqli;
@@ -14,7 +15,6 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\DI\Container;
-use Nettrine\ORM\EntityManagerDecorator;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Throwable;
@@ -37,14 +37,14 @@ class DatabaseService
 
     private Application $consoleApplication;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     public function __construct(
         string $dir,
         Container $container,
         IStorage $storage,
         Application $consoleApplication,
-        EntityManagerDecorator $em
+        EntityManagerInterface $em
     ) {
         $this->dir       = $dir;
         $this->container = $container;
@@ -59,7 +59,7 @@ class DatabaseService
      *
      * @throws Throwable
      */
-    public function update() : void
+    public function update(): void
     {
         if ($this->databaseCache->load('updated') === null) {
             $this->databaseCache->save('lock', function () {
@@ -89,7 +89,7 @@ class DatabaseService
      *
      * @throws Exception
      */
-    public function backup() : void
+    public function backup(): void
     {
         $host     = $this->em->getConnection()->getHost();
         $user     = $this->em->getConnection()->getUsername();

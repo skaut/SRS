@@ -22,6 +22,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
       - run: composer install
+      - name: Remove development docker-compose override
+        run: rm docker-compose.override.yml
+      - name: Fix permissions
+        run: chown 1000:1000 . -R && chmod 777 . -R
       - name: Create tarball
         run: tar -czpf /tmp/workdir.tar.gz . && mv /tmp/workdir.tar.gz .
       - name: Upload workdir
@@ -45,6 +49,46 @@ jobs:
       - name: Extract workdir
         run: tar -xzf workdir.tar.gz
       - run: phing tests-unit
+
+  tests-integration:
+    name: "Integration tests"
+    runs-on: ubuntu-18.04
+    needs: workdir
+    steps:
+      - name: Download workdir
+        uses: actions/download-artifact@v1
+        with:
+          name: workdir
+          path: .
+      - name: Extract workdir
+        run: tar -xzpf workdir.tar.gz
+      - name: Start application containers
+        run: docker-compose up -d mysql-test
+      - run: docker-compose run -T -u www-data app phing tests-integration
+
+  code-coverage:
+    name: "Code coverage"
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-18.04
+    needs: workdir
+    steps:
+      - name: Download workdir
+        uses: actions/download-artifact@v1
+        with:
+          name: workdir
+          path: .
+      - name: Extract workdir
+        run: tar -xzpf workdir.tar.gz
+      - name: Start application containers
+        run: docker-compose up -d app mysql-test
+      - name: Run tests with coverage
+        run: docker-compose exec -T -u www-data app phing tests-with-coverage
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: tests/_output/coverage.xml
+          fail_ci_if_error: true
 
   static-analysis:
     name: "PHPStan analysis"

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
-use App\Services\SettingsService;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Services\ISettingsService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
@@ -31,13 +31,13 @@ class SeminarFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private SubeventRepository $subeventRepository;
 
     public function __construct(
         BaseFormFactory $baseForm,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         SubeventRepository $subeventRepository
     ) {
         $this->baseFormFactory    = $baseForm;
@@ -51,7 +51,7 @@ class SeminarFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -101,7 +101,7 @@ class SeminarFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         $this->settingsService->setValue(Settings::SEMINAR_NAME, $values->seminarName);
         $implicitSubevent = $this->subeventRepository->findImplicit();
@@ -118,7 +118,7 @@ class SeminarFormFactory
      *
      * @param DateTime[] $args
      */
-    public function validateSeminarFromDate(DateControl $field, array $args) : bool
+    public function validateSeminarFromDate(DateControl $field, array $args): bool
     {
         return $args[0] <= $args[1];
     }
@@ -128,7 +128,7 @@ class SeminarFormFactory
      *
      * @param DateTime[] $args
      */
-    public function validateSeminarToDate(DateControl $field, array $args) : bool
+    public function validateSeminarToDate(DateControl $field, array $args): bool
     {
         return $args[0] >= $args[1];
     }
@@ -138,7 +138,7 @@ class SeminarFormFactory
      *
      * @param DateTime[] $args
      */
-    public function validateEditRegistrationTo(DateControl $field, array $args) : bool
+    public function validateEditRegistrationTo(DateControl $field, array $args): bool
     {
         return $args[0] < $args[1];
     }

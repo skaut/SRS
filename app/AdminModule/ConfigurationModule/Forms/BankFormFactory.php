@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use App\Services\BankService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use DateTimeImmutable;
 use FioApi\Exceptions\InternalErrorException;
 use Nette;
@@ -31,13 +31,13 @@ class BankFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private BankService $bankService;
 
     public function __construct(
         BaseFormFactory $baseForm,
-        SettingsService $settingsService,
+        ISettingsService $settingsService,
         BankService $bankService
     ) {
         $this->baseFormFactory = $baseForm;
@@ -50,7 +50,7 @@ class BankFormFactory
      *
      * @throws Throwable
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -83,7 +83,7 @@ class BankFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         $token = $values->bankToken;
         $from  = $values->bankDownloadFrom;
@@ -102,7 +102,7 @@ class BankFormFactory
     /**
      * Ověří, že datum počátku stahování transakcí je v minulosti.
      */
-    public function validateBankDownloadFromDate(DateControl $field) : bool
+    public function validateBankDownloadFromDate(DateControl $field): bool
     {
         return $field->getValue() <= new DateTimeImmutable();
     }

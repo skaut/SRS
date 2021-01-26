@@ -14,5 +14,5 @@ interface IPaymentFormFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : PaymentForm;
+    public function create(): PaymentForm;
 }

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Structure\Discount;
-use App\Model\Structure\DiscountRepository;
-use App\Model\Structure\SubeventRepository;
+use App\Model\Structure\Repositories\DiscountRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
 use InvalidArgumentException;
 use Nette;
 use Nette\Localization\ITranslator;
+
 use function explode;
 use function in_array;
 use function is_numeric;
@@ -63,7 +64,7 @@ class DiscountService
      *
      * @param int[] $selectedSubeventsIds
      */
-    public function countDiscount(array $selectedSubeventsIds) : int
+    public function countDiscount(array $selectedSubeventsIds): int
     {
         $totalDiscount = 0;
 
@@ -89,7 +90,7 @@ class DiscountService
     /**
      * Ověří formát podmínky pro slevu.
      */
-    public function validateCondition(string $condition) : bool
+    public function validateCondition(string $condition): bool
     {
         $this->tokenize($condition);
 
@@ -107,7 +108,7 @@ class DiscountService
     /**
      * Převede podmínku na text.
      */
-    public function convertConditionToText(string $condition) : string
+    public function convertConditionToText(string $condition): string
     {
         $this->tokenize($condition);
 
@@ -140,7 +141,7 @@ class DiscountService
         return $text;
     }
 
-    private function tokenize(string $condition) : void
+    private function tokenize(string $condition): void
     {
         $tokens = explode('|', $condition);
 
@@ -156,22 +157,22 @@ class DiscountService
         $this->currentSymbol = 0;
     }
 
-    private function nextSymbol() : void
+    private function nextSymbol(): void
     {
         $this->currentSymbol++;
     }
 
-    private function symbol() : string
+    private function symbol(): string
     {
         return $this->symbols[$this->currentSymbol]['symbol'];
     }
 
-    private function symbolValue() : string
+    private function symbolValue(): string
     {
         return $this->symbols[$this->currentSymbol]['value'];
     }
 
-    private function accept(string $symbol) : void
+    private function accept(string $symbol): void
     {
         if ($this->symbol() !== $symbol) {
             throw new InvalidArgumentException();
@@ -180,7 +181,7 @@ class DiscountService
         $this->nextSymbol();
     }
 
-    private function acceptSubevent(?int &$sValue) : void
+    private function acceptSubevent(?int &$sValue): void
     {
         if ($this->symbol() !== Discount::SUBEVENT_ID || $this->subeventRepository->findById((int) $this->symbolValue()) === null) {
             throw new InvalidArgumentException();
@@ -190,7 +191,7 @@ class DiscountService
         $this->nextSymbol();
     }
 
-    private function parseExpression(?int &$sValue) : void
+    private function parseExpression(?int &$sValue): void
     {
         switch ($this->symbol()) {
             case Discount::SUBEVENT_ID:
@@ -205,7 +206,7 @@ class DiscountService
         }
     }
 
-    private function parseExpressionRest(int $dValue, ?int &$sValue) : void
+    private function parseExpressionRest(int $dValue, ?int &$sValue): void
     {
         switch ($this->symbol()) {
             case Discount::OPERATOR_OR:
@@ -225,7 +226,7 @@ class DiscountService
         }
     }
 
-    private function parseTerm(?int &$sValue) : void
+    private function parseTerm(?int &$sValue): void
     {
         switch ($this->symbol()) {
             case Discount::SUBEVENT_ID:
@@ -240,7 +241,7 @@ class DiscountService
         }
     }
 
-    private function parseTermRest(int $dValue, ?int &$sValue) : void
+    private function parseTermRest(int $dValue, ?int &$sValue): void
     {
         switch ($this->symbol()) {
             case Discount::OPERATOR_AND:
@@ -261,7 +262,7 @@ class DiscountService
         }
     }
 
-    private function parseFactor(?int &$sValue) : void
+    private function parseFactor(?int &$sValue): void
     {
         switch ($this->symbol()) {
             case Discount::SUBEVENT_ID:

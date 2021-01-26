@@ -19,11 +19,11 @@ class SendPresenter extends MailingBasePresenter
     /** @inject */
     public SendFormFactory $sendFormFactory;
 
-    protected function createComponentSendForm() : Form
+    protected function createComponentSendForm(): Form
     {
         $form = $this->sendFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($this->sendFormFactory->mailSuccess) {
                 $this->flashMessage('admin.mailing.send.sent', 'success');
             } else {

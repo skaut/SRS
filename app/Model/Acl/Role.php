@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Acl;
 
-use App\Model\Cms\Document\Tag;
 use App\Model\Cms\Page;
+use App\Model\Cms\Tag;
 use App\Model\Program\Category;
 use App\Model\User\User;
 use DateTimeImmutable;
@@ -13,12 +13,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
+
 use function implode;
 
 /**
  * Entita role.
  *
- * @ORM\Entity(repositoryClass="RoleRepository")
+ * @ORM\Entity
  * @ORM\Table(name="role")
  *
  * @author Michal Májský
@@ -103,7 +104,7 @@ class Role
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist"})
      *
-     * @var Collection|User[]
+     * @var Collection<User>
      */
     protected Collection $users;
 
@@ -112,7 +113,7 @@ class Role
      *
      * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist"})
      *
-     * @var Collection|Permission[]
+     * @var Collection<Permission>
      */
     protected Collection $permissions;
 
@@ -121,7 +122,7 @@ class Role
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Cms\Page", mappedBy="roles", cascade={"persist"})
      *
-     * @var Collection|Page[]
+     * @var Collection<Page>
      */
     protected Collection $pages;
 
@@ -205,7 +206,7 @@ class Role
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
      *      )
      *
-     * @var Collection|Role[]
+     * @var Collection<Role>
      */
     protected Collection $incompatibleRoles;
 
@@ -214,7 +215,7 @@ class Role
      *
      * @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist"})
      *
-     * @var Collection|Role[]
+     * @var Collection<Role>
      */
     protected Collection $requiredByRole;
 
@@ -227,7 +228,7 @@ class Role
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
      *      )
      *
-     * @var Collection|Role[]
+     * @var Collection<Role>
      */
     protected Collection $requiredRoles;
 
@@ -236,7 +237,7 @@ class Role
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist"})
      *
-     * @var Collection|Category[]
+     * @var Collection<Category>
      */
     protected Collection $registerableCategories;
 
@@ -250,9 +251,9 @@ class Role
     /**
      * Kategorie dokumentů, ke kterým má role přístup.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Cms\Document\Tag", mappedBy="roles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="\App\Model\Cms\Tag", mappedBy="roles", cascade={"persist"})
      *
-     * @var Collection|Tag[]
+     * @var Collection<Tag>
      */
     protected Collection $tags;
 
@@ -269,109 +270,142 @@ class Role
         $this->tags                   = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getSystemName() : ?string
+    public function getSystemName(): ?string
     {
         return $this->systemName;
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection<User>
      */
-    public function getUsers() : Collection
+    public function getUsers(): Collection
     {
         return $this->users;
     }
 
+    public function addUser(User $user): void
+    {
+        if (! $this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addRole($this);
+        }
+    }
+
+    public function removeUser(User $user): void
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            $user->removeRole($this);
+        }
+    }
+
     /**
-     * @return Collection|Permission[]
+     * @return Collection<Permission>
      */
-    public function getPermissions() : Collection
+    public function getPermissions(): Collection
     {
         return $this->permissions;
     }
 
     /**
-     * @param Collection|Permission[] $permissions
+     * @param Collection<Permission> $permissions
      */
-    public function setPermissions(Collection $permissions) : void
+    public function setPermissions(Collection $permissions): void
     {
-        $this->permissions->clear();
+        foreach ($this->permissions as $permission) {
+            $this->removePermission($permission);
+        }
+
         foreach ($permissions as $permission) {
-            $this->permissions->add($permission);
+            $this->addPermission($permission);
         }
     }
 
-    public function addPermission(Permission $permission) : void
+    public function addPermission(Permission $permission): void
     {
-        $this->permissions->add($permission);
+        if (! $this->permissions->contains($permission)) {
+            $this->permissions->add($permission);
+            $permission->addRole($this);
+        }
+    }
+
+    public function removePermission(Permission $permission): void
+    {
+        if ($this->permissions->contains($permission)) {
+            $this->permissions->removeElement($permission);
+            $permission->removeRole($this);
+        }
     }
 
     /**
-     * @return Collection|Page[]
+     * @return Collection<Page>
      */
-    public function getPages() : Collection
+    public function getPages(): Collection
     {
         return $this->pages;
     }
 
     /**
-     * @param Collection|Page[] $pages
+     * @param Collection<Page> $pages
      */
-    public function setPages(Collection $pages) : void
+    public function setPages(Collection $pages): void
     {
-        foreach ($this->getPages() as $page) {
-            if (! $pages->contains($page)) {
-                $page->getRoles()->removeElement($this);
-            }
+        foreach ($this->pages as $page) {
+            $this->removePage($page);
         }
 
         foreach ($pages as $page) {
-            if (! $page->getRoles()->contains($this)) {
-                $page->getRoles()->add($this);
-            }
+            $this->addPage($page);
         }
-
-        $this->pages = $pages;
     }
 
-    public function addPage(Page $page) : void
+    public function addPage(Page $page): void
     {
         if (! $this->pages->contains($page)) {
+            $this->pages->add($page);
             $page->addRole($this);
         }
     }
 
-    public function isSystemRole() : bool
+    public function removePage(Page $page): void
+    {
+        if ($this->pages->contains($page)) {
+            $this->pages->removeElement($page);
+            $page->removeRole($this);
+        }
+    }
+
+    public function isSystemRole(): bool
     {
         return $this->systemRole;
     }
 
-    public function setSystemRole(bool $systemRole) : void
+    public function setSystemRole(bool $systemRole): void
     {
         $this->systemRole = $systemRole;
     }
 
-    public function isRegisterable() : bool
+    public function isRegisterable(): bool
     {
         return $this->registerable;
     }
 
-    public function setRegisterable(bool $registerable) : void
+    public function setRegisterable(bool $registerable): void
     {
         $this->registerable = $registerable;
     }
@@ -379,7 +413,7 @@ class Role
     /**
      * Vrací true, pokud je role v tuto chvíli registrovatelná.
      */
-    public function isRegisterableNow() : bool
+    public function isRegisterableNow(): bool
     {
         $now = new DateTimeImmutable();
 
@@ -388,148 +422,164 @@ class Role
             ($this->registerableTo === null || $this->registerableTo >= $now);
     }
 
-    public function isApprovedAfterRegistration() : bool
+    public function isApprovedAfterRegistration(): bool
     {
         return $this->approvedAfterRegistration;
     }
 
-    public function setApprovedAfterRegistration(bool $approvedAfterRegistration) : void
+    public function setApprovedAfterRegistration(bool $approvedAfterRegistration): void
     {
         $this->approvedAfterRegistration = $approvedAfterRegistration;
     }
 
-    public function getRegisterableFrom() : ?DateTimeImmutable
+    public function getRegisterableFrom(): ?DateTimeImmutable
     {
         return $this->registerableFrom;
     }
 
-    public function setRegisterableFrom(?DateTimeImmutable $registerableFrom) : void
+    public function setRegisterableFrom(?DateTimeImmutable $registerableFrom): void
     {
         $this->registerableFrom = $registerableFrom;
     }
 
-    public function getRegisterableTo() : ?DateTimeImmutable
+    public function getRegisterableTo(): ?DateTimeImmutable
     {
         return $this->registerableTo;
     }
 
-    public function setRegisterableTo(?DateTimeImmutable $registerableTo) : void
+    public function setRegisterableTo(?DateTimeImmutable $registerableTo): void
     {
         $this->registerableTo = $registerableTo;
     }
 
-    public function getCapacity() : ?int
+    public function getCapacity(): ?int
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity) : void
+    public function setCapacity(?int $capacity): void
     {
         $this->capacity = $capacity;
     }
 
-    public function hasLimitedCapacity() : bool
+    public function hasLimitedCapacity(): bool
     {
         return $this->capacity !== null;
     }
 
-    public function getOccupancy() : int
+    public function getOccupancy(): int
     {
         return $this->occupancy;
     }
 
-    public function getFee() : ?int
+    public function getFee(): ?int
     {
         return $this->fee;
     }
 
-    public function setFee(?int $fee) : void
+    public function setFee(?int $fee): void
     {
         $this->fee = $fee;
     }
 
-    public function getMinimumAge() : int
+    public function getMinimumAge(): int
     {
         return $this->minimumAge;
     }
 
-    public function setMinimumAge(int $age) : void
+    public function setMinimumAge(int $age): void
     {
         $this->minimumAge = $age;
     }
 
-    public function isSyncedWithSkautIS() : bool
+    public function isSyncedWithSkautIS(): bool
     {
         return $this->syncedWithSkautIS;
     }
 
-    public function setSyncedWithSkautIS(bool $syncedWithSkautIS) : void
+    public function setSyncedWithSkautIS(bool $syncedWithSkautIS): void
     {
         $this->syncedWithSkautIS = $syncedWithSkautIS;
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
-    public function getIncompatibleRoles() : Collection
+    public function getIncompatibleRoles(): Collection
     {
         return $this->incompatibleRoles;
     }
 
     /**
-     * @param Collection|Role[] $incompatibleRoles
+     * @param Collection<Role> $incompatibleRoles
      */
-    public function setIncompatibleRoles(Collection $incompatibleRoles) : void
+    public function setIncompatibleRoles(Collection $incompatibleRoles): void
     {
-        foreach ($this->getIncompatibleRoles() as $role) {
-            if (! $incompatibleRoles->contains($role)) {
-                $role->getIncompatibleRoles()->removeElement($this);
-            }
+        foreach ($this->incompatibleRoles as $role) {
+            $this->removeIncompatibleRole($role);
         }
 
         foreach ($incompatibleRoles as $role) {
-            if (! $role->getIncompatibleRoles()->contains($this)) {
-                $role->getIncompatibleRoles()->add($this);
-            }
+            $this->addIncompatibleRole($role);
         }
-
-        $this->incompatibleRoles = $incompatibleRoles;
     }
 
     /**
      * Vrací názvy všech nekompatibilních rolí.
      */
-    public function getIncompatibleRolesText() : string
+    public function getIncompatibleRolesText(): string
     {
-        $incompatibleRolesNames = [];
-        foreach ($this->getIncompatibleRoles() as $incompatibleRole) {
-            $incompatibleRolesNames[] = $incompatibleRole->getName();
-        }
-
-        return implode(', ', $incompatibleRolesNames);
+        return implode(', ', $this->incompatibleRoles->map(static function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
-    public function addIncompatibleRole(Role $role) : void
+    public function addIncompatibleRole(Role $role): void
     {
         if (! $this->incompatibleRoles->contains($role)) {
             $this->incompatibleRoles->add($role);
+            $role->addIncompatibleRole($this);
+        }
+    }
+
+    public function removeIncompatibleRole(Role $role): void
+    {
+        if ($this->incompatibleRoles->contains($role)) {
+            $this->incompatibleRoles->removeElement($role);
+            $role->removeIncompatibleRole($this);
         }
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
-    public function getRequiredByRole() : Collection
+    public function getRequiredByRole(): Collection
     {
         return $this->requiredByRole;
+    }
+
+    public function addRequiredByRole(Role $role): void
+    {
+        if (! $this->requiredByRole->contains($role)) {
+            $this->requiredByRole->add($role);
+            $role->addRequiredRole($this);
+        }
+    }
+
+    public function removeRequiredByRole(Role $role): void
+    {
+        if ($this->requiredByRole->contains($role)) {
+            $this->requiredByRole->removeElement($role);
+            $role->removeRequiredRole($this);
+        }
     }
 
     /**
      * Vrací všechny (tranzitivně) role, kterými je tato role vyžadována.
      *
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
-    public function getRequiredByRoleTransitive() : Collection
+    public function getRequiredByRoleTransitive(): Collection
     {
         $allRequiredByRole = new ArrayCollection();
         foreach ($this->requiredByRole as $requiredByRole) {
@@ -540,9 +590,9 @@ class Role
     }
 
     /**
-     * @param Collection|Role[] $allRequiredByRole
+     * @param Collection<Role> $allRequiredByRole
      */
-    private function getRequiredByRoleTransitiveRec(Collection &$allRequiredByRole, Role $role) : void
+    private function getRequiredByRoleTransitiveRec(Collection &$allRequiredByRole, Role $role): void
     {
         if ($this->getId() !== $role->getId() && ! $allRequiredByRole->contains($role)) {
             $allRequiredByRole->add($role);
@@ -554,37 +604,49 @@ class Role
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
-    public function getRequiredRoles() : Collection
+    public function getRequiredRoles(): Collection
     {
         return $this->requiredRoles;
     }
 
     /**
-     * @param Collection|Role[] $requiredRoles
+     * @param Collection<Role> $requiredRoles
      */
-    public function setRequiredRoles(Collection $requiredRoles) : void
+    public function setRequiredRoles(Collection $requiredRoles): void
     {
-        $this->requiredRoles->clear();
+        foreach ($this->requiredRoles as $requiredRole) {
+            $this->removeRequiredRole($requiredRole);
+        }
+
         foreach ($requiredRoles as $requiredRole) {
-            $this->requiredRoles->add($requiredRole);
+            $this->addRequiredRole($requiredRole);
         }
     }
 
-    public function addRequiredRole(Role $role) : void
+    public function addRequiredRole(Role $role): void
     {
         if (! $this->requiredRoles->contains($role)) {
             $this->requiredRoles->add($role);
+            $role->addRequiredByRole($this);
+        }
+    }
+
+    public function removeRequiredRole(Role $role): void
+    {
+        if ($this->requiredRoles->contains($role)) {
+            $this->requiredRoles->removeElement($role);
+            $role->removeRequiredByRole($this);
         }
     }
 
     /**
      * Vrací všechny (tranzitivně) vyžadované role.
      *
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
-    public function getRequiredRolesTransitive() : Collection
+    public function getRequiredRolesTransitive(): Collection
     {
         $allRequiredRoles = new ArrayCollection();
         foreach ($this->requiredRoles as $requiredRole) {
@@ -595,9 +657,9 @@ class Role
     }
 
     /**
-     * @param Collection|Role[] $allRequiredRoles
+     * @param Collection<Role> $allRequiredRoles
      */
-    private function getRequiredRolesTransitiveRec(Collection &$allRequiredRoles, Role $role) : void
+    private function getRequiredRolesTransitiveRec(Collection &$allRequiredRoles, Role $role): void
     {
         if ($this->getId() !== $role->getId() && ! $allRequiredRoles->contains($role)) {
             $allRequiredRoles->add($role);
@@ -611,60 +673,82 @@ class Role
     /**
      * Vrací názvy všech vyžadovaných rolí.
      */
-    public function getRequiredRolesTransitiveText() : string
+    public function getRequiredRolesTransitiveText(): string
     {
-        $requiredRolesNames = [];
-        foreach ($this->getRequiredRolesTransitive() as $requiredRole) {
-            $requiredRolesNames[] = $requiredRole->getName();
-        }
-
-        return implode(', ', $requiredRolesNames);
+        return implode(', ', $this->getRequiredRolesTransitive()->map(static function (Role $role) {
+            return $role->getName();
+        })->toArray());
     }
 
     /**
-     * @return Collection|Category[]
+     * @return Collection<Category>
      */
-    public function getRegisterableCategories() : Collection
+    public function getRegisterableCategories(): Collection
     {
         return $this->registerableCategories;
     }
 
-    public function addRegisterableCategory(Category $category) : void
+    public function addRegisterableCategory(Category $category): void
     {
         if (! $this->registerableCategories->contains($category)) {
-            $category->addRole($this);
+            $this->registerableCategories->add($category);
+            $category->addRegisterableRole($this);
         }
     }
 
-    public function getRedirectAfterLogin() : ?string
+    public function removeRegisterableCategory(Category $category): void
+    {
+        if ($this->registerableCategories->contains($category)) {
+            $this->registerableCategories->removeElement($category);
+            $category->removeRegisterableRole($this);
+        }
+    }
+
+    public function getRedirectAfterLogin(): ?string
     {
         return $this->redirectAfterLogin;
     }
 
-    public function setRedirectAfterLogin(?string $redirectAfterLogin) : void
+    public function setRedirectAfterLogin(?string $redirectAfterLogin): void
     {
         $this->redirectAfterLogin = $redirectAfterLogin;
     }
 
     /**
-     * @return Collection|Tag[]
+     * @return Collection<Tag>
      */
-    public function getTags() : Collection
+    public function getTags(): Collection
     {
         return $this->tags;
     }
 
-    public function countUsers() : int
+    public function addTag(Tag $tag): void
+    {
+        if (! $this->tags->contains($tag)) {
+            $this->tags->add($tag);
+            $tag->addRole($this);
+        }
+    }
+
+    public function removeTag(Tag $tag): void
+    {
+        if ($this->tags->contains($tag)) {
+            $this->tags->removeElement($tag);
+            $tag->removeRole($this);
+        }
+    }
+
+    public function countUsers(): int
     {
         return $this->users->count();
     }
 
-    public function countUnoccupied() : ?int
+    public function countUnoccupied(): ?int
     {
         return $this->capacity ? $this->capacity - $this->countUsers() : null;
     }
 
-    public function getOccupancyText() : string
+    public function getOccupancyText(): string
     {
         return $this->capacity ? $this->countUsers() . '/' . $this->capacity : '' . $this->countUsers();
     }

@@ -23,6 +23,7 @@
                                 ? selectedEventInfo.event.extendedProps.attendeesCount + '/' + selectedEventInfo.event.extendedProps.block.capacity
                                 : selectedEventInfo.event.extendedProps.attendeesCount
                                 }}
+                                <span v-if="selectedEventInfo.event.extendedProps.block.alternatesAllowed">({{ selectedEventInfo.event.extendedProps.alternatesCount }} náhradníků)</span>
                             </li>
                         </ul>
 
@@ -43,13 +44,21 @@
                         <div v-html="selectedEventInfo.event.extendedProps.block.description"></div>
                     </div>
 
-                    <div class="modal-footer" v-show="userAllowedRegisterPrograms">
-                        <button @click="handleAttendEvent()" v-show="!selectedEventInfo.event.extendedProps.userAttends"
+                    <div class="modal-footer" v-show="registerProgramsAllowed">
+                        <button @click="handleAttendEvent()"
+                                v-show="!(selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates) && !(selectedEventInfo.event.extendedProps.block.alternatesAllowed && selectedEventInfo.event.extendedProps.occupied)"
                                 :disabled="selectedEventInfo.event.extendedProps.blocked || selectedEventInfo.event.extendedProps.occupied || !selectedEventInfo.event.extendedProps.paid"
                                 class="btn btn-sm btn-success pull-left">
                             Přihlásit se na program
                         </button>
-                        <button @click="handleUnattendEvent()" v-show="selectedEventInfo.event.extendedProps.userAttends"
+                        <button @click="handleAttendEvent()"
+                                v-show="!(selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates) && (selectedEventInfo.event.extendedProps.block.alternatesAllowed && selectedEventInfo.event.extendedProps.occupied)"
+                                :disabled="selectedEventInfo.event.extendedProps.blocked || !selectedEventInfo.event.extendedProps.paid"
+                                class="btn btn-sm btn-success pull-left">
+                            Přihlásit se na program jako náhradník
+                        </button>
+                        <button @click="handleUnattendEvent()"
+                                v-show="selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates"
                                 :disabled="selectedEventInfo.event.extendedProps.block.autoRegistered"
                                 class="btn btn-sm btn-danger pull-left">
                             Odhlásit se z programu
@@ -72,6 +81,7 @@
                         <h6>Typy programů</h6>
                         <ul class="list-group text-white">
                             <li class="list-group-item bg-success">Programy, které máte přihlášené.</li>
+                            <li class="list-group-item bg-warning">Programy, které máte přihlášené jako náhradník.</li>
                             <li class="list-group-item bg-primary">Programy, na které se lze přihlásit.</li>
                             <li class="list-group-item bg-danger">Programy, které jsou povinné.</li>
                             <li class="list-group-item bg-secondary">Programy, na které se nelze přihlásit (máte přihlášený stejný program, je obsazený nebo jej nemáte zaplacený).</li>
@@ -147,7 +157,7 @@
             return {
                 initialView: localStorage.getItem('fcInitialView') || 'timeGridSeminar',
                 selectedEventInfo: null,
-                userAllowedRegisterPrograms: userAllowedRegisterPrograms,
+                registerProgramsAllowed: registerProgramsAllowed,
                 basePath: basePath
             }
         },

@@ -4,38 +4,39 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
+use App\Model\CustomInput\CustomCheckbox;
+use App\Model\CustomInput\CustomCheckboxValue;
+use App\Model\CustomInput\CustomDate;
+use App\Model\CustomInput\CustomDateTime;
+use App\Model\CustomInput\CustomDateTimeValue;
+use App\Model\CustomInput\CustomDateValue;
+use App\Model\CustomInput\CustomFile;
+use App\Model\CustomInput\CustomFileValue;
+use App\Model\CustomInput\CustomMultiSelect;
+use App\Model\CustomInput\CustomMultiSelectValue;
+use App\Model\CustomInput\CustomSelect;
+use App\Model\CustomInput\CustomSelectValue;
+use App\Model\CustomInput\CustomText;
+use App\Model\CustomInput\CustomTextValue;
+use App\Model\CustomInput\Repositories\CustomInputRepository;
+use App\Model\CustomInput\Repositories\CustomInputValueRepository;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\CustomInput\CustomCheckbox;
-use App\Model\Settings\CustomInput\CustomDate;
-use App\Model\Settings\CustomInput\CustomDateTime;
-use App\Model\Settings\CustomInput\CustomFile;
-use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\CustomInput\CustomMultiSelect;
-use App\Model\Settings\CustomInput\CustomSelect;
-use App\Model\Settings\CustomInput\CustomText;
 use App\Model\Settings\Settings;
-use App\Model\User\CustomInputValue\CustomCheckboxValue;
-use App\Model\User\CustomInputValue\CustomDateTimeValue;
-use App\Model\User\CustomInputValue\CustomDateValue;
-use App\Model\User\CustomInputValue\CustomFileValue;
-use App\Model\User\CustomInputValue\CustomInputValueRepository;
-use App\Model\User\CustomInputValue\CustomMultiSelectValue;
-use App\Model\User\CustomInputValue\CustomSelectValue;
-use App\Model\User\CustomInputValue\CustomTextValue;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
-use App\Services\MailService;
-use App\Services\SettingsService;
+use App\Services\IMailService;
+use App\Services\ISettingsService;
 use App\Services\UserService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Nette;
 use Nette\Application\UI\Form;
@@ -43,13 +44,14 @@ use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Http\FileUpload;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
-use Nettrine\ORM\EntityManagerDecorator;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
+
 use function array_key_exists;
 use function assert;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -70,7 +72,7 @@ class EditUserSeminarFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private EntityManagerDecorator $em;
+    private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
 
@@ -86,9 +88,9 @@ class EditUserSeminarFormFactory
 
     private FilesService $filesService;
 
-    private MailService $mailService;
+    private IMailService $mailService;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
     private AclService $aclService;
 
@@ -96,7 +98,7 @@ class EditUserSeminarFormFactory
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
-        EntityManagerDecorator $em,
+        EntityManagerInterface $em,
         UserRepository $userRepository,
         CustomInputRepository $customInputRepository,
         CustomInputValueRepository $customInputValueRepository,
@@ -104,8 +106,8 @@ class EditUserSeminarFormFactory
         ApplicationService $applicationService,
         Validators $validators,
         FilesService $filesService,
-        MailService $mailService,
-        SettingsService $settingsService,
+        IMailService $mailService,
+        ISettingsService $settingsService,
         AclService $aclService,
         UserService $userService
     ) {
@@ -127,7 +129,7 @@ class EditUserSeminarFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->user = $this->userRepository->findById($id);
 
@@ -260,7 +262,7 @@ class EditUserSeminarFormFactory
      *
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;
@@ -268,7 +270,7 @@ class EditUserSeminarFormFactory
 
         $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
-        $this->em->transactional(function () use ($values, $loggedUser) : void {
+        $this->em->transactional(function () use ($values, $loggedUser): void {
             $customInputValueChanged = false;
 
             if (! $this->user->isExternalLector()) {
@@ -286,27 +288,27 @@ class EditUserSeminarFormFactory
 
                     if ($customInput instanceof CustomText) {
                         /** @var CustomTextValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomTextValue();
+                        $customInputValue = $customInputValue ?: new CustomTextValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomCheckbox) {
                         /** @var CustomCheckboxValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomCheckboxValue();
+                        $customInputValue = $customInputValue ?: new CustomCheckboxValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomSelect) {
                         /** @var CustomSelectValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomSelectValue();
+                        $customInputValue = $customInputValue ?: new CustomSelectValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomMultiSelect) {
                         /** @var CustomMultiSelectValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomMultiSelectValue();
+                        $customInputValue = $customInputValue ?: new CustomMultiSelectValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomFile) {
                         /** @var CustomFileValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomFileValue();
+                        $customInputValue = $customInputValue ?: new CustomFileValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         /** @var FileUpload $newValue */
                         $newValue = $values->$customInputId;
@@ -317,18 +319,16 @@ class EditUserSeminarFormFactory
                         }
                     } elseif ($customInput instanceof CustomDate) {
                         /** @var CustomDateValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomDateValue();
+                        $customInputValue = $customInputValue ?: new CustomDateValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomDateTime) {
                         /** @var CustomDateTimeValue $customInputValue */
-                        $customInputValue = $customInputValue ?: new CustomDateTimeValue();
+                        $customInputValue = $customInputValue ?: new CustomDateTimeValue($customInput, $this->user);
                         $oldValue         = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     }
 
-                    $customInputValue->setUser($this->user);
-                    $customInputValue->setInput($customInput);
                     $this->customInputValueRepository->save($customInputValue);
 
                     if ($oldValue !== $newValue) {
@@ -356,7 +356,7 @@ class EditUserSeminarFormFactory
     /**
      * Ověří, že není vybrána role "Neregistrovaný".
      */
-    public function validateRolesNonregistered(MultiSelectBox $field) : bool
+    public function validateRolesNonregistered(MultiSelectBox $field): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
@@ -366,7 +366,7 @@ class EditUserSeminarFormFactory
     /**
      * Ověří kapacitu rolí.
      */
-    public function validateRolesCapacities(MultiSelectBox $field) : bool
+    public function validateRolesCapacities(MultiSelectBox $field): bool
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
@@ -379,7 +379,7 @@ class EditUserSeminarFormFactory
      *
      * @param int[] $customInputRoles
      */
-    public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles) : bool
+    public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles): bool
     {
         return false;
     }
@@ -387,7 +387,7 @@ class EditUserSeminarFormFactory
     /**
      * Vygeneruje cestu souboru.
      */
-    private function generatePath(FileUpload $file) : string
+    private function generatePath(FileUpload $file): string
     {
         return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }

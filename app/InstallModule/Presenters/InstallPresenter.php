@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\InstallModule\Presenters;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\UserRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Contributte\Console\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Nette\Application\AbortException;
-use Nettrine\ORM\EntityManagerDecorator;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -39,10 +39,10 @@ class InstallPresenter extends InstallBasePresenter
     public Application $consoleApplication;
 
     /** @inject */
-    public EntityManagerDecorator $em;
+    public EntityManagerInterface $em;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /** @inject */
     public RoleRepository $roleRepository;
@@ -65,7 +65,7 @@ class InstallPresenter extends InstallBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function renderDefault() : void
+    public function renderDefault(): void
     {
         if ($this->user->isLoggedIn()) {
             $this->user->logout(true);
@@ -88,7 +88,7 @@ class InstallPresenter extends InstallBasePresenter
      *
      * @throws Exception
      */
-    public function handleImportSchema() : void
+    public function handleImportSchema(): void
     {
         $this->consoleApplication->add(new MigrateCommand());
         $this->consoleApplication->setAutoExit(false);
@@ -113,7 +113,7 @@ class InstallPresenter extends InstallBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function renderAdmin() : void
+    public function renderAdmin(): void
     {
         try {
             if ($this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
@@ -130,7 +130,7 @@ class InstallPresenter extends InstallBasePresenter
             return;
         }
 
-        $this->em->transactional(function () : void {
+        $this->em->transactional(function (): void {
             $user = $this->userRepository->findById($this->user->id);
             $this->userRepository->save($user);
 
@@ -158,7 +158,7 @@ class InstallPresenter extends InstallBasePresenter
      *
      * @throws AbortException
      */
-    public function handleCreateAdmin() : void
+    public function handleCreateAdmin(): void
     {
         if ($this->checkSkautISConnection()) {
             $this->redirect(':Auth:login', ['backlink' => ':Install:Install:admin']);
@@ -173,7 +173,7 @@ class InstallPresenter extends InstallBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function renderFinish() : void
+    public function renderFinish(): void
     {
         try {
             if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
@@ -192,7 +192,7 @@ class InstallPresenter extends InstallBasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    public function renderInstalled() : void
+    public function renderInstalled(): void
     {
         try {
             if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
@@ -208,7 +208,7 @@ class InstallPresenter extends InstallBasePresenter
     /**
      * Vyzkouší připojení ke skautIS pomocí anonymní funkce.
      */
-    private function checkSkautISConnection() : bool
+    private function checkSkautISConnection(): bool
     {
         try {
             $this->skautIs->org->UnitAllRegistryBasic();

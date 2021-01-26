@@ -41,6 +41,9 @@ class BlockDetailDto
     private ?int $capacity = null;
 
     /** @JMS\Type("boolean") */
+    private bool $alternatesAllowed;
+
+    /** @JMS\Type("boolean") */
     private bool $mandatory;
 
     /** @JMS\Type("boolean") */
@@ -61,32 +64,32 @@ class BlockDetailDto
     /** @JMS\Type("boolean") */
     private bool $userAttends;
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId(int $id) : void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getCategory() : string
+    public function getCategory(): string
     {
         return $this->category;
     }
 
-    public function setCategory(string $category) : void
+    public function setCategory(string $category): void
     {
         $this->category = $category;
     }
@@ -94,7 +97,7 @@ class BlockDetailDto
     /**
      * @return LectorDetailDto[]
      */
-    public function getLectors() : array
+    public function getLectors(): array
     {
         return $this->lectors;
     }
@@ -102,107 +105,117 @@ class BlockDetailDto
     /**
      * @param LectorDetailDto[] $lectors
      */
-    public function setLectors(array $lectors) : void
+    public function setLectors(array $lectors): void
     {
         $this->lectors = $lectors;
     }
 
-    public function getLectorsNames() : string
+    public function getLectorsNames(): string
     {
         return $this->lectorsNames;
     }
 
-    public function setLectorsNames(string $lectorsNames) : void
+    public function setLectorsNames(string $lectorsNames): void
     {
         $this->lectorsNames = $lectorsNames;
     }
 
-    public function getDuration() : int
+    public function getDuration(): int
     {
         return $this->duration;
     }
 
-    public function setDuration(int $duration) : void
+    public function setDuration(int $duration): void
     {
         $this->duration = $duration;
     }
 
-    public function getCapacity() : ?int
+    public function getCapacity(): ?int
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity) : void
+    public function setCapacity(?int $capacity): void
     {
         $this->capacity = $capacity;
     }
 
-    public function isMandatory() : bool
+    public function isAlternatesAllowed(): bool
+    {
+        return $this->alternatesAllowed;
+    }
+
+    public function setAlternatesAllowed(bool $alternatesAllowed): void
+    {
+        $this->alternatesAllowed = $alternatesAllowed;
+    }
+
+    public function isMandatory(): bool
     {
         return $this->mandatory;
     }
 
-    public function setMandatory(bool $mandatory) : void
+    public function setMandatory(bool $mandatory): void
     {
         $this->mandatory = $mandatory;
     }
 
-    public function isAutoRegistered() : bool
+    public function isAutoRegistered(): bool
     {
         return $this->autoRegistered;
     }
 
-    public function setAutoRegistered(bool $autoRegistered) : void
+    public function setAutoRegistered(bool $autoRegistered): void
     {
         $this->autoRegistered = $autoRegistered;
     }
 
-    public function getPerex() : string
+    public function getPerex(): string
     {
         return $this->perex;
     }
 
-    public function setPerex(string $perex) : void
+    public function setPerex(string $perex): void
     {
         $this->perex = $perex;
     }
 
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function setDescription(string $description) : void
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
 
-    public function getProgramsCount() : int
+    public function getProgramsCount(): int
     {
         return $this->programsCount;
     }
 
-    public function setProgramsCount(int $programsCount) : void
+    public function setProgramsCount(int $programsCount): void
     {
         $this->programsCount = $programsCount;
     }
 
-    public function isUserAllowed() : bool
+    public function isUserAllowed(): bool
     {
         return $this->userAllowed;
     }
 
-    public function setUserAllowed(bool $userAllowed) : void
+    public function setUserAllowed(bool $userAllowed): void
     {
         $this->userAllowed = $userAllowed;
     }
 
-    public function isUserAttends() : bool
+    public function isUserAttends(): bool
     {
         return $this->userAttends;
     }
 
-    public function setUserAttends(bool $userAttends) : void
+    public function setUserAttends(bool $userAttends): void
     {
         $this->userAttends = $userAttends;
     }

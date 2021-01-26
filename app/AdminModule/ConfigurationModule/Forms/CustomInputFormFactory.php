@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
-use App\Model\Settings\CustomInput\CustomCheckbox;
-use App\Model\Settings\CustomInput\CustomDate;
-use App\Model\Settings\CustomInput\CustomDateTime;
-use App\Model\Settings\CustomInput\CustomFile;
-use App\Model\Settings\CustomInput\CustomInput;
-use App\Model\Settings\CustomInput\CustomInputRepository;
-use App\Model\Settings\CustomInput\CustomMultiSelect;
-use App\Model\Settings\CustomInput\CustomSelect;
-use App\Model\Settings\CustomInput\CustomText;
+use App\Model\CustomInput\CustomCheckbox;
+use App\Model\CustomInput\CustomDate;
+use App\Model\CustomInput\CustomDateTime;
+use App\Model\CustomInput\CustomFile;
+use App\Model\CustomInput\CustomInput;
+use App\Model\CustomInput\CustomMultiSelect;
+use App\Model\CustomInput\CustomSelect;
+use App\Model\CustomInput\CustomText;
+use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Services\AclService;
 use App\Utils\Helpers;
 use Doctrine\ORM\NonUniqueResultException;
@@ -23,6 +23,7 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
+
 use function array_keys;
 use function array_map;
 use function explode;
@@ -65,7 +66,7 @@ class CustomInputFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->customInput = $this->customInputRepository->findById($id);
 
@@ -126,7 +127,7 @@ class CustomInputFormFactory
      * @throws NonUniqueResultException
      * @throws ORMException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;
@@ -190,7 +191,7 @@ class CustomInputFormFactory
      *
      * @return string[]
      */
-    private function prepareCustomInputTypesOptions() : array
+    private function prepareCustomInputTypesOptions(): array
     {
         $options = [];
         foreach (CustomInput::$types as $type) {

@@ -22,21 +22,21 @@ class DiscountsPresenter extends ConfigurationBasePresenter
     /** @inject */
     public IDiscountFormFactory $discountFormFactory;
 
-    protected function createComponentDiscountsGrid() : DiscountsGridControl
+    protected function createComponentDiscountsGrid(): DiscountsGridControl
     {
         return $this->discountsGridControlFactory->create();
     }
 
-    protected function createComponentDiscountForm() : DiscountForm
+    protected function createComponentDiscountForm(): DiscountForm
     {
         $control = $this->discountFormFactory->create((int) $this->getParameter('id'));
 
-        $control->onSave[] = function () : void {
+        $control->onSave[] = function (): void {
             $this->flashMessage('admin.configuration.discounts_saved', 'success');
             $this->redirect('Discounts:default');
         };
 
-        $control->onConditionError[] = function (DiscountForm $control) : void {
+        $control->onConditionError[] = function (DiscountForm $control): void {
             $this->flashMessage('admin.configuration.discounts_condition_format', 'danger');
 
             if ($control->id) {

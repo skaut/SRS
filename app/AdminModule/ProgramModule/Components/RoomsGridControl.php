@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
+use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
-use App\Model\Program\RoomRepository;
 use App\Services\ExcelExportService;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -55,7 +55,7 @@ class RoomsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/rooms_grid.latte');
         $this->template->render();
@@ -66,7 +66,7 @@ class RoomsGridControl extends Control
      *
      * @throws DataGridException
      */
-    public function createComponentRoomsGrid(string $name) : void
+    public function createComponentRoomsGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -86,7 +86,7 @@ class RoomsGridControl extends Control
                 return $row->getCapacity() === null;
             });
 
-        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) : void {
+        $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container): void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.rooms_name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findAllNames());
@@ -97,7 +97,7 @@ class RoomsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container): void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.program.rooms_name_empty');
 
@@ -105,7 +105,7 @@ class RoomsGridControl extends Control
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Room $item) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Room $item): void {
             /** @var TextInput $nameText */
             $nameText = $container['name'];
             $nameText->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findOthersNames($item->getId()));
@@ -136,7 +136,7 @@ class RoomsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function add(stdClass $values) : void
+    public function add(stdClass $values): void
     {
         $room = new Room();
 
@@ -157,7 +157,7 @@ class RoomsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function edit(string $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values): void
     {
         $room = $this->roomRepository->findById((int) $id);
 
@@ -178,7 +178,7 @@ class RoomsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $room = $this->roomRepository->findById($id);
         $this->roomRepository->remove($room);
@@ -195,10 +195,10 @@ class RoomsGridControl extends Control
      *
      * @throws AbortException
      */
-    public function groupExportRoomsSchedules(array $ids) : void
+    public function groupExportRoomsSchedules(array $ids): void
     {
         $this->sessionSection->roomIds = $ids;
-        $this->redirect('exportroomsschedules'); //presmerovani kvuli zruseni ajax
+        $this->redirect('exportroomsschedules'); // presmerovani kvuli zruseni ajax
     }
 
     /**
@@ -207,7 +207,7 @@ class RoomsGridControl extends Control
      * @throws AbortException
      * @throws Exception
      */
-    public function handleExportRoomsSchedules() : void
+    public function handleExportRoomsSchedules(): void
     {
         $ids = $this->session->getSection('srs')->roomIds;
 

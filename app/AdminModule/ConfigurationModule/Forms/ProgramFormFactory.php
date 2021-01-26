@@ -7,9 +7,9 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\CalendarView;
 use App\Model\Enums\ProgramRegistrationType;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
@@ -30,9 +30,9 @@ class ProgramFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
-    public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
+    public function __construct(BaseFormFactory $baseForm, ISettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
         $this->settingsService = $settingsService;
@@ -44,7 +44,7 @@ class ProgramFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -110,7 +110,7 @@ class ProgramFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values->isAllowedAddBlock);
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values->isAllowedModifySchedule);
@@ -126,7 +126,7 @@ class ProgramFormFactory
      *
      * @param DateTime[]|null[] $args
      */
-    public function validateRegisterProgramsFrom(DateTimeControl $field, array $args) : bool
+    public function validateRegisterProgramsFrom(DateTimeControl $field, array $args): bool
     {
         if ($args[0] === null || $args[1] === null) {
             return true;
@@ -140,7 +140,7 @@ class ProgramFormFactory
      *
      * @param DateTime[]|null[] $args
      */
-    public function validateRegisterProgramsTo(DateTimeControl $field, array $args) : bool
+    public function validateRegisterProgramsTo(DateTimeControl $field, array $args): bool
     {
         if ($args[0] === null || $args[1] === null) {
             return true;
@@ -154,7 +154,7 @@ class ProgramFormFactory
      *
      * @return string[]
      */
-    private function prepareRegisterProgramsTypeOptions() : array
+    private function prepareRegisterProgramsTypeOptions(): array
     {
         $options = [];
         foreach (ProgramRegistrationType::$types as $type) {

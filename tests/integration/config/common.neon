@@ -1,0 +1,28 @@
+services:
+    - App\Services\CommandBus(@messenger.commandBus.bus)
+    - App\Services\QueryBus(@messenger.queryBus.bus)
+    - App\Services\EventBus(@messenger.eventBus.bus)
+    - App\Services\MailServiceStub
+    - App\Services\SettingsServiceStub
+    - Tracy\Bar
+
+extensions:
+    console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
+    messenger: Fmasa\Messenger\DI\MessengerExtension
+
+nettrine.dbal:
+    connection:
+        host: mysql-test
+        driver: mysqli
+        dbname: srs
+        user: root
+        password: root
+
+messenger:
+    buses:
+        commandBus:
+        eventBus:
+        queryBus:
+
+includes:
+    - ../../../app/config/doctrine.neon

@@ -11,5 +11,5 @@ namespace App\WebModule\Components;
  */
 interface ICapacitiesContentControlFactory
 {
-    public function create() : CapacitiesContentControl;
+    public function create(): CapacitiesContentControl;
 }

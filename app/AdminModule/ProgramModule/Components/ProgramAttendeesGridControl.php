@@ -6,19 +6,32 @@ namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
-use App\Model\Enums\ApplicationState;
+use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Program\Exceptions\ProgramCapacityOccupiedException;
+use App\Model\Program\Exceptions\UserAlreadyAttendsBlockException;
+use App\Model\Program\Exceptions\UserAlreadyAttendsProgramException;
+use App\Model\Program\Exceptions\UserAttendsConflictingProgramException;
+use App\Model\Program\Exceptions\UserNotAllowedProgramException;
+use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Program;
-use App\Model\Program\ProgramRepository;
+use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Settings\Settings;
+use App\Model\User\Commands\RegisterProgram;
+use App\Model\User\Commands\UnregisterProgram;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
-use App\Services\ProgramService;
+use App\Services\CommandBus;
+use App\Services\ISettingsService;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
+use Tracy\Debugger;
+use Tracy\ILogger;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -40,21 +53,25 @@ class ProgramAttendeesGridControl extends Control
 
     private UserRepository $userRepository;
 
-    private ProgramService $programService;
-
     private SessionSection $sessionSection;
+
+    private CommandBus $commandBus;
+
+    private ISettingsService $settingsService;
 
     public function __construct(
         ITranslator $translator,
         ProgramRepository $programRepository,
         UserRepository $userRepository,
-        ProgramService $programService,
-        Session $session
+        Session $session,
+        CommandBus $commandBus,
+        ISettingsService $settingsService
     ) {
         $this->translator        = $translator;
         $this->programRepository = $programRepository;
         $this->userRepository    = $userRepository;
-        $this->programService    = $programService;
+        $this->commandBus        = $commandBus;
+        $this->settingsService   = $settingsService;
 
         $this->sessionSection = $session->getSection('srs');
     }
@@ -62,7 +79,7 @@ class ProgramAttendeesGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/program_attendees_grid.latte');
         $this->template->render();
@@ -73,7 +90,7 @@ class ProgramAttendeesGridControl extends Control
      *
      * @throws DataGridException
      */
-    public function createComponentProgramAttendeesGrid(string $name) : void
+    public function createComponentProgramAttendeesGrid(string $name): void
     {
         $programId = (int) $this->getPresenter()->getParameter('programId');
         if (! $programId) {
@@ -87,63 +104,56 @@ class ProgramAttendeesGridControl extends Control
         if (! $program) {
             $grid->setDataSource([]);
         } else {
-            $this->program = $program;
-            $user          = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+            $this->program                    = $program;
+            $user                             = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+            $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
 
             $grid->setTranslator($this->translator);
 
-            $qb = $this->userRepository->createQueryBuilder('u')
-                ->leftJoin('u.programs', 'p', 'WITH', 'p.id = :pid')
-                ->innerJoin('u.roles', 'r')
-                ->innerJoin('r.permissions', 'per')
-                ->innerJoin('u.applications', 'a')
-                ->innerJoin('a.subevents', 's')
-                ->where('per.name = :permission')
-                ->andWhere('s.id = :sid')
-                ->andWhere('a.validTo IS NULL')
-                ->andWhere('(a.state = \'' . ApplicationState::PAID . '\' OR a.state = \'' . ApplicationState::PAID_FREE
-                    . '\' OR a.state = \'' . ApplicationState::WAITING_FOR_PAYMENT . '\')')
-                ->setParameter('pid', $program->getId())
-                ->setParameter('permission', Permission::CHOOSE_PROGRAMS)
-                ->setParameter('sid', $program->getBlock()->getSubevent()->getId())
-                ->orderBy('u.displayName');
-
-            if ($this->program->getBlock()->getCategory()) {
-                $qb = $qb
-                    ->innerJoin('u.roles', 'rol')
-                    ->innerJoin('rol.registerableCategories', 'c')
-                    ->andWhere('c.id = :cid')
-                    ->setParameter('cid', $this->program->getBlock()->getCategory()->getId());
-            }
+            $qb = $this->userRepository->blockAllowedQuery($program->getBlock(), $registrationBeforePaymentAllowed)
+                ->leftJoin('u.programApplications', 'pa', 'WITH', 'pa.program = :program')
+                ->setParameter('program', $program);
 
             $grid->setDataSource($qb);
+            $grid->setDefaultSort(['displayName' => 'ASC']);
             $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
             $grid->setStrictSessionFilterValues(false);
 
-            $grid->addGroupAction('admin.program.blocks_attendees_register')->onSelect[]   = [$this, 'groupRegister'];
-            $grid->addGroupAction('admin.program.blocks_attendees_unregister')->onSelect[] = [$this, 'groupUnregister'];
-
-            $grid->addColumnText('displayName', 'admin.program.blocks_attendees_name')
+            $grid->addColumnText('displayName', 'admin.program.blocks.attendees.column.name')
                 ->setFilterText();
 
-            $grid->addColumnText('attends', 'admin.program.blocks_attendees_attends', 'pid')
-                ->setRenderer(function (User $item) {
-                    return $item->getPrograms()->contains($this->program)
+            $grid->addColumnText('attends', 'admin.program.blocks.attendees.column.attends', 'pa')
+                ->setRenderer(function (User $user) {
+                    return $user->isAttendee($this->program)
                         ? $this->translator->translate('admin.common.yes')
                         : $this->translator->translate('admin.common.no');
                 })
                 ->setFilterSelect(['' => 'admin.common.all', 'yes' => 'admin.common.yes', 'no' => 'admin.common.no'])
-                ->setCondition(function (QueryBuilder $qb, string $value) : void {
+                ->setCondition(static function (QueryBuilder $qb, string $value): void {
                     if ($value === '') {
                         return;
                     } elseif ($value === 'yes') {
-                        $qb->innerJoin('u.programs', 'pro')
-                            ->andWhere('pro.id = :proid')
-                            ->setParameter('proid', $this->program->getId());
+                        $qb->andWhere('pa.alternate = false');
                     } elseif ($value === 'no') {
-                        $qb->leftJoin('u.programs', 'pro')
-                            ->andWhere('u not in (:attendees)')
-                            ->setParameter('attendees', $this->program->getAttendees());
+                        $qb->andWhere('pa IS NULL OR pa.alternate = true');
+                    }
+                })
+                ->setTranslateOptions();
+
+            $grid->addColumnText('alternates', 'admin.program.blocks.attendees.column.alternates', 'pa')
+                ->setRenderer(function (User $user) {
+                    return $user->isAlternate($this->program)
+                        ? $this->translator->translate('admin.common.yes')
+                        : $this->translator->translate('admin.common.no');
+                })
+                ->setFilterSelect(['' => 'admin.common.all', 'yes' => 'admin.common.yes', 'no' => 'admin.common.no'])
+                ->setCondition(static function (QueryBuilder $qb, string $value): void {
+                    if ($value === '') {
+                        return;
+                    } elseif ($value === 'yes') {
+                        $qb->andWhere('pa.alternate = true');
+                    } elseif ($value === 'no') {
+                        $qb->andWhere('pa IS NULL OR pa.alternate = true');
                     }
                 })
                 ->setTranslateOptions();
@@ -156,18 +166,34 @@ class ProgramAttendeesGridControl extends Control
                     ->addAttributes(['target' => '_blank']);
             }
 
-            if ($user->isAllowedModifyBlock($this->program->getBlock())) {
-                $grid->addAction('register', 'admin.program.blocks_attendees_register', 'register!')
+            if ($user->isAllowedModifyBlock($this->program->getBlock()) && $program->getBlock()->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED) {
+                $grid->addAction('register', 'admin.program.blocks.attendees.action.register', 'register!')
                     ->setClass('btn btn-xs btn-success ajax');
-                $grid->allowRowsAction('register', function ($item) {
-                    return ! $this->program->isAttendee($item);
+                $grid->allowRowsAction('register', function (User $user) {
+                    $freeCapacity = $this->program->getBlockCapacity() === null || $this->program->getBlockCapacity() > $this->program->getAttendeesCount();
+
+                    return $freeCapacity && ! $user->isAttendee($this->program);
                 });
 
-                $grid->addAction('unregister', 'admin.program.blocks_attendees_unregister', 'unregister!')
-                    ->setClass('btn btn-xs btn-danger ajax');
-                $grid->allowRowsAction('unregister', function ($item) {
-                    return $this->program->isAttendee($item);
+                $grid->addAction('registerAlternate', 'admin.program.blocks.attendees.action.register_alternate', 'register!')
+                    ->setClass('btn btn-xs btn-success ajax');
+                $grid->allowRowsAction('registerAlternate', function (User $user) {
+                    $freeCapacity = $this->program->getBlockCapacity() === null || $this->program->getBlockCapacity() > $this->program->getAttendeesCount();
+
+                    return ! $freeCapacity && $this->program->getBlock()->isAlternatesAllowed()
+                        && ! $user->isAttendee($this->program) && ! $user->isAlternate($this->program);
                 });
+
+                $grid->addAction('unregister', 'admin.program.blocks.attendees.action.unregister', 'unregister!')
+                    ->setClass('btn btn-xs btn-danger ajax');
+                $grid->allowRowsAction('unregister', function (User $user) {
+                    return $user->isAttendee($this->program) || $user->isAlternate($this->program);
+                });
+
+                /* todo: opravit EntityManager closed pri exception
+                $grid->addGroupAction('admin.program.blocks.attendees.action.register')->onSelect[]   = [$this, 'groupRegister'];
+                $grid->addGroupAction('admin.program.blocks.attendees.action.unregister')->onSelect[] = [$this, 'groupUnregister'];
+                */
             }
         }
     }
@@ -178,7 +204,7 @@ class ProgramAttendeesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleRegister(int $id) : void
+    public function handleRegister(int $id): void
     {
         $user = $this->userRepository->findById($id);
 
@@ -188,11 +214,31 @@ class ProgramAttendeesGridControl extends Control
 
         if (! $this->isAllowedModifyProgram($program)) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
-        } elseif ($user->hasProgramBlock($program->getBlock())) {
-            $p->flashMessage('admin.program.blocks_attendees_already_has_block', 'danger');
         } else {
-            $this->programService->registerProgram($user, $program, true);
-            $p->flashMessage('admin.program.blocks_attendees_registered', 'success');
+            try {
+                $this->commandBus->handle(new RegisterProgram($user, $program));
+                $p->flashMessage('admin.program.blocks.attendees.message.registered', 'success');
+            } catch (HandlerFailedException $e) {
+                if ($e->getPrevious() instanceof UserNotAllowedProgramException) {
+                    $p->flashMessage('admin.program.blocks.attendees.message.not_allowed', 'danger');
+                }
+
+                if ($e->getPrevious() instanceof UserAlreadyAttendsProgramException) {
+                    $p->flashMessage('admin.program.blocks.attendees.message.already_attends_program', 'danger');
+                }
+
+                if ($e->getPrevious() instanceof UserAlreadyAttendsBlockException) {
+                    $p->flashMessage('admin.program.blocks.attendees.message.alreadu_attends_block', 'danger');
+                }
+
+                if ($e->getPrevious() instanceof ProgramCapacityOccupiedException) {
+                    $p->flashMessage('admin.program.blocks.attendees.message.capacity_occupied', 'danger');
+                }
+
+                if ($e->getPrevious() instanceof UserAttendsConflictingProgramException) {
+                    $p->flashMessage('admin.program.blocks.attendees.message.attends_conflicting', 'danger');
+                }
+            }
         }
 
         if ($p->isAjax()) {
@@ -209,7 +255,7 @@ class ProgramAttendeesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function handleUnregister(int $id) : void
+    public function handleUnregister(int $id): void
     {
         $user = $this->userRepository->findById($id);
 
@@ -220,8 +266,14 @@ class ProgramAttendeesGridControl extends Control
         if (! $this->isAllowedModifyProgram($program)) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         } else {
-            $this->programService->unregisterProgram($user, $program, true);
-            $p->flashMessage('admin.program.blocks_attendees_unregistered', 'success');
+            try {
+                $this->commandBus->handle(new UnregisterProgram($user, $program));
+                $p->flashMessage('admin.program.blocks.attendees.message.unregistered', 'success');
+            } catch (HandlerFailedException $e) {
+                if ($e->getPrevious() instanceof UserNotAttendsProgramException) {
+                    $p->flashMessage('admin.program.blocks.attendees.message.not_attends', 'danger');
+                }
+            }
         }
 
         if ($p->isAjax()) {
@@ -240,21 +292,30 @@ class ProgramAttendeesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function groupRegister(array $ids) : void
+    public function groupRegister(array $ids): void
     {
         $p = $this->getPresenter();
 
         if (! $this->isAllowedModifyProgram($this->program)) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         } else {
+            $success = 0;
+            $all     = 0;
+
             foreach ($ids as $id) {
-                $user = $this->userRepository->findById($id);
-                if (! $user->hasProgramBlock($this->program->getBlock())) {
-                    $this->programService->registerProgram($user, $this->program, true);
+                try {
+                    $user = $this->userRepository->findById($id);
+                    $this->commandBus->handle(new RegisterProgram($user, $this->program));
+                    $success++;
+                } catch (HandlerFailedException $e) {
+                    Debugger::log($e, ILogger::DEBUG);
                 }
+
+                $all++;
             }
 
-            $p->flashMessage('admin.program.blocks_attendees_group_action_registered', 'success');
+            $message = $this->translator->translate('admin.program.blocks.attendees.message.group_registered', null, ['success' => $success, 'all' => $all]);
+            $p->flashMessage($message, 'success');
         }
 
         if ($p->isAjax()) {
@@ -273,21 +334,30 @@ class ProgramAttendeesGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function groupUnregister(array $ids) : void
+    public function groupUnregister(array $ids): void
     {
         $p = $this->getPresenter();
 
         if (! $this->isAllowedModifyProgram($this->program)) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         } else {
+            $success = 0;
+            $all     = 0;
+
             foreach ($ids as $id) {
-                $user = $this->userRepository->findById($id);
-                if ($user->hasProgramBlock($this->program->getBlock())) {
-                    $this->programService->unregisterProgram($user, $this->program, true);
+                try {
+                    $user = $this->userRepository->findById($id);
+                    $this->commandBus->handle(new UnregisterProgram($user, $this->program));
+                    $success++;
+                } catch (HandlerFailedException $e) {
+                    Debugger::log($e, ILogger::DEBUG);
                 }
+
+                $all++;
             }
 
-            $p->flashMessage('admin.program.blocks_attendees_group_action_unregistered', 'success');
+            $message = $this->translator->translate('admin.program.blocks.attendees.message.group_unregistered', null, ['success' => $success, 'all' => $all]);
+            $p->flashMessage($message, 'success');
         }
 
         if ($p->isAjax()) {
@@ -298,7 +368,7 @@ class ProgramAttendeesGridControl extends Control
         }
     }
 
-    private function isAllowedModifyProgram(Program $program) : bool
+    private function isAllowedModifyProgram(Program $program): bool
     {
         $user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
+use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
-use App\Model\Structure\SubeventRepository;
 use App\Utils\Helpers;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -35,7 +35,7 @@ class SubeventsGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/subevents_grid.latte');
         $this->template->render();
@@ -46,7 +46,7 @@ class SubeventsGridControl extends Control
      *
      * @throws DataGridException
      */
-    public function createComponentSubeventsGrid(string $name) : void
+    public function createComponentSubeventsGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -101,7 +101,7 @@ class SubeventsGridControl extends Control
      * @throws OptimisticLockException
      * @throws AbortException
      */
-    public function handleDelete(int $id) : void
+    public function handleDelete(int $id): void
     {
         $subevent = $this->subeventRepository->findById($id);
 

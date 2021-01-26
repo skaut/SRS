@@ -1,9 +1,5 @@
 name: "SRS"
 
-permission_group:
-    web: "Web"
-    admin: "Administrace"
-
 permission_name:
     access:
         admin: "Přístup do administrace"
@@ -16,9 +12,6 @@ permission_name:
         payments: "Spravovat platby"
         mailing: "Spravovat mailing"
         configuration: "Spravovat nastavení"
-
-    choose_programs:
-        program: "Přihlašovat se na programy"
 
     manage_own_programs:
         program: "Spravovat vlastní programy"
@@ -151,13 +144,11 @@ api:
         program_not_found: "Program nebyl nalezen."
         user_not_allowed_manage: "Nemáte právo upravovat harmonogram."
         not_allowed_modify: "Úprava harmonogramu není povolena."
-        user_not_allowed_register_programs: "Nemáte právo přihlašovat se na programy."
         register_programs_not_allowed: "Přihlašování na programy není v tuto chvíli povoleno."
-        register_programs_before_payment_not_allowed: "Přihlašování na programy povoleno až po zaplacení poplatku."
         program_already_registered: "Program už máte přihlášený."
         program_no_vacancies: "Kapacita programu je již obsazena."
-        program_category_not_allowed: "Nemáte právo přihlašovat se na programy z této kategorie."
-        program_blocked: "Tento programový blok už máte zapsaný, nebo máte jiný program ve stejnou dobu."
+        program_not_allowed: "Nemáte oprávnění pro zápis tohoto programu."
+        program_blocked: "Tento programový blok už máte zapsaný nebo máte jiný program ve stejný čas."
         program_registered: "Program byl úspěšně přihlášen."
         program_not_registered: "Na tento program jste nebyli přihlášeni."
         program_unregistered: "Program byl úspěšně odhlášen."

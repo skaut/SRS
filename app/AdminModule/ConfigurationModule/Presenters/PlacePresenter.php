@@ -8,8 +8,8 @@ use App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactor
 use App\AdminModule\ConfigurationModule\Components\PlacePointsGridControl;
 use App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\PlacePointFormFactory;
-use App\Model\Settings\Place\PlacePointRepository;
-use App\Model\Settings\SettingsException;
+use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Repositories\PlacePointRepository;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
@@ -33,7 +33,7 @@ class PlacePresenter extends ConfigurationBasePresenter
     /** @inject */
     public IPlacePointsGridControlFactory $placePointsGridControlFactory;
 
-    public function renderEdit(int $id) : void
+    public function renderEdit(int $id): void
     {
         $placePoint                 = $this->placePointRepository->findById($id);
         $this->template->placePoint = $placePoint;
@@ -43,11 +43,11 @@ class PlacePresenter extends ConfigurationBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    protected function createComponentPlaceDescriptionForm() : Form
+    protected function createComponentPlaceDescriptionForm(): Form
     {
         $form = $this->placeDescriptionFormFactory->create();
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
 
             $this->redirect('this');
@@ -56,11 +56,11 @@ class PlacePresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentPlacePointForm() : Form
+    protected function createComponentPlacePointForm(): Form
     {
         $form = $this->placePointFormFactory->create((int) $this->getParameter('id'));
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) : void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('Place:default');
             }
@@ -73,7 +73,7 @@ class PlacePresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    protected function createComponentPlacePointsGrid() : PlacePointsGridControl
+    protected function createComponentPlacePointsGrid(): PlacePointsGridControl
     {
         return $this->placePointsGridControlFactory->create();
     }

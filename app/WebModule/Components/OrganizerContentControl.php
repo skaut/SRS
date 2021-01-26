@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\Cms\Content\OrganizerContentDto;
+use App\Model\Cms\Dto\OrganizerContentDto;
 use Nette\Application\UI\Control;
 
 /**
@@ -14,7 +14,7 @@ use Nette\Application\UI\Control;
  */
 class OrganizerContentControl extends Control
 {
-    public function render(OrganizerContentDto $content) : void
+    public function render(OrganizerContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/organizer_content.latte');

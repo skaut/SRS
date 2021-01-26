@@ -14,5 +14,5 @@ interface IUsersGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : UsersGridControl;
+    public function create(): UsersGridControl;
 }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\AdminModule\ProgramModule\Components;
 
 use App\Model\Program\Program;
-use App\Model\Program\ProgramRepository;
+use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
-use App\Model\Program\RoomRepository;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Exception;
@@ -52,7 +52,7 @@ class RoomScheduleGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/room_schedule_grid.latte');
         $this->template->render();
@@ -63,7 +63,7 @@ class RoomScheduleGridControl extends Control
      *
      * @throws DataGridException
      */
-    public function createComponentRoomScheduleGrid(string $name) : void
+    public function createComponentRoomScheduleGrid(string $name): void
     {
         $this->room = $this->roomRepository->findById((int) $this->getPresenter()->getParameter('id'));
 
@@ -85,13 +85,11 @@ class RoomScheduleGridControl extends Control
 
         $grid->addColumnText('occupancy', 'admin.program.rooms_schedule_occupancy')
             ->setRenderer(
-                function (Program $row) {
-                    $capacity = $this->room->getCapacity();
-                    if ($capacity === null) {
-                        return $row->getAttendeesCount();
-                    }
+                function (Program $program) {
+                    $capacity       = $this->room->getCapacity();
+                    $attendeesCount = $program->getAttendeesCount();
 
-                    return $row->getAttendeesCount() . '/' . $capacity;
+                    return $capacity === null ? $attendeesCount : $attendeesCount . '/' . $capacity;
                 }
             );
 
@@ -102,7 +100,7 @@ class RoomScheduleGridControl extends Control
      * @throws AbortException
      * @throws Exception
      */
-    public function handleExportRoomsSchedule() : void
+    public function handleExportRoomsSchedule(): void
     {
         $this->room = $this->roomRepository->findById((int) $this->getPresenter()->getParameter('id'));
 

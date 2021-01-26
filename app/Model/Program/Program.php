@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Model\Program;
 
-use App\Model\User\User;
 use DateInterval;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Nettrine\ORM\Entity\Attributes\Id;
@@ -16,7 +16,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita program.
  *
- * @ORM\Entity(repositoryClass="ProgramRepository")
+ * @ORM\Entity
  * @ORM\Table(name="program")
  *
  * @author Michal Májský
@@ -34,20 +34,20 @@ class Program
     protected Block $block;
 
     /**
-     * Účastníci programu.
+     * Přihlášky na program.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="programs", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ProgramApplication", mappedBy="program", cascade={"persist"})
      *
-     * @var Collection|User[]
+     * @var Collection<ProgramApplication>
      */
-    protected Collection $attendees;
+    protected Collection $programApplications;
 
     /**
-     * Obsazenost.
+     * Počet účastníků.
      *
      * @ORM\Column(type="integer")
      */
-    protected int $occupancy = 0;
+    protected int $attendeesCount = 0;
 
     /**
      * Místnost.
@@ -63,93 +63,77 @@ class Program
      */
     protected DateTimeImmutable $start;
 
-    public function __construct(Block $block)
+    public function __construct(Block $block, ?Room $room, DateTimeImmutable $start)
     {
-        $this->block     = $block;
-        $this->attendees = new ArrayCollection();
+        $this->block               = $block;
+        $this->room                = $room;
+        $this->start               = $start;
+        $this->programApplications = new ArrayCollection();
     }
 
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getBlock() : Block
+    public function getBlock(): Block
     {
         return $this->block;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getAttendees() : Collection
+    public function getAttendeesCount(): int
     {
-        return $this->attendees;
+        return $this->attendeesCount;
     }
 
-    public function addAttendee(User $user) : void
+    public function setAttendeesCount(int $attendeesCount): void
     {
-        if (! $this->attendees->contains($user)) {
-            $this->attendees->add($user);
-            $user->addProgram($this);
+        $this->attendeesCount = $attendeesCount;
+    }
+
+    public function getAlternatesCount(): int
+    {
+        return $this->programApplications->matching(
+            Criteria::create()->where(
+                Criteria::expr()->eq('alternate', true)
+            )
+        )->count();
+    }
+
+    public function getRoom(): ?Room
+    {
+        return $this->room;
+    }
+
+    public function setRoom(?Room $room): void
+    {
+        if ($this->room != null) {
+            $this->room->removeProgram($this);
         }
-    }
 
-    public function removeAttendee(User $user) : void
-    {
-        if ($this->attendees->contains($user)) {
-            $this->attendees->removeElement($user);
-            $user->removeProgram($this);
+        if ($room !== null) {
+            $room->addProgram($this);
         }
+
+        $this->room = $room;
     }
 
-    /**
-     * Vrací počet účastníků.
-     */
-    public function getAttendeesCount() : int
+    public function getStart(): DateTimeImmutable
     {
-        return $this->attendees->count();
+        return $this->start;
     }
 
-    /**
-     * Je uživatel účastník programu?
-     */
-    public function isAttendee(User $user) : bool
+    public function setStart(DateTimeImmutable $start): void
     {
-        return $this->attendees->contains($user);
+        $this->start = $start;
     }
 
     /**
      * Vrací kapacitu programového bloku.
      */
-    public function getCapacity() : ?int
+    public function getBlockCapacity(): ?int
     {
         return $this->block->getCapacity();
-    }
-
-    public function getOccupancy() : int
-    {
-        return $this->occupancy;
-    }
-
-    public function getRoom() : ?Room
-    {
-        return $this->room;
-    }
-
-    public function setRoom(?Room $room) : void
-    {
-        $this->room = $room;
-    }
-
-    public function getStart() : DateTimeImmutable
-    {
-        return $this->start;
-    }
-
-    public function setStart(DateTimeImmutable $start) : void
-    {
-        $this->start = $start;
     }
 
     /**
@@ -157,7 +141,7 @@ class Program
      *
      * @throws Exception
      */
-    public function getEnd() : DateTimeImmutable
+    public function getEnd(): DateTimeImmutable
     {
         return $this->start->add(new DateInterval('PT' . $this->block->getDuration() . 'M'));
     }

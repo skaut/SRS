@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -64,7 +64,7 @@ class Authenticator implements IAuthenticator
      * @throws ORMException
      * @throws Exception
      */
-    public function authenticate(array $credentials) : IIdentity
+    public function authenticate(array $credentials): IIdentity
     {
         $skautISUser = $this->skautIsService->getUserDetail();
 
@@ -82,7 +82,7 @@ class Authenticator implements IAuthenticator
 
         $this->userRepository->save($user);
 
-        //nacteni schvalenych roli v SRS
+        // nacteni schvalenych roli v SRS
         $netteRoles = [];
         if ($user->isApproved()) {
             foreach ($user->getRoles() as $role) {
@@ -93,7 +93,7 @@ class Authenticator implements IAuthenticator
             $netteRoles[$roleUnapproved->getId()] = $roleUnapproved->getName();
         }
 
-        //invalidace cache roli ze skautIS
+        // invalidace cache roli ze skautIS
         $this->userRolesCache->remove($user->getSkautISUserId());
 
         return new Identity($user->getId(), $netteRoles, ['firstLogin' => $firstLogin]);
@@ -104,7 +104,7 @@ class Authenticator implements IAuthenticator
      *
      * @throws Exception
      */
-    private function updateUserFromSkautIS(User $user, stdClass $skautISUser) : void
+    private function updateUserFromSkautIS(User $user, stdClass $skautISUser): void
     {
         $skautISPerson = $this->skautIsService->getPersonDetail($skautISUser->ID_Person);
 
@@ -151,7 +151,7 @@ class Authenticator implements IAuthenticator
     /**
      * Aktualizuje role přihlášeného uživatele.
      */
-    public function updateRoles(NS\User $user, ?Role $testedRole = null) : void
+    public function updateRoles(NS\User $user, ?Role $testedRole = null): void
     {
         $dbuser = $this->userRepository->findById($user->id);
 

@@ -11,7 +11,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita FAQ.
  *
- * @ORM\Entity(repositoryClass="FaqRepository")
+ * @ORM\Entity
  * @ORM\Table(name="faq")
  *
  * @author Michal Májský
@@ -56,57 +56,57 @@ class Faq
      */
     protected int $position = 0;
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getQuestion() : string
+    public function getQuestion(): string
     {
         return $this->question;
     }
 
-    public function setQuestion(string $question) : void
+    public function setQuestion(string $question): void
     {
         $this->question = $question;
     }
 
-    public function getAuthor() : User
+    public function getAuthor(): User
     {
         return $this->author;
     }
 
-    public function setAuthor(User $author) : void
+    public function setAuthor(User $author): void
     {
         $this->author = $author;
     }
 
-    public function getAnswer() : ?string
+    public function getAnswer(): ?string
     {
         return $this->answer;
     }
 
-    public function setAnswer(?string $answer) : void
+    public function setAnswer(?string $answer): void
     {
         $this->answer = $answer;
     }
 
-    public function isPublic() : bool
+    public function isPublic(): bool
     {
         return $this->public;
     }
 
-    public function setPublic(bool $public) : void
+    public function setPublic(bool $public): void
     {
         $this->public = $public;
     }
 
-    public function getPosition() : int
+    public function getPosition(): int
     {
         return $this->position;
     }
 
-    public function setPosition(int $position) : void
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }
@@ -114,7 +114,7 @@ class Faq
     /**
      * Je zodpovězena?
      */
-    public function isAnswered() : bool
+    public function isAnswered(): bool
     {
         return $this->answer !== '';
     }

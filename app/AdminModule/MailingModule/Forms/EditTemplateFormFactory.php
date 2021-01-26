@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\AdminModule\MailingModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Mailing\Repositories\TemplateRepository;
 use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateRepository;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
@@ -39,7 +39,7 @@ class EditTemplateFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $this->template = $this->templateRepository->findById($id);
 
@@ -80,7 +80,7 @@ class EditTemplateFormFactory
      *
      * @throws ORMException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
             return;

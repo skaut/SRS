@@ -10,7 +10,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita skautIS kurz.
  *
- * @ORM\Entity(repositoryClass="SkautIsCourseRepository")
+ * @ORM\Entity
  * @ORM\Table(name="skaut_is_course")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
@@ -33,27 +33,27 @@ class SkautIsCourse
      */
     protected string $name;
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getSkautIsCourseId() : int
+    public function getSkautIsCourseId(): int
     {
         return $this->skautIsCourseId;
     }
 
-    public function setSkautIsCourseId(int $skautIsCourseId) : void
+    public function setSkautIsCourseId(int $skautIsCourseId): void
     {
         $this->skautIsCourseId = $skautIsCourseId;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }

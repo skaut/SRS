@@ -14,5 +14,5 @@ interface ISubeventsGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : SubeventsGridControl;
+    public function create(): SubeventsGridControl;
 }

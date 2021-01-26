@@ -12,12 +12,12 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200208121828 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
@@ -32,7 +32,7 @@ final class Version20200208121828 extends AbstractMigration
         $this->addSql('ALTER TABLE user CHANGE birthdate birthdate DATE DEFAULT NULL COMMENT \'(DC2Type:date_immutable)\', CHANGE last_login last_login DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', CHANGE arrival arrival DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', CHANGE departure departure DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', CHANGE photo_update photo_update DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', CHANGE roles_application_date roles_application_date DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', CHANGE last_payment_date last_payment_date DATE DEFAULT NULL COMMENT \'(DC2Type:date_immutable)\'');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
     }
 }

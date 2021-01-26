@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\MailingModule\Components;
 
-use App\Model\Mailing\TemplateRepository;
+use App\Model\Mailing\Repositories\TemplateRepository;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -33,7 +33,7 @@ class MailTemplatesGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/mail_templates_grid.latte');
         $this->template->render();
@@ -45,7 +45,7 @@ class MailTemplatesGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentMailTemplatesGrid(string $name) : void
+    public function createComponentMailTemplatesGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -77,7 +77,7 @@ class MailTemplatesGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function changeActive(string $id, string $active) : void
+    public function changeActive(string $id, string $active): void
     {
         $p = $this->getPresenter();
 

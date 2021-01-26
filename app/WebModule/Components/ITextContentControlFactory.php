@@ -12,5 +12,5 @@ namespace App\WebModule\Components;
  */
 interface ITextContentControlFactory
 {
-    public function create() : TextContentControl;
+    public function create(): TextContentControl;
 }

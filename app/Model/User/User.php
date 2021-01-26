@@ -7,27 +7,29 @@ namespace App\Model\User;
 use App\Model\Acl\Permission;
 use App\Model\Acl\Role;
 use App\Model\Acl\SrsResource;
+use App\Model\Application\Application;
+use App\Model\Application\RolesApplication;
+use App\Model\Application\SubeventsApplication;
+use App\Model\CustomInput\CustomInput;
+use App\Model\CustomInput\CustomInputValue;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
-use App\Model\Settings\CustomInput\CustomInput;
+use App\Model\Program\ProgramApplication;
 use App\Model\Structure\Subevent;
-use App\Model\User\Application\Application;
-use App\Model\User\Application\RolesApplication;
-use App\Model\User\Application\SubeventsApplication;
-use App\Model\User\CustomInputValue\CustomInputValue;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Nettrine\ORM\Entity\Attributes\Id;
+
 use function implode;
 
 /**
  * Entita uživatele.
  *
- * @ORM\Entity(repositoryClass="UserRepository")
+ * @ORM\Entity
  * @ORM\Table(name="user")
  *
  * @author Michal Májský
@@ -221,35 +223,34 @@ class User
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="users", cascade={"persist"})
      *
-     * @var Collection|Role[]
+     * @var Collection<Role>
      */
     protected Collection $roles;
 
     /**
      * Přihlášky.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\User\Application\Application", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\App\Model\Application\Application", mappedBy="user", cascade={"persist"})
      *
-     * @var Collection|Application[]
+     * @var Collection<Application>
      */
     protected Collection $applications;
 
     /**
      * Přihlášené programy.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Program", inversedBy="attendees", cascade={"persist"})
-     * @ORM\OrderBy({"start" = "ASC"})
+     * @ORM\OneToMany(targetEntity="\App\Model\Program\ProgramApplication", mappedBy="user", cascade={"persist"})
      *
-     * @var Collection|Program[]
+     * @var Collection<ProgramApplication>
      */
-    protected Collection $programs;
+    protected Collection $programApplications;
 
     /**
      * Lektorované bloky.
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block", mappedBy="lectors", cascade={"persist"})
      *
-     * @var Collection|Block[]
+     * @var Collection<Block>
      */
     protected Collection $lecturersBlocks;
 
@@ -293,7 +294,7 @@ class User
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block")
      *
-     * @var Collection|Block[]
+     * @var Collection<Block>
      */
     protected Collection $notRegisteredMandatoryBlocks;
 
@@ -307,9 +308,9 @@ class User
     /**
      * Hodnoty vlastních polí přihlášky.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\User\CustomInputValue\CustomInputValue", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\App\Model\CustomInput\CustomInputValue", mappedBy="user", cascade={"persist"})
      *
-     * @var Collection|CustomInputValue[]
+     * @var Collection<CustomInputValue>
      */
     protected Collection $customInputValues;
 
@@ -338,105 +339,105 @@ class User
     {
         $this->applications                 = new ArrayCollection();
         $this->roles                        = new ArrayCollection();
-        $this->programs                     = new ArrayCollection();
+        $this->programApplications          = new ArrayCollection();
         $this->lecturersBlocks              = new ArrayCollection();
         $this->notRegisteredMandatoryBlocks = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getUsername() : ?string
+    public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    public function setUsername(?string $username) : void
+    public function setUsername(?string $username): void
     {
         $this->username = $username;
     }
 
-    public function getEmail() : ?string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(?string $email) : void
+    public function setEmail(?string $email): void
     {
         $this->email = $email;
     }
 
-    public function isApproved() : bool
+    public function isApproved(): bool
     {
         return $this->approved;
     }
 
-    public function setApproved(bool $approved) : void
+    public function setApproved(bool $approved): void
     {
         $this->approved = $approved;
     }
 
-    public function getFirstName() : string
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName) : void
+    public function setFirstName(string $firstName): void
     {
         $this->firstName = $firstName;
         $this->updateDisplayName();
         $this->updateLectorName();
     }
 
-    public function getLastName() : string
+    public function getLastName(): string
     {
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName) : void
+    public function setLastName(string $lastName): void
     {
         $this->lastName = $lastName;
         $this->updateDisplayName();
         $this->updateLectorName();
     }
 
-    public function getNickName() : ?string
+    public function getNickName(): ?string
     {
         return $this->nickName;
     }
 
-    public function setNickName(?string $nickName) : void
+    public function setNickName(?string $nickName): void
     {
         $this->nickName = $nickName;
         $this->updateDisplayName();
         $this->updateLectorName();
     }
 
-    public function getDegreePre() : ?string
+    public function getDegreePre(): ?string
     {
         return $this->degreePre;
     }
 
-    public function setDegreePre(?string $degreePre) : void
+    public function setDegreePre(?string $degreePre): void
     {
         $this->degreePre = $degreePre;
         $this->updateLectorName();
     }
 
-    public function getDegreePost() : ?string
+    public function getDegreePost(): ?string
     {
         return $this->degreePost;
     }
 
-    public function setDegreePost(?string $degreePost) : void
+    public function setDegreePost(?string $degreePost): void
     {
         $this->degreePost = $degreePost;
         $this->updateLectorName();
     }
 
-    public function getDisplayName() : string
+    public function getDisplayName(): string
     {
         return $this->displayName;
     }
@@ -444,7 +445,7 @@ class User
     /**
      * Aktualizuje zobrazované jméno.
      */
-    private function updateDisplayName() : void
+    private function updateDisplayName(): void
     {
         $this->displayName = $this->lastName . ' ' . $this->firstName;
 
@@ -453,7 +454,7 @@ class User
         }
     }
 
-    public function getLectorName() : ?string
+    public function getLectorName(): ?string
     {
         return $this->lectorName;
     }
@@ -461,7 +462,7 @@ class User
     /**
      * Aktualizuje jméno lektora.
      */
-    private function updateLectorName() : void
+    private function updateLectorName(): void
     {
         $this->lectorName = '';
 
@@ -480,12 +481,12 @@ class User
         }
     }
 
-    public function getSecurityCode() : ?string
+    public function getSecurityCode(): ?string
     {
         return $this->securityCode;
     }
 
-    public function setSecurityCode(?string $securityCode) : void
+    public function setSecurityCode(?string $securityCode): void
     {
         $this->securityCode = $securityCode;
     }
@@ -493,137 +494,137 @@ class User
     /**
      * Má propojený účet?
      */
-    public function isMember() : bool
+    public function isMember(): bool
     {
         return $this->member;
     }
 
-    public function setMember(bool $member) : void
+    public function setMember(bool $member): void
     {
         $this->member = $member;
     }
 
-    public function isExternalLector() : bool
+    public function isExternalLector(): bool
     {
         return $this->externalLector;
     }
 
-    public function setExternalLector(bool $externalLector) : void
+    public function setExternalLector(bool $externalLector): void
     {
         $this->externalLector = $externalLector;
     }
 
-    public function getUnit() : ?string
+    public function getUnit(): ?string
     {
         return $this->unit;
     }
 
-    public function setUnit(?string $unit) : void
+    public function setUnit(?string $unit): void
     {
         $this->unit = $unit;
     }
 
-    public function getSex() : ?string
+    public function getSex(): ?string
     {
         return $this->sex;
     }
 
-    public function setSex(?string $sex) : void
+    public function setSex(?string $sex): void
     {
         $this->sex = $sex;
     }
 
-    public function getBirthdate() : ?DateTimeImmutable
+    public function getBirthdate(): ?DateTimeImmutable
     {
         return $this->birthdate;
     }
 
-    public function setBirthdate(?DateTimeImmutable $birthdate) : void
+    public function setBirthdate(?DateTimeImmutable $birthdate): void
     {
         $this->birthdate = $birthdate;
     }
 
-    public function getAge() : ?int
+    public function getAge(): ?int
     {
         return $this->birthdate !== null ? (new DateTimeImmutable())->diff($this->birthdate)->y : null;
     }
 
-    public function getSkautISUserId() : ?int
+    public function getSkautISUserId(): ?int
     {
         return $this->skautISUserId;
     }
 
-    public function setSkautISUserId(?int $skautISUserId) : void
+    public function setSkautISUserId(?int $skautISUserId): void
     {
         $this->skautISUserId = $skautISUserId;
     }
 
-    public function getSkautISPersonId() : ?int
+    public function getSkautISPersonId(): ?int
     {
         return $this->skautISPersonId;
     }
 
-    public function setSkautISPersonId(?int $skautISPersonId) : void
+    public function setSkautISPersonId(?int $skautISPersonId): void
     {
         $this->skautISPersonId = $skautISPersonId;
     }
 
-    public function getLastLogin() : ?DateTimeImmutable
+    public function getLastLogin(): ?DateTimeImmutable
     {
         return $this->lastLogin;
     }
 
-    public function setLastLogin(?DateTimeImmutable $lastLogin) : void
+    public function setLastLogin(?DateTimeImmutable $lastLogin): void
     {
         $this->lastLogin = $lastLogin;
     }
 
-    public function getAbout() : ?string
+    public function getAbout(): ?string
     {
         return $this->about;
     }
 
-    public function setAbout(?string $about) : void
+    public function setAbout(?string $about): void
     {
         $this->about = $about;
     }
 
-    public function getStreet() : ?string
+    public function getStreet(): ?string
     {
         return $this->street;
     }
 
-    public function setStreet(?string $street) : void
+    public function setStreet(?string $street): void
     {
         $this->street = $street;
     }
 
-    public function getCity() : ?string
+    public function getCity(): ?string
     {
         return $this->city;
     }
 
-    public function setCity(?string $city) : void
+    public function setCity(?string $city): void
     {
         $this->city = $city;
     }
 
-    public function getPostcode() : ?string
+    public function getPostcode(): ?string
     {
         return $this->postcode;
     }
 
-    public function setPostcode(?string $postcode) : void
+    public function setPostcode(?string $postcode): void
     {
         $this->postcode = $postcode;
     }
 
-    public function getState() : ?string
+    public function getState(): ?string
     {
         return $this->state;
     }
 
-    public function setState(?string $state) : void
+    public function setState(?string $state): void
     {
         $this->state = $state;
     }
@@ -631,7 +632,7 @@ class User
     /**
      * Vrátí adresu uživatele.
      */
-    public function getAddress() : ?string
+    public function getAddress(): ?string
     {
         if (empty($this->street) || empty($this->city) || empty($this->postcode)) {
             return null;
@@ -640,56 +641,66 @@ class User
         return $this->street . ', ' . $this->city . ', ' . $this->postcode;
     }
 
-    public function isAttended() : bool
+    public function isAttended(): bool
     {
         return $this->attended;
     }
 
-    public function setAttended(bool $attended) : void
+    public function setAttended(bool $attended): void
     {
         $this->attended = $attended;
     }
 
     /**
-     * @return Collection|Role[]
+     * @return Collection<Role>
      */
-    public function getRoles() : Collection
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
 
     /**
-     * @param Collection|Role[] $roles
+     * @param Collection<Role> $roles
      */
-    public function setRoles(Collection $roles) : void
+    public function setRoles(Collection $roles): void
     {
-        $this->roles->clear();
+        foreach ($this->roles as $role) {
+            $this->removeRole($role);
+        }
+
         foreach ($roles as $role) {
-            $this->roles->add($role);
+            $this->addRole($role);
         }
     }
 
-    public function addRole(Role $role) : void
+    public function addRole(Role $role): void
     {
-        if (! $this->isInRole($role)) {
+        if (! $this->roles->contains($role)) {
             $this->roles->add($role);
+            $role->addUser($this);
+        }
+    }
+
+    public function removeRole(Role $role): void
+    {
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
+            $role->removeUser($this);
         }
     }
 
     /**
      * Je uživatel v roli?
      */
-    public function isInRole(Role $role) : bool
+    public function isInRole(Role $role): bool
     {
-        return $this->roles->filter(static function (Role $item) use ($role) {
-            return $item->getId() === $role->getId();
-        })->count() !== 0;
+        return $this->roles->contains($role);
     }
 
     /**
      * Vrací, zda má uživatel nějakou roli, která nemá cenu podle podakcí.
      */
-    public function hasFixedFeeRole() : bool
+    public function hasFixedFeeRole(): bool
     {
         return $this->roles->exists(static function (int $key, Role $role) {
             return $role->getFee() !== null;
@@ -699,7 +710,7 @@ class User
     /**
      * Vrátí role uživatele oddělené čárkou.
      */
-    public function getRolesText() : string
+    public function getRolesText(): string
     {
         $rolesNames = [];
         foreach ($this->roles as $role) {
@@ -712,7 +723,7 @@ class User
     /**
      * Má uživatel oprávnění k prostředku?
      */
-    public function isAllowed(string $resource, string $permission) : bool
+    public function isAllowed(string $resource, string $permission): bool
     {
         foreach ($this->roles as $r) {
             foreach ($r->getPermissions() as $p) {
@@ -728,7 +739,7 @@ class User
     /**
      * Je uživatel oprávněn upravovat blok?
      */
-    public function isAllowedModifyBlock(Block $block) : bool
+    public function isAllowedModifyBlock(Block $block): bool
     {
         if ($this->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS)) {
             return true;
@@ -738,27 +749,26 @@ class User
     }
 
     /**
-     * Je uživatel oprávněn zapisovat se na programy?
+     * @return Collection<Application>
      */
-    public function isAllowedRegisterPrograms() : bool
-    {
-        return $this->isApproved() && $this->isAllowed(SrsResource::PROGRAM, Permission::CHOOSE_PROGRAMS);
-    }
-
-    /**
-     * @return Collection|Application[]
-     */
-    public function getApplications() : Collection
+    public function getApplications(): Collection
     {
         return $this->applications;
+    }
+
+    public function addApplication(Application $application): void
+    {
+        if (! $this->applications->contains($application)) {
+            $this->applications->add($application);
+        }
     }
 
     /**
      * Vrátí platné přihlášky.
      *
-     * @return Collection|Application[]
+     * @return Collection<Application>
      */
-    public function getValidApplications() : Collection
+    public function getValidApplications(): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->isNull('validTo'))
@@ -770,9 +780,9 @@ class User
     /**
      * Vrátí nezrušené přihlášky.
      *
-     * @return Collection|Application[]
+     * @return Collection<Application>
      */
-    public function getNotCanceledApplications() : Collection
+    public function getNotCanceledApplications(): Collection
     {
         return $this->getValidApplications()->filter(static function (Application $application) {
             return ! $application->isCanceled();
@@ -782,9 +792,9 @@ class User
     /**
      * Vrátí nezrušené přihlášky na rolí.
      *
-     * @return Collection|RolesApplication[]
+     * @return Collection<RolesApplication>
      */
-    public function getNotCanceledRolesApplications() : Collection
+    public function getNotCanceledRolesApplications(): Collection
     {
         return $this->getNotCanceledApplications()->filter(static function (Application $application) {
             return $application->getType() === Application::ROLES;
@@ -794,9 +804,9 @@ class User
     /**
      * Vrátí nezrušené přihlášky na podakce.
      *
-     * @return Collection|SubeventsApplication[]
+     * @return Collection<SubeventsApplication>
      */
-    public function getNotCanceledSubeventsApplications() : Collection
+    public function getNotCanceledSubeventsApplications(): Collection
     {
         return $this->getNotCanceledApplications()->filter(static function (Application $application) {
             return $application->getType() === Application::SUBEVENTS;
@@ -806,9 +816,9 @@ class User
     /**
      * Vrácí zaplacené přihlášky.
      *
-     * @return Collection|Application[]
+     * @return Collection<Application>
      */
-    public function getPaidApplications() : Collection
+    public function getPaidApplications(): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->andX(
@@ -822,9 +832,9 @@ class User
     /**
      * Vrátí přihlášky, které jsou zaplacené nebo zdarma.
      *
-     * @return Collection|Application[]
+     * @return Collection<Application>
      */
-    public function getPaidAndFreeApplications() : Collection
+    public function getPaidAndFreeApplications(): Collection
     {
         return $this->applications->filter(static function (Application $application) {
             return $application->getValidTo() === null && (
@@ -836,9 +846,9 @@ class User
     /**
      * Vrátí přihlášky čekající na platbu.
      *
-     * @return Collection|Application[]
+     * @return Collection<Application>
      */
-    public function getWaitingForPaymentApplications() : Collection
+    public function getWaitingForPaymentApplications(): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->andX(
@@ -852,9 +862,9 @@ class User
     /**
      * Vrátí přihlášky rolí čekající na platbu.
      *
-     * @return Collection|RolesApplication[]
+     * @return Collection<RolesApplication>
      */
-    public function getWaitingForPaymentRolesApplications() : Collection
+    public function getWaitingForPaymentRolesApplications(): Collection
     {
         return $this->getWaitingForPaymentApplications()->filter(static function (Application $application) {
             return $application->getType() === Application::ROLES;
@@ -864,7 +874,7 @@ class User
     /**
      * Vrací přihlášku rolí.
      */
-    public function getRolesApplication() : ?RolesApplication
+    public function getRolesApplication(): ?RolesApplication
     {
         foreach ($this->getNotCanceledRolesApplications() as $application) {
             return $application;
@@ -876,9 +886,9 @@ class User
     /**
      * Vrátí přihlášky podakcí čekající na platbu.
      *
-     * @return Collection|SubeventsApplication[]
+     * @return Collection<SubeventsApplication>
      */
-    public function getWaitingForPaymentSubeventsApplications() : Collection
+    public function getWaitingForPaymentSubeventsApplications(): Collection
     {
         return $this->getWaitingForPaymentApplications()->filter(static function (Application $application) {
             return $application->getType() === Application::SUBEVENTS;
@@ -888,7 +898,7 @@ class User
     /**
      * Vrací zda uživatel zaplatil nějakou přihlášku.
      */
-    public function hasPaidAnyApplication() : bool
+    public function hasPaidAnyApplication(): bool
     {
         return ! $this->getPaidApplications()->isEmpty();
     }
@@ -896,7 +906,7 @@ class User
     /**
      * Vrací zda uživatel zaplatil všechny přihlášky.
      */
-    public function hasPaidEveryApplication() : bool
+    public function hasPaidEveryApplication(): bool
     {
         return $this->getValidApplications()->forAll(static function (int $key, Application $application) {
             return $application->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
@@ -906,59 +916,41 @@ class User
     /**
      * Vrací zda uživatel zaplatil přihlášku rolí.
      */
-    public function hasPaidRolesApplication() : bool
+    public function hasPaidRolesApplication(): bool
     {
         return $this->getRolesApplication()->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
     }
 
     /**
-     * @return Collection|Program[]
+     * @return Collection<Block>
      */
-    public function getPrograms() : Collection
-    {
-        return $this->programs;
-    }
-
-    public function addProgram(Program $program) : void
-    {
-        if (! $this->programs->contains($program)) {
-            $this->programs->add($program);
-            $program->addAttendee($this);
-        }
-    }
-
-    public function removeProgram(Program $program) : void
-    {
-        if ($this->programs->contains($program)) {
-            $this->programs->removeElement($program);
-            $program->removeAttendee($this);
-        }
-    }
-
-    /**
-     * Má uživatel přihlášený program z bloku?
-     */
-    public function hasProgramBlock(Block $block) : bool
-    {
-        return ! $this->programs->filter(static function (Program $program) use ($block) {
-            return $program->getBlock()->getId() === $block->getId();
-        })->isEmpty();
-    }
-
-    /**
-     * @return Collection|Block[]
-     */
-    public function getLecturersBlocks() : Collection
+    public function getLecturersBlocks(): Collection
     {
         return $this->lecturersBlocks;
     }
 
-    public function getFee() : int
+    public function addLecturersBlock(Block $block): void
+    {
+        if (! $this->lecturersBlocks->contains($block)) {
+            $this->lecturersBlocks->add($block);
+            $block->addLector($this);
+        }
+    }
+
+    public function removeLecturersBlock(Block $block): void
+    {
+        if ($this->lecturersBlocks->contains($block)) {
+            $this->lecturersBlocks->removeElement($block);
+            $block->removeLector($this);
+        }
+    }
+
+    public function getFee(): int
     {
         return $this->fee;
     }
 
-    public function setFee(int $fee) : void
+    public function setFee(int $fee): void
     {
         $this->fee = $fee;
     }
@@ -966,60 +958,60 @@ class User
     /**
      * Je uživatel platící?
      */
-    public function isPaying() : bool
+    public function isPaying(): bool
     {
         return $this->getFee() !== 0;
     }
 
-    public function getFeeRemaining() : int
+    public function getFeeRemaining(): int
     {
         return $this->feeRemaining;
     }
 
-    public function setFeeRemaining(int $feeRemaining) : void
+    public function setFeeRemaining(int $feeRemaining): void
     {
         $this->feeRemaining = $feeRemaining;
     }
 
-    public function getPaymentMethod() : ?string
+    public function getPaymentMethod(): ?string
     {
         return $this->paymentMethod;
     }
 
-    public function setPaymentMethod(?string $paymentMethod) : void
+    public function setPaymentMethod(?string $paymentMethod): void
     {
         $this->paymentMethod = $paymentMethod;
     }
 
-    public function getLastPaymentDate() : ?DateTimeImmutable
+    public function getLastPaymentDate(): ?DateTimeImmutable
     {
         return $this->lastPaymentDate;
     }
 
-    public function setLastPaymentDate(?DateTimeImmutable $lastPaymentDate) : void
+    public function setLastPaymentDate(?DateTimeImmutable $lastPaymentDate): void
     {
         $this->lastPaymentDate = $lastPaymentDate;
     }
 
-    public function getRolesApplicationDate() : ?DateTimeImmutable
+    public function getRolesApplicationDate(): ?DateTimeImmutable
     {
         return $this->rolesApplicationDate;
     }
 
-    public function setRolesApplicationDate(?DateTimeImmutable $rolesApplicationDate) : void
+    public function setRolesApplicationDate(?DateTimeImmutable $rolesApplicationDate): void
     {
         $this->rolesApplicationDate = $rolesApplicationDate;
     }
 
     /**
-     * @return Collection|Block[]
+     * @return Collection<Block>
      */
-    public function getNotRegisteredMandatoryBlocks() : Collection
+    public function getNotRegisteredMandatoryBlocks(): Collection
     {
         return $this->notRegisteredMandatoryBlocks;
     }
 
-    public function getNotRegisteredMandatoryBlocksText() : string
+    public function getNotRegisteredMandatoryBlocksText(): string
     {
         return implode(', ', $this->notRegisteredMandatoryBlocks->map(static function (Block $block) {
             return $block->getName();
@@ -1027,9 +1019,9 @@ class User
     }
 
     /**
-     * @param Collection|Block[] $notRegisteredMandatoryBlocks
+     * @param Collection<Block> $notRegisteredMandatoryBlocks
      */
-    public function setNotRegisteredMandatoryBlocks(Collection $notRegisteredMandatoryBlocks) : void
+    public function setNotRegisteredMandatoryBlocks(Collection $notRegisteredMandatoryBlocks): void
     {
         $this->notRegisteredMandatoryBlocks->clear();
         foreach ($notRegisteredMandatoryBlocks as $notRegisteredMandatoryBlock) {
@@ -1039,20 +1031,27 @@ class User
         $this->notRegisteredMandatoryBlocksCount = $this->notRegisteredMandatoryBlocks->count();
     }
 
-    public function getNotRegisteredMandatoryBlocksCount() : int
+    public function getNotRegisteredMandatoryBlocksCount(): int
     {
         return $this->notRegisteredMandatoryBlocksCount;
     }
 
     /**
-     * @return Collection|CustomInputValue[]
+     * @return Collection<CustomInputValue>
      */
-    public function getCustomInputValues() : Collection
+    public function getCustomInputValues(): Collection
     {
         return $this->customInputValues;
     }
 
-    public function getCustomInputValue(CustomInput $customInput) : ?CustomInputValue
+    public function addCustomInputValue(CustomInputValue $value): void
+    {
+        if (! $this->customInputValues->contains($value)) {
+            $this->customInputValues->add($value);
+        }
+    }
+
+    public function getCustomInputValue(CustomInput $customInput): ?CustomInputValue
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()
@@ -1067,32 +1066,32 @@ class User
         return $matchingCustomInputValues->first();
     }
 
-    public function getNote() : ?string
+    public function getNote(): ?string
     {
         return $this->note;
     }
 
-    public function setNote(?string $note) : void
+    public function setNote(?string $note): void
     {
         $this->note = $note;
     }
 
-    public function getPhoto() : ?string
+    public function getPhoto(): ?string
     {
         return $this->photo;
     }
 
-    public function setPhoto(?string $photo) : void
+    public function setPhoto(?string $photo): void
     {
         $this->photo = $photo;
     }
 
-    public function getPhotoUpdate() : ?DateTimeImmutable
+    public function getPhotoUpdate(): ?DateTimeImmutable
     {
         return $this->photoUpdate;
     }
 
-    public function setPhotoUpdate(?DateTimeImmutable $photoUpdate) : void
+    public function setPhotoUpdate(?DateTimeImmutable $photoUpdate): void
     {
         $this->photoUpdate = $photoUpdate;
     }
@@ -1100,9 +1099,9 @@ class User
     /**
      * Vrací podakce uživatele.
      *
-     * @return Collection|Subevent[]
+     * @return Collection<Subevent>
      */
-    public function getSubevents() : Collection
+    public function getSubevents(): Collection
     {
         $subevents = new ArrayCollection();
 
@@ -1118,7 +1117,7 @@ class User
     /**
      * Vrátí podakce uživatele oddělené čárkou.
      */
-    public function getSubeventsText() : string
+    public function getSubeventsText(): string
     {
         $subeventsNames = $this->getSubevents()->map(static function (Subevent $subevent) {
             return $subevent->getName();
@@ -1130,7 +1129,7 @@ class User
     /**
      * Vrací, zda je uživatel přihlášen na podakci.
      */
-    public function hasSubevent(Subevent $subevent) : bool
+    public function hasSubevent(Subevent $subevent): bool
     {
         return $this->getSubevents()->contains($subevent);
     }
@@ -1138,7 +1137,7 @@ class User
     /**
      * Vrácí, zda má uživatel zaplacenou přihlášku s podakcí.
      */
-    public function hasPaidSubevent(Subevent $subevent) : bool
+    public function hasPaidSubevent(Subevent $subevent): bool
     {
         foreach ($this->getPaidAndFreeApplications() as $application) {
             if ($application->getType() === Application::SUBEVENTS && $application->getSubevents()->contains($subevent)) {
@@ -1152,12 +1151,36 @@ class User
     /**
      * Vrátí variabilní symboly oddělené čárkou.
      */
-    public function getVariableSymbolsText() : string
+    public function getVariableSymbolsText(): string
     {
         $variableSymbols = $this->getNotCanceledApplications()->map(static function (Application $application) {
             return $application->getVariableSymbolText();
         });
 
         return implode(', ', $variableSymbols->toArray());
+    }
+
+    public function isAttendee(Program $program): bool
+    {
+        return ! $this->programApplications->matching(
+            Criteria::create()->where(
+                Criteria::expr()->andX(
+                    Criteria::expr()->eq('program', $program),
+                    Criteria::expr()->eq('alternate', false)
+                )
+            )
+        )->isEmpty();
+    }
+
+    public function isAlternate(Program $program): bool
+    {
+        return ! $this->programApplications->matching(
+            Criteria::create()->where(
+                Criteria::expr()->andX(
+                    Criteria::expr()->eq('program', $program),
+                    Criteria::expr()->eq('alternate', true)
+                )
+            )
+        )->isEmpty();
     }
 }

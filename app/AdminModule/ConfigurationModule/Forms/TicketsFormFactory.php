@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Nette\Application\UI\Form;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
@@ -23,9 +23,9 @@ class TicketsFormFactory
 {
     private BaseFormFactory $baseFormFactory;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
-    public function __construct(BaseFormFactory $baseForm, SettingsService $settingsService)
+    public function __construct(BaseFormFactory $baseForm, ISettingsService $settingsService)
     {
         $this->baseFormFactory = $baseForm;
         $this->settingsService = $settingsService;
@@ -37,7 +37,7 @@ class TicketsFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -74,7 +74,7 @@ class TicketsFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($values->ticketsAllowed) {
             $this->settingsService->setDateTimeValue(Settings::TICKETS_FROM, $values->ticketsFrom);

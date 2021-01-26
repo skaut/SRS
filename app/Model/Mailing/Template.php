@@ -12,7 +12,7 @@ use Nettrine\ORM\Entity\Attributes\Id;
 /**
  * Entita šablona automatického e-mailu.
  *
- * @ORM\Entity(repositoryClass="TemplateRepository")
+ * @ORM\Entity
  * @ORM\Table(name="mail_template")
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
@@ -121,9 +121,9 @@ class Template
     /**
      * Proměnné použitelné v šabloně.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Mailing\TemplateVariable")
+     * @ORM\ManyToMany(targetEntity="TemplateVariable")
      *
-     * @var Collection|TemplateVariable[]
+     * @var Collection<TemplateVariable>
      */
     protected Collection $variables;
 
@@ -139,60 +139,60 @@ class Template
         $this->variables = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getType() : string
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function setType(string $type) : void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    public function getSubject() : string
+    public function getSubject(): string
     {
         return $this->subject;
     }
 
-    public function setSubject(string $subject) : void
+    public function setSubject(string $subject): void
     {
         $this->subject = $subject;
     }
 
-    public function getText() : string
+    public function getText(): string
     {
         return $this->text;
     }
 
-    public function setText(string $text) : void
+    public function setText(string $text): void
     {
         $this->text = $text;
     }
 
-    public function isActive() : bool
+    public function isActive(): bool
     {
         return $this->active;
     }
 
-    public function setActive(bool $active) : void
+    public function setActive(bool $active): void
     {
         $this->active = $active;
     }
 
     /**
-     * @return Collection|TemplateVariable[]
+     * @return Collection<TemplateVariable>
      */
-    public function getVariables() : Collection
+    public function getVariables(): Collection
     {
         return $this->variables;
     }
 
-    public function isSystemTemplate() : bool
+    public function isSystemTemplate(): bool
     {
         return $this->systemTemplate;
     }

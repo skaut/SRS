@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entita nastavení.
  *
- * @ORM\Entity(repositoryClass="SettingsRepository")
+ * @ORM\Entity
  * @ORM\Table(name="settings")
  *
  * @author Michal Májský
@@ -254,12 +254,12 @@ class Settings
         $this->value = $value;
     }
 
-    public function getValue() : ?string
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    public function setValue(?string $value) : void
+    public function setValue(?string $value): void
     {
         $this->value = $value;
     }

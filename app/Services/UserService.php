@@ -8,9 +8,11 @@ use App\Model\Enums\PaymentType;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Settings;
+use App\Model\User\Events\UserUpdatedEvent;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Localization\ITranslator;
@@ -30,24 +32,32 @@ class UserService
 
     private MailService $mailService;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
+
+    private EventBus $eventBus;
+
+    private EntityManagerInterface $em;
 
     public function __construct(
         ITranslator $translator,
         UserRepository $userRepository,
         MailService $mailService,
-        SettingsService $settingsService
+        ISettingsService $settingsService,
+        EventBus $eventBus,
+        EntityManagerInterface $em
     ) {
         $this->translator      = $translator;
         $this->userRepository  = $userRepository;
         $this->mailService     = $mailService;
         $this->settingsService = $settingsService;
+        $this->eventBus        = $eventBus;
+        $this->em              = $em;
     }
 
     /**
      * Vrací informaci o členství jako text.
      */
-    public function getMembershipText(User $user) : string
+    public function getMembershipText(User $user): string
     {
         if ($user->getUnit() !== null) {
             return $user->getUnit();
@@ -67,7 +77,7 @@ class UserService
     /**
      * Vrací platební metodu uživatele.
      */
-    public function getPaymentMethod(User $user) : ?string
+    public function getPaymentMethod(User $user): ?string
     {
         $paymentMethod = null;
 
@@ -90,50 +100,24 @@ class UserService
     }
 
     /**
-     * Schválí registraci uživatele, pokud už není schválený.
-     *
-     * @throws ORMException
-     */
-    public function approveUser(User $user) : void
-    {
-        if ($user->isApproved()) {
-            return;
-        }
-
-        $user->setApproved(true);
-        $this->userRepository->save($user);
-
-        $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_APPROVED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-        ]);
-    }
-
-    /**
-     * Zruší schválení registrace uživatele, pokud není neschválený.
-     *
-     * @throws ORMException
-     */
-    public function unapproveUser(User $user) : void
-    {
-        if (! $user->isApproved()) {
-            return;
-        }
-
-        $user->setApproved(false);
-        $this->userRepository->save($user);
-    }
-
-    /**
      * Nastaví registraci uživatele jako schválenou nebo nechválenou.
      *
      * @throws ORMException
      */
-    public function setApproved(User $user, bool $approved) : void
+    public function setApproved(User $user, bool $approved): void
     {
-        if ($approved) {
-            $this->approveUser($user);
-        } else {
-            $this->unapproveUser($user);
-        }
+        $this->em->transactional(function () use ($user, $approved): void {
+            $approvedOld = $user->isApproved();
+            $user->setApproved($approved);
+            $this->userRepository->save($user);
+
+            $this->eventBus->handle(new UserUpdatedEvent($user, $approvedOld));
+
+            if ($approved) {
+                $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_APPROVED, [
+                    TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                ]);
+            }
+        });
     }
 }

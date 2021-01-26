@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\ActionModule\Presenters;
 
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
 use App\Services\BankService;
-use App\Services\SettingsService;
+use App\Services\ISettingsService;
 use Nette\Application\Responses\TextResponse;
 use Throwable;
 
@@ -22,7 +22,7 @@ class BankPresenter extends ActionBasePresenter
     public BankService $bankService;
 
     /** @inject */
-    public SettingsService $settingsService;
+    public ISettingsService $settingsService;
 
     /**
      * Zkontroluje splatnost přihlášek.
@@ -30,7 +30,7 @@ class BankPresenter extends ActionBasePresenter
      * @throws SettingsException
      * @throws Throwable
      */
-    public function actionCheck() : void
+    public function actionCheck(): void
     {
         $from = $this->settingsService->getDateValue(Settings::BANK_DOWNLOAD_FROM);
         $this->bankService->downloadTransactions($from);

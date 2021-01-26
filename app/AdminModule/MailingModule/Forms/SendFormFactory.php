@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\AdminModule\MailingModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Acl\RoleRepository;
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
-use App\Model\User\UserRepository;
+use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\AclService;
-use App\Services\MailService;
+use App\Services\IMailService;
 use App\Services\SubeventService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
@@ -40,7 +40,7 @@ class SendFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private MailService $mailService;
+    private IMailService $mailService;
 
     private RoleRepository $roleRepository;
 
@@ -54,7 +54,7 @@ class SendFormFactory
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
-        MailService $mailService,
+        IMailService $mailService,
         RoleRepository $roleRepository,
         UserRepository $userRepository,
         SubeventRepository $subeventRepository,
@@ -73,7 +73,7 @@ class SendFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -137,7 +137,7 @@ class SendFormFactory
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         try {
             $recipientsRoles     = $this->roleRepository->findRolesByIds($values->recipientRoles);

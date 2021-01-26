@@ -7,8 +7,8 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
-use App\Model\Settings\SettingsException;
-use App\Model\Structure\SubeventRepository;
+use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Structure\Repositories\SubeventRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\AbortException;
 use Throwable;
@@ -28,7 +28,7 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
     /**
      * @throws AbortException
      */
-    public function startup() : void
+    public function startup(): void
     {
         parent::startup();
 
@@ -40,7 +40,7 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    public function beforeRender() : void
+    public function beforeRender(): void
     {
         parent::beforeRender();
 

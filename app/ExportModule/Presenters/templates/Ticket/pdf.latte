@@ -36,7 +36,7 @@
         </div>
     </div>
 
-    <div class="row" n:if="!$ticketUser->getPrograms()->isEmpty()">
+    <div class="row" n:if="!$ticketUserPrograms->isEmpty()">
         <div class="col-12">
             <h2>Harmonogram</h2>
             <table class="table table-sm">
@@ -50,7 +50,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr n:foreach="$ticketUser->getPrograms() as $program">
+                    <tr n:foreach="$ticketUserPrograms as $program">
                         <td class="text-right">
                             {var $startDay = $program->getStart()->format('N')}
                             {_common.day.$startDay}

@@ -14,5 +14,5 @@ interface IMailTemplatesGridControlFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create() : MailTemplatesGridControl;
+    public function create(): MailTemplatesGridControl;
 }

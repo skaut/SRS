@@ -7,10 +7,10 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Model\Settings\SettingsException;
-use App\Services\MailService;
-use App\Services\SettingsService;
+use App\Services\IMailService;
+use App\Services\ISettingsService;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
@@ -21,6 +21,7 @@ use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
+
 use function array_map;
 use function explode;
 use function implode;
@@ -42,9 +43,9 @@ class MailingFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private SettingsService $settingsService;
+    private ISettingsService $settingsService;
 
-    private MailService $mailService;
+    private IMailService $mailService;
 
     private LinkGenerator $linkGenerator;
 
@@ -52,8 +53,8 @@ class MailingFormFactory
 
     public function __construct(
         BaseFormFactory $baseForm,
-        SettingsService $settingsService,
-        MailService $mailService,
+        ISettingsService $settingsService,
+        IMailService $mailService,
         LinkGenerator $linkGenerator,
         Validators $validators
     ) {
@@ -70,7 +71,7 @@ class MailingFormFactory
      * @throws SettingsException
      * @throws Throwable
      */
-    public function create(int $id) : Form
+    public function create(int $id): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -110,7 +111,7 @@ class MailingFormFactory
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function processForm(Form $form, stdClass $values) : void
+    public function processForm(Form $form, stdClass $values): void
     {
         if ($this->settingsService->getValue(Settings::SEMINAR_EMAIL) !== $values->seminarEmail) {
             $this->settingsService->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values->seminarEmail);
@@ -145,7 +146,7 @@ class MailingFormFactory
     /**
      * Ověří seznam e-mailů oddělených ','.
      */
-    public function validateEmails(TextInput $field) : bool
+    public function validateEmails(TextInput $field): bool
     {
         return $this->validators->validateEmails($field->getValue());
     }

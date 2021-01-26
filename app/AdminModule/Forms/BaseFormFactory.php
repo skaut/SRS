@@ -28,7 +28,7 @@ class BaseFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create() : Form
+    public function create(): Form
     {
         $form = new Form();
         $form->setTranslator($this->translator);

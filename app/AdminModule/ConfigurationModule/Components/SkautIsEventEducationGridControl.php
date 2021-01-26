@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Components;
 
-use App\Model\SkautIs\SkautIsCourseRepository;
+use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
-use App\Model\Structure\SubeventRepository;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Container;
@@ -41,7 +41,7 @@ class SkautIsEventEducationGridControl extends Control
     /**
      * Vykreslí komponentu.
      */
-    public function render() : void
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/skaut_is_event_education_grid.latte');
         $this->template->render();
@@ -50,7 +50,7 @@ class SkautIsEventEducationGridControl extends Control
     /**
      * Vytvoří komponentu.
      */
-    public function createComponentSkautIsEventEducationGrid(string $name) : void
+    public function createComponentSkautIsEventEducationGrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -62,7 +62,7 @@ class SkautIsEventEducationGridControl extends Control
 
         $grid->addColumnText('skautIsCourses', 'admin.configuration.skautis_event_education_skaut_is_courses', 'skautIsCoursesText');
 
-        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container) : void {
+        $grid->addInlineEdit()->onControlAdd[]  = function (Container $container): void {
             $container->addMultiSelect(
                 'skautIsCourses',
                 '',
@@ -70,7 +70,7 @@ class SkautIsEventEducationGridControl extends Control
             )
                 ->setHtmlAttribute('class', 'datagrid-multiselect');
         };
-        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Subevent $subevent) : void {
+        $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Subevent $subevent): void {
             $container->setDefaults([
                 'skautIsCourses' => $this->skautIsCourseRepository->findSkautIsCoursesIds($subevent->getSkautIsCourses()),
             ]);
@@ -84,7 +84,7 @@ class SkautIsEventEducationGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function edit(string $id, stdClass $values) : void
+    public function edit(string $id, stdClass $values): void
     {
         $subevent = $this->subeventRepository->findById((int) $id);
 

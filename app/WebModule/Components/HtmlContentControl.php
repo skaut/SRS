@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\Cms\Content\HtmlContentDto;
+use App\Model\Cms\Dto\HtmlContentDto;
 use Nette\Application\UI\Control;
 
 /**
@@ -15,7 +15,7 @@ use Nette\Application\UI\Control;
  */
 class HtmlContentControl extends Control
 {
-    public function render(HtmlContentDto $content) : void
+    public function render(HtmlContentDto $content): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/html_content.latte');
