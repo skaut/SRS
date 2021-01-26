@@ -82,7 +82,7 @@ jobs:
       - name: Start application containers
         run: docker-compose up -d mysql-test
       - name: Run tests with coverage
-        run: docker-compose exec -T -u www-data app phing tests-with-coverage
+        run: docker-compose run -T -u www-data app phing tests-with-coverage
       - name: Upload code coverage
         uses: codecov/codecov-action@v1
         with:
