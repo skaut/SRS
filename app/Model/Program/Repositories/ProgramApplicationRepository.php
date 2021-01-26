@@ -92,7 +92,7 @@ class ProgramApplicationRepository extends AbstractRepository
             $program = $em->getRepository(Program::class)->find($programApplication->getProgram()->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 
-            $attendeesCount  = $program->getAttendeesCount();
+            $attendeesCount = $program->getAttendeesCount();
 
             if (! $programApplication->isAlternate()) {
                 $program->setAttendeesCount($attendeesCount - 1);

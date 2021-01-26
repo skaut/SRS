@@ -214,20 +214,35 @@ program:
     blocks_program_room: "Místnost"
     blocks_program_attendees_count: "Počet účastníků"
     blocks_program_alternates_count: "Počet náhradníků"
-    blocks_program_show_attendees_list: "Seznam oprávněných účastníků"
+    blocks_program_show_attendees_list: "Účastníci"
     blocks_program_hide_attendees_list: "Skrýt"
     blocks_program_delete_confirm: "Opravdu chcete program odstranit z harmonogramu?"
     blocks_program_deleted: "Program byl úspěšně odstraněn z harmonogramu."
     blocks_program_modify_schedule_not_allowed: "Úprava harmonogramu není povolena nebo nemáte potřebné oprávnění."
-    blocks_attendees_name: "Jméno"
-    blocks_attendees_attends: "Přihlášený na program"
-    blocks_attendees_register: "Přihlásit"
-    blocks_attendees_unregister: "Odhlásit"
-    blocks_attendees_already_has_block: "Účastník je již na program přihlášen jindy."
-    blocks_attendees_registered: "Účastník byl úspěšně přihlášen na program."
-    blocks_attendees_unregistered: "Účastník byl úspěšně odhlášen z programu."
-    blocks_attendees_group_action_registered: "Účastníci, kteří tento program neměli zapsaný jindy, byli úspěšně přihlášeni."
-    blocks_attendees_group_action_unregistered: "Účastníci byli úspěšně odhlášeni z programu."
+
+    blocks:
+        attendees:
+            column:
+                name: "Jméno"
+                attends: "Účastník"
+                alternates: "Náhradník"
+
+            action:
+                register: "Přihlásit"
+                register_alternate: "Přihlásit jako náhradníka"
+                unregister: "Odhlásit"
+
+            message:
+                registered: "Uživatel byl úspěšně přihlášen na program."
+                unregistered: "Uživatel byl úspěšně odhlášen z programu."
+                group_registered: "%success% z %all% uživatelů bylo přihlášeno."
+                group_unregistered: "%success% z %all% uživatelů bylo odhlášeno."
+                not_allowed: "Uživatel není oprávněn zapsat si tento program."
+                already_attends_program: "Uživatel již má tento program zapsaný."
+                alreadu_attends_block: "Uživatel již má tento blok zapsaný v jiném čase."
+                capacity_occupied: "Kapacita programu je již obsazena."
+                attends_conflicting: "Uživatel má jiný program ve stejný čas."
+                not_attends: "Uživatel nebyl na program přihlášen."
 
     schedule:
         heading: "Harmonogram"

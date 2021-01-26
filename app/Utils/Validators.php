@@ -7,7 +7,6 @@ namespace App\Utils;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Application\Application;
-use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Exceptions\SettingsException;
@@ -18,7 +17,6 @@ use App\Services\ISettingsService;
 use Doctrine\Common\Collections\Collection;
 use Throwable;
 
-use Yasumi\tests\Netherlands\thirdCarnivalDay;
 use function array_map;
 use function explode;
 use function trim;
@@ -245,6 +243,7 @@ class Validators
             return true;
         } elseif ($block->getProgramsCount() === 1) {
             $program = $block->getPrograms()->first();
+
             return ! $this->programRepository->hasOverlappingProgram($program->getId(), $program->getStart(), $program->getEnd());
         }
 

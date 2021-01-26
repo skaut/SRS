@@ -120,7 +120,7 @@ class ProgramRepository extends AbstractRepository
         $result = $this->createQueryBuilder('p')
             ->join('p.block', 'b')
             ->where('p != :program')
-            ->andWhere("p.block = :block")
+            ->andWhere('p.block = :block')
             ->setParameter('program', $program)
             ->setParameter('block', $program->getBlock())
             ->getQuery()

@@ -14,6 +14,7 @@ use App\Model\CustomInput\CustomInput;
 use App\Model\CustomInput\CustomInputValue;
 use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
+use App\Model\Program\Program;
 use App\Model\Program\ProgramApplication;
 use App\Model\Structure\Subevent;
 use DateTimeImmutable;
@@ -1157,5 +1158,29 @@ class User
         });
 
         return implode(', ', $variableSymbols->toArray());
+    }
+
+    public function isAttendee(Program $program): bool
+    {
+        return ! $this->programApplications->matching(
+            Criteria::create()->where(
+                Criteria::expr()->andX(
+                    Criteria::expr()->eq('program', $program),
+                    Criteria::expr()->eq('alternate', false)
+                )
+            )
+        )->isEmpty();
+    }
+
+    public function isAlternate(Program $program): bool
+    {
+        return ! $this->programApplications->matching(
+            Criteria::create()->where(
+                Criteria::expr()->andX(
+                    Criteria::expr()->eq('program', $program),
+                    Criteria::expr()->eq('alternate', true)
+                )
+            )
+        )->isEmpty();
     }
 }

@@ -9,7 +9,6 @@ use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
 use App\Services\ExcelExportService;
-use App\Services\QueryBus;
 use App\Utils\Helpers;
 use Exception;
 use Nette\Application\AbortException;
@@ -38,20 +37,16 @@ class RoomScheduleGridControl extends Control
 
     private ExcelExportService $excelExportService;
 
-    private QueryBus $queryBus;
-
     public function __construct(
         ITranslator $translator,
         RoomRepository $roomRepository,
         ProgramRepository $programRepository,
-        ExcelExportService $excelExportService,
-        QueryBus $queryBus
+        ExcelExportService $excelExportService
     ) {
         $this->translator         = $translator;
         $this->roomRepository     = $roomRepository;
         $this->programRepository  = $programRepository;
         $this->excelExportService = $excelExportService;
-        $this->queryBus           = $queryBus;
     }
 
     /**

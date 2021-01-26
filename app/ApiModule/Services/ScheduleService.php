@@ -163,8 +163,8 @@ class ScheduleService
                 if ($p1->getId() !== $p2->getId()) {
                     if (
                         (($p1->getUserAttends() || $p1->getUserAlternates()) && in_array($p2->getId(), $p1->getOverlappingPrograms()))
-                        || ($p1->getUserAttends() && in_array($p2->getId(), $p1->getSameBlockPrograms())))
-                    {
+                        || ($p1->getUserAttends() && in_array($p2->getId(), $p1->getSameBlockPrograms()))
+                    ) {
                         $p2->setBlocked(true);
                     }
                 }

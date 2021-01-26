@@ -148,7 +148,7 @@ api:
         program_already_registered: "Program už máte přihlášený."
         program_no_vacancies: "Kapacita programu je již obsazena."
         program_not_allowed: "Nemáte oprávnění pro zápis tohoto programu."
-        program_blocked: "Tento programový blok už máte zapsaný, nebo máte jiný program ve stejnou dobu."
+        program_blocked: "Tento programový blok už máte zapsaný nebo máte jiný program ve stejný čas."
         program_registered: "Program byl úspěšně přihlášen."
         program_not_registered: "Na tento program jste nebyli přihlášeni."
         program_unregistered: "Program byl úspěšně odhlášen."

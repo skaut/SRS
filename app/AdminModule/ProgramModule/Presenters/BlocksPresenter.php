@@ -70,9 +70,9 @@ class BlocksPresenter extends ProgramBasePresenter
     {
         $block = $this->blockRepository->findById($id);
 
-        $this->template->block                     = $block;
-        $this->template->programId                 = $this->session->getSection('srs')->programId;
-        $this->template->userAllowedModifySchedule = $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)
+        $this->template->block                              = $block;
+        $this->template->programId                          = $this->session->getSection('srs')->programId;
+        $this->template->userAllowedModifySchedule          = $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)
             && $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
         $this->template->programMandatoryTypeVoluntary      = ProgramMandatoryType::VOLUNTARY;
         $this->template->programMandatoryTypeMandatory      = ProgramMandatoryType::MANDATORY;

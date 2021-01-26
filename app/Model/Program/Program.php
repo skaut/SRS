@@ -8,6 +8,7 @@ use DateInterval;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Nettrine\ORM\Entity\Attributes\Id;
@@ -92,7 +93,11 @@ class Program
 
     public function getAlternatesCount(): int
     {
-        return $this->alternatesCount;
+        return $this->programApplications->matching(
+            Criteria::create()->where(
+                Criteria::expr()->eq('alternate', true)
+            )
+        )->count();
     }
 
     public function getRoom(): ?Room

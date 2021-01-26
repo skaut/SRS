@@ -45,6 +45,7 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
 
 use function abs;
+use function array_diff;
 use function implode;
 use function str_pad;
 use function strval;
@@ -212,7 +213,7 @@ class ApplicationService
             }
         }
 
-        $this->em->transactional(function () use ($user, $roles, $createdBy, $approve, $rolesOld) : void {
+        $this->em->transactional(function () use ($user, $roles, $createdBy, $approve, $rolesOld): void {
             if ($rolesOld->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
                 $this->createRolesApplication($user, $roles, $createdBy, $approve);
                 $this->createSubeventsApplication($user, new ArrayCollection([$this->subeventRepository->findImplicit()]), $createdBy);

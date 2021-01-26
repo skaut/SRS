@@ -19,6 +19,7 @@ use App\Model\User\User;
 use App\Services\CommandBus;
 use App\Services\ISettingsService;
 use App\Services\SubeventService;
+use App\Utils\Helpers;
 use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -194,7 +195,7 @@ class BlockFormFactory
                 'id' => $id,
                 'name' => $this->block->getName(),
                 'category' => $this->block->getCategory() ? $this->block->getCategory()->getId() : null,
-                'lectors' => $this->userRepository->findUsersIds($this->block->getLectors()),
+                'lectors' => Helpers::getIds($this->block->getLectors()),
                 'duration' => $this->block->getDuration(),
                 'capacity' => $this->block->getCapacity(),
                 'alternatesAllowed' => $this->block->isAlternatesAllowed(),
@@ -287,6 +288,8 @@ class BlockFormFactory
 
     /**
      * Ověří, zda může být program automaticky přihlašovaný.
+     *
+     * @param int[] $args
      */
     public function validateAutoRegistered(Checkbox $field, array $args): bool
     {

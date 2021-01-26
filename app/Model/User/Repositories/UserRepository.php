@@ -10,16 +10,14 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\User\User;
-use App\Services\QueryBus;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
-
 use Doctrine\ORM\QueryBuilder;
-use function array_map;
+
 use function count;
 
 /**
@@ -78,20 +76,6 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací id uživatelů.
-     *
-     * @param Collection<User> $users
-     *
-     * @return int[]
-     */
-    public function findUsersIds(Collection $users): array
-    {
-        return array_map(static function (User $user) {
-            return $user->getId();
-        }, $users->toArray());
-    }
-
-    /**
      * Vrací jména uživatelů obsahující zadaný text, seřazená podle zobrazovaného jména.
      *
      * @return string[]
@@ -107,35 +91,6 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací uživatele, kteří se synchronizují s účastníky skautIS akce.
-     *
-     * @return User[]
-     */
-    public function findAllSyncedWithSkautIS(): array
-    {
-        return $this->createQueryBuilder('u')
-            ->join('u.roles', 'r')
-            ->where('r.syncedWithSkautIS = true')
-            ->andWhere('u.external = false')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Vrací uživatele v roli.
-     *
-     * @return User[]
-     */
-    public function findAllInRole(Role $role): array
-    {
-        return $this->createQueryBuilder('u')
-            ->join('u.roles', 'r')
-            ->where('r.id = :id')->setParameter('id', $role->getId())
-            ->orderBy('u.displayName')
-            ->getQuery()->execute();
-    }
-
-    /**
      * Vrací schválené uživatele v roli.
      *
      * @return User[]
@@ -148,23 +103,6 @@ class UserRepository extends AbstractRepository
             ->andWhere('u.approved = true')
             ->orderBy('u.displayName')
             ->getQuery()->execute();
-    }
-
-    /**
-     * Vrací uživatele v rolích.
-     *
-     * @param int[] $rolesIds
-     *
-     * @return User[]
-     */
-    public function findAllInRoles(array $rolesIds): array
-    {
-        return $this->createQueryBuilder('u')
-            ->join('u.roles', 'r')
-            ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
-            ->orderBy('u.displayName')
-            ->getQuery()
-            ->getResult();
     }
 
     /**
@@ -233,30 +171,7 @@ class UserRepository extends AbstractRepository
      */
     public function findBlockAllowed(Block $block, bool $paidOnly): Collection
     {
-        $qb = $this->createQueryBuilder('u')
-            ->join('u.applications', 'sa', 'WITH', 'sa.validTo IS NULL AND sa.state != :stateCanceled AND sa.state != :stateCanceledNotPaid')
-            ->join('sa.subevents', 's')
-            ->where('u.approved = true')
-            ->andWhere('s = :subevent')
-            ->setParameter('subevent', $block->getSubevent())
-            ->setParameter('stateCanceled', ApplicationState::CANCELED)
-            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID);
-
-        if ($block->getCategory() !== null) {
-            $qb = $qb->join('u.roles', 'r')
-                ->join('r.registerableCategories', 'c')
-                ->andWhere('c = :category')
-                ->setParameter('category', $block->getCategory());
-        }
-
-        if ($paidOnly) {
-            $qb = $qb->join('u.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND ra.state != :stateWaitingForPayment')
-                ->join('ra.roles', 'rar')
-                ->andWhere('sa.state != :stateWaitingForPayment')
-                ->setParameter('stateWaitingForPayment', ApplicationState::WAITING_FOR_PAYMENT);
-        }
-
-        return new ArrayCollection($qb->getQuery()->getResult());
+        return new ArrayCollection($this->blockAllowedQuery($block, $paidOnly)->getQuery()->getResult());
     }
 
     /**
@@ -401,10 +316,37 @@ class UserRepository extends AbstractRepository
         $this->em->flush();
     }
 
+    public function blockAllowedQuery(Block $block, bool $paidOnly): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->join('u.applications', 'sa', 'WITH', 'sa.validTo IS NULL AND sa.state != :stateCanceled AND sa.state != :stateCanceledNotPaid')
+            ->join('sa.subevents', 's')
+            ->where('u.approved = true')
+            ->andWhere('s = :subevent')
+            ->setParameter('subevent', $block->getSubevent())
+            ->setParameter('stateCanceled', ApplicationState::CANCELED)
+            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID);
+
+        if ($block->getCategory() !== null) {
+            $qb = $qb->join('u.roles', 'r')
+                ->join('r.registerableCategories', 'c')
+                ->andWhere('c = :category')
+                ->setParameter('category', $block->getCategory());
+        }
+
+        if ($paidOnly) {
+            $qb = $qb->join('u.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND ra.state != :stateWaitingForPayment')
+                ->join('ra.roles', 'rar')
+                ->andWhere('sa.state != :stateWaitingForPayment')
+                ->setParameter('stateWaitingForPayment', ApplicationState::WAITING_FOR_PAYMENT);
+        }
+
+        return $qb;
+    }
+
     private function programAttendeesQuery(Program $program, ?bool $alternate): QueryBuilder
     {
         $qb = $this->createQueryBuilder('u')
-            ->select('count(u)')
             ->leftJoin('u.programApplications', 'a')
             ->where('a.program = :program')->setParameter('program', $program);
 

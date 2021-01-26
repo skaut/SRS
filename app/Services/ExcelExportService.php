@@ -10,7 +10,6 @@ use App\Model\CustomInput\CustomInput;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Program\Block;
 use App\Model\Program\Queries\BlockAttendeesQuery;
-use App\Model\Program\Queries\ProgramAttendeesCountQuery;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Room;
