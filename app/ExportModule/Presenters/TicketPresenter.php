@@ -64,7 +64,7 @@ class TicketPresenter extends ExportBasePresenter
         $template->logo                    = $this->settingsService->getValue(Settings::LOGO);
         $template->seminarName             = $this->settingsService->getValue(Settings::SEMINAR_NAME);
         $template->ticketUser              = $user;
-        $template->tickerUserPrograms      = $userPrograms;
+        $template->ticketUserPrograms      = $userPrograms;
         $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         $this->pdfResponse->setTemplate($template);

@@ -54,6 +54,7 @@ class ProgramRepository extends AbstractRepository
     {
         $result = $this->createQueryBuilder('p')
             ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = false')
+            ->orderBy('p.start')
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
@@ -71,6 +72,7 @@ class ProgramRepository extends AbstractRepository
         $result = $this->createQueryBuilder('p')
             ->join('p.programApplications', 'a', 'WITH', 'a.user = :user AND a.alternate = false')
             ->join('p.block', 'b', 'WITH', 'b.category = :category')
+            ->orderBy('p.start')
             ->setParameter('user', $user)
             ->setParameter('category', $category)
             ->getQuery()
