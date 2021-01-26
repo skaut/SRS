@@ -80,7 +80,7 @@ jobs:
       - name: Extract workdir
         run: tar -xzpf workdir.tar.gz
       - name: Start application containers
-        run: docker-compose up -d app mysql-test
+        run: docker-compose up -d mysql-test
       - name: Run tests with coverage
         run: docker-compose exec -T -u www-data app phing tests-with-coverage
       - name: Upload code coverage
