@@ -289,7 +289,7 @@ class BlockFormFactory
     /**
      * Ověří, zda může být program automaticky přihlašovaný.
      *
-     * @param int[] $args
+     * @param string[]|int[] $args
      */
     public function validateAutoRegistered(Checkbox $field, array $args): bool
     {
