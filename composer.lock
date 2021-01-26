@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5cf091818950e64b14ba933c1326a428",
+    "content-hash": "ddb8eabef32f95e6e905f955f76eb043",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -578,6 +578,79 @@
                 "nette"
             ],
             "time": "2020-01-05T18:11:45+00:00"
+        },
+        {
+            "name": "contributte/pdf",
+            "version": "v6.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contributte/pdf.git",
+                "reference": "79d2b8a14211152d5ad9c9b11893f31bed8b76a3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contributte/pdf/zipball/79d2b8a14211152d5ad9c9b11893f31bed8b76a3",
+                "reference": "79d2b8a14211152d5ad9c9b11893f31bed8b76a3",
+                "shasum": ""
+            },
+            "require": {
+                "mpdf/mpdf": "^8.0",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "latte/latte": "~2.5",
+                "nette/application": "~3.0",
+                "nette/di": "^3.0",
+                "nette/tester": "~2.2",
+                "symfony/css-selector": "~2.5",
+                "symfony/dom-crawler": "~2.5"
+            },
+            "suggest": {
+                "nette/nette": "PHP framework to which this extension belongs to.",
+                "symfony/dom-crawler": "Allows filtering html tags."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Contributte\\PdfResponse\\": "src/",
+                    "Joseki\\Application\\Responses\\": "src-old/"
+                },
+                "files": [
+                    "src/compatibility.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Miroslav Paulík",
+                    "email": "miras.paulik@seznam.cz"
+                },
+                {
+                    "name": "Jan Kuchař"
+                },
+                {
+                    "name": "Tomáš Votruba",
+                    "email": "tomas.vot@gmail.com"
+                },
+                {
+                    "name": "Petr Parolek",
+                    "homepage": "https://www.webnazakazku.cz/"
+                },
+                {
+                    "name": "Milan Felix Šulc",
+                    "homepage": "https://f3l1x.io"
+                }
+            ],
+            "description": "Pdf response extension for Nette Framework",
+            "time": "2020-12-08T10:05:18+00:00"
         },
         {
             "name": "contributte/recaptcha",
@@ -2592,71 +2665,6 @@
             "time": "2020-12-29T12:26:56+00:00"
         },
         {
-            "name": "joseki/pdf-response",
-            "version": "v5.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Joseki/PdfResponse.git",
-                "reference": "da964c5bcc19d56f502a9028dd9c7bdb658a88a7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Joseki/PdfResponse/zipball/da964c5bcc19d56f502a9028dd9c7bdb658a88a7",
-                "reference": "da964c5bcc19d56f502a9028dd9c7bdb658a88a7",
-                "shasum": ""
-            },
-            "require": {
-                "mpdf/mpdf": "~8.0.0",
-                "php": "~7.1.0 || ~7.2.0 || ~7.3.0 || ~7.4.0"
-            },
-            "require-dev": {
-                "latte/latte": "~2.5",
-                "nette/application": "~3.0",
-                "nette/di": "^3.0",
-                "nette/tester": "~2.2",
-                "symfony/css-selector": "~2.5",
-                "symfony/dom-crawler": "~2.5"
-            },
-            "suggest": {
-                "nette/nette": "PHP framework to which this extension belongs to.",
-                "symfony/dom-crawler": "Allows filtering html tags."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Joseki\\Application\\Responses\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Miroslav Paulík",
-                    "email": "miras.paulik@seznam.cz"
-                },
-                {
-                    "name": "Jan Kuchař"
-                },
-                {
-                    "name": "Tomáš Votruba",
-                    "email": "tomas.vot@gmail.com"
-                },
-                {
-                    "name": "Petr Parolek"
-                }
-            ],
-            "description": "Pdf response extension for Nette Framework",
-            "abandoned": "contributte/pdf",
-            "time": "2020-06-18T16:05:09+00:00"
-        },
-        {
             "name": "kartik-v/bootstrap-fileinput",
             "version": "v5.1.4",
             "source": {
@@ -2948,16 +2956,16 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.9.2",
+            "version": "v2.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "f66806cb6dff34ae536348524bb20965f74766fe"
+                "reference": "0787008cc4aecb0d741a143081cb5038b4a4fd43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/f66806cb6dff34ae536348524bb20965f74766fe",
-                "reference": "f66806cb6dff34ae536348524bb20965f74766fe",
+                "url": "https://api.github.com/repos/nette/latte/zipball/0787008cc4aecb0d741a143081cb5038b4a4fd43",
+                "reference": "0787008cc4aecb0d741a143081cb5038b4a4fd43",
                 "shasum": ""
             },
             "require": {
@@ -2985,7 +2993,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.9-dev"
+                    "dev-master": "2.10-dev"
                 }
             },
             "autoload": {
@@ -3021,7 +3029,7 @@
                 "template",
                 "twig"
             ],
-            "time": "2020-12-16T23:52:58+00:00"
+            "time": "2021-01-26T13:15:35+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -3187,20 +3195,20 @@
         },
         {
             "name": "markbaker/matrix",
-            "version": "2.0.0",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MarkBaker/PHPMatrix.git",
-                "reference": "9567d9c4c519fbe40de01dbd1e4469dbbb66f46a"
+                "reference": "361c0f545c3172ee26c3d596a0aa03f0cef65e6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MarkBaker/PHPMatrix/zipball/9567d9c4c519fbe40de01dbd1e4469dbbb66f46a",
-                "reference": "9567d9c4c519fbe40de01dbd1e4469dbbb66f46a",
+                "url": "https://api.github.com/repos/MarkBaker/PHPMatrix/zipball/361c0f545c3172ee26c3d596a0aa03f0cef65e6a",
+                "reference": "361c0f545c3172ee26c3d596a0aa03f0cef65e6a",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0"
+                "php": "^7.1 || ^8.0"
             },
             "require-dev": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
@@ -3218,22 +3226,22 @@
                     "Matrix\\": "classes/src/"
                 },
                 "files": [
-                    "classes/src/functions/adjoint.php",
-                    "classes/src/functions/antidiagonal.php",
-                    "classes/src/functions/cofactors.php",
-                    "classes/src/functions/determinant.php",
-                    "classes/src/functions/diagonal.php",
-                    "classes/src/functions/identity.php",
-                    "classes/src/functions/inverse.php",
-                    "classes/src/functions/minors.php",
-                    "classes/src/functions/trace.php",
-                    "classes/src/functions/transpose.php",
-                    "classes/src/operations/add.php",
-                    "classes/src/operations/directsum.php",
-                    "classes/src/operations/subtract.php",
-                    "classes/src/operations/multiply.php",
-                    "classes/src/operations/divideby.php",
-                    "classes/src/operations/divideinto.php"
+                    "classes/src/Functions/adjoint.php",
+                    "classes/src/Functions/antidiagonal.php",
+                    "classes/src/Functions/cofactors.php",
+                    "classes/src/Functions/determinant.php",
+                    "classes/src/Functions/diagonal.php",
+                    "classes/src/Functions/identity.php",
+                    "classes/src/Functions/inverse.php",
+                    "classes/src/Functions/minors.php",
+                    "classes/src/Functions/trace.php",
+                    "classes/src/Functions/transpose.php",
+                    "classes/src/Operations/add.php",
+                    "classes/src/Operations/directsum.php",
+                    "classes/src/Operations/subtract.php",
+                    "classes/src/Operations/multiply.php",
+                    "classes/src/Operations/divideby.php",
+                    "classes/src/Operations/divideinto.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3253,7 +3261,7 @@
                 "matrix",
                 "vector"
             ],
-            "time": "2020-08-28T17:11:00+00:00"
+            "time": "2021-01-23T16:37:31+00:00"
         },
         {
             "name": "mhujer/fio-api-php",
@@ -3547,16 +3555,16 @@
         },
         {
             "name": "nette/application",
-            "version": "v3.0.7",
+            "version": "v3.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/application.git",
-                "reference": "d2471134ed909210de8a3e8559931902b1bee67b"
+                "reference": "3d9ea92ab36f5e1475b8dd93a27da03d5fc3b8c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/application/zipball/d2471134ed909210de8a3e8559931902b1bee67b",
-                "reference": "d2471134ed909210de8a3e8559931902b1bee67b",
+                "url": "https://api.github.com/repos/nette/application/zipball/3d9ea92ab36f5e1475b8dd93a27da03d5fc3b8c7",
+                "reference": "3d9ea92ab36f5e1475b8dd93a27da03d5fc3b8c7",
                 "shasum": ""
             },
             "require": {
@@ -3567,13 +3575,13 @@
                 "php": ">=7.1"
             },
             "conflict": {
-                "latte/latte": "<2.6",
+                "latte/latte": "<2.6 >=3.0",
                 "nette/di": "<3.0-stable",
                 "nette/forms": "<3.0",
                 "tracy/tracy": "<2.5"
             },
             "require-dev": {
-                "latte/latte": "^2.6.2",
+                "latte/latte": "^2.9.1",
                 "mockery/mockery": "^1.0",
                 "nette/di": "^v3.0",
                 "nette/forms": "^3.0",
@@ -3628,7 +3636,7 @@
                 "routing",
                 "seo"
             ],
-            "time": "2020-11-02T13:42:35+00:00"
+            "time": "2021-01-25T20:02:59+00:00"
         },
         {
             "name": "nette/bootstrap",
@@ -4317,16 +4325,16 @@
         },
         {
             "name": "nette/php-generator",
-            "version": "v3.5.1",
+            "version": "v3.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/php-generator.git",
-                "reference": "fe54415cd22d01bee1307a608058bf131978610a"
+                "reference": "41dcc5d1cb322835e5950a76515166c90923c6b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/php-generator/zipball/fe54415cd22d01bee1307a608058bf131978610a",
-                "reference": "fe54415cd22d01bee1307a608058bf131978610a",
+                "url": "https://api.github.com/repos/nette/php-generator/zipball/41dcc5d1cb322835e5950a76515166c90923c6b7",
+                "reference": "41dcc5d1cb322835e5950a76515166c90923c6b7",
                 "shasum": ""
             },
             "require": {
@@ -4377,7 +4385,7 @@
                 "php",
                 "scaffolding"
             ],
-            "time": "2020-11-04T11:26:26+00:00"
+            "time": "2021-01-19T13:02:23+00:00"
         },
         {
             "name": "nette/robot-loader",
@@ -4502,16 +4510,16 @@
         },
         {
             "name": "nette/schema",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/schema.git",
-                "reference": "3b6b9702a2a54170c81d157b65570fac871caba0"
+                "reference": "9962564311f4affebd63f9cab014ab69266306ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/schema/zipball/3b6b9702a2a54170c81d157b65570fac871caba0",
-                "reference": "3b6b9702a2a54170c81d157b65570fac871caba0",
+                "url": "https://api.github.com/repos/nette/schema/zipball/9962564311f4affebd63f9cab014ab69266306ce",
+                "reference": "9962564311f4affebd63f9cab014ab69266306ce",
                 "shasum": ""
             },
             "require": {
@@ -4526,7 +4534,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "1.2-dev"
                 }
             },
             "autoload": {
@@ -4556,7 +4564,7 @@
                 "config",
                 "nette"
             ],
-            "time": "2020-12-20T22:18:49+00:00"
+            "time": "2021-01-21T14:49:23+00:00"
         },
         {
             "name": "nette/security",
@@ -7898,16 +7906,16 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.8.1",
+            "version": "v2.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "37c238d08db44f2cd6f21f7d97e5cea11d631fae"
+                "reference": "7794de6c53ee85f24cf8d7fa79a9ba32441914cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/37c238d08db44f2cd6f21f7d97e5cea11d631fae",
-                "reference": "37c238d08db44f2cd6f21f7d97e5cea11d631fae",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/7794de6c53ee85f24cf8d7fa79a9ba32441914cd",
+                "reference": "7794de6c53ee85f24cf8d7fa79a9ba32441914cd",
                 "shasum": ""
             },
             "require": {
@@ -7964,20 +7972,20 @@
                 "nette",
                 "profiler"
             ],
-            "time": "2021-01-01T22:21:23+00:00"
+            "time": "2021-01-21T16:36:22+00:00"
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v4.5.3",
+            "version": "v4.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "a716fb03f965dc0846df479e14388b1b4b93d7ce"
+                "reference": "6ffb0b48e455430f8a5359ed689ad64c1143fac2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/a716fb03f965dc0846df479e14388b1b4b93d7ce",
-                "reference": "a716fb03f965dc0846df479e14388b1b4b93d7ce",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/6ffb0b48e455430f8a5359ed689ad64c1143fac2",
+                "reference": "6ffb0b48e455430f8a5359ed689ad64c1143fac2",
                 "shasum": ""
             },
             "replace": {
@@ -8021,7 +8029,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2020-10-13T15:38:30+00:00"
+            "time": "2021-01-19T16:16:38+00:00"
         },
         {
             "name": "ublaboo/datagrid",
@@ -8196,23 +8204,23 @@
     "packages-dev": [
         {
             "name": "behat/gherkin",
-            "version": "v4.6.2",
+            "version": "v4.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Gherkin.git",
-                "reference": "51ac4500c4dc30cbaaabcd2f25694299df666a31"
+                "reference": "987bcdc3d29ba433e6bd4b1db4ae59737ba3dacd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Gherkin/zipball/51ac4500c4dc30cbaaabcd2f25694299df666a31",
-                "reference": "51ac4500c4dc30cbaaabcd2f25694299df666a31",
+                "url": "https://api.github.com/repos/Behat/Gherkin/zipball/987bcdc3d29ba433e6bd4b1db4ae59737ba3dacd",
+                "reference": "987bcdc3d29ba433e6bd4b1db4ae59737ba3dacd",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.1"
+                "php": ">=5.6"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.5|~5",
+                "phpunit/phpunit": "~5.7|~6|~7",
                 "symfony/phpunit-bridge": "~2.7|~3|~4",
                 "symfony/yaml": "~2.3|~3|~4"
             },
@@ -8241,7 +8249,7 @@
                     "homepage": "http://everzet.com"
                 }
             ],
-            "description": "Gherkin DSL parser for PHP 5.3",
+            "description": "Gherkin DSL parser for PHP",
             "homepage": "http://behat.org/",
             "keywords": [
                 "BDD",
@@ -8251,20 +8259,20 @@
                 "gherkin",
                 "parser"
             ],
-            "time": "2020-03-17T14:03:26+00:00"
+            "time": "2021-01-26T16:24:32+00:00"
         },
         {
             "name": "codeception/codeception",
-            "version": "4.1.14",
+            "version": "4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "bf2d7861cc6cf4e118a21c6945f482a5c822636c"
+                "reference": "daf4fe110b33855252009a0dcab87ce8bcf7c009"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/bf2d7861cc6cf4e118a21c6945f482a5c822636c",
-                "reference": "bf2d7861cc6cf4e118a21c6945f482a5c822636c",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/daf4fe110b33855252009a0dcab87ce8bcf7c009",
+                "reference": "daf4fe110b33855252009a0dcab87ce8bcf7c009",
                 "shasum": ""
             },
             "require": {
@@ -8342,7 +8350,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2020-12-28T19:16:28+00:00"
+            "time": "2021-01-26T07:25:32+00:00"
         },
         {
             "name": "codeception/lib-asserts",
@@ -8396,16 +8404,16 @@
         },
         {
             "name": "codeception/lib-innerbrowser",
-            "version": "1.3.5",
+            "version": "1.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/lib-innerbrowser.git",
-                "reference": "956101b060a0d898a1ed8c106fd4d81adf25fd87"
+                "reference": "41b79ba6761001bdb1f373a347400180693ad4e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/lib-innerbrowser/zipball/956101b060a0d898a1ed8c106fd4d81adf25fd87",
-                "reference": "956101b060a0d898a1ed8c106fd4d81adf25fd87",
+                "url": "https://api.github.com/repos/Codeception/lib-innerbrowser/zipball/41b79ba6761001bdb1f373a347400180693ad4e7",
+                "reference": "41b79ba6761001bdb1f373a347400180693ad4e7",
                 "shasum": ""
             },
             "require": {
@@ -8448,7 +8456,7 @@
             "keywords": [
                 "codeception"
             ],
-            "time": "2021-01-02T18:59:34+00:00"
+            "time": "2021-01-17T11:21:09+00:00"
         },
         {
             "name": "codeception/mockery-module",
@@ -8490,59 +8498,6 @@
             ],
             "description": "Mockery Module for Codeception",
             "time": "2020-01-17T15:08:49+00:00"
-        },
-        {
-            "name": "codeception/module-asserts",
-            "version": "1.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Codeception/module-asserts.git",
-                "reference": "59374f2fef0cabb9e8ddb53277e85cdca74328de"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/module-asserts/zipball/59374f2fef0cabb9e8ddb53277e85cdca74328de",
-                "reference": "59374f2fef0cabb9e8ddb53277e85cdca74328de",
-                "shasum": ""
-            },
-            "require": {
-                "codeception/codeception": "*@dev",
-                "codeception/lib-asserts": "^1.13.1",
-                "php": ">=5.6.0 <9.0"
-            },
-            "conflict": {
-                "codeception/codeception": "<4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Bodnarchuk"
-                },
-                {
-                    "name": "Gintautas Miselis"
-                },
-                {
-                    "name": "Gustavo Nieves",
-                    "homepage": "https://medium.com/@ganieves"
-                }
-            ],
-            "description": "Codeception module containing various assertions",
-            "homepage": "https://codeception.com/",
-            "keywords": [
-                "assertions",
-                "asserts",
-                "codeception"
-            ],
-            "time": "2020-10-21T16:48:15+00:00"
         },
         {
             "name": "codeception/phpunit-wrapper",
@@ -9421,16 +9376,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.67",
+            "version": "0.12.69",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "ced7a5d9c5dba908c1c00cea3f1d4ad74da71b86"
+                "reference": "8f436ea35241da33487fd0d38b4bc3e6dfe30ea8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ced7a5d9c5dba908c1c00cea3f1d4ad74da71b86",
-                "reference": "ced7a5d9c5dba908c1c00cea3f1d4ad74da71b86",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8f436ea35241da33487fd0d38b4bc3e6dfe30ea8",
+                "reference": "8f436ea35241da33487fd0d38b4bc3e6dfe30ea8",
                 "shasum": ""
             },
             "require": {
@@ -9473,20 +9428,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-14T14:16:19+00:00"
+            "time": "2021-01-24T14:55:37+00:00"
         },
         {
             "name": "phpstan/phpstan-doctrine",
-            "version": "0.12.28",
+            "version": "0.12.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-doctrine.git",
-                "reference": "723ed14e8f4fbdfa8c0fd7d9601f176444a004eb"
+                "reference": "c4b910638ef416ad336aca596b4551a2db10b5f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-doctrine/zipball/723ed14e8f4fbdfa8c0fd7d9601f176444a004eb",
-                "reference": "723ed14e8f4fbdfa8c0fd7d9601f176444a004eb",
+                "url": "https://api.github.com/repos/phpstan/phpstan-doctrine/zipball/c4b910638ef416ad336aca596b4551a2db10b5f7",
+                "reference": "c4b910638ef416ad336aca596b4551a2db10b5f7",
                 "shasum": ""
             },
             "require": {
@@ -9504,6 +9459,7 @@
                 "doctrine/annotations": "^1.11.0",
                 "doctrine/collections": "^1.0",
                 "doctrine/common": "^2.7 || ^3.0",
+                "doctrine/dbal": "^2.11.0",
                 "doctrine/mongodb-odm": "^1.3 || ^2.1",
                 "doctrine/orm": "^2.5",
                 "doctrine/persistence": "^1.1 || ^2.0",
@@ -9536,7 +9492,7 @@
                 "MIT"
             ],
             "description": "Doctrine extensions for PHPStan",
-            "time": "2021-01-14T10:53:06+00:00"
+            "time": "2021-01-18T13:00:10+00:00"
         },
         {
             "name": "phpstan/phpstan-nette",
@@ -9898,16 +9854,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.0",
+            "version": "9.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "8e16c225d57c3d6808014df6b1dd7598d0a5bbbe"
+                "reference": "e7bdf4085de85a825f4424eae52c99a1cec2f360"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8e16c225d57c3d6808014df6b1dd7598d0a5bbbe",
-                "reference": "8e16c225d57c3d6808014df6b1dd7598d0a5bbbe",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e7bdf4085de85a825f4424eae52c99a1cec2f360",
+                "reference": "e7bdf4085de85a825f4424eae52c99a1cec2f360",
                 "shasum": ""
             },
             "require": {
@@ -9993,7 +9949,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-12-04T05:05:53+00:00"
+            "time": "2021-01-17T07:42:25+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -10001,12 +9957,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "0f7a0af0970ff222b7c4212e2417580e0e05b257"
+                "reference": "db043e108edc5065662fec040aedea5bf30f8a12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0f7a0af0970ff222b7c4212e2417580e0e05b257",
-                "reference": "0f7a0af0970ff222b7c4212e2417580e0e05b257",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/db043e108edc5065662fec040aedea5bf30f8a12",
+                "reference": "db043e108edc5065662fec040aedea5bf30f8a12",
                 "shasum": ""
             },
             "conflict": {
@@ -10088,7 +10044,7 @@
                 "guzzlehttp/guzzle": ">=4-rc.2,<4.2.4|>=5,<5.3.1|>=6,<6.2.1",
                 "illuminate/auth": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.10",
                 "illuminate/cookie": ">=4,<=4.0.11|>=4.1,<=4.1.99999|>=4.2,<=4.2.99999|>=5,<=5.0.99999|>=5.1,<=5.1.99999|>=5.2,<=5.2.99999|>=5.3,<=5.3.99999|>=5.4,<=5.4.99999|>=5.5,<=5.5.49|>=5.6,<=5.6.99999|>=5.7,<=5.7.99999|>=5.8,<=5.8.99999|>=6,<6.18.31|>=7,<7.22.4",
-                "illuminate/database": ">=4,<4.0.99|>=4.1,<4.1.29|>=5.5,<=5.5.44|>=6,<6.18.34|>=7,<7.23.2",
+                "illuminate/database": "<6.20.12|>=7,<7.30.3|>=8,<8.22.1",
                 "illuminate/encryption": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
                 "illuminate/view": ">=7,<7.1.2",
                 "ivankristianto/phpwhois": "<=4.3",
@@ -10099,7 +10055,7 @@
                 "kitodo/presentation": "<3.1.2",
                 "kreait/firebase-php": ">=3.2,<3.8.1",
                 "la-haute-societe/tcpdf": "<6.2.22",
-                "laravel/framework": ">=4,<4.0.99|>=4.1,<=4.1.99999|>=4.2,<=4.2.99999|>=5,<=5.0.99999|>=5.1,<=5.1.99999|>=5.2,<=5.2.99999|>=5.3,<=5.3.99999|>=5.4,<=5.4.99999|>=5.5,<=5.5.49|>=5.6,<=5.6.99999|>=5.7,<=5.7.99999|>=5.8,<=5.8.99999|>=6,<6.20.11|>=7,<7.30.2|>=8,<8.22.1",
+                "laravel/framework": "<6.20.12|>=7,<7.30.3|>=8,<8.22.1",
                 "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
                 "league/commonmark": "<0.18.3",
                 "librenms/librenms": "<1.53",
@@ -10109,6 +10065,7 @@
                 "magento/magento1ee": ">=1,<1.14.4.3",
                 "magento/product-community-edition": ">=2,<2.2.10|>=2.3,<2.3.2-p.2",
                 "marcwillmann/turn": "<0.3.3",
+                "mautic/core": "<2.16.5|>=3,<3.2.4|= 2.13.1",
                 "mediawiki/core": ">=1.27,<1.27.6|>=1.29,<1.29.3|>=1.30,<1.30.2|>=1.31,<1.31.9|>=1.32,<1.32.6|>=1.32.99,<1.33.3|>=1.33.99,<1.34.3|>=1.34.99,<1.35",
                 "mittwald/typo3_forum": "<1.2.1",
                 "monolog/monolog": ">=1.8,<1.12",
@@ -10133,7 +10090,7 @@
                 "paragonie/random_compat": "<2",
                 "passbolt/passbolt_api": "<2.11",
                 "paypal/merchant-sdk-php": "<3.12",
-                "pear/archive_tar": "<1.4.11",
+                "pear/archive_tar": "<1.4.12",
                 "personnummer/personnummer": "<3.0.2",
                 "phpfastcache/phpfastcache": ">=5,<5.0.13",
                 "phpmailer/phpmailer": "<6.1.6",
@@ -10149,7 +10106,7 @@
                 "prestashop/autoupgrade": ">=4,<4.10.1",
                 "prestashop/contactform": ">1.0.1,<4.3",
                 "prestashop/gamification": "<2.3.2",
-                "prestashop/productcomments": ">=4,<4.2",
+                "prestashop/productcomments": ">=4,<4.2.1",
                 "prestashop/ps_facetedsearch": "<3.4.1",
                 "privatebin/privatebin": "<1.2.2|>=1.3,<1.3.2",
                 "propel/propel": ">=2-alpha.1,<=2-alpha.7",
@@ -10310,7 +10267,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-14T09:32:54+00:00"
+            "time": "2021-01-20T22:18:29+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -11702,12 +11659,12 @@
             "version": "1.9.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webmozart/assert.git",
+                "url": "https://github.com/webmozarts/assert.git",
                 "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "shasum": ""
             },
