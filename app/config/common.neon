@@ -53,7 +53,7 @@ services:
     authenticator: App\Services\Authenticator
     console.application: Contributte\Console\Application
     -
-        factory: Joseki\Application\Responses\PdfResponse
+        factory: Contributte\PdfResponse\PdfResponse
         setup:
             - $mpdfConfig([tempDir: %tempDir%/mpdf])
 

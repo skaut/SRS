@@ -11,7 +11,7 @@ use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ISettingsService;
 use App\Services\QueryBus;
-use Joseki\Application\Responses\PdfResponse;
+use Contributte\PdfResponse\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Bridges\ApplicationLatte\Template;
