@@ -6,6 +6,7 @@ namespace App\Utils;
 
 use Doctrine\Common\Collections\Collection;
 
+use function array_diff;
 use function array_map;
 use function mb_strlen;
 use function mb_strrpos;
@@ -67,8 +68,8 @@ class Helpers
             return false;
         }
 
-        $collection1Ids = Helpers::getIds($collection1);
-        $collection2Ids = Helpers::getIds($collection2);
+        $collection1Ids = self::getIds($collection1);
+        $collection2Ids = self::getIds($collection2);
 
         return array_diff($collection1Ids, $collection2Ids) === array_diff($collection2Ids, $collection1Ids);
     }

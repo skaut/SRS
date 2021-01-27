@@ -17,7 +17,6 @@ use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\TextUI\Help;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class CategoryUpdatedEventListener implements MessageHandlerInterface

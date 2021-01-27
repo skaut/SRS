@@ -39,14 +39,12 @@ use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Nette;
 use Nette\Localization\ITranslator;
-use PHPUnit\TextUI\Help;
 use ReflectionException;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
 
 use function abs;
-use function array_diff;
 use function implode;
 use function str_pad;
 use function strval;
