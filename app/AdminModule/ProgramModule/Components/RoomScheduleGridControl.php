@@ -75,15 +75,15 @@ class RoomScheduleGridControl extends Control
         $grid->setDefaultSort(['start' => 'ASC']);
         $grid->setPagination(false);
 
-        $grid->addColumnDateTime('start', 'admin.program.rooms_schedule_program_start')
+        $grid->addColumnDateTime('start', 'admin.program.rooms.schedule.column.program_start')
             ->setFormat(Helpers::DATETIME_FORMAT);
 
-        $grid->addColumnDateTime('end', 'admin.program.rooms_schedule_program_end')
+        $grid->addColumnDateTime('end', 'admin.program.rooms.schedule.column.program_end')
             ->setFormat(Helpers::DATETIME_FORMAT);
 
-        $grid->addColumnText('name', 'admin.program.rooms_schedule_program_name', 'block.name');
+        $grid->addColumnText('name', 'admin.program.rooms.schedule.column.program_name', 'block.name');
 
-        $grid->addColumnText('occupancy', 'admin.program.rooms_schedule_occupancy')
+        $grid->addColumnText('occupancy', 'admin.program.rooms.schedule.column.occupancy')
             ->setRenderer(
                 function (Program $program) {
                     $capacity       = $this->room->getCapacity();
@@ -93,7 +93,7 @@ class RoomScheduleGridControl extends Control
                 }
             );
 
-        $grid->addToolbarButton('exportRoomsSchedule!', 'admin.program.rooms_schedule_download_schedule');
+        $grid->addToolbarButton('exportRoomsSchedule!', 'admin.program.rooms.schedule.action.export_schedule');
     }
 
     /**

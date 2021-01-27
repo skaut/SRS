@@ -134,6 +134,11 @@ day:
     6: "So"
     7: "Ne"
 
+program_mandatory_type:
+    voluntary: "Nepovinný"
+    mandatory: "Povinný"
+    auto_registered: "Automaticky přihlašovaný"
+
 api:
     authentification_error: "Uživatel musí být přihlášen."
 

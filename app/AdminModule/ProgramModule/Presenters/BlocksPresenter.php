@@ -87,7 +87,7 @@ class BlocksPresenter extends ProgramBasePresenter
         $block = $this->blockRepository->findById($id);
 
         if (! $this->userRepository->findById($this->getUser()->getId())->isAllowedModifyBlock($block)) {
-            $this->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
+            $this->flashMessage('admin.program.blocks.message.edit_not_allowed', 'danger');
             $this->redirect('Blocks:default');
         }
 
@@ -127,10 +127,10 @@ class BlocksPresenter extends ProgramBasePresenter
             ! $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
             ! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
         ) {
-            $this->flashMessage('admin.program.blocks_program_modify_schedule_not_allowed', 'danger');
+            $this->flashMessage('admin.program.blocks.programs.message.modify_schedule_not_allowed', 'danger');
         } else {
             $this->commandBus->handle(new RemoveProgram($program));
-            $this->flashMessage('admin.program.blocks_program_deleted', 'success');
+            $this->flashMessage('admin.program.blocks.programs.message.delete_success', 'success');
         }
 
         $this->redirect('this');
@@ -161,7 +161,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
             if (! $values->id) {
                 if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
-                    $this->flashMessage('admin.program.blocks_add_not_allowed', 'danger');
+                    $this->flashMessage('admin.program.blocks.message.add_not_allowed', 'danger');
                     $this->redirect('Blocks:default');
                 }
             } else {
@@ -169,12 +169,12 @@ class BlocksPresenter extends ProgramBasePresenter
                 $block = $this->blockRepository->findById((int) $values->id);
 
                 if (! $user->isAllowedModifyBlock($block)) {
-                    $this->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
+                    $this->flashMessage('admin.program.blocks.message.edit_not_allowed', 'danger');
                     $this->redirect('Blocks:default');
                 }
             }
 
-            $this->flashMessage('admin.program.blocks_saved', 'success');
+            $this->flashMessage('admin.program.blocks.message.save_success', 'success');
 
             if ($form->isSubmitted() === $form['submitAndContinue']) {
                 $id = $values->id ?: $this->blockRepository->findLastId();

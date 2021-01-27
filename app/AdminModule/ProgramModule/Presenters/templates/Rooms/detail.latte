@@ -1,6 +1,6 @@
 {block main}
-    <h2>{_admin.program.rooms_detail_heading, ['name' => $room->getName()]}</h2>
+    <h2>{_admin.program.rooms.detail.heading, ['name' => $room->getName()]}</h2>
 
-    <h3>Harmonogram místnosti</h3>
+    <h3>{_admin.program.rooms.schedule.heading}</h3>
     {control roomScheduleGrid}
 {/block}

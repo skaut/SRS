@@ -1,9 +1,9 @@
 {block main}
-    <h2>{_admin.program.blocks_detail_heading, ['name' => $block->getName()]}</h2>
+    <h2>{_admin.program.blocks.detail.heading, ['name' => $block->getName()]}</h2>
     <div class="card card-body bg-light pb-1 mb-3">
         <div class="form-group row">
             <div class="col-3">
-                {_admin.program.blocks_category}
+                {_admin.program.blocks.common.category}
             </div>
             <div class="col-9">
                 {if $block->getCategory()}
@@ -14,7 +14,7 @@
 
         <div class="form-group row">
             <div class="col-3">
-                {_admin.program.blocks_lectors}
+                {_admin.program.blocks.common.lectors}
             </div>
             <div class="col-9">
                 {$block->getLectorsText()}
@@ -23,7 +23,7 @@
 
         <div class="form-group row">
             <div class="col-3">
-                {_admin.program.blocks_duration}
+                {_admin.program.blocks.common.duration}
             </div>
             <div class="col-9">
                 {_admin.common.minutes, ['count' => $block->getDuration()]}
@@ -32,38 +32,38 @@
 
         <div class="form-group row">
             <div class="col-3">
-                {_admin.program.blocks_capacity}
+                {_admin.program.blocks.common.capacity}
             </div>
             <div class="col-9">
                 {if $block->getCapacity() !== null}
                     {$block->getCapacity()}
                     {if $block->isAlternatesAllowed()}
-                        {_admin.program.blocks_capacity_alternates_allowed}
+                        {_admin.program.blocks.detail.capacity_alternates_allowed}
                     {/if}
                 {else}
-                    {_admin.program.blocks_capacity_unlimited}
+                    {_admin.program.blocks.common.capacity_unlimited}
                 {/if}
             </div>
         </div>
 
         <div class="form-group row">
             <div class="col-3">
-                {_admin.program.blocks_mandatory}
+                {_admin.program.blocks.common.mandatory}
             </div>
             <div class="col-9">
                 {if $block->getMandatory() === $programMandatoryTypeVoluntary}
-                    {_admin.program.blocks_mandatory_voluntary}
+                    {_common.program_mandatory_type.voluntary}
                 {elseif $block->getMandatory() == $programMandatoryTypeMandatory}
-                    {_admin.program.blocks_mandatory_mandatory}
+                    {_common.program_mandatory_type.mandatory}
                 {elseif $block->getMandatory() == $programMandatoryTypeAutoRegistered}
-                    {_admin.program.blocks_mandatory_auto_registered}
+                    {_common.program_mandatory_type.auto_registered}
                 {/if}
             </div>
         </div>
 
         <div class="form-group row">
             <div class="col-3">
-                {_admin.program.blocks_tools}
+                {_admin.program.blocks.common.tools}
             </div>
             <div class="col-9">
                 {$block->getTools()}
@@ -72,7 +72,7 @@
 
         <div class="form-group row">
             <div class="col-3">
-                {_admin.program.blocks_perex}
+                {_admin.program.blocks.common.perex}
             </div>
             <div class="col-9">
                 {$block->getPerex()}
@@ -86,16 +86,16 @@
         </div>
     </div>
 
-    <h3>{_admin.program.blocks_schedule}</h3>
+    <h3>{_admin.program.blocks.detail.schedule}</h3>
     {snippet programs}
         <table class="table table-sm table-bordered table-striped">
             <thead>
                 <tr>
-                    <th class="text-right">{_admin.program.blocks_program_start}</th>
-                    <th class="text-right">{_admin.program.blocks_program_end}</th>
-                    <th>{_admin.program.blocks_program_room}</th>
-                    <th>{_admin.program.blocks_program_attendees_count}</th>
-                    <th n:if="$block->isAlternatesAllowed()">{_admin.program.blocks_program_alternates_count}</th>
+                    <th class="text-right">{_admin.program.blocks.programs.column.start}</th>
+                    <th class="text-right">{_admin.program.blocks.programs.column.end}</th>
+                    <th>{_admin.program.blocks.programs.column.room}</th>
+                    <th>{_admin.program.blocks.programs.column.attendees_count}</th>
+                    <th n:if="$block->isAlternatesAllowed()">{_admin.program.blocks.programs.column.alternates_count}</th>
                     <th class="text-center" style="white-space: nowrap; width: 1%;">{_ublaboo_datagrid.action}</th>
                 </tr>
             </thead>
@@ -129,15 +129,15 @@
                         <td class="text-right" style="white-space: nowrap; width: 1%;">
                             {if $programId == $program->getId()}
                                 <a class="btn btn-xs btn-warning ajax" n:href="showattendees! 0">
-                                    {_admin.program.blocks_program_hide_attendees_list}
+                                    {_admin.program.blocks.programs.action.hide_attendees_list}
                                 </a>
                             {else}
                                 <a class="btn btn-xs btn-secondary ajax" n:href="showattendees! $program->getId()">
-                                    {_admin.program.blocks_program_show_attendees_list}
+                                    {_admin.program.blocks.programs.action.show_attendees_list}
                                 </a>
                             {/if}
                             <a class="btn btn-xs btn-danger" n:href="deleteProgram! $program->getId()" data-toggle="confirmation"
-                               data-content="{_admin.program.blocks_program_delete_confirm}" n:if="$userAllowedModifySchedule">
+                               data-content="{_admin.program.blocks.programs.action.delete_confirm}" n:if="$userAllowedModifySchedule">
                                 <i class="fa fa-trash"></i>
                             </a>
                         </td>

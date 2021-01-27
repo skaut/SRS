@@ -154,73 +154,91 @@ cms:
     faq_edit_heading: "Úprava otázky"
 
 program:
-    menu_blocks: "Programové bloky"
-    menu_schedule: "Harmonogram"
-    menu_categories: "Kategorie"
-    menu_rooms: "Místnosti"
-
-    empty_user_info_begin: "Nemáte vyplňené informace o sobě, "
-    empty_user_info_link: "vyplňte je"
-    empty_user_info_end: ", aby se zobrazovaly u Vašich programů."
-
-    blocks_heading: "Programové bloky"
-    blocks_name: "Název"
-    blocks_name_empty: "Zadejte název."
-    blocks_name_exists: "Programový blok s tímto názvem již existuje."
-    blocks_subevent: "Podakce"
-    blocks_subevent_empty: "Vyberte podakci."
-    blocks_category: "Kategorie"
-    blocks_lectors: "Lektoři"
-    blocks_duration: "Délka"
-    blocks_duration_form: "Délka v minutách"
-    blocks_duration_empty: "Zadejte délku."
-    blocks_duration_format: "Zadejte číslo."
-    blocks_capacity: "Kapacita"
-    blocks_capacity_format: "Zadejte číslo nebo nechte pole prázdné."
-    blocks_capacity_note: "Pokud nechcete kapacitu omezovat, nechte pole prázdné."
-    blocks_capacity_unlimited: "Neomezená"
-    blocks_capacity_alternates_allowed: "(náhradníci povoleni)"
-    blocks_alternates_allowed: "povolit náhradníky"
-    blocks_mandatory: "Povinnost"
-    blocks_mandatory_mandatory: "Povinný"
-    blocks_mandatory_voluntary: "Nepovinný"
-    blocks_mandatory_auto_registered: "Automaticky přihlašovaný"
-    blocks_mandatory_form: "povinný"
-    blocks_auto_registered: "přihlašovat automaticky"
-    blocks_auto_registered_note: "Automaticky přihlašovaný program musí mít neomezenou kapacitu, může být v harmonogramu zařazen maximálně jednou a nesmí být ve stejnou dobu jako jiný program."
-    blocks_auto_registered_not_allowed: "Program nemůže být automaticky přihlašovaný, protože má omezenou kapacitu, je v harmonogramu vícekrát nebo ve stejnou dobu jako jiný program."
-    blocks_programs_count: "Počet zařazení"
-    blocks_perex: "Stručný popis"
-    blocks_perex_form: "Stručný popis (160 znaků)"
-    blocks_perex_length: "Překročena maximální délka."
-    blocks_description: "Detailní popis"
-    blocks_tools: "Pomůcky"
-    blocks_saved: "Programový blok byl úspěšně uložen."
-    blocks_group_action_export_blocks_attendees: "Export seznamu účastníků"
-    blocks_changed_mandatory: "Povinnost programového bloku byla úspěšně upravena."
-    blocks_change_mandatory_denied: "Nemáte oprávnění k úpravě tohoto programového bloku."
-    blocks_change_mandatory_auto_registered_not_allowed: "Program nemůže být automaticky přihlašovaný, protože má omezenou kapacitu, je v harmonogramu vícekrát nebo ve stejnou dobu jako jiný program."
-    blocks_delete_confirm: "Opravdu chcete programový blok odstranit?"
-    blocks_deleted: "Programový blok byl úspěšně odstraněn."
-    blocks_delete_not_allowed: "K odstranění tohoto bloku nemáte oprávnění."
-    blocks_add_heading: "Nový programový blok"
-    blocks_add_not_allowed: "Přidávání programových bloků není povoleno."
-    blocks_edit_heading: "Úprava bloku: %name%"
-    blocks_edit_not_allowed: "K úpravě tohoto bloku nemáte oprávnění."
-    blocks_detail_heading: "Detail bloku: %name%"
-    blocks_schedule: "Zařazení v harmonogramu"
-    blocks_program_start: "Od"
-    blocks_program_end: "Do"
-    blocks_program_room: "Místnost"
-    blocks_program_attendees_count: "Počet účastníků"
-    blocks_program_alternates_count: "Počet náhradníků"
-    blocks_program_show_attendees_list: "Účastníci"
-    blocks_program_hide_attendees_list: "Skrýt"
-    blocks_program_delete_confirm: "Opravdu chcete program odstranit z harmonogramu?"
-    blocks_program_deleted: "Program byl úspěšně odstraněn z harmonogramu."
-    blocks_program_modify_schedule_not_allowed: "Úprava harmonogramu není povolena nebo nemáte potřebné oprávnění."
+    menu:
+        blocks: "Programové bloky"
+        schedule: "Harmonogram"
+        categories: "Kategorie"
+        rooms: "Místnosti"
 
     blocks:
+        heading: "Programové bloky"
+
+        common:
+            name: "Název"
+            subevent: "Podakce"
+            category: "Kategorie"
+            lectors: "Lektoři"
+            duration: "Délka"
+            capacity: "Kapacita"
+            capacity_unlimited: "Neomezená"
+            mandatory: "Povinnost"
+            perex: "Stručný popis"
+            description: "Detailní popis"
+            tools: "Pomůcky"
+
+        column:
+            alternates_allowed: "Náhradnící povoleni"
+            programs_count: "Počet zařazení"
+
+        action:
+            delete_confirm: "Opravdu chcete programový blok odstranit?"
+            export_blocks_attendees: "Export seznamu účastníků"
+
+        message:
+            empty_user_info_begin: "Nemáte vyplňené informace o sobě, "
+            empty_user_info_link: "vyplňte je"
+            empty_user_info_end: ", aby se zobrazovaly u Vašich programů."
+            save_success: "Programový blok byl úspěšně uložen."
+            add_not_allowed: "Přidávání programových bloků není povoleno."
+            edit_not_allowed: "K úpravě tohoto bloku nemáte oprávnění."
+            delete_success: "Programový blok byl úspěšně odstraněn."
+            delete_not_allowed: "K odstranění tohoto bloku nemáte oprávnění."
+            mandatory_change_success: "Povinnost programového bloku byla úspěšně upravena."
+            mandatory_change_failed: "Změna povinnosti programového bloku selhala."
+            mandatory_change_denied: "Nemáte oprávnění k úpravě tohoto programového bloku."
+            mandatory_change_auto_registered_not_allowed: "Program nemůže být automaticky přihlašovaný, protože má omezenou kapacitu, je v harmonogramu vícekrát nebo ve stejnou dobu jako jiný program."
+
+        detail:
+            heading: "Detail bloku: %name%"
+            capacity_alternates_allowed: "(náhradníci povoleni)"
+            schedule: "Zařazení v harmonogramu"
+
+        form:
+            add_heading: "Nový programový blok"
+            edit_heading: "Úprava bloku: %name%"
+            name_empty: "Zadejte název."
+            name_exists: "Programový blok s tímto názvem již existuje."
+            subevent_empty: "Vyberte podakci."
+            duration: "Délka v minutách"
+            duration_empty: "Zadejte délku."
+            duration_format: "Zadejte číslo."
+            capacity_format: "Zadejte číslo nebo nechte pole prázdné."
+            capacity_note: "Pokud nechcete kapacitu omezovat, nechte pole prázdné."
+            alternates_allowed: "povolit náhradníky"
+            mandatory: "povinný"
+            auto_registered: "přihlašovat automaticky"
+            auto_registered_note: "Automaticky přihlašovaný program musí mít neomezenou kapacitu, může být v harmonogramu zařazen maximálně jednou a nesmí být ve stejnou dobu jako jiný program."
+            auto_registered_not_allowed: "Program nemůže být automaticky přihlašovaný, protože má omezenou kapacitu, je v harmonogramu vícekrát nebo ve stejnou dobu jako jiný program."
+            perex: "Stručný popis (160 znaků)"
+            perex_length: "Překročena maximální délka."
+
+        programs:
+            column:
+                start: "Od"
+                end: "Do"
+                room: "Místnost"
+                attendees_count: "Počet účastníků"
+                alternates_count: "Počet náhradníků"
+
+            action:
+                show_attendees_list: "Účastníci"
+                hide_attendees_list: "Skrýt"
+                delete_confirm: "Opravdu chcete program odstranit z harmonogramu?"
+
+            message:
+                delete_success: "Program byl úspěšně odstraněn z harmonogramu."
+                modify_schedule_not_allowed: "Úprava harmonogramu není povolena nebo nemáte potřebné oprávnění."
+
         attendees:
             column:
                 name: "Jméno"
@@ -247,38 +265,63 @@ program:
     schedule:
         heading: "Harmonogram"
         blocks_heading: "Programové bloky"
-        modify_schedule_is_not_allowed_begin: "Úprava harmonogramu není povolena, povolit ji můžete v "
-        modify_schedule_is_not_allowed_link: "nastavení"
-        modify_schedule_is_not_allowed_end: "."
 
-    categories_heading: "Kategorie"
-    categories_name: "Název"
-    categories_name_empty: "Zadejte název kategorie."
-    categories_name_exists: "Kategorie s tímto názvem již existuje."
-    categories_registerable_roles: "Oprávněné role"
-    categories_registerable_roles_empty: "Vyberte alespoň jednu roli."
-    categories_saved: "Kategorie byla úspěšně uložena."
-    categories_delete_confirm: "Odstraněním kategorie odeberete kategorii všem programovým blokům. Opravdu chcete kategorii odstranit?"
-    categories_deleted: "Kategorie byla úspěšně odstraněna."
-    categories_deleted_error: "Kategorie nebyla odstraněna, zkontrolujte, zda není přiřazena programovému bloku."
+        message:
+            modify_schedule_is_not_allowed_begin: "Úprava harmonogramu není povolena, povolit ji můžete v "
+            modify_schedule_is_not_allowed_link: "nastavení"
+            modify_schedule_is_not_allowed_end: "."
 
-    rooms_heading: "Místnosti"
-    rooms_name: "Název"
-    rooms_name_empty: "Zadejte název místnosti."
-    rooms_name_exists: "Místnost s tímo názvem již existuje."
-    rooms_capacity: "Kapacita"
-    rooms_capacity_format: "Zadejte číslo nebo nechte pole prázdné."
-    rooms_capacity_unlimited: "Neomezená"
-    rooms_saved: "Místnost byla úspěšně uložena."
-    rooms_group_action_export_rooms_schedules: "Export harmonogramů místností"
-    rooms_delete_confirm: "Odstraněním místnosti odeberete místnost všem programům. Opravdu chcete místnost odstranit?"
-    rooms_deleted: "Místnost byla úspěšně odstraněna."
-    rooms_detail_heading: "Detail místnosti: %name%"
-    rooms_schedule_program_name: "Program"
-    rooms_schedule_program_start: "Od"
-    rooms_schedule_program_end: "Do"
-    rooms_schedule_occupancy: "Obsazenost"
-    rooms_schedule_download_schedule: "Stáhnout harmonogram"
+    categories:
+        heading: "Kategorie"
+
+        column:
+            name: "Název"
+            name_empty: "Zadejte název kategorie."
+            name_exists: "Kategorie s tímto názvem již existuje."
+            registerable_roles: "Oprávněné role"
+            registerable_roles_empty: "Vyberte alespoň jednu roli."
+
+        action:
+            delete_confirm: "Odstraněním kategorie odeberete kategorii všem programovým blokům. Opravdu chcete kategorii odstranit?"
+
+        message:
+            save_success: "Kategorie byla úspěšně uložena."
+            delete_success: "Kategorie byla úspěšně odstraněna."
+            delete_failed: "Kategorie nebyla odstraněna, zkontrolujte, zda není přiřazena programovému bloku."
+
+    rooms:
+        heading: "Místnosti"
+
+        column:
+            name: "Název"
+            name_empty: "Zadejte název místnosti."
+            name_exists: "Místnost s tímo názvem již existuje."
+            capacity: "Kapacita"
+            capacity_format: "Zadejte číslo nebo nechte pole prázdné."
+            capacity_unlimited: "Neomezená"
+
+        action:
+            delete_confirm: "Odstraněním místnosti odeberete místnost všem programům. Opravdu chcete místnost odstranit?"
+            export_rooms_schedules: "Export harmonogramů místností"
+
+        message:
+            save_success: "Místnost byla úspěšně uložena."
+            delete_success: "Místnost byla úspěšně odstraněna."
+
+        detail:
+            heading: "Detail místnosti: %name%"
+
+        schedule:
+            heading: "Harmonogram místnosti"
+
+            column:
+                program_name: "Program"
+                program_start: "Od"
+                program_end: "Do"
+                occupancy: "Obsazenost"
+
+            action:
+                export_schedule: "Stáhnout harmonogram"
 
 users:
     users_heading: "Uživatelé"
