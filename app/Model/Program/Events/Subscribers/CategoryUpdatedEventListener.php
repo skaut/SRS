@@ -55,13 +55,8 @@ class CategoryUpdatedEventListener implements MessageHandlerInterface
             $registerableRoles    = $event->getCategory()->getRegisterableRoles();
             $registerableRolesOld = $event->getRegisterableRolesOld();
 
-            if ($registerableRoles->count() === $registerableRolesOld->count()) {
-                $registerableRolesArray    = Helpers::getIds($registerableRoles);
-                $registerableRolesOldArray = Helpers::getIds($registerableRolesOld);
-
-                if (array_diff($registerableRolesArray, $registerableRolesOldArray) === array_diff($registerableRolesOldArray, $registerableRolesArray)) {
-                    return;
-                }
+            if (Helpers::collectionsEquals($registerableRoles, $registerableRolesOld)) {
+                return;
             }
 
             foreach ($event->getCategory()->getBlocks() as $block) {

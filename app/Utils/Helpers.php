@@ -54,4 +54,22 @@ class Helpers
             return $o->getId();
         }, $collection->toArray());
     }
+
+    /**
+     * Porovnává kolekce entit podle id.
+     *
+     * @param Collection<object> $collection1
+     * @param Collection<object> $collection2
+     */
+    public static function collectionsEquals(Collection $collection1, Collection $collection2): bool
+    {
+        if ($collection1->count() !== $collection2->count()) {
+            return false;
+        }
+
+        $collection1Ids = Helpers::getIds($collection1);
+        $collection2Ids = Helpers::getIds($collection2);
+
+        return array_diff($collection1Ids, $collection2Ids) === array_diff($collection2Ids, $collection1Ids);
+    }
 }

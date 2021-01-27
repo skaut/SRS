@@ -200,14 +200,8 @@ class ApplicationService
     {
         $rolesOld = clone $user->getRoles();
 
-        //pokud se role nezmenily, nic se neprovede
-        if ($roles->count() === $rolesOld->count()) {
-            $rolesArray    = Helpers::getIds($roles);
-            $rolesOldArray = Helpers::getIds($rolesOld);
-
-            if (array_diff($rolesArray, $rolesOldArray) === array_diff($rolesOldArray, $rolesArray)) {
-                return;
-            }
+        if (Helpers::collectionsEquals($roles, $rolesOld)) {
+            return;
         }
 
         $this->em->transactional(function () use ($user, $roles, $createdBy, $approve, $rolesOld): void {
@@ -381,14 +375,8 @@ class ApplicationService
 
         $subeventsOld = clone $application->getSubevents();
 
-        //pokud se podakce nezmenily, nic se neprovede
-        if ($subevents->count() === $subeventsOld->count()) {
-            $subeventsArray    = Helpers::getIds($subevents);
-            $subeventsOldArray = Helpers::getIds($subeventsOld);
-
-            if (array_diff($subeventsArray, $subeventsOldArray) === array_diff($subeventsOldArray, $subeventsArray)) {
-                return;
-            }
+        if (Helpers::collectionsEquals($subevents, $subeventsOld)) {
+            return;
         }
 
         $this->em->transactional(function () use ($application, $subevents, $createdBy): void {
