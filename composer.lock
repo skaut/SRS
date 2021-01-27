@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "298fcd6bdf0d6c0da3d9c2ab9ebc9ae1",
+    "content-hash": "8515af7bba23c260ce093e3e95b96b0a",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -7906,16 +7906,16 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.8.2",
+            "version": "v2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "7794de6c53ee85f24cf8d7fa79a9ba32441914cd"
+                "reference": "37c238d08db44f2cd6f21f7d97e5cea11d631fae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/7794de6c53ee85f24cf8d7fa79a9ba32441914cd",
-                "reference": "7794de6c53ee85f24cf8d7fa79a9ba32441914cd",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/37c238d08db44f2cd6f21f7d97e5cea11d631fae",
+                "reference": "37c238d08db44f2cd6f21f7d97e5cea11d631fae",
                 "shasum": ""
             },
             "require": {
@@ -7972,7 +7972,7 @@
                 "nette",
                 "profiler"
             ],
-            "time": "2021-01-21T16:36:22+00:00"
+            "time": "2021-01-01T22:21:23+00:00"
         },
         {
             "name": "twbs/bootstrap",
