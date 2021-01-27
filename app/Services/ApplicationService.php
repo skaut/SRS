@@ -39,6 +39,7 @@ use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Nette;
 use Nette\Localization\ITranslator;
+use PHPUnit\TextUI\Help;
 use ReflectionException;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
@@ -201,14 +202,10 @@ class ApplicationService
 
         //pokud se role nezmenily, nic se neprovede
         if ($roles->count() === $rolesOld->count()) {
-            $rolesArray    = $roles->map(static function (Role $role) {
-                return $role->getId();
-            })->toArray();
-            $oldRolesArray = $rolesOld->map(static function (Role $role) {
-                return $role->getId();
-            })->toArray();
+            $rolesArray    = Helpers::getIds($roles);
+            $rolesOldArray = Helpers::getIds($rolesOld);
 
-            if (array_diff($rolesArray, $oldRolesArray) === array_diff($oldRolesArray, $rolesArray)) {
+            if (array_diff($rolesArray, $rolesOldArray) === array_diff($rolesOldArray, $rolesArray)) {
                 return;
             }
         }
@@ -386,14 +383,10 @@ class ApplicationService
 
         //pokud se podakce nezmenily, nic se neprovede
         if ($subevents->count() === $subeventsOld->count()) {
-            $subeventsArray    = $subevents->map(static function (Subevent $subevent) {
-                return $subevent->getId();
-            })->toArray();
-            $oldSubeventsArray = $subeventsOld->map(static function (Subevent $subevent) {
-                return $subevent->getId();
-            })->toArray();
+            $subeventsArray    = Helpers::getIds($subevents);
+            $subeventsOldArray = Helpers::getIds($subeventsOld);
 
-            if (array_diff($subeventsArray, $oldSubeventsArray) === array_diff($oldSubeventsArray, $subeventsArray)) {
+            if (array_diff($subeventsArray, $subeventsOldArray) === array_diff($subeventsOldArray, $subeventsArray)) {
                 return;
             }
         }
