@@ -580,6 +580,79 @@
             "time": "2020-01-05T18:11:45+00:00"
         },
         {
+            "name": "contributte/pdf",
+            "version": "v6.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contributte/pdf.git",
+                "reference": "79d2b8a14211152d5ad9c9b11893f31bed8b76a3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contributte/pdf/zipball/79d2b8a14211152d5ad9c9b11893f31bed8b76a3",
+                "reference": "79d2b8a14211152d5ad9c9b11893f31bed8b76a3",
+                "shasum": ""
+            },
+            "require": {
+                "mpdf/mpdf": "^8.0",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "latte/latte": "~2.5",
+                "nette/application": "~3.0",
+                "nette/di": "^3.0",
+                "nette/tester": "~2.2",
+                "symfony/css-selector": "~2.5",
+                "symfony/dom-crawler": "~2.5"
+            },
+            "suggest": {
+                "nette/nette": "PHP framework to which this extension belongs to.",
+                "symfony/dom-crawler": "Allows filtering html tags."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Contributte\\PdfResponse\\": "src/",
+                    "Joseki\\Application\\Responses\\": "src-old/"
+                },
+                "files": [
+                    "src/compatibility.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Miroslav Paulík",
+                    "email": "miras.paulik@seznam.cz"
+                },
+                {
+                    "name": "Jan Kuchař"
+                },
+                {
+                    "name": "Tomáš Votruba",
+                    "email": "tomas.vot@gmail.com"
+                },
+                {
+                    "name": "Petr Parolek",
+                    "homepage": "https://www.webnazakazku.cz/"
+                },
+                {
+                    "name": "Milan Felix Šulc",
+                    "homepage": "https://f3l1x.io"
+                }
+            ],
+            "description": "Pdf response extension for Nette Framework",
+            "time": "2020-12-08T10:05:18+00:00"
+        },
+        {
             "name": "contributte/recaptcha",
             "version": "v3.3.1",
             "source": {
@@ -2590,71 +2663,6 @@
                 }
             ],
             "time": "2020-12-29T12:26:56+00:00"
-        },
-        {
-            "name": "joseki/pdf-response",
-            "version": "v5.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Joseki/PdfResponse.git",
-                "reference": "da964c5bcc19d56f502a9028dd9c7bdb658a88a7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Joseki/PdfResponse/zipball/da964c5bcc19d56f502a9028dd9c7bdb658a88a7",
-                "reference": "da964c5bcc19d56f502a9028dd9c7bdb658a88a7",
-                "shasum": ""
-            },
-            "require": {
-                "mpdf/mpdf": "~8.0.0",
-                "php": "~7.1.0 || ~7.2.0 || ~7.3.0 || ~7.4.0"
-            },
-            "require-dev": {
-                "latte/latte": "~2.5",
-                "nette/application": "~3.0",
-                "nette/di": "^3.0",
-                "nette/tester": "~2.2",
-                "symfony/css-selector": "~2.5",
-                "symfony/dom-crawler": "~2.5"
-            },
-            "suggest": {
-                "nette/nette": "PHP framework to which this extension belongs to.",
-                "symfony/dom-crawler": "Allows filtering html tags."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Joseki\\Application\\Responses\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Miroslav Paulík",
-                    "email": "miras.paulik@seznam.cz"
-                },
-                {
-                    "name": "Jan Kuchař"
-                },
-                {
-                    "name": "Tomáš Votruba",
-                    "email": "tomas.vot@gmail.com"
-                },
-                {
-                    "name": "Petr Parolek"
-                }
-            ],
-            "description": "Pdf response extension for Nette Framework",
-            "abandoned": "contributte/pdf",
-            "time": "2020-06-18T16:05:09+00:00"
         },
         {
             "name": "kartik-v/bootstrap-fileinput",
@@ -7898,16 +7906,16 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.8.1",
+            "version": "v2.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "37c238d08db44f2cd6f21f7d97e5cea11d631fae"
+                "reference": "7794de6c53ee85f24cf8d7fa79a9ba32441914cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/37c238d08db44f2cd6f21f7d97e5cea11d631fae",
-                "reference": "37c238d08db44f2cd6f21f7d97e5cea11d631fae",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/7794de6c53ee85f24cf8d7fa79a9ba32441914cd",
+                "reference": "7794de6c53ee85f24cf8d7fa79a9ba32441914cd",
                 "shasum": ""
             },
             "require": {
@@ -7964,7 +7972,7 @@
                 "nette",
                 "profiler"
             ],
-            "time": "2021-01-01T22:21:23+00:00"
+            "time": "2021-01-21T16:36:22+00:00"
         },
         {
             "name": "twbs/bootstrap",
