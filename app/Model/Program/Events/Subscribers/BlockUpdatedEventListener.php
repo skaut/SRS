@@ -21,6 +21,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
+use function assert;
+
 class BlockUpdatedEventListener implements MessageHandlerInterface
 {
     private CommandBus $commandBus;
@@ -122,7 +124,7 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
                 foreach ($block->getPrograms() as $program) {
                     $programAlternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));
 
-                    foreach ($programAlternates as $alternate) {
+                    foreach ($programAlternates as $user) {
                         $this->commandBus->handle(new UnregisterProgram($user, $program));
                     }
                 }
@@ -135,12 +137,12 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
                     assert($program instanceof Program);
 
                     while ($program->getAttendeesCount() <= $capacity) {
-                        $alternate = $this->userRepository->findProgramFirstAlternate($program);
-                        if ($alternate === null) {
+                        $user = $this->userRepository->findProgramFirstAlternate($program);
+                        if ($user === null) {
                             break;
                         }
 
-                        $this->commandBus->handle(new RegisterProgram($alternate, $program));
+                        $this->commandBus->handle(new RegisterProgram($user, $program));
                     }
                 }
             }

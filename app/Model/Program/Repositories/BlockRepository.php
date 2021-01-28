@@ -16,11 +16,10 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 
 use function array_map;
+use function assert;
 
 /**
  * Třída spravující programové bloky.
@@ -180,7 +179,7 @@ class BlockRepository extends AbstractRepository
      */
     public function save(Block $block): void
     {
-        $this->em->transactional(function (EntityManager $em) use ($block): void {
+        $this->em->transactional(static function (EntityManager $em) use ($block): void {
             if ($block->getCapacity() !== null) {
                 foreach ($block->getPrograms() as $program) {
                     $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
@@ -203,7 +202,7 @@ class BlockRepository extends AbstractRepository
      */
     public function remove(Block $block): void
     {
-        $this->em->transactional(function (EntityManager $em) use ($block): void {
+        $this->em->transactional(static function (EntityManager $em) use ($block): void {
             foreach ($block->getPrograms() as $program) {
                 $em->remove($program);
             }

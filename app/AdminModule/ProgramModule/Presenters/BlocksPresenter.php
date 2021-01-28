@@ -18,12 +18,9 @@ use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Http\Session;
-use stdClass;
 use Throwable;
 
 /**

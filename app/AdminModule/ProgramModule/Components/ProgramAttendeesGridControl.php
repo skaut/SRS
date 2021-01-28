@@ -31,8 +31,6 @@ use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
-use Tracy\Debugger;
-use Tracy\ILogger;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -303,7 +301,7 @@ class ProgramAttendeesGridControl extends Control
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         } else {
             try {
-                $this->em->transactional(function () use ($ids) {
+                $this->em->transactional(function () use ($ids): void {
                     foreach ($ids as $id) {
                         $user = $this->userRepository->findById($id);
                         $this->commandBus->handle(new RegisterProgram($user, $this->program));
@@ -339,7 +337,7 @@ class ProgramAttendeesGridControl extends Control
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         } else {
             try {
-                $this->em->transactional(function () use ($ids) {
+                $this->em->transactional(function () use ($ids): void {
                     foreach ($ids as $id) {
                         $user = $this->userRepository->findById($id);
                         $this->commandBus->handle(new UnregisterProgram($user, $this->program));
