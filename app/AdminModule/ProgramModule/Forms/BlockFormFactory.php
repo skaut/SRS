@@ -10,6 +10,7 @@ use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\Commands\SaveBlock;
+use App\Model\Program\Exceptions\BlockCapacityInsufficientException;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Settings\Settings;
@@ -29,6 +30,7 @@ use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Forms\Controls\TextInput;
 use stdClass;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
 /**
@@ -235,16 +237,18 @@ class BlockFormFactory
     public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
-            return;
+            $form->getPresenter()->redirect('Blocks:default');
         }
 
         if ($this->block === null) {
             if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
-                return; // todo: exception
+                $form->getPresenter()->flashMessage('admin.program.blocks.message.add_not_allowed', 'danger');
+                $form->getPresenter()->redirect('Blocks:default');
             }
         } else {
             if (! $this->user->isAllowedModifyBlock($this->block)) {
-                return; // todo: exception
+                $form->getPresenter()->flashMessage('admin.program.blocks.message.edit_not_allowed', 'danger');
+                $form->getPresenter()->redirect('Blocks:default');
             }
         }
 
@@ -283,7 +287,23 @@ class BlockFormFactory
             $this->block->setTools($values->tools);
         }
 
-        $this->commandBus->handle(new SaveBlock($this->block, $blockOld));
+        try {
+            $this->commandBus->handle(new SaveBlock($this->block, $blockOld));
+
+            $form->getPresenter()->flashMessage('admin.program.blocks.message.save_success', 'success');
+
+            if ($form->isSubmitted() === $form['submitAndContinue']) {
+                $form->getPresenter()->redirect('Blocks:edit', ['id' => $this->block->getId()]);
+            } else {
+                $form->getPresenter()->redirect('Blocks:default');
+            }
+        } catch (HandlerFailedException $e) {
+            if ($e->getPrevious() instanceof BlockCapacityInsufficientException) {
+                $form->getPresenter()->flashMessage('admin.program.blocks.message.capacity_insufficient', 'danger');
+            } else {
+                $form->getPresenter()->flashMessage('admin.program.blocks.message.save_failed', 'danger');
+            }
+        }
     }
 
     /**

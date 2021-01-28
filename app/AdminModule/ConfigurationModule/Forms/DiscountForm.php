@@ -141,9 +141,9 @@ class DiscountForm extends UI\Control
 
             $this->discountRepository->save($this->discount);
 
-            $this->onSave($this);
+            $this->onSave();
         } else {
-            $this->onConditionError($this);
+            $this->onConditionError();
         }
     }
 }

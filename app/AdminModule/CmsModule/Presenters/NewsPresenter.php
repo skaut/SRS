@@ -49,7 +49,7 @@ class NewsPresenter extends CmsBasePresenter
             $this->flashMessage('admin.cms.news_saved', 'success');
 
             if ($form->isSubmitted() === $form['submitAndContinue']) {
-                $id = $values->id ?: $this->newsRepository->findLastId();
+                $id = $values->id ?: $this->newsRepository->findLastId(); // todo: nahradit
                 $this->redirect('News:edit', ['id' => $id]);
             } else {
                 $this->redirect('News:default');

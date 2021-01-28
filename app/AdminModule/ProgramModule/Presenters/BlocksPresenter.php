@@ -146,44 +146,8 @@ class BlocksPresenter extends ProgramBasePresenter
         return $this->programAttendeesGridControlFactory->create();
     }
 
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
     protected function createComponentBlockForm(): Form
     {
-        $form = $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getUser()->getId());
-
-        $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() === $form['cancel']) {
-                $this->redirect('Blocks:default');
-            }
-
-            if (! $values->id) {
-                if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
-                    $this->flashMessage('admin.program.blocks.message.add_not_allowed', 'danger');
-                    $this->redirect('Blocks:default');
-                }
-            } else {
-                $user  = $this->userRepository->findById($this->user->getId());
-                $block = $this->blockRepository->findById((int) $values->id);
-
-                if (! $user->isAllowedModifyBlock($block)) {
-                    $this->flashMessage('admin.program.blocks.message.edit_not_allowed', 'danger');
-                    $this->redirect('Blocks:default');
-                }
-            }
-
-            $this->flashMessage('admin.program.blocks.message.save_success', 'success');
-
-            if ($form->isSubmitted() === $form['submitAndContinue']) {
-                $id = $values->id ?: $this->blockRepository->findLastId();
-                $this->redirect('Blocks:edit', ['id' => $id]);
-            } else {
-                $this->redirect('Blocks:default');
-            }
-        };
-
-        return $form;
+        return $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getUser()->getId());
     }
 }

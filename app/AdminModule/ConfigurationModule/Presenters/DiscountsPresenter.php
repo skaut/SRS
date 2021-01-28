@@ -36,14 +36,8 @@ class DiscountsPresenter extends ConfigurationBasePresenter
             $this->redirect('Discounts:default');
         };
 
-        $control->onConditionError[] = function (DiscountForm $control): void {
+        $control->onConditionError[] = function (): void {
             $this->flashMessage('admin.configuration.discounts_condition_format', 'danger');
-
-            if ($control->id) {
-                $this->redirect('Discounts:edit', ['id' => $control->id]);
-            } else {
-                $this->redirect('Discounts:add');
-            }
         };
 
         return $control;

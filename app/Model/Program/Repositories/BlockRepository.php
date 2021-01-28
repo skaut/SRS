@@ -7,10 +7,14 @@ namespace App\Model\Program\Repositories;
 use App\Model\Enums\ApplicationState;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
+use App\Model\Program\Exceptions\BlockCapacityInsufficientException;
+use App\Model\Program\Program;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -48,20 +52,6 @@ class BlockRepository extends AbstractRepository
     public function findById(?int $id): ?Block
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
-    }
-
-    /**
-     * Vrací poslední id.
-     *
-     * @throws NoResultException
-     * @throws NonUniqueResultException
-     */
-    public function findLastId(): int
-    {
-        return (int) $this->createQueryBuilder('b')
-            ->select('MAX(b.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
     }
 
     /**
@@ -190,8 +180,20 @@ class BlockRepository extends AbstractRepository
      */
     public function save(Block $block): void
     {
-        $this->em->persist($block);
-        $this->em->flush();
+        $this->em->transactional(function (EntityManager $em) use ($block): void {
+            if ($block->getCapacity() !== null) {
+                foreach ($block->getPrograms() as $program) {
+                    $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
+                    assert($program instanceof Program);
+                    if ($program->getAttendeesCount() > $block->getCapacity()) {
+                        throw new BlockCapacityInsufficientException();
+                    }
+                }
+            }
+
+            $em->persist($block);
+            $em->flush();
+        });
     }
 
     /**
@@ -201,11 +203,13 @@ class BlockRepository extends AbstractRepository
      */
     public function remove(Block $block): void
     {
-        foreach ($block->getPrograms() as $program) {
-            $this->em->remove($program);
-        }
+        $this->em->transactional(function (EntityManager $em) use ($block): void {
+            foreach ($block->getPrograms() as $program) {
+                $em->remove($program);
+            }
 
-        $this->em->remove($block);
-        $this->em->flush();
+            $em->remove($block);
+            $em->flush();
+        });
     }
 }
