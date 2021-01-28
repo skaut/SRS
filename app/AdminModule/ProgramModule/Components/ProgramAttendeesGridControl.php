@@ -22,6 +22,7 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
 use App\Services\ISettingsService;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -59,19 +60,23 @@ class ProgramAttendeesGridControl extends Control
 
     private ISettingsService $settingsService;
 
+    private EntityManagerInterface $em;
+
     public function __construct(
         ITranslator $translator,
         ProgramRepository $programRepository,
         UserRepository $userRepository,
         Session $session,
         CommandBus $commandBus,
-        ISettingsService $settingsService
+        ISettingsService $settingsService,
+        EntityManagerInterface $em
     ) {
         $this->translator        = $translator;
         $this->programRepository = $programRepository;
         $this->userRepository    = $userRepository;
         $this->commandBus        = $commandBus;
         $this->settingsService   = $settingsService;
+        $this->em                = $em;
 
         $this->sessionSection = $session->getSection('srs');
     }
@@ -190,10 +195,8 @@ class ProgramAttendeesGridControl extends Control
                     return $user->isAttendee($this->program) || $user->isAlternate($this->program);
                 });
 
-                /* todo: opravit EntityManager closed pri exception
                 $grid->addGroupAction('admin.program.blocks.attendees.action.register')->onSelect[]   = [$this, 'groupRegister'];
                 $grid->addGroupAction('admin.program.blocks.attendees.action.unregister')->onSelect[] = [$this, 'groupUnregister'];
-                */
             }
         }
     }
@@ -299,23 +302,17 @@ class ProgramAttendeesGridControl extends Control
         if (! $this->isAllowedModifyProgram($this->program)) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         } else {
-            $success = 0;
-            $all     = 0;
-
-            foreach ($ids as $id) {
-                try {
-                    $user = $this->userRepository->findById($id);
-                    $this->commandBus->handle(new RegisterProgram($user, $this->program));
-                    $success++;
-                } catch (HandlerFailedException $e) {
-                    Debugger::log($e, ILogger::DEBUG);
-                }
-
-                $all++;
+            try {
+                $this->em->transactional(function () use ($ids) {
+                    foreach ($ids as $id) {
+                        $user = $this->userRepository->findById($id);
+                        $this->commandBus->handle(new RegisterProgram($user, $this->program));
+                    }
+                });
+                $p->flashMessage('admin.program.blocks.attendees.message.group_register_success', 'success');
+            } catch (HandlerFailedException $e) {
+                $p->flashMessage('admin.program.blocks.attendees.message.group_register_failed', 'danger');
             }
-
-            $message = $this->translator->translate('admin.program.blocks.attendees.message.group_registered', null, ['success' => $success, 'all' => $all]);
-            $p->flashMessage($message, 'success');
         }
 
         if ($p->isAjax()) {
@@ -341,23 +338,17 @@ class ProgramAttendeesGridControl extends Control
         if (! $this->isAllowedModifyProgram($this->program)) {
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         } else {
-            $success = 0;
-            $all     = 0;
-
-            foreach ($ids as $id) {
-                try {
-                    $user = $this->userRepository->findById($id);
-                    $this->commandBus->handle(new UnregisterProgram($user, $this->program));
-                    $success++;
-                } catch (HandlerFailedException $e) {
-                    Debugger::log($e, ILogger::DEBUG);
-                }
-
-                $all++;
+            try {
+                $this->em->transactional(function () use ($ids) {
+                    foreach ($ids as $id) {
+                        $user = $this->userRepository->findById($id);
+                        $this->commandBus->handle(new UnregisterProgram($user, $this->program));
+                    }
+                });
+                $p->flashMessage('admin.program.blocks.attendees.message.group_unregister_success', 'success');
+            } catch (HandlerFailedException $e) {
+                $p->flashMessage('admin.program.blocks.attendees.message.group_unregister_failed', 'danger');
             }
-
-            $message = $this->translator->translate('admin.program.blocks.attendees.message.group_unregistered', null, ['success' => $success, 'all' => $all]);
-            $p->flashMessage($message, 'success');
         }
 
         if ($p->isAjax()) {

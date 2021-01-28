@@ -253,8 +253,10 @@ program:
             message:
                 registered: "Uživatel byl úspěšně přihlášen na program."
                 unregistered: "Uživatel byl úspěšně odhlášen z programu."
-                group_registered: "%success% z %all% uživatelů bylo přihlášeno."
-                group_unregistered: "%success% z %all% uživatelů bylo odhlášeno."
+                group_register_success: "Vybraní uživatelé byli úspěšně přihlášeni na program."
+                group_register_failed: "Přihlášení uživatelů selhalo, zkontrolujte zda je dost volných míst, uživatelé nemají zapsaný stejný program nebo jiný program ve stejném čase."
+                group_unregister_success: "Vybraní uživatelé byli úspěšně odhlášeni z programu."
+                group_unregister_failed: "Odhlášení uživatelů selhalo, zkontrolujte zda mají uživatelé program přihlášený."
                 not_allowed: "Uživatel není oprávněn zapsat si tento program."
                 already_attends_program: "Uživatel již má tento program zapsaný."
                 alreadu_attends_block: "Uživatel již má tento blok zapsaný v jiném čase."
