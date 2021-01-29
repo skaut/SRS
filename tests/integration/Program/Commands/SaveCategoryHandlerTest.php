@@ -44,7 +44,7 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
 
     private ProgramApplicationRepository $programApplicationRepository;
 
-    public function testRegisterableRolesChanged(): void
+    public function testRegisterableRolesChange(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
@@ -56,12 +56,15 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
         $role2 = new Role('role2');
         $this->roleRepository->save($role2);
 
+        $role3 = new Role('role3');
+        $this->roleRepository->save($role3);
+
         $category = new Category('category');
         $category->addRegisterableRole($role1);
         $category->addRegisterableRole($role2);
         $this->commandBus->handle(new SaveCategory($category, null));
 
-        $block = new Block('block', 60, 2, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 2, true, ProgramMandatoryType::AUTO_REGISTERED, $subevent, null);
         $block->setCategory($category);
         $this->blockRepository->save($block);
 
@@ -89,14 +92,26 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user2, $role2);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user2, $subevent);
 
+        $user3 = new User();
+        $user3->setFirstName('First');
+        $user3->setLastName('Last');
+        $user3->addRole($role3);
+        $user3->setApproved(true);
+        $this->userRepository->save($user3);
+
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user3, $role3);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user3, $subevent);
+
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user3, $program));
 
         $this->programApplicationRepository->save(new ProgramApplication($user1, $program));
         $this->programApplicationRepository->save(new ProgramApplication($user2, $program));
 
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user3, $program));
 
         $categoryOld = clone $category;
         $category->removeRegisterableRole($role2);
@@ -104,6 +119,15 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
 
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user3, $program));
+
+        $categoryOld = clone $category;
+        $category->addRegisterableRole($role3);
+        $this->commandBus->handle(new SaveCategory($category, $categoryOld));
+
+        $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
+        $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user3, $program));
     }
 
     /**
