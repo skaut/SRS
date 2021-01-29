@@ -463,6 +463,89 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
     }
 
     /**
+     * Zrušení povolení náhradníků.
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Throwable
+     */
+    public function testAlternatesAllowedChange(): void
+    {
+        $subevent = new Subevent();
+        $subevent->setName('subevent');
+        $this->subeventRepository->save($subevent);
+
+        $role = new Role('role1');
+        $this->roleRepository->save($role);
+
+        $user1 = new User();
+        $user1->setFirstName('First');
+        $user1->setLastName('Last');
+        $user1->addRole($role);
+        $user1->setApproved(true);
+        $this->userRepository->save($user1);
+
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user1, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user1, $subevent);
+
+        $user2 = new User();
+        $user2->setFirstName('First');
+        $user2->setLastName('Last');
+        $user2->addRole($role);
+        $user2->setApproved(true);
+        $this->userRepository->save($user2);
+
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user2, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user2, $subevent);
+
+        $user3 = new User();
+        $user3->setFirstName('First');
+        $user3->setLastName('Last');
+        $user3->addRole($role);
+        $user3->setApproved(true);
+        $this->userRepository->save($user3);
+
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user3, $role);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user3, $subevent);
+
+        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $this->commandBus->handle(new SaveBlock($block));
+
+        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $block->addProgram($program);
+        $this->programRepository->save($program);
+
+        $this->programApplicationRepository->save(new ProgramApplication($user1, $program));
+        $this->programApplicationRepository->save(new ProgramApplication($user2, $program));
+        $this->programApplicationRepository->save(new ProgramApplication($user3, $program));
+
+        $programApplication1 = $this->programApplicationRepository->findByUserAndProgram($user1, $program);
+        $this->assertNotNull($programApplication1);
+        $this->assertFalse($programApplication1->isAlternate());
+        $programApplication2 = $this->programApplicationRepository->findByUserAndProgram($user2, $program);
+        $this->assertNotNull($programApplication2);
+        $this->assertTrue($programApplication2->isAlternate());
+        $programApplication3 = $this->programApplicationRepository->findByUserAndProgram($user3, $program);
+        $this->assertNotNull($programApplication3);
+        $this->assertTrue($programApplication3->isAlternate());
+
+        $blockOld = clone $block;
+        $block->setAlternatesAllowed(false);
+        $this->commandBus->handle(new SaveBlock($block, $blockOld));
+
+        $programApplication1 = $this->programApplicationRepository->findByUserAndProgram($user1, $program);
+        $this->assertNotNull($programApplication1);
+        $this->assertFalse($programApplication1->isAlternate());
+        $programApplication2 = $this->programApplicationRepository->findByUserAndProgram($user2, $program);
+        $this->assertNull($programApplication2);
+        $programApplication3 = $this->programApplicationRepository->findByUserAndProgram($user3, $program);
+        $this->assertNull($programApplication3);
+
+        $blockOld = clone $block;
+        $block->setCapacity(1);
+    }
+
+    /**
      * @return string[]
      */
     protected function getTestedAggregateRoots(): array

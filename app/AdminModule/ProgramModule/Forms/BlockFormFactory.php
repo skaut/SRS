@@ -34,7 +34,6 @@ use Nette\Forms\Controls\TextInput;
 use stdClass;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
-use Tracy\Debugger;
 
 /**
  * Formulář pro úpravu programového bloku.
