@@ -15,6 +15,9 @@ use App\Model\Program\Commands\SaveProgram;
 use App\Model\Program\Program;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
+use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Program\Repositories\RoomRepository;
+use App\Model\Program\Room;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -44,13 +47,17 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
 
     private ProgramApplicationRepository $programApplicationRepository;
 
+    private RoomRepository $roomRepository;
+
+    private ProgramRepository $programRepository;
+
     /**
      * Vytvoření volitelného programu.
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function testVoluntaryProgram(): void
+    public function testVoluntaryProgramCreate(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
@@ -96,7 +103,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function testAutoRegisteredProgram(): void
+    public function testAutoRegisteredProgramCreate(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
@@ -157,7 +164,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function testAutoRegisteredProgramNotPaidAllowed(): void
+    public function testAutoRegisteredProgramCreateNotPaidAllowed(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
@@ -211,6 +218,38 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
     }
 
     /**
+     * Test uložení změn programu.
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function testProgramUpdate(): void
+    {
+        $subevent = new Subevent();
+        $subevent->setName('subevent');
+        $this->subeventRepository->save($subevent);
+
+        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED, $subevent, null);
+        $this->blockRepository->save($block);
+
+        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $this->commandBus->handle(new SaveProgram($program));
+
+        $room = new Room();
+        $room->setName("room");
+
+        $program->setStart(new DateTimeImmutable('2020-01-01 09:00'));
+        $program->setRoom($room);
+
+        $this->commandBus->handle(new SaveProgram($program));
+
+        $program = $this->programRepository->findById($program->getId());
+
+        $this->assertEquals(new DateTimeImmutable('2020-01-01 09:00'), $program->getStart());
+        $this->assertEquals($room, $program->getRoom());
+    }
+
+    /**
      * @return string[]
      */
     protected function getTestedAggregateRoots(): array
@@ -230,6 +269,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $this->roleRepository               = $this->tester->grabService(RoleRepository::class);
         $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
+        $this->roomRepository               = $this->tester->grabService(RoomRepository::class);
+        $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
 
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
         $this->settingsService->setValue(Settings::SEMINAR_NAME, 'test');
