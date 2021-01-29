@@ -44,6 +44,13 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
 
     private ProgramApplicationRepository $programApplicationRepository;
 
+    /**
+     * Změna rolí u kategorie - neoprávnění účastníci a náhradníci jsou odhlášeni, automaticky přihlašovaní přihlášeni.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Throwable
+     */
     public function testRegisterableRolesChange(): void
     {
         $subevent = new Subevent();

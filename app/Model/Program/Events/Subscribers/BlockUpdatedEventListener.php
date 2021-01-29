@@ -136,7 +136,7 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
                     $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
                     assert($program instanceof Program);
 
-                    while ($program->getAttendeesCount() <= $capacity) {
+                    while ($program->getAttendeesCount() < $capacity) {
                         $user = $this->userRepository->findProgramFirstAlternate($program);
                         if ($user === null) {
                             break;
