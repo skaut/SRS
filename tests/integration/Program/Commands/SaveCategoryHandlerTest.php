@@ -25,6 +25,9 @@ use App\Model\User\User;
 use App\Services\ISettingsService;
 use CommandHandlerTest;
 use DateTimeImmutable;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Throwable;
 
 final class SaveCategoryHandlerTest extends CommandHandlerTest
 {
@@ -47,9 +50,9 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
     /**
      * Změna rolí u kategorie - neoprávnění účastníci a náhradníci jsou odhlášeni, automaticky přihlašovaní přihlášeni.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Throwable
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testRegisterableRolesChange(): void
     {

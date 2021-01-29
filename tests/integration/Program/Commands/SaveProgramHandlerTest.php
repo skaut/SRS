@@ -236,7 +236,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $this->commandBus->handle(new SaveProgram($program));
 
         $room = new Room();
-        $room->setName("room");
+        $room->setName('room');
+        $this->roomRepository->save($room);
 
         $program->setStart(new DateTimeImmutable('2020-01-01 09:00'));
         $program->setRoom($room);
