@@ -172,6 +172,22 @@ class BlockRepository extends AbstractRepository
         return new ArrayCollection($qb->getQuery()->getResult());
     }
 
+    public function getMinBlockAllowedCapacity(Block $block): ?int
+    {
+        $result = $this->createQueryBuilder('b')
+            ->select('count(pa) c')
+            ->join('b.programs', 'p')
+            ->join('p.programApplications', 'pa', 'WITH', 'pa.alternate = false')
+            ->where('b = :block')
+            ->groupBy('p')
+            ->orderBy('c', 'DESC')
+            ->setParameter('block', $block)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $result === null ? null : $result['c'];
+    }
+
     /**
      * Uloží blok.
      *

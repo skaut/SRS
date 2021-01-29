@@ -11,6 +11,7 @@ use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\Commands\SaveBlock;
 use App\Model\Program\Exceptions\BlockCapacityInsufficientException;
+use App\Model\Program\Queries\MinBlockAllowedCapacityQuery;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Settings\Settings;
@@ -19,6 +20,7 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
 use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
@@ -32,6 +34,7 @@ use Nette\Forms\Controls\TextInput;
 use stdClass;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
+use Tracy\Debugger;
 
 /**
  * Formulář pro úpravu programového bloku.
@@ -60,6 +63,8 @@ class BlockFormFactory
 
     private CommandBus $commandBus;
 
+    private QueryBus $queryBus;
+
     private BaseFormFactory $baseFormFactory;
 
     private BlockRepository $blockRepository;
@@ -78,6 +83,7 @@ class BlockFormFactory
 
     public function __construct(
         CommandBus $commandBus,
+        QueryBus $queryBus,
         BaseFormFactory $baseFormFactory,
         BlockRepository $blockRepository,
         UserRepository $userRepository,
@@ -88,6 +94,7 @@ class BlockFormFactory
         Validators $validators
     ) {
         $this->commandBus         = $commandBus;
+        $this->queryBus           = $queryBus;
         $this->baseFormFactory    = $baseFormFactory;
         $this->blockRepository    = $blockRepository;
         $this->userRepository     = $userRepository;
@@ -154,6 +161,11 @@ class BlockFormFactory
         $capacityText->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.program.blocks.form.capacity_format')
             ->toggle('alternatesAllowedCheckbox');
+        $minAllowedCapacity = $this->queryBus->handle(new MinBlockAllowedCapacityQuery($this->block));
+        if ($minAllowedCapacity !== null) {
+            $capacityText->addCondition(Form::FILLED)
+                ->addRule(Form::MIN, 'admin.program.blocks.form.capacity_low', $minAllowedCapacity);
+        }
 
         $form->addCheckbox('alternatesAllowed', 'admin.program.blocks.form.alternates_allowed')
             ->setOption('id', 'alternatesAllowedCheckbox');
@@ -299,7 +311,7 @@ class BlockFormFactory
             }
         } catch (HandlerFailedException $e) {
             if ($e->getPrevious() instanceof BlockCapacityInsufficientException) {
-                $form->getPresenter()->flashMessage('admin.program.blocks.message.capacity_insufficient', 'danger');
+                $form->getPresenter()->flashMessage('admin.program.blocks.message.capacity_low', 'danger');
             } else {
                 $form->getPresenter()->flashMessage('admin.program.blocks.message.save_failed', 'danger');
             }
