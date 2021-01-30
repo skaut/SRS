@@ -63,7 +63,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, 10, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 10, true, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
         $role = new Role('role');
@@ -242,8 +243,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $program->setBlock($block);
         $this->commandBus->handle(new SaveProgram($program));
 
-        $room = new Room();
-        $room->setName('room');
+        $room = new Room('room', null);
         $this->roomRepository->save($room);
 
         $program->setStart(new DateTimeImmutable('2020-01-01 09:00'));
