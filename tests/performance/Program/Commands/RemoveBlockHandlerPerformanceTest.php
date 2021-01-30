@@ -31,7 +31,7 @@ use Throwable;
 use function microtime;
 use function rand;
 
-final class RemoveBlockHandlerTest extends CommandHandlerTest
+final class RemoveBlockHandlerPerformanceTest extends CommandHandlerTest
 {
     private ISettingsService $settingsService;
 
@@ -113,7 +113,7 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $this->tester->useConfigFiles([__DIR__ . '/RemoveBlockHandlerTest.neon']);
+        $this->tester->useConfigFiles([__DIR__ . '/RemoveBlockHandlerPerformanceTest.neon']);
         parent::_before();
 
         $this->settingsService              = $this->tester->grabService(ISettingsService::class);

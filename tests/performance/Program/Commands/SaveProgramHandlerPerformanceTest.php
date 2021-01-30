@@ -26,7 +26,7 @@ use Doctrine\ORM\ORMException;
 
 use function microtime;
 
-final class SaveProgramHandlerTest extends CommandHandlerTest
+final class SaveProgramHandlerPerformanceTest extends CommandHandlerTest
 {
     private ISettingsService $settingsService;
 
@@ -95,7 +95,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $this->tester->useConfigFiles([__DIR__ . '/SaveProgramHandlerTest.neon']);
+        $this->tester->useConfigFiles([__DIR__ . '/SaveProgramHandlerPerformanceTest.neon']);
         parent::_before();
 
         $this->settingsService       = $this->tester->grabService(ISettingsService::class);
