@@ -277,7 +277,9 @@ class BlockFormFactory
         $blockOld = null;
 
         if ($this->block === null) {
-            $this->block = new Block($values->name, $values->duration, $capacity, $values->alternatesAllowed, $mandatory, $subevent, $category);
+            $this->block = new Block($values->name, $values->duration, $capacity, $values->alternatesAllowed, $mandatory);
+            $this->block->setSubevent($subevent);
+            $this->block->setCategory($category);
             $this->block->setLectors($lectors);
             $this->block->setPerex($values->perex);
             $this->block->setDescription($values->description);

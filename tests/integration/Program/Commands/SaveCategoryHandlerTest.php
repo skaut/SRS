@@ -74,7 +74,8 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
         $category->addRegisterableRole($role2);
         $this->commandBus->handle(new SaveCategory($category, null));
 
-        $block = new Block('block', 60, 2, true, ProgramMandatoryType::AUTO_REGISTERED, $subevent, null);
+        $block = new Block('block', 60, 2, true, ProgramMandatoryType::AUTO_REGISTERED);
+        $block->setSubevent($subevent);
         $block->setCategory($category);
         $this->blockRepository->save($block);
 

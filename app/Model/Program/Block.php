@@ -120,17 +120,13 @@ class Block
         int $duration,
         ?int $capacity,
         bool $alternatesAllowed,
-        string $mandatory,
-        Subevent $subevent,
-        ?Category $category
+        string $mandatory
     ) {
         $this->name              = $name;
         $this->duration          = $duration;
         $this->capacity          = $capacity;
         $this->alternatesAllowed = $alternatesAllowed;
         $this->mandatory         = $mandatory;
-        $this->subevent          = $subevent;
-        $this->category          = $category;
         $this->programs          = new ArrayCollection();
         $this->lectors           = new ArrayCollection();
     }
@@ -243,8 +239,12 @@ class Block
 
     public function setSubevent(Subevent $subevent): void
     {
-        $this->subevent->removeBlock($this);
+        if (isset($this->subevent)) {
+            $this->subevent->removeBlock($this);
+        }
+
         $subevent->addBlock($this);
+
         $this->subevent = $subevent;
     }
 

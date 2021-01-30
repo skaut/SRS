@@ -2,12 +2,17 @@ services:
     - App\Model\Program\Repositories\BlockRepository
     - App\Model\Structure\Repositories\SubeventRepository
     - App\Model\User\Repositories\UserRepository
+    - App\Model\Program\Repositories\CategoryRepository
     - App\Model\Acl\Repositories\RoleRepository
     - App\Model\Program\Repositories\ProgramRepository
     - App\Model\Program\Repositories\ProgramApplicationRepository
     - App\Model\Application\Repositories\ApplicationRepository
 
-    - class: App\Model\User\Commands\Handlers\UnregisterProgramHandler
+    - class: App\Model\Program\Commands\Handlers\RemoveCategoryHandler
+      tags:
+        messenger.messageHandler:
+        bus: commandBus
+    - class: App\Model\Program\Commands\Handlers\SaveBlockHandler
       tags:
         messenger.messageHandler:
         bus: commandBus
@@ -16,12 +21,20 @@ services:
         messenger.messageHandler:
         bus: commandBus
 
+    - class: App\Model\Program\Queries\Handlers\ProgramAlternatesQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+    - class: App\Model\Program\Queries\Handlers\ProgramAttendeesQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
     - class: App\Model\User\Queries\Handlers\UserAllowedProgramsQueryHandler
       tags:
         messenger.messageHandler:
         bus: queryBus
 
-    - class: App\Model\User\Events\Subscribers\ProgramUnregisteredEventListener
+    - class: App\Model\Program\Events\Subscribers\BlockUpdatedEventListener
       tags:
         messenger.messageHandler:
         bus: eventBus

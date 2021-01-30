@@ -109,7 +109,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED, $subevent, null);
+        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
         $role = new Role('role');
@@ -170,7 +171,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED, $subevent, null);
+        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
         $role = new Role('role');
@@ -229,7 +231,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED, $subevent, null);
+        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));

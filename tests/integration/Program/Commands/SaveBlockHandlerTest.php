@@ -98,7 +98,8 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user3, $role2);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user3, $subevent);
 
-        $block = new Block('block', 60, 2, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 2, true, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->commandBus->handle(new SaveBlock($block));
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
@@ -200,7 +201,8 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user3, $role);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user3, $subevent2);
 
-        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED, $subevent1, null);
+        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED);
+        $block->setSubevent($subevent1);
         $this->commandBus->handle(new SaveBlock($block));
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
@@ -276,7 +278,8 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
 
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user2, $role);
 
-        $block = new Block('block', 60, null, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, true, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->commandBus->handle(new SaveBlock($block));
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
@@ -330,7 +333,8 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user2, $role);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user1, $subevent);
 
-        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED, $subevent, null);
+        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED);
+        $block->setSubevent($subevent);
         $this->commandBus->handle(new SaveBlock($block));
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
@@ -417,7 +421,8 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user5, $role);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user5, $subevent);
 
-        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->commandBus->handle(new SaveBlock($block));
 
         $program1 = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
@@ -508,7 +513,8 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user3, $role);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user3, $subevent);
 
-        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->commandBus->handle(new SaveBlock($block));
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));

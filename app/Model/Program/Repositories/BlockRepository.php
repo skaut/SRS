@@ -218,13 +218,7 @@ class BlockRepository extends AbstractRepository
      */
     public function remove(Block $block): void
     {
-        $this->em->transactional(static function (EntityManager $em) use ($block): void {
-            foreach ($block->getPrograms() as $program) {
-                $em->remove($program);
-            }
-
-            $em->remove($block);
-            $em->flush();
-        });
+        $this->em->remove($block);
+        $this->em->flush();
     }
 }

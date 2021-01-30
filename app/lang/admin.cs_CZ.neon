@@ -181,7 +181,7 @@ program:
             programs_count: "Počet zařazení"
 
         action:
-            delete_confirm: "Opravdu chcete programový blok odstranit?"
+            delete_confirm: "Opravdu chcete programový blok a všechny jeho programy odstranit?"
             export_blocks_attendees: "Export seznamu účastníků"
 
         message:

@@ -59,7 +59,8 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
         $program1 = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
@@ -191,7 +192,8 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, 1, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, false, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
         $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));

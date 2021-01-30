@@ -128,11 +128,6 @@ class CategoryRepository extends AbstractRepository
      */
     public function remove(Category $category): void
     {
-        foreach ($category->getBlocks() as $block) {
-            $block->setCategory(null);
-            $this->em->persist($block);
-        }
-
         $this->em->remove($category);
         $this->em->flush();
     }

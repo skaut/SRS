@@ -7,6 +7,7 @@ services:
     - App\Model\Program\Repositories\ProgramRepository
     - App\Model\Program\Repositories\ProgramApplicationRepository
     - App\Model\Application\Repositories\ApplicationRepository
+
     - class: App\Model\Program\Commands\Handlers\SaveBlockHandler
       tags:
         messenger.messageHandler:
@@ -19,6 +20,7 @@ services:
       tags:
         messenger.messageHandler:
         bus: commandBus
+
     - class: App\Model\Program\Queries\Handlers\ProgramAttendeesQueryHandler
       tags:
         messenger.messageHandler:
@@ -31,6 +33,7 @@ services:
       tags:
         messenger.messageHandler:
         bus: queryBus
+
     - class: App\Model\Program\Events\Subscribers\BlockUpdatedEventListener
       tags:
         messenger.messageHandler:
