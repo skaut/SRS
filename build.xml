@@ -223,6 +223,10 @@
         <exec command="vendor/bin/codecept run integration" passthru="true" checkreturn="true"/>
     </target>
 
+    <target name="tests-performance">
+        <exec command="vendor/bin/codecept run performance" passthru="true" checkreturn="true"/>
+    </target>
+
     <target name="tests">
         <phingcall target="tests-unit"/>
         <phingcall target="tests-integration"/>

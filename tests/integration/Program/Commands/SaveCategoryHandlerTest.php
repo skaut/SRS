@@ -54,7 +54,7 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function testRegisterableRolesChange(): void
+    public function testChangeRegisterableRoles(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');

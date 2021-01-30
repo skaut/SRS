@@ -1,0 +1,14 @@
+class_name: IntegrationTester
+modules:
+    enabled:
+        - \Helper\Performance
+
+        - Contributte\Codeception\Module\NetteDIModule:
+            tempDir: ../_temp/performance
+            appDir: ../../app
+            configFiles:
+                - config/doctrine.neon
+            newContainerForEachTest: true
+            removeDefaultExtensions: true
+        
+        - Mockery

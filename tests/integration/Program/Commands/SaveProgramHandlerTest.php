@@ -57,7 +57,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function testVoluntaryProgramCreate(): void
+    public function testCreateVoluntaryProgram(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
@@ -105,7 +105,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function testAutoRegisteredProgramCreate(): void
+    public function testCreateAutoRegisteredProgram(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
@@ -168,7 +168,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function testAutoRegisteredProgramCreateNotPaidAllowed(): void
+    public function testCreateAutoRegisteredProgramNotPaidAllowed(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
@@ -229,7 +229,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function testProgramUpdate(): void
+    public function testUpdateProgram(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');

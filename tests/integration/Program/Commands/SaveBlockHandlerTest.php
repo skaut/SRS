@@ -56,7 +56,7 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function testCategoryChange(): void
+    public function testChangeCategory(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
@@ -157,7 +157,7 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function testSubeventChange(): void
+    public function testChangeSubevent(): void
     {
         $subevent1 = new Subevent();
         $subevent1->setName('subevent1');
@@ -250,7 +250,7 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function testVoluntaryChangeToAutoRegistered(): void
+    public function testChangeVoluntaryToAutoRegistered(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent1');
@@ -304,7 +304,7 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function testAutoRegisteredChangeToMandatory(): void
+    public function testChangeAutoRegisteredToMandatory(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent1');
@@ -362,7 +362,7 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function testCapacityChange(): void
+    public function testChangeCapacity(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
@@ -474,7 +474,7 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function testAlternatesAllowedChange(): void
+    public function testChangeAlternatesAllowed(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');

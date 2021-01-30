@@ -1,0 +1,130 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Model\Program\Commands\Handlers;
+
+use App\Model\Acl\Repositories\RoleRepository;
+use App\Model\Acl\Role;
+use App\Model\Application\ApplicationFactory;
+use App\Model\Application\Repositories\ApplicationRepository;
+use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Program\Block;
+use App\Model\Program\Commands\RemoveBlock;
+use App\Model\Program\Program;
+use App\Model\Program\ProgramApplication;
+use App\Model\Program\Repositories\BlockRepository;
+use App\Model\Program\Repositories\ProgramApplicationRepository;
+use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Settings\Settings;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\Structure\Subevent;
+use App\Model\User\Repositories\UserRepository;
+use App\Model\User\User;
+use App\Services\ISettingsService;
+use CommandHandlerTest;
+use DateTimeImmutable;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Throwable;
+
+use function microtime;
+use function rand;
+
+final class RemoveBlockHandlerTest extends CommandHandlerTest
+{
+    private ISettingsService $settingsService;
+
+    private SubeventRepository $subeventRepository;
+
+    private UserRepository $userRepository;
+
+    private RoleRepository $roleRepository;
+
+    private ProgramRepository $programRepository;
+
+    private ApplicationRepository $applicationRepository;
+
+    private ProgramApplicationRepository $programApplicationRepository;
+
+    private BlockRepository $blockRepository;
+
+    /**
+     * Odstranění bloku s velkým množstvím programů a účastníků.
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Throwable
+     */
+    public function testRemoveBlock(): void
+    {
+        $subevent = new Subevent();
+        $subevent->setName('subevent');
+        $this->subeventRepository->save($subevent);
+
+        $role = new Role('role');
+        $this->roleRepository->save($role);
+
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
+        $this->blockRepository->save($block);
+
+        $programsCount = 10;
+        $usersCount    = 400;
+        $programs      = [];
+
+        for ($i = 0; $i < $programsCount; $i++) {
+            $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+            $program->setBlock($block);
+            $this->programRepository->save($program);
+            $programs[] = $program;
+        }
+
+        for ($i = 0; $i < $usersCount; $i++) {
+            $user = new User();
+            $user->setFirstName('First');
+            $user->setLastName('Last');
+            $user->addRole($role);
+            $user->setApproved(true);
+            $this->userRepository->save($user);
+
+            ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
+            ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent);
+
+            $this->programApplicationRepository->save(new ProgramApplication($user, $programs[rand(0, $programsCount - 1)]));
+        }
+
+        $time = microtime(true);
+
+        $this->commandBus->handle(new RemoveBlock($block));
+
+        $duration = microtime(true) - $time;
+
+        $this->assertLessThan(30, $duration);
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getTestedAggregateRoots(): array
+    {
+        return [Block::class];
+    }
+
+    protected function _before(): void
+    {
+        $this->tester->useConfigFiles([__DIR__ . '/RemoveBlockHandlerTest.neon']);
+        parent::_before();
+
+        $this->settingsService              = $this->tester->grabService(ISettingsService::class);
+        $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);
+        $this->userRepository               = $this->tester->grabService(UserRepository::class);
+        $this->roleRepository               = $this->tester->grabService(RoleRepository::class);
+        $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
+        $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
+        $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
+        $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
+
+        $this->settingsService->setValue(Settings::SEMINAR_NAME, 'test');
+    }
+}
