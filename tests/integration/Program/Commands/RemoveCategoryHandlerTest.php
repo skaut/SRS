@@ -47,7 +47,7 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
     private BlockRepository $blockRepository;
 
     /**
-     * Odstranění bloku - odstraní se i jeho programy a účastníci.
+     * Odstranění kategorie - automaticky přihlašovaní, kteří jsou nově oprávněni jsou přihlášeni.
      *
      * @throws ORMException
      * @throws OptimisticLockException

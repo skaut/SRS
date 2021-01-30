@@ -89,7 +89,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user2, $role);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user2, $subevent);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->commandBus->handle(new SaveProgram($program));
 
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
@@ -148,7 +149,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
 
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->commandBus->handle(new SaveProgram($program));
 
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
@@ -210,7 +212,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
 
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, true);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->commandBus->handle(new SaveProgram($program));
 
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
@@ -235,7 +238,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->commandBus->handle(new SaveProgram($program));
 
         $room = new Room();
