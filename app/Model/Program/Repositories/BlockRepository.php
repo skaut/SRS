@@ -183,9 +183,9 @@ class BlockRepository extends AbstractRepository
             ->orderBy('c', 'DESC')
             ->setParameter('block', $block)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
 
-        return $result === null ? null : $result['c'];
+        return $result === null ? null : $result[0]['c'];
     }
 
     /**
