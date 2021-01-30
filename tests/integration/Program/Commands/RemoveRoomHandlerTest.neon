@@ -1,0 +1,17 @@
+services:
+    - App\Model\Program\Repositories\BlockRepository
+    - App\Model\Structure\Repositories\SubeventRepository
+    - App\Model\Program\Repositories\ProgramRepository
+    - App\Model\Program\Repositories\RoomRepository
+
+    - class: App\Model\Program\Commands\Handlers\RemoveRoomHandler
+      tags:
+        messenger.messageHandler:
+        bus: commandBus
+    - class: App\Model\Program\Commands\Handlers\SaveProgramHandler
+      tags:
+        messenger.messageHandler:
+        bus: commandBus
+
+includes:
+- ../../config/common.neon

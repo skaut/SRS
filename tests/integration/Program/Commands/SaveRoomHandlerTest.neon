@@ -1,0 +1,10 @@
+services:
+    - App\Model\Program\Repositories\RoomRepository
+
+    - class: App\Model\Program\Commands\Handlers\SaveRoomHandler
+      tags:
+        messenger.messageHandler:
+        bus: commandBus
+
+includes:
+- ../../config/common.neon

@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
+use App\Model\Program\Commands\RemoveRoom;
+use App\Model\Program\Commands\SaveRoom;
 use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
+use App\Services\CommandBus;
 use App\Services\ExcelExportService;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -28,6 +31,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class RoomsGridControl extends Control
 {
+    private CommandBus $commandBus;
+
     private ITranslator $translator;
 
     private RoomRepository $roomRepository;
@@ -39,11 +44,13 @@ class RoomsGridControl extends Control
     private SessionSection $sessionSection;
 
     public function __construct(
+        CommandBus $commandBus,
         ITranslator $translator,
         RoomRepository $roomRepository,
         ExcelExportService $excelExportService,
         Session $session
     ) {
+        $this->commandBus         = $commandBus;
         $this->translator         = $translator;
         $this->roomRepository     = $roomRepository;
         $this->excelExportService = $excelExportService;
@@ -138,12 +145,9 @@ class RoomsGridControl extends Control
      */
     public function add(stdClass $values): void
     {
-        $room = new Room();
+        $room = new Room($values->name, $values->capacity !== '' ? $values->capacity : null);
 
-        $room->setName($values->name);
-        $room->setCapacity($values->capacity !== '' ? $values->capacity : null);
-
-        $this->roomRepository->save($room);
+        $this->commandBus->handle(new SaveRoom($room));
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.program.rooms.message.save_success', 'success');
@@ -164,7 +168,7 @@ class RoomsGridControl extends Control
         $room->setName($values->name);
         $room->setCapacity($values->capacity !== '' ? $values->capacity : null);
 
-        $this->roomRepository->save($room);
+        $this->commandBus->handle(new SaveRoom($room));
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.program.rooms.message.save_success', 'success');
@@ -181,7 +185,8 @@ class RoomsGridControl extends Control
     public function handleDelete(int $id): void
     {
         $room = $this->roomRepository->findById($id);
-        $this->roomRepository->remove($room);
+
+        $this->commandBus->handle(new RemoveRoom($room));
 
         $this->getPresenter()->flashMessage('admin.program.rooms.message.delete_success', 'success');
 
