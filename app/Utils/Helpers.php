@@ -6,6 +6,7 @@ namespace App\Utils;
 
 use Doctrine\Common\Collections\Collection;
 
+use function array_diff;
 use function array_map;
 use function mb_strlen;
 use function mb_strrpos;
@@ -53,5 +54,23 @@ class Helpers
         return array_map(static function ($o) {
             return $o->getId();
         }, $collection->toArray());
+    }
+
+    /**
+     * Porovnává kolekce entit podle id.
+     *
+     * @param Collection<object> $collection1
+     * @param Collection<object> $collection2
+     */
+    public static function collectionsEquals(Collection $collection1, Collection $collection2): bool
+    {
+        if ($collection1->count() !== $collection2->count()) {
+            return false;
+        }
+
+        $collection1Ids = self::getIds($collection1);
+        $collection2Ids = self::getIds($collection2);
+
+        return array_diff($collection1Ids, $collection2Ids) === array_diff($collection2Ids, $collection1Ids);
     }
 }

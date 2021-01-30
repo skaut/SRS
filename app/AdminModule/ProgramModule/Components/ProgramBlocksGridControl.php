@@ -120,22 +120,19 @@ class ProgramBlocksGridControl extends Control
         $grid->setColumnsHideable();
         $grid->setStrictSessionFilterValues(false);
 
-        $grid->addGroupAction('admin.program.blocks_group_action_export_blocks_attendees')
-            ->onSelect[] = [$this, 'groupExportBlocksAttendees'];
-
-        $grid->addColumnText('name', 'admin.program.blocks_name')
+        $grid->addColumnText('name', 'admin.program.blocks.common.name')
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('subevent', 'admin.program.blocks_subevent', 'subevent.name')
+        $grid->addColumnText('subevent', 'admin.program.blocks.common.subevent', 'subevent.name')
             ->setSortable('s.name')
             ->setFilterMultiSelect($this->subeventService->getSubeventsOptions(), 's.id');
 
-        $grid->addColumnText('category', 'admin.program.blocks_category', 'category.name')
+        $grid->addColumnText('category', 'admin.program.blocks.common.category', 'category.name')
             ->setSortable('c.name')
             ->setFilterMultiSelect($this->categoryRepository->getCategoriesOptions(), 'c.id');
 
-        $grid->addColumnText('lectors', 'admin.program.blocks_lectors', 'lectorsText')
+        $grid->addColumnText('lectors', 'admin.program.blocks.common.lectors', 'lectorsText')
             ->setFilterMultiSelect($this->userRepository->getLectorsOptions())
             ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
                 $qb->join('b.lectors', 'l')
@@ -143,27 +140,36 @@ class ProgramBlocksGridControl extends Control
                     ->setParameter('lids', (array) $values);
             });
 
-        $grid->addColumnNumber('duration', 'admin.program.blocks_duration')
+        $grid->addColumnNumber('duration', 'admin.program.blocks.common.duration')
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('capacity', 'admin.program.blocks_capacity')
+        $grid->addColumnText('capacity', 'admin.program.blocks.common.capacity')
             ->setRendererOnCondition(function ($row) {
-                return $this->translator->translate('admin.program.blocks_capacity_unlimited');
+                return $this->translator->translate('admin.program.blocks.common.capacity_unlimited');
             }, static function (Block $row) {
                 return $row->getCapacity() === null;
             })
             ->setSortable();
 
-        $columnMandatory = $grid->addColumnStatus('mandatory', 'admin.program.blocks_mandatory');
+        $grid->addColumnText('alternatesAllowed', 'admin.program.blocks.column.alternates_allowed')
+            ->setReplacement([
+                '0' => $this->translator->translate('admin.common.no'),
+                '1' => $this->translator->translate('admin.common.yes'),
+            ])
+            ->setSortable()
+            ->setFilterSelect([null => 'admin.common.all', 1 => 'admin.common.yes', 0 => 'admin.common.no'])
+            ->setTranslateOptions();
+
+        $columnMandatory = $grid->addColumnStatus('mandatory', 'admin.program.blocks.common.mandatory');
         $columnMandatory
-            ->addOption(ProgramMandatoryType::VOLUNTARY, 'admin.program.blocks_mandatory_voluntary')
+            ->addOption(ProgramMandatoryType::VOLUNTARY, 'common.program_mandatory_type.voluntary')
             ->setClass('btn-primary')
             ->endOption()
-            ->addOption(ProgramMandatoryType::MANDATORY, 'admin.program.blocks_mandatory_mandatory')
+            ->addOption(ProgramMandatoryType::MANDATORY, 'common.program_mandatory_type.mandatory')
             ->setClass('btn-danger')
             ->endOption()
-            ->addOption(ProgramMandatoryType::AUTO_REGISTERED, 'admin.program.blocks_mandatory_auto_registered')
+            ->addOption(ProgramMandatoryType::AUTO_REGISTERED, 'common.program_mandatory_type.auto_registered')
             ->setClass('btn-warning')
             ->endOption()
             ->onChange[] = [$this, 'changeMandatory'];
@@ -172,13 +178,13 @@ class ProgramBlocksGridControl extends Control
             ->setSortable()
             ->setFilterSelect([
                 '' => 'admin.common.all',
-                ProgramMandatoryType::VOLUNTARY => 'admin.program.blocks_mandatory_voluntary',
-                ProgramMandatoryType::MANDATORY => 'admin.program.blocks_mandatory_mandatory',
-                ProgramMandatoryType::AUTO_REGISTERED => 'admin.program.blocks_mandatory_auto_registered',
+                ProgramMandatoryType::VOLUNTARY => 'common.program_mandatory_type.voluntary',
+                ProgramMandatoryType::MANDATORY => 'common.program_mandatory_type.mandatory',
+                ProgramMandatoryType::AUTO_REGISTERED => 'common.program_mandatory_type.auto_registered',
             ])
             ->setTranslateOptions();
 
-        $grid->addColumnNumber('programsCount', 'admin.program.blocks_programs_count')
+        $grid->addColumnNumber('programsCount', 'admin.program.blocks.column.programs_count')
             ->setRenderer(static function (Block $row) {
                 return $row->getProgramsCount();
             });
@@ -205,9 +211,12 @@ class ProgramBlocksGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.program.blocks_delete_confirm'),
+                'data-content' => $this->translator->translate('admin.program.blocks.action.delete_confirm'),
             ]);
         $grid->allowRowsAction('delete', [$this, 'isAllowedModifyBlock']);
+
+        $grid->addGroupAction('admin.program.blocks.action.export_blocks_attendees')
+            ->onSelect[] = [$this, 'groupExportBlocksAttendees'];
     }
 
     /**
@@ -221,13 +230,13 @@ class ProgramBlocksGridControl extends Control
         $block = $this->blockRepository->findById($id);
 
         if (! $this->userRepository->findById($this->getPresenter()->getUser()->getId())->isAllowedModifyBlock($block)) {
-            $this->getPresenter()->flashMessage('admin.program.blocks_delete_not_allowed', 'danger');
+            $this->getPresenter()->flashMessage('admin.program.blocks.message.delete_not_allowed', 'danger');
             $this->redirect('this');
         }
 
         $this->commandBus->handle(new RemoveBlock($block));
 
-        $this->getPresenter()->flashMessage('admin.program.blocks_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.program.blocks.message.delete_success', 'success');
 
         $this->redirect('this');
     }
@@ -244,18 +253,18 @@ class ProgramBlocksGridControl extends Control
         $p = $this->getPresenter();
 
         if (! $this->isAllowedModifyBlock($block)) {
-            $p->flashMessage('admin.program.blocks_change_mandatory_denied', 'danger');
+            $p->flashMessage('admin.program.blocks.message.mandatory_change_denied', 'danger');
         } elseif ($mandatory  === ProgramMandatoryType::AUTO_REGISTERED && ! $this->validators->validateBlockAutoRegistered($block, $block->getCapacity())) {
-            $p->flashMessage('admin.program.blocks_change_mandatory_auto_registered_not_allowed', 'danger');
+            $p->flashMessage('admin.program.blocks.message.mandatory_change_auto_registered_not_allowed', 'danger');
         } else {
             try {
                 $blockOld = clone $block;
                 $block->setMandatory($mandatory);
                 $this->commandBus->handle(new SaveBlock($block, $blockOld));
-                $p->flashMessage('admin.program.blocks_changed_mandatory', 'success');
+                $p->flashMessage('admin.program.blocks.message.mandatory_change_success', 'success');
             } catch (Throwable $ex) {
                 Debugger::log($ex, ILogger::WARNING);
-                $p->flashMessage('admin.program.blocks_change_mandatory_error', 'danger');
+                $p->flashMessage('admin.program.blocks.message.mandatory_change_failed', 'danger');
             }
         }
 

@@ -63,10 +63,8 @@ class Program
      */
     protected DateTimeImmutable $start;
 
-    public function __construct(Block $block, ?Room $room, DateTimeImmutable $start)
+    public function __construct(DateTimeImmutable $start)
     {
-        $this->block               = $block;
-        $this->room                = $room;
         $this->start               = $start;
         $this->programApplications = new ArrayCollection();
     }
@@ -79,6 +77,12 @@ class Program
     public function getBlock(): Block
     {
         return $this->block;
+    }
+
+    public function setBlock(Block $block): void
+    {
+        $block->addProgram($this);
+        $this->block = $block;
     }
 
     public function getAttendeesCount(): int

@@ -67,10 +67,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $role = new Role('role');
@@ -125,10 +127,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, 1, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, false, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $role = new Role('role');
@@ -183,10 +187,13 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $category = new Category('category');
         $this->categoryRepository->save($category);
 
-        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, $category);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
+        $block->setCategory($category);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $role = new Role('role');
@@ -222,10 +229,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $user = new User();
@@ -254,10 +263,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $role = new Role('role');
@@ -293,10 +304,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $role = new Role('role');
@@ -332,10 +345,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $role = new Role('role');
@@ -370,10 +385,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $role = new Role('role');
@@ -409,10 +426,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, null, false, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $role = new Role('role');
@@ -448,10 +467,12 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $role = new Role('role');
@@ -493,13 +514,16 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 1, true, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
-        $program1 = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program1 = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program1->setBlock($block);
         $this->programRepository->save($program1);
 
-        $program2 = new Program($block, null, new DateTimeImmutable('2020-01-01 10:00'));
+        $program2 = new Program(new DateTimeImmutable('2020-01-01 10:00'));
+        $program2->setBlock($block);
         $this->programRepository->save($program2);
 
         $role = new Role('role');
@@ -541,22 +565,28 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block1 = new Block('block-1', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block1 = new Block('block-1', 60, 1, true, ProgramMandatoryType::VOLUNTARY);
+        $block1->setSubevent($subevent);
         $this->blockRepository->save($block1);
 
-        $program1 = new Program($block1, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program1 = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program1->setBlock($block1);
         $this->programRepository->save($program1);
 
-        $block2 = new Block('block-2', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block2 = new Block('block-2', 60, 1, true, ProgramMandatoryType::VOLUNTARY);
+        $block2->setSubevent($subevent);
         $this->blockRepository->save($block2);
 
-        $program2 = new Program($block2, null, new DateTimeImmutable('2020-01-01 09:00'));
+        $program2 = new Program(new DateTimeImmutable('2020-01-01 09:00'));
+        $program2->setBlock($block2);
         $this->programRepository->save($program2);
 
-        $block3 = new Block('block-3', 60, 1, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block3 = new Block('block-3', 60, 1, true, ProgramMandatoryType::VOLUNTARY);
+        $block3->setSubevent($subevent);
         $this->blockRepository->save($block3);
 
-        $program3 = new Program($block3, null, new DateTimeImmutable('2020-01-01 09:30'));
+        $program3 = new Program(new DateTimeImmutable('2020-01-01 09:30'));
+        $program3->setBlock($block3);
         $this->programRepository->save($program3);
 
         $role = new Role('role');

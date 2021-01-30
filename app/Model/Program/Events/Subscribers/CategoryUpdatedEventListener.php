@@ -15,6 +15,7 @@ use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
 use App\Services\ISettingsService;
 use App\Services\QueryBus;
+use App\Utils\Helpers;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -50,34 +51,36 @@ class CategoryUpdatedEventListener implements MessageHandlerInterface
     public function __invoke(CategoryUpdatedEvent $event): void
     {
         $this->em->transactional(function () use ($event): void {
-            $registerableRoles    = $event->getCategory()->getRegisterableRoles()->toArray();
-            $registerableRolesOld = $event->getRegisterableRolesOld()->toArray();
+            $registerableRoles    = $event->getCategory()->getRegisterableRoles();
+            $registerableRolesOld = $event->getRegisterableRolesOld();
 
-            if ($registerableRoles != $registerableRolesOld) {
-                foreach ($event->getCategory()->getBlocks() as $block) {
-                    $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
-                    $allowedUsers                     = $this->userRepository->findBlockAllowed($block, ! $registrationBeforePaymentAllowed);
+            if (Helpers::collectionsEquals($registerableRoles, $registerableRolesOld)) {
+                return;
+            }
 
-                    foreach ($block->getPrograms() as $program) {
-                        $programAlternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));
-                        foreach ($programAlternates as $user) {
-                            if (! $allowedUsers->contains($user)) {
-                                $this->commandBus->handle(new UnregisterProgram($user, $program));
-                            }
+            foreach ($event->getCategory()->getBlocks() as $block) {
+                $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+                $allowedUsers                     = $this->userRepository->findBlockAllowed($block, ! $registrationBeforePaymentAllowed);
+
+                foreach ($block->getPrograms() as $program) {
+                    $programAlternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));
+                    foreach ($programAlternates as $user) {
+                        if (! $allowedUsers->contains($user)) {
+                            $this->commandBus->handle(new UnregisterProgram($user, $program));
                         }
+                    }
 
-                        $programAttendees = $this->queryBus->handle(new ProgramAttendeesQuery($program));
-                        foreach ($programAttendees as $user) {
-                            if (! $allowedUsers->contains($user)) {
-                                $this->commandBus->handle(new UnregisterProgram($user, $program));
-                            }
+                    $programAttendees = $this->queryBus->handle(new ProgramAttendeesQuery($program));
+                    foreach ($programAttendees as $user) {
+                        if (! $allowedUsers->contains($user)) {
+                            $this->commandBus->handle(new UnregisterProgram($user, $program));
                         }
+                    }
 
-                        if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
-                            foreach ($allowedUsers as $user) {
-                                if (! $programAttendees->contains($user)) {
-                                    $this->commandBus->handle(new RegisterProgram($user, $program));
-                                }
+                    if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
+                        foreach ($allowedUsers as $user) {
+                            if (! $programAttendees->contains($user)) {
+                                $this->commandBus->handle(new RegisterProgram($user, $program));
                             }
                         }
                     }

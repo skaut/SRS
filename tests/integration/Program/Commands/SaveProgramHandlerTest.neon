@@ -6,6 +6,8 @@ services:
     - App\Model\Program\Repositories\ProgramRepository
     - App\Model\Program\Repositories\ProgramApplicationRepository
     - App\Model\Application\Repositories\ApplicationRepository
+    - App\Model\Program\Repositories\RoomRepository
+
     - class: App\Model\Program\Commands\Handlers\SaveProgramHandler
       tags:
         messenger.messageHandler:
@@ -14,10 +16,12 @@ services:
       tags:
         messenger.messageHandler:
         bus: commandBus
+
     - class: App\Model\User\Queries\Handlers\UserAllowedProgramsQueryHandler
       tags:
         messenger.messageHandler:
         bus: queryBus
+
     - class: App\Model\Program\Events\Subscribers\ProgramCreatedEventListener
       tags:
         messenger.messageHandler:

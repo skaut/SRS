@@ -38,22 +38,22 @@
                         <div class="row">
                             <div class="col-6 mb-3">
                                 <a href="{plink Program:Blocks:default}" class="btn btn-secondary btn-sm btn-block">
-                                    <span class="fa fa-2x fa-calendar-o"></span><br>{_admin.program.menu_blocks}
+                                    <span class="fa fa-2x fa-calendar-o"></span><br>{_admin.program.menu.blocks}
                                 </a>
                             </div>
                             <div class="col-6 mb-3">
                                 <a href="{plink Program:Schedule:default}" class="btn btn-secondary btn-sm btn-block">
-                                    <span class="fa fa-2x fa-calendar"></span><br>{_admin.program.menu_schedule}
+                                    <span class="fa fa-2x fa-calendar"></span><br>{_admin.program.menu.schedule}
                                 </a>
                             </div>
                             <div class="col-6 mb-3" n:if="$user->isAllowed($resourceProgram, $permissionManageCategories)">
                                 <a href="{plink Program:Categories:default}" class="btn btn-secondary btn-sm btn-block">
-                                    <span class="fa fa-2x fa-flag"></span><br>{_admin.program.menu_categories}
+                                    <span class="fa fa-2x fa-flag"></span><br>{_admin.program.menu.categories}
                                 </a>
                             </div>
                             <div class="col-6 mb-3" n:if="$user->isAllowed($resourceProgram, $permissionManageRooms)">
                                 <a href="{plink Program:Rooms:default}" class="btn btn-secondary btn-sm btn-block">
-                                    <span class="fa fa-2x fa-home"></span><br>{_admin.program.menu_rooms}
+                                    <span class="fa fa-2x fa-home"></span><br>{_admin.program.menu.rooms}
                                 </a>
                             </div>
                         </div>

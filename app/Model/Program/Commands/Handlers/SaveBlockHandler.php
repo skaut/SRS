@@ -35,13 +35,15 @@ class SaveBlockHandler implements MessageHandlerInterface
             $this->blockRepository->save($block);
         } else {
             $this->em->transactional(function () use ($block, $blockOld): void {
-                $categoryOld  = $blockOld->getCategory();
-                $subeventOld  = $blockOld->getSubevent();
-                $mandatoryOld = $blockOld->getMandatory();
+                $categoryOld          = $blockOld->getCategory();
+                $subeventOld          = $blockOld->getSubevent();
+                $mandatoryOld         = $blockOld->getMandatory();
+                $capacityOld          = $blockOld->getCapacity();
+                $alternatesAllowedOld = $blockOld->isAlternatesAllowed();
 
                 $this->blockRepository->save($block);
 
-                $this->eventBus->handle(new BlockUpdatedEvent($block, $categoryOld, $subeventOld, $mandatoryOld));
+                $this->eventBus->handle(new BlockUpdatedEvent($block, $categoryOld, $subeventOld, $mandatoryOld, $capacityOld, $alternatesAllowedOld));
             });
         }
     }

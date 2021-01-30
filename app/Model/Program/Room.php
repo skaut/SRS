@@ -45,8 +45,11 @@ class Room
      */
     protected Collection $programs;
 
-    public function __construct()
+    public function __construct(string $name, ?int $capacity)
     {
+        $this->name     = $name;
+        $this->capacity = $capacity;
+
         $this->programs = new ArrayCollection();
     }
 

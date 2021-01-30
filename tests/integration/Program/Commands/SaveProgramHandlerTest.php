@@ -15,6 +15,9 @@ use App\Model\Program\Commands\SaveProgram;
 use App\Model\Program\Program;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
+use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Program\Repositories\RoomRepository;
+use App\Model\Program\Room;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -44,19 +47,24 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
 
     private ProgramApplicationRepository $programApplicationRepository;
 
+    private RoomRepository $roomRepository;
+
+    private ProgramRepository $programRepository;
+
     /**
      * Vytvoření volitelného programu.
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function testVoluntaryProgram(): void
+    public function testCreateVoluntaryProgram(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, 10, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 10, true, ProgramMandatoryType::VOLUNTARY);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
         $role = new Role('role');
@@ -82,7 +90,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user2, $role);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user2, $subevent);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->commandBus->handle(new SaveProgram($program));
 
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
@@ -96,13 +105,14 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function testAutoRegisteredProgram(): void
+    public function testCreateAutoRegisteredProgram(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED, $subevent, null);
+        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
         $role = new Role('role');
@@ -140,7 +150,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
 
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->commandBus->handle(new SaveProgram($program));
 
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
@@ -157,13 +168,14 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
      * @throws OptimisticLockException
      * @throws Throwable
      */
-    public function testAutoRegisteredProgramNotPaidAllowed(): void
+    public function testCreateAutoRegisteredProgramNotPaidAllowed(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
         $this->subeventRepository->save($subevent);
 
-        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED, $subevent, null);
+        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED);
+        $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
         $role = new Role('role');
@@ -201,13 +213,48 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
 
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, true);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->commandBus->handle(new SaveProgram($program));
 
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user3, $program));
         $this->assertEquals(3, $program->getAttendeesCount());
+    }
+
+    /**
+     * Test uložení změn programu.
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function testUpdateProgram(): void
+    {
+        $subevent = new Subevent();
+        $subevent->setName('subevent');
+        $this->subeventRepository->save($subevent);
+
+        $block = new Block('block', 60, null, true, ProgramMandatoryType::AUTO_REGISTERED);
+        $block->setSubevent($subevent);
+        $this->blockRepository->save($block);
+
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
+        $this->commandBus->handle(new SaveProgram($program));
+
+        $room = new Room('room', null);
+        $this->roomRepository->save($room);
+
+        $program->setStart(new DateTimeImmutable('2020-01-01 09:00'));
+        $program->setRoom($room);
+
+        $this->commandBus->handle(new SaveProgram($program));
+
+        $program = $this->programRepository->findById($program->getId());
+
+        $this->assertEquals(new DateTimeImmutable('2020-01-01 09:00'), $program->getStart());
+        $this->assertEquals($room, $program->getRoom());
     }
 
     /**
@@ -230,6 +277,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $this->roleRepository               = $this->tester->grabService(RoleRepository::class);
         $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
+        $this->roomRepository               = $this->tester->grabService(RoomRepository::class);
+        $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
 
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
         $this->settingsService->setValue(Settings::SEMINAR_NAME, 'test');

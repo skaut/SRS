@@ -90,7 +90,7 @@ class AclPresenter extends AdminBasePresenter
 
             $this->flashMessage('admin.acl.roles_saved', 'success');
 
-            $id = $this->roleRepository->findLastId();
+            $id = $this->roleRepository->findLastId(); // todo: nahradit
             $this->redirect('Acl:edit', ['id' => $id]);
         };
 

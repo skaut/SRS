@@ -133,11 +133,6 @@ class RoomRepository extends AbstractRepository
      */
     public function remove(Room $room): void
     {
-        foreach ($room->getPrograms() as $program) {
-            $program->setRoom(null);
-            $this->em->persist($program);
-        }
-
         $this->em->remove($room);
         $this->em->flush();
     }

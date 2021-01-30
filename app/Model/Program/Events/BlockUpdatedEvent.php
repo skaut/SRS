@@ -18,12 +18,24 @@ class BlockUpdatedEvent
 
     private string $mandatoryOld;
 
-    public function __construct(Block $block, ?Category $categoryOld, Subevent $subeventOld, string $mandatoryOld)
-    {
-        $this->block        = $block;
-        $this->categoryOld  = $categoryOld;
-        $this->subeventOld  = $subeventOld;
-        $this->mandatoryOld = $mandatoryOld;
+    private ?int $capacityOld;
+
+    private bool $alternatesAllowedOld;
+
+    public function __construct(
+        Block $block,
+        ?Category $categoryOld,
+        Subevent $subeventOld,
+        string $mandatoryOld,
+        ?int $capacityOld,
+        bool $alternatesAllowedOld
+    ) {
+        $this->block                = $block;
+        $this->categoryOld          = $categoryOld;
+        $this->subeventOld          = $subeventOld;
+        $this->mandatoryOld         = $mandatoryOld;
+        $this->capacityOld          = $capacityOld;
+        $this->alternatesAllowedOld = $alternatesAllowedOld;
     }
 
     public function getBlock(): Block
@@ -44,5 +56,15 @@ class BlockUpdatedEvent
     public function getMandatoryOld(): string
     {
         return $this->mandatoryOld;
+    }
+
+    public function getCapacityOld(): ?int
+    {
+        return $this->capacityOld;
+    }
+
+    public function isAlternatesAllowedOld(): bool
+    {
+        return $this->alternatesAllowedOld;
     }
 }

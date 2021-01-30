@@ -7,9 +7,9 @@
 {block main}
     <h2>{_admin.program.schedule.heading}</h2>
     <div class="alert alert-warning alert-forever" n:if="!$isAllowedModifySchedule">
-        {_admin.program.schedule.modify_schedule_is_not_allowed_begin}
+        {_admin.program.schedule.message.modify_schedule_is_not_allowed_begin}
         <a href="{plink :Admin:Configuration:Program:default}"
-           class="alert-link">{_admin.program.schedule.modify_schedule_is_not_allowed_link}</a>{_admin.program.schedule.modify_schedule_is_not_allowed_end}
+           class="alert-link">{_admin.program.schedule.message.modify_schedule_is_not_allowed_link}</a>{_admin.program.schedule.message.modify_schedule_is_not_allowed_end}
     </div>
 
     <div id='calendar'></div>

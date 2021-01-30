@@ -10,6 +10,8 @@ use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Block;
 use App\Model\Program\Commands\SaveBlock;
+use App\Model\Program\Exceptions\BlockCapacityInsufficientException;
+use App\Model\Program\Queries\MinBlockAllowedCapacityQuery;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Settings\Settings;
@@ -18,6 +20,7 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
 use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
@@ -29,6 +32,7 @@ use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Forms\Controls\TextInput;
 use stdClass;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
 /**
@@ -58,6 +62,8 @@ class BlockFormFactory
 
     private CommandBus $commandBus;
 
+    private QueryBus $queryBus;
+
     private BaseFormFactory $baseFormFactory;
 
     private BlockRepository $blockRepository;
@@ -76,6 +82,7 @@ class BlockFormFactory
 
     public function __construct(
         CommandBus $commandBus,
+        QueryBus $queryBus,
         BaseFormFactory $baseFormFactory,
         BlockRepository $blockRepository,
         UserRepository $userRepository,
@@ -86,6 +93,7 @@ class BlockFormFactory
         Validators $validators
     ) {
         $this->commandBus         = $commandBus;
+        $this->queryBus           = $queryBus;
         $this->baseFormFactory    = $baseFormFactory;
         $this->blockRepository    = $blockRepository;
         $this->userRepository     = $userRepository;
@@ -113,16 +121,16 @@ class BlockFormFactory
 
         $form->addHidden('id');
 
-        $form->addText('name', 'admin.program.blocks_name')
-            ->addRule(Form::FILLED, 'admin.program.blocks_name_empty');
+        $form->addText('name', 'admin.program.blocks.common.name')
+            ->addRule(Form::FILLED, 'admin.program.blocks.form.name_empty');
 
         if ($this->subeventsExists) {
-            $form->addSelect('subevent', 'admin.program.blocks_subevent', $this->subeventService->getSubeventsOptions())
+            $form->addSelect('subevent', 'admin.program.blocks.common.subevent', $this->subeventService->getSubeventsOptions())
                 ->setPrompt('')
-                ->addRule(Form::FILLED, 'admin.program.blocks_subevent_empty');
+                ->addRule(Form::FILLED, 'admin.program.blocks.form.subevent_empty');
         }
 
-        $form->addSelect('category', 'admin.program.blocks_category', $this->categoryRepository->getCategoriesOptions())
+        $form->addSelect('category', 'admin.program.blocks.common.category', $this->categoryRepository->getCategoriesOptions())
             ->setPrompt('');
 
         $userIsAllowedManageAllPrograms = $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS);
@@ -139,43 +147,48 @@ class BlockFormFactory
             }
         }
 
-        $form->addMultiSelect('lectors', 'admin.program.blocks_lectors', $lectorsOptions);
+        $form->addMultiSelect('lectors', 'admin.program.blocks.common.lectors', $lectorsOptions);
 
-        $form->addInteger('duration', 'admin.program.blocks_duration_form')
-            ->addRule(Form::FILLED, 'admin.program.blocks_duration_empty')
-            ->addRule(Form::INTEGER, 'admin.program.blocks_duration_format');
+        $form->addInteger('duration', 'admin.program.blocks.form.duration')
+            ->addRule(Form::FILLED, 'admin.program.blocks.form.duration_empty')
+            ->addRule(Form::INTEGER, 'admin.program.blocks.form.duration_format');
 
-        $capacityText = $form->addText('capacity', 'admin.program.blocks_capacity')
+        $capacityText = $form->addText('capacity', 'admin.program.blocks.common.capacity')
             ->setHtmlAttribute('data-toggle', 'tooltip')
             ->setHtmlAttribute('data-placement', 'bottom')
-            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks_capacity_note'));
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks.form.capacity_note'));
         $capacityText->addCondition(Form::FILLED)
-            ->addRule(Form::INTEGER, 'admin.program.blocks_capacity_format')
+            ->addRule(Form::INTEGER, 'admin.program.blocks.form.capacity_format')
             ->toggle('alternatesAllowedCheckbox');
+        $minAllowedCapacity = $this->queryBus->handle(new MinBlockAllowedCapacityQuery($this->block));
+        if ($minAllowedCapacity !== null) {
+            $capacityText->addCondition(Form::FILLED)
+                ->addRule(Form::MIN, 'admin.program.blocks.form.capacity_low', $minAllowedCapacity);
+        }
 
-        $form->addCheckbox('alternatesAllowed', 'admin.program.blocks_alternates_allowed')
+        $form->addCheckbox('alternatesAllowed', 'admin.program.blocks.form.alternates_allowed')
             ->setOption('id', 'alternatesAllowedCheckbox');
 
-        $form->addCheckbox('mandatory', 'admin.program.blocks_mandatory_form')
+        $form->addCheckbox('mandatory', 'admin.program.blocks.form.mandatory')
             ->addCondition(Form::EQUAL, true)
             ->toggle('autoRegisteredCheckbox');
 
-        $form->addCheckbox('autoRegistered', 'admin.program.blocks_auto_registered')
+        $form->addCheckbox('autoRegistered', 'admin.program.blocks.form.auto_registered')
             ->setOption('id', 'autoRegisteredCheckbox')
             ->setHtmlAttribute('data-toggle', 'tooltip')
             ->setHtmlAttribute('data-placement', 'bottom')
-            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks_auto_registered_note'))
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.program.blocks.form.auto_registered_note'))
             ->addCondition(Form::FILLED)
-            ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks_auto_registered_not_allowed', [$capacityText]);
+            ->addRule([$this, 'validateAutoRegistered'], 'admin.program.blocks.form.auto_registered_not_allowed', [$capacityText]);
 
-        $form->addTextArea('perex', 'admin.program.blocks_perex_form')
+        $form->addTextArea('perex', 'admin.program.blocks.form.perex')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::MAX_LENGTH, 'admin.program.blocks_perex_length', 160);
+            ->addRule(Form::MAX_LENGTH, 'admin.program.blocks.form.perex_length', 160);
 
-        $form->addTextArea('description', 'admin.program.blocks_description')
+        $form->addTextArea('description', 'admin.program.blocks.common.description')
             ->setHtmlAttribute('class', 'tinymce-paragraph');
 
-        $form->addText('tools', 'admin.program.blocks_tools');
+        $form->addText('tools', 'admin.program.blocks.common.tools');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -189,7 +202,7 @@ class BlockFormFactory
         $nameText = $form['name'];
 
         if ($this->block) {
-            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findOthersNames($id));
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.blocks.form.name_exists', $this->blockRepository->findOthersNames($id));
 
             $form->setDefaults([
                 'id' => $id,
@@ -212,7 +225,7 @@ class BlockFormFactory
                 ]);
             }
         } else {
-            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.blocks_name_exists', $this->blockRepository->findAllNames());
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.blocks.form.name_exists', $this->blockRepository->findAllNames());
 
             if (! $userIsAllowedManageAllPrograms) {
                 /** @var MultiSelectBox $lectorsMultiSelect */
@@ -235,16 +248,18 @@ class BlockFormFactory
     public function processForm(Form $form, stdClass $values): void
     {
         if ($form->isSubmitted() === $form['cancel']) {
-            return;
+            $form->getPresenter()->redirect('Blocks:default');
         }
 
         if ($this->block === null) {
             if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
-                return; // todo: exception
+                $form->getPresenter()->flashMessage('admin.program.blocks.message.add_not_allowed', 'danger');
+                $form->getPresenter()->redirect('Blocks:default');
             }
         } else {
             if (! $this->user->isAllowedModifyBlock($this->block)) {
-                return; // todo: exception
+                $form->getPresenter()->flashMessage('admin.program.blocks.message.edit_not_allowed', 'danger');
+                $form->getPresenter()->redirect('Blocks:default');
             }
         }
 
@@ -262,7 +277,9 @@ class BlockFormFactory
         $blockOld = null;
 
         if ($this->block === null) {
-            $this->block = new Block($values->name, $values->duration, $capacity, $values->alternatesAllowed, $mandatory, $subevent, $category);
+            $this->block = new Block($values->name, $values->duration, $capacity, $values->alternatesAllowed, $mandatory);
+            $this->block->setSubevent($subevent);
+            $this->block->setCategory($category);
             $this->block->setLectors($lectors);
             $this->block->setPerex($values->perex);
             $this->block->setDescription($values->description);
@@ -283,7 +300,23 @@ class BlockFormFactory
             $this->block->setTools($values->tools);
         }
 
-        $this->commandBus->handle(new SaveBlock($this->block, $blockOld));
+        try {
+            $this->commandBus->handle(new SaveBlock($this->block, $blockOld));
+
+            $form->getPresenter()->flashMessage('admin.program.blocks.message.save_success', 'success');
+
+            if ($form->isSubmitted() === $form['submitAndContinue']) {
+                $form->getPresenter()->redirect('Blocks:edit', ['id' => $this->block->getId()]);
+            } else {
+                $form->getPresenter()->redirect('Blocks:default');
+            }
+        } catch (HandlerFailedException $e) {
+            if ($e->getPrevious() instanceof BlockCapacityInsufficientException) {
+                $form->getPresenter()->flashMessage('admin.program.blocks.message.capacity_low', 'danger');
+            } else {
+                $form->getPresenter()->flashMessage('admin.program.blocks.message.save_failed', 'danger');
+            }
+        }
     }
 
     /**

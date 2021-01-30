@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
+use App\Model\Program\Commands\RemoveRoom;
+use App\Model\Program\Commands\SaveRoom;
 use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
+use App\Services\CommandBus;
 use App\Services\ExcelExportService;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -28,6 +31,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class RoomsGridControl extends Control
 {
+    private CommandBus $commandBus;
+
     private ITranslator $translator;
 
     private RoomRepository $roomRepository;
@@ -39,11 +44,13 @@ class RoomsGridControl extends Control
     private SessionSection $sessionSection;
 
     public function __construct(
+        CommandBus $commandBus,
         ITranslator $translator,
         RoomRepository $roomRepository,
         ExcelExportService $excelExportService,
         Session $session
     ) {
+        $this->commandBus         = $commandBus;
         $this->translator         = $translator;
         $this->roomRepository     = $roomRepository;
         $this->excelExportService = $excelExportService;
@@ -74,41 +81,41 @@ class RoomsGridControl extends Control
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(false);
 
-        $grid->addGroupAction('admin.program.rooms_group_action_export_rooms_schedules')
+        $grid->addGroupAction('admin.program.rooms.action.export_rooms_schedules')
             ->onSelect[] = [$this, 'groupExportRoomsSchedules'];
 
-        $grid->addColumnText('name', 'admin.program.rooms_name');
+        $grid->addColumnText('name', 'admin.program.rooms.column.name');
 
-        $grid->addColumnText('capacity', 'admin.program.rooms_capacity')
+        $grid->addColumnText('capacity', 'admin.program.rooms.column.capacity')
             ->setRendererOnCondition(function (Room $row) {
-                return $this->translator->translate('admin.program.blocks_capacity_unlimited');
+                return $this->translator->translate('admin.program.blocks.column.capacity_unlimited');
             }, static function (Room $row) {
                 return $row->getCapacity() === null;
             });
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container): void {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.program.rooms_name_empty')
-                ->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findAllNames());
+                ->addRule(Form::FILLED, 'admin.program.rooms.column.name_empty')
+                ->addRule(Form::IS_NOT_IN, 'admin.program.rooms.column.name_exists', $this->roomRepository->findAllNames());
 
             $container->addText('capacity', '')
                 ->addCondition(Form::FILLED)
-                ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
+                ->addRule(Form::INTEGER, 'admin.program.rooms.column.capacity_format');
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container): void {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.program.rooms_name_empty');
+                ->addRule(Form::FILLED, 'admin.program.rooms.column.name_empty');
 
             $container->addText('capacity', '')
                 ->addCondition(Form::FILLED)
-                ->addRule(Form::INTEGER, 'admin.program.rooms_capacity_format');
+                ->addRule(Form::INTEGER, 'admin.program.rooms.column.capacity_format');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Room $item): void {
             /** @var TextInput $nameText */
             $nameText = $container['name'];
-            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.rooms_name_exists', $this->roomRepository->findOthersNames($item->getId()));
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.rooms.column.name_exists', $this->roomRepository->findOthersNames($item->getId()));
 
             $container->setDefaults([
                 'name' => $item->getName(),
@@ -126,7 +133,7 @@ class RoomsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.program.rooms_delete_confirm'),
+                'data-content' => $this->translator->translate('admin.program.rooms.action.delete_confirm'),
             ]);
     }
 
@@ -138,15 +145,12 @@ class RoomsGridControl extends Control
      */
     public function add(stdClass $values): void
     {
-        $room = new Room();
+        $room = new Room($values->name, $values->capacity !== '' ? $values->capacity : null);
 
-        $room->setName($values->name);
-        $room->setCapacity($values->capacity !== '' ? $values->capacity : null);
-
-        $this->roomRepository->save($room);
+        $this->commandBus->handle(new SaveRoom($room));
 
         $p = $this->getPresenter();
-        $p->flashMessage('admin.program.rooms_saved', 'success');
+        $p->flashMessage('admin.program.rooms.message.save_success', 'success');
 
         $this->redirect('this');
     }
@@ -164,10 +168,10 @@ class RoomsGridControl extends Control
         $room->setName($values->name);
         $room->setCapacity($values->capacity !== '' ? $values->capacity : null);
 
-        $this->roomRepository->save($room);
+        $this->commandBus->handle(new SaveRoom($room));
 
         $p = $this->getPresenter();
-        $p->flashMessage('admin.program.rooms_saved', 'success');
+        $p->flashMessage('admin.program.rooms.message.save_success', 'success');
 
         $this->redirect('this');
     }
@@ -181,9 +185,10 @@ class RoomsGridControl extends Control
     public function handleDelete(int $id): void
     {
         $room = $this->roomRepository->findById($id);
-        $this->roomRepository->remove($room);
 
-        $this->getPresenter()->flashMessage('admin.program.rooms_deleted', 'success');
+        $this->commandBus->handle(new RemoveRoom($room));
+
+        $this->getPresenter()->flashMessage('admin.program.rooms.message.delete_success', 'success');
 
         $this->redirect('this');
     }

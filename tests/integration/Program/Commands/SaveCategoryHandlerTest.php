@@ -25,6 +25,9 @@ use App\Model\User\User;
 use App\Services\ISettingsService;
 use CommandHandlerTest;
 use DateTimeImmutable;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Throwable;
 
 final class SaveCategoryHandlerTest extends CommandHandlerTest
 {
@@ -44,7 +47,14 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
 
     private ProgramApplicationRepository $programApplicationRepository;
 
-    public function testRegisterableRolesChanged(): void
+    /**
+     * Změna rolí u kategorie - neoprávnění účastníci a náhradníci jsou odhlášeni, automaticky přihlašovaní přihlášeni.
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Throwable
+     */
+    public function testChangeRegisterableRoles(): void
     {
         $subevent = new Subevent();
         $subevent->setName('subevent');
@@ -56,17 +66,21 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
         $role2 = new Role('role2');
         $this->roleRepository->save($role2);
 
+        $role3 = new Role('role3');
+        $this->roleRepository->save($role3);
+
         $category = new Category('category');
         $category->addRegisterableRole($role1);
         $category->addRegisterableRole($role2);
         $this->commandBus->handle(new SaveCategory($category, null));
 
-        $block = new Block('block', 60, 2, true, ProgramMandatoryType::VOLUNTARY, $subevent, null);
+        $block = new Block('block', 60, 2, true, ProgramMandatoryType::AUTO_REGISTERED);
+        $block->setSubevent($subevent);
         $block->setCategory($category);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
-        $block->addProgram($program);
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $user1 = new User();
@@ -89,14 +103,46 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user2, $role2);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user2, $subevent);
 
+        $user3 = new User();
+        $user3->setFirstName('First');
+        $user3->setLastName('Last');
+        $user3->addRole($role3);
+        $user3->setApproved(true);
+        $this->userRepository->save($user3);
+
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user3, $role3);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user3, $subevent);
+
+        $user4 = new User();
+        $user4->setFirstName('First');
+        $user4->setLastName('Last');
+        $user4->addRole($role2);
+        $user4->setApproved(true);
+        $this->userRepository->save($user4);
+
+        ApplicationFactory::createRolesApplication($this->applicationRepository, $user4, $role2);
+        ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user4, $subevent);
+
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user3, $program));
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user4, $program));
 
         $this->programApplicationRepository->save(new ProgramApplication($user1, $program));
         $this->programApplicationRepository->save(new ProgramApplication($user2, $program));
+        $this->programApplicationRepository->save(new ProgramApplication($user4, $program));
 
-        $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
-        $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
+        $programApplication1 = $this->programApplicationRepository->findByUserAndProgram($user1, $program);
+        $this->assertNotNull($programApplication1);
+        $this->assertFalse($programApplication1->isAlternate());
+        $programApplication2 = $this->programApplicationRepository->findByUserAndProgram($user2, $program);
+        $this->assertNotNull($programApplication2);
+        $this->assertFalse($programApplication2->isAlternate());
+        $programApplication3 = $this->programApplicationRepository->findByUserAndProgram($user3, $program);
+        $this->assertNull($programApplication3);
+        $programApplication4 = $this->programApplicationRepository->findByUserAndProgram($user4, $program);
+        $this->assertNotNull($programApplication4);
+        $this->assertTrue($programApplication4->isAlternate());
 
         $categoryOld = clone $category;
         $category->removeRegisterableRole($role2);
@@ -104,6 +150,17 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
 
         $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user3, $program));
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user4, $program));
+
+        $categoryOld = clone $category;
+        $category->addRegisterableRole($role3);
+        $this->commandBus->handle(new SaveCategory($category, $categoryOld));
+
+        $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user2, $program));
+        $this->assertNotNull($this->programApplicationRepository->findByUserAndProgram($user3, $program));
+        $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user4, $program));
     }
 
     /**

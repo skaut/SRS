@@ -45,7 +45,6 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
 
 use function abs;
-use function array_diff;
 use function implode;
 use function str_pad;
 use function strval;
@@ -199,18 +198,8 @@ class ApplicationService
     {
         $rolesOld = clone $user->getRoles();
 
-        //pokud se role nezmenily, nic se neprovede
-        if ($roles->count() === $rolesOld->count()) {
-            $rolesArray    = $roles->map(static function (Role $role) {
-                return $role->getId();
-            })->toArray();
-            $oldRolesArray = $rolesOld->map(static function (Role $role) {
-                return $role->getId();
-            })->toArray();
-
-            if (array_diff($rolesArray, $oldRolesArray) === array_diff($oldRolesArray, $rolesArray)) {
-                return;
-            }
+        if (Helpers::collectionsEquals($roles, $rolesOld)) {
+            return;
         }
 
         $this->em->transactional(function () use ($user, $roles, $createdBy, $approve, $rolesOld): void {
@@ -384,18 +373,8 @@ class ApplicationService
 
         $subeventsOld = clone $application->getSubevents();
 
-        //pokud se podakce nezmenily, nic se neprovede
-        if ($subevents->count() === $subeventsOld->count()) {
-            $subeventsArray    = $subevents->map(static function (Subevent $subevent) {
-                return $subevent->getId();
-            })->toArray();
-            $oldSubeventsArray = $subeventsOld->map(static function (Subevent $subevent) {
-                return $subevent->getId();
-            })->toArray();
-
-            if (array_diff($subeventsArray, $oldSubeventsArray) === array_diff($oldSubeventsArray, $subeventsArray)) {
-                return;
-            }
+        if (Helpers::collectionsEquals($subevents, $subeventsOld)) {
+            return;
         }
 
         $this->em->transactional(function () use ($application, $subevents, $createdBy): void {

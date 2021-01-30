@@ -7,16 +7,19 @@ namespace App\Model\Program\Repositories;
 use App\Model\Enums\ApplicationState;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
+use App\Model\Program\Exceptions\BlockCapacityInsufficientException;
+use App\Model\Program\Program;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 
 use function array_map;
+use function assert;
 
 /**
  * Třída spravující programové bloky.
@@ -48,20 +51,6 @@ class BlockRepository extends AbstractRepository
     public function findById(?int $id): ?Block
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
-    }
-
-    /**
-     * Vrací poslední id.
-     *
-     * @throws NoResultException
-     * @throws NonUniqueResultException
-     */
-    public function findLastId(): int
-    {
-        return (int) $this->createQueryBuilder('b')
-            ->select('MAX(b.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
     }
 
     /**
@@ -183,6 +172,22 @@ class BlockRepository extends AbstractRepository
         return new ArrayCollection($qb->getQuery()->getResult());
     }
 
+    public function getMinBlockAllowedCapacity(Block $block): ?int
+    {
+        $result = $this->createQueryBuilder('b')
+            ->select('count(pa) c')
+            ->join('b.programs', 'p')
+            ->join('p.programApplications', 'pa', 'WITH', 'pa.alternate = false')
+            ->where('b = :block')
+            ->groupBy('p')
+            ->orderBy('c', 'DESC')
+            ->setParameter('block', $block)
+            ->getQuery()
+            ->getResult();
+
+        return $result === null ? null : $result[0]['c'];
+    }
+
     /**
      * Uloží blok.
      *
@@ -190,8 +195,20 @@ class BlockRepository extends AbstractRepository
      */
     public function save(Block $block): void
     {
-        $this->em->persist($block);
-        $this->em->flush();
+        $this->em->transactional(static function (EntityManager $em) use ($block): void {
+            if ($block->getCapacity() !== null) {
+                foreach ($block->getPrograms() as $program) {
+                    $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
+                    assert($program instanceof Program);
+                    if ($program->getAttendeesCount() > $block->getCapacity()) {
+                        throw new BlockCapacityInsufficientException();
+                    }
+                }
+            }
+
+            $em->persist($block);
+            $em->flush();
+        });
     }
 
     /**
@@ -201,10 +218,6 @@ class BlockRepository extends AbstractRepository
      */
     public function remove(Block $block): void
     {
-        foreach ($block->getPrograms() as $program) {
-            $this->em->remove($program);
-        }
-
         $this->em->remove($block);
         $this->em->flush();
     }
