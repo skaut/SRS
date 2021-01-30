@@ -15,7 +15,6 @@ use App\Model\Program\Commands\RemoveCategory;
 use App\Model\Program\Program;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
-use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -44,8 +43,6 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
     private ProgramRepository $programRepository;
 
     private ApplicationRepository $applicationRepository;
-
-    private ProgramApplicationRepository $programApplicationRepository;
 
     private BlockRepository $blockRepository;
 
@@ -87,8 +84,8 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
         $block->setCategory($category);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
-        $block->addProgram($program);
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $this->assertContains($category, $this->categoryRepository->findAll());
@@ -115,15 +112,14 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
         $this->tester->useConfigFiles([__DIR__ . '/RemoveCategoryHandlerTest.neon']);
         parent::_before();
 
-        $this->settingsService              = $this->tester->grabService(ISettingsService::class);
-        $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);
-        $this->userRepository               = $this->tester->grabService(UserRepository::class);
-        $this->categoryRepository           = $this->tester->grabService(CategoryRepository::class);
-        $this->roleRepository               = $this->tester->grabService(RoleRepository::class);
-        $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
-        $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
-        $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
-        $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
+        $this->settingsService       = $this->tester->grabService(ISettingsService::class);
+        $this->subeventRepository    = $this->tester->grabService(SubeventRepository::class);
+        $this->userRepository        = $this->tester->grabService(UserRepository::class);
+        $this->categoryRepository    = $this->tester->grabService(CategoryRepository::class);
+        $this->roleRepository        = $this->tester->grabService(RoleRepository::class);
+        $this->programRepository     = $this->tester->grabService(ProgramRepository::class);
+        $this->applicationRepository = $this->tester->grabService(ApplicationRepository::class);
+        $this->blockRepository       = $this->tester->grabService(BlockRepository::class);
 
         $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
         $this->settingsService->setValue(Settings::SEMINAR_NAME, 'test');

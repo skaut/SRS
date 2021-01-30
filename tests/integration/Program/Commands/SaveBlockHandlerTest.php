@@ -102,8 +102,8 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         $block->setSubevent($subevent);
         $this->commandBus->handle(new SaveBlock($block));
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
-        $block->addProgram($program);
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $programApplication1 = $this->programApplicationRepository->findByUserAndProgram($user1, $program);
@@ -205,8 +205,8 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         $block->setSubevent($subevent1);
         $this->commandBus->handle(new SaveBlock($block));
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
-        $block->addProgram($program);
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $programApplication1 = $this->programApplicationRepository->findByUserAndProgram($user1, $program);
@@ -282,8 +282,8 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         $block->setSubevent($subevent);
         $this->commandBus->handle(new SaveBlock($block));
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
-        $block->addProgram($program);
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user1, $program));
@@ -337,8 +337,8 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         $block->setSubevent($subevent);
         $this->commandBus->handle(new SaveBlock($block));
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
-        $block->addProgram($program);
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $this->programApplicationRepository->save(new ProgramApplication($user1, $program));
@@ -425,12 +425,12 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         $block->setSubevent($subevent);
         $this->commandBus->handle(new SaveBlock($block));
 
-        $program1 = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
-        $block->addProgram($program1);
+        $program1 = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program1->setBlock($block);
         $this->programRepository->save($program1);
 
-        $program2 = new Program($block, null, new DateTimeImmutable('2020-01-01 09:00'));
-        $block->addProgram($program2);
+        $program2 = new Program(new DateTimeImmutable('2020-01-01 09:00'));
+        $program2->setBlock($block);
         $this->programRepository->save($program2);
 
         $this->programApplicationRepository->save(new ProgramApplication($user1, $program1));
@@ -517,8 +517,8 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         $block->setSubevent($subevent);
         $this->commandBus->handle(new SaveBlock($block));
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
-        $block->addProgram($program);
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $this->programApplicationRepository->save(new ProgramApplication($user1, $program));

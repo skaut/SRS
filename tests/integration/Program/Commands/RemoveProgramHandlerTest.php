@@ -14,7 +14,6 @@ use App\Model\Program\Commands\RemoveProgram;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramApplication;
 use App\Model\Program\Repositories\BlockRepository;
-use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Settings;
@@ -36,8 +35,6 @@ final class RemoveProgramHandlerTest extends CommandHandlerTest
     private SubeventRepository $subeventRepository;
 
     private UserRepository $userRepository;
-
-    private CategoryRepository $categoryRepository;
 
     private RoleRepository $roleRepository;
 
@@ -79,8 +76,8 @@ final class RemoveProgramHandlerTest extends CommandHandlerTest
         $block->setSubevent($subevent);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
-        $block->addProgram($program);
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $this->programApplicationRepository->save(new ProgramApplication($user, $program));
@@ -110,7 +107,6 @@ final class RemoveProgramHandlerTest extends CommandHandlerTest
         $this->settingsService              = $this->tester->grabService(ISettingsService::class);
         $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);
         $this->userRepository               = $this->tester->grabService(UserRepository::class);
-        $this->categoryRepository           = $this->tester->grabService(CategoryRepository::class);
         $this->roleRepository               = $this->tester->grabService(RoleRepository::class);
         $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
         $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);

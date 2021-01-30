@@ -166,6 +166,7 @@ class Block
     {
         if (! $this->programs->contains($program)) {
             $this->programs->add($program);
+            $program->setBlock($this);
         }
     }
 

@@ -85,8 +85,8 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
         $block->setCategory($category);
         $this->blockRepository->save($block);
 
-        $program = new Program($block, null, new DateTimeImmutable('2020-01-01 08:00'));
-        $block->addProgram($program);
+        $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
+        $program->setBlock($block);
         $this->programRepository->save($program);
 
         $this->programApplicationRepository->save(new ProgramApplication($user, $program));
