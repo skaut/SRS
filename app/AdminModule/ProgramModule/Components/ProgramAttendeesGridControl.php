@@ -121,7 +121,7 @@ class ProgramAttendeesGridControl extends Control
             $grid->setTranslator($this->translator);
 
             $qb = $this->userRepository->blockAllowedQuery($program->getBlock(), $registrationBeforePaymentAllowed)
-                ->leftJoin('u.programApplications', 'x', 'WITH', 'x.program = :program')
+                ->leftJoin('u.programApplications', 'pa', 'WITH', 'pa.program = :program')
                 ->setParameter('program', $program);
 
             $grid->setDataSource($qb);
@@ -143,9 +143,9 @@ class ProgramAttendeesGridControl extends Control
                     if ($value === '') {
                         return;
                     } elseif ($value === 'yes') {
-                        $qb->andWhere('x.alternate = false');
+                        $qb->andWhere('pa.alternate = false');
                     } elseif ($value === 'no') {
-                        $qb->andWhere('x IS NULL OR x.alternate = true');
+                        $qb->andWhere('pa IS NULL OR pa.alternate = true');
                     }
                 })
                 ->setTranslateOptions();
@@ -161,9 +161,9 @@ class ProgramAttendeesGridControl extends Control
                     if ($value === '') {
                         return;
                     } elseif ($value === 'yes') {
-                        $qb->andWhere('x.alternate = true');
+                        $qb->andWhere('pa.alternate = true');
                     } elseif ($value === 'no') {
-                        $qb->andWhere('x IS NULL OR x.alternate = true');
+                        $qb->andWhere('pa IS NULL OR pa.alternate = true');
                     }
                 })
                 ->setTranslateOptions();
