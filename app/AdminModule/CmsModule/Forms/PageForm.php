@@ -14,6 +14,7 @@ use App\Model\Cms\ImageContent;
 use App\Model\Cms\Page;
 use App\Model\Cms\Repositories\PageRepository;
 use App\Model\Cms\Repositories\TagRepository;
+use App\Model\Cms\SlideshowContent;
 use App\Model\Cms\UsersContent;
 use App\Services\AclService;
 use App\Services\CmsService;
@@ -143,6 +144,9 @@ class PageForm extends UI\Control
                     $content->injectTagRepository($this->tagRepository);
                     break;
                 case ImageContent::class:
+                    $content->injectFilesService($this->filesService);
+                    break;
+                case SlideshowContent::class:
                     $content->injectFilesService($this->filesService);
                     break;
                 case UsersContent::class:

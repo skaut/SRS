@@ -37,7 +37,8 @@ use function ucwords;
  *     "blocks_content" = "BlocksContent",
  *     "capacities_content" = "CapacitiesContent",
  *     "organizer_content" = "OrganizerContent",
- *     "contact_form_content" = "ContactFormContent"
+ *     "contact_form_content" = "ContactFormContent",
+ *     "slideshow_content" = "SlideshowContent"
  * })
  *
  * @author Michal Májský
@@ -120,6 +121,10 @@ abstract class Content implements IContent
      */
     public const CONTACT_FORM = 'contact_form';
 
+    /**
+     * SlideshowContent
+     */
+    public const SLIDESHOW = 'slideshow';
 
     /**
      * Hlavní oblast stránky.
@@ -149,6 +154,7 @@ abstract class Content implements IContent
         self::BLOCKS,
         self::CAPACITIES,
         self::ORGANIZER,
+        self::SLIDESHOW,
     ];
 
     /** @var string[] */
