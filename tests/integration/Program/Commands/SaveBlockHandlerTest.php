@@ -457,6 +457,16 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         $this->assertEquals(1, $program2->getAlternatesCount());
 
         $blockOld = clone $block;
+        $block->setCapacity(null);
+        $block->setAlternatesAllowed(false);
+        $this->commandBus->handle(new SaveBlock($block, $blockOld));
+
+        $this->assertEquals(2, $program1->getAttendeesCount());
+        $this->assertEquals(0, $program1->getAlternatesCount());
+        $this->assertEquals(3, $program2->getAttendeesCount());
+        $this->assertEquals(0, $program2->getAlternatesCount());
+
+        $blockOld = clone $block;
         $block->setCapacity(1);
 
         $this->expectException(BlockCapacityInsufficientException::class);

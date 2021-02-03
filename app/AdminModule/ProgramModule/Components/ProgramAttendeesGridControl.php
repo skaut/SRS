@@ -18,10 +18,13 @@ use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
+use App\Model\User\Queries\UserRegisteredProgramAtQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
 use App\Services\ISettingsService;
+use App\Services\QueryBus;
+use App\Utils\Helpers;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Application\AbortException;
@@ -56,6 +59,8 @@ class ProgramAttendeesGridControl extends Control
 
     private CommandBus $commandBus;
 
+    private QueryBus $queryBus;
+
     private ISettingsService $settingsService;
 
     private EntityManagerInterface $em;
@@ -66,6 +71,7 @@ class ProgramAttendeesGridControl extends Control
         UserRepository $userRepository,
         Session $session,
         CommandBus $commandBus,
+        QueryBus $queryBus,
         ISettingsService $settingsService,
         EntityManagerInterface $em
     ) {
@@ -73,6 +79,7 @@ class ProgramAttendeesGridControl extends Control
         $this->programRepository = $programRepository;
         $this->userRepository    = $userRepository;
         $this->commandBus        = $commandBus;
+        $this->queryBus          = $queryBus;
         $this->settingsService   = $settingsService;
         $this->em                = $em;
 
@@ -114,7 +121,7 @@ class ProgramAttendeesGridControl extends Control
             $grid->setTranslator($this->translator);
 
             $qb = $this->userRepository->blockAllowedQuery($program->getBlock(), $registrationBeforePaymentAllowed)
-                ->leftJoin('u.programApplications', 'pa', 'WITH', 'pa.program = :program')
+                ->leftJoin('u.programApplications', 'x', 'WITH', 'x.program = :program')
                 ->setParameter('program', $program);
 
             $grid->setDataSource($qb);
@@ -125,7 +132,7 @@ class ProgramAttendeesGridControl extends Control
             $grid->addColumnText('displayName', 'admin.program.blocks.attendees.column.name')
                 ->setFilterText();
 
-            $grid->addColumnText('attends', 'admin.program.blocks.attendees.column.attends', 'pa')
+            $grid->addColumnText('attends', 'admin.program.blocks.attendees.column.attends')
                 ->setRenderer(function (User $user) {
                     return $user->isAttendee($this->program)
                         ? $this->translator->translate('admin.common.yes')
@@ -136,14 +143,14 @@ class ProgramAttendeesGridControl extends Control
                     if ($value === '') {
                         return;
                     } elseif ($value === 'yes') {
-                        $qb->andWhere('pa.alternate = false');
+                        $qb->andWhere('x.alternate = false');
                     } elseif ($value === 'no') {
-                        $qb->andWhere('pa IS NULL OR pa.alternate = true');
+                        $qb->andWhere('x IS NULL OR x.alternate = true');
                     }
                 })
                 ->setTranslateOptions();
 
-            $grid->addColumnText('alternates', 'admin.program.blocks.attendees.column.alternates', 'pa')
+            $grid->addColumnText('alternates', 'admin.program.blocks.attendees.column.alternates')
                 ->setRenderer(function (User $user) {
                     return $user->isAlternate($this->program)
                         ? $this->translator->translate('admin.common.yes')
@@ -154,12 +161,19 @@ class ProgramAttendeesGridControl extends Control
                     if ($value === '') {
                         return;
                     } elseif ($value === 'yes') {
-                        $qb->andWhere('pa.alternate = true');
+                        $qb->andWhere('x.alternate = true');
                     } elseif ($value === 'no') {
-                        $qb->andWhere('pa IS NULL OR pa.alternate = true');
+                        $qb->andWhere('x IS NULL OR x.alternate = true');
                     }
                 })
                 ->setTranslateOptions();
+
+            $grid->addColumnDateTime('registeredAt', 'admin.program.blocks.attendees.column.registered_at')
+                ->setRenderer(function (User $user) {
+                    $registeredAt = $this->queryBus->handle(new UserRegisteredProgramAtQuery($user, $this->program));
+
+                    return $registeredAt === null ? null : $registeredAt->format(Helpers::DATETIME_FORMAT);
+                });
 
             $grid->setDefaultFilter(['attends' => 'yes'], false);
 
