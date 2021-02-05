@@ -8,6 +8,8 @@ use Nette;
 use Nette\Http\FileUpload;
 use Nette\Utils\Image;
 use Nette\Utils\ImageException;
+use Nette\Utils\Random;
+use Nette\Utils\Strings;
 use Nette\Utils\UnknownImageFileException;
 
 use function dirname;
@@ -38,9 +40,19 @@ class FilesService
     /**
      * Uloží soubor.
      */
-    public function save(FileUpload $file, string $path): void
+    public function save(FileUpload $file, string $dir, bool $randSubDir, string $name): string
     {
+        $path = '/files/' . $dir;
+
+        if ($randSubDir) {
+            $path .= '/' . Random::generate(5);
+        }
+
+        $path .= '/' . Strings::webalize($name, '.');
+
         $file->move($this->dir . $path);
+
+        return $path;
     }
 
     /**
@@ -48,9 +60,9 @@ class FilesService
      */
     public function delete(string $path): void
     {
-        $file = $this->dir . $path;
-        if (file_exists($file)) {
-            unlink($file);
+        $absolutePath = $this->getAbsolutePath($path);
+        if (file_exists($absolutePath)) {
+            unlink($absolutePath);
         }
     }
 
@@ -59,16 +71,31 @@ class FilesService
      */
     public function create(string $path, string $content): void
     {
-        $absPath = $this->dir . $path;
-        $dirname = dirname($absPath);
+        $absolutePath = $this->getAbsolutePath($path);
+        $dirname = dirname($absolutePath);
 
         if (! is_dir($dirname)) {
             mkdir($dirname, 0755, true);
         }
 
-        $file = fopen($absPath, 'wb');
+        $file = fopen($absolutePath, 'wb');
         fwrite($file, $content);
         fclose($file);
+    }
+
+    /**
+     * Načte obrázek ze souboru.
+     *
+     * @throws UnknownImageFileException
+     */
+    public function openImage(string $path): ?Image {
+        $absolutePath = $this->getAbsolutePath($path);
+
+        if (file_exists($absolutePath)) {
+            return Image::fromFile($absolutePath);
+        }
+
+        return null;
     }
 
     /**
@@ -79,10 +106,12 @@ class FilesService
      */
     public function resizeImage(string $path, ?int $width, ?int $height): void
     {
-        $image = Image::fromFile($this->dir . $path);
+        $absolutePath = $this->getAbsolutePath($path);
+
+        $image = Image::fromFile($absolutePath);
         $image->resize($width, $height);
         $image->sharpen();
-        $image->save($this->dir . $path);
+        $image->save($absolutePath);
     }
 
     /**
@@ -93,7 +122,9 @@ class FilesService
      */
     public function resizeAndCropImage(string $path, ?int $width, ?int $height): void
     {
-        $image = Image::fromFile($this->dir . $path);
+        $absolutePath = $this->getAbsolutePath($path);
+
+        $image = Image::fromFile($absolutePath);
 
         if ($image->getWidth() / $width > $image->getHeight() / $height) {
             $image->resize(null, $height);
@@ -103,14 +134,14 @@ class FilesService
 
         $image->sharpen();
         $image->crop('50%', '50%', $width, $height);
-        $image->save($this->dir . $path);
+        $image->save($absolutePath);
     }
 
     /**
-     * Vrací cestu ke složce pro nahrávání souborů.
+     * Vrací celou cestu k souboru.
      */
-    public function getDir(): string
+    public function getAbsolutePath(string $path): string
     {
-        return $this->dir;
+        return $this->dir . $path;
     }
 }

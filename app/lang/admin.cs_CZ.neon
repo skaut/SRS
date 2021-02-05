@@ -93,6 +93,8 @@ cms:
     pages_content_text: "Text"
     pages_content_users_roles: "Zobrazované role"
     pages_content_organizer: "Pořadatel"
+    pages_content_slideshow_images: "Obrázky"
+    pages_content_slideshow_images_forma: "Obrázky musí být ve formátu JPG nebo PNG."
 
     news_heading: "Aktuality"
     news_published: "Zveřejnit"

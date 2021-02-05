@@ -155,19 +155,17 @@ class ImageContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
+        assert($formContainer instanceof Container);
 
-        $formContainer->addText('currentImage', 'admin.cms.pages_content_image_current_file')
-            ->setHtmlAttribute('data-type', 'image')
-            ->setHtmlAttribute('data-image', $this->image)
-            ->setHtmlAttribute('data-width', $this->width)
-            ->setHtmlAttribute('data-height', $this->height);
-
-        $formContainer->addUpload('image', 'admin.cms.pages_content_image_new_file')
+        $formContainer->addUpload('image', 'admin.cms.pages_content_image_image')
             ->setHtmlAttribute('accept', 'image/*')
+            ->setHtmlAttribute('data-show-preview', 'true')
+            ->setHtmlAttribute('data-initial-preview', '[' . ($this->image === null ? '' : '"' . $this->image . '"') . ']')
+            ->setHtmlAttribute('data-initial-preview-as-data', 'true')
+            ->setHtmlAttribute('data-initial-preview-show-delete', 'false')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::IMAGE, 'admin.cms.pages_content_image_new_file_format');
+            ->addRule(Form::IMAGE, 'admin.cms.pages_content_image_image_format');
 
         $formContainer->addSelect('align', 'admin.cms.pages_content_image_align', $this->prepareAlignOptions());
 
@@ -204,30 +202,23 @@ class ImageContent extends Content implements IContent
 
         $formName = $this->getContentFormName();
         $values   = $values->$formName;
-        /** @var FileUpload $file */
-        $file   = $values->image;
+
+        $file = $values->image;
+        assert($file instanceof FileUpload);
+
         $width  = $values->width !== '' ? $values->width : null;
         $height = $values->height !== '' ? $values->height : null;
 
         $image = null;
 
-        $exists = false;
-
         if ($file->getError() == UPLOAD_ERR_OK) {
-            $path        = $this->generatePath($file);
-            $this->image = $path;
-            $this->filesService->save($file, $path);
-            $image  = $file->toImage();
-            $exists = true;
+            $this->image = $this->filesService->save($file, 'images', true, $file->name);
+            $image       = $file->toImage();
         } elseif ($this->image) {
-            $path   = $this->filesService->getDir() . $this->image;
-            $exists = file_exists($path);
-            if ($exists) {
-                $image = Image::fromFile($path);
-            }
+            $image = $this->filesService->openImage($this->image);
         }
 
-        if ($exists) {
+        if ($image !== null) {
             if ($width && $height) {
                 $this->width  = $width;
                 $this->height = $height;
@@ -262,14 +253,6 @@ class ImageContent extends Content implements IContent
         }
 
         return $options;
-    }
-
-    /**
-     * Vygeneruje cestu pro uložení obrázku.
-     */
-    private function generatePath(FileUpload $file): string
-    {
-        return '/images/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }
 
     public function convertToDto(): ContentDto

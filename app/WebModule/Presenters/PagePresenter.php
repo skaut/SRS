@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
 
+use App\Model\Cms\SlideshowContent;
 use App\WebModule\Components\ApplicationContentControl;
 use App\WebModule\Components\BlocksContentControl;
 use App\WebModule\Components\CapacitiesContentControl;
@@ -89,6 +90,9 @@ class PagePresenter extends WebBasePresenter
 
     /** @inject */
     public IContactFormContentControlFactory $contactFormContentFactory;
+
+    /** @inject */
+    public ISlideshowContentControlFactory $slideshowContentFactory;
 
     /**
      * @throws BadRequestException
@@ -197,5 +201,10 @@ class PagePresenter extends WebBasePresenter
     protected function createComponentContactFormContent(): ContactFormContentControl
     {
         return $this->contactFormContentFactory->create();
+    }
+
+    protected function createComponentSlideshowContent(): SlideshowContentControl
+    {
+        return $this->slideshowContentFactory->create();
     }
 }

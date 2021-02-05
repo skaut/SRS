@@ -5,21 +5,17 @@ declare(strict_types=1);
 namespace App\Model\Cms;
 
 use App\Model\Cms\Dto\ContentDto;
-use App\Model\Cms\Dto\ImageContentDto;
 use App\Model\Cms\Dto\SlideshowContentDto;
 use App\Services\FilesService;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Http\FileUpload;
-use Nette\Utils\Image;
 use Nette\Utils\ImageException;
-use Nette\Utils\Random;
-use Nette\Utils\Strings;
 use Nette\Utils\UnknownImageFileException;
-use phpDocumentor\Reflection\Types\Array_;
 use stdClass;
 
+use Tracy\Debugger;
 use function file_exists;
 
 use const UPLOAD_ERR_OK;
@@ -34,7 +30,7 @@ use const UPLOAD_ERR_OK;
  */
 class SlideshowContent extends Content implements IContent
 {
-    protected string $type = Content::IMAGE;
+    protected string $type = Content::SLIDESHOW;
 
     /**
      * Adresy obrázků.
@@ -69,24 +65,19 @@ class SlideshowContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
+        assert($formContainer instanceof Container);
 
-//        $formContainer->addText('currentImage', 'admin.cms.pages_content_image_current_file')
-//            ->setHtmlAttribute('data-type', 'image')
-//            ->setHtmlAttribute('data-image', $this->image);
+        $initialPreview = '[' . join(', ', array_map(fn($i) => '"' . $i . '"', $this->images)) . ']';
 
-        $formContainer->addMultiUpload('image', 'admin.cms.pages_content_image_new_file')
-//            ->setHtmlAttribute('accept', 'image/*')
-            ->setHtmlAttribute('data-show-preview', 'true');
-//            ->addCondition(Form::FILLED)
-//            ->addRule(Form::IMAGE, 'admin.cms.pages_content_image_new_file_format');
-
-//        $formContainer->setDefaults([
-//            'align' => $this->align,
-//            'width' => $this->width,
-//            'height' => $this->height,
-//        ]);
+        $formContainer->addMultiUpload('images', 'admin.cms.pages_content_slideshow_images')
+            ->setHtmlAttribute('accept', 'image/*')
+            ->setHtmlAttribute('data-show-preview', 'true')
+            ->setHtmlAttribute('data-initial-preview', $initialPreview)
+            ->setHtmlAttribute('data-initial-preview-as-data', 'true')
+            ->setHtmlAttribute('data-initial-preview-show-delete', 'false')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::IMAGE, 'admin.cms.pages_content_slideshow_images_format');
 
         return $form;
     }
@@ -101,60 +92,23 @@ class SlideshowContent extends Content implements IContent
     {
         parent::contentFormSucceeded($form, $values);
 
-        $this->images = ['aa'];
-//        $formName = $this->getContentFormName();
-//        $values   = $values->$formName;
-//        /** @var FileUpload $file */
-//        $file   = $values->image;
-//        $width  = $values->width !== '' ? $values->width : null;
-//        $height = $values->height !== '' ? $values->height : null;
-//
-//        $image = null;
-//
-//        $exists = false;
-//
-//        if ($file->getError() == UPLOAD_ERR_OK) {
-//            $path        = $this->generatePath($file);
-//            $this->image = $path;
-//            $this->filesService->save($file, $path);
-//            $image  = $file->toImage();
-//            $exists = true;
-//        } elseif ($this->image) {
-//            $path   = $this->filesService->getDir() . $this->image;
-//            $exists = file_exists($path);
-//            if ($exists) {
-//                $image = Image::fromFile($path);
-//            }
-//        }
-//
-//        if ($exists) {
-//            if ($width && $height) {
-//                $this->width  = $width;
-//                $this->height = $height;
-//            } elseif (! $width && ! $height) {
-//                $this->width  = $image->getWidth();
-//                $this->height = $image->getHeight();
-//            } elseif ($width) {
-//                $this->width  = $width;
-//                $this->height = (int) ($image->getHeight() * $width / $image->getWidth());
-//            } else {
-//                $this->width  = (int) ($image->getWidth() * $height / $image->getHeight());
-//                $this->height = $height;
-//            }
-//        } else {
-//            $this->width  = $width;
-//            $this->height = $height;
-//        }
-//
-//        $this->align = $values->align;
-    }
+        $formName = $this->getContentFormName();
+        $values   = $values->$formName;
 
-    /**
-     * Vygeneruje cestu pro uložení obrázku.
-     */
-    private function generatePath(FileUpload $file): string
-    {
-        return '/images/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
+        if (! empty($values->images)) {
+            foreach ($this->images as $image) {
+                $this->filesService->delete($image);
+            }
+
+            $this->images = [];
+
+            foreach ($values->images as $image) {
+                assert($image instanceof FileUpload);
+                if ($image->getError() == UPLOAD_ERR_OK) {
+                    $this->images[] = $this->filesService->save($image, 'images', true, $image->name);
+                }
+            }
+        }
     }
 
     public function convertToDto(): ContentDto
