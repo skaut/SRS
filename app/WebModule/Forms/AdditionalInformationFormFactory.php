@@ -33,11 +33,9 @@ use App\Services\ISettingsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
-use Nette\Application\UI;
+use Nette;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
-use Nette\Utils\Random;
-use Nette\Utils\Strings;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
@@ -58,19 +56,14 @@ use const UPLOAD_ERR_OK;
  * @author Jan Staněk <jan.stanek@skaut.cz>
  * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
-class AdditionalInformationForm extends UI\Control
+class AdditionalInformationFormFactory
 {
+    use Nette\SmartObject;
+
     /**
      * Přihlášený uživatel.
      */
     private ?User $user = null;
-
-    /**
-     * Událost při uložení formuláře.
-     *
-     * @var callable[]
-     */
-    public array $onSave = [];
 
     private BaseFormFactory $baseFormFactory;
 
@@ -113,23 +106,14 @@ class AdditionalInformationForm extends UI\Control
     }
 
     /**
-     * Vykreslí komponentu.
-     */
-    public function render(): void
-    {
-        $this->template->setFile(__DIR__ . '/templates/additional_information_form.latte');
-        $this->template->render();
-    }
-
-    /**
      * Vytvoří formulář.
      *
      * @throws SettingsException
      * @throws Throwable
      */
-    public function createComponentForm(): Form
+    public function create(int $userId): Form
     {
-        $this->user                = $this->userRepository->findById($this->presenter->user->getId());
+        $this->user = $this->userRepository->findById($userId);
         $isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
 
         $form = $this->baseFormFactory->create();
@@ -186,12 +170,14 @@ class AdditionalInformationForm extends UI\Control
 
                 case $customInput instanceof CustomFile:
                     $custom = $form->addUpload($customInputId, $customInput->getName());
+                    $custom->setHtmlAttribute('data-show-preview', 'true')
+                        ->setHtmlAttribute('data-initial-preview-file-type', 'other');
 
-                    /** @var ?CustomFileValue $customInputValue */
                     $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue && $customInputValue->getValue()) {
-                        $custom->setHtmlAttribute('data-current-file-link', $customInputValue->getValue())
-                            ->setHtmlAttribute('data-current-file-name', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]);
+                    if ($customInputValue) {
+                        assert($customInputValue instanceof CustomFileValue);
+                        $custom->setHtmlAttribute('data-initial-preview', '["' . $customInputValue->getValue() . '"]')
+                            ->setHtmlAttribute('data-initial-preview-download-url', $customInputValue->getValue());
                     }
 
                     break;
@@ -288,8 +274,7 @@ class AdditionalInformationForm extends UI\Control
                         /** @var FileUpload $newValue */
                         $newValue = $values->$customInputId;
                         if ($newValue->getError() == UPLOAD_ERR_OK) {
-                            $path = $this->generatePath($newValue);
-                            $this->filesService->save($newValue, $path);
+                            $path = $this->filesService->save($newValue, CustomFile::PATH, true, $newValue->name);
                             $customInputValue->setValue($path);
                         }
                     } elseif ($customInput instanceof CustomDate) {
@@ -324,15 +309,5 @@ class AdditionalInformationForm extends UI\Control
                 ]);
             }
         });
-
-        $this->onSave($this);
-    }
-
-    /**
-     * Vygeneruje cestu souboru.
-     */
-    private function generatePath(FileUpload $file): string
-    {
-        return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }
 }

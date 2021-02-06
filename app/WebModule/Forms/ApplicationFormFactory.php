@@ -299,8 +299,7 @@ class ApplicationFormFactory
                     /** @var FileUpload $file */
                     $file = $values->$customInputId;
                     if ($file->getError() == UPLOAD_ERR_OK) {
-                        $path = $this->generatePath($file);
-                        $this->filesService->save($file, $path);
+                        $path = $this->filesService->save($file, CustomFile::PATH, true, $file->name);
                         $customInputValue->setValue($path);
                     }
                 } elseif ($customInput instanceof CustomDate) {
@@ -377,6 +376,7 @@ class ApplicationFormFactory
 
                 case $customInput instanceof CustomFile:
                     $custom = $form->addUpload($customInputId, $customInputName);
+                    $custom->setHtmlAttribute('data-show-preview', 'true');
                     break;
 
                 case $customInput instanceof CustomDate:
@@ -653,13 +653,5 @@ class ApplicationFormFactory
     public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles): bool
     {
         return false;
-    }
-
-    /**
-     * Vygeneruje cestu souboru.
-     */
-    private function generatePath(FileUpload $file): string
-    {
-        return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }
 }

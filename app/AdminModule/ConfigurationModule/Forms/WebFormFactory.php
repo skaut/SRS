@@ -71,8 +71,6 @@ class WebFormFactory
             ->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
             ->setHtmlAttribute('data-initial-preview', '["' . $logo . '"]')
-            ->setHtmlAttribute('data-initial-preview-as-data', 'true')
-            ->setHtmlAttribute('data-initial-preview-show-delete', 'false')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.configuration.web_logo_format');
 

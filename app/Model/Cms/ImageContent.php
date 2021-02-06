@@ -159,8 +159,6 @@ class ImageContent extends Content implements IContent
             ->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
             ->setHtmlAttribute('data-initial-preview', '[' . ($this->image === null ? '' : '"' . $this->image . '"') . ']')
-            ->setHtmlAttribute('data-initial-preview-as-data', 'true')
-            ->setHtmlAttribute('data-initial-preview-show-delete', 'false')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.cms.pages.content.form.image_format');
 

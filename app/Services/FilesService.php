@@ -38,19 +38,14 @@ class FilesService
     }
 
     /**
-     * Uloží soubor.
+     * Uloží soubor z formuláře.
      */
-    public function save(FileUpload $file, string $dir, bool $randSubDir, string $name): string
+    public function save(FileUpload $file, string $directory, bool $randomSubDir, string $fileName): string
     {
-        $path = '/files/' . $dir;
+        $path = $this->generatePath($directory, $randomSubDir, $fileName);
+        $absolutePath = $this->getAbsolutePath($path);
 
-        if ($randSubDir) {
-            $path .= '/' . Random::generate(5);
-        }
-
-        $path .= '/' . Strings::webalize($name, '.');
-
-        $file->move($this->dir . $path);
+        $file->move($absolutePath);
 
         return $path;
     }
@@ -67,20 +62,18 @@ class FilesService
     }
 
     /**
-     * Vytvoří soubor s daným obsahem.
+     * Zapíše obsah do souboru.
      */
-    public function create(string $path, string $content): void
+    public function create(string $content, string $directory, bool $randomSubDir, string $fileName): string
     {
+        $path = $this->generatePath($directory, $randomSubDir, $fileName);
         $absolutePath = $this->getAbsolutePath($path);
-        $dirname      = dirname($absolutePath);
-
-        if (! is_dir($dirname)) {
-            mkdir($dirname, 0755, true);
-        }
 
         $file = fopen($absolutePath, 'wb');
         fwrite($file, $content);
         fclose($file);
+
+        return $path;
     }
 
     /**
@@ -141,8 +134,22 @@ class FilesService
     /**
      * Vrací celou cestu k souboru.
      */
-    public function getAbsolutePath(string $path): string
+    private function getAbsolutePath(string $path): string
     {
         return $this->dir . $path;
+    }
+
+    /**
+     * Vygeneruje relativní cestu.
+     */
+    private function generatePath(string $directory, bool $randomSubDir, string $fileName): string
+    {
+        $path = '/files/' . $directory;
+
+        if ($randomSubDir) {
+            $path .= '/' . Random::generate(5);
+        }
+
+        return $path . '/' . Strings::webalize($fileName, '.');
     }
 }

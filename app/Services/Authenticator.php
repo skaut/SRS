@@ -137,9 +137,8 @@ class Authenticator implements IAuthenticator
             $photo = $this->skautIsService->getPersonPhoto($skautISUser->ID_Person, 'normal');
             if ($photo->ID_PersonPhotoNormal) {
                 $fileName = $photo->ID . $photo->PhotoExtension;
-                $path     = User::PHOTO_PATH . '/' . $fileName;
-                $this->filesService->create($path, $photo->PhotoNormalContent);
-                $user->setPhoto($fileName);
+                $path = $this->filesService->create($photo->PhotoNormalContent, User::PHOTO_PATH, false, $fileName);
+                $user->setPhoto($path);
             } else {
                 $user->setPhoto(null);
             }

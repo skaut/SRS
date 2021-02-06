@@ -75,9 +75,4 @@ class PagesPresenter extends CmsBasePresenter
 
         return $control;
     }
-
-    public function handleDelete(string $file): void
-    {
-        $this->redirect('this');
-    }
 }

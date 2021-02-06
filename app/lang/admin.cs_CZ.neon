@@ -383,8 +383,6 @@ users:
     users_heading: "Uživatelé"
     users_name: "Jméno"
     users_photo: "Fotka"
-    users_new_photo: "Nová fotka"
-    users_remove_photo: "odstranit fotku"
     users_photo_format: "Fotka musí být ve formátu JPG, PNG nebo GIF."
     users_username: "Uživatelské jméno"
     users_firstname: "Jméno"

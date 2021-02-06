@@ -10,14 +10,12 @@ use App\Services\FilesService;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Http\FileUpload;
 use Nette\Utils\ImageException;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 
 use function getimagesizefromstring;
 use function image_type_to_extension;
-use function property_exists;
 
 use const UPLOAD_ERR_OK;
 
@@ -59,18 +57,18 @@ class EditUserPersonalDetailsFormFactory
 
         $form->addHidden('id');
 
-        $form->addUpload('newPhoto', 'admin.users.users_new_photo')
-            ->setHtmlAttribute('accept', 'image/*')
-            ->setOption('id', 'new-photo')
+        $photoUpload = $form->addUpload('photo', 'admin.users.users_photo');
+        $photoUpload->setHtmlAttribute('accept', 'image/*')
+            ->setHtmlAttribute('data-show-preview', 'true')
+            ->setHtmlAttribute('data-show-remove', 'true') //todo
+            ->setOption('id', 'photo')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.users.users_photo_format')
             ->toggle('remove-photo', false);
 
-        $form->addCheckbox('removePhoto', 'admin.users.users_remove_photo')
-            ->setOption('id', 'remove-photo')
-            ->setDisabled($this->user->getPhoto() === null)
-            ->addCondition(Form::FILLED)
-            ->toggle('new-photo', false);
+        if ($this->user->getPhoto() !== null) {
+            $photoUpload->setHtmlAttribute('data-initial-preview', '["' . $this->user->getPhoto() . '"]');
+        }
 
         $form->addText('firstName', 'admin.users.users_firstname')
             ->addRule(Form::FILLED, 'admin.users.users_firstname_empty');
@@ -150,20 +148,15 @@ class EditUserPersonalDetailsFormFactory
         $this->user->setCity($values->city);
         $this->user->setPostcode($values->postcode);
 
-        if (property_exists($values, 'removePhoto') && $values->removePhoto) {
-            $this->user->setPhoto(null);
-        } elseif (property_exists($values, 'newPhoto')) {
-            /** @var FileUpload $photo */
-            $photo = $values->newPhoto;
-            if ($photo->getError() == UPLOAD_ERR_OK) {
-                $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
-                $photoName      = 'ext_' . $this->user->getId() . $photoExtension;
+        $photo = $values->photo;
+        if ($photo->getError() == UPLOAD_ERR_OK) {
+            $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
+            $photoName      = 'ext_' . $this->user->getId() . $photoExtension;
 
-                $this->filesService->save($photo, User::PHOTO_PATH . '/' . $photoName);
-                $this->filesService->resizeAndCropImage(User::PHOTO_PATH . '/' . $photoName, 135, 180);
+            $path = $this->filesService->save($photo, User::PHOTO_PATH, false, $photoName);
+            $this->filesService->resizeAndCropImage($path, 135, 180);
 
-                $this->user->setPhoto($photoName);
-            }
+            $this->user->setPhoto($path);
         }
 
         $this->userRepository->save($this->user);
