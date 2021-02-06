@@ -70,14 +70,14 @@ class SlideshowContent extends Content implements IContent
 
         $initialPreview = '[' . join(', ', array_map(fn($i) => '"' . $i . '"', $this->images)) . ']';
 
-        $formContainer->addMultiUpload('images', 'admin.cms.pages_content_slideshow_images')
+        $formContainer->addMultiUpload('images', 'admin.cms.pages.content.form.slideshow_images')
             ->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
             ->setHtmlAttribute('data-initial-preview', $initialPreview)
             ->setHtmlAttribute('data-initial-preview-as-data', 'true')
             ->setHtmlAttribute('data-initial-preview-show-delete', 'false')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::IMAGE, 'admin.cms.pages_content_slideshow_images_format');
+            ->addRule(Form::IMAGE, 'admin.cms.pages.content.form.slideshow_images_format');
 
         return $form;
     }

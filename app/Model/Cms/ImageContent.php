@@ -158,24 +158,24 @@ class ImageContent extends Content implements IContent
         $formContainer = $form[$this->getContentFormName()];
         assert($formContainer instanceof Container);
 
-        $formContainer->addUpload('image', 'admin.cms.pages_content_image_image')
+        $formContainer->addUpload('image', 'admin.cms.pages.content.form.image')
             ->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
             ->setHtmlAttribute('data-initial-preview', '[' . ($this->image === null ? '' : '"' . $this->image . '"') . ']')
             ->setHtmlAttribute('data-initial-preview-as-data', 'true')
             ->setHtmlAttribute('data-initial-preview-show-delete', 'false')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::IMAGE, 'admin.cms.pages_content_image_image_format');
+            ->addRule(Form::IMAGE, 'admin.cms.pages.content.form.image_format');
 
-        $formContainer->addSelect('align', 'admin.cms.pages_content_image_align', $this->prepareAlignOptions());
+        $formContainer->addSelect('align', 'admin.cms.pages.content.form.image_align', $this->prepareAlignOptions());
 
-        $formContainer->addText('width', 'admin.cms.pages_content_image_width')
+        $formContainer->addText('width', 'admin.cms.pages.content.form.image_width')
             ->setHtmlAttribute('data-toggle', 'tooltip')
             ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))
             ->addCondition(Form::FILLED)->addRule(Form::INTEGER, 'admin.cms.pages_content_image_width_format');
 
-        $formContainer->addText('height', 'admin.cms.pages_content_image_height')
+        $formContainer->addText('height', 'admin.cms.pages.content.form.image_height')
             ->setHtmlAttribute('data-toggle', 'tooltip')
             ->setHtmlAttribute('data-placement', 'bottom')
             ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_image_size_note'))

@@ -18,7 +18,7 @@
 
                 {if $c instanceof Nette\Forms\Controls\UploadControl && array_key_exists('data-current-file-link', $c->control->attrs)}
                     <div class="col-md-9 mb-3">
-                        <a href="{$basePath}/files{$c->control->attrs['data-current-file-link']}" target="_blank" class="btn btn-secondary">
+                        <a href="{$basePath}{$c->control->attrs['data-current-file-link']}" target="_blank" class="btn btn-secondary">
                             <span class="fa fa-download"></span> {$c->control->attrs['data-current-file-name']}
                         </a>
                     </div>

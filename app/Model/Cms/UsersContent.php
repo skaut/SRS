@@ -92,7 +92,7 @@ class UsersContent extends Content implements IContent
         $formContainer = $form[$this->getContentFormName()];
         $formContainer->addMultiSelect(
             'roles',
-            'admin.cms.pages_content_users_roles',
+            'admin.cms.pages.content.form.users_roles',
             $this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
         )
             ->setDefaultValue($this->roleRepository->findRolesIds($this->roles));

@@ -50,7 +50,7 @@ class HtmlContent extends Content implements IContent
 
         /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
-        $formContainer->addTextArea('text', 'admin.cms.pages_content_html')
+        $formContainer->addTextArea('text', 'admin.cms.pages.content.form.html')
             ->setDefaultValue($this->text)
             ->setHtmlAttribute('rows', 5);
 

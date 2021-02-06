@@ -71,11 +71,11 @@ class DocumentTagsGridControl extends Control
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(false);
 
-        $grid->addColumnText('name', 'admin.cms.tags_name');
+        $grid->addColumnText('name', 'admin.cms.documents.tags.column.name');
 
-        $grid->addColumnText('roles', 'admin.cms.tags_roles', 'rolesText')
+        $grid->addColumnText('roles', 'admin.cms.documents.tags.column.roles', 'rolesText')
             ->setRendererOnCondition(function () {
-                return $this->translator->translate('admin.cms.tags_roles_all');
+                return $this->translator->translate('admin.cms.documents.tags.column.roles_all');
             }, function (Tag $tag) {
                 return count($this->roleRepository->findAll()) === $tag->getRoles()->count();
             });
@@ -84,24 +84,24 @@ class DocumentTagsGridControl extends Control
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container) use ($rolesOptions): void {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.cms.tags_name_empty')
-                ->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findAllNames());
+                ->addRule(Form::FILLED, 'admin.cms.documents.tags.column.name_empty')
+                ->addRule(Form::IS_NOT_IN, 'admin.cms.documents.tags.column.name_exists', $this->tagRepository->findAllNames());
             $container->addMultiSelect('roles', '', $rolesOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
                 ->setDefaultValue(array_keys($rolesOptions))
-                ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
+                ->addRule(Form::FILLED, 'admin.cms.documents.tags.column.roles_empty');
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($rolesOptions): void {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.cms.tags_name_empty');
+                ->addRule(Form::FILLED, 'admin.cms.documents.tags.column.name_empty');
             $container->addMultiSelect('roles', '', $rolesOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.cms.tags_roles_empty');
+                ->addRule(Form::FILLED, 'admin.cms.documents.tags.column.roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Tag $item): void {
             /** @var TextInput $nameText */
             $nameText = $container['name'];
-            $nameText->addRule(Form::IS_NOT_IN, 'admin.cms.tags_name_exists', $this->tagRepository->findOthersNames($item->getId()));
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.cms.documents.tags.column.name_exists', $this->tagRepository->findOthersNames($item->getId()));
 
             $container->setDefaults([
                 'name' => $item->getName(),
@@ -116,7 +116,7 @@ class DocumentTagsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.cms.tags_delete_confirm'),
+                'data-content' => $this->translator->translate('admin.cms.documents.tags.action.delete_confirm'),
             ]);
     }
 
@@ -135,7 +135,7 @@ class DocumentTagsGridControl extends Control
 
         $this->tagRepository->save($tag);
 
-        $this->getPresenter()->flashMessage('admin.cms.tags_saved', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.documents.tags.message.save_success', 'success');
 
         $this->redirect('this');
     }
@@ -155,7 +155,7 @@ class DocumentTagsGridControl extends Control
 
         $this->tagRepository->save($tag);
 
-        $this->getPresenter()->flashMessage('admin.cms.tags_saved', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.documents.tags.message.save_success', 'success');
 
         $this->redirect('this');
     }
@@ -171,7 +171,7 @@ class DocumentTagsGridControl extends Control
         $tag = $this->tagRepository->findById($id);
         $this->tagRepository->remove($tag);
 
-        $this->getPresenter()->flashMessage('admin.cms.tags_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.documents.tags.message.delete_success', 'success');
 
         $this->redirect('this');
     }

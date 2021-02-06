@@ -50,7 +50,7 @@ class TextContent extends Content implements IContent
 
         /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
-        $formContainer->addTextArea('text', 'admin.cms.pages_content_text')
+        $formContainer->addTextArea('text', 'admin.cms.pages.content.form.text')
             ->setDefaultValue($this->text)
             ->setHtmlAttribute('class', 'tinymce');
 

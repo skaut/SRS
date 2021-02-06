@@ -92,7 +92,7 @@ class CapacitiesContent extends Content implements IContent
         $formContainer = $form[$this->getContentFormName()];
         $formContainer->addMultiSelect(
             'roles',
-            'admin.cms.pages_content_capacities_roles',
+            'admin.cms.pages.content.form.capacities_roles',
             $this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
         )
             ->setDefaultValue($this->roleRepository->findRolesIds($this->roles));

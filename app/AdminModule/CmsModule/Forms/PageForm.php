@@ -19,14 +19,12 @@ use App\Model\Cms\UsersContent;
 use App\Services\AclService;
 use App\Services\CmsService;
 use App\Services\FilesService;
-use Codeception\Util\Debug;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
 
-use Tracy\Debugger;
 use function get_class;
 use function str_replace;
 use function ucwords;
@@ -134,7 +132,7 @@ class PageForm extends UI\Control
 
         $form->addHidden('id')->setDefaultValue($this->page->getId());
         $form->addHidden('area')->setDefaultValue($this->area);
-        $form->addSelect('type', 'admin.cms.pages_content_type', $this->prepareContentTypesOptions());
+        $form->addSelect('type', 'admin.cms.pages.content.form.type', $this->prepareContentTypesOptions());
 
         foreach ($this->page->getContents($this->area) as $content) {
             switch (get_class($content)) {

@@ -9,7 +9,7 @@
             {if !$editPersonalDetails}
                 <div class="form-group row" n:if="$detailUser->getPhoto()">
                     <div class="col-3">{_admin.users.users_photo}</div>
-                    <div class="col-9"><img src="{$basePath}/files/user_photos/{$detailUser->getPhoto()}"/></div>
+                    <div class="col-9"><img src="{$basePath}{$detailUser->getPhoto()}"/></div>
                 </div>
 
                 <div class="form-group row" n:if="!$detailUser->isExternalLector()">
@@ -119,7 +119,7 @@
                                             {_admin.common.no}
                                         {/if}
                                     {case $customInputTypeFile}
-                                        <a href="{$basePath}/files{$customInputValue->getValue()}" target="_blank" n:if="$customInputValue->getValue() !== null">
+                                        <a href="{$basePath}{$customInputValue->getValue()}" target="_blank" n:if="$customInputValue->getValue() !== null">
                                             {array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0]}
                                         </a>
                                     {default}

@@ -32,7 +32,7 @@
                             <div v-for="lector in selectedEventInfo.event.extendedProps.block.lectors">
                                 <b>{{ lector.name }}</b>
                                 <p>
-                                    <img :src="basePath + '/files/user_photos/' + lector.photo" v-if="lector.photo" class="pull-left mr-3 mb-3"/>
+                                    <img :src="basePath + lector.photo" v-if="lector.photo" class="pull-left mr-3 mb-3"/>
                                     {{ lector.about }}
                                 </p>
                                 <div class="clearfix"></div>

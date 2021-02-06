@@ -49,7 +49,7 @@ class OrganizerContent extends Content implements IContent
 
         /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
-        $formContainer->addText('organizer', 'admin.cms.pages_content_organizer')
+        $formContainer->addText('organizer', 'admin.cms.pages.content.form.organizer')
             ->setDefaultValue($this->organizer);
 
         return $form;

@@ -357,8 +357,7 @@ class UsersGridControl extends Control
                             case $customInputValue instanceof CustomFileValue:
                                 return $customInputValue->getValue()
                                     ? Html::el('a')
-                                        ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath
-                                            . '/files' . $customInputValue->getValue())
+                                        ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath . $customInputValue->getValue())
                                         ->setAttribute('title', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0])
                                         ->setAttribute('target', '_blank')
                                         ->setAttribute('class', 'btn btn-xs btn-secondary')

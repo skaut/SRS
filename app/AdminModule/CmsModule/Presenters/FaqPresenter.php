@@ -46,7 +46,7 @@ class FaqPresenter extends CmsBasePresenter
                 $this->redirect('Faq:default');
             }
 
-            $this->flashMessage('admin.cms.faq_saved', 'success');
+            $this->flashMessage('admin.cms.faq.message.save_success', 'success');
 
             if ($form->isSubmitted() === $form['submitAndContinue']) {
                 $id = $values->id ?: $this->faqRepository->findLastId(); // todo: nahradit

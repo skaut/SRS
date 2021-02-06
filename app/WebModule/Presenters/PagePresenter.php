@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\WebModule\Presenters;
 
-use App\Model\Cms\SlideshowContent;
 use App\WebModule\Components\ApplicationContentControl;
 use App\WebModule\Components\BlocksContentControl;
 use App\WebModule\Components\CapacitiesContentControl;
@@ -26,6 +25,7 @@ use App\WebModule\Components\INewsContentControlFactory;
 use App\WebModule\Components\IOrganizerContentControlFactory;
 use App\WebModule\Components\IPlaceContentControlFactory;
 use App\WebModule\Components\IProgramsContentControlFactory;
+use App\WebModule\Components\ISlideshowContentControlFactory;
 use App\WebModule\Components\ITextContentControlFactory;
 use App\WebModule\Components\IUsersContentControlFactory;
 use App\WebModule\Components\LectorsContentControl;
@@ -33,6 +33,7 @@ use App\WebModule\Components\NewsContentControl;
 use App\WebModule\Components\OrganizerContentControl;
 use App\WebModule\Components\PlaceContentControl;
 use App\WebModule\Components\ProgramsContentControl;
+use App\WebModule\Components\SlideshowContentControl;
 use App\WebModule\Components\TextContentControl;
 use App\WebModule\Components\UsersContentControl;
 use Nette\Application\BadRequestException;

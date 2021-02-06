@@ -272,7 +272,7 @@ abstract class Content implements IContent
         $formContainer->addHidden('delete')
             ->setHtmlAttribute('class', 'delete');
 
-        $formContainer->addText('heading', 'admin.cms.pages_content_heading');
+        $formContainer->addText('heading', 'admin.cms.pages.content.form.heading');
 
         $formContainer->setDefaults([
             'id' => $this->id,

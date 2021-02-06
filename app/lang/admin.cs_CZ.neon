@@ -44,116 +44,165 @@ menu:
     help: "Nápověda"
 
 cms:
-    menu_pages: "Stránky"
-    menu_news: "Aktuality"
-    menu_documents: "Dokumenty"
-    menu_faq: "FAQ"
+    menu:
+        pages: "Stránky"
+        news: "Aktuality"
+        documents: "Dokumenty"
+        faq: "FAQ"
 
-    pages_heading: "Stránky"
-    pages_name: "Název"
-    pages_name_empty: "Zadejte název."
-    pages_slug: "Cesta"
-    pages_slug_empty: "Zadejte cestu."
-    pages_slug_format: "Cesta může obsahovat pouze malá písmena, číslice a \"-\"."
-    pages_slug_exists: "Stránka s touto cestou již existuje."
-    pages_public: "Viditelnost"
-    pages_public_public: "Viditelná"
-    pages_public_private: "Skrytá"
-    pages_public_form: "viditelná"
-    pages_roles: "Viditelná pro role"
-    pages_roles_empty: "Vyberte alespoň jednu roli."
-    pages_roles_all: "Všechny role"
-    pages_edit_content: "Upravit obsah"
-    pages_saved: "Stránka byla úspěšně uložena."
-    pages_delete_confirm: "Opravdu chcete stránku odstranit?"
-    pages_deleted: "Stránka byla úspěšně odstraněna."
-    pages_order_saved: "Pořadí stránek bylo úspěšně upraveno."
-    pages_changed_public: "Viditelnost stránky byla úspěšně změněna."
-    pages_change_public_denied: "Úvodní stránka nemůže být skryta."
-    pages_edit_heading: "Úprava obsahu stránky: %name%"
-    pages_content_type: "Typ obsahu"
-    pages_content_heading: "Nadpis"
-    pages_content_saved: "Stránka byla úspěšně uložena."
-    pages_content_save_error: "Při ukládání stránky došlo k chybě."
-    pages_content_capacities_roles: "Zobrazované role"
-    pages_content_tags: "Zobrazované kategorie"
-    pages_content_html: "HTML"
-    pages_content_image_current_file: "Stávající obrázek"
-    pages_content_image_new_file: "Nový obrázek"
-    pages_content_image_new_file_format: "Obrázek musí být ve formátu JPG, PNG nebo GIF."
-    pages_content_image_align: "Zarovnání"
-    pages_content_image_width: "Šířka"
-    pages_content_image_width_format: "Zadejte číslo."
-    pages_content_image_height: "Výška"
-    pages_content_image_height_format: "Zadejte číslo."
-    pages_content_image_size_note: "Pokud zadáte jeden rozměr, druhý bude vypočten automaticky. Pokud nezadáte žádný, použije se velikost obrázku."
-    pages_content_news_count: "Zobrazovaný počet"
-    pages_content_news_count_format: "Zadejte číslo."
-    pages_content_news_count_note: "Pokud necháte počet prázdný, zobrazí se všechny aktuality."
-    pages_content_text: "Text"
-    pages_content_users_roles: "Zobrazované role"
-    pages_content_organizer: "Pořadatel"
-    pages_content_slideshow_images: "Obrázky"
-    pages_content_slideshow_images_forma: "Obrázky musí být ve formátu JPG nebo PNG."
+    pages:
+        heading: "Stránky"
 
-    news_heading: "Aktuality"
-    news_published: "Zveřejnit"
-    news_published_empty: "Zadejte čas zveřejnění."
-    news_pinned: "Připnutí nahoru"
-    news_pinned_unpinned: "Nepřipnutá"
-    news_pinned_pinned: "Připnutá"
-    news_changed_pinned: "Připnutí aktuality bylo úspěšně změněno."
-    news_edit_pinned: "připnout nahoru"
-    news_text: "Text"
-    news_text_empty: "Zadejte text aktuality."
-    news_saved: "Aktualita byla úspěšně uložena."
-    news_delete_confirm: "Opravdu chcete aktualitu odstranit?"
-    news_deleted: "Aktualita byla úspěšně odstraněna."
-    news_add_heading: "Nová aktualita"
-    news_edit_heading: "Úprava aktuality"
+        column:
+            name: "Název"
+            name_empty: "Zadejte název."
+            slug: "Cesta"
+            slug_empty: "Zadejte cestu."
+            slug_format: "Cesta může obsahovat pouze malá písmena, číslice a \"-\"."
+            slug_exists: "Stránka s touto cestou již existuje."
+            public: "Viditelnost"
+            public_public: "Viditelná"
+            public_private: "Skrytá"
+            public_form: "viditelná"
+            roles: "Viditelná pro role"
+            roles_empty: "Vyberte alespoň jednu roli."
+            roles_all: "Všechny role"
 
-    documents_heading: "Dokumenty"
-    documents_name: "Název"
-    documents_name_empty: "Zadejte název dokumentu."
-    documents_tags: "Kategorie"
-    documents_tags_empty: "Dokument musí být alespoň v jedné kategorii."
-    documents_file: "Soubor"
-    documents_download: "Stáhnout"
-    documents_file_empty: "Vyberte soubor."
-    documents_description: "Popis"
-    documents_timestamp: "Upraven"
-    documents_saved: "Dokument byl úspěšně uložen."
-    documents_delete_confirm: "Opravdu chcete dokument odstranit?"
-    documents_deleted: "Dokument byl úspěšně odstraněn."
+        action:
+            edit_content: "Upravit obsah"
+            delete_confirm: "Opravdu chcete stránku odstranit?"
 
-    tags_heading: "Kategorie dokumentů"
-    tags_name: "Název"
-    tags_name_empty: "Zadejte název kategorie."
-    tags_name_exists: "Kategorie s tímto názvem již existuje."
-    tags_roles: "Oprávněné role"
-    tags_roles_empty: "Vyberte alespoň jednu roli."
-    tags_roles_all: "Všechny role"
-    tags_saved: "Kategorie byla úspěšně uložena."
-    tags_delete_confirm: "Odstraněním kategorie odeberete kategorii všem dokumentům. Opravdu chcete kategorii odstranit?"
-    tags_deleted: "Kategorie byla úspěšně odstraněna."
+        message:
+            save_success: "Stránka byla úspěšně uložena."
+            delete_success: "Stránka byla úspěšně odstraněna."
+            order_save_success: "Pořadí stránek bylo úspěšně upraveno."
+            public_change_success: "Viditelnost stránky byla úspěšně změněna."
+            public_change_denied: "Úvodní stránka nemůže být skryta."
 
-    faq_heading: "FAQ"
-    faq_question: "Otázka"
-    faq_question_empty: "Zadejte otázku."
-    faq_author: "Autor"
-    faq_public: "Viditelnost"
-    faq_public_public: "Viditelná"
-    faq_public_private: "Skrytá"
-    faq_public_form: "viditelná"
-    faq_answer: "Odpověď"
-    faq_answered: "Zodpovězena"
-    faq_saved: "Otázka byla úspěšně uložena."
-    faq_delete_confirm: "Opravdu chcete otázku odstranit?"
-    faq_deleted: "Otázka byla úspěšně odstraněna."
-    faq_order_saved: "Pořadí otázek bylo úspěšně upraveno."
-    faq_changed_public: "Viditelnost otázky byla úspěšně změněna."
-    faq_add_heading: "Nová otázka"
-    faq_edit_heading: "Úprava otázky"
+        content:
+            heading: "Úprava obsahu stránky: %name%"
+
+            form:
+                type: "Typ obsahu"
+                heading: "Nadpis"
+                capacities_roles: "Zobrazované role"
+                tags: "Zobrazované kategorie"
+                html: "HTML"
+                image: "Obrázek"
+                image_format: "Obrázek musí být ve formátu JPG, PNG nebo GIF."
+                image_align: "Zarovnání"
+                image_width: "Šířka"
+                image_width_format: "Zadejte číslo."
+                image_height: "Výška"
+                image_height_format: "Zadejte číslo."
+                image_size_note: "Pokud zadáte jeden rozměr, druhý bude vypočten automaticky. Pokud nezadáte žádný, použije se velikost obrázku."
+                news_count: "Zobrazovaný počet"
+                news_count_format: "Zadejte číslo."
+                news_count_note: "Pokud necháte počet prázdný, zobrazí se všechny aktuality."
+                text: "Text"
+                users_roles: "Zobrazované role"
+                organizer: "Pořadatel"
+                slideshow_images: "Obrázky"
+                slideshow_images_forma: "Obrázky musí být ve formátu JPG nebo PNG."
+
+            message:
+                save_success: "Stránka byla úspěšně uložena."
+                save_failed: "Při ukládání stránky došlo k chybě."
+
+    news:
+        heading: "Aktuality"
+
+        common:
+            published: "Zveřejnit"
+            text: "Text"
+
+        column:
+            pinned: "Připnutí nahoru"
+            pinned_unpinned: "Nepřipnutá"
+            pinned_pinned: "Připnutá"
+
+        form:
+            add_heading: "Nová aktualita"
+            edit_heading: "Úprava aktuality"
+            published_empty: "Zadejte čas zveřejnění."
+            pinned: "připnout nahoru"
+            text_empty: "Zadejte text aktuality."
+
+        action:
+            delete_confirm: "Opravdu chcete aktualitu odstranit?"
+
+        message:
+            pinned_change_success: "Připnutí aktuality bylo úspěšně změněno."
+            save_success: "Aktualita byla úspěšně uložena."
+            delete_success: "Aktualita byla úspěšně odstraněna."
+
+    documents:
+        heading: "Dokumenty"
+
+        column:
+            name: "Název"
+            name_empty: "Zadejte název dokumentu."
+            tags: "Kategorie"
+            tags_empty: "Dokument musí být alespoň v jedné kategorii."
+            file: "Soubor"
+            file_download: "Stáhnout"
+            file_empty: "Vyberte soubor."
+            description: "Popis"
+            timestamp: "Upraven"
+
+        action:
+            delete_confirm: "Opravdu chcete dokument odstranit?"
+
+        message:
+            save_success: "Dokument byl úspěšně uložen."
+            delete_success: "Dokument byl úspěšně odstraněn."
+
+        tags:
+            heading: "Kategorie dokumentů"
+
+            column:
+                name: "Název"
+                name_empty: "Zadejte název kategorie."
+                name_exists: "Kategorie s tímto názvem již existuje."
+                roles: "Oprávněné role"
+                roles_empty: "Vyberte alespoň jednu roli."
+                roles_all: "Všechny role"
+
+            action:
+                delete_confirm: "Odstraněním kategorie odeberete kategorii všem dokumentům. Opravdu chcete kategorii odstranit?"
+
+            message:
+                save_success: "Kategorie byla úspěšně uložena."
+                delete_success: "Kategorie byla úspěšně odstraněna."
+
+    faq:
+        heading: "FAQ"
+
+        common:
+            question: "Otázka"
+
+        column:
+            author: "Autor"
+            public: "Viditelnost"
+            public_public: "Viditelná"
+            public_private: "Skrytá"
+            answered: "Zodpovězena"
+
+        form:
+            add_heading: "Nová otázka"
+            edit_heading: "Úprava otázky"
+            question_empty: "Zadejte otázku."
+            public: "viditelná"
+            answer: "Odpověď"
+
+        action:
+            delete_confirm: "Opravdu chcete otázku odstranit?"
+
+        message:
+            save_success: "Otázka byla úspěšně uložena."
+            delete_success: "Otázka byla úspěšně odstraněna."
+            order_save_success: "Pořadí otázek bylo úspěšně upraveno."
+            public_change_success: "Viditelnost otázky byla úspěšně změněna."
 
 program:
     menu:
@@ -776,9 +825,8 @@ configuration:
     skautis_event_education_connection_saved: "Propojení se skautIS kurzy bylo úspěšně uloženo."
 
     web_heading: "Web"
-    web_current_logo: "Stávající logo"
-    web_new_logo: "Nové logo"
-    web_new_logo_format: "Logo musí být ve formátu JPG, PNG nebo GIF."
+    web_logo: "Logo"
+    web_logo_format: "Logo musí být ve formátu JPG, PNG nebo GIF."
     web_footer: "Text v patičce"
     web_ga_id: "Google Analytics číslo pro měření"
     web_redirect_after_login: "Po přihlášení přesměrovat na"

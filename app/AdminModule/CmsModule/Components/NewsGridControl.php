@@ -55,20 +55,20 @@ class NewsGridControl extends Control
         $grid->setDefaultSort(['published' => 'DESC']);
         $grid->setPagination(false);
 
-        $grid->addColumnDateTime('published', 'admin.cms.news_published')
+        $grid->addColumnDateTime('published', 'admin.cms.news.common.published')
             ->setFormat(Helpers::DATETIME_FORMAT);
 
-        $columnMandatory = $grid->addColumnStatus('pinned', 'admin.cms.news_pinned');
+        $columnMandatory = $grid->addColumnStatus('pinned', 'admin.cms.news.column.pinned');
         $columnMandatory
-            ->addOption(false, 'admin.cms.news_pinned_unpinned')
+            ->addOption(false, 'admin.cms.news.column.pinned_unpinned')
             ->setClass('btn-primary')
             ->endOption()
-            ->addOption(true, 'admin.cms.news_pinned_pinned')
+            ->addOption(true, 'admin.cms.news.column.pinned_pinned')
             ->setClass('btn-warning')
             ->endOption()
             ->onChange[] = [$this, 'changePinned'];
 
-        $grid->addColumnText('text', 'admin.cms.news_text');
+        $grid->addColumnText('text', 'admin.cms.news.common.text');
 
         $grid->addToolbarButton('News:add')
             ->setIcon('plus')
@@ -82,7 +82,7 @@ class NewsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.cms.news_delete_confirm'),
+                'data-content' => $this->translator->translate('admin.cms.news.action.delete_confirm'),
             ]);
     }
 
@@ -97,7 +97,7 @@ class NewsGridControl extends Control
         $news = $this->newsRepository->findById($id);
         $this->newsRepository->remove($news);
 
-        $this->getPresenter()->flashMessage('admin.cms.news_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.news.message.delete_success', 'success');
 
         $this->redirect('this');
     }
@@ -115,7 +115,7 @@ class NewsGridControl extends Control
         $this->newsRepository->save($news);
 
         $p = $this->getPresenter();
-        $p->flashMessage('admin.cms.news_changed_pinned', 'success');
+        $p->flashMessage('admin.cms.news.message.pinned_change_success', 'success');
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
