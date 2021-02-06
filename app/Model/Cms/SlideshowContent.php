@@ -15,8 +15,9 @@ use Nette\Utils\ImageException;
 use Nette\Utils\UnknownImageFileException;
 use stdClass;
 
-use Tracy\Debugger;
-use function file_exists;
+use function array_map;
+use function assert;
+use function implode;
 
 use const UPLOAD_ERR_OK;
 
@@ -37,7 +38,7 @@ class SlideshowContent extends Content implements IContent
      *
      * @ORM\Column(type="simple_array", nullable=true)
      *
-     * @var string[]
+     * @var string[]|null
      */
     protected ?array $images;
 
@@ -48,11 +49,17 @@ class SlideshowContent extends Content implements IContent
         $this->filesService = $filesService;
     }
 
+    /**
+     * @return string[]|null
+     */
     public function getImages(): ?array
     {
         return $this->images;
     }
 
+    /**
+     * @param string[]|null $images
+     */
     public function setImages(?array $images): void
     {
         $this->images = $images;
@@ -68,7 +75,7 @@ class SlideshowContent extends Content implements IContent
         $formContainer = $form[$this->getContentFormName()];
         assert($formContainer instanceof Container);
 
-        $initialPreview = '[' . join(', ', array_map(fn($i) => '"' . $i . '"', $this->images)) . ']';
+        $initialPreview = '[' . implode(', ', array_map(static fn ($i) => '"' . $i . '"', $this->images)) . ']';
 
         $formContainer->addMultiUpload('images', 'admin.cms.pages.content.form.slideshow_images')
             ->setHtmlAttribute('accept', 'image/*')

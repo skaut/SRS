@@ -18,8 +18,6 @@ use Nette\Forms\Container;
 use Nette\Http\FileUpload;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
-use Nette\Utils\Random;
-use Nette\Utils\Strings;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;

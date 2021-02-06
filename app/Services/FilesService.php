@@ -72,7 +72,7 @@ class FilesService
     public function create(string $path, string $content): void
     {
         $absolutePath = $this->getAbsolutePath($path);
-        $dirname = dirname($absolutePath);
+        $dirname      = dirname($absolutePath);
 
         if (! is_dir($dirname)) {
             mkdir($dirname, 0755, true);
@@ -88,7 +88,8 @@ class FilesService
      *
      * @throws UnknownImageFileException
      */
-    public function openImage(string $path): ?Image {
+    public function openImage(string $path): ?Image
+    {
         $absolutePath = $this->getAbsolutePath($path);
 
         if (file_exists($absolutePath)) {

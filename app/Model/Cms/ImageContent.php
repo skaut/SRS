@@ -11,14 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Http\FileUpload;
-use Nette\Utils\Image;
 use Nette\Utils\ImageException;
-use Nette\Utils\Random;
-use Nette\Utils\Strings;
 use Nette\Utils\UnknownImageFileException;
 use stdClass;
 
-use function file_exists;
+use function assert;
 
 use const UPLOAD_ERR_OK;
 

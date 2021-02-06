@@ -13,7 +13,6 @@ use App\Services\ISettingsService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
-use Nette\Utils\Strings;
 use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
 use stdClass;
 use Throwable;

@@ -14,7 +14,7 @@ class SlideshowContentDto extends ContentDto
     /**
      * Adresy obrázků.
      *
-     * @type string[] $images
+     * @var string[]
      */
     protected array $images;
 

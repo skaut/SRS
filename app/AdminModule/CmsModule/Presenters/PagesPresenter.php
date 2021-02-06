@@ -10,7 +10,6 @@ use App\AdminModule\CmsModule\Forms\IPageFormFactory;
 use App\AdminModule\CmsModule\Forms\PageForm;
 use App\Model\Cms\Content;
 use App\Model\Cms\Repositories\PageRepository;
-use Tracy\Debugger;
 
 /**
  * Presenter starající se o správu stránek.
@@ -77,7 +76,8 @@ class PagesPresenter extends CmsBasePresenter
         return $control;
     }
 
-    public function handleDelete(string $file) {
+    public function handleDelete(string $file): void
+    {
         $this->redirect('this');
     }
 }
