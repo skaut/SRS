@@ -337,6 +337,10 @@ class EditUserSeminarFormFactory
                         $newValue = $values->$customInputId;
                         assert($newValue instanceof FileUpload);
                         if ($newValue->getError() == UPLOAD_ERR_OK) {
+                            if ($oldValue !== null) {
+                                $this->filesService->delete($oldValue);
+                            }
+
                             $path = $this->filesService->save($newValue, CustomFile::PATH, true, $newValue->name);
                             $customInputValue->setValue($path);
                         }

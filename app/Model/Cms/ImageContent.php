@@ -209,27 +209,31 @@ class ImageContent extends Content implements IContent
         $width  = $values->width !== '' ? $values->width : null;
         $height = $values->height !== '' ? $values->height : null;
 
-        $image = null;
+        $imageData = null;
 
         if ($file->getError() == UPLOAD_ERR_OK) {
+            if ($this->image !== null) {
+                $this->filesService->delete($this->image);
+            }
+
             $this->image = $this->filesService->save($file, 'images', true, $file->name);
-            $image       = $file->toImage();
-        } elseif ($this->image) {
-            $image = $this->filesService->openImage($this->image);
+            $imageData   = $file->toImage();
+        } elseif ($this->image !== null) {
+            $imageData = $this->filesService->openImage($this->image);
         }
 
-        if ($image !== null) {
+        if ($imageData !== null) {
             if ($width && $height) {
                 $this->width  = $width;
                 $this->height = $height;
             } elseif (! $width && ! $height) {
-                $this->width  = $image->getWidth();
-                $this->height = $image->getHeight();
+                $this->width  = $imageData->getWidth();
+                $this->height = $imageData->getHeight();
             } elseif ($width) {
                 $this->width  = $width;
-                $this->height = (int) ($image->getHeight() * $width / $image->getWidth());
+                $this->height = (int) ($imageData->getHeight() * $width / $imageData->getWidth());
             } else {
-                $this->width  = (int) ($image->getWidth() * $height / $image->getHeight());
+                $this->width  = (int) ($imageData->getWidth() * $height / $imageData->getHeight());
                 $this->height = $height;
             }
         } else {
