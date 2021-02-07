@@ -40,7 +40,7 @@ class User
     /**
      * Adresář pro ukládání profilových fotek.
      */
-    public const PHOTO_PATH = '/user_photos';
+    public const PHOTO_PATH = 'user_photos';
     use Id;
 
     /**
