@@ -43,6 +43,8 @@ use Throwable;
 
 use function array_key_exists;
 use function assert;
+use function basename;
+use function json_encode;
 
 use const UPLOAD_ERR_OK;
 
@@ -172,10 +174,12 @@ class AdditionalInformationFormFactory
                         $file = $customInputValue->getValue();
                         $custom->setHtmlAttribute('data-initial-preview', json_encode([$file]))
                             ->setHtmlAttribute('data-initial-preview-file-type', 'other')
-                            ->setHtmlAttribute('data-initial-preview-config', json_encode([[
-                                'caption' => basename($file),
-                                'downloadUrl' => $file
-                            ]]));
+                            ->setHtmlAttribute('data-initial-preview-config', json_encode([
+                                [
+                                    'caption' => basename($file),
+                                    'downloadUrl' => $file,
+                                ],
+                            ]));
                     }
 
                     break;

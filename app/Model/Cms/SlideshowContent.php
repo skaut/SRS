@@ -17,7 +17,8 @@ use stdClass;
 
 use function array_map;
 use function assert;
-use function implode;
+use function basename;
+use function json_encode;
 
 use const UPLOAD_ERR_OK;
 
@@ -79,12 +80,11 @@ class SlideshowContent extends Content implements IContent
             ->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
             ->setHtmlAttribute('data-initial-preview', json_encode($this->images))
-            ->setHtmlAttribute('data-initial-preview-config', json_encode(array_map(function (string $image) {
+            ->setHtmlAttribute('data-initial-preview-config', json_encode(array_map(static function (string $image) {
                 return ['caption' => basename($image)];
             }, $this->images)))
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.cms.pages.content.form.slideshow_images_format');
-
 
         return $form;
     }

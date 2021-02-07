@@ -50,6 +50,8 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
+use function basename;
+
 /**
  * Komponenta pro správu rolí.
  *

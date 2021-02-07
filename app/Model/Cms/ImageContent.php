@@ -16,6 +16,8 @@ use Nette\Utils\UnknownImageFileException;
 use stdClass;
 
 use function assert;
+use function basename;
+use function json_encode;
 
 use const UPLOAD_ERR_OK;
 

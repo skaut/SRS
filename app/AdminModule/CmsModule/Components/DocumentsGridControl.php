@@ -23,6 +23,7 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 use function assert;
+use function basename;
 
 use const UPLOAD_ERR_OK;
 
@@ -91,7 +92,7 @@ class DocumentsGridControl extends Control
             });
 
         $grid->addColumnText('file', 'admin.cms.documents.column.file')
-            ->setRenderer(function (Document $document) {
+            ->setRenderer(static function (Document $document) {
                 return Html::el('a')
                     ->setAttribute('href', $document->getFile())
                     ->setAttribute('target', '_blank')

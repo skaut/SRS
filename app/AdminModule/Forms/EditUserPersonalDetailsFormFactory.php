@@ -14,8 +14,10 @@ use Nette\Utils\ImageException;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 
+use function basename;
 use function getimagesizefromstring;
 use function image_type_to_extension;
+use function json_encode;
 
 use const UPLOAD_ERR_OK;
 

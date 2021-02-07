@@ -26,7 +26,6 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
-use Tracy\Debugger;
 
 /**
  * Presenter obsluhující správu uživatelů.
