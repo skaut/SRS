@@ -58,7 +58,7 @@ services:
             - $mpdfConfig([tempDir: %tempDir%/mpdf])
 
     - App\Services\Authorizator
-    - App\Services\DatabaseService(%appDir%/..)
+    - App\Services\DatabaseService(%appDir%/../backup)
     - App\Services\FilesService(%wwwDir%)
 
     - App\Services\CommandBus(@messenger.commandBus.bus)
