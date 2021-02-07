@@ -119,6 +119,23 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
                 }
             }
 
+            // prihlaseni nahradniku na program, pokud se navysi kapacita nebo se zmeni na neomezenou
+            if ($alternatesAllowedOld && ($capacity > $capacityOld || $capacity === null)) {
+                foreach ($block->getPrograms() as $program) {
+                    $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
+                    assert($program instanceof Program);
+
+                    while ($capacity === null || $program->getAttendeesCount() < $capacity) {
+                        $user = $this->userRepository->findProgramFirstAlternate($program);
+                        if ($user === null) {
+                            break;
+                        }
+
+                        $this->commandBus->handle(new RegisterProgram($user, $program));
+                    }
+                }
+            }
+
             // odhlaseni nahradniku, pokud jsou nahradnici zakazani
             if (! $alternatesAllowed && $alternatesAllowedOld) {
                 foreach ($block->getPrograms() as $program) {
@@ -126,23 +143,6 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
 
                     foreach ($programAlternates as $user) {
                         $this->commandBus->handle(new UnregisterProgram($user, $program));
-                    }
-                }
-            }
-
-            // prihlaseni nahradniku na program, pokud se navysi kapacita
-            if ($alternatesAllowed && $capacity > $capacityOld) {
-                foreach ($block->getPrograms() as $program) {
-                    $program = $em->getRepository(Program::class)->find($program->getId(), LockMode::PESSIMISTIC_WRITE);
-                    assert($program instanceof Program);
-
-                    while ($program->getAttendeesCount() < $capacity) {
-                        $user = $this->userRepository->findProgramFirstAlternate($program);
-                        if ($user === null) {
-                            break;
-                        }
-
-                        $this->commandBus->handle(new RegisterProgram($user, $program));
                     }
                 }
             }

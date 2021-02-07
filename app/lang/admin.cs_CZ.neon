@@ -298,6 +298,7 @@ program:
                 name: "Jméno"
                 attends: "Účastník"
                 alternates: "Náhradník"
+                registered_at: "Čas přihlášení"
 
             action:
                 register: "Přihlásit"
@@ -420,7 +421,7 @@ users:
     users_fee_remaining: "Zbývá doplatit"
     users_payment_method: "Platební metoda"
     users_variable_symbol: "Variabilní symbol"
-    users_roles_application_date: "Datum přihlášení"
+    users_roles_application_date: "Čas přihlášení"
     users_last_payment_date: "Datum poslední platby"
     users_payment_date: "Zaplaceno dne"
     users_application_date: "Odeslání přihlášky"
@@ -472,7 +473,7 @@ users:
     users_edit_roles_occupied: "Všechna místa v některé roli jsou obsazena."
     users_edit_roles_nonregistered: "Roli \"Nepřihlášený\" není možné nastavit, použijte odhlášení ze semináře."
 
-    users_applications_application_date: "Datum přihlášky"
+    users_applications_application_date: "Čas přihlášení"
     users_applications_roles: "Role"
     users_applications_subevents: "Podakce"
     users_applications_subevents_empty: "Musí být vybrána alespoň jedna podakce."
