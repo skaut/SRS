@@ -12,7 +12,7 @@
             <div id="slideshow" class="carousel slide" data-ride="carousel">
                 <ol class="carousel-indicators">
                     {foreach $images as $image}
-                        <li data-target="#carouselExampleIndicators" data-slide-to="{$iterator->counter0}" n:class="$iterator->first ? active"></li>
+                        <li data-target="#slideshow" data-slide-to="{$iterator->counter0}" n:class="$iterator->first ? active"></li>
                     {/foreach}
                 </ol>
                 <div class="carousel-inner">
