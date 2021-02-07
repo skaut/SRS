@@ -797,7 +797,7 @@ class User
     public function getNotCanceledRolesApplications(): Collection
     {
         return $this->getNotCanceledApplications()->filter(static function (Application $application) {
-            return $application->getType() === Application::ROLES;
+            return $application instanceof RolesApplication;
         });
     }
 
@@ -809,7 +809,7 @@ class User
     public function getNotCanceledSubeventsApplications(): Collection
     {
         return $this->getNotCanceledApplications()->filter(static function (Application $application) {
-            return $application->getType() === Application::SUBEVENTS;
+            return $application instanceof SubeventsApplication;
         });
     }
 
@@ -867,7 +867,7 @@ class User
     public function getWaitingForPaymentRolesApplications(): Collection
     {
         return $this->getWaitingForPaymentApplications()->filter(static function (Application $application) {
-            return $application->getType() === Application::ROLES;
+            return $application instanceof RolesApplication;
         });
     }
 
@@ -891,7 +891,7 @@ class User
     public function getWaitingForPaymentSubeventsApplications(): Collection
     {
         return $this->getWaitingForPaymentApplications()->filter(static function (Application $application) {
-            return $application->getType() === Application::SUBEVENTS;
+            return $application instanceof SubeventsApplication;
         });
     }
 
@@ -1140,7 +1140,7 @@ class User
     public function hasPaidSubevent(Subevent $subevent): bool
     {
         foreach ($this->getPaidAndFreeApplications() as $application) {
-            if ($application->getType() === Application::SUBEVENTS && $application->getSubevents()->contains($subevent)) {
+            if ($application instanceof SubeventsApplication && $application->getSubevents()->contains($subevent)) {
                 return true;
             }
         }

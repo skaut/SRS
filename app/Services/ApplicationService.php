@@ -678,7 +678,7 @@ class ApplicationService
      */
     public function isAllowedEditApplication(Application $application): bool
     {
-        return $application->getType() === Application::SUBEVENTS && ! $application->isCanceled()
+        return $application instanceof SubeventsApplication && ! $application->isCanceled()
             && $application->getState() !== ApplicationState::PAID
             && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTimeImmutable())->setTime(0, 0);
     }

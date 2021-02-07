@@ -199,11 +199,6 @@ abstract class Application
         $this->applicationId = $applicationId;
     }
 
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
     public function getUser(): User
     {
         return $this->user;
