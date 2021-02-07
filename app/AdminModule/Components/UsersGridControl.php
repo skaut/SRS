@@ -50,10 +50,6 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
-use function array_slice;
-use function array_values;
-use function explode;
-
 /**
  * Komponenta pro správu rolí.
  *
@@ -357,13 +353,11 @@ class UsersGridControl extends Control
                             case $customInputValue instanceof CustomFileValue:
                                 return $customInputValue->getValue()
                                     ? Html::el('a')
-                                        ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath . $customInputValue->getValue())
-                                        ->setAttribute('title', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0])
+                                        ->setAttribute('href', $customInputValue->getValue())
+                                        ->setAttribute('title', basename($customInputValue->getValue()))
                                         ->setAttribute('target', '_blank')
                                         ->setAttribute('class', 'btn btn-xs btn-secondary')
-                                        ->addHtml(
-                                            Html::el('span')->setAttribute('class', 'fa fa-download')
-                                        )
+                                        ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-download'))
                                     : '';
 
                             default:

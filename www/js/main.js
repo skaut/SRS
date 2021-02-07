@@ -66,6 +66,7 @@ function initFileInputs() {
         showUpload: false,
         showCancel: false,
         showClose: false,
+        showDrag: false, // nefunguje, opraveno v CSS
         initialPreviewShowDelete: false,
         initialPreviewAsData: true,
         browseClass: 'btn btn-secondary',

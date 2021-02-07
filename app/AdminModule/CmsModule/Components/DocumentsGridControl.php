@@ -91,14 +91,13 @@ class DocumentsGridControl extends Control
             });
 
         $grid->addColumnText('file', 'admin.cms.documents.column.file')
-            ->setRenderer(function (Document $row) {
+            ->setRenderer(function (Document $document) {
                 return Html::el('a')
-                    ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath . $row->getFile())
+                    ->setAttribute('href', $document->getFile())
                     ->setAttribute('target', '_blank')
                     ->setAttribute('class', 'btn btn-xs btn-secondary')
-                    ->addHtml(
-                        Html::el('span')->setAttribute('class', 'fa fa-download')
-                    );
+                    ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-download'))
+                    ->addText(' ' . basename($document->getFile()));
             });
 
         $grid->addColumnText('description', 'admin.cms.documents.column.description');

@@ -75,16 +75,16 @@ class SlideshowContent extends Content implements IContent
         $formContainer = $form[$this->getContentFormName()];
         assert($formContainer instanceof Container);
 
-        $initialPreview = '[' . implode(', ', array_map(static fn ($i) => '"' . $i . '"', $this->images)) . ']';
-
         $formContainer->addMultiUpload('images', 'admin.cms.pages.content.form.slideshow_images')
             ->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
-            ->setHtmlAttribute('data-initial-preview', $initialPreview)
-            ->setHtmlAttribute('data-initial-preview-as-data', 'true')
-            ->setHtmlAttribute('data-initial-preview-show-delete', 'false')
+            ->setHtmlAttribute('data-initial-preview', json_encode($this->images))
+            ->setHtmlAttribute('data-initial-preview-config', json_encode(array_map(function (string $image) {
+                return ['caption' => basename($image)];
+            }, $this->images)))
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.cms.pages.content.form.slideshow_images_format');
+
 
         return $form;
     }

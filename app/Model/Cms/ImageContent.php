@@ -155,12 +155,15 @@ class ImageContent extends Content implements IContent
         $formContainer = $form[$this->getContentFormName()];
         assert($formContainer instanceof Container);
 
-        $formContainer->addUpload('image', 'admin.cms.pages.content.form.image')
-            ->setHtmlAttribute('accept', 'image/*')
+        $imageUpload = $formContainer->addUpload('image', 'admin.cms.pages.content.form.image');
+        $imageUpload->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
-            ->setHtmlAttribute('data-initial-preview', '[' . ($this->image === null ? '' : '"' . $this->image . '"') . ']')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.cms.pages.content.form.image_format');
+        if ($this->image !== null) {
+            $imageUpload->setHtmlAttribute('data-initial-preview', json_encode([$this->image]))
+                ->setHtmlAttribute('data-initial-preview-config', json_encode([['caption' => basename($this->image)]]));
+        }
 
         $formContainer->addSelect('align', 'admin.cms.pages.content.form.image_align', $this->prepareAlignOptions());
 

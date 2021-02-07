@@ -60,14 +60,14 @@ class EditUserPersonalDetailsFormFactory
         $photoUpload = $form->addUpload('photo', 'admin.users.users_photo');
         $photoUpload->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
-            ->setHtmlAttribute('data-show-remove', 'true') //todo
-            ->setOption('id', 'photo')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::IMAGE, 'admin.users.users_photo_format')
-            ->toggle('remove-photo', false);
+            ->addRule(Form::IMAGE, 'admin.users.users_photo_format');
 
         if ($this->user->getPhoto() !== null) {
-            $photoUpload->setHtmlAttribute('data-initial-preview', '["' . $this->user->getPhoto() . '"]');
+            $photoUpload->setHtmlAttribute('data-delete-url', '?do=removePhoto')
+                ->setHtmlAttribute('data-initial-preview', json_encode([$this->user->getPhoto()]))
+                ->setHtmlAttribute('data-initial-preview-show-delete', 'true')
+                ->setHtmlAttribute('data-initial-preview-config', json_encode([['caption' => basename($this->user->getPhoto())]]));
         }
 
         $form->addText('firstName', 'admin.users.users_firstname')

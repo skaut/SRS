@@ -142,6 +142,7 @@ abstract class Content implements IContent
         self::TEXT,
         self::IMAGE,
         self::HTML,
+        self::SLIDESHOW,
         self::NEWS,
         self::DOCUMENT,
         self::APPLICATION,
@@ -154,7 +155,6 @@ abstract class Content implements IContent
         self::BLOCKS,
         self::CAPACITIES,
         self::ORGANIZER,
-        self::SLIDESHOW,
     ];
 
     /** @var string[] */

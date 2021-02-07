@@ -15,7 +15,7 @@
                 <ul class="list-unstyled">
                     <li class="mb-1" n:foreach="$documents as $document">
                         <a class="btn btn-sm btn-secondary" href="{$basePath}{$document->getFile()}" target="_blank">
-                            <i class="fa fa-file"></i>
+                            <i class="fa fa-download"></i>
                             {$document->getName()}
                         </a>
                         <span n:if="$document->getDescription()">- {$document->getDescription()}</span>

@@ -202,13 +202,18 @@ class EditUserSeminarFormFactory
 
                     case $customInput instanceof CustomFile:
                         $custom = $form->addUpload($customInputId, $customInput->getName());
-                        $custom->setHtmlAttribute('data-show-preview', 'true')
-                                ->setHtmlAttribute('data-initial-preview-file-type', 'other');
+                        $custom->setHtmlAttribute('data-show-preview', 'true');
 
                         $customInputValue = $this->user->getCustomInputValue($customInput);
                         if ($customInputValue) {
                             assert($customInputValue instanceof CustomFileValue);
-                            $custom->setHtmlAttribute('data-initial-preview', '["' . $customInputValue->getValue() . '"]');
+                            $file = $customInputValue->getValue();
+                            $custom->setHtmlAttribute('data-initial-preview', json_encode([$file]))
+                                ->setHtmlAttribute('data-initial-preview-file-type', 'other')
+                                ->setHtmlAttribute('data-initial-preview-config', json_encode([[
+                                    'caption' => basename($file),
+                                    'downloadUrl' => $file
+                                ]]));
                         }
 
                         break;

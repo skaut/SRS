@@ -71,7 +71,8 @@ class WebFormFactory
         $form->addUpload('logo', 'admin.configuration.web_logo')
             ->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
-            ->setHtmlAttribute('data-initial-preview', '["' . $logo . '"]')
+            ->setHtmlAttribute('data-initial-preview', json_encode([$logo]))
+            ->setHtmlAttribute('data-initial-preview-config', json_encode([['caption' => basename($logo)]]))
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.configuration.web_logo_format');
 

@@ -26,6 +26,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
+use Tracy\Debugger;
 
 /**
  * Presenter obsluhující správu uživatelů.
@@ -167,6 +168,16 @@ class UsersPresenter extends AdminBasePresenter
         $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED, $loggedUser);
 
         $this->flashMessage('admin.users.users_registration_canceled', 'success');
+        $this->redirect('this');
+    }
+
+    public function handleRemovePhoto(): void
+    {
+        $user = $this->userRepository->findById((int) $this->getParameter('id'));
+
+        $user->setPhoto(null);
+        $this->userRepository->save($user);
+
         $this->redirect('this');
     }
 
