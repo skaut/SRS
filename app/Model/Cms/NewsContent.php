@@ -11,6 +11,8 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use stdClass;
 
+use function assert;
+
 /**
  * Entita obsahu s aktualitami.
  *
@@ -48,14 +50,14 @@ class NewsContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
-        $formContainer->addText('count', 'admin.cms.pages_content_news_count')
+        assert($formContainer instanceof Container);
+        $formContainer->addText('count', 'admin.cms.pages.content.form.news_count')
             ->setDefaultValue($this->count)
             ->setHtmlAttribute('data-toggle', 'tooltip')
             ->setHtmlAttribute('data-placement', 'bottom')
-            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.cms.pages_content_news_count_note'))
-            ->addCondition(Form::FILLED)->addRule(Form::INTEGER, 'admin.cms.pages_content_news_count_format');
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.cms.pages.content.form.news_count_note'))
+            ->addCondition(Form::FILLED)->addRule(Form::INTEGER, 'admin.cms.pages.content.form.news_count_format');
 
         return $form;
     }

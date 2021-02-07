@@ -10,9 +10,11 @@ use App\Model\Settings\Settings;
 use App\Services\ISettingsService;
 use Nette;
 use Nette\Application\UI\Form;
-use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
+use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
 use stdClass;
 use Throwable;
+
+use function assert;
 
 /**
  * Formulář pro nastavení dokladů.
@@ -44,8 +46,8 @@ class PaymentProofFormFactory
     {
         $form = $this->baseFormFactory->create();
 
-        /** @var Bs3FormRenderer $renderer */
-        $renderer                                   = $form->getRenderer();
+        $renderer = $form->getRenderer();
+        assert($renderer instanceof Bs4FormRenderer);
         $renderer->wrappers['control']['container'] = 'div class="col-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 

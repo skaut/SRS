@@ -185,7 +185,7 @@ class BlockRepository extends AbstractRepository
             ->getQuery()
             ->getResult();
 
-        return $result === null ? null : $result[0]['c'];
+        return empty($result) ? null : $result[0]['c'];
     }
 
     /**

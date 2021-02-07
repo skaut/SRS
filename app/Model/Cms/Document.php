@@ -24,7 +24,7 @@ class Document
     /**
      * Adresář pro ukládání dokumentů.
      */
-    public const PATH = '/documents';
+    public const PATH = 'documents';
     use Id;
 
     /**

@@ -11,6 +11,8 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use stdClass;
 
+use function assert;
+
 /**
  * Entita obsahu s textem.
  *
@@ -48,9 +50,9 @@ class TextContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
-        $formContainer->addTextArea('text', 'admin.cms.pages_content_text')
+        assert($formContainer instanceof Container);
+        $formContainer->addTextArea('text', 'admin.cms.pages.content.form.text')
             ->setDefaultValue($this->text)
             ->setHtmlAttribute('class', 'tinymce');
 

@@ -50,14 +50,14 @@ class NewsFormFactory
 
         $form->addHidden('id');
 
-        $publishedDateTime = new DateTimeControl('admin.cms.news_published');
-        $publishedDateTime->addRule(Form::FILLED, 'admin.cms.news_published_empty');
+        $publishedDateTime = new DateTimeControl('admin.cms.news.common.published');
+        $publishedDateTime->addRule(Form::FILLED, 'admin.cms.news.form.published_empty');
         $form->addComponent($publishedDateTime, 'published');
 
-        $form->addCheckbox('pinned', 'admin.cms.news_edit_pinned');
+        $form->addCheckbox('pinned', 'admin.cms.news.form.pinned');
 
-        $form->addTextArea('text', 'admin.cms.news_text')
-            ->addRule(Form::FILLED, 'admin.cms.news_text_empty')
+        $form->addTextArea('text', 'admin.cms.news.common.text')
+            ->addRule(Form::FILLED, 'admin.cms.news.form.text_empty')
             ->setHtmlAttribute('class', 'tinymce-paragraph');
 
         $form->addSubmit('submit', 'admin.common.save');

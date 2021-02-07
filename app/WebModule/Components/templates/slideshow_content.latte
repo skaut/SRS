@@ -1,0 +1,38 @@
+<div class="clearfix"></div>
+
+<div class="slideshow-content">
+    <div class="row" n:ifcontent>
+        <div class="col" n:ifcontent>
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <div id="slideshow" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    {foreach $images as $image}
+                        <li data-target="#carouselExampleIndicators" data-slide-to="{$iterator->counter0}" n:class="$iterator->first ? active"></li>
+                    {/foreach}
+                </ol>
+                <div class="carousel-inner">
+                    {foreach $images as $image}
+                        <div n:class="carousel-item, $iterator->first ? active">
+                            <img class="d-block w-100" src="{$basePath}{$image}">
+                        </div>
+                    {/foreach}
+                </div>
+                <a class="carousel-control-prev" href="#slideshow" data-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#slideshow" data-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

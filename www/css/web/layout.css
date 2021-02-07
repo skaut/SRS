@@ -165,3 +165,8 @@ p {
 .datagrid .disabled {
     color: #70757D !important;
 }
+
+/* uprava fileinput */
+.file-drag-handle {
+    display: none;
+}

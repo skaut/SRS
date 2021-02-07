@@ -37,7 +37,8 @@ use function ucwords;
  *     "blocks_content" = "BlocksContent",
  *     "capacities_content" = "CapacitiesContent",
  *     "organizer_content" = "OrganizerContent",
- *     "contact_form_content" = "ContactFormContent"
+ *     "contact_form_content" = "ContactFormContent",
+ *     "slideshow_content" = "SlideshowContent"
  * })
  *
  * @author Michal Májský
@@ -120,6 +121,10 @@ abstract class Content implements IContent
      */
     public const CONTACT_FORM = 'contact_form';
 
+    /**
+     * SlideshowContent
+     */
+    public const SLIDESHOW = 'slideshow';
 
     /**
      * Hlavní oblast stránky.
@@ -137,6 +142,7 @@ abstract class Content implements IContent
         self::TEXT,
         self::IMAGE,
         self::HTML,
+        self::SLIDESHOW,
         self::NEWS,
         self::DOCUMENT,
         self::APPLICATION,
@@ -266,7 +272,7 @@ abstract class Content implements IContent
         $formContainer->addHidden('delete')
             ->setHtmlAttribute('class', 'delete');
 
-        $formContainer->addText('heading', 'admin.cms.pages_content_heading');
+        $formContainer->addText('heading', 'admin.cms.pages.content.form.heading');
 
         $formContainer->setDefaults([
             'id' => $this->id,

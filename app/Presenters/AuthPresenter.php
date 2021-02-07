@@ -63,8 +63,8 @@ class AuthPresenter extends BasePresenter
         $this->user->login('');
         $this->user->setExpiration('+30 minutes');
 
-        /** @var Identity $userIdentity */
         $userIdentity = $this->user->identity;
+        assert($userIdentity instanceof Identity);
         if ($userIdentity->data['firstLogin']) {
             $user = $this->userRepository->findById($this->user->id);
 

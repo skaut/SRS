@@ -8,15 +8,14 @@ use Nette;
 use Nette\Http\FileUpload;
 use Nette\Utils\Image;
 use Nette\Utils\ImageException;
+use Nette\Utils\Random;
+use Nette\Utils\Strings;
 use Nette\Utils\UnknownImageFileException;
 
-use function dirname;
 use function fclose;
 use function file_exists;
 use function fopen;
 use function fwrite;
-use function is_dir;
-use function mkdir;
 use function unlink;
 
 /**
@@ -36,11 +35,16 @@ class FilesService
     }
 
     /**
-     * Uloží soubor.
+     * Uloží soubor z formuláře.
      */
-    public function save(FileUpload $file, string $path): void
+    public function save(FileUpload $file, string $directory, bool $randomSubDir, string $fileName): string
     {
-        $file->move($this->dir . $path);
+        $path         = $this->generatePath($directory, $randomSubDir, $fileName);
+        $absolutePath = $this->getAbsolutePath($path);
+
+        $file->move($absolutePath);
+
+        return $path;
     }
 
     /**
@@ -48,27 +52,41 @@ class FilesService
      */
     public function delete(string $path): void
     {
-        $file = $this->dir . $path;
-        if (file_exists($file)) {
-            unlink($file);
+        $absolutePath = $this->getAbsolutePath($path);
+        if (file_exists($absolutePath)) {
+            unlink($absolutePath);
         }
     }
 
     /**
-     * Vytvoří soubor s daným obsahem.
+     * Zapíše obsah do souboru.
      */
-    public function create(string $path, string $content): void
+    public function create(string $content, string $directory, bool $randomSubDir, string $fileName): string
     {
-        $absPath = $this->dir . $path;
-        $dirname = dirname($absPath);
+        $path         = $this->generatePath($directory, $randomSubDir, $fileName);
+        $absolutePath = $this->getAbsolutePath($path);
 
-        if (! is_dir($dirname)) {
-            mkdir($dirname, 0755, true);
-        }
-
-        $file = fopen($absPath, 'wb');
+        $file = fopen($absolutePath, 'wb');
         fwrite($file, $content);
         fclose($file);
+
+        return $path;
+    }
+
+    /**
+     * Načte obrázek ze souboru.
+     *
+     * @throws UnknownImageFileException
+     */
+    public function openImage(string $path): ?Image
+    {
+        $absolutePath = $this->getAbsolutePath($path);
+
+        if (file_exists($absolutePath)) {
+            return Image::fromFile($absolutePath);
+        }
+
+        return null;
     }
 
     /**
@@ -79,10 +97,12 @@ class FilesService
      */
     public function resizeImage(string $path, ?int $width, ?int $height): void
     {
-        $image = Image::fromFile($this->dir . $path);
+        $absolutePath = $this->getAbsolutePath($path);
+
+        $image = Image::fromFile($absolutePath);
         $image->resize($width, $height);
         $image->sharpen();
-        $image->save($this->dir . $path);
+        $image->save($absolutePath);
     }
 
     /**
@@ -93,7 +113,9 @@ class FilesService
      */
     public function resizeAndCropImage(string $path, ?int $width, ?int $height): void
     {
-        $image = Image::fromFile($this->dir . $path);
+        $absolutePath = $this->getAbsolutePath($path);
+
+        $image = Image::fromFile($absolutePath);
 
         if ($image->getWidth() / $width > $image->getHeight() / $height) {
             $image->resize(null, $height);
@@ -103,14 +125,28 @@ class FilesService
 
         $image->sharpen();
         $image->crop('50%', '50%', $width, $height);
-        $image->save($this->dir . $path);
+        $image->save($absolutePath);
     }
 
     /**
-     * Vrací cestu ke složce pro nahrávání souborů.
+     * Vrací celou cestu k souboru.
      */
-    public function getDir(): string
+    private function getAbsolutePath(string $path): string
     {
-        return $this->dir;
+        return $this->dir . $path;
+    }
+
+    /**
+     * Vygeneruje relativní cestu.
+     */
+    private function generatePath(string $directory, bool $randomSubDir, string $fileName): string
+    {
+        $path = '/files/' . $directory;
+
+        if ($randomSubDir) {
+            $path .= '/' . Random::generate(5);
+        }
+
+        return $path . '/' . Strings::webalize($fileName, '.');
     }
 }

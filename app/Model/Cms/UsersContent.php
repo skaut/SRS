@@ -18,6 +18,8 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use stdClass;
 
+use function assert;
+
 /**
  * Entita obsahu se seznamem uživatelů.
  *
@@ -88,11 +90,11 @@ class UsersContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
+        assert($formContainer instanceof Container);
         $formContainer->addMultiSelect(
             'roles',
-            'admin.cms.pages_content_users_roles',
+            'admin.cms.pages.content.form.users_roles',
             $this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
         )
             ->setDefaultValue($this->roleRepository->findRolesIds($this->roles));

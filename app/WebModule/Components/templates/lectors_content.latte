@@ -13,7 +13,7 @@
             <div class="card card-body bg-light pb-1">
                 <div class="row">
                     <div class="col-md-auto text-center mb-3" n:if="$lector->getPhoto()">
-                        <img src="{$basePath}/files/user_photos/{$lector->getPhoto()}"/>
+                        <img src="{$basePath}{$lector->getPhoto()}"/>
                     </div>
                     <div class="col">
                         <div class="row mb-3" n:if="$lector->getAbout()">

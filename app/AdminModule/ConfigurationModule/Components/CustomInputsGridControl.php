@@ -59,7 +59,7 @@ class CustomInputsGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentCustomInputsGrid(string $name): void
+    public function createComponentCustomInputsGrid(string $name): DataGrid
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -111,6 +111,8 @@ class CustomInputsGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.configuration.custom_inputs_delete_confirm'),
             ]);
+
+        return $grid;
     }
 
     /**
@@ -144,8 +146,7 @@ class CustomInputsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $customInputsGrid */
-            $customInputsGrid = $this['customInputsGrid'];
+            $customInputsGrid = $this->getComponent('customInputsGrid');
             $customInputsGrid->reload();
         } else {
             $this->redirect('this');
@@ -170,8 +171,7 @@ class CustomInputsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $customInputsGrid */
-            $customInputsGrid = $this['customInputsGrid'];
+            $customInputsGrid = $this->getComponent('customInputsGrid');
             $customInputsGrid->redrawItem($id);
         } else {
             $this->redirect('this');

@@ -20,6 +20,8 @@ use Nette\Security\Identity;
 use Nette\Security\IIdentity;
 use stdClass;
 
+use function assert;
+
 /**
  * Služba starající se o autentizaci uživatelů.
  *
@@ -137,9 +139,8 @@ class Authenticator implements IAuthenticator
             $photo = $this->skautIsService->getPersonPhoto($skautISUser->ID_Person, 'normal');
             if ($photo->ID_PersonPhotoNormal) {
                 $fileName = $photo->ID . $photo->PhotoExtension;
-                $path     = User::PHOTO_PATH . '/' . $fileName;
-                $this->filesService->create($path, $photo->PhotoNormalContent);
-                $user->setPhoto($fileName);
+                $path     = $this->filesService->create($photo->PhotoNormalContent, User::PHOTO_PATH, false, $fileName);
+                $user->setPhoto($path);
             } else {
                 $user->setPhoto(null);
             }
@@ -171,8 +172,8 @@ class Authenticator implements IAuthenticator
             $netteRoles[$testedRole->getId()] = $testedRole->getName();
         }
 
-        /** @var Identity $identity */
         $identity = $user->identity;
+        assert($identity instanceof Identity);
         $identity->setRoles($netteRoles);
     }
 }

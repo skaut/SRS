@@ -58,8 +58,8 @@ services:
             - $mpdfConfig([tempDir: %tempDir%/mpdf])
 
     - App\Services\Authorizator
-    - App\Services\DatabaseService(%appDir%/..)
-    - App\Services\FilesService(%wwwDir%/files)
+    - App\Services\DatabaseService(%appDir%/../backup)
+    - App\Services\FilesService(%wwwDir%)
 
     - App\Services\CommandBus(@messenger.commandBus.bus)
     - App\Services\QueryBus(@messenger.queryBus.bus)
@@ -114,6 +114,10 @@ messenger:
 latte:
     macros:
         - Nextras\FormsRendering\LatteMacros\Bs3InputMacros::install
+
+forms:
+    messages:
+        MAX_FILE_SIZE: 'Velikost nahraného souboru může být nejvýše %d bytů.'
 
 webloader:
     css:

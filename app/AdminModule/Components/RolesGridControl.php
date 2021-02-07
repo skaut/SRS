@@ -53,7 +53,7 @@ class RolesGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentRolesGrid(string $name): void
+    public function createComponentRolesGrid(string $name): DataGrid
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -113,6 +113,8 @@ class RolesGridControl extends Control
         $grid->allowRowsAction('delete', static function (Role $item) {
             return ! $item->isSystemRole();
         });
+
+        return $grid;
     }
 
     /**
@@ -154,8 +156,7 @@ class RolesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $rolesGrid */
-            $rolesGrid = $this['rolesGrid'];
+            $rolesGrid = $this->getComponent('rolesGrid');
             $rolesGrid->redrawItem($id);
         } else {
             $this->redirect('this');

@@ -13,12 +13,14 @@ use App\Services\ISettingsService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
-use Nette\Utils\Strings;
-use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
+use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
 use stdClass;
 use Throwable;
 
 use function array_key_exists;
+use function assert;
+use function basename;
+use function json_encode;
 
 use const UPLOAD_ERR_OK;
 
@@ -62,15 +64,19 @@ class WebFormFactory
     {
         $form = $this->baseFormFactory->create();
 
-        /** @var Bs3FormRenderer $renderer */
-        $renderer                                   = $form->getRenderer();
+        $renderer = $form->getRenderer();
+        assert($renderer instanceof Bs4FormRenderer);
         $renderer->wrappers['control']['container'] = 'div class="col-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 
-        $form->addUpload('logo', 'admin.configuration.web_new_logo')
+        $logo = $this->settingsService->getValue(Settings::LOGO);
+        $form->addUpload('logo', 'admin.configuration.web_logo')
             ->setHtmlAttribute('accept', 'image/*')
+            ->setHtmlAttribute('data-show-preview', 'true')
+            ->setHtmlAttribute('data-initial-preview', json_encode([$logo]))
+            ->setHtmlAttribute('data-initial-preview-config', json_encode([['caption' => basename($logo)]]))
             ->addCondition(Form::FILLED)
-            ->addRule(Form::IMAGE, 'admin.configuration.web_new_logo_format');
+            ->addRule(Form::IMAGE, 'admin.configuration.web_logo_format');
 
         $form->addText('footer', 'admin.configuration.web_footer');
 
@@ -104,15 +110,13 @@ class WebFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        /** @var FileUpload $logo */
         $logo = $values->logo;
+        assert($logo instanceof FileUpload);
         if ($logo->getError() == UPLOAD_ERR_OK) {
-//            $this->filesService->delete('/logo/' . $this->settingsService->getValue(Settings::LOGO));
-            $logoName = Strings::webalize($logo->name, '.');
-            $this->filesService->save($logo, '/logo/' . $logoName);
-            $this->filesService->resizeImage('/logo/' . $logoName, null, 100);
-
-            $this->settingsService->setValue(Settings::LOGO, $logoName);
+            $this->filesService->delete($this->settingsService->getValue(Settings::LOGO));
+            $path = $this->filesService->save($logo, 'logo', false, $logo->name);
+            $this->filesService->resizeImage($path, null, 100);
+            $this->settingsService->setValue(Settings::LOGO, $path);
         }
 
         $this->settingsService->setValue(Settings::FOOTER, $values->footer);

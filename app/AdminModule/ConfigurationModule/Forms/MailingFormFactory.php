@@ -17,12 +17,13 @@ use Nette;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\TextInput;
-use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
+use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
 use stdClass;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 use function array_map;
+use function assert;
 use function explode;
 use function implode;
 use function md5;
@@ -75,8 +76,8 @@ class MailingFormFactory
     {
         $form = $this->baseFormFactory->create();
 
-        /** @var Bs3FormRenderer $renderer */
-        $renderer                                   = $form->getRenderer();
+        $renderer = $form->getRenderer();
+        assert($renderer instanceof Bs4FormRenderer);
         $renderer->wrappers['control']['container'] = 'div class="col-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 

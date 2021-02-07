@@ -50,7 +50,7 @@ class PagesPresenter extends CmsBasePresenter
         $control = $this->pageFormFactory->create($id, $area);
 
         $control->onPageSave[] = function (PageForm $control, $submitName): void {
-            $this->flashMessage('admin.cms.pages_content_saved', 'success');
+            $this->flashMessage('admin.cms.pages.content.message.save_success', 'success');
 
             switch ($submitName) {
                 case 'submitAndContinue':
@@ -69,7 +69,7 @@ class PagesPresenter extends CmsBasePresenter
         };
 
         $control->onPageSaveError[] = function (PageForm $control): void {
-            $this->flashMessage('admin.cms.pages_content_save_error', 'danger');
+            $this->flashMessage('admin.cms.pages.content.message.save_failed', 'danger');
             $this->redirect('Pages:content', ['id' => $control->id, 'area' => $control->area]);
         };
 

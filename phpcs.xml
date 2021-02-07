@@ -35,9 +35,6 @@
         <!-- Docasne ignorovano - problem ve foreach, pokud je potreba jen key -->
         <exclude name="SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable"/>
 
-        <!-- Rozpor s phpstan -->
-        <exclude name="SlevomatCodingStandard.PHP.RequireExplicitAssertion.RequiredExplicitAssertion"/>
-
         <!-- skautIS property -->
         <exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
     </rule>

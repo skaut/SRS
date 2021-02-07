@@ -100,6 +100,6 @@ class DatabaseService
 
         $timestamp = (new DateTimeImmutable())->format('YmdHi');
 
-        $dump->save($this->dir . '/backup/' . $dbname . '-' . $timestamp . '.sql.gz');
+        $dump->save($this->dir . '/' . $dbname . '-' . $timestamp . '.sql.gz');
     }
 }

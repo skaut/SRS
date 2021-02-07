@@ -2,16 +2,10 @@
 
 <script>
     $(function () {
-        // nastaveni trid a identifikatoru pro spravnou funkcnost mazani a razeni contentu
-        $('.contents-item').each(function () {
-            var id = $(this).find('input.id').val();
-            $(this).attr('id', 'content-' + id);
-            $(this).find('.delete-content').attr('href', '#content-' + id);
-        });
-
         // razeni contentu
         $('#contents').sortable({
             delay: 300,
+            handle: '.card-header',
             update: function (event, ui) {
             },
             start: function (event, ui) {
@@ -39,6 +33,7 @@
             var contentToDeleteSelector = $('#' + contentToDelete);
             contentToDeleteSelector.find('input[type=text]').prop('disabled', true).val('');
             contentToDeleteSelector.find('input[type=file]').prop('disabled', true).val('');
+            contentToDeleteSelector.find('select').prop('disabled', true).val('');
             contentToDeleteSelector.find('textarea').prop('disabled', true).val('');
             contentToDeleteSelector.fadeOut();
         });
@@ -76,13 +71,13 @@
             {var $type = $content->getType()}
             {var $id = $content->getId()}
 
-            <div class="card contents-item mb-3">
+            <div id="content-{$id}" class="card contents-item mb-3">
                 <div class="card-header">
                     <div class="pull-left">
                         {_common.content.name.$type}
                     </div>
                     <div class="pull-right">
-                        <a href="#" class="btn btn-xs btn-danger delete-content">
+                        <a href="#content-{$id}" class="btn btn-xs btn-danger delete-content">
                             <i class="fa fa-trash"></i>
                         </a>
                         <a href="#" class="btn btn-xs btn-secondary" onclick="return false;">
@@ -98,22 +93,6 @@
 
                         {if $prototype->getAttribute('type') == 'hidden'}
                             {input $input}
-
-                        {elseif $prototype->getAttribute('data-type') == 'image'}
-                            <div class="form-group row">
-                                <div class="col-3">
-                                    {_$input->caption}
-                                </div>
-                                <div class="col-9 overflow-hidden">
-                                    {var $image = $prototype->getAttribute('data-image')}
-                                    {if $image}
-                                        <img src="{$basePath}/files/{$image}" width="{$prototype->getAttribute('data-width')}" height="{$prototype->getAttribute('data-height')}"/>
-                                    {else}
-                                        <div>Žádný obrázek</div>
-                                    {/if}
-                                </div>
-                            </div>
-
                         {else}
                             <div class="form-group row {$input->required ? required}">
                                 <div class="col-3 col-form-label">

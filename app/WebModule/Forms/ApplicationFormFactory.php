@@ -47,8 +47,6 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Http\FileUpload;
 use Nette\Localization\ITranslator;
-use Nette\Utils\Random;
-use Nette\Utils\Strings;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use Skautis\Wsdl\WsdlException;
@@ -58,6 +56,7 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 use function array_keys;
+use function assert;
 use function count;
 use function in_array;
 use function property_exists;
@@ -278,38 +277,37 @@ class ApplicationFormFactory
                 $customInputValue = $this->user->getCustomInputValue($customInput);
 
                 if ($customInput instanceof CustomText) {
-                    /** @var CustomTextValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomTextValue($customInput, $this->user);
+                    assert($customInputValue instanceof CustomTextValue);
                     $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomCheckbox) {
-                    /** @var CustomCheckboxValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomCheckboxValue($customInput, $this->user);
+                    assert($customInputValue instanceof CustomCheckboxValue);
                     $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomSelect) {
-                    /** @var CustomSelectValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomSelectValue($customInput, $this->user);
+                    assert($customInputValue instanceof CustomSelectValue);
                     $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomMultiSelect) {
-                    /** @var CustomMultiSelectValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomMultiSelectValue($customInput, $this->user);
+                    assert($customInputValue instanceof CustomMultiSelectValue);
                     $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomFile) {
-                    /** @var CustomFileValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomFileValue($customInput, $this->user);
-                    /** @var FileUpload $file */
+                    assert($customInputValue instanceof CustomFileValue);
                     $file = $values->$customInputId;
+                    assert($file instanceof FileUpload);
                     if ($file->getError() == UPLOAD_ERR_OK) {
-                        $path = $this->generatePath($file);
-                        $this->filesService->save($file, $path);
+                        $path = $this->filesService->save($file, CustomFile::PATH, true, $file->name);
                         $customInputValue->setValue($path);
                     }
                 } elseif ($customInput instanceof CustomDate) {
-                    /** @var CustomDateValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomDateValue($customInput, $this->user);
+                    assert($customInputValue instanceof CustomDateValue);
                     $customInputValue->setValue($values->$customInputId);
                 } elseif ($customInput instanceof CustomDateTime) {
-                    /** @var CustomDateTimeValue $customInputValue */
                     $customInputValue = $customInputValue ?: new CustomDateTimeValue($customInput, $this->user);
+                    assert($customInputValue instanceof CustomDateTimeValue);
                     $customInputValue->setValue($values->$customInputId);
                 }
 
@@ -377,6 +375,7 @@ class ApplicationFormFactory
 
                 case $customInput instanceof CustomFile:
                     $custom = $form->addUpload($customInputId, $customInputName);
+                    $custom->setHtmlAttribute('data-show-preview', 'true');
                     break;
 
                 case $customInput instanceof CustomDate:
@@ -396,8 +395,8 @@ class ApplicationFormFactory
             $custom->setOption('id', 'form-group-' . $customInputId);
 
             if ($customInput->isMandatory()) {
-                /** @var MultiSelectBox $rolesSelect */
                 $rolesSelect = $form['roles'];
+                assert($rolesSelect instanceof MultiSelectBox);
                 $custom->addConditionOn($rolesSelect, self::class . '::toggleCustomInputRequired', ['id' => $customInputId, 'roles' => Helpers::getIds($customInput->getRoles())])
                     ->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
             }
@@ -426,8 +425,9 @@ class ApplicationFormFactory
             ->setRequired(false)
             ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
 
-        /** @var MultiSelectBox $rolesSelect */
         $rolesSelect = $form['roles'];
+        assert($rolesSelect instanceof MultiSelectBox);
+
         $subeventsSelect->addConditionOn(
             $rolesSelect,
             self::class . '::toggleSubeventsRequired',
@@ -653,13 +653,5 @@ class ApplicationFormFactory
     public static function toggleCustomInputVisibility(MultiSelectBox $field, array $customInputRoles): bool
     {
         return false;
-    }
-
-    /**
-     * Vygeneruje cestu souboru.
-     */
-    private function generatePath(FileUpload $file): string
-    {
-        return CustomFile::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }
 }

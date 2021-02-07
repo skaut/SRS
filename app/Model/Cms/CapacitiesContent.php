@@ -18,6 +18,8 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use stdClass;
 
+use function assert;
+
 /**
  * Entita obsahu s přehledem kapacit rolí.
  *
@@ -88,11 +90,11 @@ class CapacitiesContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
+        assert($formContainer instanceof Container);
         $formContainer->addMultiSelect(
             'roles',
-            'admin.cms.pages_content_capacities_roles',
+            'admin.cms.pages.content.form.capacities_roles',
             $this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
         )
             ->setDefaultValue($this->roleRepository->findRolesIds($this->roles));

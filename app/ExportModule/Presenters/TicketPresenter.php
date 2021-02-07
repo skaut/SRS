@@ -17,6 +17,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Bridges\ApplicationLatte\Template;
 use Throwable;
 
+use function assert;
 use function random_bytes;
 
 /**
@@ -57,8 +58,8 @@ class TicketPresenter extends ExportBasePresenter
         $user         = $this->userRepository->findById($this->user->id);
         $userPrograms = $this->queryBus->handle(new UserAttendsProgramsQuery($user));
 
-        /** @var Template $template */
         $template = $this->createTemplate();
+        assert($template instanceof Template);
         $template->setFile(__DIR__ . '/templates/Ticket/pdf.latte');
 
         $template->logo                    = $this->settingsService->getValue(Settings::LOGO);

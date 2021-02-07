@@ -19,7 +19,7 @@ class CustomFile extends CustomInput
     /**
      * Adresář pro ukládání souborů.
      */
-    public const PATH = '/custom_input';
+    public const PATH = 'custom_input';
 
     protected string $type = CustomInput::FILE;
 }

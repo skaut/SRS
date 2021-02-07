@@ -15,8 +15,7 @@ use App\Services\IMailService;
 use App\Services\QueryBus;
 use App\WebModule\Components\ApplicationsGridControl;
 use App\WebModule\Components\IApplicationsGridControlFactory;
-use App\WebModule\Forms\AdditionalInformationForm;
-use App\WebModule\Forms\IAdditionalInformationFormFactory;
+use App\WebModule\Forms\AdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesFormFactory;
 use Exception;
@@ -37,7 +36,7 @@ class ProfilePresenter extends WebBasePresenter
     public PersonalDetailsFormFactory $personalDetailsFormFactory;
 
     /** @inject */
-    public IAdditionalInformationFormFactory $additionalInformationFormFactory;
+    public AdditionalInformationFormFactory $additionalInformationFormFactory;
 
     /** @inject */
     public RolesFormFactory $rolesFormFactory;
@@ -119,16 +118,16 @@ class ProfilePresenter extends WebBasePresenter
         return $form;
     }
 
-    protected function createComponentAdditionalInformationForm(): AdditionalInformationForm
+    protected function createComponentAdditionalInformationForm(): Form
     {
-        $control = $this->additionalInformationFormFactory->create();
+        $form = $this->additionalInformationFormFactory->create($this->user->id);
 
-        $control->onSave[] = function (): void {
+        $form->onSuccess[] = function (): void {
             $this->flashMessage('web.profile.additional_information_update_successfull', 'success');
             $this->redirect('this#additional-information');
         };
 
-        return $control;
+        return $form;
     }
 
     /**

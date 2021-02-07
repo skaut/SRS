@@ -6,6 +6,7 @@ namespace App\AdminModule\Components;
 
 use App\Model\Application\Application;
 use App\Model\Application\Repositories\ApplicationRepository;
+use App\Model\Application\RolesApplication;
 use App\Model\Application\SubeventsApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
@@ -214,8 +215,8 @@ class ApplicationsGridControl extends Control
                     'data-toggle' => 'confirmation',
                     'data-content' => $this->translator->translate('admin.users.users_applications_cancel_application_confirm'),
                 ])->setClass('btn btn-xs btn-danger');
-            $grid->allowRowsAction('cancelApplication', static function (Application $item) {
-                return $item->getType() === Application::SUBEVENTS && ! $item->isCanceled();
+            $grid->allowRowsAction('cancelApplication', static function (Application $application) {
+                return $application instanceof SubeventsApplication && ! $application->isCanceled();
             });
         }
 
@@ -274,7 +275,7 @@ class ApplicationsGridControl extends Control
 
         $p = $this->getPresenter();
 
-        if ($application->getType() === Application::ROLES) {
+        if ($application instanceof RolesApplication) {
             if (! $selectedSubevents->isEmpty()) {
                 $p->flashMessage('admin.users.users_applications_subevents_not_empty', 'danger');
                 $this->redirect('this');

@@ -61,13 +61,20 @@ function initFileInputs() {
     $('input[type="file"]').fileinput({
         language: 'cs',
         theme: 'fa',
-        browseLabel: 'Vybrat',
-        msgPlaceholder: 'Vybrat soubor...',
         showPreview: false,
         showRemove: false,
         showUpload: false,
         showCancel: false,
-        browseClass: 'btn btn-secondary'
+        showClose: false,
+        showDrag: false, // nefunguje, opraveno v CSS
+        initialPreviewShowDelete: false,
+        initialPreviewAsData: true,
+        browseClass: 'btn btn-secondary',
+        browseLabel: 'Vybrat',
+        msgPlaceholder: 'Vybrat soubor...',
+        dropZoneTitle: 'Přetáhněte soubory sem &hellip;',
+        fileSingle: 'souborů',
+        filePlural: 'souborů'
     });
 }
 

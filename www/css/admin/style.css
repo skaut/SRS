@@ -121,6 +121,11 @@ div.mce-fullscreen {
     border-left: none !important;
 }
 
+/* uprava fileinput */
+.file-drag-handle {
+    display: none;
+}
+
 /* vyber role */
 #role-menu-text {
     max-width: 220px;

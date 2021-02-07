@@ -18,11 +18,12 @@ use Nette\Forms\Container;
 use Nette\Http\FileUpload;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
-use Nette\Utils\Random;
-use Nette\Utils\Strings;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
+
+use function assert;
+use function basename;
 
 use const UPLOAD_ERR_OK;
 
@@ -75,9 +76,9 @@ class DocumentsGridControl extends Control
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(false);
 
-        $grid->addColumnText('name', 'admin.cms.documents_name');
+        $grid->addColumnText('name', 'admin.cms.documents.column.name');
 
-        $grid->addColumnText('tags', 'admin.cms.documents_tags')
+        $grid->addColumnText('tags', 'admin.cms.documents.column.tags')
             ->setRenderer(static function (Document $row) {
                 $tags = Html::el();
                 foreach ($row->getTags() as $tag) {
@@ -90,34 +91,32 @@ class DocumentsGridControl extends Control
                 return $tags;
             });
 
-        $grid->addColumnText('file', 'admin.cms.documents_file')
-            ->setRenderer(function (Document $row) {
+        $grid->addColumnText('file', 'admin.cms.documents.column.file')
+            ->setRenderer(static function (Document $document) {
                 return Html::el('a')
-                    ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath
-                        . '/files' . $row->getFile())
+                    ->setAttribute('href', $document->getFile())
                     ->setAttribute('target', '_blank')
                     ->setAttribute('class', 'btn btn-xs btn-secondary')
-                    ->addHtml(
-                        Html::el('span')->setAttribute('class', 'fa fa-download')
-                    );
+                    ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-download'))
+                    ->addText(' ' . basename($document->getFile()));
             });
 
-        $grid->addColumnText('description', 'admin.cms.documents_description');
+        $grid->addColumnText('description', 'admin.cms.documents.column.description');
 
-        $grid->addColumnDateTime('timestamp', 'admin.cms.documents_timestamp')
+        $grid->addColumnDateTime('timestamp', 'admin.cms.documents.column.timestamp')
             ->setFormat(Helpers::DATETIME_FORMAT);
 
         $tagsOptions = $this->tagRepository->getTagsOptions();
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = static function (Container $container) use ($tagsOptions): void {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
+                ->addRule(Form::FILLED, 'admin.cms.documents.column.name_empty');
 
             $container->addMultiSelect('tags', '', $tagsOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
+                ->addRule(Form::FILLED, 'admin.cms.documents.column.tags_empty');
 
             $container->addUpload('file', '')->setHtmlAttribute('class', 'datagrid-upload')
-                ->addRule(Form::FILLED, 'admin.cms.documents_file_empty');
+                ->addRule(Form::FILLED, 'admin.cms.documents.column.file_empty');
 
             $container->addText('description', '');
         };
@@ -125,10 +124,10 @@ class DocumentsGridControl extends Control
 
         $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container) use ($tagsOptions): void {
             $container->addText('name', '')
-                ->addRule(Form::FILLED, 'admin.cms.documents_name_empty');
+                ->addRule(Form::FILLED, 'admin.cms.documents.column.name_empty');
 
             $container->addMultiSelect('tags', '', $tagsOptions)->setHtmlAttribute('class', 'datagrid-multiselect')
-                ->addRule(Form::FILLED, 'admin.cms.documents_tags_empty');
+                ->addRule(Form::FILLED, 'admin.cms.documents.column.tags_empty');
 
             $container->addUpload('file', '')->setHtmlAttribute('class', 'datagrid-upload');
 
@@ -149,7 +148,7 @@ class DocumentsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.cms.documents_delete_confirm'),
+                'data-content' => $this->translator->translate('admin.cms.documents.action.delete_confirm'),
             ]);
     }
 
@@ -162,8 +161,7 @@ class DocumentsGridControl extends Control
     public function add(stdClass $values): void
     {
         $file = $values->file;
-        $path = $this->generatePath($file);
-        $this->filesService->save($file, $path);
+        $path = $this->filesService->save($file, Document::PATH, true, $file->name);
 
         $document = new Document();
 
@@ -175,7 +173,7 @@ class DocumentsGridControl extends Control
 
         $this->documentRepository->save($document);
 
-        $this->getPresenter()->flashMessage('admin.cms.documents_saved', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.documents.message.save_success', 'success');
 
         $this->redirect('this');
     }
@@ -190,13 +188,11 @@ class DocumentsGridControl extends Control
     {
         $document = $this->documentRepository->findById((int) $id);
 
-        /** @var FileUpload $file */
         $file = $values->file;
+        assert($file instanceof FileUpload);
         if ($file->getError() == UPLOAD_ERR_OK) {
             $this->filesService->delete($this->documentRepository->findById((int) $id)->getFile());
-            $path = $this->generatePath($file);
-            $this->filesService->save($file, $path);
-
+            $path = $this->filesService->save($file, Document::PATH, true, $file->name);
             $document->setFile($path);
             $document->setTimestamp(new DateTimeImmutable());
         }
@@ -207,7 +203,7 @@ class DocumentsGridControl extends Control
 
         $this->documentRepository->save($document);
 
-        $this->getPresenter()->flashMessage('admin.cms.documents_saved', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.documents.message.save_success', 'success');
 
         $this->redirect('this');
     }
@@ -224,16 +220,8 @@ class DocumentsGridControl extends Control
         $this->filesService->delete($document->getFile());
         $this->documentRepository->remove($document);
 
-        $this->getPresenter()->flashMessage('admin.cms.documents_deleted', 'success');
+        $this->getPresenter()->flashMessage('admin.cms.documents.message.delete_success', 'success');
 
         $this->redirect('this');
-    }
-
-    /**
-     * Vygeneruje cestu dokumentu.
-     */
-    private function generatePath(FileUpload $file): string
-    {
-        return Document::PATH . '/' . Random::generate(5) . '/' . Strings::webalize($file->name, '.');
     }
 }

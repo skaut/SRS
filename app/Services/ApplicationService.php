@@ -227,8 +227,7 @@ class ApplicationService
                 }
 
                 foreach ($user->getNotCanceledApplications() as $application) {
-                    if ($application->getType() === Application::ROLES) {
-                        /** @var RolesApplication $newApplication */
+                    if ($application instanceof RolesApplication) {
                         $newApplication = clone $application;
                         $newApplication->setRoles($roles);
                         $newApplication->setFee($this->countRolesFee($roles));
@@ -679,7 +678,7 @@ class ApplicationService
      */
     public function isAllowedEditApplication(Application $application): bool
     {
-        return $application->getType() === Application::SUBEVENTS && ! $application->isCanceled()
+        return $application instanceof SubeventsApplication && ! $application->isCanceled()
             && $application->getState() !== ApplicationState::PAID
             && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTimeImmutable())->setTime(0, 0);
     }

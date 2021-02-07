@@ -45,6 +45,7 @@ content:
         capacities: "Kapacita semináře"
         organizer: "Pořadatel"
         contact_form: "Kontaktní formulář"
+        slideshow: "Slideshow"
 
     default_heading:
         text: ""
@@ -62,6 +63,7 @@ content:
         capacities: "Kapacita semináře"
         organizer: "Pořadatel"
         contact_form: "Kontaktní formulář"
+        slideshow: ""
 
 area:
     main: "Hlavní oblast"

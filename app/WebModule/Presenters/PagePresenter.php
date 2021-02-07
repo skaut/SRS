@@ -25,6 +25,7 @@ use App\WebModule\Components\INewsContentControlFactory;
 use App\WebModule\Components\IOrganizerContentControlFactory;
 use App\WebModule\Components\IPlaceContentControlFactory;
 use App\WebModule\Components\IProgramsContentControlFactory;
+use App\WebModule\Components\ISlideshowContentControlFactory;
 use App\WebModule\Components\ITextContentControlFactory;
 use App\WebModule\Components\IUsersContentControlFactory;
 use App\WebModule\Components\LectorsContentControl;
@@ -32,6 +33,7 @@ use App\WebModule\Components\NewsContentControl;
 use App\WebModule\Components\OrganizerContentControl;
 use App\WebModule\Components\PlaceContentControl;
 use App\WebModule\Components\ProgramsContentControl;
+use App\WebModule\Components\SlideshowContentControl;
 use App\WebModule\Components\TextContentControl;
 use App\WebModule\Components\UsersContentControl;
 use Nette\Application\BadRequestException;
@@ -89,6 +91,9 @@ class PagePresenter extends WebBasePresenter
 
     /** @inject */
     public IContactFormContentControlFactory $contactFormContentFactory;
+
+    /** @inject */
+    public ISlideshowContentControlFactory $slideshowContentFactory;
 
     /**
      * @throws BadRequestException
@@ -197,5 +202,10 @@ class PagePresenter extends WebBasePresenter
     protected function createComponentContactFormContent(): ContactFormContentControl
     {
         return $this->contactFormContentFactory->create();
+    }
+
+    protected function createComponentSlideshowContent(): SlideshowContentControl
+    {
+        return $this->slideshowContentFactory->create();
     }
 }

@@ -50,9 +50,7 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
-use function array_slice;
-use function array_values;
-use function explode;
+use function basename;
 
 /**
  * Komponenta pro správu rolí.
@@ -143,7 +141,7 @@ class UsersGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentUsersGrid(string $name): void
+    public function createComponentUsersGrid(string $name): DataGrid
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -357,14 +355,11 @@ class UsersGridControl extends Control
                             case $customInputValue instanceof CustomFileValue:
                                 return $customInputValue->getValue()
                                     ? Html::el('a')
-                                        ->setAttribute('href', $this->getPresenter()->getTemplate()->basePath
-                                            . '/files' . $customInputValue->getValue())
-                                        ->setAttribute('title', array_values(array_slice(explode('/', $customInputValue->getValue()), -1))[0])
+                                        ->setAttribute('href', $customInputValue->getValue())
+                                        ->setAttribute('title', basename($customInputValue->getValue()))
                                         ->setAttribute('target', '_blank')
                                         ->setAttribute('class', 'btn btn-xs btn-secondary')
-                                        ->addHtml(
-                                            Html::el('span')->setAttribute('class', 'fa fa-download')
-                                        )
+                                        ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-download'))
                                     : '';
 
                             default:
@@ -483,6 +478,8 @@ class UsersGridControl extends Control
         });
 
         $grid->setColumnsSummary(['fee', 'feeRemaining']);
+
+        return $grid;
     }
 
     /**
@@ -519,8 +516,7 @@ class UsersGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $usersGrid */
-            $usersGrid = $this['usersGrid'];
+            $usersGrid = $this->getComponent('usersGrid');
             $usersGrid->redrawItem($id);
         } else {
             $this->redirect('this');
@@ -544,8 +540,7 @@ class UsersGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $usersGrid */
-            $usersGrid = $this['usersGrid'];
+            $usersGrid = $this->getComponent('usersGrid');
             $usersGrid->redrawItem($id);
         } else {
             $this->redirect('this');

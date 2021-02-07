@@ -170,6 +170,16 @@ class UsersPresenter extends AdminBasePresenter
         $this->redirect('this');
     }
 
+    public function handleRemovePhoto(): void
+    {
+        $user = $this->userRepository->findById((int) $this->getParameter('id'));
+
+        $user->setPhoto(null);
+        $this->userRepository->save($user);
+
+        $this->redirect('this');
+    }
+
     protected function createComponentUsersGrid(): UsersGridControl
     {
         return $this->usersGridControlFactory->create();

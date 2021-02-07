@@ -14,6 +14,7 @@ use App\Model\Cms\ImageContent;
 use App\Model\Cms\Page;
 use App\Model\Cms\Repositories\PageRepository;
 use App\Model\Cms\Repositories\TagRepository;
+use App\Model\Cms\SlideshowContent;
 use App\Model\Cms\UsersContent;
 use App\Services\AclService;
 use App\Services\CmsService;
@@ -131,7 +132,7 @@ class PageForm extends UI\Control
 
         $form->addHidden('id')->setDefaultValue($this->page->getId());
         $form->addHidden('area')->setDefaultValue($this->area);
-        $form->addSelect('type', 'admin.cms.pages_content_type', $this->prepareContentTypesOptions());
+        $form->addSelect('type', 'admin.cms.pages.content.form.type', $this->prepareContentTypesOptions());
 
         foreach ($this->page->getContents($this->area) as $content) {
             switch (get_class($content)) {
@@ -143,6 +144,9 @@ class PageForm extends UI\Control
                     $content->injectTagRepository($this->tagRepository);
                     break;
                 case ImageContent::class:
+                    $content->injectFilesService($this->filesService);
+                    break;
+                case SlideshowContent::class:
                     $content->injectFilesService($this->filesService);
                     break;
                 case UsersContent::class:

@@ -35,6 +35,8 @@ use stdClass;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
+use function assert;
+
 /**
  * Formulář pro úpravu programového bloku.
  *
@@ -198,8 +200,8 @@ class BlockFormFactory
             ->setValidationScope([])
             ->setHtmlAttribute('class', 'btn btn-warning');
 
-        /** @var TextInput $nameText */
         $nameText = $form['name'];
+        assert($nameText instanceof TextInput);
 
         if ($this->block) {
             $nameText->addRule(Form::IS_NOT_IN, 'admin.program.blocks.form.name_exists', $this->blockRepository->findOthersNames($id));
@@ -228,8 +230,8 @@ class BlockFormFactory
             $nameText->addRule(Form::IS_NOT_IN, 'admin.program.blocks.form.name_exists', $this->blockRepository->findAllNames());
 
             if (! $userIsAllowedManageAllPrograms) {
-                /** @var MultiSelectBox $lectorsMultiSelect */
                 $lectorsMultiSelect = $form['lectors'];
+                assert($lectorsMultiSelect instanceof MultiSelectBox);
                 $lectorsMultiSelect->setDefaultValue([$this->user->getId()]);
             }
         }
