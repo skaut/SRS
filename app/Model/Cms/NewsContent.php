@@ -11,6 +11,8 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use stdClass;
 
+use function assert;
+
 /**
  * Entita obsahu s aktualitami.
  *
@@ -48,8 +50,8 @@ class NewsContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
+        assert($formContainer instanceof Container);
         $formContainer->addText('count', 'admin.cms.pages.content.form.news_count')
             ->setDefaultValue($this->count)
             ->setHtmlAttribute('data-toggle', 'tooltip')

@@ -16,6 +16,8 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use stdClass;
 
+use function assert;
+
 /**
  * Entita obsahu s dokumenty.
  *
@@ -80,8 +82,8 @@ class DocumentContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
+        assert($formContainer instanceof Container);
         $formContainer->addMultiSelect('tags', 'admin.cms.pages.content.form.tags', $this->tagRepository->getTagsOptions())
             ->setDefaultValue($this->tagRepository->findTagsIds($this->tags));
 

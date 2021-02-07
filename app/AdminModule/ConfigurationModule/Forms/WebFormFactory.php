@@ -13,11 +13,12 @@ use App\Services\ISettingsService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
-use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
+use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
 use stdClass;
 use Throwable;
 
 use function array_key_exists;
+use function assert;
 
 use const UPLOAD_ERR_OK;
 
@@ -61,8 +62,8 @@ class WebFormFactory
     {
         $form = $this->baseFormFactory->create();
 
-        /** @var Bs3FormRenderer $renderer */
-        $renderer                                   = $form->getRenderer();
+        $renderer = $form->getRenderer();
+        assert($renderer instanceof Bs4FormRenderer);
         $renderer->wrappers['control']['container'] = 'div class="col-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 
@@ -106,8 +107,8 @@ class WebFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        /** @var FileUpload $logo */
         $logo = $values->logo;
+        assert($logo instanceof FileUpload);
         if ($logo->getError() == UPLOAD_ERR_OK) {
             $this->filesService->delete($this->settingsService->getValue(Settings::LOGO));
             $path = $this->filesService->save($logo, 'logo', false, $logo->name);

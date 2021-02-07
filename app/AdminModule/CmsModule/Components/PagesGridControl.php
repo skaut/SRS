@@ -25,6 +25,7 @@ use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 use function array_keys;
+use function assert;
 use function count;
 
 /**
@@ -73,7 +74,7 @@ class PagesGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentPagesGrid(string $name): void
+    public function createComponentPagesGrid(string $name): DataGrid
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -139,8 +140,8 @@ class PagesGridControl extends Control
             $container->addSelect('public', '', $publicOptions);
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Page $item): void {
-            /** @var TextInput $slugText */
             $slugText = $container['slug'];
+            assert($slugText instanceof TextInput);
             $slugText->addRule(Form::IS_NOT_IN, 'admin.cms.pages.column.slug_exists', $this->pageRepository->findOthersSlugs($item->getId()));
 
             $container->setDefaults([
@@ -167,6 +168,8 @@ class PagesGridControl extends Control
         $grid->allowRowsAction('delete', static function (Page $item) {
             return $item->getSlug() !== '/';
         });
+
+        return $grid;
     }
 
     /**
@@ -251,8 +254,7 @@ class PagesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $pagesGrid */
-            $pagesGrid = $this['pagesGrid'];
+            $pagesGrid = $this->getComponent('pagesGrid');
             $pagesGrid->reload();
         } else {
             $this->redirect('this');
@@ -284,8 +286,7 @@ class PagesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $pagesGrid */
-            $pagesGrid = $this['pagesGrid'];
+            $pagesGrid = $this->getComponent('pagesGrid');
             $pagesGrid->redrawItem($id);
         } else {
             $this->redirect('this');

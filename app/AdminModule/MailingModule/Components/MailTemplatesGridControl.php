@@ -45,7 +45,7 @@ class MailTemplatesGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentMailTemplatesGrid(string $name): void
+    public function createComponentMailTemplatesGrid(string $name): DataGrid
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -69,6 +69,8 @@ class MailTemplatesGridControl extends Control
             ->onChange[] = [$this, 'changeActive'];
 
         $grid->addAction('edit', 'admin.common.edit', 'Templates:edit');
+
+        return $grid;
     }
 
     /**
@@ -94,8 +96,7 @@ class MailTemplatesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $mailTemplatesGrid */
-            $mailTemplatesGrid = $this['mailTemplatesGrid'];
+            $mailTemplatesGrid = $this->getComponent('mailTemplatesGrid');
             $mailTemplatesGrid->redrawItem($id);
         } else {
             $this->redirect('this');

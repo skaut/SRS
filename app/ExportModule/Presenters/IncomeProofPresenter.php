@@ -24,6 +24,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Bridges\ApplicationLatte\Template;
 use Throwable;
 
+use function assert;
 use function random_bytes;
 
 /**
@@ -137,8 +138,8 @@ class IncomeProofPresenter extends ExportBasePresenter
             }
         }
 
-        /** @var Template $template */
         $template = $this->createTemplate();
+        assert($template instanceof Template);
         $template->setFile(__DIR__ . '/templates/IncomeProof/pdf.latte');
 
         $template->applications      = $updatedApplications;

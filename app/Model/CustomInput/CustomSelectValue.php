@@ -6,6 +6,8 @@ namespace App\Model\CustomInput;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use function assert;
+
 /**
  * Entita hodnota vlastního výběrového pole přihlášky.
  *
@@ -38,8 +40,8 @@ class CustomSelectValue extends CustomInputValue
      */
     public function getValueText(): string
     {
-        /** @var CustomSelect $input */
         $input = $this->getInput();
+        assert($input instanceof CustomSelect);
 
         return $this->value !== 0 ? $input->getSelectOptions()[$this->value] : '';
     }

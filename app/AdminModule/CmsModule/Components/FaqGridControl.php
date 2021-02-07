@@ -46,7 +46,7 @@ class FaqGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentFaqGrid(string $name): void
+    public function createComponentFaqGrid(string $name): DataGrid
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -88,6 +88,8 @@ class FaqGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.cms.faq.action.delete_confirm'),
             ]);
+
+        return $grid;
     }
 
     /**
@@ -121,8 +123,7 @@ class FaqGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $faqGrid */
-            $faqGrid = $this['faqGrid'];
+            $faqGrid = $this->getComponent('faqGrid');
             $faqGrid->reload();
         } else {
             $this->redirect('this');
@@ -147,8 +148,7 @@ class FaqGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $faqGrid */
-            $faqGrid = $this['faqGrid'];
+            $faqGrid = $this->getComponent('faqGrid');
             $faqGrid->redrawItem($id);
         } else {
             $this->redirect('this');

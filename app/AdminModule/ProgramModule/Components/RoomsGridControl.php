@@ -24,6 +24,8 @@ use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
+use function assert;
+
 /**
  * Komponenta pro správu místností.
  *
@@ -113,8 +115,8 @@ class RoomsGridControl extends Control
                 ->addRule(Form::INTEGER, 'admin.program.rooms.column.capacity_format');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Room $item): void {
-            /** @var TextInput $nameText */
             $nameText = $container['name'];
+            assert($nameText instanceof TextInput);
             $nameText->addRule(Form::IS_NOT_IN, 'admin.program.rooms.column.name_exists', $this->roomRepository->findOthersNames($item->getId()));
 
             $container->setDefaults([

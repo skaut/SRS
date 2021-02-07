@@ -42,10 +42,7 @@ use stdClass;
 use Throwable;
 
 use function array_key_exists;
-use function array_slice;
-use function array_values;
 use function assert;
-use function explode;
 
 use const UPLOAD_ERR_OK;
 
@@ -113,7 +110,7 @@ class AdditionalInformationFormFactory
      */
     public function create(int $userId): Form
     {
-        $this->user = $this->userRepository->findById($userId);
+        $this->user                = $this->userRepository->findById($userId);
         $isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
 
         $form = $this->baseFormFactory->create();
@@ -124,45 +121,43 @@ class AdditionalInformationFormFactory
 
             switch (true) {
                 case $customInput instanceof CustomText:
-                    $custom = $form->addText($customInputId, $customInput->getName());
-
-                    /** @var ?CustomTextValue $customInputValue */
+                    $custom           = $form->addText($customInputId, $customInput->getName());
                     $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
+                        assert($customInputValue instanceof CustomTextValue);
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
 
                     break;
 
                 case $customInput instanceof CustomCheckbox:
-                    $custom = $form->addCheckbox($customInputId, $customInput->getName());
-
-                    /** @var ?CustomCheckboxValue $customInputValue */
+                    $custom           = $form->addCheckbox($customInputId, $customInput->getName());
                     $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
+                        assert($customInputValue instanceof CustomCheckboxValue);
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
 
                     break;
 
                 case $customInput instanceof CustomSelect:
-                    $selectOptions = $customInput->getSelectOptions();
-                    $custom        = $form->addSelect($customInputId, $customInput->getName(), $selectOptions);
-
-                    /** @var ?CustomSelectValue $customInputValue */
+                    $selectOptions    = $customInput->getSelectOptions();
+                    $custom           = $form->addSelect($customInputId, $customInput->getName(), $selectOptions);
                     $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue && array_key_exists($customInputValue->getValue(), $selectOptions)) {
-                        $custom->setDefaultValue($customInputValue->getValue());
+                    if ($customInputValue) {
+                        assert($customInputValue instanceof CustomSelectValue);
+                        if (array_key_exists($customInputValue->getValue(), $selectOptions)) {
+                            $custom->setDefaultValue($customInputValue->getValue());
+                        }
                     }
 
                     break;
 
                 case $customInput instanceof CustomMultiSelect:
-                    $custom = $form->addMultiSelect($customInputId, $customInput->getName(), $customInput->getSelectOptions());
-
-                    /** @var ?CustomMultiSelectValue $customInputValue */
+                    $custom           = $form->addMultiSelect($customInputId, $customInput->getName(), $customInput->getSelectOptions());
                     $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
+                        assert($customInputValue instanceof CustomMultiSelectValue);
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
 
@@ -172,7 +167,6 @@ class AdditionalInformationFormFactory
                     $custom = $form->addUpload($customInputId, $customInput->getName());
                     $custom->setHtmlAttribute('data-show-preview', 'true')
                         ->setHtmlAttribute('data-initial-preview-file-type', 'other');
-
                     $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         assert($customInputValue instanceof CustomFileValue);
@@ -183,11 +177,10 @@ class AdditionalInformationFormFactory
                     break;
 
                 case $customInput instanceof CustomDate:
-                    $custom = new DateControl($customInput->getName());
-
-                    /** @var ?CustomDateValue $customInputValue */
+                    $custom           = new DateControl($customInput->getName());
                     $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
+                        assert($customInputValue instanceof CustomDateValue);
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
 
@@ -195,11 +188,10 @@ class AdditionalInformationFormFactory
                     break;
 
                 case $customInput instanceof CustomDateTime:
-                    $custom = new DateTimeControl($customInput->getName());
-
-                    /** @var ?CustomDateTimeValue $customInputValue */
+                    $custom           = new DateTimeControl($customInput->getName());
                     $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
+                        assert($customInputValue instanceof CustomDateTimeValue);
                         $custom->setDefaultValue($customInputValue->getValue());
                     }
 
@@ -248,44 +240,44 @@ class AdditionalInformationFormFactory
                     $newValue         = $values->$customInputId;
 
                     if ($customInput instanceof CustomText) {
-                        /** @var CustomTextValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomTextValue($customInput, $this->user);
-                        $oldValue         = $customInputValue->getValue();
+                        assert($customInputValue instanceof CustomTextValue);
+                        $oldValue = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomCheckbox) {
-                        /** @var CustomCheckboxValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue($customInput, $this->user);
-                        $oldValue         = $customInputValue->getValue();
+                        assert($customInputValue instanceof CustomCheckboxValue);
+                        $oldValue = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomSelect) {
-                        /** @var CustomSelectValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomSelectValue($customInput, $this->user);
-                        $oldValue         = $customInputValue->getValue();
+                        assert($customInputValue instanceof CustomSelectValue);
+                        $oldValue = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomMultiSelect) {
-                        /** @var CustomMultiSelectValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomMultiSelectValue($customInput, $this->user);
-                        $oldValue         = $customInputValue->getValue();
+                        assert($customInputValue instanceof CustomMultiSelectValue);
+                        $oldValue = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomFile) {
-                        /** @var CustomFileValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomFileValue($customInput, $this->user);
-                        $oldValue         = $customInputValue->getValue();
-                        /** @var FileUpload $newValue */
+                        assert($customInputValue instanceof CustomFileValue);
+                        $oldValue = $customInputValue->getValue();
                         $newValue = $values->$customInputId;
+                        assert($newValue instanceof FileUpload);
                         if ($newValue->getError() == UPLOAD_ERR_OK) {
                             $path = $this->filesService->save($newValue, CustomFile::PATH, true, $newValue->name);
                             $customInputValue->setValue($path);
                         }
                     } elseif ($customInput instanceof CustomDate) {
-                        /** @var CustomDateValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomDateValue($customInput, $this->user);
-                        $oldValue         = $customInputValue->getValue();
+                        assert($customInputValue instanceof CustomDateValue);
+                        $oldValue = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomDateTime) {
-                        /** @var CustomDateTimeValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomDateTimeValue($customInput, $this->user);
-                        $oldValue         = $customInputValue->getValue();
+                        assert($customInputValue instanceof CustomDateTimeValue);
+                        $oldValue = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     }
 

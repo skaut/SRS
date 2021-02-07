@@ -12,13 +12,10 @@ use Nette\Utils\Random;
 use Nette\Utils\Strings;
 use Nette\Utils\UnknownImageFileException;
 
-use function dirname;
 use function fclose;
 use function file_exists;
 use function fopen;
 use function fwrite;
-use function is_dir;
-use function mkdir;
 use function unlink;
 
 /**
@@ -42,7 +39,7 @@ class FilesService
      */
     public function save(FileUpload $file, string $directory, bool $randomSubDir, string $fileName): string
     {
-        $path = $this->generatePath($directory, $randomSubDir, $fileName);
+        $path         = $this->generatePath($directory, $randomSubDir, $fileName);
         $absolutePath = $this->getAbsolutePath($path);
 
         $file->move($absolutePath);
@@ -66,7 +63,7 @@ class FilesService
      */
     public function create(string $content, string $directory, bool $randomSubDir, string $fileName): string
     {
-        $path = $this->generatePath($directory, $randomSubDir, $fileName);
+        $path         = $this->generatePath($directory, $randomSubDir, $fileName);
         $absolutePath = $this->getAbsolutePath($path);
 
         $file = fopen($absolutePath, 'wb');

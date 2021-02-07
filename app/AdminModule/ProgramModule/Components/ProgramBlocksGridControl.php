@@ -36,6 +36,8 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
+use function assert;
+
 /**
  * Komponenta pro správu programových bloků.
  *
@@ -108,7 +110,7 @@ class ProgramBlocksGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentProgramBlocksGrid(string $name): void
+    public function createComponentProgramBlocksGrid(string $name): DataGrid
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -217,6 +219,8 @@ class ProgramBlocksGridControl extends Control
 
         $grid->addGroupAction('admin.program.blocks.action.export_blocks_attendees')
             ->onSelect[] = [$this, 'groupExportBlocksAttendees'];
+
+        return $grid;
     }
 
     /**
@@ -270,8 +274,7 @@ class ProgramBlocksGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $programBlocksGrid */
-            $programBlocksGrid = $this['programBlocksGrid'];
+            $programBlocksGrid = $this->getComponent('programBlocksGrid');
             $programBlocksGrid->redrawItem($id);
         } else {
             $this->redirect('this');
@@ -313,8 +316,8 @@ class ProgramBlocksGridControl extends Control
      */
     public function isAllowedModifyBlock(Block $block): bool
     {
-        /** @var AdminBasePresenter $presenter */
         $presenter = $this->getPresenter();
+        assert($presenter instanceof AdminBasePresenter);
 
         return $presenter->dbuser->isAllowedModifyBlock($block);
     }

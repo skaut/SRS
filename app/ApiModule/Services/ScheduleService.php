@@ -140,7 +140,6 @@ class ScheduleService
         $userAllowedPrograms              = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user, ! $registrationBeforePaymentAllowed));
         $userAllowedProgramsWithNotPaid   = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user, false));
 
-        /** @var ProgramDetailDto[] $programDetailDtos */
         $programDetailDtos = [];
         foreach ($userAllowedProgramsWithNotPaid as $program) {
             $programAttendees  = $this->queryBus->handle(new ProgramAttendeesQuery($program));

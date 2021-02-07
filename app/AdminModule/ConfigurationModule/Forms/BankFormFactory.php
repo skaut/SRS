@@ -13,12 +13,15 @@ use DateTimeImmutable;
 use FioApi\Exceptions\InternalErrorException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\TextInput;
 use Nextras\FormComponents\Controls\DateControl;
-use Nextras\FormsRendering\Renderers\Bs3FormRenderer;
+use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
 use stdClass;
 use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
+
+use function assert;
 
 /**
  * Formulár pro nastavení párování plateb.
@@ -54,8 +57,8 @@ class BankFormFactory
     {
         $form = $this->baseFormFactory->create();
 
-        /** @var Bs3FormRenderer $renderer */
-        $renderer                                   = $form->getRenderer();
+        $renderer = $form->getRenderer();
+        assert($renderer instanceof Bs4FormRenderer);
         $renderer->wrappers['control']['container'] = 'div class="col-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 
@@ -93,8 +96,8 @@ class BankFormFactory
             $this->settingsService->setValue(Settings::BANK_TOKEN, $token);
         } catch (InternalErrorException $ex) {
             Debugger::log($ex, ILogger::WARNING);
-            /** @var Nette\Forms\Controls\TextInput $bankTokenInput */
             $bankTokenInput = $form['bankToken'];
+            assert($bankTokenInput instanceof TextInput);
             $bankTokenInput->addError('admin.configuration.payment.bank.invalid_token');
         }
     }

@@ -42,8 +42,6 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Http\FileUpload;
-use Nette\Utils\Random;
-use Nette\Utils\Strings;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
@@ -306,28 +304,27 @@ class EditUserSeminarFormFactory
                     if ($customInput instanceof CustomText) {
                         $customInputValue = $customInputValue ?: new CustomTextValue($customInput, $this->user);
                         assert($customInputValue instanceof CustomTextValue);
-                        $oldValue         = $customInputValue->getValue();
+                        $oldValue = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomCheckbox) {
                         $customInputValue = $customInputValue ?: new CustomCheckboxValue($customInput, $this->user);
                         assert($customInputValue instanceof CustomCheckboxValue);
-                        $oldValue         = $customInputValue->getValue();
+                        $oldValue = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomSelect) {
                         $customInputValue = $customInputValue ?: new CustomSelectValue($customInput, $this->user);
                         assert($customInputValue instanceof CustomSelectValue);
-                        $oldValue         = $customInputValue->getValue();
+                        $oldValue = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomMultiSelect) {
                         $customInputValue = $customInputValue ?: new CustomMultiSelectValue($customInput, $this->user);
                         assert($customInputValue instanceof CustomMultiSelectValue);
-                        $oldValue         = $customInputValue->getValue();
+                        $oldValue = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomFile) {
                         $customInputValue = $customInputValue ?: new CustomFileValue($customInput, $this->user);
                         assert($customInputValue instanceof CustomFileValue);
-                        $oldValue         = $customInputValue->getValue();
-
+                        $oldValue = $customInputValue->getValue();
                         $newValue = $values->$customInputId;
                         assert($newValue instanceof FileUpload);
                         if ($newValue->getError() == UPLOAD_ERR_OK) {
@@ -335,14 +332,14 @@ class EditUserSeminarFormFactory
                             $customInputValue->setValue($path);
                         }
                     } elseif ($customInput instanceof CustomDate) {
-                        /** @var CustomDateValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomDateValue($customInput, $this->user);
-                        $oldValue         = $customInputValue->getValue();
+                        assert($customInputValue instanceof CustomDateValue);
+                        $oldValue = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     } elseif ($customInput instanceof CustomDateTime) {
-                        /** @var CustomDateTimeValue $customInputValue */
                         $customInputValue = $customInputValue ?: new CustomDateTimeValue($customInput, $this->user);
-                        $oldValue         = $customInputValue->getValue();
+                        assert($customInputValue instanceof CustomDateTimeValue);
+                        $oldValue = $customInputValue->getValue();
                         $customInputValue->setValue($newValue);
                     }
 

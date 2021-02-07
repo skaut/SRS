@@ -22,6 +22,8 @@ use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
+use function assert;
+
 use const UPLOAD_ERR_OK;
 
 /**
@@ -186,8 +188,8 @@ class DocumentsGridControl extends Control
     {
         $document = $this->documentRepository->findById((int) $id);
 
-        /** @var FileUpload $file */
         $file = $values->file;
+        assert($file instanceof FileUpload);
         if ($file->getError() == UPLOAD_ERR_OK) {
             $this->filesService->delete($this->documentRepository->findById((int) $id)->getFile());
             $path = $this->filesService->save($file, Document::PATH, true, $file->name);

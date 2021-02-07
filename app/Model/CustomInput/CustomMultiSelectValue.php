@@ -6,6 +6,7 @@ namespace App\Model\CustomInput;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use function assert;
 use function implode;
 
 /**
@@ -48,8 +49,8 @@ class CustomMultiSelectValue extends CustomInputValue
      */
     public function getValueText(): string
     {
-        /** @var CustomMultiSelect $input */
         $input = $this->getInput();
+        assert($input instanceof CustomMultiSelect);
 
         if (empty($this->value)) {
             return '';

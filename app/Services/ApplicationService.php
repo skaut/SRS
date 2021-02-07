@@ -227,8 +227,7 @@ class ApplicationService
                 }
 
                 foreach ($user->getNotCanceledApplications() as $application) {
-                    if ($application->getType() === Application::ROLES) {
-                        /** @var RolesApplication $newApplication */
+                    if ($application instanceof RolesApplication) {
                         $newApplication = clone $application;
                         $newApplication->setRoles($roles);
                         $newApplication->setFee($this->countRolesFee($roles));

@@ -46,7 +46,7 @@ class NewsGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentNewsGrid(string $name): void
+    public function createComponentNewsGrid(string $name): DataGrid
     {
         $grid = new DataGrid($this, $name);
         $grid->setTemplateFile(__DIR__ . '/templates/news_grid_template.latte');
@@ -84,6 +84,8 @@ class NewsGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.cms.news.action.delete_confirm'),
             ]);
+
+        return $grid;
     }
 
     /**
@@ -119,8 +121,7 @@ class NewsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $newsGrid */
-            $newsGrid = $this['newsGrid'];
+            $newsGrid = $this->getComponent('newsGrid');
             $newsGrid->redrawItem($id);
         } else {
             $this->redirect('this');

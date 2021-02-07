@@ -20,6 +20,7 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 use function array_keys;
+use function assert;
 use function count;
 
 /**
@@ -99,8 +100,8 @@ class DocumentTagsGridControl extends Control
                 ->addRule(Form::FILLED, 'admin.cms.documents.tags.column.roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Tag $item): void {
-            /** @var TextInput $nameText */
             $nameText = $container['name'];
+            assert($nameText instanceof TextInput);
             $nameText->addRule(Form::IS_NOT_IN, 'admin.cms.documents.tags.column.name_exists', $this->tagRepository->findOthersNames($item->getId()));
 
             $container->setDefaults([

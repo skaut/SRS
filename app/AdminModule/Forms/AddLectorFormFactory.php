@@ -17,6 +17,7 @@ use Nette\Http\FileUpload;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 
+use function assert;
 use function getimagesizefromstring;
 use function image_type_to_extension;
 
@@ -141,8 +142,8 @@ class AddLectorFormFactory
 
         $this->userRepository->save($user);
 
-        /** @var FileUpload $photo */
         $photo = $values->photo;
+        assert($photo instanceof FileUpload);
         if ($photo->getError() == UPLOAD_ERR_OK) {
             $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
             $photoName      = 'ext_' . $user->getId() . $photoExtension;

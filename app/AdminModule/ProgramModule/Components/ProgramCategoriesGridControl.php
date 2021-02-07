@@ -24,6 +24,8 @@ use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
+use function assert;
+
 /**
  * Komponenta pro správu kategorií.
  *
@@ -101,8 +103,8 @@ class ProgramCategoriesGridControl extends Control
                 ->addRule(Form::FILLED, 'admin.program.categories.column.registerable_roles_empty');
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Category $item): void {
-            /** @var TextInput $nameText */
             $nameText = $container['name'];
+            assert($nameText instanceof TextInput);
             $nameText->addRule(Form::IS_NOT_IN, 'admin.program.categories.column.name_exists', $this->categoryRepository->findOthersNames($item->getId()));
 
             $container->setDefaults([

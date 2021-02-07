@@ -143,7 +143,7 @@ class UsersGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentUsersGrid(string $name): void
+    public function createComponentUsersGrid(string $name): DataGrid
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -482,6 +482,8 @@ class UsersGridControl extends Control
         });
 
         $grid->setColumnsSummary(['fee', 'feeRemaining']);
+
+        return $grid;
     }
 
     /**
@@ -518,8 +520,7 @@ class UsersGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $usersGrid */
-            $usersGrid = $this['usersGrid'];
+            $usersGrid = $this->getComponent('usersGrid');
             $usersGrid->redrawItem($id);
         } else {
             $this->redirect('this');
@@ -543,8 +544,7 @@ class UsersGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            /** @var DataGrid $usersGrid */
-            $usersGrid = $this['usersGrid'];
+            $usersGrid = $this->getComponent('usersGrid');
             $usersGrid->redrawItem($id);
         } else {
             $this->redirect('this');

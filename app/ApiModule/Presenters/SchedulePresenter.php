@@ -16,6 +16,7 @@ use Nette\Application\AbortException;
 use Nette\Application\Responses\JsonResponse;
 use Throwable;
 
+use function assert;
 use function file_get_contents;
 
 /**
@@ -136,8 +137,8 @@ class SchedulePresenter extends ApiBasePresenter
      */
     public function actionSaveProgram(): void
     {
-        /** @var ProgramSaveDto $programSaveDto */
         $programSaveDto = $this->serializer->deserialize(file_get_contents('php://input'), ProgramSaveDto::class, 'json');
+        assert($programSaveDto instanceof ProgramSaveDto);
 
         try {
             $data = $this->scheduleService->saveProgram($programSaveDto);

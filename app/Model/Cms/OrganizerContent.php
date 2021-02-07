@@ -11,6 +11,8 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use stdClass;
 
+use function assert;
+
 /**
  * Entita obsahu s informací o pořadateli.
  *
@@ -47,8 +49,8 @@ class OrganizerContent extends Content implements IContent
     {
         parent::addContentForm($form);
 
-        /** @var Container $formContainer */
         $formContainer = $form[$this->getContentFormName()];
+        assert($formContainer instanceof Container);
         $formContainer->addText('organizer', 'admin.cms.pages.content.form.organizer')
             ->setDefaultValue($this->organizer);
 
