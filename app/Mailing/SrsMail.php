@@ -31,6 +31,7 @@ class SrsMail extends AbstractMail implements IComposableMail
 
         $message->setSubject($mailData->getSubject());
 
-        $message->setHtmlBody($mailData->getText());
+        $this->template->subject = $mailData->getSubject();
+        $this->template->text    = $mailData->getText();
     }
 }
