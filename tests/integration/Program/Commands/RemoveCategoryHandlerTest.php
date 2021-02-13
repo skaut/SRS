@@ -119,7 +119,7 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
         $this->programRepository     = $this->tester->grabService(ProgramRepository::class);
         $this->applicationRepository = $this->tester->grabService(ApplicationRepository::class);
         $this->blockRepository       = $this->tester->grabService(BlockRepository::class);
-        $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);
+        $this->settingsRepository    = $this->tester->grabService(SettingsRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));

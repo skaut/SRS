@@ -9,21 +9,17 @@ use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
 use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
-use App\Services\CommandBus;
 use App\Services\QueryBus;
 use DateTimeImmutable;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class IsAllowedRegisterProgramsQueryHandler implements MessageHandlerInterface
 {
-    private CommandBus $commandBus;
-
     private QueryBus $queryBus;
 
-    public function __construct(CommandBus $commandBus, QueryBus $queryBus)
+    public function __construct(QueryBus $queryBus)
     {
-        $this->commandBus = $commandBus;
-        $this->queryBus   = $queryBus;
+        $this->queryBus = $queryBus;
     }
 
     public function __invoke(IsAllowedRegisterProgramsQuery $query): bool

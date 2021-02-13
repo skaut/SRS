@@ -55,9 +55,11 @@ class BackupDatabaseCommand extends Command
         try {
             $dump = new MySQLDump(new mysqli($host, $user, $password, $dbname));
             $dump->save($this->dir . '/' . $dbname . '-' . $timestamp . '.sql.gz');
+
             return 0;
         } catch (Throwable $e) {
             $output->write('error');
+
             return 1;
         }
     }

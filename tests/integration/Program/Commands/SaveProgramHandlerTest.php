@@ -282,7 +282,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
         $this->roomRepository               = $this->tester->grabService(RoomRepository::class);
         $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
-        $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);
+        $this->settingsRepository           = $this->tester->grabService(SettingsRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));

@@ -123,7 +123,7 @@ final class RemoveBlockHandlerPerformanceTest extends CommandHandlerTest
         $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
         $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
-        $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);
+        $this->settingsRepository           = $this->tester->grabService(SettingsRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
     }

@@ -112,7 +112,7 @@ final class RegisterProgramHandlerPerformanceTest extends CommandHandlerTest
         $this->roleRepository        = $this->tester->grabService(RoleRepository::class);
         $this->programRepository     = $this->tester->grabService(ProgramRepository::class);
         $this->applicationRepository = $this->tester->grabService(ApplicationRepository::class);
-        $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);
+        $this->settingsRepository    = $this->tester->grabService(SettingsRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
     }
