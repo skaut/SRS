@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
@@ -22,7 +22,7 @@ class SeminarPresenter extends ConfigurationBasePresenter
     public SeminarFormFactory $seminarFormFactory;
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentSeminarForm(): Form

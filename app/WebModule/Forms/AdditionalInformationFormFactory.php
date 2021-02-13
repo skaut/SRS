@@ -22,7 +22,7 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\CustomInput\Repositories\CustomInputValueRepository;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
@@ -108,7 +108,7 @@ class AdditionalInformationFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(int $userId): Form

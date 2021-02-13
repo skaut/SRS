@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Settings\Queries\Handlers;
 
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Repositories\SettingsRepository;
 use DateTimeImmutable;
@@ -20,7 +20,7 @@ class SettingDateValueQueryHandler implements MessageHandlerInterface
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      */
     public function __invoke(SettingDateValueQuery $query): ?DateTimeImmutable
     {

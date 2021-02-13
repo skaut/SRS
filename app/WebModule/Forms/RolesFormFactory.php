@@ -7,7 +7,7 @@ namespace App\WebModule\Forms;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
@@ -78,7 +78,7 @@ class RolesFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(int $id): Form
@@ -240,7 +240,7 @@ class RolesFormFactory
     /**
      * Ověří požadovaný minimální věk.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function validateRolesMinimumAge(MultiSelectBox $field): bool

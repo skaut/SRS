@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\WebModule\Presenters;
 
 use App\Model\Enums\PaymentType;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -75,7 +75,7 @@ class ProfilePresenter extends WebBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
@@ -130,7 +130,7 @@ class ProfilePresenter extends WebBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentRolesForm(): Form

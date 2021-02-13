@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Forms\WebFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
@@ -24,7 +24,7 @@ class WebPresenter extends ConfigurationBasePresenter
     public WebFormFactory $webFormFactory;
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
@@ -33,7 +33,7 @@ class WebPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentSettingsForm(): Form

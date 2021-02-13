@@ -6,7 +6,7 @@ namespace App\Presenters;
 
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
@@ -47,7 +47,7 @@ class AuthPresenter extends BasePresenter
     /**
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws AuthenticationException
      * @throws Throwable
@@ -97,7 +97,7 @@ class AuthPresenter extends BasePresenter
     /**
      * Provede přesměrování po úspěšném přihlášení, v závislosti na nastavení, nastavení role nebo returnUrl.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */

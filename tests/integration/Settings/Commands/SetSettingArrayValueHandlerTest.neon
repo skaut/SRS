@@ -1,0 +1,10 @@
+services:
+    - App\Model\Settings\Repositories\SettingsRepository
+
+    - class: App\Model\Settings\Commands\Handlers\SetSettingArrayValueHandler
+      tags:
+        messenger.messageHandler:
+        bus: commandBus
+
+includes:
+- ../../config/common.neon

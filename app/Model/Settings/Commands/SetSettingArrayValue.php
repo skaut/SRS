@@ -9,12 +9,12 @@ class SetSettingArrayValue
     private string $item;
 
     /** @var mixed[] */
-    private array $value;
+    private ?array $value;
 
     /**
      * @param mixed[] $value
      */
-    public function __construct(string $item, array $value)
+    public function __construct(string $item, ?array $value)
     {
         $this->item  = $item;
         $this->value = $value;
@@ -28,7 +28,7 @@ class SetSettingArrayValue
     /**
      * @return mixed[]
      */
-    public function getValue(): array
+    public function getValue(): ?array
     {
         return $this->value;
     }

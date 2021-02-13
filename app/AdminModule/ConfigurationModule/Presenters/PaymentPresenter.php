@@ -10,7 +10,7 @@ use App\AdminModule\ConfigurationModule\Forms\PaymentForm;
 use App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\TicketsFormFactory;
 use App\Model\Settings\Commands\SetSettingStringValue;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
@@ -42,7 +42,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
     public TicketsFormFactory $ticketsFormFactory;
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
@@ -58,7 +58,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
     /**
      * Zruší propojení s API banky.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function handleDisconnect(): void
@@ -82,7 +82,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentPaymentProofForm(): Form
@@ -113,7 +113,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentTicketsForm(): Form

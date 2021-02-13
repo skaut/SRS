@@ -23,7 +23,7 @@ use App\Model\CustomInput\CustomTextValue;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\CustomInput\Repositories\CustomInputValueRepository;
 use App\Model\Enums\Sex;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -150,7 +150,7 @@ class ApplicationFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws Throwable
      */
@@ -603,7 +603,7 @@ class ApplicationFormFactory
     /**
      * Ověří požadovaný minimální věk.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function validateRolesMinimumAge(MultiSelectBox $field): bool

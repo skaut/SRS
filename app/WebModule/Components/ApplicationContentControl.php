@@ -8,7 +8,7 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -68,7 +68,7 @@ class ApplicationContentControl extends Control
 
     /**
      * @throws NonUniqueResultException
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function render(?ContentDto $content = null): void
@@ -115,7 +115,7 @@ class ApplicationContentControl extends Control
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws Throwable
      */

@@ -9,7 +9,7 @@ use App\Model\Acl\Role;
 use App\Model\Application\Application;
 use App\Model\Program\Block;
 use App\Model\Program\Repositories\ProgramRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Subevent;
@@ -138,7 +138,7 @@ class Validators
      *
      * @param Collection<Role> $selectedRoles
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function validateRolesMinimumAge(Collection $selectedRoles, User $user): bool

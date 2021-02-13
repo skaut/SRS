@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 use App\Model\Cms\Dto\ContentDto;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Repositories\PlacePointRepository;
 use App\Model\Settings\Settings;
@@ -31,7 +31,7 @@ class PlaceContentControl extends Control
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function render(ContentDto $content): void

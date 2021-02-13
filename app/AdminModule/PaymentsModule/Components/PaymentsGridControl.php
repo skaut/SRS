@@ -7,7 +7,7 @@ namespace App\AdminModule\PaymentsModule\Components;
 use App\Model\Enums\PaymentState;
 use App\Model\Payment\Payment;
 use App\Model\Payment\Repositories\PaymentRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -81,7 +81,7 @@ class PaymentsGridControl extends Control
      * Vytvoří komponentu.
      *
      * @throws DataGridException
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function createComponentPaymentsGrid(string $name): void
@@ -211,7 +211,7 @@ class PaymentsGridControl extends Control
     /**
      * Zkontroluje platby na bankovním účtu.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function handleCheckPayments(): void

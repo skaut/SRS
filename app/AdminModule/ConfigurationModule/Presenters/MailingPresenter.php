@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Forms\MailingFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
@@ -24,7 +24,7 @@ class MailingPresenter extends ConfigurationBasePresenter
     public MailingFormFactory $mailingFormFactory;
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
@@ -33,7 +33,7 @@ class MailingPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentMailingForm(): Form

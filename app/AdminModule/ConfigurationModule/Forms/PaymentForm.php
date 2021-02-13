@@ -9,7 +9,7 @@ use App\Model\Enums\MaturityType;
 use App\Model\Settings\Commands\SetSettingDateValue;
 use App\Model\Settings\Commands\SetSettingIntValue;
 use App\Model\Settings\Commands\SetSettingStringValue;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -68,7 +68,7 @@ class PaymentForm extends UI\Control
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function createComponentForm(): Form
@@ -147,7 +147,7 @@ class PaymentForm extends UI\Control
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void

@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Model\Payment\Repositories\PaymentRepository;
 use App\Model\Settings\Commands\SetSettingDateValue;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use DateTimeImmutable;
@@ -52,7 +52,7 @@ class BankService
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function downloadTransactions(DateTimeImmutable $from, ?string $token = null): void

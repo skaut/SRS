@@ -8,7 +8,7 @@ use App\ApiModule\Dto\Schedule\ProgramSaveDto;
 use App\ApiModule\Dto\Schedule\ResponseDto;
 use App\ApiModule\Services\ApiException;
 use App\ApiModule\Services\ScheduleService;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use Exception;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
@@ -72,7 +72,7 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */
@@ -116,7 +116,7 @@ class SchedulePresenter extends ApiBasePresenter
     /**
      * Vrací nastavení pro FullCalendar.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */

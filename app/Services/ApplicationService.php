@@ -23,7 +23,7 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Payment\Payment;
 use App\Model\Payment\Repositories\PaymentRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingDateValueAsTextQuery;
 use App\Model\Settings\Queries\SettingDateValueQuery;
@@ -195,7 +195,7 @@ class ApplicationService
      *
      * @param Collection<Role> $roles
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
@@ -280,7 +280,7 @@ class ApplicationService
     /**
      * Zruší registraci uživatele na seminář a provede historizaci přihlášky.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
@@ -365,7 +365,7 @@ class ApplicationService
      *
      * @param Collection<Subevent> $subevents
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
@@ -412,7 +412,7 @@ class ApplicationService
     /**
      * Zruší přihlášku na podakce a provede její historizaci.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
@@ -665,7 +665,7 @@ class ApplicationService
     /**
      * Může uživatel upravovat role?
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedEditRegistration(User $user): bool
@@ -678,7 +678,7 @@ class ApplicationService
     /**
      * Je uživateli povoleno upravit nebo zrušit přihlášku?
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedEditApplication(Application $application): bool
@@ -691,7 +691,7 @@ class ApplicationService
     /**
      * Může uživatel dodatečně přidávat podakce?
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedAddApplication(User $user): bool
@@ -705,7 +705,7 @@ class ApplicationService
     /**
      * Může uživatel upravovat vlastní pole přihlášky?
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedEditCustomInputs(): bool
@@ -716,7 +716,7 @@ class ApplicationService
     /**
      * @param Collection<Role> $roles
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ReflectionException
@@ -767,7 +767,7 @@ class ApplicationService
     /**
      * @param Collection<Subevent> $subevents
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ReflectionException
@@ -798,7 +798,7 @@ class ApplicationService
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     private function generateVariableSymbol(): VariableSymbol
@@ -819,7 +819,7 @@ class ApplicationService
     /**
      * Vypočítá datum splatnosti podle zvolené metody.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws ReflectionException
      * @throws Throwable
      */

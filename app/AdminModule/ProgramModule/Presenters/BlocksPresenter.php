@@ -15,7 +15,7 @@ use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Commands\RemoveProgram;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\ProgramRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
@@ -61,7 +61,7 @@ class BlocksPresenter extends ProgramBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDetail(int $id): void
@@ -113,7 +113,7 @@ class BlocksPresenter extends ProgramBasePresenter
     /**
      * Odstraní vybraný program.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */

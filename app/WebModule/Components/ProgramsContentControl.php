@@ -8,7 +8,7 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Enums\ProgramRegistrationType;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingDateTimeValueQuery;
@@ -44,7 +44,7 @@ class ProgramsContentControl extends Control
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function render(ContentDto $content): void

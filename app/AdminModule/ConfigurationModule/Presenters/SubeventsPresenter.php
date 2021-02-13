@@ -8,7 +8,7 @@ use App\AdminModule\ConfigurationModule\Components\ISubeventsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Components\SubeventsGridControl;
 use App\AdminModule\ConfigurationModule\Forms\SubeventFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\SubeventsFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Structure\Repositories\SubeventRepository;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -61,7 +61,7 @@ class SubeventsPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentSubeventsForm(): Form

@@ -7,7 +7,7 @@ namespace App\AdminModule\Presenters;
 use App\Model\Acl\Permission;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\SrsResource;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
@@ -96,7 +96,7 @@ abstract class AdminBasePresenter extends BasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function beforeRender(): void

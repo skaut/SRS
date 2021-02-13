@@ -6,7 +6,7 @@ namespace App\WebModule\Forms;
 
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingArrayValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -125,7 +125,7 @@ class ContactForm extends UI\Control
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Presenters;
 
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use Throwable;
@@ -18,7 +18,7 @@ use Throwable;
 class SchedulePresenter extends ProgramBasePresenter
 {
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void

@@ -12,7 +12,7 @@ use App\Model\Mailing\Mail;
 use App\Model\Mailing\Recipient;
 use App\Model\Mailing\Repositories\MailRepository;
 use App\Model\Mailing\Repositories\TemplateRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -83,7 +83,7 @@ class MailService implements IMailService
      * @param Collection<User>|null     $recipientsUsers
      * @param Collection<string>|null   $recipientEmails
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
@@ -162,7 +162,7 @@ class MailService implements IMailService
      * @param string[]                $parameters
      *
      * @throws MailingMailCreationException
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function sendMailFromTemplate(?Collection $recipientsUsers, ?Collection $recipientsEmails, string $type, array $parameters): void

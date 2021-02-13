@@ -18,7 +18,7 @@ use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Repositories\SettingsRepository;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -165,7 +165,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
     /**
      * Vytvoření automaticky zapisovaného programu - oprávnění uživatelé jsou zapsáni, včetně nezaplacených.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws Throwable

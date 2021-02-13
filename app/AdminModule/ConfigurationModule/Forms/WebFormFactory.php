@@ -7,7 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\Repositories\PageRepository;
 use App\Model\Settings\Commands\SetSettingStringValue;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
@@ -64,7 +64,7 @@ class WebFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -112,7 +112,7 @@ class WebFormFactory
      * Zpracuje formulář.
      *
      * @throws Nette\Utils\UnknownImageFileException
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void

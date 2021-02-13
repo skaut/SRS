@@ -10,7 +10,7 @@ use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Commands\SetSettingArrayValue;
 use App\Model\Settings\Commands\SetSettingBoolValue;
 use App\Model\Settings\Commands\SetSettingStringValue;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingArrayValueQuery;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -80,7 +80,7 @@ class MailingFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(int $id): Form
@@ -119,7 +119,7 @@ class MailingFormFactory
      * Zpracuje formulář.
      *
      * @throws Nette\Application\UI\InvalidLinkException
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */

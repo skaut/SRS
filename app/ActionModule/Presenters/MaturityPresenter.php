@@ -9,7 +9,7 @@ use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -54,7 +54,7 @@ class MaturityPresenter extends ActionBasePresenter
     /**
      * Zruší přihlášky po splatnosti.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function actionCancelApplications(): void
@@ -111,7 +111,7 @@ class MaturityPresenter extends ActionBasePresenter
     /**
      * Rozešle přípomínky splatnosti.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */

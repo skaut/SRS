@@ -11,7 +11,7 @@ use App\Model\Application\Repositories\SubeventsApplicationRepository;
 use App\Model\Application\SubeventsApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -100,7 +100,7 @@ class ApplicationsGridControl extends Control
     /**
      * Vytvoří komponentu.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws Throwable
      * @throws DataGridException
@@ -280,7 +280,7 @@ class ApplicationsGridControl extends Control
     /**
      * Zpracuje úpravu přihlášky.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      * @throws MailingMailCreationException
@@ -349,7 +349,7 @@ class ApplicationsGridControl extends Control
     /**
      * Zruší přihlášku.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */

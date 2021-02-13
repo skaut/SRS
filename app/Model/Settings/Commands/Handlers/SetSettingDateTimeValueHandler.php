@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Settings\Commands\Handlers;
 
 use App\Model\Settings\Commands\SetSettingDateTimeValue;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Repositories\SettingsRepository;
 use DateTimeImmutable;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -20,7 +20,7 @@ class SetSettingDateTimeValueHandler implements MessageHandlerInterface
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      */
     public function __invoke(SetSettingDateTimeValue $command): void
     {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Settings\Repositories;
 
 use App\Model\Infrastructure\Repositories\AbstractRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Settings;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -32,7 +32,7 @@ class SettingsRepository extends AbstractRepository
         $setting = $this->getRepository()->findOneBy(['item' => $item]);
 
         if ($setting === null) {
-            throw new SettingsException('Item ' . $item . ' was not found in table Settings.');
+            throw new SettingsItemNotFoundException('Item ' . $item . ' was not found in table Settings.');
         }
 
         assert($setting instanceof Settings);

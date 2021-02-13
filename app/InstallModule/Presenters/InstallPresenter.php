@@ -7,7 +7,7 @@ namespace App\InstallModule\Presenters;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Settings\Commands\SetSettingBoolValue;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -85,7 +85,7 @@ class InstallPresenter extends InstallBasePresenter
             $this->flashMessage('install.schema.schema_already_created', 'info');
             $this->redirect('admin');
         } catch (TableNotFoundException $ex) {
-        } catch (SettingsException $ex) {
+        } catch (SettingsItemNotFoundException $ex) {
         }
     }
 
@@ -128,7 +128,7 @@ class InstallPresenter extends InstallBasePresenter
             }
         } catch (TableNotFoundException $ex) {
             $this->redirect('default');
-        } catch (SettingsException $ex) {
+        } catch (SettingsItemNotFoundException $ex) {
             $this->redirect('default');
         }
 
@@ -187,7 +187,7 @@ class InstallPresenter extends InstallBasePresenter
             }
         } catch (TableNotFoundException $ex) {
             $this->redirect('default');
-        } catch (SettingsException $ex) {
+        } catch (SettingsItemNotFoundException $ex) {
             $this->redirect('default');
         }
     }
@@ -206,7 +206,7 @@ class InstallPresenter extends InstallBasePresenter
             }
         } catch (TableNotFoundException $ex) {
             $this->redirect('default');
-        } catch (SettingsException $ex) {
+        } catch (SettingsItemNotFoundException $ex) {
             $this->redirect('default');
         }
     }

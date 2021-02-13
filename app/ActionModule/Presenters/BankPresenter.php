@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ActionModule\Presenters;
 
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\BankService;
@@ -28,7 +28,7 @@ class BankPresenter extends ActionBasePresenter
     /**
      * Zkontroluje splatnost přihlášek.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function actionCheck(): void

@@ -9,7 +9,7 @@ use App\AdminModule\ConfigurationModule\Components\SkautIsEventEducationGridCont
 use App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Commands\SetSettingStringValue;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
@@ -40,7 +40,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     public SkautIsCourseRepository $skautIsCourseRepository;
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
@@ -58,7 +58,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     /**
      * Zruší propojení s akcí ve skautIS.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */
@@ -77,7 +77,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentSkautIsEventForm(): Form

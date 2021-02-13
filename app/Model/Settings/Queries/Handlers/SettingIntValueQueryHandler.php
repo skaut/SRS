@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Settings\Queries\Handlers;
 
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Repositories\SettingsRepository;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -23,7 +23,7 @@ class SettingIntValueQueryHandler implements MessageHandlerInterface
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      */
     public function __invoke(SettingIntValueQuery $query): ?int
     {

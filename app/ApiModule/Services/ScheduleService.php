@@ -30,7 +30,7 @@ use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingDateValueQuery;
@@ -129,7 +129,7 @@ class ScheduleService
      *
      * @return ProgramDetailDto[]
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function getProgramsWeb(): array
@@ -206,7 +206,7 @@ class ScheduleService
     /**
      * Vrací nastavení pro FullCalendar.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function getCalendarConfig(): CalendarConfigDto

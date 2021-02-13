@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Settings\Queries\Handlers;
 
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingArrayValueQuery;
 use App\Model\Settings\Repositories\SettingsRepository;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -23,9 +23,9 @@ class SettingArrayValueQueryHandler implements MessageHandlerInterface
     /**
      * @return mixed[]
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      */
-    public function __invoke(SettingArrayValueQuery $query): array
+    public function __invoke(SettingArrayValueQuery $query): ?array
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
 

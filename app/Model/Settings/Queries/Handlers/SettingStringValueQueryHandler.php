@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Settings\Queries\Handlers;
 
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Repositories\SettingsRepository;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -19,7 +19,7 @@ class SettingStringValueQueryHandler implements MessageHandlerInterface
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      */
     public function __invoke(SettingStringValueQuery $query): ?string
     {

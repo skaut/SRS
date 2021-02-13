@@ -8,7 +8,7 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Commands\SetSettingIntValue;
 use App\Model\Settings\Commands\SetSettingStringValue;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
@@ -75,7 +75,7 @@ class SkautIsEventFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -125,7 +125,7 @@ class SkautIsEventFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

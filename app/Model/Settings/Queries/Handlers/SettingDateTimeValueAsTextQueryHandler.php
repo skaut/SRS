@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Settings\Queries\Handlers;
 
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateTimeValueAsTextQuery;
 use App\Model\Settings\Repositories\SettingsRepository;
 use App\Utils\Helpers;
@@ -21,7 +21,7 @@ class SettingDateTimeValueAsTextQueryHandler implements MessageHandlerInterface
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      */
     public function __invoke(SettingDateTimeValueAsTextQuery $query): ?string
     {

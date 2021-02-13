@@ -9,7 +9,7 @@ use App\AdminModule\ConfigurationModule\Components\ICustomInputsGridControlFacto
 use App\AdminModule\ConfigurationModule\Forms\ApplicationFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\CustomInputFormFactory;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
@@ -44,7 +44,7 @@ class ApplicationPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentApplicationForm(): Form

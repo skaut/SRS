@@ -8,7 +8,7 @@ use App\Model\Application\Application;
 use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
@@ -121,7 +121,7 @@ class IncomeProofPresenter extends ExportBasePresenter
      * @param Collection<Application> $applications
      *
      * @throws AbortException
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws NonUniqueResultException
      */
