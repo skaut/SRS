@@ -18,6 +18,7 @@ use App\Presenters\BasePresenter;
 use App\Services\Authenticator;
 use App\Services\Authorizator;
 use App\Services\CmsService;
+use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette\Application\AbortException;
@@ -32,6 +33,9 @@ use WebLoader\Nette\JavaScriptLoader;
  */
 abstract class WebBasePresenter extends BasePresenter
 {
+    /** @inject */
+    public QueryBus $queryBus;
+
     /** @inject */
     public Authorizator $authorizator;
 
@@ -111,8 +115,6 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->adminAccess = $this->user->isAllowed(SrsResource::ADMIN, Permission::ACCESS);
 
         $this->template->pages = $this->cmsService->findPublishedOrderedByPositionDto();
-
-        $this->template->settings = $this->settingsService;
     }
 
     /**

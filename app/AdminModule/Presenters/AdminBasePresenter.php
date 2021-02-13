@@ -14,6 +14,7 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Presenters\BasePresenter;
 use App\Services\Authorizator;
+use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Nette\Application\AbortException;
 use stdClass;
@@ -32,6 +33,9 @@ use function array_keys;
 abstract class AdminBasePresenter extends BasePresenter
 {
     protected string $resource = SrsResource::ADMIN;
+
+    /** @inject */
+    public QueryBus $queryBus;
 
     /** @inject */
     public Authorizator $authorizator;
@@ -119,8 +123,6 @@ abstract class AdminBasePresenter extends BasePresenter
 
         $this->template->footer      = $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER));
         $this->template->seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
-
-        $this->template->settings = $this->settingsService;
 
         $skautIsUserId                = $this->dbuser->getSkautISUserId();
         $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId);

@@ -13,6 +13,8 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -26,6 +28,9 @@ use Throwable;
  */
 class SkautIsPresenter extends ConfigurationBasePresenter
 {
+    /** @inject */
+    public CommandBus $commandBus;
+
     /** @inject */
     public SkautIsEventFormFactory $skautIsEventFormFactory;
 

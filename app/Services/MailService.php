@@ -39,6 +39,8 @@ class MailService implements IMailService
 {
     use Nette\SmartObject;
 
+    private QueryBus $queryBus;
+
     private MailFactory $mailFactory;
 
     private MailRepository $mailRepository;
@@ -54,6 +56,7 @@ class MailService implements IMailService
     private ITranslator $translator;
 
     public function __construct(
+        QueryBus $queryBus,
         MailFactory $mailFactory,
         MailRepository $mailRepository,
         UserRepository $userRepository,
@@ -62,6 +65,7 @@ class MailService implements IMailService
         TemplateRepository $templateRepository,
         ITranslator $translator
     ) {
+        $this->queryBus = $queryBus;
         $this->mailFactory        = $mailFactory;
         $this->mailRepository     = $mailRepository;
         $this->userRepository     = $userRepository;

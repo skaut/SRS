@@ -10,6 +10,7 @@ use App\Model\Cms\Dto\ContentDto;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
+use App\Services\QueryBus;
 use App\WebModule\Forms\ContactForm;
 use App\WebModule\Forms\IContactFormFactory;
 use Nette\Application\UI\Control;
@@ -22,14 +23,14 @@ use Throwable;
  */
 class ContactFormContentControl extends Control
 {
+    private QueryBus $queryBus;
+
     private IContactFormFactory $contactFormFactory;
 
     private RoleRepository $roleRepository;
 
-    public function __construct(
-        IContactFormFactory $contactFormFactory,
-        RoleRepository $roleRepository,
-    ) {
+    public function __construct(QueryBus $queryBus, IContactFormFactory $contactFormFactory, RoleRepository $roleRepository) {
+        $this->queryBus = $queryBus;
         $this->contactFormFactory = $contactFormFactory;
         $this->roleRepository     = $roleRepository;
     }

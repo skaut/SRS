@@ -6,6 +6,8 @@ namespace App\WebModule\Presenters;
 
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
+use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Services\ApplicationService;
@@ -59,9 +61,6 @@ class ProfilePresenter extends WebBasePresenter
     /** @inject */
     public Authenticator $authenticator;
 
-    /** @inject */
-    public QueryBus $queryBus;
-
     /**
      * @throws AbortException
      * @throws Throwable
@@ -86,6 +85,7 @@ class ProfilePresenter extends WebBasePresenter
         $this->template->paymentMethodBank         = PaymentType::BANK;
         $this->template->isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
         $this->template->userPrograms              = $this->queryBus->handle(new UserAttendsProgramsQuery($this->dbuser));
+        $this->template->accountNumber = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
     }
 
     /**

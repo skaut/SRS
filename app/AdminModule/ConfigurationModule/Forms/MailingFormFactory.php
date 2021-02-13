@@ -8,12 +8,16 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Commands\SetSettingArrayValue;
+use App\Model\Settings\Commands\SetSettingBoolValue;
+use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingArrayValueQuery;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
+use App\Services\CommandBus;
 use App\Services\IMailService;
+use App\Services\QueryBus;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
@@ -47,6 +51,10 @@ class MailingFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
+    private CommandBus $commandBus;
+
+    private QueryBus $queryBus;
+
     private IMailService $mailService;
 
     private LinkGenerator $linkGenerator;
@@ -55,11 +63,15 @@ class MailingFormFactory
 
     public function __construct(
         BaseFormFactory $baseForm,
+        CommandBus $commandBus,
+        QueryBus $queryBus,
         IMailService $mailService,
         LinkGenerator $linkGenerator,
         Validators $validators
     ) {
         $this->baseFormFactory = $baseForm;
+        $this->commandBus = $commandBus;
+        $this->queryBus = $queryBus;
         $this->mailService     = $mailService;
         $this->linkGenerator   = $linkGenerator;
         $this->validators      = $validators;

@@ -13,6 +13,7 @@ use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\IMailService;
+use App\Services\QueryBus;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
 use Contributte\ReCaptcha\ReCaptchaProvider;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -46,6 +47,8 @@ class ContactForm extends UI\Control
 
     private BaseFormFactory $baseFormFactory;
 
+    private QueryBus $queryBus;
+
     private UserRepository $userRepository;
 
     private ReCaptchaProvider $recaptchaProvider;
@@ -54,11 +57,13 @@ class ContactForm extends UI\Control
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
+        QueryBus $queryBus,
         UserRepository $userRepository,
         ReCaptchaProvider $recaptchaProvider,
         IMailService $mailService
     ) {
         $this->baseFormFactory   = $baseFormFactory;
+        $this->queryBus = $queryBus;
         $this->userRepository    = $userRepository;
         $this->recaptchaProvider = $recaptchaProvider;
         $this->mailService       = $mailService;

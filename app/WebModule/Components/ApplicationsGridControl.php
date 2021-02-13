@@ -18,6 +18,7 @@ use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
+use App\Services\QueryBus;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
@@ -41,6 +42,8 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  */
 class ApplicationsGridControl extends Control
 {
+    private QueryBus $queryBus;
+
     private ITranslator $translator;
 
     private ApplicationRepository $applicationRepository;
@@ -62,6 +65,7 @@ class ApplicationsGridControl extends Control
     private SubeventService $subeventService;
 
     public function __construct(
+        QueryBus $queryBus,
         ITranslator $translator,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
@@ -72,6 +76,7 @@ class ApplicationsGridControl extends Control
         SubeventsApplicationRepository $subeventsApplicationRepository,
         SubeventService $subeventService
     ) {
+        $this->queryBus = $queryBus;
         $this->translator                     = $translator;
         $this->applicationRepository          = $applicationRepository;
         $this->userRepository                 = $userRepository;

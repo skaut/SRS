@@ -9,6 +9,7 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Repositories\PlacePointRepository;
 use App\Model\Settings\Settings;
+use App\Services\QueryBus;
 use Nette\Application\UI\Control;
 use Throwable;
 
@@ -19,10 +20,13 @@ use Throwable;
  */
 class PlaceContentControl extends Control
 {
+    private QueryBus $queryBus;
+
     private PlacePointRepository $placePointRepository;
 
-    public function __construct(PlacePointRepository $placePointRepository)
+    public function __construct(QueryBus $queryBus, PlacePointRepository $placePointRepository)
     {
+        $this->queryBus = $queryBus;
         $this->placePointRepository = $placePointRepository;
     }
 

@@ -32,6 +32,7 @@ use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\IMailService;
+use App\Services\QueryBus;
 use App\Services\UserService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
@@ -72,6 +73,8 @@ class EditUserSeminarFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
+    private QueryBus $queryBus;
+
     private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
@@ -96,6 +99,7 @@ class EditUserSeminarFormFactory
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
+        QueryBus $queryBus,
         EntityManagerInterface $em,
         UserRepository $userRepository,
         CustomInputRepository $customInputRepository,
@@ -109,6 +113,7 @@ class EditUserSeminarFormFactory
         UserService $userService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
+        $this->queryBus = $queryBus;
         $this->em                         = $em;
         $this->userRepository             = $userRepository;
         $this->customInputRepository      = $customInputRepository;

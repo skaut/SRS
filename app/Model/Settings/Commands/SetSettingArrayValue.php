@@ -11,6 +11,9 @@ class SetSettingArrayValue
     /** @var mixed[] */
     private array $value;
 
+    /**
+     * @param mixed[] $value
+     */
     public function __construct(string $item, array $value)
     {
         $this->item  = $item;

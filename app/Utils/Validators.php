@@ -14,7 +14,9 @@ use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
+use App\Services\QueryBus;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Query;
 use Throwable;
 
 use function array_map;
@@ -28,14 +30,18 @@ use function trim;
  */
 class Validators
 {
+    private QueryBus $queryBus;
+
     private RoleRepository $roleRepository;
 
     private ProgramRepository $programRepository;
 
     public function __construct(
+        QueryBus $queryBus,
         RoleRepository $roleRepository,
         ProgramRepository $programRepository
     ) {
+        $this->queryBus = $queryBus;
         $this->roleRepository    = $roleRepository;
         $this->programRepository = $programRepository;
     }

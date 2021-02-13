@@ -14,6 +14,7 @@ use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\Authenticator;
+use App\Services\QueryBus;
 use App\WebModule\Forms\ApplicationFormFactory;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\UI\Control;
@@ -29,6 +30,8 @@ use Throwable;
  */
 class ApplicationContentControl extends Control
 {
+    private QueryBus $queryBus;
+
     private ApplicationFormFactory $applicationFormFactory;
 
     private UserRepository $userRepository;
@@ -44,6 +47,7 @@ class ApplicationContentControl extends Control
     public CustomInputRepository $customInputRepository;
 
     public function __construct(
+        QueryBus $queryBus,
         ApplicationFormFactory $applicationFormFactory,
         Authenticator $authenticator,
         UserRepository $userRepository,
@@ -52,6 +56,7 @@ class ApplicationContentControl extends Control
         IApplicationsGridControlFactory $applicationsGridControlFactory,
         CustomInputRepository $customInputRepository
     ) {
+        $this->queryBus = $queryBus;
         $this->applicationFormFactory         = $applicationFormFactory;
         $this->authenticator                  = $authenticator;
         $this->userRepository                 = $userRepository;

@@ -25,6 +25,7 @@ use App\Model\Payment\Payment;
 use App\Model\Payment\Repositories\PaymentRepository;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
+use App\Model\Settings\Queries\SettingDateValueAsTextQuery;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -65,6 +66,8 @@ class ApplicationService
 {
     use Nette\SmartObject;
 
+    private QueryBus $queryBus;
+
     private EntityManagerInterface $em;
 
     private ApplicationRepository $applicationRepository;
@@ -94,6 +97,7 @@ class ApplicationService
     private EventBus $eventBus;
 
     public function __construct(
+        QueryBus $queryBus,
         EntityManagerInterface $em,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
@@ -109,6 +113,7 @@ class ApplicationService
         IncomeProofRepository $incomeProofRepository,
         EventBus $eventBus
     ) {
+        $this->queryBus = $queryBus;
         $this->em                       = $em;
         $this->applicationRepository    = $applicationRepository;
         $this->userRepository           = $userRepository;
@@ -173,7 +178,7 @@ class ApplicationService
             $applicationVariableSymbol = $subeventsApplication->getVariableSymbolText();
         }
 
-        $editRegistrationToText = $this->settingsService->getDateValueText(Settings::EDIT_REGISTRATION_TO);
+        $editRegistrationToText = $this->queryBus->handle(new SettingDateValueAsTextQuery(Settings::EDIT_REGISTRATION_TO));
 
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION, [
             TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),

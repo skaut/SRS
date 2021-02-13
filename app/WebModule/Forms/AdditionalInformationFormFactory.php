@@ -30,6 +30,7 @@ use App\Model\User\User;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\IMailService;
+use App\Services\QueryBus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -66,6 +67,8 @@ class AdditionalInformationFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
+    private QueryBus $queryBus;
+
     private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
@@ -82,6 +85,7 @@ class AdditionalInformationFormFactory
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
+        QueryBus $queryBus,
         EntityManagerInterface $em,
         UserRepository $userRepository,
         CustomInputRepository $customInputRepository,
@@ -91,6 +95,7 @@ class AdditionalInformationFormFactory
         IMailService $mailService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
+        $this->queryBus = $queryBus;
         $this->em                         = $em;
         $this->userRepository             = $userRepository;
         $this->customInputRepository      = $customInputRepository;

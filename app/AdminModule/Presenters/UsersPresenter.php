@@ -61,9 +61,6 @@ class UsersPresenter extends AdminBasePresenter
     /** @inject */
     public ApplicationService $applicationService;
 
-    /** @inject */
-    public QueryBus $queryBus;
-
     /**
      * @throws AbortException
      */

@@ -14,6 +14,7 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
+use App\Services\QueryBus;
 use App\Utils\Validators;
 use DateTimeImmutable;
 use Nette;
@@ -40,6 +41,8 @@ class RolesFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
+    private QueryBus $queryBus;
+
     private UserRepository $userRepository;
 
     private RoleRepository $roleRepository;
@@ -54,6 +57,7 @@ class RolesFormFactory
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
+        QueryBus $queryBus,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
         ApplicationService $applicationService,
@@ -62,6 +66,7 @@ class RolesFormFactory
         AclService $aclService
     ) {
         $this->baseFormFactory    = $baseFormFactory;
+        $this->queryBus = $queryBus;
         $this->userRepository     = $userRepository;
         $this->roleRepository     = $roleRepository;
         $this->applicationService = $applicationService;

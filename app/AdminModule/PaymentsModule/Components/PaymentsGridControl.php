@@ -8,11 +8,13 @@ use App\Model\Enums\PaymentState;
 use App\Model\Payment\Payment;
 use App\Model\Payment\Repositories\PaymentRepository;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\BankService;
+use App\Services\QueryBus;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Nette\Application\AbortException;
@@ -34,6 +36,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class PaymentsGridControl extends Control
 {
+    private QueryBus $queryBus;
+
     private ITranslator $translator;
 
     private PaymentRepository $paymentRepository;
@@ -47,6 +51,7 @@ class PaymentsGridControl extends Control
     private Session $session;
 
     public function __construct(
+        QueryBus $queryBus,
         ITranslator $translator,
         PaymentRepository $paymentRepository,
         UserRepository $userRepository,
@@ -54,6 +59,7 @@ class PaymentsGridControl extends Control
         BankService $bankService,
         Session $session
     ) {
+        $this->queryBus = $queryBus;
         $this->translator         = $translator;
         $this->paymentRepository  = $paymentRepository;
         $this->userRepository     = $userRepository;

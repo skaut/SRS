@@ -33,6 +33,7 @@ use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
+use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
@@ -84,6 +85,8 @@ class ApplicationFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
+    private QueryBus $queryBus;
+
     private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
@@ -112,6 +115,7 @@ class ApplicationFormFactory
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
+        QueryBus $queryBus,
         EntityManagerInterface $em,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
@@ -127,6 +131,7 @@ class ApplicationFormFactory
         ITranslator $translator
     ) {
         $this->baseFormFactory            = $baseFormFactory;
+        $this->queryBus = $queryBus;
         $this->em                         = $em;
         $this->userRepository             = $userRepository;
         $this->roleRepository             = $roleRepository;

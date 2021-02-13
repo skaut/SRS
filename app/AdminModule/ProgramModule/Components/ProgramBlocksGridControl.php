@@ -19,6 +19,7 @@ use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
 use App\Services\ExcelExportService;
+use App\Services\QueryBus;
 use App\Services\SubeventService;
 use App\Utils\Validators;
 use Doctrine\ORM\QueryBuilder;
@@ -47,6 +48,8 @@ class ProgramBlocksGridControl extends Control
 {
     private CommandBus $commandBus;
 
+    private QueryBus $queryBus;
+
     private ITranslator $translator;
 
     private BlockRepository $blockRepository;
@@ -67,6 +70,7 @@ class ProgramBlocksGridControl extends Control
 
     public function __construct(
         CommandBus $commandBus,
+        QueryBus $queryBus,
         ITranslator $translator,
         BlockRepository $blockRepository,
         UserRepository $userRepository,
@@ -77,6 +81,7 @@ class ProgramBlocksGridControl extends Control
         Session $session
     ) {
         $this->commandBus         = $commandBus;
+        $this->queryBus = $queryBus;
         $this->translator         = $translator;
         $this->blockRepository    = $blockRepository;
         $this->userRepository     = $userRepository;

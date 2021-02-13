@@ -27,6 +27,8 @@ class BankService
 {
     use Nette\SmartObject;
 
+    private CommandBus $commandBus;
+
     private QueryBus $queryBus;
 
     private ApplicationService $applicationService;
@@ -36,11 +38,13 @@ class BankService
     private PaymentRepository $paymentRepository;
 
     public function __construct(
+        CommandBus $commandBus,
         QueryBus $queryBus,
         ApplicationService $applicationService,
         EntityManagerInterface $em,
         PaymentRepository $paymentRepository
     ) {
+        $this->commandBus = $commandBus;
         $this->queryBus           = $queryBus;
         $this->applicationService = $applicationService;
         $this->em                 = $em;

@@ -77,7 +77,6 @@ class ProgramAttendeesGridControl extends Control
         $this->userRepository    = $userRepository;
         $this->commandBus        = $commandBus;
         $this->queryBus          = $queryBus;
-        $this->settingsService   = $settingsService;
         $this->em                = $em;
 
         $this->sessionSection = $session->getSection('srs');

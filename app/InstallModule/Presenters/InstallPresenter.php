@@ -13,6 +13,8 @@ use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Contributte\Console\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\TableNotFoundException;
@@ -36,6 +38,12 @@ use Tracy\ILogger;
  */
 class InstallPresenter extends InstallBasePresenter
 {
+    /** @inject */
+    public CommandBus $commandBus;
+
+    /** @inject */
+    public QueryBus $queryBus;
+
     /** @inject */
     public Application $consoleApplication;
 

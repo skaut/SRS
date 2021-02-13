@@ -14,6 +14,8 @@ use App\Model\Settings\Settings;
 use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
 use App\Model\SkautIs\SkautIsCourse;
 use App\Model\Structure\Repositories\SubeventRepository;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use Doctrine\ORM\NonUniqueResultException;
@@ -40,6 +42,10 @@ class SkautIsEventFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
+    private CommandBus $commandBus;
+
+    private QueryBus $queryBus;
+
     private SkautIsCourseRepository $skautIsCourseRepository;
 
     private SkautIsEventGeneralService $skautIsEventGeneralService;
@@ -50,12 +56,16 @@ class SkautIsEventFormFactory
 
     public function __construct(
         BaseFormFactory $baseForm,
+        CommandBus $commandBus,
+        QueryBus $queryBus,
         SkautIsCourseRepository $skautIsCourseRepository,
         SkautIsEventGeneralService $skautIsEventGeneralService,
         SkautIsEventEducationService $skautIsEventEducationService,
         SubeventRepository $subeventRepository
     ) {
         $this->baseFormFactory              = $baseForm;
+        $this->commandBus = $commandBus;
+        $this->queryBus = $queryBus;
         $this->skautIsCourseRepository      = $skautIsCourseRepository;
         $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;
