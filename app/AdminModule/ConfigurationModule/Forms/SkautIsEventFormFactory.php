@@ -6,6 +6,8 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\SkautIsEventType;
+use App\Model\Settings\Commands\SetSettingIntValue;
+use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -154,11 +156,11 @@ class SkautIsEventFormFactory
                 break;
         }
 
-        $this->settingsService->setValue(Settings::SKAUTIS_EVENT_TYPE, $eventType);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::SKAUTIS_EVENT_TYPE, $eventType));
 
         if ($eventId !== null) {
-            $this->settingsService->setIntValue(Settings::SKAUTIS_EVENT_ID, $eventId);
-            $this->settingsService->setValue(Settings::SKAUTIS_EVENT_NAME, $eventName);
+            $this->commandBus->handle(new SetSettingIntValue(Settings::SKAUTIS_EVENT_ID, $eventId));
+            $this->commandBus->handle(new SetSettingStringValue(Settings::SKAUTIS_EVENT_NAME, $eventName));
         }
     }
 }

@@ -7,6 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Commands\SetSettingArrayValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingArrayValueQuery;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
@@ -113,10 +114,10 @@ class MailingFormFactory
     public function processForm(Form $form, stdClass $values): void
     {
         if ($this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL)) !== $values->seminarEmail) {
-            $this->settingsService->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values->seminarEmail);
+            $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values->seminarEmail));
 
             $verificationCode = substr(md5(uniqid((string) mt_rand(), true)), 0, 8);
-            $this->settingsService->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode);
+            $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode));
 
             $link = $this->linkGenerator->link('Action:Mailing:verify', ['code' => $verificationCode]);
 
@@ -137,9 +138,9 @@ class MailingFormFactory
             },
             explode(',', $values->contactFormRecipients)
         );
-        $this->settingsService->setArrayValue(Settings::CONTACT_FORM_RECIPIENTS, $contactFormRecipients);
+        $this->commandBus->handle(new SetSettingArrayValue(Settings::CONTACT_FORM_RECIPIENTS, $contactFormRecipients));
 
-        $this->settingsService->setBoolValue(Settings::CONTACT_FORM_GUESTS_ALLOWED, $values->contactFormGuestsAllowed);
+        $this->commandBus->handle(new SetSettingBoolValue(Settings::CONTACT_FORM_GUESTS_ALLOWED, $values->contactFormGuestsAllowed));
     }
 
     /**

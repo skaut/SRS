@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Settings\Commands\SetSettingDateTimeValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Settings;
@@ -84,9 +85,9 @@ class TicketsFormFactory
     public function processForm(Form $form, stdClass $values): void
     {
         if ($values->ticketsAllowed) {
-            $this->settingsService->setDateTimeValue(Settings::TICKETS_FROM, $values->ticketsFrom);
+            $this->commandBus->handle(new SetSettingDateTimeValue(Settings::TICKETS_FROM, $values->ticketsFrom));
         } else {
-            $this->settingsService->setDateTimeValue(Settings::TICKETS_FROM, null);
+            $this->commandBus->handle(new SetSettingDateTimeValue(Settings::TICKETS_FROM, null));
         }
     }
 }

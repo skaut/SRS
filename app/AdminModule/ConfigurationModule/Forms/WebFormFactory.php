@@ -6,6 +6,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\Repositories\PageRepository;
+use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -122,11 +123,11 @@ class WebFormFactory
             $this->filesService->delete($this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO)));
             $path = $this->filesService->save($logo, 'logo', false, $logo->name);
             $this->filesService->resizeImage($path, null, 100);
-            $this->settingsService->setValue(Settings::LOGO, $path);
+            $this->commandBus->handle(new SetSettingStringValue(Settings::LOGO, $path));
         }
 
-        $this->settingsService->setValue(Settings::FOOTER, $values->footer);
-        $this->settingsService->setValue(Settings::REDIRECT_AFTER_LOGIN, $values->redirectAfterLogin);
-        $this->settingsService->setValue(Settings::GA_ID, $values->ga_id);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::FOOTER, $values->footer));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::REDIRECT_AFTER_LOGIN, $values->redirectAfterLogin));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::GA_ID, $values->ga_id));
     }
 }

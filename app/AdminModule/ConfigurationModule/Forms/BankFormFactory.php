@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Services\BankService;
@@ -90,7 +91,7 @@ class BankFormFactory
 
         try {
             $this->bankService->downloadTransactions($from, $token);
-            $this->settingsService->setValue(Settings::BANK_TOKEN, $token);
+            $this->commandBus->handle(new SetSettingStringValue(Settings::BANK_TOKEN, $token));
         } catch (InternalErrorException $ex) {
             Debugger::log($ex, ILogger::WARNING);
             $bankTokenInput = $form['bankToken'];

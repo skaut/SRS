@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Settings\Commands\SetSettingDateValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -108,14 +109,14 @@ class SeminarFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->settingsService->setValue(Settings::SEMINAR_NAME, $values->seminarName);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_NAME, $values->seminarName));
         $implicitSubevent = $this->subeventRepository->findImplicit();
         $implicitSubevent->setName($values->seminarName);
         $this->subeventRepository->save($implicitSubevent);
 
-        $this->settingsService->setDateValue(Settings::SEMINAR_FROM_DATE, $values->seminarFromDate);
-        $this->settingsService->setDateValue(Settings::SEMINAR_TO_DATE, $values->seminarToDate);
-        $this->settingsService->setDateValue(Settings::EDIT_REGISTRATION_TO, $values->editRegistrationTo);
+        $this->commandBus->handle(new SetSettingDateValue(Settings::SEMINAR_FROM_DATE, $values->seminarFromDate));
+        $this->commandBus->handle(new SetSettingDateValue(Settings::SEMINAR_TO_DATE, $values->seminarToDate));
+        $this->commandBus->handle(new SetSettingDateValue(Settings::EDIT_REGISTRATION_TO, $values->editRegistrationTo));
     }
 
     /**

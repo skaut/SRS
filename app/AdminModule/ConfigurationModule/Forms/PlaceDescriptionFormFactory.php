@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -70,6 +71,6 @@ class PlaceDescriptionFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->settingsService->setValue(Settings::PLACE_DESCRIPTION, $values->placeDescription);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::PLACE_DESCRIPTION, $values->placeDescription));
     }
 }

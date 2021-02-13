@@ -9,6 +9,7 @@ use App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\PaymentForm;
 use App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\TicketsFormFactory;
+use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -58,7 +59,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
      */
     public function handleDisconnect(): void
     {
-        $this->settingsService->setValue(Settings::BANK_TOKEN, null);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::BANK_TOKEN, null));
 
         $this->flashMessage('admin.configuration.payment.bank.disconnect_successful', 'success');
         $this->redirect('this');

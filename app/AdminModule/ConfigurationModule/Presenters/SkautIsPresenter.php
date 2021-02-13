@@ -8,6 +8,7 @@ use App\AdminModule\ConfigurationModule\Components\ISkautIsEventEducationGridCon
 use App\AdminModule\ConfigurationModule\Components\SkautIsEventEducationGridControl;
 use App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory;
 use App\Model\Enums\SkautIsEventType;
+use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -59,8 +60,8 @@ class SkautIsPresenter extends ConfigurationBasePresenter
      */
     public function handleDisconnect(): void
     {
-        $this->settingsService->setValue(Settings::SKAUTIS_EVENT_ID, null);
-        $this->settingsService->setValue(Settings::SKAUTIS_EVENT_NAME, null);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::SKAUTIS_EVENT_ID, null));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::SKAUTIS_EVENT_NAME, null));
 
         if ($this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE)) === SkautIsEventType::EDUCATION) {
             $this->skautIsCourseRepository->removeAll();

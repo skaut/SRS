@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Settings\Commands\SetSettingDateValue;
+use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -76,7 +78,7 @@ class ApplicationFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->settingsService->setValue(Settings::APPLICATION_AGREEMENT, $values->applicationAgreement);
-        $this->settingsService->setDateValue(Settings::EDIT_CUSTOM_INPUTS_TO, $values->editCustomInputsTo);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::APPLICATION_AGREEMENT, $values->applicationAgreement));
+        $this->commandBus->handle(new SetSettingDateValue(Settings::EDIT_CUSTOM_INPUTS_TO, $values->editCustomInputsTo));
     }
 }

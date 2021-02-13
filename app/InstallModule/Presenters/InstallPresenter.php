@@ -6,6 +6,7 @@ namespace App\InstallModule\Presenters;
 
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
+use App\Model\Settings\Commands\SetSettingBoolValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
@@ -142,7 +143,7 @@ class InstallPresenter extends InstallBasePresenter
                 true
             );
 
-            $this->settingsService->setBoolValue(Settings::ADMIN_CREATED, true);
+            $this->commandBus->handle(new SetSettingBoolValue(Settings::ADMIN_CREATED, true));
         });
 
         $this->user->logout(true);

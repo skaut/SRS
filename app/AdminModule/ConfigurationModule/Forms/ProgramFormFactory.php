@@ -7,6 +7,9 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\CalendarView;
 use App\Model\Enums\ProgramRegistrationType;
+use App\Model\Settings\Commands\SetSettingBoolValue;
+use App\Model\Settings\Commands\SetSettingDateTimeValue;
+use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingDateTimeValueQuery;
@@ -121,13 +124,13 @@ class ProgramFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values->isAllowedAddBlock);
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values->isAllowedModifySchedule);
-        $this->settingsService->setValue(Settings::REGISTER_PROGRAMS_TYPE, $values->registerProgramsType);
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values->isAllowedRegisterProgramsBeforePayment);
-        $this->settingsService->setDateTimeValue(Settings::REGISTER_PROGRAMS_FROM, $values->registerProgramsFrom);
-        $this->settingsService->setDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values->registerProgramsTo);
-        $this->settingsService->setValue(Settings::SCHEDULE_INITIAL_VIEW, $values->scheduleInitialView);
+        $this->commandBus->handle(new SetSettingBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values->isAllowedAddBlock));
+        $this->commandBus->handle(new SetSettingBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values->isAllowedModifySchedule));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::REGISTER_PROGRAMS_TYPE, $values->registerProgramsType));
+        $this->commandBus->handle(new SetSettingBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values->isAllowedRegisterProgramsBeforePayment));
+        $this->commandBus->handle(new SetSettingDateTimeValue(Settings::REGISTER_PROGRAMS_FROM, $values->registerProgramsFrom));
+        $this->commandBus->handle(new SetSettingDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values->registerProgramsTo));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::SCHEDULE_INITIAL_VIEW, $values->scheduleInitialView));
     }
 
     /**

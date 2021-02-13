@@ -6,6 +6,9 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\MaturityType;
+use App\Model\Settings\Commands\SetSettingDateValue;
+use App\Model\Settings\Commands\SetSettingIntValue;
+use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Queries\SettingIntValueQuery;
@@ -149,40 +152,40 @@ class PaymentForm extends UI\Control
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->settingsService->setValue(Settings::ACCOUNT_NUMBER, $values->accountNumber);
-        $this->settingsService->setValue(Settings::VARIABLE_SYMBOL_CODE, $values->variableSymbolCode);
-        $this->settingsService->setValue(Settings::MATURITY_TYPE, $values->maturityType);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::ACCOUNT_NUMBER, $values->accountNumber));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::VARIABLE_SYMBOL_CODE, $values->variableSymbolCode));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::MATURITY_TYPE, $values->maturityType));
 
         if (property_exists($values, 'maturityDate')) {
-            $this->settingsService->setDateValue(Settings::MATURITY_DATE, $values->maturityDate ?: (new DateTimeImmutable())->setTime(0, 0));
+            $this->commandBus->handle(new SetSettingDateValue(Settings::MATURITY_DATE, $values->maturityDate ?: (new DateTimeImmutable())->setTime(0, 0)));
         }
 
         if (property_exists($values, 'maturityDays')) {
-            $this->settingsService->setIntValue(
+            $this->commandBus->handle(new SetSettingIntValue(
                 Settings::MATURITY_DAYS,
                 $values->maturityDays !== '' ? $values->maturityDays : 0
-            );
+            ));
         }
 
         if (property_exists($values, 'maturityWorkDays')) {
-            $this->settingsService->setIntValue(
+            $this->commandBus->handle(new SetSettingIntValue(
                 Settings::MATURITY_WORK_DAYS,
                 $values->maturityWorkDays !== '' ? $values->maturityWorkDays : 0
-            );
+            ));
         }
 
         if (property_exists($values, 'maturityReminder')) {
-            $this->settingsService->setIntValue(
+            $this->commandBus->handle(new SetSettingIntValue(
                 Settings::MATURITY_REMINDER,
                 $values->maturityReminder !== '' ? $values->maturityReminder : null
-            );
+            ));
         }
 
         if (property_exists($values, 'cancelRegistrationAfterMaturity')) {
-            $this->settingsService->setIntValue(
+            $this->commandBus->handle(new SetSettingIntValue(
                 Settings::CANCEL_REGISTRATION_AFTER_MATURITY,
                 $values->cancelRegistrationAfterMaturity !== '' ? $values->cancelRegistrationAfterMaturity : null
-            );
+            ));
         }
 
         $this->onSave($this);

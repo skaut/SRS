@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -91,9 +92,9 @@ class PaymentProofFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->settingsService->setValue(Settings::COMPANY, $values->company);
-        $this->settingsService->setValue(Settings::ICO, $values->ico);
-        $this->settingsService->setValue(Settings::ACCOUNTANT, $values->accountant);
-//        $this->settingsService->setValue(Settings::PRINT_LOCATION, $values->printLocation); todo: odstranit, pokud se nebude pouzivat v dokladech
+        $this->commandBus->handle(new SetSettingStringValue(Settings::COMPANY, $values->company));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::ICO, $values->ico));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::ACCOUNTANT, $values->accountant));
+//        $this->commandBus->handle(new SetSettingStringValue(Settings::PRINT_LOCATION, $values->printLocation)); todo: odstranit, pokud se nebude pouzivat v dokladech
     }
 }

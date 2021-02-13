@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Payment\Repositories\PaymentRepository;
+use App\Model\Settings\Commands\SetSettingDateValue;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -91,6 +92,6 @@ class BankService
             });
         }
 
-        $this->settingsService->setDateValue(Settings::BANK_DOWNLOAD_FROM, new DateTimeImmutable());
+        $this->commandBus->handle(new SetSettingDateValue(Settings::BANK_DOWNLOAD_FROM, new DateTimeImmutable()));
     }
 }
