@@ -131,7 +131,7 @@ class ApplicationFormFactory
         ITranslator $translator
     ) {
         $this->baseFormFactory            = $baseFormFactory;
-        $this->queryBus = $queryBus;
+        $this->queryBus                   = $queryBus;
         $this->em                         = $em;
         $this->userRepository             = $userRepository;
         $this->roleRepository             = $roleRepository;

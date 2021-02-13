@@ -56,7 +56,7 @@ class ApplicationContentControl extends Control
         IApplicationsGridControlFactory $applicationsGridControlFactory,
         CustomInputRepository $customInputRepository
     ) {
-        $this->queryBus = $queryBus;
+        $this->queryBus                       = $queryBus;
         $this->applicationFormFactory         = $applicationFormFactory;
         $this->authenticator                  = $authenticator;
         $this->userRepository                 = $userRepository;

@@ -11,7 +11,6 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\CommandBus;
 use App\Services\IMailService;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;

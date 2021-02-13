@@ -65,7 +65,7 @@ class MailService implements IMailService
         TemplateRepository $templateRepository,
         ITranslator $translator
     ) {
-        $this->queryBus = $queryBus;
+        $this->queryBus           = $queryBus;
         $this->mailFactory        = $mailFactory;
         $this->mailRepository     = $mailRepository;
         $this->userRepository     = $userRepository;

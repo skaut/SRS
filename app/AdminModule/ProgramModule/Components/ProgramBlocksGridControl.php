@@ -81,7 +81,7 @@ class ProgramBlocksGridControl extends Control
         Session $session
     ) {
         $this->commandBus         = $commandBus;
-        $this->queryBus = $queryBus;
+        $this->queryBus           = $queryBus;
         $this->translator         = $translator;
         $this->blockRepository    = $blockRepository;
         $this->userRepository     = $userRepository;

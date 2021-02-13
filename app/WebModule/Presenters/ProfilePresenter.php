@@ -14,7 +14,6 @@ use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\ExcelExportService;
 use App\Services\IMailService;
-use App\Services\QueryBus;
 use App\WebModule\Components\ApplicationsGridControl;
 use App\WebModule\Components\IApplicationsGridControlFactory;
 use App\WebModule\Forms\AdditionalInformationFormFactory;
@@ -85,7 +84,7 @@ class ProfilePresenter extends WebBasePresenter
         $this->template->paymentMethodBank         = PaymentType::BANK;
         $this->template->isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
         $this->template->userPrograms              = $this->queryBus->handle(new UserAttendsProgramsQuery($this->dbuser));
-        $this->template->accountNumber = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
+        $this->template->accountNumber             = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
     }
 
     /**

@@ -33,10 +33,10 @@ class ProgramUnregisteredEventListener implements MessageHandlerInterface
         UserRepository $userRepository,
         IMailService $mailService
     ) {
-        $this->commandBus      = $commandBus;
-        $this->queryBus = $queryBus;
-        $this->userRepository  = $userRepository;
-        $this->mailService     = $mailService;
+        $this->commandBus     = $commandBus;
+        $this->queryBus       = $queryBus;
+        $this->userRepository = $userRepository;
+        $this->mailService    = $mailService;
     }
 
     public function __invoke(ProgramUnregisteredEvent $event): void

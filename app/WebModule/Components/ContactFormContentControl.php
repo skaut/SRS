@@ -29,8 +29,9 @@ class ContactFormContentControl extends Control
 
     private RoleRepository $roleRepository;
 
-    public function __construct(QueryBus $queryBus, IContactFormFactory $contactFormFactory, RoleRepository $roleRepository) {
-        $this->queryBus = $queryBus;
+    public function __construct(QueryBus $queryBus, IContactFormFactory $contactFormFactory, RoleRepository $roleRepository)
+    {
+        $this->queryBus           = $queryBus;
         $this->contactFormFactory = $contactFormFactory;
         $this->roleRepository     = $roleRepository;
     }

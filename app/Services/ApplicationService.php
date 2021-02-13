@@ -113,7 +113,7 @@ class ApplicationService
         IncomeProofRepository $incomeProofRepository,
         EventBus $eventBus
     ) {
-        $this->queryBus = $queryBus;
+        $this->queryBus                 = $queryBus;
         $this->em                       = $em;
         $this->applicationRepository    = $applicationRepository;
         $this->userRepository           = $userRepository;

@@ -26,7 +26,7 @@ class PlaceContentControl extends Control
 
     public function __construct(QueryBus $queryBus, PlacePointRepository $placePointRepository)
     {
-        $this->queryBus = $queryBus;
+        $this->queryBus             = $queryBus;
         $this->placePointRepository = $placePointRepository;
     }
 

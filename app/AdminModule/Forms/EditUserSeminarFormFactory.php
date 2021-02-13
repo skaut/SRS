@@ -113,7 +113,7 @@ class EditUserSeminarFormFactory
         UserService $userService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
-        $this->queryBus = $queryBus;
+        $this->queryBus                   = $queryBus;
         $this->em                         = $em;
         $this->userRepository             = $userRepository;
         $this->customInputRepository      = $customInputRepository;

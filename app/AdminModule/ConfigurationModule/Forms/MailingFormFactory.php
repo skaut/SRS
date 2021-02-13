@@ -70,8 +70,8 @@ class MailingFormFactory
         Validators $validators
     ) {
         $this->baseFormFactory = $baseForm;
-        $this->commandBus = $commandBus;
-        $this->queryBus = $queryBus;
+        $this->commandBus      = $commandBus;
+        $this->queryBus        = $queryBus;
         $this->mailService     = $mailService;
         $this->linkGenerator   = $linkGenerator;
         $this->validators      = $validators;

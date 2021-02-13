@@ -44,7 +44,7 @@ class BankService
         EntityManagerInterface $em,
         PaymentRepository $paymentRepository
     ) {
-        $this->commandBus = $commandBus;
+        $this->commandBus         = $commandBus;
         $this->queryBus           = $queryBus;
         $this->applicationService = $applicationService;
         $this->em                 = $em;

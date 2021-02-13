@@ -14,7 +14,6 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
-use App\Services\QueryBus;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;

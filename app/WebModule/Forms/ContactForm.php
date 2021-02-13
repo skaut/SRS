@@ -63,7 +63,7 @@ class ContactForm extends UI\Control
         IMailService $mailService
     ) {
         $this->baseFormFactory   = $baseFormFactory;
-        $this->queryBus = $queryBus;
+        $this->queryBus          = $queryBus;
         $this->userRepository    = $userRepository;
         $this->recaptchaProvider = $recaptchaProvider;
         $this->mailService       = $mailService;

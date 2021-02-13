@@ -16,7 +16,6 @@ use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use App\Services\QueryBus;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Query;
 use Throwable;
 
 use function array_map;
@@ -41,7 +40,7 @@ class Validators
         RoleRepository $roleRepository,
         ProgramRepository $programRepository
     ) {
-        $this->queryBus = $queryBus;
+        $this->queryBus          = $queryBus;
         $this->roleRepository    = $roleRepository;
         $this->programRepository = $programRepository;
     }

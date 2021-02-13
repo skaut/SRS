@@ -76,7 +76,7 @@ class ApplicationsGridControl extends Control
         SubeventsApplicationRepository $subeventsApplicationRepository,
         SubeventService $subeventService
     ) {
-        $this->queryBus = $queryBus;
+        $this->queryBus                       = $queryBus;
         $this->translator                     = $translator;
         $this->applicationRepository          = $applicationRepository;
         $this->userRepository                 = $userRepository;

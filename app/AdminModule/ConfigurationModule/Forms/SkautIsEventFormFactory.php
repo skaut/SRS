@@ -64,8 +64,8 @@ class SkautIsEventFormFactory
         SubeventRepository $subeventRepository
     ) {
         $this->baseFormFactory              = $baseForm;
-        $this->commandBus = $commandBus;
-        $this->queryBus = $queryBus;
+        $this->commandBus                   = $commandBus;
+        $this->queryBus                     = $queryBus;
         $this->skautIsCourseRepository      = $skautIsCourseRepository;
         $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;

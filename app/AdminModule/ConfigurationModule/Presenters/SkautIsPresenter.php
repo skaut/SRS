@@ -14,7 +14,6 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
 use App\Services\CommandBus;
-use App\Services\QueryBus;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use stdClass;

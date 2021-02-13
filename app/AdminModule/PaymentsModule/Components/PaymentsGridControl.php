@@ -59,7 +59,7 @@ class PaymentsGridControl extends Control
         BankService $bankService,
         Session $session
     ) {
-        $this->queryBus = $queryBus;
+        $this->queryBus           = $queryBus;
         $this->translator         = $translator;
         $this->paymentRepository  = $paymentRepository;
         $this->userRepository     = $userRepository;

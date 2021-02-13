@@ -66,7 +66,7 @@ class RolesFormFactory
         AclService $aclService
     ) {
         $this->baseFormFactory    = $baseFormFactory;
-        $this->queryBus = $queryBus;
+        $this->queryBus           = $queryBus;
         $this->userRepository     = $userRepository;
         $this->roleRepository     = $roleRepository;
         $this->applicationService = $applicationService;
