@@ -12,7 +12,6 @@ use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramRegisteredEvent;
 use App\Model\User\Queries\UserAllowedProgramsQuery;
 use App\Services\EventBus;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -27,20 +26,16 @@ class RegisterProgramHandler implements MessageHandlerInterface
 
     private ProgramApplicationRepository $programApplicationRepository;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
         QueryBus $queryBus,
         EventBus $eventBus,
         EntityManagerInterface $em,
-        ProgramApplicationRepository $programApplicationRepository,
-        ISettingsService $settingsService
+        ProgramApplicationRepository $programApplicationRepository
     ) {
         $this->queryBus                     = $queryBus;
         $this->eventBus                     = $eventBus;
         $this->em                           = $em;
         $this->programApplicationRepository = $programApplicationRepository;
-        $this->settingsService              = $settingsService;
     }
 
     /**

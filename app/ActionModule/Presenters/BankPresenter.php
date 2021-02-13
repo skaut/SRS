@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\ActionModule\Presenters;
 
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\BankService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use Nette\Application\Responses\TextResponse;
 use Throwable;
 
@@ -19,10 +20,10 @@ use Throwable;
 class BankPresenter extends ActionBasePresenter
 {
     /** @inject */
-    public BankService $bankService;
+    public QueryBus $queryBus;
 
     /** @inject */
-    public ISettingsService $settingsService;
+    public BankService $bankService;
 
     /**
      * Zkontroluje splatnost přihlášek.
@@ -32,7 +33,7 @@ class BankPresenter extends ActionBasePresenter
      */
     public function actionCheck(): void
     {
-        $from = $this->settingsService->getDateValue(Settings::BANK_DOWNLOAD_FROM);
+        $from = $this->queryBus->handle(new SettingDateValueQuery(Settings::BANK_DOWNLOAD_FROM));
         $this->bankService->downloadTransactions($from);
 
         $response = new TextResponse(null);

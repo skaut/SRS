@@ -6,9 +6,12 @@ namespace App\ActionModule\Presenters;
 
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
+use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Nette\Application\AbortException;
 use Throwable;
 
@@ -20,7 +23,10 @@ use Throwable;
 class MailingPresenter extends ActionBasePresenter
 {
     /** @inject */
-    public ISettingsService $settingsService;
+    public CommandBus $commandBus;
+
+    /** @inject */
+    public QueryBus $queryBus;
 
     /**
      * Ověří e-mail semináře.
@@ -31,12 +37,12 @@ class MailingPresenter extends ActionBasePresenter
      */
     public function actionVerify(string $code): void
     {
-        if ($code === $this->settingsService->getValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE)) {
-            $newEmail = $this->settingsService->getValue(Settings::SEMINAR_EMAIL_UNVERIFIED);
-            $this->settingsService->setValue(Settings::SEMINAR_EMAIL, $newEmail);
+        if ($code === $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL_VERIFICATION_CODE))) {
+            $newEmail = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL_UNVERIFIED));
+            $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_EMAIL, $newEmail));
 
-            $this->settingsService->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, null);
-            $this->settingsService->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, null);
+            $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_EMAIL_UNVERIFIED, null));
+            $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, null));
 
             $this->flashMessage('admin.configuration.mailing_email_verification_successful', 'success');
         } else {

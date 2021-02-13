@@ -8,8 +8,9 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\Repositories\PageRepository;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
+use App\Services\CommandBus;
 use App\Services\FilesService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
@@ -36,21 +37,25 @@ class WebFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private PageRepository $pageRepository;
+    private CommandBus $commandBus;
 
-    private ISettingsService $settingsService;
+    private QueryBus $queryBus;
+
+    private PageRepository $pageRepository;
 
     private FilesService $filesService;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
+        CommandBus $commandBus,
+        QueryBus $queryBus,
         PageRepository $pageRepository,
-        ISettingsService $settingsService,
         FilesService $filesService
     ) {
         $this->baseFormFactory = $baseFormFactory;
+        $this->commandBus      = $commandBus;
+        $this->queryBus        = $queryBus;
         $this->pageRepository  = $pageRepository;
-        $this->settingsService = $settingsService;
         $this->filesService    = $filesService;
     }
 

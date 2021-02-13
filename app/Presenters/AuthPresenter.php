@@ -11,7 +11,6 @@ use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\IMailService;
-use App\Services\ISettingsService;
 use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Application\AbortException;
@@ -33,9 +32,6 @@ class AuthPresenter extends BasePresenter
 {
     /** @inject */
     public SkautIsService $skautIsService;
-
-    /** @inject */
-    public ISettingsService $settingsService;
 
     /** @inject */
     public UserRepository $userRepository;

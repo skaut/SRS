@@ -63,8 +63,6 @@ class ApplicationService
 
     private EntityManagerInterface $em;
 
-    private ISettingsService $settingsService;
-
     private ApplicationRepository $applicationRepository;
 
     private UserRepository $userRepository;
@@ -93,7 +91,6 @@ class ApplicationService
 
     public function __construct(
         EntityManagerInterface $em,
-        ISettingsService $settingsService,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
         AclService $aclService,
@@ -109,7 +106,6 @@ class ApplicationService
         EventBus $eventBus
     ) {
         $this->em                       = $em;
-        $this->settingsService          = $settingsService;
         $this->applicationRepository    = $applicationRepository;
         $this->userRepository           = $userRepository;
         $this->aclService               = $aclService;

@@ -12,7 +12,7 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Utils\Helpers;
 use Contributte\PdfResponse\PdfResponse;
 use DateTimeImmutable;
@@ -35,6 +35,9 @@ use function random_bytes;
 class IncomeProofPresenter extends ExportBasePresenter
 {
     /** @inject */
+    public QueryBus $queryBus;
+
+    /** @inject */
     public ApplicationService $applicationService;
 
     /** @inject */
@@ -45,9 +48,6 @@ class IncomeProofPresenter extends ExportBasePresenter
 
     /** @inject */
     public UserRepository $userRepository;
-
-    /** @inject */
-    public ISettingsService $settingsService;
 
     /**
      * @throws ForbiddenRequestException

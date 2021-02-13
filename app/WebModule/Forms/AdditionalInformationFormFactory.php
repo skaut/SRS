@@ -29,7 +29,6 @@ use App\Model\User\User;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\IMailService;
-use App\Services\ISettingsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -80,8 +79,6 @@ class AdditionalInformationFormFactory
 
     private IMailService $mailService;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
         EntityManagerInterface $em,
@@ -90,8 +87,7 @@ class AdditionalInformationFormFactory
         ApplicationService $applicationService,
         CustomInputValueRepository $customInputValueRepository,
         FilesService $filesService,
-        IMailService $mailService,
-        ISettingsService $settingsService
+        IMailService $mailService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
         $this->em                         = $em;
@@ -101,7 +97,6 @@ class AdditionalInformationFormFactory
         $this->customInputValueRepository = $customInputValueRepository;
         $this->filesService               = $filesService;
         $this->mailService                = $mailService;
-        $this->settingsService            = $settingsService;
     }
 
     /**

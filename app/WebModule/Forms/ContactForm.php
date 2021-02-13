@@ -11,7 +11,6 @@ use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\IMailService;
-use App\Services\ISettingsService;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
 use Contributte\ReCaptcha\ReCaptchaProvider;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -51,20 +50,16 @@ class ContactForm extends UI\Control
 
     private IMailService $mailService;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
         UserRepository $userRepository,
         ReCaptchaProvider $recaptchaProvider,
-        IMailService $mailService,
-        ISettingsService $settingsService
+        IMailService $mailService
     ) {
         $this->baseFormFactory   = $baseFormFactory;
         $this->userRepository    = $userRepository;
         $this->recaptchaProvider = $recaptchaProvider;
         $this->mailService       = $mailService;
-        $this->settingsService   = $settingsService;
     }
 
     /**

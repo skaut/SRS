@@ -8,7 +8,8 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Services\BankService;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use DateTimeImmutable;
 use FioApi\Exceptions\InternalErrorException;
 use Nette;
@@ -34,17 +35,14 @@ class BankFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
+    private CommandBus $commandBus;
 
     private BankService $bankService;
 
-    public function __construct(
-        BaseFormFactory $baseForm,
-        ISettingsService $settingsService,
-        BankService $bankService
-    ) {
+    public function __construct(BaseFormFactory $baseForm, CommandBus $commandBus, BankService $bankService)
+    {
         $this->baseFormFactory = $baseForm;
-        $this->settingsService = $settingsService;
+        $this->commandBus      = $commandBus;
         $this->bankService     = $bankService;
     }
 

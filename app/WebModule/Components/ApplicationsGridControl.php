@@ -17,7 +17,6 @@ use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
-use App\Services\ISettingsService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
@@ -61,8 +60,6 @@ class ApplicationsGridControl extends Control
 
     private SubeventService $subeventService;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
         ITranslator $translator,
         ApplicationRepository $applicationRepository,
@@ -72,8 +69,7 @@ class ApplicationsGridControl extends Control
         Validators $validators,
         RolesApplicationRepository $rolesApplicationRepository,
         SubeventsApplicationRepository $subeventsApplicationRepository,
-        SubeventService $subeventService,
-        ISettingsService $settingsService
+        SubeventService $subeventService
     ) {
         $this->translator                     = $translator;
         $this->applicationRepository          = $applicationRepository;
@@ -84,7 +80,6 @@ class ApplicationsGridControl extends Control
         $this->rolesApplicationRepository     = $rolesApplicationRepository;
         $this->subeventsApplicationRepository = $subeventsApplicationRepository;
         $this->subeventService                = $subeventService;
-        $this->settingsService                = $settingsService;
     }
 
     /**

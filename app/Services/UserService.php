@@ -26,31 +26,31 @@ class UserService
 {
     use Nette\SmartObject;
 
+    private QueryBus $queryBus;
+
+    private EventBus $eventBus;
+
     private ITranslator $translator;
 
     private UserRepository $userRepository;
 
     private MailService $mailService;
 
-    private ISettingsService $settingsService;
-
-    private EventBus $eventBus;
-
     private EntityManagerInterface $em;
 
     public function __construct(
+        QueryBus $queryBus,
+        EventBus $eventBus,
         ITranslator $translator,
         UserRepository $userRepository,
         MailService $mailService,
-        ISettingsService $settingsService,
-        EventBus $eventBus,
         EntityManagerInterface $em
     ) {
+        $this->queryBus        = $queryBus;
+        $this->eventBus        = $eventBus;
         $this->translator      = $translator;
         $this->userRepository  = $userRepository;
         $this->mailService     = $mailService;
-        $this->settingsService = $settingsService;
-        $this->eventBus        = $eventBus;
         $this->em              = $em;
     }
 

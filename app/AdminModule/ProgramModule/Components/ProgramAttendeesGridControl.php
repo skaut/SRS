@@ -22,7 +22,6 @@ use App\Model\User\Queries\UserRegisteredProgramAtQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,8 +60,6 @@ class ProgramAttendeesGridControl extends Control
 
     private QueryBus $queryBus;
 
-    private ISettingsService $settingsService;
-
     private EntityManagerInterface $em;
 
     public function __construct(
@@ -72,7 +69,6 @@ class ProgramAttendeesGridControl extends Control
         Session $session,
         CommandBus $commandBus,
         QueryBus $queryBus,
-        ISettingsService $settingsService,
         EntityManagerInterface $em
     ) {
         $this->translator        = $translator;

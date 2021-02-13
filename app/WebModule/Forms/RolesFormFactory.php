@@ -13,7 +13,6 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
-use App\Services\ISettingsService;
 use App\Utils\Validators;
 use DateTimeImmutable;
 use Nette;
@@ -44,8 +43,6 @@ class RolesFormFactory
 
     private RoleRepository $roleRepository;
 
-    private ISettingsService $settingsService;
-
     private ApplicationService $applicationService;
 
     private ITranslator $translator;
@@ -58,7 +55,6 @@ class RolesFormFactory
         BaseFormFactory $baseFormFactory,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
-        ISettingsService $settingsService,
         ApplicationService $applicationService,
         ITranslator $translator,
         Validators $validators,
@@ -67,7 +63,6 @@ class RolesFormFactory
         $this->baseFormFactory    = $baseFormFactory;
         $this->userRepository     = $userRepository;
         $this->roleRepository     = $roleRepository;
-        $this->settingsService    = $settingsService;
         $this->applicationService = $applicationService;
         $this->translator         = $translator;
         $this->validators         = $validators;

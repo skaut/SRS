@@ -10,7 +10,6 @@ use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Services\IMailService;
-use App\Services\ISettingsService;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
@@ -44,8 +43,6 @@ class MailingFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
-
     private IMailService $mailService;
 
     private LinkGenerator $linkGenerator;
@@ -54,13 +51,11 @@ class MailingFormFactory
 
     public function __construct(
         BaseFormFactory $baseForm,
-        ISettingsService $settingsService,
         IMailService $mailService,
         LinkGenerator $linkGenerator,
         Validators $validators
     ) {
         $this->baseFormFactory = $baseForm;
-        $this->settingsService = $settingsService;
         $this->mailService     = $mailService;
         $this->linkGenerator   = $linkGenerator;
         $this->validators      = $validators;

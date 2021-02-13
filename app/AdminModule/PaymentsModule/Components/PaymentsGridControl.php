@@ -12,7 +12,6 @@ use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\BankService;
-use App\Services\ISettingsService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Nette\Application\AbortException;
@@ -40,8 +39,6 @@ class PaymentsGridControl extends Control
 
     private UserRepository $userRepository;
 
-    private ISettingsService $settingsService;
-
     private ApplicationService $applicationService;
 
     private BankService $bankService;
@@ -52,7 +49,6 @@ class PaymentsGridControl extends Control
         ITranslator $translator,
         PaymentRepository $paymentRepository,
         UserRepository $userRepository,
-        ISettingsService $settingsService,
         ApplicationService $applicationService,
         BankService $bankService,
         Session $session
@@ -60,7 +56,6 @@ class PaymentsGridControl extends Control
         $this->translator         = $translator;
         $this->paymentRepository  = $paymentRepository;
         $this->userRepository     = $userRepository;
-        $this->settingsService    = $settingsService;
         $this->applicationService = $applicationService;
         $this->bankService        = $bankService;
         $this->session            = $session;

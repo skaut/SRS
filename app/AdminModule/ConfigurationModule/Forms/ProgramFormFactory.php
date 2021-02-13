@@ -9,7 +9,8 @@ use App\Model\Enums\CalendarView;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
@@ -32,12 +33,15 @@ class ProgramFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
+    private CommandBus $commandBus;
 
-    public function __construct(BaseFormFactory $baseForm, ISettingsService $settingsService)
+    private QueryBus $queryBus;
+
+    public function __construct(BaseFormFactory $baseForm, CommandBus $commandBus, QueryBus $queryBus)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsService = $settingsService;
+        $this->commandBus      = $commandBus;
+        $this->queryBus        = $queryBus;
     }
 
     /**

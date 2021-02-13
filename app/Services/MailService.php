@@ -40,8 +40,6 @@ class MailService implements IMailService
 
     private MailFactory $mailFactory;
 
-    private ISettingsService $settingsService;
-
     private MailRepository $mailRepository;
 
     private UserRepository $userRepository;
@@ -56,7 +54,6 @@ class MailService implements IMailService
 
     public function __construct(
         MailFactory $mailFactory,
-        ISettingsService $settingsService,
         MailRepository $mailRepository,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
@@ -65,7 +62,6 @@ class MailService implements IMailService
         ITranslator $translator
     ) {
         $this->mailFactory        = $mailFactory;
-        $this->settingsService    = $settingsService;
         $this->mailRepository     = $mailRepository;
         $this->userRepository     = $userRepository;
         $this->roleRepository     = $roleRepository;

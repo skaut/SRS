@@ -45,16 +45,10 @@ abstract class WebBasePresenter extends BasePresenter
     public CmsService $cmsService;
 
     /** @inject */
-    public ISettingsService $settingsService;
-
-    /** @inject */
     public UserRepository $userRepository;
 
     /** @inject */
     public SkautIsService $skautIsService;
-
-    /** @inject */
-    public DatabaseService $databaseService;
 
     protected ?User $dbuser = null;
 
@@ -143,8 +137,6 @@ abstract class WebBasePresenter extends BasePresenter
         try {
             if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
                 $this->redirect(':Install:Install:default');
-            } else {
-                $this->databaseService->update();
             }
         } catch (TableNotFoundException $ex) {
             $this->redirect(':Install:Install:default');

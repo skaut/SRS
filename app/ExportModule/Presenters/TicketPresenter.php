@@ -9,7 +9,6 @@ use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use Contributte\PdfResponse\PdfResponse;
 use Nette\Application\AbortException;
@@ -29,9 +28,6 @@ class TicketPresenter extends ExportBasePresenter
 {
     /** @inject */
     public PdfResponse $pdfResponse;
-
-    /** @inject */
-    public ISettingsService $settingsService;
 
     /** @inject */
     public SubeventRepository $subeventRepository;

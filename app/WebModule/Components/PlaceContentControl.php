@@ -8,7 +8,6 @@ use App\Model\Cms\Dto\ContentDto;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Repositories\PlacePointRepository;
 use App\Model\Settings\Settings;
-use App\Services\ISettingsService;
 use Nette\Application\UI\Control;
 use Throwable;
 
@@ -19,13 +18,10 @@ use Throwable;
  */
 class PlaceContentControl extends Control
 {
-    private ISettingsService $settingsService;
-
     private PlacePointRepository $placePointRepository;
 
-    public function __construct(ISettingsService $settingsService, PlacePointRepository $placePointRepository)
+    public function __construct(PlacePointRepository $placePointRepository)
     {
-        $this->settingsService      = $settingsService;
         $this->placePointRepository = $placePointRepository;
     }
 

@@ -31,7 +31,6 @@ use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\IMailService;
-use App\Services\ISettingsService;
 use App\Services\UserService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
@@ -90,8 +89,6 @@ class EditUserSeminarFormFactory
 
     private IMailService $mailService;
 
-    private ISettingsService $settingsService;
-
     private AclService $aclService;
 
     private UserService $userService;
@@ -107,7 +104,6 @@ class EditUserSeminarFormFactory
         Validators $validators,
         FilesService $filesService,
         IMailService $mailService,
-        ISettingsService $settingsService,
         AclService $aclService,
         UserService $userService
     ) {
@@ -121,7 +117,6 @@ class EditUserSeminarFormFactory
         $this->validators                 = $validators;
         $this->filesService               = $filesService;
         $this->mailService                = $mailService;
-        $this->settingsService            = $settingsService;
         $this->aclService                 = $aclService;
         $this->userService                = $userService;
     }

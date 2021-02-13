@@ -12,7 +12,6 @@ use App\Model\User\Commands\UpdateUserPrograms;
 use App\Model\User\Queries\UserAllowedProgramsQuery;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Services\CommandBus;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -25,18 +24,14 @@ class UpdateUserProgramsHandler implements MessageHandlerInterface
 
     private EntityManagerInterface $em;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
         QueryBus $queryBus,
         CommandBus $commandBus,
-        EntityManagerInterface $em,
-        ISettingsService $settingsService
+        EntityManagerInterface $em
     ) {
         $this->queryBus        = $queryBus;
         $this->commandBus      = $commandBus;
         $this->em              = $em;
-        $this->settingsService = $settingsService;
     }
 
     public function __invoke(UpdateUserPrograms $command): void

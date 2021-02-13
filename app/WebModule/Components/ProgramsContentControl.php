@@ -12,7 +12,6 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use Nette\Application\UI\Control;
 use Throwable;
@@ -31,18 +30,14 @@ class ProgramsContentControl extends Control
 
     private RoleRepository $roleRepository;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
         QueryBus $queryBus,
         UserRepository $userRepository,
-        RoleRepository $roleRepository,
-        ISettingsService $settingsService
+        RoleRepository $roleRepository
     ) {
         $this->queryBus        = $queryBus;
         $this->userRepository  = $userRepository;
         $this->roleRepository  = $roleRepository;
-        $this->settingsService = $settingsService;
     }
 
     /**

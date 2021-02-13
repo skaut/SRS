@@ -7,7 +7,8 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
@@ -28,12 +29,15 @@ class PaymentProofFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
+    private CommandBus $commandBus;
 
-    public function __construct(BaseFormFactory $baseForm, ISettingsService $settingsService)
+    private QueryBus $queryBus;
+
+    public function __construct(BaseFormFactory $baseForm, CommandBus $commandBus, QueryBus $queryBus)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsService = $settingsService;
+        $this->commandBus      = $commandBus;
+        $this->queryBus        = $queryBus;
     }
 
     /**

@@ -13,7 +13,6 @@ use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,20 +28,16 @@ class CategoryUpdatedEventListener implements MessageHandlerInterface
 
     private UserRepository $userRepository;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
         CommandBus $commandBus,
         QueryBus $queryBus,
         EntityManagerInterface $em,
-        UserRepository $userRepository,
-        ISettingsService $settingsService
+        UserRepository $userRepository
     ) {
         $this->commandBus      = $commandBus;
         $this->queryBus        = $queryBus;
         $this->em              = $em;
         $this->userRepository  = $userRepository;
-        $this->settingsService = $settingsService;
     }
 
     /**

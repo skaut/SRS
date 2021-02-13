@@ -13,7 +13,6 @@ use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\Authenticator;
-use App\Services\ISettingsService;
 use App\WebModule\Forms\ApplicationFormFactory;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\UI\Control;
@@ -37,8 +36,6 @@ class ApplicationContentControl extends Control
 
     private Authenticator $authenticator;
 
-    private ISettingsService $settingsService;
-
     private SubeventRepository $subeventRepository;
 
     public IApplicationsGridControlFactory $applicationsGridControlFactory;
@@ -50,7 +47,6 @@ class ApplicationContentControl extends Control
         Authenticator $authenticator,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
-        ISettingsService $settingsService,
         SubeventRepository $subeventRepository,
         IApplicationsGridControlFactory $applicationsGridControlFactory,
         CustomInputRepository $customInputRepository
@@ -59,7 +55,6 @@ class ApplicationContentControl extends Control
         $this->authenticator                  = $authenticator;
         $this->userRepository                 = $userRepository;
         $this->roleRepository                 = $roleRepository;
-        $this->settingsService                = $settingsService;
         $this->subeventRepository             = $subeventRepository;
         $this->applicationsGridControlFactory = $applicationsGridControlFactory;
         $this->customInputRepository          = $customInputRepository;

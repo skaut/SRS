@@ -41,7 +41,6 @@ use App\Model\User\Queries\UserAttendsBlocksQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use DateInterval;
@@ -77,8 +76,6 @@ class ScheduleService
 
     private RoomRepository $roomRepository;
 
-    private ISettingsService $settingsService;
-
     private CommandBus $commandBus;
 
     private QueryBus $queryBus;
@@ -89,7 +86,6 @@ class ScheduleService
         ProgramRepository $programRepository,
         BlockRepository $blockRepository,
         RoomRepository $roomRepository,
-        ISettingsService $settingsService,
         CommandBus $commandBus,
         QueryBus $queryBus
     ) {
@@ -98,7 +94,6 @@ class ScheduleService
         $this->programRepository = $programRepository;
         $this->blockRepository   = $blockRepository;
         $this->roomRepository    = $roomRepository;
-        $this->settingsService   = $settingsService;
         $this->commandBus        = $commandBus;
         $this->queryBus          = $queryBus;
     }

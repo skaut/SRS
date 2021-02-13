@@ -11,7 +11,6 @@ use App\Model\Settings\Settings;
 use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
 use App\Model\SkautIs\SkautIsCourse;
 use App\Model\Structure\Repositories\SubeventRepository;
-use App\Services\ISettingsService;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use Doctrine\ORM\NonUniqueResultException;
@@ -38,8 +37,6 @@ class SkautIsEventFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
-
     private SkautIsCourseRepository $skautIsCourseRepository;
 
     private SkautIsEventGeneralService $skautIsEventGeneralService;
@@ -50,14 +47,12 @@ class SkautIsEventFormFactory
 
     public function __construct(
         BaseFormFactory $baseForm,
-        ISettingsService $settingsService,
         SkautIsCourseRepository $skautIsCourseRepository,
         SkautIsEventGeneralService $skautIsEventGeneralService,
         SkautIsEventEducationService $skautIsEventEducationService,
         SubeventRepository $subeventRepository
     ) {
         $this->baseFormFactory              = $baseForm;
-        $this->settingsService              = $settingsService;
         $this->skautIsCourseRepository      = $skautIsCourseRepository;
         $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;

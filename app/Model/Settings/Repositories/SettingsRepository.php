@@ -39,9 +39,6 @@ class SettingsRepository extends AbstractRepository
         return $setting;
     }
 
-    /**
-     * @throws ORMException
-     */
     public function save(Settings $settings): void
     {
         $this->em->persist($settings);

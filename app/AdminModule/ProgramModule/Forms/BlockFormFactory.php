@@ -19,7 +19,6 @@ use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
@@ -74,8 +73,6 @@ class BlockFormFactory
 
     private CategoryRepository $categoryRepository;
 
-    private ISettingsService $settingsService;
-
     private SubeventRepository $subeventRepository;
 
     private SubeventService $subeventService;
@@ -89,7 +86,6 @@ class BlockFormFactory
         BlockRepository $blockRepository,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
-        ISettingsService $settingsService,
         SubeventRepository $subeventRepository,
         SubeventService $subeventService,
         Validators $validators
@@ -100,7 +96,6 @@ class BlockFormFactory
         $this->blockRepository    = $blockRepository;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->settingsService    = $settingsService;
         $this->subeventRepository = $subeventRepository;
         $this->subeventService    = $subeventService;
         $this->validators         = $validators;
