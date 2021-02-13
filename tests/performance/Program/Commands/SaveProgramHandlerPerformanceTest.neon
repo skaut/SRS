@@ -6,6 +6,7 @@ services:
     - App\Model\Program\Repositories\ProgramRepository
     - App\Model\Program\Repositories\ProgramApplicationRepository
     - App\Model\Application\Repositories\ApplicationRepository
+    - App\Model\Settings\Repositories\SettingsRepository
 
     - class: App\Model\Program\Commands\Handlers\SaveProgramHandler
       tags:
