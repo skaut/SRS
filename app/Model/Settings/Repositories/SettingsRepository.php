@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Settings\Repositories;
 
 use App\Model\Infrastructure\Repositories\AbstractRepository;
+use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
@@ -25,9 +26,17 @@ class SettingsRepository extends AbstractRepository
     /**
      * Vrací položku nastavení podle názvu.
      */
-    public function findByItem(?string $item): ?Settings
+    public function findByItem(string $item): Settings
     {
-        return $this->getRepository()->findOneBy(['item' => $item]);
+        $setting = $this->getRepository()->findOneBy(['item' => $item]);
+
+        if ($setting === null) {
+            throw new SettingsException('Item ' . $item . ' was not found in table Settings.');
+        }
+
+        assert($setting instanceof Settings);
+
+        return $setting;
     }
 
     /**
