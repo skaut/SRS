@@ -38,9 +38,9 @@ class ProgramsContentControl extends Control
         UserRepository $userRepository,
         RoleRepository $roleRepository
     ) {
-        $this->queryBus        = $queryBus;
-        $this->userRepository  = $userRepository;
-        $this->roleRepository  = $roleRepository;
+        $this->queryBus       = $queryBus;
+        $this->userRepository = $userRepository;
+        $this->roleRepository = $roleRepository;
     }
 
     /**

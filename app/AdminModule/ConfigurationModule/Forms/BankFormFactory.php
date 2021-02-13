@@ -9,7 +9,6 @@ use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use App\Services\BankService;
 use App\Services\CommandBus;
-use App\Services\QueryBus;
 use DateTimeImmutable;
 use FioApi\Exceptions\InternalErrorException;
 use Nette;

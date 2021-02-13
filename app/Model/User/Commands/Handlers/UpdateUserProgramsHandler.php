@@ -30,9 +30,9 @@ class UpdateUserProgramsHandler implements MessageHandlerInterface
         CommandBus $commandBus,
         EntityManagerInterface $em
     ) {
-        $this->queryBus        = $queryBus;
-        $this->commandBus      = $commandBus;
-        $this->em              = $em;
+        $this->queryBus   = $queryBus;
+        $this->commandBus = $commandBus;
+        $this->em         = $em;
     }
 
     public function __invoke(UpdateUserPrograms $command): void

@@ -25,7 +25,7 @@ class SettingDateTimeValueQueryHandler implements MessageHandlerInterface
     public function __invoke(SettingDateTimeValueQuery $query): ?DateTimeImmutable
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
-        $value = $setting->getValue();
+        $value   = $setting->getValue();
         if ($value === null) {
             return null;
         }

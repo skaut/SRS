@@ -8,7 +8,8 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Settings;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
+
+use function assert;
 
 /**
  * Třída spravující nastavení.

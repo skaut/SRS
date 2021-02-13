@@ -47,12 +47,12 @@ class UserService
         MailService $mailService,
         EntityManagerInterface $em
     ) {
-        $this->queryBus        = $queryBus;
-        $this->eventBus        = $eventBus;
-        $this->translator      = $translator;
-        $this->userRepository  = $userRepository;
-        $this->mailService     = $mailService;
-        $this->em              = $em;
+        $this->queryBus       = $queryBus;
+        $this->eventBus       = $eventBus;
+        $this->translator     = $translator;
+        $this->userRepository = $userRepository;
+        $this->mailService    = $mailService;
+        $this->em             = $em;
     }
 
     /**

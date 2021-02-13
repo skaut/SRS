@@ -19,7 +19,7 @@ class ProgramRegisteredEventListener implements MessageHandlerInterface
 
     public function __construct(IMailService $mailService)
     {
-        $this->mailService     = $mailService;
+        $this->mailService = $mailService;
     }
 
     public function __invoke(ProgramRegisteredEvent $event): void

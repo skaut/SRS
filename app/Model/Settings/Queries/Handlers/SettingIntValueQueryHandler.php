@@ -9,6 +9,10 @@ use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Repositories\SettingsRepository;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
+use function filter_var;
+
+use const FILTER_VALIDATE_INT;
+
 class SettingIntValueQueryHandler implements MessageHandlerInterface
 {
     private SettingsRepository $settingsRepository;
@@ -24,7 +28,7 @@ class SettingIntValueQueryHandler implements MessageHandlerInterface
     public function __invoke(SettingIntValueQuery $query): ?int
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
-        $value = $setting->getValue();
+        $value   = $setting->getValue();
         if ($value === null) {
             return null;
         }

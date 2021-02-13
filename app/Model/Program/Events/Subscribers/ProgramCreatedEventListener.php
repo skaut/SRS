@@ -27,9 +27,9 @@ class ProgramCreatedEventListener implements MessageHandlerInterface
         EntityManagerInterface $em,
         UserRepository $userRepository
     ) {
-        $this->commandBus      = $commandBus;
-        $this->em              = $em;
-        $this->userRepository  = $userRepository;
+        $this->commandBus     = $commandBus;
+        $this->em             = $em;
+        $this->userRepository = $userRepository;
     }
 
     /**

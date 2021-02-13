@@ -39,10 +39,10 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
         EntityManagerInterface $em,
         UserRepository $userRepository
     ) {
-        $this->commandBus      = $commandBus;
-        $this->queryBus        = $queryBus;
-        $this->em              = $em;
-        $this->userRepository  = $userRepository;
+        $this->commandBus     = $commandBus;
+        $this->queryBus       = $queryBus;
+        $this->em             = $em;
+        $this->userRepository = $userRepository;
     }
 
     public function __invoke(BlockUpdatedEvent $event): void

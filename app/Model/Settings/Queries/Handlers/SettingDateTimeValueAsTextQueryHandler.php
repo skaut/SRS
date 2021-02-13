@@ -26,7 +26,7 @@ class SettingDateTimeValueAsTextQueryHandler implements MessageHandlerInterface
     public function __invoke(SettingDateTimeValueAsTextQuery $query): ?string
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
-        $value = $setting->getValue();
+        $value   = $setting->getValue();
         if ($value === null) {
             return null;
         }

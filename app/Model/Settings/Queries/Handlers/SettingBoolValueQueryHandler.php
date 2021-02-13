@@ -9,6 +9,10 @@ use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Repositories\SettingsRepository;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
+use function filter_var;
+
+use const FILTER_VALIDATE_BOOLEAN;
+
 class SettingBoolValueQueryHandler implements MessageHandlerInterface
 {
     private SettingsRepository $settingsRepository;
@@ -24,7 +28,7 @@ class SettingBoolValueQueryHandler implements MessageHandlerInterface
     public function __invoke(SettingBoolValueQuery $query): ?bool
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
-        $value = $setting->getValue();
+        $value   = $setting->getValue();
         if ($value === null) {
             return null;
         }

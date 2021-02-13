@@ -18,8 +18,6 @@ use App\Presenters\BasePresenter;
 use App\Services\Authenticator;
 use App\Services\Authorizator;
 use App\Services\CmsService;
-use App\Services\DatabaseService;
-use App\Services\ISettingsService;
 use App\Services\SkautIsService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette\Application\AbortException;
