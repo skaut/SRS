@@ -61,11 +61,11 @@ class ClearCacheCommand extends Command
                 unlink($key);
             }
 
-            $output->writeln('Cache cleared.');
+            $output->writeln('Cache cleared successfully.');
 
             return 0;
         } catch (Throwable $e) {
-            $output->write('error');
+            $output->writeln('Cache clearing failed.');
 
             return 1;
         }

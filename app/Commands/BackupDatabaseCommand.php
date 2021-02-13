@@ -56,9 +56,11 @@ class BackupDatabaseCommand extends Command
             $dump = new MySQLDump(new mysqli($host, $user, $password, $dbname));
             $dump->save($this->dir . '/' . $dbname . '-' . $timestamp . '.sql.gz');
 
+            $output->writeln('Database dump created successfully.');
+
             return 0;
         } catch (Throwable $e) {
-            $output->write('error');
+            $output->writeln('Database dump creation failed.');
 
             return 1;
         }
