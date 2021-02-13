@@ -18,12 +18,12 @@ use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Settings\Repositories\SettingsRepository;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\ISettingsService;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
@@ -32,8 +32,6 @@ use Throwable;
 
 final class RemoveBlockHandlerTest extends CommandHandlerTest
 {
-    private ISettingsService $settingsService;
-
     private SubeventRepository $subeventRepository;
 
     private UserRepository $userRepository;
@@ -49,6 +47,8 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
     private ProgramApplicationRepository $programApplicationRepository;
 
     private BlockRepository $blockRepository;
+
+    private SettingsRepository $settingsRepository;
 
     /**
      * Odstranění bloku - odstraní se i jeho programy a účastníci.
@@ -107,7 +107,7 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
      */
     protected function getTestedAggregateRoots(): array
     {
-        return [Block::class];
+        return [Block::class, Settings::class];
     }
 
     protected function _before(): void
@@ -115,7 +115,6 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
         $this->tester->useConfigFiles([__DIR__ . '/RemoveBlockHandlerTest.neon']);
         parent::_before();
 
-        $this->settingsService              = $this->tester->grabService(ISettingsService::class);
         $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);
         $this->userRepository               = $this->tester->grabService(UserRepository::class);
         $this->categoryRepository           = $this->tester->grabService(CategoryRepository::class);
@@ -124,7 +123,8 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
         $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
         $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
+        $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);
 
-        $this->settingsService->setValue(Settings::SEMINAR_NAME, 'test');
+        $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
     }
 }

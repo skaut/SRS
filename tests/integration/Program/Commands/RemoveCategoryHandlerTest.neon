@@ -7,6 +7,7 @@ services:
     - App\Model\Program\Repositories\ProgramRepository
     - App\Model\Program\Repositories\ProgramApplicationRepository
     - App\Model\Application\Repositories\ApplicationRepository
+    - App\Model\Settings\Repositories\SettingsRepository
 
     - class: App\Model\Program\Commands\Handlers\RemoveCategoryHandler
       tags:
@@ -30,6 +31,14 @@ services:
         messenger.messageHandler:
         bus: queryBus
     - class: App\Model\User\Queries\Handlers\UserAllowedProgramsQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+    - class: App\Model\Settings\Queries\Handlers\SettingStringValueQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+    - class: App\Model\Settings\Queries\Handlers\SettingBoolValueQueryHandler
       tags:
         messenger.messageHandler:
         bus: queryBus

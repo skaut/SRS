@@ -20,6 +20,14 @@ services:
       tags:
         messenger.messageHandler:
         bus: queryBus
+    - class: App\Model\Settings\Queries\Handlers\SettingStringValueQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+    - class: App\Model\Settings\Queries\Handlers\SettingBoolValueQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
 
     - class: App\Model\Program\Events\Subscribers\ProgramCreatedEventListener
       tags:

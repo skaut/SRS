@@ -28,6 +28,10 @@ services:
       tags:
         messenger.messageHandler:
         bus: queryBus
+    - class: App\Model\Settings\Queries\Handlers\SettingStringValueQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
 
     - class: App\Model\User\Events\Subscribers\ProgramUnregisteredEventListener
       tags:

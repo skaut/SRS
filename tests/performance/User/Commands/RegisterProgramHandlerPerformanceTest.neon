@@ -16,6 +16,10 @@ services:
       tags:
         messenger.messageHandler:
         bus: queryBus
+    - class: App\Model\Settings\Queries\Handlers\SettingBoolValueQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
 
     - class: App\Model\User\Events\Subscribers\ProgramRegisteredEventListener
       tags:

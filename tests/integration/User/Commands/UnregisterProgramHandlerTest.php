@@ -16,13 +16,13 @@ use App\Model\Program\ProgramApplication;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Settings\Repositories\SettingsRepository;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\ISettingsService;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
@@ -31,8 +31,6 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 
 final class UnregisterProgramHandlerTest extends CommandHandlerTest
 {
-    private ISettingsService $settingsService;
-
     private BlockRepository $blockRepository;
 
     private SubeventRepository $subeventRepository;
@@ -46,6 +44,8 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
     private ApplicationRepository $applicationRepository;
 
     private ProgramApplicationRepository $programApplicationRepository;
+
+    private SettingsRepository $settingsRepository;
 
     /**
      * Odhlášení uživatelé jsou nahrazeni prvními náhradníky, přihlášení jako náhradník se registrací na program ruší.
@@ -228,7 +228,7 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
      */
     protected function getTestedAggregateRoots(): array
     {
-        return [User::class];
+        return [User::class, Settings::class];
     }
 
     protected function _before(): void
@@ -236,7 +236,6 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $this->tester->useConfigFiles([__DIR__ . '/UnregisterProgramHandlerTest.neon']);
         parent::_before();
 
-        $this->settingsService              = $this->tester->grabService(ISettingsService::class);
         $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
         $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);
         $this->userRepository               = $this->tester->grabService(UserRepository::class);
@@ -244,8 +243,9 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
         $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
+        $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);
 
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
-        $this->settingsService->setValue(Settings::SEMINAR_NAME, 'test');
+        $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
+        $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
     }
 }
