@@ -64,7 +64,7 @@ class ClearCacheCommand extends Command
             $output->writeln('Cache cleared.');
 
             return 0;
-        } catch (Throwable $ex) {
+        } catch (Throwable $e) {
             $output->write('error');
 
             return 1;
