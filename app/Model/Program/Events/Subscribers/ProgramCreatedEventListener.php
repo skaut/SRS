@@ -6,6 +6,7 @@ namespace App\Model\Program\Events\Subscribers;
 
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Events\ProgramCreatedEvent;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Repositories\UserRepository;
@@ -40,7 +41,7 @@ class ProgramCreatedEventListener implements MessageHandlerInterface
             $block = $event->getProgram()->getBlock();
 
             if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {
-                $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+                $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
 
                 foreach ($this->userRepository->findBlockAllowed($block, ! $registrationBeforePaymentAllowed) as $user) {
                     $this->commandBus->handle(new RegisterProgram($user, $event->getProgram()));

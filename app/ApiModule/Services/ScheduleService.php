@@ -32,6 +32,9 @@ use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
 use App\Model\Settings\Exceptions\SettingsException;
 use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
+use App\Model\Settings\Queries\SettingDateValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
@@ -131,7 +134,7 @@ class ScheduleService
      */
     public function getProgramsWeb(): array
     {
-        $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+        $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
         $userAllowedPrograms              = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user, ! $registrationBeforePaymentAllowed));
         $userAllowedProgramsWithNotPaid   = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user, false));
 
@@ -210,12 +213,12 @@ class ScheduleService
     {
         $calendarConfigDto = new CalendarConfigDto();
 
-        $fromDate = $this->settingsService->getDateValue(Settings::SEMINAR_FROM_DATE);
-        $toDate   = $this->settingsService->getDateValue(Settings::SEMINAR_TO_DATE);
+        $fromDate = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_FROM_DATE));
+        $toDate   = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_TO_DATE));
 
         $calendarConfigDto->setSeminarFromDate($fromDate->format('Y-m-d'));
         $calendarConfigDto->setSeminarToDate($toDate->add(new DateInterval('P1D'))->format('Y-m-d'));
-        $calendarConfigDto->setAllowedModifySchedule($this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
+        $calendarConfigDto->setAllowedModifySchedule($this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_MODIFY_SCHEDULE))
             && $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE));
 
         $programs = $this->programRepository->findAll();
@@ -245,7 +248,7 @@ class ScheduleService
         $calendarConfigDto->setMinTime((string) $minTime);
         $calendarConfigDto->setMaxTime((string) $maxTime);
 
-        $calendarConfigDto->setInitialView($this->settingsService->getValue(Settings::SCHEDULE_INITIAL_VIEW));
+        $calendarConfigDto->setInitialView($this->queryBus->handle(new SettingStringValueQuery(Settings::SCHEDULE_INITIAL_VIEW)));
 
         return $calendarConfigDto;
     }
@@ -275,7 +278,7 @@ class ScheduleService
 
         if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             throw new ApiException($this->translator->translate('common.api.schedule.user_not_allowed_manage'));
-        } elseif (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
+        } elseif (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_MODIFY_SCHEDULE))) {
             throw new ApiException($this->translator->translate('common.api.schedule.not_allowed_modify'));
         } elseif ($overlappingLecturersProgram) {
             throw new ApiException($this->translator->translate('common.api.schedule.lector_has_another_program'));
@@ -327,7 +330,7 @@ class ScheduleService
 
         if (! $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)) {
             throw new ApiException($this->translator->translate('common.api.schedule.user_not_allowed_manage'));
-        } elseif (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)) {
+        } elseif (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_MODIFY_SCHEDULE))) {
             throw new ApiException($this->translator->translate('common.api.schedule.not_allowed_modify'));
         } elseif (! $program) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_not_found'));
@@ -477,7 +480,7 @@ class ScheduleService
      */
     private function convertBlockToBlockDetailDto(Block $block): BlockDetailDto
     {
-        $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+        $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
         $userBlocks                       = $this->queryBus->handle(new UserAttendsBlocksQuery($this->user));
         $userAllowedBlocks                = $this->queryBus->handle(new UserAllowedBlocksQuery($this->user, ! $registrationBeforePaymentAllowed));
 

@@ -7,6 +7,7 @@ namespace App\InstallModule\Presenters;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
@@ -68,7 +69,7 @@ class InstallPresenter extends InstallBasePresenter
         }
 
         try {
-            if ($this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
+            if ($this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect('installed');
             }
 
@@ -112,7 +113,7 @@ class InstallPresenter extends InstallBasePresenter
     public function renderAdmin(): void
     {
         try {
-            if ($this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
+            if ($this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->flashMessage('install.admin.admin_already_created', 'info');
                 $this->redirect('finish');
             }
@@ -172,7 +173,7 @@ class InstallPresenter extends InstallBasePresenter
     public function renderFinish(): void
     {
         try {
-            if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
+            if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect('default');
             }
         } catch (TableNotFoundException $ex) {
@@ -191,7 +192,7 @@ class InstallPresenter extends InstallBasePresenter
     public function renderInstalled(): void
     {
         try {
-            if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
+            if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect('default');
             }
         } catch (TableNotFoundException $ex) {

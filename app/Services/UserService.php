@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Model\Enums\PaymentType;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Events\UserUpdatedEvent;
 use App\Model\User\Repositories\UserRepository;
@@ -115,7 +116,7 @@ class UserService
 
             if ($approved) {
                 $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_APPROVED, [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                    TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                 ]);
             }
         });

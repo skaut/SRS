@@ -20,6 +20,7 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
@@ -700,14 +701,14 @@ class UsersGridControl extends Control
 
         $p = $this->getPresenter();
 
-        $eventId = $this->settingsService->getIntValue(Settings::SKAUTIS_EVENT_ID);
+        $eventId = $this->queryBus->handle(new SettingIntValueQuery(Settings::SKAUTIS_EVENT_ID));
 
         if ($eventId === null) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_connected', 'danger');
             $this->redirect('this');
         }
 
-        switch ($this->settingsService->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
+        switch ($this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE))) {
             case SkautIsEventType::GENERAL:
                 $skautIsEventService = $this->skautIsEventGeneralService;
                 break;

@@ -8,6 +8,7 @@ use App\Model\Acl\Permission;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\SrsResource;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
@@ -116,8 +117,8 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->permissionManageRooms       = Permission::MANAGE_ROOMS;
         $this->template->permissionManageCategories  = Permission::MANAGE_CATEGORIES;
 
-        $this->template->footer      = $this->settingsService->getValue(Settings::FOOTER);
-        $this->template->seminarName = $this->settingsService->getValue(Settings::SEMINAR_NAME);
+        $this->template->footer      = $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER));
+        $this->template->seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
 
         $this->template->settings = $this->settingsService;
 

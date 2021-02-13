@@ -24,6 +24,7 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\CustomInput\Repositories\CustomInputValueRepository;
 use App\Model\Enums\Sex;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
@@ -202,7 +203,7 @@ class ApplicationFormFactory
 
         $this->addCustomInputs($form);
 
-        $form->addCheckbox('agreement', $this->settingsService->getValue(Settings::APPLICATION_AGREEMENT))
+        $form->addCheckbox('agreement', $this->queryBus->handle(new SettingStringValueQuery(Settings::APPLICATION_AGREEMENT)))
             ->addRule(Form::FILLED, 'web.application_content.agreement_empty');
 
         $form->addSubmit('submit', 'web.application_content.register');

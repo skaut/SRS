@@ -8,6 +8,9 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\CalendarView;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
+use App\Model\Settings\Queries\SettingDateTimeValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
@@ -96,13 +99,13 @@ class ProgramFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'isAllowedAddBlock' => $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK),
-            'isAllowedModifySchedule' => $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE),
-            'registerProgramsType' => $this->settingsService->getValue(Settings::REGISTER_PROGRAMS_TYPE),
-            'registerProgramsFrom' => $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM),
-            'registerProgramsTo' => $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO),
-            'isAllowedRegisterProgramsBeforePayment' => $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT),
-            'scheduleInitialView' => $this->settingsService->getValue(Settings::SCHEDULE_INITIAL_VIEW),
+            'isAllowedAddBlock' => $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_ADD_BLOCK)),
+            'isAllowedModifySchedule' => $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_MODIFY_SCHEDULE)),
+            'registerProgramsType' => $this->queryBus->handle(new SettingStringValueQuery(Settings::REGISTER_PROGRAMS_TYPE)),
+            'registerProgramsFrom' => $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::REGISTER_PROGRAMS_FROM)),
+            'registerProgramsTo' => $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::REGISTER_PROGRAMS_TO)),
+            'isAllowedRegisterProgramsBeforePayment' => $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)),
+            'scheduleInitialView' => $this->queryBus->handle(new SettingStringValueQuery(Settings::SCHEDULE_INITIAL_VIEW)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];

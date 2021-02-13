@@ -6,6 +6,8 @@ namespace App\Model\Settings\Queries\Handlers;
 
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
+use App\Model\Settings\Queries\SettingDateTimeValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
@@ -26,13 +28,13 @@ class IsAllowedRegisterProgramsQueryHandler implements MessageHandlerInterface
 
     public function __invoke(IsAllowedRegisterProgramsQuery $query): bool
     {
-        $registerProgramsType = $this->settingsService->getValue(Settings::REGISTER_PROGRAMS_TYPE);
+        $registerProgramsType = $this->queryBus->handle(new SettingStringValueQuery(Settings::REGISTER_PROGRAMS_TYPE));
 
         if ($registerProgramsType === ProgramRegistrationType::ALLOWED) {
             return true;
         } elseif ($registerProgramsType === ProgramRegistrationType::ALLOWED_FROM_TO) {
-            $registerProgramsFrom = $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM);
-            $registerProgramsTo   = $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO);
+            $registerProgramsFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::REGISTER_PROGRAMS_FROM));
+            $registerProgramsTo   = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::REGISTER_PROGRAMS_TO));
 
             return ($registerProgramsFrom === null || $registerProgramsFrom <= new DateTimeImmutable())
                 && ($registerProgramsTo === null || $registerProgramsTo >= new DateTimeImmutable());

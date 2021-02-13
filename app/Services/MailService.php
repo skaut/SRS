@@ -13,6 +13,7 @@ use App\Model\Mailing\Recipient;
 use App\Model\Mailing\Repositories\MailRepository;
 use App\Model\Mailing\Repositories\TemplateRepository;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
@@ -122,7 +123,7 @@ class MailService implements IMailService
             }
         }
 
-        $from = new Recipient($this->settingsService->getValue(Settings::SEMINAR_EMAIL), $this->settingsService->getValue(Settings::SEMINAR_NAME));
+        $from = new Recipient($this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL)), $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)));
 
         $messageData = new SrsMailData($from, $recipients, $subject, $text);
         $mail        = $this->mailFactory->createByType(SrsMail::class, $messageData);

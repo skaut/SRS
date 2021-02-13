@@ -16,6 +16,7 @@ use App\Model\Program\Commands\RemoveProgram;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use Nette\Application\AbortException;
@@ -70,7 +71,7 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->template->block                              = $block;
         $this->template->programId                          = $this->session->getSection('srs')->programId;
         $this->template->userAllowedModifySchedule          = $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE)
-            && $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE);
+            && $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_MODIFY_SCHEDULE));
         $this->template->programMandatoryTypeVoluntary      = ProgramMandatoryType::VOLUNTARY;
         $this->template->programMandatoryTypeMandatory      = ProgramMandatoryType::MANDATORY;
         $this->template->programMandatoryTypeAutoRegistered = ProgramMandatoryType::AUTO_REGISTERED;
@@ -122,7 +123,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
         if (
             ! $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE) ||
-            ! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE)
+            ! $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_MODIFY_SCHEDULE))
         ) {
             $this->flashMessage('admin.program.blocks.programs.message.modify_schedule_not_allowed', 'danger');
         } else {

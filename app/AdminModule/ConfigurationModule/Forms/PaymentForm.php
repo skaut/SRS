@@ -7,6 +7,9 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\MaturityType;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingDateValueQuery;
+use App\Model\Settings\Queries\SettingIntValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
@@ -123,14 +126,14 @@ class PaymentForm extends UI\Control
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'accountNumber' => $this->settingsService->getValue(Settings::ACCOUNT_NUMBER),
-            'variableSymbolCode' => $this->settingsService->getValue(Settings::VARIABLE_SYMBOL_CODE),
-            'maturityType' => $this->settingsService->getValue(Settings::MATURITY_TYPE),
-            'maturityDate' => $this->settingsService->getDateValue(Settings::MATURITY_DATE),
-            'maturityDays' => $this->settingsService->getIntValue(Settings::MATURITY_DAYS),
-            'maturityWorkDays' => $this->settingsService->getIntValue(Settings::MATURITY_WORK_DAYS),
-            'maturityReminder' => $this->settingsService->getIntValue(Settings::MATURITY_REMINDER),
-            'cancelRegistrationAfterMaturity' => $this->settingsService->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY),
+            'accountNumber' => $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER)),
+            'variableSymbolCode' => $this->queryBus->handle(new SettingStringValueQuery(Settings::VARIABLE_SYMBOL_CODE)),
+            'maturityType' => $this->queryBus->handle(new SettingStringValueQuery(Settings::MATURITY_TYPE)),
+            'maturityDate' => $this->queryBus->handle(new SettingDateValueQuery(Settings::MATURITY_DATE)),
+            'maturityDays' => $this->queryBus->handle(new SettingIntValueQuery(Settings::MATURITY_DAYS)),
+            'maturityWorkDays' => $this->queryBus->handle(new SettingIntValueQuery(Settings::MATURITY_WORK_DAYS)),
+            'maturityReminder' => $this->queryBus->handle(new SettingIntValueQuery(Settings::MATURITY_REMINDER)),
+            'cancelRegistrationAfterMaturity' => $this->queryBus->handle(new SettingIntValueQuery(Settings::CANCEL_REGISTRATION_AFTER_MATURITY)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];

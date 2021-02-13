@@ -8,6 +8,7 @@ use App\Model\Enums\PaymentState;
 use App\Model\Payment\Payment;
 use App\Model\Payment\Repositories\PaymentRepository;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
@@ -130,7 +131,7 @@ class PaymentsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        if ($this->settingsService->getValue(Settings::BANK_TOKEN) !== null) {
+        if ($this->queryBus->handle(new SettingStringValueQuery(Settings::BANK_TOKEN)) !== null) {
             $grid->addToolbarButton('checkPayments!')
                 ->setText('admin.payments.payments.check_payments');
         }
@@ -209,7 +210,7 @@ class PaymentsGridControl extends Control
      */
     public function handleCheckPayments(): void
     {
-        $from = $this->settingsService->getDateValue(Settings::BANK_DOWNLOAD_FROM);
+        $from = $this->queryBus->handle(new SettingDateValueQuery(Settings::BANK_DOWNLOAD_FROM));
         $this->bankService->downloadTransactions($from);
     }
 

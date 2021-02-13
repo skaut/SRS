@@ -12,6 +12,7 @@ use App\Model\Application\SubeventsApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
@@ -206,8 +207,8 @@ class ApplicationsGridControl extends Control
             ->setIcon('money')
             ->setClass('btn btn-xs btn-primary ajax')
             ->setTemplateParameters([
-                'account' => $this->settingsService->getValue(Settings::ACCOUNT_NUMBER),
-                'message' => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                'account' => $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER)),
+                'message' => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             ]);
         $grid->setTemplateFile(__DIR__ . '/templates/applications_grid_detail.latte');
 

@@ -6,6 +6,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
@@ -51,7 +52,7 @@ class SubeventsFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'isAllowedAddSubeventsAfterPayment' => $this->settingsService->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT),
+            'isAllowedAddSubeventsAfterPayment' => $this->queryBus->handle(new SettingStringValueQuery(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];

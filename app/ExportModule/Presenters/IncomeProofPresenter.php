@@ -9,6 +9,7 @@ use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
@@ -143,12 +144,12 @@ class IncomeProofPresenter extends ExportBasePresenter
         $template->setFile(__DIR__ . '/templates/IncomeProof/pdf.latte');
 
         $template->applications      = $updatedApplications;
-        $template->logo              = $this->settingsService->getValue(Settings::LOGO);
-        $template->seminarName       = $this->settingsService->getValue(Settings::SEMINAR_NAME);
-        $template->company           = $this->settingsService->getValue(Settings::COMPANY);
-        $template->ico               = $this->settingsService->getValue(Settings::ICO);
-        $template->accountNumber     = $this->settingsService->getValue(Settings::ACCOUNT_NUMBER);
-        $template->accountant        = $this->settingsService->getValue(Settings::ACCOUNTANT);
+        $template->logo              = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
+        $template->seminarName       = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
+        $template->company           = $this->queryBus->handle(new SettingStringValueQuery(Settings::COMPANY));
+        $template->ico               = $this->queryBus->handle(new SettingStringValueQuery(Settings::ICO));
+        $template->accountNumber     = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
+        $template->accountant        = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNTANT));
         $template->date              = (new DateTimeImmutable())->format(Helpers::DATE_FORMAT);
         $template->paymentMethodCash = PaymentType::CASH;
         $template->paymentMethodBank = PaymentType::BANK;

@@ -9,6 +9,7 @@ use App\Model\Program\Events\BlockUpdatedEvent;
 use App\Model\Program\Program;
 use App\Model\Program\Queries\ProgramAlternatesQuery;
 use App\Model\Program\Queries\ProgramAttendeesQuery;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
@@ -60,7 +61,7 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
             $capacityOld          = $event->getCapacityOld();
             $alternatesAllowedOld = $event->isAlternatesAllowedOld();
 
-            $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+            $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
             $allowedUsers                     = $this->userRepository->findBlockAllowed($block, ! $registrationBeforePaymentAllowed);
 
             // aktualizace ucastniku pri zmene kategorie nebo podakce (odstraneni neopravnenych, pridani u automaticky registrovanych)

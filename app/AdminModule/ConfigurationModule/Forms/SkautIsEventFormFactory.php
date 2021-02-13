@@ -7,6 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
 use App\Model\SkautIs\SkautIsCourse;
@@ -101,7 +102,7 @@ class SkautIsEventFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'skautisEventType' => $this->settingsService->getValue(Settings::SKAUTIS_EVENT_TYPE),
+            'skautisEventType' => $this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];

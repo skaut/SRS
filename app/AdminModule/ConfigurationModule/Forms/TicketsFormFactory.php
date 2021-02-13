@@ -6,6 +6,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
@@ -62,7 +63,7 @@ class TicketsFormFactory
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $ticketsFrom = $this->settingsService->getDateTimeValue(Settings::TICKETS_FROM);
+        $ticketsFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
 
         $form->setDefaults([
             'ticketsAllowed' => $ticketsFrom !== null,

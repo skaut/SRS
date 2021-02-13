@@ -9,6 +9,8 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Acl\SrsResource;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
@@ -99,10 +101,10 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
 
-        $this->template->logo        = $this->settingsService->getValue(Settings::LOGO);
-        $this->template->footer      = $this->settingsService->getValue(Settings::FOOTER);
-        $this->template->seminarName = $this->settingsService->getValue(Settings::SEMINAR_NAME);
-        $this->template->gaId        = $this->settingsService->getValue(Settings::GA_ID);
+        $this->template->logo        = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
+        $this->template->footer      = $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER));
+        $this->template->seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
+        $this->template->gaId        = $this->queryBus->handle(new SettingStringValueQuery(Settings::GA_ID));
 
         $this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
         $this->template->unapprovedRole    = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
@@ -135,7 +137,7 @@ abstract class WebBasePresenter extends BasePresenter
     private function checkInstallation(): void
     {
         try {
-            if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
+            if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect(':Install:Install:default');
             }
         } catch (TableNotFoundException $ex) {

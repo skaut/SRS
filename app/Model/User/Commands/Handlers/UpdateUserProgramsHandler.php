@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\User\Commands\Handlers;
 
 use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
@@ -37,7 +38,7 @@ class UpdateUserProgramsHandler implements MessageHandlerInterface
     public function __invoke(UpdateUserPrograms $command): void
     {
         $this->em->transactional(function () use ($command): void {
-            $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+            $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
 
             $userPrograms        = $this->queryBus->handle(new UserAttendsProgramsQuery($command->getUser()));
             $userAllowedPrograms = $this->queryBus->handle(new UserAllowedProgramsQuery($command->getUser(), ! $registrationBeforePaymentAllowed));

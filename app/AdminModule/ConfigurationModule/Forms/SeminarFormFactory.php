@@ -6,6 +6,8 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingDateValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Services\CommandBus;
@@ -85,10 +87,10 @@ class SeminarFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'seminarName' => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-            'seminarFromDate' => $this->settingsService->getDateValue(Settings::SEMINAR_FROM_DATE),
-            'seminarToDate' => $this->settingsService->getDateValue(Settings::SEMINAR_TO_DATE),
-            'editRegistrationTo' => $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO),
+            'seminarName' => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
+            'seminarFromDate' => $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_FROM_DATE)),
+            'seminarToDate' => $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_TO_DATE)),
+            'editRegistrationTo' => $this->queryBus->handle(new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];

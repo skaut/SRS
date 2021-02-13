@@ -15,6 +15,7 @@ use App\Model\Program\Exceptions\UserNotAllowedProgramException;
 use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Program;
 use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
@@ -112,7 +113,7 @@ class ProgramAttendeesGridControl extends Control
         } else {
             $this->program                    = $program;
             $user                             = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
-            $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+            $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
 
             $grid->setTranslator($this->translator);
 

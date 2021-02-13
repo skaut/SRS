@@ -7,6 +7,8 @@ namespace App\WebModule\Forms;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingArrayValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
@@ -144,7 +146,7 @@ class ContactForm extends UI\Control
             }
         }
 
-        $recipients = $this->settingsService->getArrayValue(Settings::CONTACT_FORM_RECIPIENTS);
+        $recipients = $this->queryBus->handle(new SettingArrayValueQuery(Settings::CONTACT_FORM_RECIPIENTS));
         foreach ($recipients as $recipient) {
             $recipientsEmails->add($recipient);
         }
@@ -154,7 +156,7 @@ class ContactForm extends UI\Control
             $recipientsEmails,
             Template::CONTACT_FORM,
             [
-                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                 TemplateVariable::SENDER_NAME => $senderName,
                 TemplateVariable::SENDER_EMAIL => $senderEmail,
                 TemplateVariable::MESSAGE => str_replace(["\n", "\r"], '', nl2br($values->message, false)),

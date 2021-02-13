@@ -7,6 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\Repositories\PageRepository;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use App\Services\FilesService;
@@ -74,7 +75,7 @@ class WebFormFactory
         $renderer->wrappers['control']['container'] = 'div class="col-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 
-        $logo = $this->settingsService->getValue(Settings::LOGO);
+        $logo = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
         $form->addUpload('logo', 'admin.configuration.web_logo')
             ->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
@@ -86,7 +87,7 @@ class WebFormFactory
         $form->addText('footer', 'admin.configuration.web_footer');
 
         $redirectAfterLoginOptions = $this->pageRepository->getPagesOptions();
-        $redirectAfterLoginValue   = $this->settingsService->getValue(Settings::REDIRECT_AFTER_LOGIN);
+        $redirectAfterLoginValue   = $this->queryBus->handle(new SettingStringValueQuery(Settings::REDIRECT_AFTER_LOGIN));
 
         $form->addSelect('redirectAfterLogin', 'admin.configuration.web_redirect_after_login', $redirectAfterLoginOptions)
             ->addRule(Form::FILLED, 'admin.configuration.web_redirect_after_login_empty');
@@ -96,9 +97,9 @@ class WebFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'footer' => $this->settingsService->getValue(Settings::FOOTER),
+            'footer' => $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER)),
             'redirectAfterLogin' => array_key_exists($redirectAfterLoginValue, $redirectAfterLoginOptions) ? $redirectAfterLoginValue : null,
-            'ga_id' => $this->settingsService->getValue(Settings::GA_ID),
+            'ga_id' => $this->queryBus->handle(new SettingStringValueQuery(Settings::GA_ID)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -118,7 +119,7 @@ class WebFormFactory
         $logo = $values->logo;
         assert($logo instanceof FileUpload);
         if ($logo->getError() == UPLOAD_ERR_OK) {
-            $this->filesService->delete($this->settingsService->getValue(Settings::LOGO));
+            $this->filesService->delete($this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO)));
             $path = $this->filesService->save($logo, 'logo', false, $logo->name);
             $this->filesService->resizeImage($path, null, 100);
             $this->settingsService->setValue(Settings::LOGO, $path);

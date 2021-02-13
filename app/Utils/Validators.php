@@ -10,6 +10,7 @@ use App\Model\Application\Application;
 use App\Model\Program\Block;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
@@ -137,7 +138,7 @@ class Validators
      */
     public function validateRolesMinimumAge(Collection $selectedRoles, User $user): bool
     {
-        $age = $this->settingsService->getDateValue(Settings::SEMINAR_FROM_DATE)->diff($user->getBirthdate())->y;
+        $age = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_FROM_DATE))->diff($user->getBirthdate())->y;
 
         foreach ($selectedRoles as $role) {
             if ($role->getMinimumAge() > $age) {

@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Model\Payment\Repositories\PaymentRepository;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -51,7 +52,7 @@ class BankService
      */
     public function downloadTransactions(DateTimeImmutable $from, ?string $token = null): void
     {
-        $token = $token ?: $this->settingsService->getValue(Settings::BANK_TOKEN);
+        $token = $token ?: $this->queryBus->handle(new SettingStringValueQuery(Settings::BANK_TOKEN));
         if ($token === null) {
             throw new InvalidArgumentException('Token is not set.');
         }

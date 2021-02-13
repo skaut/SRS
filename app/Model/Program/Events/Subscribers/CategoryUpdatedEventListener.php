@@ -8,6 +8,7 @@ use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Events\CategoryUpdatedEvent;
 use App\Model\Program\Queries\ProgramAlternatesQuery;
 use App\Model\Program\Queries\ProgramAttendeesQuery;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
@@ -54,7 +55,7 @@ class CategoryUpdatedEventListener implements MessageHandlerInterface
             }
 
             foreach ($event->getCategory()->getBlocks() as $block) {
-                $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+                $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
                 $allowedUsers                     = $this->userRepository->findBlockAllowed($block, ! $registrationBeforePaymentAllowed);
 
                 foreach ($block->getPrograms() as $program) {

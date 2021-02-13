@@ -7,6 +7,7 @@ namespace App\Presenters;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
@@ -66,7 +67,7 @@ class AuthPresenter extends BasePresenter
 
             assert($user instanceof User);
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::SIGN_IN, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             ]);
         }
 
@@ -129,7 +130,7 @@ class AuthPresenter extends BasePresenter
         if ($redirectByRole && ! $multipleRedirects) {
             $slug = $redirectByRole;
         } else {
-            $slug = $this->settingsService->getValue(Settings::REDIRECT_AFTER_LOGIN);
+            $slug = $this->queryBus->handle(new SettingStringValueQuery(Settings::REDIRECT_AFTER_LOGIN));
         }
 
         $this->redirect(':Web:Page:default', ['slug' => $slug]);

@@ -8,6 +8,9 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingArrayValueQuery;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\IMailService;
 use App\Utils\Validators;
@@ -89,9 +92,9 @@ class MailingFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'seminarEmail' => $this->settingsService->getValue(Settings::SEMINAR_EMAIL),
-            'contactFormRecipients' => implode(', ', $this->settingsService->getArrayValue(Settings::CONTACT_FORM_RECIPIENTS)),
-            'contactFormGuestsAllowed' => $this->settingsService->getBoolValue(Settings::CONTACT_FORM_GUESTS_ALLOWED),
+            'seminarEmail' => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL)),
+            'contactFormRecipients' => implode(', ', $this->queryBus->handle(new SettingArrayValueQuery(Settings::CONTACT_FORM_RECIPIENTS))),
+            'contactFormGuestsAllowed' => $this->queryBus->handle(new SettingBoolValueQuery(Settings::CONTACT_FORM_GUESTS_ALLOWED)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -109,7 +112,7 @@ class MailingFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($this->settingsService->getValue(Settings::SEMINAR_EMAIL) !== $values->seminarEmail) {
+        if ($this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL)) !== $values->seminarEmail) {
             $this->settingsService->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values->seminarEmail);
 
             $verificationCode = substr(md5(uniqid((string) mt_rand(), true)), 0, 8);
@@ -122,7 +125,7 @@ class MailingFormFactory
                 new ArrayCollection([$values->seminarEmail]),
                 Template::EMAIL_VERIFICATION,
                 [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                    TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                     TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
                 ]
             );

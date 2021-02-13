@@ -9,6 +9,7 @@ use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
@@ -91,7 +92,7 @@ class ApplicationContentControl extends Control
             $template->noRegisterableRole  = $this->roleRepository->findFilteredRoles(true, false, false)->isEmpty();
             $template->registrationStart   = $this->roleRepository->getRegistrationStart();
             $template->registrationEnd     = $this->roleRepository->getRegistrationEnd();
-            $template->bankAccount         = $this->settingsService->getValue(Settings::ACCOUNT_NUMBER);
+            $template->bankAccount         = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
             $template->dbuser              = $dbuser;
             $template->userHasFixedFeeRole = $userHasFixedFeeRole;
 

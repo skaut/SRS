@@ -8,6 +8,7 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\WebModule\Forms\ContactForm;
 use App\WebModule\Forms\IContactFormFactory;
@@ -48,7 +49,7 @@ class ContactFormContentControl extends Control
 
         $user                    = $this->getPresenter()->user;
         $template->guestRole     = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
-        $template->guestsAllowed = $this->settingsService->getBoolValue(Settings::CONTACT_FORM_GUESTS_ALLOWED);
+        $template->guestsAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::CONTACT_FORM_GUESTS_ALLOWED));
 
         $template->render();
     }

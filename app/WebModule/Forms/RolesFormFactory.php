@@ -8,6 +8,7 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
@@ -143,7 +144,7 @@ class RolesFormFactory
                 ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
         }
 
-        $ticketDownloadFrom = $this->settingsService->getDateTimeValue(Settings::TICKETS_FROM);
+        $ticketDownloadFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
         if ($ticketDownloadFrom !== null) {
             $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.download_ticket')
                 ->setHtmlAttribute('class', 'btn-secondary');

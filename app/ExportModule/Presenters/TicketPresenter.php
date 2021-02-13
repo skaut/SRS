@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\ExportModule\Presenters;
 
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
@@ -58,8 +59,8 @@ class TicketPresenter extends ExportBasePresenter
         assert($template instanceof Template);
         $template->setFile(__DIR__ . '/templates/Ticket/pdf.latte');
 
-        $template->logo                    = $this->settingsService->getValue(Settings::LOGO);
-        $template->seminarName             = $this->settingsService->getValue(Settings::SEMINAR_NAME);
+        $template->logo                    = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
+        $template->seminarName             = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
         $template->ticketUser              = $user;
         $template->ticketUserPrograms      = $userPrograms;
         $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();

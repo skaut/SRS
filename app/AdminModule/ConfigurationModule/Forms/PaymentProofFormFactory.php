@@ -6,6 +6,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
@@ -71,10 +72,10 @@ class PaymentProofFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'company' => $this->settingsService->getValue(Settings::COMPANY),
-            'ico' => $this->settingsService->getValue(Settings::ICO),
-            'accountant' => $this->settingsService->getValue(Settings::ACCOUNTANT),
-//            'printLocation' => $this->settingsService->getValue(Settings::PRINT_LOCATION), todo: odstranit, pokud se nebude pouzivat v dokladech
+            'company' => $this->queryBus->handle(new SettingStringValueQuery(Settings::COMPANY)),
+            'ico' => $this->queryBus->handle(new SettingStringValueQuery(Settings::ICO)),
+            'accountant' => $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNTANT)),
+//            'printLocation' => $this->queryBus->handle(new SettingStringValueQuery(Settings::PRINT_LOCATION)), todo: odstranit, pokud se nebude pouzivat v dokladech
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];

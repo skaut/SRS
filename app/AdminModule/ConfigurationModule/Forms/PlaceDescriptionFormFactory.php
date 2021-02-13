@@ -6,6 +6,7 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
@@ -52,7 +53,7 @@ class PlaceDescriptionFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'placeDescription' => $this->settingsService->getValue(Settings::PLACE_DESCRIPTION),
+            'placeDescription' => $this->queryBus->handle(new SettingStringValueQuery(Settings::PLACE_DESCRIPTION)),
         ]);
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');

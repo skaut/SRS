@@ -6,6 +6,8 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingDateValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
@@ -57,8 +59,8 @@ class ApplicationFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'applicationAgreement' => $this->settingsService->getValue(Settings::APPLICATION_AGREEMENT),
-            'editCustomInputsTo' => $this->settingsService->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO),
+            'applicationAgreement' => $this->queryBus->handle(new SettingStringValueQuery(Settings::APPLICATION_AGREEMENT)),
+            'editCustomInputsTo' => $this->queryBus->handle(new SettingDateValueQuery(Settings::EDIT_CUSTOM_INPUTS_TO)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];

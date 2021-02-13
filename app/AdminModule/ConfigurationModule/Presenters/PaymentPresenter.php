@@ -10,6 +10,7 @@ use App\AdminModule\ConfigurationModule\Forms\PaymentForm;
 use App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\TicketsFormFactory;
 use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -41,7 +42,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
      */
     public function renderDefault(): void
     {
-        $bankToken = $this->settingsService->getValue(Settings::BANK_TOKEN);
+        $bankToken = $this->queryBus->handle(new SettingStringValueQuery(Settings::BANK_TOKEN));
         if ($bankToken !== null) {
             $this->template->connected = true;
         } else {
