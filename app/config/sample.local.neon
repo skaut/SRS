@@ -8,10 +8,6 @@ nettrine.dbal:
         user: user
         password: password
 
-nettrine.orm:
-    configuration:
-        autoGenerateProxyClasses: true
-
 skautis:
     applicationId: skaut_is_app_id
     testMode: false
