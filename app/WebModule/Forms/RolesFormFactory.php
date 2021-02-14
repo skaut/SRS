@@ -7,13 +7,14 @@ namespace App\WebModule\Forms;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Utils\Validators;
 use DateTimeImmutable;
 use Nette;
@@ -40,11 +41,11 @@ class RolesFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
+    private QueryBus $queryBus;
+
     private UserRepository $userRepository;
 
     private RoleRepository $roleRepository;
-
-    private ISettingsService $settingsService;
 
     private ApplicationService $applicationService;
 
@@ -56,18 +57,18 @@ class RolesFormFactory
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
+        QueryBus $queryBus,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
-        ISettingsService $settingsService,
         ApplicationService $applicationService,
         ITranslator $translator,
         Validators $validators,
         AclService $aclService
     ) {
         $this->baseFormFactory    = $baseFormFactory;
+        $this->queryBus           = $queryBus;
         $this->userRepository     = $userRepository;
         $this->roleRepository     = $roleRepository;
-        $this->settingsService    = $settingsService;
         $this->applicationService = $applicationService;
         $this->translator         = $translator;
         $this->validators         = $validators;
@@ -77,7 +78,7 @@ class RolesFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(int $id): Form
@@ -148,7 +149,7 @@ class RolesFormFactory
                 ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
         }
 
-        $ticketDownloadFrom = $this->settingsService->getDateTimeValue(Settings::TICKETS_FROM);
+        $ticketDownloadFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
         if ($ticketDownloadFrom !== null) {
             $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.download_ticket')
                 ->setHtmlAttribute('class', 'btn-secondary');
@@ -239,7 +240,7 @@ class RolesFormFactory
     /**
      * Ověří požadovaný minimální věk.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function validateRolesMinimumAge(MultiSelectBox $field): bool

@@ -6,12 +6,14 @@ namespace App\WebModule\Forms;
 
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingArrayValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\IMailService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
 use Contributte\ReCaptcha\ReCaptchaProvider;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -45,26 +47,26 @@ class ContactForm extends UI\Control
 
     private BaseFormFactory $baseFormFactory;
 
+    private QueryBus $queryBus;
+
     private UserRepository $userRepository;
 
     private ReCaptchaProvider $recaptchaProvider;
 
     private IMailService $mailService;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
+        QueryBus $queryBus,
         UserRepository $userRepository,
         ReCaptchaProvider $recaptchaProvider,
-        IMailService $mailService,
-        ISettingsService $settingsService
+        IMailService $mailService
     ) {
         $this->baseFormFactory   = $baseFormFactory;
+        $this->queryBus          = $queryBus;
         $this->userRepository    = $userRepository;
         $this->recaptchaProvider = $recaptchaProvider;
         $this->mailService       = $mailService;
-        $this->settingsService   = $settingsService;
     }
 
     /**
@@ -123,7 +125,7 @@ class ContactForm extends UI\Control
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
@@ -149,7 +151,7 @@ class ContactForm extends UI\Control
             }
         }
 
-        $recipients = $this->settingsService->getArrayValue(Settings::CONTACT_FORM_RECIPIENTS);
+        $recipients = $this->queryBus->handle(new SettingArrayValueQuery(Settings::CONTACT_FORM_RECIPIENTS));
         foreach ($recipients as $recipient) {
             $recipientsEmails->add($recipient);
         }
@@ -159,7 +161,7 @@ class ContactForm extends UI\Control
             $recipientsEmails,
             Template::CONTACT_FORM,
             [
-                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                 TemplateVariable::SENDER_NAME => $senderName,
                 TemplateVariable::SENDER_EMAIL => $senderEmail,
                 TemplateVariable::MESSAGE => str_replace(["\n", "\r"], '', nl2br($values->message, false)),

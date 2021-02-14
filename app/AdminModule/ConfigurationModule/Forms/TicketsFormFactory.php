@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingDateTimeValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Settings;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Nette\Application\UI\Form;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
@@ -25,18 +28,21 @@ class TicketsFormFactory
 {
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
+    private CommandBus $commandBus;
 
-    public function __construct(BaseFormFactory $baseForm, ISettingsService $settingsService)
+    private QueryBus $queryBus;
+
+    public function __construct(BaseFormFactory $baseForm, CommandBus $commandBus, QueryBus $queryBus)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsService = $settingsService;
+        $this->commandBus      = $commandBus;
+        $this->queryBus        = $queryBus;
     }
 
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -58,7 +64,7 @@ class TicketsFormFactory
 
         $form->addSubmit('submit', 'admin.common.save');
 
-        $ticketsFrom = $this->settingsService->getDateTimeValue(Settings::TICKETS_FROM);
+        $ticketsFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
 
         $form->setDefaults([
             'ticketsAllowed' => $ticketsFrom !== null,
@@ -73,15 +79,15 @@ class TicketsFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void
     {
         if ($values->ticketsAllowed) {
-            $this->settingsService->setDateTimeValue(Settings::TICKETS_FROM, $values->ticketsFrom);
+            $this->commandBus->handle(new SetSettingDateTimeValue(Settings::TICKETS_FROM, $values->ticketsFrom));
         } else {
-            $this->settingsService->setDateTimeValue(Settings::TICKETS_FROM, null);
+            $this->commandBus->handle(new SetSettingDateTimeValue(Settings::TICKETS_FROM, null));
         }
     }
 }

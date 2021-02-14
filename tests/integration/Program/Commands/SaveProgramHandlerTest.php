@@ -18,13 +18,13 @@ use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Repositories\SettingsRepository;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\ISettingsService;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
@@ -33,8 +33,6 @@ use Throwable;
 
 final class SaveProgramHandlerTest extends CommandHandlerTest
 {
-    private ISettingsService $settingsService;
-
     private BlockRepository $blockRepository;
 
     private SubeventRepository $subeventRepository;
@@ -50,6 +48,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
     private RoomRepository $roomRepository;
 
     private ProgramRepository $programRepository;
+
+    private SettingsRepository $settingsRepository;
 
     /**
      * Vytvoření volitelného programu.
@@ -148,7 +148,9 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user3, $role);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user3, $subevent, ApplicationState::WAITING_FOR_PAYMENT);
 
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
+        $setting = $this->settingsRepository->findByItem(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+        $setting->setValue((string) false);
+        $this->settingsRepository->save($setting);
 
         $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
         $program->setBlock($block);
@@ -163,7 +165,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
     /**
      * Vytvoření automaticky zapisovaného programu - oprávnění uživatelé jsou zapsáni, včetně nezaplacených.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws Throwable
@@ -211,7 +213,9 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user3, $role);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user3, $subevent, ApplicationState::WAITING_FOR_PAYMENT);
 
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, true);
+        $setting = $this->settingsRepository->findByItem(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+        $setting->setValue((string) true);
+        $this->settingsRepository->save($setting);
 
         $program = new Program(new DateTimeImmutable('2020-01-01 08:00'));
         $program->setBlock($block);
@@ -262,7 +266,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
      */
     protected function getTestedAggregateRoots(): array
     {
-        return [Program::class];
+        return [Program::class, Settings::class];
     }
 
     protected function _before(): void
@@ -270,7 +274,6 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $this->tester->useConfigFiles([__DIR__ . '/SaveProgramHandlerTest.neon']);
         parent::_before();
 
-        $this->settingsService              = $this->tester->grabService(ISettingsService::class);
         $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
         $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);
         $this->userRepository               = $this->tester->grabService(UserRepository::class);
@@ -279,8 +282,9 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
         $this->roomRepository               = $this->tester->grabService(RoomRepository::class);
         $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
+        $this->settingsRepository           = $this->tester->grabService(SettingsRepository::class);
 
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
-        $this->settingsService->setValue(Settings::SEMINAR_NAME, 'test');
+        $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
+        $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
     }
 }

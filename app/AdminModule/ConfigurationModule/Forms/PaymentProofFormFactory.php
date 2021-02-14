@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingStringValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
@@ -28,18 +31,21 @@ class PaymentProofFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
+    private CommandBus $commandBus;
 
-    public function __construct(BaseFormFactory $baseForm, ISettingsService $settingsService)
+    private QueryBus $queryBus;
+
+    public function __construct(BaseFormFactory $baseForm, CommandBus $commandBus, QueryBus $queryBus)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsService = $settingsService;
+        $this->commandBus      = $commandBus;
+        $this->queryBus        = $queryBus;
     }
 
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -67,10 +73,10 @@ class PaymentProofFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'company' => $this->settingsService->getValue(Settings::COMPANY),
-            'ico' => $this->settingsService->getValue(Settings::ICO),
-            'accountant' => $this->settingsService->getValue(Settings::ACCOUNTANT),
-//            'printLocation' => $this->settingsService->getValue(Settings::PRINT_LOCATION), todo: odstranit, pokud se nebude pouzivat v dokladech
+            'company' => $this->queryBus->handle(new SettingStringValueQuery(Settings::COMPANY)),
+            'ico' => $this->queryBus->handle(new SettingStringValueQuery(Settings::ICO)),
+            'accountant' => $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNTANT)),
+//            'printLocation' => $this->queryBus->handle(new SettingStringValueQuery(Settings::PRINT_LOCATION)), todo: odstranit, pokud se nebude pouzivat v dokladech
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -81,14 +87,14 @@ class PaymentProofFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->settingsService->setValue(Settings::COMPANY, $values->company);
-        $this->settingsService->setValue(Settings::ICO, $values->ico);
-        $this->settingsService->setValue(Settings::ACCOUNTANT, $values->accountant);
-//        $this->settingsService->setValue(Settings::PRINT_LOCATION, $values->printLocation); todo: odstranit, pokud se nebude pouzivat v dokladech
+        $this->commandBus->handle(new SetSettingStringValue(Settings::COMPANY, $values->company));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::ICO, $values->ico));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::ACCOUNTANT, $values->accountant));
+//        $this->commandBus->handle(new SetSettingStringValue(Settings::PRINT_LOCATION, $values->printLocation)); todo: odstranit, pokud se nebude pouzivat v dokladech
     }
 }

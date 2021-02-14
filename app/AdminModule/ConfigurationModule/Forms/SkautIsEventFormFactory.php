@@ -6,12 +6,16 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\SkautIsEventType;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingIntValue;
+use App\Model\Settings\Commands\SetSettingStringValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
 use App\Model\SkautIs\SkautIsCourse;
 use App\Model\Structure\Repositories\SubeventRepository;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use Doctrine\ORM\NonUniqueResultException;
@@ -38,7 +42,9 @@ class SkautIsEventFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
+    private CommandBus $commandBus;
+
+    private QueryBus $queryBus;
 
     private SkautIsCourseRepository $skautIsCourseRepository;
 
@@ -50,14 +56,16 @@ class SkautIsEventFormFactory
 
     public function __construct(
         BaseFormFactory $baseForm,
-        ISettingsService $settingsService,
+        CommandBus $commandBus,
+        QueryBus $queryBus,
         SkautIsCourseRepository $skautIsCourseRepository,
         SkautIsEventGeneralService $skautIsEventGeneralService,
         SkautIsEventEducationService $skautIsEventEducationService,
         SubeventRepository $subeventRepository
     ) {
         $this->baseFormFactory              = $baseForm;
-        $this->settingsService              = $settingsService;
+        $this->commandBus                   = $commandBus;
+        $this->queryBus                     = $queryBus;
         $this->skautIsCourseRepository      = $skautIsCourseRepository;
         $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
         $this->skautIsEventEducationService = $skautIsEventEducationService;
@@ -67,7 +75,7 @@ class SkautIsEventFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -106,7 +114,7 @@ class SkautIsEventFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'skautisEventType' => $this->settingsService->getValue(Settings::SKAUTIS_EVENT_TYPE),
+            'skautisEventType' => $this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -117,7 +125,7 @@ class SkautIsEventFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -158,11 +166,11 @@ class SkautIsEventFormFactory
                 break;
         }
 
-        $this->settingsService->setValue(Settings::SKAUTIS_EVENT_TYPE, $eventType);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::SKAUTIS_EVENT_TYPE, $eventType));
 
         if ($eventId !== null) {
-            $this->settingsService->setIntValue(Settings::SKAUTIS_EVENT_ID, $eventId);
-            $this->settingsService->setValue(Settings::SKAUTIS_EVENT_NAME, $eventName);
+            $this->commandBus->handle(new SetSettingIntValue(Settings::SKAUTIS_EVENT_ID, $eventId));
+            $this->commandBus->handle(new SetSettingStringValue(Settings::SKAUTIS_EVENT_NAME, $eventName));
         }
     }
 }

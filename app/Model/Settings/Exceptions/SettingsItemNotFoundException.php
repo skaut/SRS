@@ -11,6 +11,6 @@ use Exception;
  *
  * @author Jan Staněk <jan.stanek@skaut.cz>
  */
-class SettingsException extends Exception
+class SettingsItemNotFoundException extends Exception
 {
 }

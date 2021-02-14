@@ -9,11 +9,12 @@ use App\Model\Acl\Role;
 use App\Model\Application\Application;
 use App\Model\Program\Block;
 use App\Model\Program\Repositories\ProgramRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use Doctrine\Common\Collections\Collection;
 use Throwable;
 
@@ -28,20 +29,20 @@ use function trim;
  */
 class Validators
 {
+    private QueryBus $queryBus;
+
     private RoleRepository $roleRepository;
 
     private ProgramRepository $programRepository;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
+        QueryBus $queryBus,
         RoleRepository $roleRepository,
-        ProgramRepository $programRepository,
-        ISettingsService $settingsService
+        ProgramRepository $programRepository
     ) {
+        $this->queryBus          = $queryBus;
         $this->roleRepository    = $roleRepository;
         $this->programRepository = $programRepository;
-        $this->settingsService   = $settingsService;
     }
 
     /**
@@ -137,12 +138,12 @@ class Validators
      *
      * @param Collection<Role> $selectedRoles
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function validateRolesMinimumAge(Collection $selectedRoles, User $user): bool
     {
-        $age = $this->settingsService->getDateValue(Settings::SEMINAR_FROM_DATE)->diff($user->getBirthdate())->y;
+        $age = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_FROM_DATE))->diff($user->getBirthdate())->y;
 
         foreach ($selectedRoles as $role) {
             if ($role->getMinimumAge() > $age) {

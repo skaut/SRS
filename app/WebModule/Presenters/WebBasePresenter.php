@@ -8,7 +8,9 @@ use App\Model\Acl\Permission;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Acl\SrsResource;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
@@ -16,8 +18,7 @@ use App\Presenters\BasePresenter;
 use App\Services\Authenticator;
 use App\Services\Authorizator;
 use App\Services\CmsService;
-use App\Services\DatabaseService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette\Application\AbortException;
@@ -33,6 +34,9 @@ use WebLoader\Nette\JavaScriptLoader;
 abstract class WebBasePresenter extends BasePresenter
 {
     /** @inject */
+    public QueryBus $queryBus;
+
+    /** @inject */
     public Authorizator $authorizator;
 
     /** @inject */
@@ -45,16 +49,10 @@ abstract class WebBasePresenter extends BasePresenter
     public CmsService $cmsService;
 
     /** @inject */
-    public ISettingsService $settingsService;
-
-    /** @inject */
     public UserRepository $userRepository;
 
     /** @inject */
     public SkautIsService $skautIsService;
-
-    /** @inject */
-    public DatabaseService $databaseService;
 
     protected ?User $dbuser = null;
 
@@ -94,7 +92,7 @@ abstract class WebBasePresenter extends BasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function beforeRender(): void
@@ -105,10 +103,10 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
 
-        $this->template->logo        = $this->settingsService->getValue(Settings::LOGO);
-        $this->template->footer      = $this->settingsService->getValue(Settings::FOOTER);
-        $this->template->seminarName = $this->settingsService->getValue(Settings::SEMINAR_NAME);
-        $this->template->gaId        = $this->settingsService->getValue(Settings::GA_ID);
+        $this->template->logo        = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
+        $this->template->footer      = $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER));
+        $this->template->seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
+        $this->template->gaId        = $this->queryBus->handle(new SettingStringValueQuery(Settings::GA_ID));
 
         $this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
         $this->template->unapprovedRole    = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
@@ -117,8 +115,6 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->adminAccess = $this->user->isAllowed(SrsResource::ADMIN, Permission::ACCESS);
 
         $this->template->pages = $this->cmsService->findPublishedOrderedByPositionDto();
-
-        $this->template->settings = $this->settingsService;
     }
 
     /**
@@ -141,14 +137,12 @@ abstract class WebBasePresenter extends BasePresenter
     private function checkInstallation(): void
     {
         try {
-            if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
+            if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect(':Install:Install:default');
-            } else {
-                $this->databaseService->update();
             }
         } catch (TableNotFoundException $ex) {
             $this->redirect(':Install:Install:default');
-        } catch (SettingsException $ex) {
+        } catch (SettingsItemNotFoundException $ex) {
             $this->redirect(':Install:Install:default');
         }
     }

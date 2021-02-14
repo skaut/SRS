@@ -14,12 +14,12 @@ use App\Model\Program\Exceptions\BlockCapacityInsufficientException;
 use App\Model\Program\Queries\MinBlockAllowedCapacityQuery;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
@@ -74,8 +74,6 @@ class BlockFormFactory
 
     private CategoryRepository $categoryRepository;
 
-    private ISettingsService $settingsService;
-
     private SubeventRepository $subeventRepository;
 
     private SubeventService $subeventService;
@@ -89,7 +87,6 @@ class BlockFormFactory
         BlockRepository $blockRepository,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
-        ISettingsService $settingsService,
         SubeventRepository $subeventRepository,
         SubeventService $subeventService,
         Validators $validators
@@ -100,7 +97,6 @@ class BlockFormFactory
         $this->blockRepository    = $blockRepository;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->settingsService    = $settingsService;
         $this->subeventRepository = $subeventRepository;
         $this->subeventService    = $subeventService;
         $this->validators         = $validators;
@@ -254,7 +250,7 @@ class BlockFormFactory
         }
 
         if ($this->block === null) {
-            if (! $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)) {
+            if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_ADD_BLOCK))) {
                 $form->getPresenter()->flashMessage('admin.program.blocks.message.add_not_allowed', 'danger');
                 $form->getPresenter()->redirect('Blocks:default');
             }

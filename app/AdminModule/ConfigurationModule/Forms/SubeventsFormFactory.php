@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingBoolValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -24,18 +27,21 @@ class SubeventsFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
+    private CommandBus $commandBus;
 
-    public function __construct(BaseFormFactory $baseForm, ISettingsService $settingsService)
+    private QueryBus $queryBus;
+
+    public function __construct(BaseFormFactory $baseForm, CommandBus $commandBus, QueryBus $queryBus)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsService = $settingsService;
+        $this->commandBus      = $commandBus;
+        $this->queryBus        = $queryBus;
     }
 
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -47,7 +53,7 @@ class SubeventsFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'isAllowedAddSubeventsAfterPayment' => $this->settingsService->getValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT),
+            'isAllowedAddSubeventsAfterPayment' => $this->queryBus->handle(new SettingStringValueQuery(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -58,11 +64,11 @@ class SubeventsFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT, $values->isAllowedAddSubeventsAfterPayment);
+        $this->commandBus->handle(new SetSettingBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT, $values->isAllowedAddSubeventsAfterPayment));
     }
 }

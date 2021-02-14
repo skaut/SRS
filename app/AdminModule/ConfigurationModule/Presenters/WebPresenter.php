@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Forms\WebFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -23,16 +24,16 @@ class WebPresenter extends ConfigurationBasePresenter
     public WebFormFactory $webFormFactory;
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
     {
-        $this->template->logo = $this->settingsService->getValue(Settings::LOGO);
+        $this->template->logo = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentSettingsForm(): Form

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Presenters;
 
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Structure\Repositories\SubeventRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Throwable;
@@ -21,7 +21,7 @@ class DashboardPresenter extends AdminBasePresenter
     public SubeventRepository $subeventRepository;
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws Throwable
      */

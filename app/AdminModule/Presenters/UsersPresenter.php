@@ -21,7 +21,6 @@ use App\Model\Enums\PaymentType;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
-use App\Services\QueryBus;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -60,9 +59,6 @@ class UsersPresenter extends AdminBasePresenter
 
     /** @inject */
     public ApplicationService $applicationService;
-
-    /** @inject */
-    public QueryBus $queryBus;
 
     /**
      * @throws AbortException

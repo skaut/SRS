@@ -22,13 +22,13 @@ use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Settings\Repositories\SettingsRepository;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\ISettingsService;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
@@ -37,8 +37,6 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 
 final class RegisterProgramHandlerTest extends CommandHandlerTest
 {
-    private ISettingsService $settingsService;
-
     private BlockRepository $blockRepository;
 
     private SubeventRepository $subeventRepository;
@@ -54,6 +52,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     private ApplicationRepository $applicationRepository;
 
     private ProgramApplicationRepository $programApplicationRepository;
+
+    private SettingsRepository $settingsRepository;
 
     /**
      * 1. uživatel se na program registruje jako poslední, 2. se stává náhradník.
@@ -447,7 +447,9 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent, ApplicationState::WAITING_FOR_PAYMENT);
 
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, true);
+        $setting = $this->settingsRepository->findByItem(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+        $setting->setValue((string) true);
+        $this->settingsRepository->save($setting);
 
         $this->commandBus->handle(new RegisterProgram($user, $program, false));
         $programApplication = $this->programApplicationRepository->findByUserAndProgram($user, $program);
@@ -627,7 +629,7 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
      */
     protected function getTestedAggregateRoots(): array
     {
-        return [User::class];
+        return [User::class, Settings::class];
     }
 
     protected function _before(): void
@@ -635,7 +637,6 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $this->tester->useConfigFiles([__DIR__ . '/RegisterProgramHandlerTest.neon']);
         parent::_before();
 
-        $this->settingsService              = $this->tester->grabService(ISettingsService::class);
         $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
         $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);
         $this->userRepository               = $this->tester->grabService(UserRepository::class);
@@ -644,7 +645,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
         $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
         $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
+        $this->settingsRepository           = $this->tester->grabService(SettingsRepository::class);
 
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
+        $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
     }
 }

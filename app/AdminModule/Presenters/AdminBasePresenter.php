@@ -7,13 +7,14 @@ namespace App\AdminModule\Presenters;
 use App\Model\Acl\Permission;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\SrsResource;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Presenters\BasePresenter;
 use App\Services\Authorizator;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Nette\Application\AbortException;
 use stdClass;
@@ -34,13 +35,13 @@ abstract class AdminBasePresenter extends BasePresenter
     protected string $resource = SrsResource::ADMIN;
 
     /** @inject */
+    public QueryBus $queryBus;
+
+    /** @inject */
     public Authorizator $authorizator;
 
     /** @inject */
     public RoleRepository $roleRepository;
-
-    /** @inject */
-    public ISettingsService $settingsService;
 
     /** @inject */
     public UserRepository $userRepository;
@@ -95,7 +96,7 @@ abstract class AdminBasePresenter extends BasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function beforeRender(): void
@@ -120,10 +121,8 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->permissionManageRooms       = Permission::MANAGE_ROOMS;
         $this->template->permissionManageCategories  = Permission::MANAGE_CATEGORIES;
 
-        $this->template->footer      = $this->settingsService->getValue(Settings::FOOTER);
-        $this->template->seminarName = $this->settingsService->getValue(Settings::SEMINAR_NAME);
-
-        $this->template->settings = $this->settingsService;
+        $this->template->footer      = $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER));
+        $this->template->seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
 
         $skautIsUserId                = $this->dbuser->getSkautISUserId();
         $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId);

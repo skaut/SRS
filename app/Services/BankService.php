@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Payment\Repositories\PaymentRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingDateValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,33 +27,37 @@ class BankService
 {
     use Nette\SmartObject;
 
+    private CommandBus $commandBus;
+
+    private QueryBus $queryBus;
+
     private ApplicationService $applicationService;
 
     private EntityManagerInterface $em;
 
-    private ISettingsService $settingsService;
-
     private PaymentRepository $paymentRepository;
 
     public function __construct(
+        CommandBus $commandBus,
+        QueryBus $queryBus,
         ApplicationService $applicationService,
         EntityManagerInterface $em,
-        ISettingsService $settingsService,
         PaymentRepository $paymentRepository
     ) {
+        $this->commandBus         = $commandBus;
+        $this->queryBus           = $queryBus;
         $this->applicationService = $applicationService;
         $this->em                 = $em;
-        $this->settingsService    = $settingsService;
         $this->paymentRepository  = $paymentRepository;
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function downloadTransactions(DateTimeImmutable $from, ?string $token = null): void
     {
-        $token = $token ?: $this->settingsService->getValue(Settings::BANK_TOKEN);
+        $token = $token ?: $this->queryBus->handle(new SettingStringValueQuery(Settings::BANK_TOKEN));
         if ($token === null) {
             throw new InvalidArgumentException('Token is not set.');
         }
@@ -90,6 +96,6 @@ class BankService
             });
         }
 
-        $this->settingsService->setDateValue(Settings::BANK_DOWNLOAD_FROM, new DateTimeImmutable());
+        $this->commandBus->handle(new SetSettingDateValue(Settings::BANK_DOWNLOAD_FROM, new DateTimeImmutable()));
     }
 }

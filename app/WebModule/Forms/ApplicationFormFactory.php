@@ -23,7 +23,8 @@ use App\Model\CustomInput\CustomTextValue;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\CustomInput\Repositories\CustomInputValueRepository;
 use App\Model\Enums\Sex;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
@@ -32,7 +33,7 @@ use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
@@ -84,6 +85,8 @@ class ApplicationFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
+    private QueryBus $queryBus;
+
     private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
@@ -95,8 +98,6 @@ class ApplicationFormFactory
     private CustomInputValueRepository $customInputValueRepository;
 
     private SkautIsService $skautIsService;
-
-    private ISettingsService $settingsService;
 
     private SubeventRepository $subeventRepository;
 
@@ -114,13 +115,13 @@ class ApplicationFormFactory
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
+        QueryBus $queryBus,
         EntityManagerInterface $em,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
         CustomInputRepository $customInputRepository,
         CustomInputValueRepository $customInputValueRepository,
         SkautIsService $skautIsService,
-        ISettingsService $settingsService,
         SubeventRepository $subeventRepository,
         AclService $aclService,
         ApplicationService $applicationService,
@@ -130,13 +131,13 @@ class ApplicationFormFactory
         ITranslator $translator
     ) {
         $this->baseFormFactory            = $baseFormFactory;
+        $this->queryBus                   = $queryBus;
         $this->em                         = $em;
         $this->userRepository             = $userRepository;
         $this->roleRepository             = $roleRepository;
         $this->customInputRepository      = $customInputRepository;
         $this->customInputValueRepository = $customInputValueRepository;
         $this->skautIsService             = $skautIsService;
-        $this->settingsService            = $settingsService;
         $this->subeventRepository         = $subeventRepository;
         $this->aclService                 = $aclService;
         $this->applicationService         = $applicationService;
@@ -149,7 +150,7 @@ class ApplicationFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws Throwable
      */
@@ -207,7 +208,7 @@ class ApplicationFormFactory
 
         $this->addCustomInputs($form);
 
-        $form->addCheckbox('agreement', $this->settingsService->getValue(Settings::APPLICATION_AGREEMENT))
+        $form->addCheckbox('agreement', $this->queryBus->handle(new SettingStringValueQuery(Settings::APPLICATION_AGREEMENT)))
             ->addRule(Form::FILLED, 'web.application_content.agreement_empty');
 
         $form->addSubmit('submit', 'web.application_content.register');
@@ -602,7 +603,7 @@ class ApplicationFormFactory
     /**
      * Ověří požadovaný minimální věk.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function validateRolesMinimumAge(MultiSelectBox $field): bool

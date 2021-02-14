@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\ExportModule\Presenters;
 
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use Contributte\PdfResponse\PdfResponse;
 use Nette\Application\AbortException;
@@ -31,9 +31,6 @@ class TicketPresenter extends ExportBasePresenter
     public PdfResponse $pdfResponse;
 
     /** @inject */
-    public ISettingsService $settingsService;
-
-    /** @inject */
     public SubeventRepository $subeventRepository;
 
     /** @inject */
@@ -46,7 +43,7 @@ class TicketPresenter extends ExportBasePresenter
      * Vygeneruje vstupenku v PDF.
      *
      * @throws AbortException
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function actionPdf(): void
@@ -62,8 +59,8 @@ class TicketPresenter extends ExportBasePresenter
         assert($template instanceof Template);
         $template->setFile(__DIR__ . '/templates/Ticket/pdf.latte');
 
-        $template->logo                    = $this->settingsService->getValue(Settings::LOGO);
-        $template->seminarName             = $this->settingsService->getValue(Settings::SEMINAR_NAME);
+        $template->logo                    = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
+        $template->seminarName             = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
         $template->ticketUser              = $user;
         $template->ticketUserPrograms      = $userPrograms;
         $template->explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();

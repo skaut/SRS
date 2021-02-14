@@ -7,12 +7,14 @@ namespace App\AdminModule\PaymentsModule\Components;
 use App\Model\Enums\PaymentState;
 use App\Model\Payment\Payment;
 use App\Model\Payment\Repositories\PaymentRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingDateValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\BankService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Nette\Application\AbortException;
@@ -34,13 +36,13 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class PaymentsGridControl extends Control
 {
+    private QueryBus $queryBus;
+
     private ITranslator $translator;
 
     private PaymentRepository $paymentRepository;
 
     private UserRepository $userRepository;
-
-    private ISettingsService $settingsService;
 
     private ApplicationService $applicationService;
 
@@ -49,18 +51,18 @@ class PaymentsGridControl extends Control
     private Session $session;
 
     public function __construct(
+        QueryBus $queryBus,
         ITranslator $translator,
         PaymentRepository $paymentRepository,
         UserRepository $userRepository,
-        ISettingsService $settingsService,
         ApplicationService $applicationService,
         BankService $bankService,
         Session $session
     ) {
+        $this->queryBus           = $queryBus;
         $this->translator         = $translator;
         $this->paymentRepository  = $paymentRepository;
         $this->userRepository     = $userRepository;
-        $this->settingsService    = $settingsService;
         $this->applicationService = $applicationService;
         $this->bankService        = $bankService;
         $this->session            = $session;
@@ -79,7 +81,7 @@ class PaymentsGridControl extends Control
      * Vytvoří komponentu.
      *
      * @throws DataGridException
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function createComponentPaymentsGrid(string $name): void
@@ -135,7 +137,7 @@ class PaymentsGridControl extends Control
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
-        if ($this->settingsService->getValue(Settings::BANK_TOKEN) !== null) {
+        if ($this->queryBus->handle(new SettingStringValueQuery(Settings::BANK_TOKEN)) !== null) {
             $grid->addToolbarButton('checkPayments!')
                 ->setText('admin.payments.payments.check_payments');
         }
@@ -209,12 +211,12 @@ class PaymentsGridControl extends Control
     /**
      * Zkontroluje platby na bankovním účtu.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function handleCheckPayments(): void
     {
-        $from = $this->settingsService->getDateValue(Settings::BANK_DOWNLOAD_FROM);
+        $from = $this->queryBus->handle(new SettingDateValueQuery(Settings::BANK_DOWNLOAD_FROM));
         $this->bankService->downloadTransactions($from);
     }
 

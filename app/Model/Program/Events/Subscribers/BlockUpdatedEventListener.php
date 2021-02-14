@@ -9,12 +9,12 @@ use App\Model\Program\Events\BlockUpdatedEvent;
 use App\Model\Program\Program;
 use App\Model\Program\Queries\ProgramAlternatesQuery;
 use App\Model\Program\Queries\ProgramAttendeesQuery;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
@@ -33,20 +33,16 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
 
     private UserRepository $userRepository;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
         CommandBus $commandBus,
         QueryBus $queryBus,
         EntityManagerInterface $em,
-        UserRepository $userRepository,
-        ISettingsService $settingsService
+        UserRepository $userRepository
     ) {
-        $this->commandBus      = $commandBus;
-        $this->queryBus        = $queryBus;
-        $this->em              = $em;
-        $this->userRepository  = $userRepository;
-        $this->settingsService = $settingsService;
+        $this->commandBus     = $commandBus;
+        $this->queryBus       = $queryBus;
+        $this->em             = $em;
+        $this->userRepository = $userRepository;
     }
 
     public function __invoke(BlockUpdatedEvent $event): void
@@ -65,7 +61,7 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
             $capacityOld          = $event->getCapacityOld();
             $alternatesAllowedOld = $event->isAlternatesAllowedOld();
 
-            $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+            $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
             $allowedUsers                     = $this->userRepository->findBlockAllowed($block, ! $registrationBeforePaymentAllowed);
 
             // aktualizace ucastniku pri zmene kategorie nebo podakce (odstraneni neopravnenych, pridani u automaticky registrovanych)

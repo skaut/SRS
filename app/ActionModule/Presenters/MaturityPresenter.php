@@ -9,12 +9,14 @@ use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingIntValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\IMailService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -32,6 +34,9 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
 class MaturityPresenter extends ActionBasePresenter
 {
     /** @inject */
+    public QueryBus $queryBus;
+
+    /** @inject */
     public EntityManagerInterface $em;
 
     /** @inject */
@@ -46,18 +51,15 @@ class MaturityPresenter extends ActionBasePresenter
     /** @inject */
     public ApplicationService $applicationService;
 
-    /** @inject */
-    public ISettingsService $settingsService;
-
     /**
      * Zruší přihlášky po splatnosti.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function actionCancelApplications(): void
     {
-        $cancelRegistration = $this->settingsService->getIntValue(Settings::CANCEL_REGISTRATION_AFTER_MATURITY);
+        $cancelRegistration = $this->queryBus->handle(new SettingIntValueQuery(Settings::CANCEL_REGISTRATION_AFTER_MATURITY));
         if ($cancelRegistration !== null) {
             $cancelRegistrationDate = (new DateTimeImmutable())->setTime(0, 0)->modify('-' . $cancelRegistration . ' days');
         } else {
@@ -109,13 +111,13 @@ class MaturityPresenter extends ActionBasePresenter
     /**
      * Rozešle přípomínky splatnosti.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
     public function actionSendReminders(): void
     {
-        $maturityReminder = $this->settingsService->getIntValue(Settings::MATURITY_REMINDER);
+        $maturityReminder = $this->queryBus->handle(new SettingIntValueQuery(Settings::MATURITY_REMINDER));
         if ($maturityReminder !== null) {
             $maturityReminderDate = (new DateTimeImmutable())->setTime(0, 0)->modify('+' . $maturityReminder . ' days');
         } else {
@@ -128,7 +130,7 @@ class MaturityPresenter extends ActionBasePresenter
 
                 if ($maturityReminderDate == $maturityDate) {
                     $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::MATURITY_REMINDER, [
-                        TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                        TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                         TemplateVariable::APPLICATION_MATURITY => $maturityDate->format(Helpers::DATE_FORMAT),
                     ]);
                 }

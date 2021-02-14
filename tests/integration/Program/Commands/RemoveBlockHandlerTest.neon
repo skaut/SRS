@@ -7,6 +7,7 @@ services:
     - App\Model\Program\Repositories\ProgramRepository
     - App\Model\Program\Repositories\ProgramApplicationRepository
     - App\Model\Application\Repositories\ApplicationRepository
+    - App\Model\Settings\Repositories\SettingsRepository
 
     - class: App\Model\Program\Commands\Handlers\RemoveBlockHandler
       tags:
@@ -26,6 +27,10 @@ services:
         messenger.messageHandler:
         bus: queryBus
     - class: App\Model\Program\Queries\Handlers\ProgramAttendeesQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+    - class: App\Model\Settings\Queries\Handlers\SettingStringValueQueryHandler
       tags:
         messenger.messageHandler:
         bus: queryBus

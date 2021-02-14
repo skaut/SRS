@@ -7,7 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Structure\Repositories\SubeventRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\AbortException;
@@ -36,7 +36,7 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws Throwable
      */

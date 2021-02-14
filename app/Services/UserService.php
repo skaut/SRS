@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Model\Enums\PaymentType;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Events\UserUpdatedEvent;
 use App\Model\User\Repositories\UserRepository;
@@ -26,32 +27,32 @@ class UserService
 {
     use Nette\SmartObject;
 
+    private QueryBus $queryBus;
+
+    private EventBus $eventBus;
+
     private ITranslator $translator;
 
     private UserRepository $userRepository;
 
     private MailService $mailService;
 
-    private ISettingsService $settingsService;
-
-    private EventBus $eventBus;
-
     private EntityManagerInterface $em;
 
     public function __construct(
+        QueryBus $queryBus,
+        EventBus $eventBus,
         ITranslator $translator,
         UserRepository $userRepository,
         MailService $mailService,
-        ISettingsService $settingsService,
-        EventBus $eventBus,
         EntityManagerInterface $em
     ) {
-        $this->translator      = $translator;
-        $this->userRepository  = $userRepository;
-        $this->mailService     = $mailService;
-        $this->settingsService = $settingsService;
-        $this->eventBus        = $eventBus;
-        $this->em              = $em;
+        $this->queryBus       = $queryBus;
+        $this->eventBus       = $eventBus;
+        $this->translator     = $translator;
+        $this->userRepository = $userRepository;
+        $this->mailService    = $mailService;
+        $this->em             = $em;
     }
 
     /**
@@ -115,7 +116,7 @@ class UserService
 
             if ($approved) {
                 $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_APPROVED, [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                    TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                 ]);
             }
         });

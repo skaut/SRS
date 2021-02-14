@@ -8,7 +8,7 @@ use App\AdminModule\ConfigurationModule\Components\IPlacePointsGridControlFactor
 use App\AdminModule\ConfigurationModule\Components\PlacePointsGridControl;
 use App\AdminModule\ConfigurationModule\Forms\PlaceDescriptionFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\PlacePointFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Repositories\PlacePointRepository;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -40,7 +40,7 @@ class PlacePresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentPlaceDescriptionForm(): Form

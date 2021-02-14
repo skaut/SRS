@@ -3,7 +3,6 @@ services:
     - App\Services\QueryBus(@messenger.queryBus.bus)
     - App\Services\EventBus(@messenger.eventBus.bus)
     - App\Services\MailServiceStub
-    - App\Services\SettingsServiceStub
     - Tracy\Bar
 
 extensions:

@@ -6,7 +6,9 @@ namespace App;
 
 use Nette\Configurator;
 
+use function dirname;
 use function getenv;
+use function putenv;
 use function umask;
 
 class Bootstrap
@@ -15,14 +17,19 @@ class Bootstrap
     {
         umask(0002);
 
+        $logDir  = __DIR__ . '/../log';
+        $tempDir = dirname(__DIR__) . '/temp';
+
+        putenv('TMPDIR=' . $tempDir);
+
         $configurator = new Configurator();
 
         // $configurator->setDebugMode('23.75.345.200'); // enable for your remote IP
         $configurator->setDebugMode(getenv('DEVELOPMENT_MACHINE') === 'true');
-        $configurator->enableTracy(__DIR__ . '/../log');
+        $configurator->enableTracy($logDir);
 
         $configurator->setTimeZone('Europe/Prague');
-        $configurator->setTempDirectory(__DIR__ . '/../temp');
+        $configurator->setTempDirectory($tempDir);
 
         $configurator->createRobotLoader()
             ->addDirectory(__DIR__)

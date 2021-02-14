@@ -7,6 +7,7 @@ services:
     - App\Model\Program\Repositories\ProgramApplicationRepository
     - App\Model\Application\Repositories\ApplicationRepository
     - App\Model\Program\Repositories\CategoryRepository
+    - App\Model\Settings\Repositories\SettingsRepository
 
     - class: App\Model\User\Commands\Handlers\UpdateUserProgramsHandler
       tags:
@@ -26,6 +27,14 @@ services:
         messenger.messageHandler:
         bus: queryBus
     - class: App\Model\User\Queries\Handlers\UserAttendsProgramsQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+    - class: App\Model\Settings\Queries\Handlers\SettingStringValueQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+    - class: App\Model\Settings\Queries\Handlers\SettingBoolValueQueryHandler
       tags:
         messenger.messageHandler:
         bus: queryBus

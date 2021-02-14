@@ -13,12 +13,13 @@ use App\Model\Program\Commands\RemoveBlock;
 use App\Model\Program\Commands\SaveBlock;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
 use App\Services\ExcelExportService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Services\SubeventService;
 use App\Utils\Validators;
 use Doctrine\ORM\QueryBuilder;
@@ -47,11 +48,11 @@ class ProgramBlocksGridControl extends Control
 {
     private CommandBus $commandBus;
 
+    private QueryBus $queryBus;
+
     private ITranslator $translator;
 
     private BlockRepository $blockRepository;
-
-    private ISettingsService $settingsService;
 
     private UserRepository $userRepository;
 
@@ -69,9 +70,9 @@ class ProgramBlocksGridControl extends Control
 
     public function __construct(
         CommandBus $commandBus,
+        QueryBus $queryBus,
         ITranslator $translator,
         BlockRepository $blockRepository,
-        ISettingsService $settingsService,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
         ExcelExportService $excelExportService,
@@ -80,9 +81,9 @@ class ProgramBlocksGridControl extends Control
         Session $session
     ) {
         $this->commandBus         = $commandBus;
+        $this->queryBus           = $queryBus;
         $this->translator         = $translator;
         $this->blockRepository    = $blockRepository;
-        $this->settingsService    = $settingsService;
         $this->userRepository     = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->excelExportService = $excelExportService;
@@ -105,7 +106,7 @@ class ProgramBlocksGridControl extends Control
     /**
      * Vytvoří komponentu.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws DataGridColumnStatusException
      * @throws DataGridException
@@ -194,7 +195,7 @@ class ProgramBlocksGridControl extends Control
         if (
             ($this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
                 $this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
-            $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK)
+            $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_ADD_BLOCK))
         ) {
             $grid->addToolbarButton('Blocks:add')
                 ->setIcon('plus')

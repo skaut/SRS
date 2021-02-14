@@ -5,10 +5,15 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingDateValue;
+use App\Model\Settings\Commands\SetSettingStringValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingDateValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
@@ -33,24 +38,24 @@ class SeminarFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
+    private CommandBus $commandBus;
+
+    private QueryBus $queryBus;
 
     private SubeventRepository $subeventRepository;
 
-    public function __construct(
-        BaseFormFactory $baseForm,
-        ISettingsService $settingsService,
-        SubeventRepository $subeventRepository
-    ) {
+    public function __construct(BaseFormFactory $baseForm, CommandBus $commandBus, QueryBus $queryBus, SubeventRepository $subeventRepository)
+    {
         $this->baseFormFactory    = $baseForm;
-        $this->settingsService    = $settingsService;
+        $this->commandBus         = $commandBus;
+        $this->queryBus           = $queryBus;
         $this->subeventRepository = $subeventRepository;
     }
 
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -84,10 +89,10 @@ class SeminarFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'seminarName' => $this->settingsService->getValue(Settings::SEMINAR_NAME),
-            'seminarFromDate' => $this->settingsService->getDateValue(Settings::SEMINAR_FROM_DATE),
-            'seminarToDate' => $this->settingsService->getDateValue(Settings::SEMINAR_TO_DATE),
-            'editRegistrationTo' => $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO),
+            'seminarName' => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
+            'seminarFromDate' => $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_FROM_DATE)),
+            'seminarToDate' => $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_TO_DATE)),
+            'editRegistrationTo' => $this->queryBus->handle(new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -100,19 +105,19 @@ class SeminarFormFactory
      *
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->settingsService->setValue(Settings::SEMINAR_NAME, $values->seminarName);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_NAME, $values->seminarName));
         $implicitSubevent = $this->subeventRepository->findImplicit();
         $implicitSubevent->setName($values->seminarName);
         $this->subeventRepository->save($implicitSubevent);
 
-        $this->settingsService->setDateValue(Settings::SEMINAR_FROM_DATE, $values->seminarFromDate);
-        $this->settingsService->setDateValue(Settings::SEMINAR_TO_DATE, $values->seminarToDate);
-        $this->settingsService->setDateValue(Settings::EDIT_REGISTRATION_TO, $values->editRegistrationTo);
+        $this->commandBus->handle(new SetSettingDateValue(Settings::SEMINAR_FROM_DATE, $values->seminarFromDate));
+        $this->commandBus->handle(new SetSettingDateValue(Settings::SEMINAR_TO_DATE, $values->seminarToDate));
+        $this->commandBus->handle(new SetSettingDateValue(Settings::EDIT_REGISTRATION_TO, $values->editRegistrationTo));
     }
 
     /**

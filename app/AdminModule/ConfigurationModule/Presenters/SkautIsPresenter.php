@@ -8,9 +8,12 @@ use App\AdminModule\ConfigurationModule\Components\ISkautIsEventEducationGridCon
 use App\AdminModule\ConfigurationModule\Components\SkautIsEventEducationGridControl;
 use App\AdminModule\ConfigurationModule\Forms\SkautIsEventFormFactory;
 use App\Model\Enums\SkautIsEventType;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingStringValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
+use App\Services\CommandBus;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -25,6 +28,9 @@ use Throwable;
 class SkautIsPresenter extends ConfigurationBasePresenter
 {
     /** @inject */
+    public CommandBus $commandBus;
+
+    /** @inject */
     public SkautIsEventFormFactory $skautIsEventFormFactory;
 
     /** @inject */
@@ -34,16 +40,16 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     public SkautIsCourseRepository $skautIsCourseRepository;
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
     {
-        $eventId = $this->settingsService->getValue(Settings::SKAUTIS_EVENT_ID);
+        $eventId = $this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_ID));
         if ($eventId !== null) {
-            $this->template->event          = $this->settingsService->getValue(Settings::SKAUTIS_EVENT_NAME);
+            $this->template->event          = $this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_NAME));
             $this->template->connected      = true;
-            $this->template->eventEducation = $this->settingsService->getValue(Settings::SKAUTIS_EVENT_TYPE) === SkautIsEventType::EDUCATION;
+            $this->template->eventEducation = $this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE)) === SkautIsEventType::EDUCATION;
         } else {
             $this->template->connected = false;
         }
@@ -52,16 +58,16 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     /**
      * Zruší propojení s akcí ve skautIS.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */
     public function handleDisconnect(): void
     {
-        $this->settingsService->setValue(Settings::SKAUTIS_EVENT_ID, null);
-        $this->settingsService->setValue(Settings::SKAUTIS_EVENT_NAME, null);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::SKAUTIS_EVENT_ID, null));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::SKAUTIS_EVENT_NAME, null));
 
-        if ($this->settingsService->getValue(Settings::SKAUTIS_EVENT_TYPE) === SkautIsEventType::EDUCATION) {
+        if ($this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE)) === SkautIsEventType::EDUCATION) {
             $this->skautIsCourseRepository->removeAll();
         }
 
@@ -71,7 +77,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentSkautIsEventForm(): Form

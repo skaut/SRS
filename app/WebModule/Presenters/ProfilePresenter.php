@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\WebModule\Presenters;
 
 use App\Model\Enums\PaymentType;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
+use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\ExcelExportService;
 use App\Services\IMailService;
-use App\Services\QueryBus;
 use App\WebModule\Components\ApplicationsGridControl;
 use App\WebModule\Components\IApplicationsGridControlFactory;
 use App\WebModule\Forms\AdditionalInformationFormFactory;
@@ -59,9 +60,6 @@ class ProfilePresenter extends WebBasePresenter
     /** @inject */
     public Authenticator $authenticator;
 
-    /** @inject */
-    public QueryBus $queryBus;
-
     /**
      * @throws AbortException
      * @throws Throwable
@@ -77,7 +75,7 @@ class ProfilePresenter extends WebBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
@@ -86,6 +84,7 @@ class ProfilePresenter extends WebBasePresenter
         $this->template->paymentMethodBank         = PaymentType::BANK;
         $this->template->isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
         $this->template->userPrograms              = $this->queryBus->handle(new UserAttendsProgramsQuery($this->dbuser));
+        $this->template->accountNumber             = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
     }
 
     /**
@@ -131,7 +130,7 @@ class ProfilePresenter extends WebBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentRolesForm(): Form

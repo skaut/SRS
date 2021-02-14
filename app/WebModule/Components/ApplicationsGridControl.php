@@ -11,13 +11,14 @@ use App\Model\Application\Repositories\SubeventsApplicationRepository;
 use App\Model\Application\SubeventsApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
@@ -41,6 +42,8 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  */
 class ApplicationsGridControl extends Control
 {
+    private QueryBus $queryBus;
+
     private ITranslator $translator;
 
     private ApplicationRepository $applicationRepository;
@@ -61,9 +64,8 @@ class ApplicationsGridControl extends Control
 
     private SubeventService $subeventService;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
+        QueryBus $queryBus,
         ITranslator $translator,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
@@ -72,9 +74,9 @@ class ApplicationsGridControl extends Control
         Validators $validators,
         RolesApplicationRepository $rolesApplicationRepository,
         SubeventsApplicationRepository $subeventsApplicationRepository,
-        SubeventService $subeventService,
-        ISettingsService $settingsService
+        SubeventService $subeventService
     ) {
+        $this->queryBus                       = $queryBus;
         $this->translator                     = $translator;
         $this->applicationRepository          = $applicationRepository;
         $this->userRepository                 = $userRepository;
@@ -84,7 +86,6 @@ class ApplicationsGridControl extends Control
         $this->rolesApplicationRepository     = $rolesApplicationRepository;
         $this->subeventsApplicationRepository = $subeventsApplicationRepository;
         $this->subeventService                = $subeventService;
-        $this->settingsService                = $settingsService;
     }
 
     /**
@@ -99,7 +100,7 @@ class ApplicationsGridControl extends Control
     /**
      * Vytvoří komponentu.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws Throwable
      * @throws DataGridException
@@ -211,8 +212,8 @@ class ApplicationsGridControl extends Control
             ->setIcon('money')
             ->setClass('btn btn-xs btn-primary ajax')
             ->setTemplateParameters([
-                'account' => $this->settingsService->getValue(Settings::ACCOUNT_NUMBER),
-                'message' => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                'account' => $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER)),
+                'message' => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             ]);
         $grid->setTemplateFile(__DIR__ . '/templates/applications_grid_detail.latte');
 
@@ -279,7 +280,7 @@ class ApplicationsGridControl extends Control
     /**
      * Zpracuje úpravu přihlášky.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      * @throws MailingMailCreationException
@@ -348,7 +349,7 @@ class ApplicationsGridControl extends Control
     /**
      * Zruší přihlášku.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */

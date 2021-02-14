@@ -16,12 +16,12 @@ use App\Model\Program\Program;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Settings\Repositories\SettingsRepository;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\ISettingsService;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
@@ -30,8 +30,6 @@ use Throwable;
 
 final class RemoveCategoryHandlerTest extends CommandHandlerTest
 {
-    private ISettingsService $settingsService;
-
     private SubeventRepository $subeventRepository;
 
     private UserRepository $userRepository;
@@ -45,6 +43,8 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
     private ApplicationRepository $applicationRepository;
 
     private BlockRepository $blockRepository;
+
+    private SettingsRepository $settingsRepository;
 
     /**
      * Odstranění kategorie - automaticky přihlašovaní, kteří jsou nově oprávněni jsou přihlášeni.
@@ -104,7 +104,7 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
      */
     protected function getTestedAggregateRoots(): array
     {
-        return [Category::class];
+        return [Category::class, Settings::class];
     }
 
     protected function _before(): void
@@ -112,7 +112,6 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
         $this->tester->useConfigFiles([__DIR__ . '/RemoveCategoryHandlerTest.neon']);
         parent::_before();
 
-        $this->settingsService       = $this->tester->grabService(ISettingsService::class);
         $this->subeventRepository    = $this->tester->grabService(SubeventRepository::class);
         $this->userRepository        = $this->tester->grabService(UserRepository::class);
         $this->categoryRepository    = $this->tester->grabService(CategoryRepository::class);
@@ -120,8 +119,9 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
         $this->programRepository     = $this->tester->grabService(ProgramRepository::class);
         $this->applicationRepository = $this->tester->grabService(ApplicationRepository::class);
         $this->blockRepository       = $this->tester->grabService(BlockRepository::class);
+        $this->settingsRepository    = $this->tester->grabService(SettingsRepository::class);
 
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
-        $this->settingsService->setValue(Settings::SEMINAR_NAME, 'test');
+        $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
+        $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
     }
 }

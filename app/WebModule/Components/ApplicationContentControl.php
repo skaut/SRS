@@ -8,12 +8,13 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\Authenticator;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\WebModule\Forms\ApplicationFormFactory;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\UI\Control;
@@ -29,6 +30,8 @@ use Throwable;
  */
 class ApplicationContentControl extends Control
 {
+    private QueryBus $queryBus;
+
     private ApplicationFormFactory $applicationFormFactory;
 
     private UserRepository $userRepository;
@@ -37,8 +40,6 @@ class ApplicationContentControl extends Control
 
     private Authenticator $authenticator;
 
-    private ISettingsService $settingsService;
-
     private SubeventRepository $subeventRepository;
 
     public IApplicationsGridControlFactory $applicationsGridControlFactory;
@@ -46,20 +47,20 @@ class ApplicationContentControl extends Control
     public CustomInputRepository $customInputRepository;
 
     public function __construct(
+        QueryBus $queryBus,
         ApplicationFormFactory $applicationFormFactory,
         Authenticator $authenticator,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
-        ISettingsService $settingsService,
         SubeventRepository $subeventRepository,
         IApplicationsGridControlFactory $applicationsGridControlFactory,
         CustomInputRepository $customInputRepository
     ) {
+        $this->queryBus                       = $queryBus;
         $this->applicationFormFactory         = $applicationFormFactory;
         $this->authenticator                  = $authenticator;
         $this->userRepository                 = $userRepository;
         $this->roleRepository                 = $roleRepository;
-        $this->settingsService                = $settingsService;
         $this->subeventRepository             = $subeventRepository;
         $this->applicationsGridControlFactory = $applicationsGridControlFactory;
         $this->customInputRepository          = $customInputRepository;
@@ -67,7 +68,7 @@ class ApplicationContentControl extends Control
 
     /**
      * @throws NonUniqueResultException
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function render(?ContentDto $content = null): void
@@ -96,7 +97,7 @@ class ApplicationContentControl extends Control
             $template->noRegisterableRole  = $this->roleRepository->findFilteredRoles(true, false, false)->isEmpty();
             $template->registrationStart   = $this->roleRepository->getRegistrationStart();
             $template->registrationEnd     = $this->roleRepository->getRegistrationEnd();
-            $template->bankAccount         = $this->settingsService->getValue(Settings::ACCOUNT_NUMBER);
+            $template->bankAccount         = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
             $template->dbuser              = $dbuser;
             $template->userHasFixedFeeRole = $userHasFixedFeeRole;
 
@@ -114,7 +115,7 @@ class ApplicationContentControl extends Control
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws Throwable
      */

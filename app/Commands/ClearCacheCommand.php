@@ -42,7 +42,7 @@ class ClearCacheCommand extends Command
     protected function configure(): void
     {
         $this->setName('app:cache:clear');
-        $this->setDescription('Clears cache, proxies and webtemp directories.');
+        $this->setDescription('Clears cache and webtemp directories.');
     }
 
     /**
@@ -51,26 +51,21 @@ class ClearCacheCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $cacheDir   = $this->dir . '/temp/cache';
-        $proxiesDir = $this->dir . '/temp/proxies';
         $webtempDir = $this->dir . '/www/webtemp';
 
         try {
             $this->deleteDir($cacheDir);
             @mkdir($cacheDir);
 
-            foreach (Finder::findFiles('*.php')->in($proxiesDir) as $key => $file) {
-                unlink($key);
-            }
-
             foreach (Finder::findFiles('*')->exclude('.gitignore')->in($webtempDir) as $key => $file) {
                 unlink($key);
             }
 
-            $output->writeln('Cache cleared.');
+            $output->writeln('Cache cleared successfully.');
 
             return 0;
-        } catch (Throwable $ex) {
-            $output->write('error');
+        } catch (Throwable $e) {
+            $output->writeln('Cache clearing failed.');
 
             return 1;
         }

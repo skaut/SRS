@@ -23,30 +23,30 @@ final class RouterFactory
     {
         $router = new RouteList();
 
-        $router[] = new Route('index.php', 'Web:Page:default', Route::ONE_WAY);
+        $router->addRoute('index.php', 'Web:Page:default', Route::ONE_WAY);
 
-        $router[] = new Route('api/<presenter>/<action>[/<id>]', [
+        $router->addRoute('api/<presenter>/<action>[/<id>]', [
             'module' => 'Api',
             'presenter' => null,
             'action' => null,
             'id' => null,
         ]);
 
-        $router[] = new Route('export/<presenter>/<action>[/<id>]', [
+        $router->addRoute('export/<presenter>/<action>[/<id>]', [
             'module' => 'Export',
             'presenter' => null,
             'action' => null,
             'id' => null,
         ]);
 
-        $router[] = new Route('action/<presenter>/<action>[/<id>]', [
+        $router->addRoute('action/<presenter>/<action>[/<id>]', [
             'module' => 'Action',
             'presenter' => null,
             'action' => null,
             'id' => null,
         ]);
 
-        $router[] = new Route('admin/cms/<presenter>/<action>[/<id>][/<area>]', [
+        $router->addRoute('admin/cms/<presenter>/<action>[/<id>][/<area>]', [
             'module' => 'Admin:Cms',
             'presenter' => 'Page',
             'action' => 'default',
@@ -54,53 +54,53 @@ final class RouterFactory
             'area' => null,
         ]);
 
-        $router[] = new Route('admin/program/<presenter>/<action>[/<id>]', [
+        $router->addRoute('admin/program/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Program',
             'presenter' => 'Block',
             'action' => 'default',
             'id' => null,
         ]);
 
-        $router[] = new Route('admin/payments/<presenter>/<action>[/<id>]', [
+        $router->addRoute('admin/payments/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Payments',
             'presenter' => 'Payments',
             'action' => 'default',
             'id' => null,
         ]);
 
-        $router[] = new Route('admin/mailing/<presenter>/<action>[/<id>]', [
+        $router->addRoute('admin/mailing/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Mailing',
             'presenter' => 'Auto',
             'action' => 'default',
             'id' => null,
         ]);
 
-        $router[] = new Route('admin/configuration/<presenter>/<action>[/<id>]', [
+        $router->addRoute('admin/configuration/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Configuration',
             'presenter' => 'Seminar',
             'action' => 'default',
             'id' => null,
         ]);
 
-        $router[] = new Route('admin/<presenter>/<action>[/<id>]', [
+        $router->addRoute('admin/<presenter>/<action>[/<id>]', [
             'module' => 'Admin',
             'presenter' => 'Dashboard',
             'action' => 'default',
             'id' => null,
         ]);
 
-        $router[] = new Route('install/<action>/<id>/', [
+        $router->addRoute('install/<action>/<id>/', [
             'module' => 'Install',
             'presenter' => 'Install',
             'action' => 'default',
             'id' => null,
         ]);
 
-        $router[] = new Route('login/', 'Auth:login');
-        $router[] = new Route('logout/', 'Auth:logout');
+        $router->addRoute('login/', 'Auth:login');
+        $router->addRoute('logout/', 'Auth:logout');
 
         try {
-            $router[] = new Route('[page/<slug>/<action>]', [
+            $router->addRoute('[page/<slug>/<action>]', [
                 'module' => 'Web',
                 'presenter' => 'Page',
                 'page' => [
@@ -116,7 +116,7 @@ final class RouterFactory
         } catch (TableNotFoundException $ex) {
         }
 
-        $router[] = new Route('<presenter>/<action>[/<id>]', [
+        $router->addRoute('<presenter>/<action>[/<id>]', [
             'module' => 'Web',
             'presenter' => 'Page',
             'action' => 'default',

@@ -12,7 +12,8 @@ use App\Model\Mailing\Mail;
 use App\Model\Mailing\Recipient;
 use App\Model\Mailing\Repositories\MailRepository;
 use App\Model\Mailing\Repositories\TemplateRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
@@ -38,9 +39,9 @@ class MailService implements IMailService
 {
     use Nette\SmartObject;
 
-    private MailFactory $mailFactory;
+    private QueryBus $queryBus;
 
-    private ISettingsService $settingsService;
+    private MailFactory $mailFactory;
 
     private MailRepository $mailRepository;
 
@@ -55,8 +56,8 @@ class MailService implements IMailService
     private ITranslator $translator;
 
     public function __construct(
+        QueryBus $queryBus,
         MailFactory $mailFactory,
-        ISettingsService $settingsService,
         MailRepository $mailRepository,
         UserRepository $userRepository,
         RoleRepository $roleRepository,
@@ -64,8 +65,8 @@ class MailService implements IMailService
         TemplateRepository $templateRepository,
         ITranslator $translator
     ) {
+        $this->queryBus           = $queryBus;
         $this->mailFactory        = $mailFactory;
-        $this->settingsService    = $settingsService;
         $this->mailRepository     = $mailRepository;
         $this->userRepository     = $userRepository;
         $this->roleRepository     = $roleRepository;
@@ -82,7 +83,7 @@ class MailService implements IMailService
      * @param Collection<User>|null     $recipientsUsers
      * @param Collection<string>|null   $recipientEmails
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
@@ -126,7 +127,7 @@ class MailService implements IMailService
             }
         }
 
-        $from = new Recipient($this->settingsService->getValue(Settings::SEMINAR_EMAIL), $this->settingsService->getValue(Settings::SEMINAR_NAME));
+        $from = new Recipient($this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL)), $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)));
 
         $messageData = new SrsMailData($from, $recipients, $subject, $text);
         $mail        = $this->mailFactory->createByType(SrsMail::class, $messageData);
@@ -161,7 +162,7 @@ class MailService implements IMailService
      * @param string[]                $parameters
      *
      * @throws MailingMailCreationException
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function sendMailFromTemplate(?Collection $recipientsUsers, ?Collection $recipientsEmails, string $type, array $parameters): void

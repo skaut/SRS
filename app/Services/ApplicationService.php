@@ -23,7 +23,12 @@ use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Payment\Payment;
 use App\Model\Payment\Repositories\PaymentRepository;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
+use App\Model\Settings\Queries\SettingDateValueAsTextQuery;
+use App\Model\Settings\Queries\SettingDateValueQuery;
+use App\Model\Settings\Queries\SettingIntValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
@@ -61,9 +66,9 @@ class ApplicationService
 {
     use Nette\SmartObject;
 
-    private EntityManagerInterface $em;
+    private QueryBus $queryBus;
 
-    private ISettingsService $settingsService;
+    private EntityManagerInterface $em;
 
     private ApplicationRepository $applicationRepository;
 
@@ -92,8 +97,8 @@ class ApplicationService
     private EventBus $eventBus;
 
     public function __construct(
+        QueryBus $queryBus,
         EntityManagerInterface $em,
-        ISettingsService $settingsService,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
         AclService $aclService,
@@ -108,8 +113,8 @@ class ApplicationService
         IncomeProofRepository $incomeProofRepository,
         EventBus $eventBus
     ) {
+        $this->queryBus                 = $queryBus;
         $this->em                       = $em;
-        $this->settingsService          = $settingsService;
         $this->applicationRepository    = $applicationRepository;
         $this->userRepository           = $userRepository;
         $this->aclService               = $aclService;
@@ -173,15 +178,15 @@ class ApplicationService
             $applicationVariableSymbol = $subeventsApplication->getVariableSymbolText();
         }
 
-        $editRegistrationToText = $this->settingsService->getDateValueText(Settings::EDIT_REGISTRATION_TO);
+        $editRegistrationToText = $this->queryBus->handle(new SettingDateValueAsTextQuery(Settings::EDIT_REGISTRATION_TO));
 
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationToText ?? '-',
             TemplateVariable::APPLICATION_MATURITY => $applicatonMaturity,
             TemplateVariable::APPLICATION_FEE => $applicationFee,
             TemplateVariable::APPLICATION_VARIABLE_SYMBOL => $applicationVariableSymbol,
-            TemplateVariable::BANK_ACCOUNT => $this->settingsService->getValue(Settings::ACCOUNT_NUMBER),
+            TemplateVariable::BANK_ACCOUNT => $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER)),
         ]);
     }
 
@@ -190,7 +195,7 @@ class ApplicationService
      *
      * @param Collection<Role> $roles
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
@@ -265,7 +270,7 @@ class ApplicationService
         });
 
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::ROLES_CHANGED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             TemplateVariable::USERS_ROLES => implode(', ', $roles->map(static function (Role $role) {
                 return $role->getName();
             })->toArray()),
@@ -275,7 +280,7 @@ class ApplicationService
     /**
      * Zruší registraci uživatele na seminář a provede historizaci přihlášky.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
@@ -322,11 +327,11 @@ class ApplicationService
 
         if ($state === ApplicationState::CANCELED) {
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_CANCELED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             ]);
         } elseif ($state === ApplicationState::CANCELED_NOT_PAID) {
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_CANCELED_NOT_PAID, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             ]);
         }
     }
@@ -350,7 +355,7 @@ class ApplicationService
         });
 
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::SUBEVENTS_CHANGED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             TemplateVariable::USERS_SUBEVENTS => $user->getSubeventsText(),
         ]);
     }
@@ -360,7 +365,7 @@ class ApplicationService
      *
      * @param Collection<Subevent> $subevents
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
@@ -399,7 +404,7 @@ class ApplicationService
         });
 
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::SUBEVENTS_CHANGED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
         ]);
     }
@@ -407,7 +412,7 @@ class ApplicationService
     /**
      * Zruší přihlášku na podakce a provede její historizaci.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
@@ -445,7 +450,7 @@ class ApplicationService
         });
 
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::SUBEVENTS_CHANGED, [
-            TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+            TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
         ]);
     }
@@ -492,7 +497,7 @@ class ApplicationService
 
         if ($paymentDate !== null && $oldPaymentDate === null) {
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::PAYMENT_CONFIRMED, [
-                TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                 TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText(),
             ]);
         }
@@ -660,58 +665,58 @@ class ApplicationService
     /**
      * Může uživatel upravovat role?
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedEditRegistration(User $user): bool
     {
         return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
             && ! $user->hasPaidAnyApplication()
-            && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTimeImmutable())->setTime(0, 0);
+            && $this->queryBus->handle(new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO)) >= (new DateTimeImmutable())->setTime(0, 0);
     }
 
     /**
      * Je uživateli povoleno upravit nebo zrušit přihlášku?
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedEditApplication(Application $application): bool
     {
         return $application instanceof SubeventsApplication && ! $application->isCanceled()
             && $application->getState() !== ApplicationState::PAID
-            && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTimeImmutable())->setTime(0, 0);
+            && $this->queryBus->handle(new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO)) >= (new DateTimeImmutable())->setTime(0, 0);
     }
 
     /**
      * Může uživatel dodatečně přidávat podakce?
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedAddApplication(User $user): bool
     {
         return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
             && $user->hasPaidEveryApplication()
-            && $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
-            && $this->settingsService->getDateValue(Settings::EDIT_REGISTRATION_TO) >= (new DateTimeImmutable())->setTime(0, 0);
+            && $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT))
+            && $this->queryBus->handle(new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO)) >= (new DateTimeImmutable())->setTime(0, 0);
     }
 
     /**
      * Může uživatel upravovat vlastní pole přihlášky?
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedEditCustomInputs(): bool
     {
-        return $this->settingsService->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO) >= (new DateTimeImmutable())->setTime(0, 0);
+        return $this->queryBus->handle(new SettingDateValueQuery(Settings::EDIT_CUSTOM_INPUTS_TO)) >= (new DateTimeImmutable())->setTime(0, 0);
     }
 
     /**
      * @param Collection<Role> $roles
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ReflectionException
@@ -762,7 +767,7 @@ class ApplicationService
     /**
      * @param Collection<Subevent> $subevents
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ReflectionException
@@ -793,12 +798,12 @@ class ApplicationService
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     private function generateVariableSymbol(): VariableSymbol
     {
-        $variableSymbolCode = $this->settingsService->getValue(Settings::VARIABLE_SYMBOL_CODE);
+        $variableSymbolCode = $this->queryBus->handle(new SettingStringValueQuery(Settings::VARIABLE_SYMBOL_CODE));
 
         $variableSymbol = new VariableSymbol();
         $this->variableSymbolRepository->save($variableSymbol);
@@ -814,21 +819,21 @@ class ApplicationService
     /**
      * Vypočítá datum splatnosti podle zvolené metody.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws ReflectionException
      * @throws Throwable
      */
     private function countMaturityDate(): ?DateTimeImmutable
     {
-        switch ($this->settingsService->getValue(Settings::MATURITY_TYPE)) {
+        switch ($this->queryBus->handle(new SettingStringValueQuery(Settings::MATURITY_TYPE))) {
             case MaturityType::DATE:
-                return $this->settingsService->getDateValue(Settings::MATURITY_DATE);
+                return $this->queryBus->handle(new SettingDateValueQuery(Settings::MATURITY_DATE));
 
             case MaturityType::DAYS:
-                return (new DateTimeImmutable())->modify('+' . $this->settingsService->getIntValue(Settings::MATURITY_DAYS) . ' days');
+                return (new DateTimeImmutable())->modify('+' . $this->queryBus->handle(new SettingIntValueQuery(Settings::MATURITY_DAYS)) . ' days');
 
             case MaturityType::WORK_DAYS:
-                $workDays = $this->settingsService->getIntValue(Settings::MATURITY_WORK_DAYS);
+                $workDays = $this->queryBus->handle(new SettingIntValueQuery(Settings::MATURITY_WORK_DAYS));
                 $date     = new DateTimeImmutable();
 
                 for ($i = 0; $i < $workDays;) {

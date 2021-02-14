@@ -6,12 +6,15 @@ namespace App\InstallModule\Presenters;
 
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingBoolValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Contributte\Console\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\TableNotFoundException;
@@ -36,13 +39,16 @@ use Tracy\ILogger;
 class InstallPresenter extends InstallBasePresenter
 {
     /** @inject */
+    public CommandBus $commandBus;
+
+    /** @inject */
+    public QueryBus $queryBus;
+
+    /** @inject */
     public Application $consoleApplication;
 
     /** @inject */
     public EntityManagerInterface $em;
-
-    /** @inject */
-    public ISettingsService $settingsService;
 
     /** @inject */
     public RoleRepository $roleRepository;
@@ -72,14 +78,14 @@ class InstallPresenter extends InstallBasePresenter
         }
 
         try {
-            if ($this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
+            if ($this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect('installed');
             }
 
             $this->flashMessage('install.schema.schema_already_created', 'info');
             $this->redirect('admin');
         } catch (TableNotFoundException $ex) {
-        } catch (SettingsException $ex) {
+        } catch (SettingsItemNotFoundException $ex) {
         }
     }
 
@@ -116,13 +122,13 @@ class InstallPresenter extends InstallBasePresenter
     public function renderAdmin(): void
     {
         try {
-            if ($this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
+            if ($this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->flashMessage('install.admin.admin_already_created', 'info');
                 $this->redirect('finish');
             }
         } catch (TableNotFoundException $ex) {
             $this->redirect('default');
-        } catch (SettingsException $ex) {
+        } catch (SettingsItemNotFoundException $ex) {
             $this->redirect('default');
         }
 
@@ -145,7 +151,7 @@ class InstallPresenter extends InstallBasePresenter
                 true
             );
 
-            $this->settingsService->setBoolValue(Settings::ADMIN_CREATED, true);
+            $this->commandBus->handle(new SetSettingBoolValue(Settings::ADMIN_CREATED, true));
         });
 
         $this->user->logout(true);
@@ -176,12 +182,12 @@ class InstallPresenter extends InstallBasePresenter
     public function renderFinish(): void
     {
         try {
-            if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
+            if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect('default');
             }
         } catch (TableNotFoundException $ex) {
             $this->redirect('default');
-        } catch (SettingsException $ex) {
+        } catch (SettingsItemNotFoundException $ex) {
             $this->redirect('default');
         }
     }
@@ -195,12 +201,12 @@ class InstallPresenter extends InstallBasePresenter
     public function renderInstalled(): void
     {
         try {
-            if (! $this->settingsService->getBoolValue(Settings::ADMIN_CREATED)) {
+            if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect('default');
             }
         } catch (TableNotFoundException $ex) {
             $this->redirect('default');
-        } catch (SettingsException $ex) {
+        } catch (SettingsItemNotFoundException $ex) {
             $this->redirect('default');
         }
     }

@@ -7,9 +7,16 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\CalendarView;
 use App\Model\Enums\ProgramRegistrationType;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingBoolValue;
+use App\Model\Settings\Commands\SetSettingDateTimeValue;
+use App\Model\Settings\Commands\SetSettingStringValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
+use App\Model\Settings\Queries\SettingDateTimeValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
@@ -32,18 +39,21 @@ class ProgramFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
+    private CommandBus $commandBus;
 
-    public function __construct(BaseFormFactory $baseForm, ISettingsService $settingsService)
+    private QueryBus $queryBus;
+
+    public function __construct(BaseFormFactory $baseForm, CommandBus $commandBus, QueryBus $queryBus)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsService = $settingsService;
+        $this->commandBus      = $commandBus;
+        $this->queryBus        = $queryBus;
     }
 
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -92,13 +102,13 @@ class ProgramFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'isAllowedAddBlock' => $this->settingsService->getBoolValue(Settings::IS_ALLOWED_ADD_BLOCK),
-            'isAllowedModifySchedule' => $this->settingsService->getBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE),
-            'registerProgramsType' => $this->settingsService->getValue(Settings::REGISTER_PROGRAMS_TYPE),
-            'registerProgramsFrom' => $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_FROM),
-            'registerProgramsTo' => $this->settingsService->getDateTimeValue(Settings::REGISTER_PROGRAMS_TO),
-            'isAllowedRegisterProgramsBeforePayment' => $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT),
-            'scheduleInitialView' => $this->settingsService->getValue(Settings::SCHEDULE_INITIAL_VIEW),
+            'isAllowedAddBlock' => $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_ADD_BLOCK)),
+            'isAllowedModifySchedule' => $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_MODIFY_SCHEDULE)),
+            'registerProgramsType' => $this->queryBus->handle(new SettingStringValueQuery(Settings::REGISTER_PROGRAMS_TYPE)),
+            'registerProgramsFrom' => $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::REGISTER_PROGRAMS_FROM)),
+            'registerProgramsTo' => $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::REGISTER_PROGRAMS_TO)),
+            'isAllowedRegisterProgramsBeforePayment' => $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT)),
+            'scheduleInitialView' => $this->queryBus->handle(new SettingStringValueQuery(Settings::SCHEDULE_INITIAL_VIEW)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -109,18 +119,18 @@ class ProgramFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values->isAllowedAddBlock);
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values->isAllowedModifySchedule);
-        $this->settingsService->setValue(Settings::REGISTER_PROGRAMS_TYPE, $values->registerProgramsType);
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values->isAllowedRegisterProgramsBeforePayment);
-        $this->settingsService->setDateTimeValue(Settings::REGISTER_PROGRAMS_FROM, $values->registerProgramsFrom);
-        $this->settingsService->setDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values->registerProgramsTo);
-        $this->settingsService->setValue(Settings::SCHEDULE_INITIAL_VIEW, $values->scheduleInitialView);
+        $this->commandBus->handle(new SetSettingBoolValue(Settings::IS_ALLOWED_ADD_BLOCK, $values->isAllowedAddBlock));
+        $this->commandBus->handle(new SetSettingBoolValue(Settings::IS_ALLOWED_MODIFY_SCHEDULE, $values->isAllowedModifySchedule));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::REGISTER_PROGRAMS_TYPE, $values->registerProgramsType));
+        $this->commandBus->handle(new SetSettingBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, $values->isAllowedRegisterProgramsBeforePayment));
+        $this->commandBus->handle(new SetSettingDateTimeValue(Settings::REGISTER_PROGRAMS_FROM, $values->registerProgramsFrom));
+        $this->commandBus->handle(new SetSettingDateTimeValue(Settings::REGISTER_PROGRAMS_TO, $values->registerProgramsTo));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::SCHEDULE_INITIAL_VIEW, $values->scheduleInitialView));
     }
 
     /**

@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 use App\Model\Cms\Dto\ContentDto;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Repositories\PlacePointRepository;
 use App\Model\Settings\Settings;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use Nette\Application\UI\Control;
 use Throwable;
 
@@ -19,18 +20,18 @@ use Throwable;
  */
 class PlaceContentControl extends Control
 {
-    private ISettingsService $settingsService;
+    private QueryBus $queryBus;
 
     private PlacePointRepository $placePointRepository;
 
-    public function __construct(ISettingsService $settingsService, PlacePointRepository $placePointRepository)
+    public function __construct(QueryBus $queryBus, PlacePointRepository $placePointRepository)
     {
-        $this->settingsService      = $settingsService;
+        $this->queryBus             = $queryBus;
         $this->placePointRepository = $placePointRepository;
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function render(ContentDto $content): void
@@ -39,7 +40,7 @@ class PlaceContentControl extends Control
         $template->setFile(__DIR__ . '/templates/place_content.latte');
 
         $template->heading     = $content->getHeading();
-        $template->description = $this->settingsService->getValue(Settings::PLACE_DESCRIPTION);
+        $template->description = $this->queryBus->handle(new SettingStringValueQuery(Settings::PLACE_DESCRIPTION));
         $template->points      = $this->placePointRepository->findAll();
 
         $template->render();

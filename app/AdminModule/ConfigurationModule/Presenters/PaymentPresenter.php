@@ -9,8 +9,11 @@ use App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\PaymentForm;
 use App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\TicketsFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingStringValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
+use App\Services\CommandBus;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
@@ -24,6 +27,9 @@ use Throwable;
 class PaymentPresenter extends ConfigurationBasePresenter
 {
     /** @inject */
+    public CommandBus $commandBus;
+
+    /** @inject */
     public IPaymentFormFactory $paymentFormFactory;
 
     /** @inject */
@@ -36,12 +42,12 @@ class PaymentPresenter extends ConfigurationBasePresenter
     public TicketsFormFactory $ticketsFormFactory;
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
     {
-        $bankToken = $this->settingsService->getValue(Settings::BANK_TOKEN);
+        $bankToken = $this->queryBus->handle(new SettingStringValueQuery(Settings::BANK_TOKEN));
         if ($bankToken !== null) {
             $this->template->connected = true;
         } else {
@@ -52,12 +58,12 @@ class PaymentPresenter extends ConfigurationBasePresenter
     /**
      * Zruší propojení s API banky.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function handleDisconnect(): void
     {
-        $this->settingsService->setValue(Settings::BANK_TOKEN, null);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::BANK_TOKEN, null));
 
         $this->flashMessage('admin.configuration.payment.bank.disconnect_successful', 'success');
         $this->redirect('this');
@@ -76,7 +82,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentPaymentProofForm(): Form
@@ -107,7 +113,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     protected function createComponentTicketsForm(): Form

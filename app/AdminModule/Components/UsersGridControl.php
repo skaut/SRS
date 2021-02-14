@@ -19,14 +19,16 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingIntValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use App\Services\SubeventService;
@@ -60,13 +62,13 @@ use function basename;
  */
 class UsersGridControl extends Control
 {
+    private QueryBus $queryBus;
+
     private ITranslator $translator;
 
     private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
-
-    private ISettingsService $settingsService;
 
     private CustomInputRepository $customInputRepository;
 
@@ -91,10 +93,10 @@ class UsersGridControl extends Control
     private SubeventService $subeventService;
 
     public function __construct(
+        QueryBus $queryBus,
         ITranslator $translator,
         EntityManagerInterface $em,
         UserRepository $userRepository,
-        ISettingsService $settingsService,
         CustomInputRepository $customInputRepository,
         RoleRepository $roleRepository,
         ExcelExportService $excelExportService,
@@ -106,10 +108,10 @@ class UsersGridControl extends Control
         SkautIsEventGeneralService $skautIsEventGeneralService,
         SubeventService $subeventService
     ) {
+        $this->queryBus                     = $queryBus;
         $this->translator                   = $translator;
         $this->em                           = $em;
         $this->userRepository               = $userRepository;
-        $this->settingsService              = $settingsService;
         $this->customInputRepository        = $customInputRepository;
         $this->roleRepository               = $roleRepository;
         $this->excelExportService           = $excelExportService;
@@ -136,7 +138,7 @@ class UsersGridControl extends Control
     /**
      * Vytvoří komponentu.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws DataGridColumnStatusException
      * @throws DataGridException
@@ -166,7 +168,7 @@ class UsersGridControl extends Control
         $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
             ->onSelect[] = [$this, 'groupMarkPaidToday'];
 
-        switch ($this->settingsService->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
+        switch ($this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE))) {
             case SkautIsEventType::GENERAL:
                 $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is')
                     ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
@@ -699,14 +701,14 @@ class UsersGridControl extends Control
 
         $p = $this->getPresenter();
 
-        $eventId = $this->settingsService->getIntValue(Settings::SKAUTIS_EVENT_ID);
+        $eventId = $this->queryBus->handle(new SettingIntValueQuery(Settings::SKAUTIS_EVENT_ID));
 
         if ($eventId === null) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_connected', 'danger');
             $this->redirect('this');
         }
 
-        switch ($this->settingsService->getValue(Settings::SKAUTIS_EVENT_TYPE)) {
+        switch ($this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE))) {
             case SkautIsEventType::GENERAL:
                 $skautIsEventService = $this->skautIsEventGeneralService;
                 break;

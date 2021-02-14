@@ -7,10 +7,17 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingArrayValue;
+use App\Model\Settings\Commands\SetSettingBoolValue;
+use App\Model\Settings\Commands\SetSettingStringValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingArrayValueQuery;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
+use App\Services\CommandBus;
 use App\Services\IMailService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
@@ -44,7 +51,9 @@ class MailingFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
+    private CommandBus $commandBus;
+
+    private QueryBus $queryBus;
 
     private IMailService $mailService;
 
@@ -54,13 +63,15 @@ class MailingFormFactory
 
     public function __construct(
         BaseFormFactory $baseForm,
-        ISettingsService $settingsService,
+        CommandBus $commandBus,
+        QueryBus $queryBus,
         IMailService $mailService,
         LinkGenerator $linkGenerator,
         Validators $validators
     ) {
         $this->baseFormFactory = $baseForm;
-        $this->settingsService = $settingsService;
+        $this->commandBus      = $commandBus;
+        $this->queryBus        = $queryBus;
         $this->mailService     = $mailService;
         $this->linkGenerator   = $linkGenerator;
         $this->validators      = $validators;
@@ -69,7 +80,7 @@ class MailingFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(int $id): Form
@@ -94,9 +105,9 @@ class MailingFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'seminarEmail' => $this->settingsService->getValue(Settings::SEMINAR_EMAIL),
-            'contactFormRecipients' => implode(', ', $this->settingsService->getArrayValue(Settings::CONTACT_FORM_RECIPIENTS)),
-            'contactFormGuestsAllowed' => $this->settingsService->getBoolValue(Settings::CONTACT_FORM_GUESTS_ALLOWED),
+            'seminarEmail' => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL)),
+            'contactFormRecipients' => implode(', ', $this->queryBus->handle(new SettingArrayValueQuery(Settings::CONTACT_FORM_RECIPIENTS))),
+            'contactFormGuestsAllowed' => $this->queryBus->handle(new SettingBoolValueQuery(Settings::CONTACT_FORM_GUESTS_ALLOWED)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -108,17 +119,17 @@ class MailingFormFactory
      * Zpracuje formulář.
      *
      * @throws Nette\Application\UI\InvalidLinkException
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($this->settingsService->getValue(Settings::SEMINAR_EMAIL) !== $values->seminarEmail) {
-            $this->settingsService->setValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values->seminarEmail);
+        if ($this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL)) !== $values->seminarEmail) {
+            $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values->seminarEmail));
 
             $verificationCode = substr(md5(uniqid((string) mt_rand(), true)), 0, 8);
-            $this->settingsService->setValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode);
+            $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode));
 
             $link = $this->linkGenerator->link('Action:Mailing:verify', ['code' => $verificationCode]);
 
@@ -127,7 +138,7 @@ class MailingFormFactory
                 new ArrayCollection([$values->seminarEmail]),
                 Template::EMAIL_VERIFICATION,
                 [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                    TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                     TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
                 ]
             );
@@ -139,9 +150,9 @@ class MailingFormFactory
             },
             explode(',', $values->contactFormRecipients)
         );
-        $this->settingsService->setArrayValue(Settings::CONTACT_FORM_RECIPIENTS, $contactFormRecipients);
+        $this->commandBus->handle(new SetSettingArrayValue(Settings::CONTACT_FORM_RECIPIENTS, $contactFormRecipients));
 
-        $this->settingsService->setBoolValue(Settings::CONTACT_FORM_GUESTS_ALLOWED, $values->contactFormGuestsAllowed);
+        $this->commandBus->handle(new SetSettingBoolValue(Settings::CONTACT_FORM_GUESTS_ALLOWED, $values->contactFormGuestsAllowed));
     }
 
     /**

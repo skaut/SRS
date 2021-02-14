@@ -8,12 +8,12 @@ use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Program\Events\CategoryUpdatedEvent;
 use App\Model\Program\Queries\ProgramAlternatesQuery;
 use App\Model\Program\Queries\ProgramAttendeesQuery;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,20 +29,16 @@ class CategoryUpdatedEventListener implements MessageHandlerInterface
 
     private UserRepository $userRepository;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
         CommandBus $commandBus,
         QueryBus $queryBus,
         EntityManagerInterface $em,
-        UserRepository $userRepository,
-        ISettingsService $settingsService
+        UserRepository $userRepository
     ) {
-        $this->commandBus      = $commandBus;
-        $this->queryBus        = $queryBus;
-        $this->em              = $em;
-        $this->userRepository  = $userRepository;
-        $this->settingsService = $settingsService;
+        $this->commandBus     = $commandBus;
+        $this->queryBus       = $queryBus;
+        $this->em             = $em;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -59,7 +55,7 @@ class CategoryUpdatedEventListener implements MessageHandlerInterface
             }
 
             foreach ($event->getCategory()->getBlocks() as $block) {
-                $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+                $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
                 $allowedUsers                     = $this->userRepository->findBlockAllowed($block, ! $registrationBeforePaymentAllowed);
 
                 foreach ($block->getPrograms() as $program) {

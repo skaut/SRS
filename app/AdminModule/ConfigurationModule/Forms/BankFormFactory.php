@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingStringValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Settings;
 use App\Services\BankService;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
 use DateTimeImmutable;
 use FioApi\Exceptions\InternalErrorException;
 use Nette;
@@ -34,17 +35,14 @@ class BankFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
+    private CommandBus $commandBus;
 
     private BankService $bankService;
 
-    public function __construct(
-        BaseFormFactory $baseForm,
-        ISettingsService $settingsService,
-        BankService $bankService
-    ) {
+    public function __construct(BaseFormFactory $baseForm, CommandBus $commandBus, BankService $bankService)
+    {
         $this->baseFormFactory = $baseForm;
-        $this->settingsService = $settingsService;
+        $this->commandBus      = $commandBus;
         $this->bankService     = $bankService;
     }
 
@@ -83,7 +81,7 @@ class BankFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void
@@ -93,7 +91,7 @@ class BankFormFactory
 
         try {
             $this->bankService->downloadTransactions($from, $token);
-            $this->settingsService->setValue(Settings::BANK_TOKEN, $token);
+            $this->commandBus->handle(new SetSettingStringValue(Settings::BANK_TOKEN, $token));
         } catch (InternalErrorException $ex) {
             Debugger::log($ex, ILogger::WARNING);
             $bankTokenInput = $form['bankToken'];

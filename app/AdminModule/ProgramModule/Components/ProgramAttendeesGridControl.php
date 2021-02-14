@@ -15,6 +15,7 @@ use App\Model\Program\Exceptions\UserNotAllowedProgramException;
 use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Program;
 use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Commands\UnregisterProgram;
@@ -22,7 +23,6 @@ use App\Model\User\Queries\UserRegisteredProgramAtQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
-use App\Services\ISettingsService;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,8 +61,6 @@ class ProgramAttendeesGridControl extends Control
 
     private QueryBus $queryBus;
 
-    private ISettingsService $settingsService;
-
     private EntityManagerInterface $em;
 
     public function __construct(
@@ -72,7 +70,6 @@ class ProgramAttendeesGridControl extends Control
         Session $session,
         CommandBus $commandBus,
         QueryBus $queryBus,
-        ISettingsService $settingsService,
         EntityManagerInterface $em
     ) {
         $this->translator        = $translator;
@@ -80,7 +77,6 @@ class ProgramAttendeesGridControl extends Control
         $this->userRepository    = $userRepository;
         $this->commandBus        = $commandBus;
         $this->queryBus          = $queryBus;
-        $this->settingsService   = $settingsService;
         $this->em                = $em;
 
         $this->sessionSection = $session->getSection('srs');
@@ -116,7 +112,7 @@ class ProgramAttendeesGridControl extends Control
         } else {
             $this->program                    = $program;
             $user                             = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
-            $registrationBeforePaymentAllowed = $this->settingsService->getBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT);
+            $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
 
             $grid->setTranslator($this->translator);
 

@@ -22,14 +22,15 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\CustomInput\Repositories\CustomInputValueRepository;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
 use App\Services\IMailService;
-use App\Services\ISettingsService;
+use App\Services\QueryBus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -66,6 +67,8 @@ class AdditionalInformationFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
+    private QueryBus $queryBus;
+
     private EntityManagerInterface $em;
 
     private UserRepository $userRepository;
@@ -80,20 +83,19 @@ class AdditionalInformationFormFactory
 
     private IMailService $mailService;
 
-    private ISettingsService $settingsService;
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
+        QueryBus $queryBus,
         EntityManagerInterface $em,
         UserRepository $userRepository,
         CustomInputRepository $customInputRepository,
         ApplicationService $applicationService,
         CustomInputValueRepository $customInputValueRepository,
         FilesService $filesService,
-        IMailService $mailService,
-        ISettingsService $settingsService
+        IMailService $mailService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
+        $this->queryBus                   = $queryBus;
         $this->em                         = $em;
         $this->userRepository             = $userRepository;
         $this->customInputRepository      = $customInputRepository;
@@ -101,13 +103,12 @@ class AdditionalInformationFormFactory
         $this->customInputValueRepository = $customInputValueRepository;
         $this->filesService               = $filesService;
         $this->mailService                = $mailService;
-        $this->settingsService            = $settingsService;
     }
 
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(int $userId): Form
@@ -308,7 +309,7 @@ class AdditionalInformationFormFactory
             if ($customInputValueChanged) {
                 assert($this->user instanceof User);
                 $this->mailService->sendMailFromTemplate(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
-                    TemplateVariable::SEMINAR_NAME => $this->settingsService->getValue(Settings::SEMINAR_NAME),
+                    TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                     TemplateVariable::USER => $this->user->getDisplayName(),
                 ]);
             }

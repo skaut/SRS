@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\Settings\Exceptions\SettingsException;
+use App\Model\Settings\Commands\SetSettingDateValue;
+use App\Model\Settings\Commands\SetSettingStringValue;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingDateValueQuery;
+use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
-use App\Services\ISettingsService;
+use App\Services\CommandBus;
+use App\Services\QueryBus;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\FormComponents\Controls\DateControl;
@@ -25,18 +30,21 @@ class ApplicationFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
-    private ISettingsService $settingsService;
+    private CommandBus $commandBus;
 
-    public function __construct(BaseFormFactory $baseForm, ISettingsService $settingsService)
+    private QueryBus $queryBus;
+
+    public function __construct(BaseFormFactory $baseForm, CommandBus $commandBus, QueryBus $queryBus)
     {
         $this->baseFormFactory = $baseForm;
-        $this->settingsService = $settingsService;
+        $this->commandBus      = $commandBus;
+        $this->queryBus        = $queryBus;
     }
 
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -53,8 +61,8 @@ class ApplicationFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'applicationAgreement' => $this->settingsService->getValue(Settings::APPLICATION_AGREEMENT),
-            'editCustomInputsTo' => $this->settingsService->getDateValue(Settings::EDIT_CUSTOM_INPUTS_TO),
+            'applicationAgreement' => $this->queryBus->handle(new SettingStringValueQuery(Settings::APPLICATION_AGREEMENT)),
+            'editCustomInputsTo' => $this->queryBus->handle(new SettingDateValueQuery(Settings::EDIT_CUSTOM_INPUTS_TO)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -65,12 +73,12 @@ class ApplicationFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsException
+     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->settingsService->setValue(Settings::APPLICATION_AGREEMENT, $values->applicationAgreement);
-        $this->settingsService->setDateValue(Settings::EDIT_CUSTOM_INPUTS_TO, $values->editCustomInputsTo);
+        $this->commandBus->handle(new SetSettingStringValue(Settings::APPLICATION_AGREEMENT, $values->applicationAgreement));
+        $this->commandBus->handle(new SetSettingDateValue(Settings::EDIT_CUSTOM_INPUTS_TO, $values->editCustomInputsTo));
     }
 }

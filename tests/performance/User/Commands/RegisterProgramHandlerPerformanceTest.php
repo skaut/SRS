@@ -13,13 +13,13 @@ use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Settings\Repositories\SettingsRepository;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\ISettingsService;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
@@ -29,8 +29,6 @@ use function microtime;
 
 final class RegisterProgramHandlerPerformanceTest extends CommandHandlerTest
 {
-    private ISettingsService $settingsService;
-
     private BlockRepository $blockRepository;
 
     private SubeventRepository $subeventRepository;
@@ -42,6 +40,8 @@ final class RegisterProgramHandlerPerformanceTest extends CommandHandlerTest
     private ProgramRepository $programRepository;
 
     private ApplicationRepository $applicationRepository;
+
+    private SettingsRepository $settingsRepository;
 
     /**
      * Hromadné přihlášení velkého množství účastníků.
@@ -98,7 +98,7 @@ final class RegisterProgramHandlerPerformanceTest extends CommandHandlerTest
      */
     protected function getTestedAggregateRoots(): array
     {
-        return [User::class];
+        return [User::class, Settings::class];
     }
 
     protected function _before(): void
@@ -106,14 +106,14 @@ final class RegisterProgramHandlerPerformanceTest extends CommandHandlerTest
         $this->tester->useConfigFiles([__DIR__ . '/RegisterProgramHandlerPerformanceTest.neon']);
         parent::_before();
 
-        $this->settingsService       = $this->tester->grabService(ISettingsService::class);
         $this->blockRepository       = $this->tester->grabService(BlockRepository::class);
         $this->subeventRepository    = $this->tester->grabService(SubeventRepository::class);
         $this->userRepository        = $this->tester->grabService(UserRepository::class);
         $this->roleRepository        = $this->tester->grabService(RoleRepository::class);
         $this->programRepository     = $this->tester->grabService(ProgramRepository::class);
         $this->applicationRepository = $this->tester->grabService(ApplicationRepository::class);
+        $this->settingsRepository    = $this->tester->grabService(SettingsRepository::class);
 
-        $this->settingsService->setBoolValue(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, false);
+        $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
     }
 }

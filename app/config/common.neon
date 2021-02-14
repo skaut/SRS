@@ -58,7 +58,6 @@ services:
             - $mpdfConfig([tempDir: %tempDir%/mpdf])
 
     - App\Services\Authorizator
-    - App\Services\DatabaseService(%appDir%/../backup)
     - App\Services\FilesService(%wwwDir%)
 
     - App\Services\CommandBus(@messenger.commandBus.bus)
@@ -66,7 +65,10 @@ services:
     - App\Services\EventBus(@messenger.eventBus.bus)
 
     - App\ApiModule\Services\ScheduleService
+
     - App\Commands\ClearCacheCommand(%appDir%/..)
+    - App\Commands\BackupDatabaseCommand(%appDir%/../backup)
+
     - App\Utils\Validators
 
     pageFormFactory:
