@@ -25,6 +25,7 @@ nettrine.dbal:
 
 nettrine.orm:
     configuration:
+        autoGenerateProxyClasses: %debugMode%
         customStringFunctions:
             regexp: DoctrineExtensions\Query\Mysql\Regexp
 
