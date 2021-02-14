@@ -7,6 +7,7 @@ namespace App;
 use Nette\Configurator;
 
 use function getenv;
+use function putenv;
 use function umask;
 
 class Bootstrap
@@ -15,7 +16,7 @@ class Bootstrap
     {
         umask(0002);
 
-        $logDir = __DIR__ . '/../log';
+        $logDir  = __DIR__ . '/../log';
         $tempDir = dirname(__DIR__) . '/temp';
 
         putenv('TMPDIR=' . $tempDir);
