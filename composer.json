@@ -31,13 +31,12 @@
         "latte/latte": "^2.10",
         "tracy/tracy": "^2.8",
 
-        "contributte/console": "^0.8",
-        "contributte/translation": "0.7",
+        "contributte/console": "^0.9",
+        "contributte/translation": "0.8",
 
-        "nettrine/orm": "^0.7",
-        "nettrine/migrations": "^0.6",
+        "nettrine/orm": "^0.8",
+        "nettrine/migrations": "^0.7",
         "beberlei/doctrineextensions": "^1.3",
-        "doctrine/common": "<3.0.0",
         "dg/mysql-dump": "^1.5",
 
         "fmasa/messenger": "dev-master",

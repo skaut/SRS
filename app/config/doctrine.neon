@@ -35,8 +35,3 @@ nettrine.orm.annotations:
 
 nettrine.migrations:
     directory: %appDir%/../migrations
-
-decorator:
-    Doctrine\Migrations\Configuration\Configuration:
-        setup:
-            - setCheckDatabasePlatform(false)
