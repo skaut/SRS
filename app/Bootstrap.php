@@ -6,6 +6,7 @@ namespace App;
 
 use Nette\Configurator;
 
+use function dirname;
 use function getenv;
 use function putenv;
 use function umask;
