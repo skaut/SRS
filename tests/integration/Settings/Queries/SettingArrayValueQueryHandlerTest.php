@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace App\Model\Settings\Queries\Handlers;
 
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
-use App\Model\Settings\Queries\SettingStringValueQuery;
+use App\Model\Settings\Queries\SettingArrayValueQuery;
 use App\Model\Settings\Repositories\SettingsRepository;
 use App\Model\Settings\Settings;
 use CommandHandlerTest;
 use Exception;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 
-final class SettingStringValueQueryHandlerTest extends CommandHandlerTest
+use function serialize;
+
+final class SettingArrayValueQueryHandlerTest extends CommandHandlerTest
 {
     private const ITEM = 'test_item';
 
@@ -25,11 +27,11 @@ final class SettingStringValueQueryHandlerTest extends CommandHandlerTest
      */
     public function testGetValue(): void
     {
-        $value = 'test';
+        $value = ['item1', 'item2', 'item3'];
 
-        $this->settingsRepository->save(new Settings(self::ITEM, $value));
+        $this->settingsRepository->save(new Settings(self::ITEM, serialize($value)));
 
-        $result = $this->queryBus->handle(new SettingStringValueQuery(self::ITEM));
+        $result = $this->queryBus->handle(new SettingArrayValueQuery(self::ITEM));
 
         $this->assertEquals($value, $result);
     }
@@ -39,9 +41,9 @@ final class SettingStringValueQueryHandlerTest extends CommandHandlerTest
      */
     public function testGetValueNull(): void
     {
-        $this->settingsRepository->save(new Settings(self::ITEM, null));
+        $this->settingsRepository->save(new Settings(self::ITEM, serialize(null)));
 
-        $result = $this->queryBus->handle(new SettingStringValueQuery(self::ITEM));
+        $result = $this->queryBus->handle(new SettingArrayValueQuery(self::ITEM));
 
         $this->assertNull($result);
     }
@@ -55,7 +57,7 @@ final class SettingStringValueQueryHandlerTest extends CommandHandlerTest
     {
         $this->expectException(SettingsItemNotFoundException::class);
         try {
-            $this->queryBus->handle(new SettingStringValueQuery(self::ITEM));
+            $this->queryBus->handle(new SettingArrayValueQuery(self::ITEM));
         } catch (HandlerFailedException $e) {
             throw $e->getPrevious();
         }
@@ -71,7 +73,7 @@ final class SettingStringValueQueryHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $this->tester->useConfigFiles([__DIR__ . '/SettingStringValueQueryHandlerTest.neon']);
+        $this->tester->useConfigFiles([__DIR__ . '/SettingArrayValueQueryHandlerTest.neon']);
         parent::_before();
 
         $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);

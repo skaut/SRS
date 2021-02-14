@@ -1,0 +1,10 @@
+services:
+    - App\Model\Settings\Repositories\SettingsRepository
+
+    - class: App\Model\Settings\Queries\Handlers\SettingDateValueQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+
+includes:
+- ../../config/common.neon
