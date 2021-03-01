@@ -158,7 +158,7 @@ class BlockFormFactory
         $capacityText->addCondition(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.program.blocks.form.capacity_format')
             ->toggle('alternatesAllowedCheckbox');
-        $minAllowedCapacity = $this->queryBus->handle(new MinBlockAllowedCapacityQuery($this->block));
+        $minAllowedCapacity = $this->block !== null ? $this->queryBus->handle(new MinBlockAllowedCapacityQuery($this->block)) : null;
         if ($minAllowedCapacity !== null) {
             $capacityText->addCondition(Form::FILLED)
                 ->addRule(Form::MIN, 'admin.program.blocks.form.capacity_low', $minAllowedCapacity);
