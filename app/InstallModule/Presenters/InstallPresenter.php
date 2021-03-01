@@ -7,7 +7,6 @@ namespace App\InstallModule\Presenters;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Settings\Commands\SetSettingBoolValue;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -17,7 +16,6 @@ use App\Services\CommandBus;
 use App\Services\QueryBus;
 use Contributte\Console\Application;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -25,6 +23,7 @@ use Nette\Application\AbortException;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -84,8 +83,8 @@ class InstallPresenter extends InstallBasePresenter
 
             $this->flashMessage('install.schema.schema_already_created', 'info');
             $this->redirect('admin');
-        } catch (TableNotFoundException $ex) {
-        } catch (SettingsItemNotFoundException $ex) {
+        } catch (HandlerFailedException $ex) {
+            // ignoruje se, tabulky ještě nejsou vytvořeny
         }
     }
 
@@ -126,9 +125,7 @@ class InstallPresenter extends InstallBasePresenter
                 $this->flashMessage('install.admin.admin_already_created', 'info');
                 $this->redirect('finish');
             }
-        } catch (TableNotFoundException $ex) {
-            $this->redirect('default');
-        } catch (SettingsItemNotFoundException $ex) {
+        } catch (HandlerFailedException $ex) {
             $this->redirect('default');
         }
 
@@ -185,9 +182,7 @@ class InstallPresenter extends InstallBasePresenter
             if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect('default');
             }
-        } catch (TableNotFoundException $ex) {
-            $this->redirect('default');
-        } catch (SettingsItemNotFoundException $ex) {
+        } catch (HandlerFailedException $ex) {
             $this->redirect('default');
         }
     }
@@ -204,9 +199,7 @@ class InstallPresenter extends InstallBasePresenter
             if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect('default');
             }
-        } catch (TableNotFoundException $ex) {
-            $this->redirect('default');
-        } catch (SettingsItemNotFoundException $ex) {
+        } catch (HandlerFailedException $ex) {
             $this->redirect('default');
         }
     }

@@ -20,8 +20,8 @@ use App\Services\Authorizator;
 use App\Services\CmsService;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
-use Doctrine\DBAL\Exception\TableNotFoundException;
 use Nette\Application\AbortException;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
@@ -140,9 +140,7 @@ abstract class WebBasePresenter extends BasePresenter
             if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect(':Install:Install:default');
             }
-        } catch (TableNotFoundException $ex) {
-            $this->redirect(':Install:Install:default');
-        } catch (SettingsItemNotFoundException $ex) {
+        } catch (HandlerFailedException $ex) {
             $this->redirect(':Install:Install:default');
         }
     }
