@@ -110,8 +110,11 @@ translation:
 messenger:
     buses:
         commandBus:
+            panel: %debugMode%
         eventBus:
+            panel: %debugMode%
         queryBus:
+            panel: %debugMode%
 
 latte:
     macros:
