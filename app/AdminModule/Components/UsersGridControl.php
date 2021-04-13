@@ -695,7 +695,7 @@ class UsersGridControl extends Control
      * @throws AbortException
      * @throws Throwable
      */
-    public function groupInsertIntoSkautIs(array $ids, bool $accept): void
+    public function groupInsertIntoSkautIs(array $ids, ?int $accept): void
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
@@ -731,7 +731,7 @@ class UsersGridControl extends Control
             $this->redirect('this');
         }
 
-        if ($skautIsEventService->insertParticipants($eventId, $users, $accept ?: false)) {
+        if ($skautIsEventService->insertParticipants($eventId, $users, $accept == 1)) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_successful', 'success');
         } else {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_skaut_is', 'danger');
@@ -913,9 +913,9 @@ class UsersGridControl extends Control
      */
     private function prepareInsertIntoSkautIsOptions(): array
     {
-        $options        = [];
-        $options[false] = 'common.skautis_event_insert_type.registered';
-        $options[true]  = 'common.skautis_event_insert_type.accepted';
+        $options    = [];
+        $options[0] = 'common.skautis_event_insert_type.registered';
+        $options[1] = 'common.skautis_event_insert_type.accepted';
 
         return $options;
     }
