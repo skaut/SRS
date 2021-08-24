@@ -320,27 +320,29 @@ class ApplicationFormFactory
                 ? $this->subeventRepository->findSubeventsByIds($values->subevents)
                 : new ArrayCollection([$this->subeventRepository->findImplicit()]);
 
-            // aktualizace udaju ve skautIS
-            try {
-                $this->skautIsService->updatePersonBasic(
-                    $this->user->getSkautISPersonId(),
-                    $this->user->getSex(),
-                    $this->user->getBirthdate(),
-                    $this->user->getFirstName(),
-                    $this->user->getLastName(),
-                    $this->user->getNickName()
-                );
+            // aktualizace údajů ve skautIS, jen pokud nemá propojený účet
+            if (! $this->user->isMember()) {
+                try {
+                    $this->skautIsService->updatePersonBasic(
+                        $this->user->getSkautISPersonId(),
+                        $this->user->getSex(),
+                        $this->user->getBirthdate(),
+                        $this->user->getFirstName(),
+                        $this->user->getLastName(),
+                        $this->user->getNickName()
+                    );
 
-                $this->skautIsService->updatePersonAddress(
-                    $this->user->getSkautISPersonId(),
-                    $this->user->getStreet(),
-                    $this->user->getCity(),
-                    $this->user->getPostcode(),
-                    $this->user->getState()
-                );
-            } catch (WsdlException $ex) {
-                Debugger::log($ex, ILogger::WARNING);
-                $this->onSkautIsError();
+                    $this->skautIsService->updatePersonAddress(
+                        $this->user->getSkautISPersonId(),
+                        $this->user->getStreet(),
+                        $this->user->getCity(),
+                        $this->user->getPostcode(),
+                        $this->user->getState()
+                    );
+                } catch (WsdlException $ex) {
+                    Debugger::log($ex, ILogger::WARNING);
+                    $this->onSkautIsError();
+                }
             }
 
             // vytvoreni prihlasky
