@@ -12,6 +12,7 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 use function array_key_exists;
+use function print_r;
 use function sprintf;
 
 /**
