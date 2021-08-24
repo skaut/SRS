@@ -15,6 +15,7 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 use function array_key_exists;
+use function sprintf;
 
 /**
  * Služba pro správu vzdělávací skautIS akce.
@@ -152,7 +153,11 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     private function getAllParticipants(int $eventId, int $courseId): array
     {
-        Debugger::log("Calling ParticipantEducationAll for ID_EventEducation: $eventId, ID_EventEducationCourse: $courseId.");
+        Debugger::log(sprintf(
+            'Calling ParticipantEducationAll for ID_EventEducation: %d, ID_EventEducationCourse: %d.',
+            $eventId,
+            $courseId
+        ));
 
         $response = $this->skautIs->event->ParticipantEducationAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -163,7 +168,7 @@ class SkautIsEventEducationService extends SkautIsEventService
 
         $response = $response instanceof stdClass ? [] : $response;
 
-        Debugger::log("Response from ParticipantEducationAll: $response.");
+        Debugger::log(sprintf('Response from ParticipantEducationAll: %s', $response));
 
         return $response;
     }
@@ -173,7 +178,12 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     private function insertParticipant(int $eventId, int $courseId, int $personId): int
     {
-        Debugger::log("Calling ParticipantEducationInsert for ID_EventEducation: $eventId, ID_EventEducationCourse: $courseId, ID_Person: $personId.");
+        Debugger::log(sprintf(
+            'Calling ParticipantEducationInsert for ID_EventEducation: %d, ID_EventEducationCourse: %d, ID_Person: %d.',
+            $eventId,
+            $courseId,
+            $personId
+        ));
 
         $response = $this->skautIs->event->ParticipantEducationInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -182,7 +192,7 @@ class SkautIsEventEducationService extends SkautIsEventService
             'ID_Person' => $personId,
         ]);
 
-        Debugger::log("Response from ParticipantEducationInsert: $response.");
+        Debugger::log(sprintf('Response from ParticipantEducationInsert: %s', $response));
 
         return $response->ID;
     }
@@ -192,7 +202,7 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     private function updateParticipant(int $participantId, bool $accept): void
     {
-        Debugger::log("Calling ParticipantEducationUpdate for ID: $participantId.");
+        Debugger::log(sprintf('Calling ParticipantEducationUpdate for ID: %d.', $participantId));
 
         $response = $this->skautIs->event->ParticipantEducationUpdate([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -200,6 +210,6 @@ class SkautIsEventEducationService extends SkautIsEventService
             'IsAccepted' => $accept,
         ], 'participantEducation');
 
-        Debugger::log("Response from ParticipantEducationUpdate: $response.");
+        Debugger::log(sprintf('Response from ParticipantEducationUpdate: %s', $response));
     }
 }

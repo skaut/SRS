@@ -12,6 +12,7 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 use function array_key_exists;
+use function sprintf;
 
 /**
  * Služba pro správu obecné skautIS akce.
@@ -84,7 +85,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
      */
     private function getAllParticipants(int $eventId): array
     {
-        Debugger::log("Calling ParticipantGeneralAll for ID_EventGeneral: $eventId.");
+        Debugger::log(sprintf('Calling ParticipantGeneralAll for ID_EventGeneral: %d.', $eventId));
 
         $response = $this->skautIs->event->ParticipantGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -93,7 +94,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
 
         $response = $response instanceof stdClass ? [] : $response;
 
-        Debugger::log("Response from ParticipantGeneralAll: $response.");
+        Debugger::log(sprintf('Response from ParticipantGeneralAll: %s', $response));
 
         return $response;
     }
@@ -103,7 +104,11 @@ class SkautIsEventGeneralService extends SkautIsEventService
      */
     private function insertParticipant(int $eventId, int $personId): void
     {
-        Debugger::log("Calling ParticipantGeneralInsert for ID_EventGeneral: $eventId, ID_Person: $personId.");
+        Debugger::log(sprintf(
+            'Calling ParticipantGeneralInsert for ID_EventGeneral: %d, ID_Person: %d.',
+            $eventId,
+            $personId
+        ));
 
         $response = $this->skautIs->event->ParticipantGeneralInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -111,6 +116,6 @@ class SkautIsEventGeneralService extends SkautIsEventService
             'ID_Person' => $personId,
         ]);
 
-        Debugger::log("Response from ParticipantGeneralAll: $response.");
+        Debugger::log(sprintf('Response from ParticipantGeneralInsert: %s', $response));
     }
 }
