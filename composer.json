@@ -22,7 +22,7 @@
         "nette/database": "^3.1",
         "nette/di": "^3.0",
         "nette/finder": "^2.5",
-        "nette/forms": "~3.0.0",
+        "nette/forms": "^3.1",
         "nette/http": "^3.1",
         "nette/mail": "^3.1",
         "nette/robot-loader": "^3.3",
@@ -52,7 +52,7 @@
         "snapappointments/bootstrap-select": "^1.13",
         "kartik-v/bootstrap-fileinput": "^5.1",
 
-        "ublaboo/datagrid": "6.2.23",
+        "ublaboo/datagrid": "^6.9",
         "ublaboo/mailing": "^1.2",
 
         "jms/serializer": "^3.11",
