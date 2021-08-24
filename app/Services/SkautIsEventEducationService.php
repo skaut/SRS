@@ -103,15 +103,11 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     protected function getDraftEvents(): array
     {
-        $events = $this->skautIs->event->EventEducationAllMyActions([
+        $response = $this->skautIs->event->EventEducationAllMyActions([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
         ]);
 
-        if ($events instanceof stdClass) {
-            return [];
-        }
-
-        return $events;
+        return $response instanceof stdClass ? [] : $response;
 
         // TODO: vracet jen akce, kam je možné přidávat účastníky
         //        return $this->skautIs->event->EventEducationAllMyActions([
@@ -127,16 +123,12 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     public function getEventCourses(int $eventId): array
     {
-        $courses = $this->skautIs->event->EventEducationCourseAll([
+        $response = $this->skautIs->event->EventEducationCourseAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventEducation' => $eventId,
         ]);
 
-        if ($courses instanceof stdClass) {
-            return [];
-        }
-
-        return $courses;
+        return $response instanceof stdClass ? [] : $response;
     }
 
     /**
@@ -160,18 +152,20 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     private function getAllParticipants(int $eventId, int $courseId): array
     {
-        $participants = $this->skautIs->event->ParticipantEducationAll([
+        Debugger::log("Calling ParticipantEducationAll for ID_EventEducation: $eventId, ID_EventEducationCourse: $courseId.");
+
+        $response = $this->skautIs->event->ParticipantEducationAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventEducation' => $eventId,
             'ID_EventEducationCourse' => [$courseId, $courseId],
             'IsActive' => true,
         ]);
 
-        if ($participants instanceof stdClass) {
-            return [];
-        }
+        $response = $response instanceof stdClass ? [] : $response;
 
-        return $participants;
+        Debugger::log("Response from ParticipantEducationAll: $response.");
+
+        return $response;
     }
 
     /**
@@ -179,12 +173,16 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     private function insertParticipant(int $eventId, int $courseId, int $personId): int
     {
+        Debugger::log("Calling ParticipantEducationInsert for ID_EventEducation: $eventId, ID_EventEducationCourse: $courseId, ID_Person: $personId.");
+
         $response = $this->skautIs->event->ParticipantEducationInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventEducation' => $eventId,
             'ID_EventEducationCourse' => $courseId,
             'ID_Person' => $personId,
         ]);
+
+        Debugger::log("Response from ParticipantEducationInsert: $response.");
 
         return $response->ID;
     }
@@ -194,10 +192,14 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     private function updateParticipant(int $participantId, bool $accept): void
     {
-        $this->skautIs->event->ParticipantEducationUpdate([
+        Debugger::log("Calling ParticipantEducationUpdate for ID: $participantId.");
+
+        $response = $this->skautIs->event->ParticipantEducationUpdate([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $participantId,
             'IsAccepted' => $accept,
         ], 'participantEducation');
+
+        Debugger::log("Response from ParticipantEducationUpdate: $response.");
     }
 }
