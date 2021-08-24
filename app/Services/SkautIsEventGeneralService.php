@@ -12,6 +12,7 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 use function array_key_exists;
+use function sprintf;
 
 /**
  * Služba pro správu obecné skautIS akce.
@@ -69,16 +70,12 @@ class SkautIsEventGeneralService extends SkautIsEventService
      */
     protected function getDraftEvents(): array
     {
-        $events = $this->skautIs->event->EventGeneralAll([
+        $response = $this->skautIs->event->EventGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventGeneralState' => 'draft',
         ]);
 
-        if ($events instanceof stdClass) {
-            return [];
-        }
-
-        return $events;
+        return $response instanceof stdClass ? [] : $response;
     }
 
     /**
@@ -88,16 +85,18 @@ class SkautIsEventGeneralService extends SkautIsEventService
      */
     private function getAllParticipants(int $eventId): array
     {
-        $participants = $this->skautIs->event->ParticipantGeneralAll([
+        Debugger::log(sprintf('Calling ParticipantGeneralAll for ID_EventGeneral: %d.', $eventId));
+
+        $response = $this->skautIs->event->ParticipantGeneralAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventGeneral' => $eventId,
         ]);
 
-        if ($participants instanceof stdClass) {
-            return [];
-        }
+        $response = $response instanceof stdClass ? [] : $response;
 
-        return $participants;
+        Debugger::log(sprintf('Response from ParticipantGeneralAll: %s', $response));
+
+        return $response;
     }
 
     /**
@@ -105,10 +104,18 @@ class SkautIsEventGeneralService extends SkautIsEventService
      */
     private function insertParticipant(int $eventId, int $personId): void
     {
-        $this->skautIs->event->ParticipantGeneralInsert([
+        Debugger::log(sprintf(
+            'Calling ParticipantGeneralInsert for ID_EventGeneral: %d, ID_Person: %d.',
+            $eventId,
+            $personId
+        ));
+
+        $response = $this->skautIs->event->ParticipantGeneralInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventGeneral' => $eventId,
             'ID_Person' => $personId,
         ]);
+
+        Debugger::log(sprintf('Response from ParticipantGeneralInsert: %s', $response));
     }
 }

@@ -15,6 +15,7 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 use function array_key_exists;
+use function sprintf;
 
 /**
  * Služba pro správu vzdělávací skautIS akce.
@@ -103,15 +104,11 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     protected function getDraftEvents(): array
     {
-        $events = $this->skautIs->event->EventEducationAllMyActions([
+        $response = $this->skautIs->event->EventEducationAllMyActions([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
         ]);
 
-        if ($events instanceof stdClass) {
-            return [];
-        }
-
-        return $events;
+        return $response instanceof stdClass ? [] : $response;
 
         // TODO: vracet jen akce, kam je možné přidávat účastníky
         //        return $this->skautIs->event->EventEducationAllMyActions([
@@ -127,16 +124,12 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     public function getEventCourses(int $eventId): array
     {
-        $courses = $this->skautIs->event->EventEducationCourseAll([
+        $response = $this->skautIs->event->EventEducationCourseAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventEducation' => $eventId,
         ]);
 
-        if ($courses instanceof stdClass) {
-            return [];
-        }
-
-        return $courses;
+        return $response instanceof stdClass ? [] : $response;
     }
 
     /**
@@ -160,18 +153,24 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     private function getAllParticipants(int $eventId, int $courseId): array
     {
-        $participants = $this->skautIs->event->ParticipantEducationAll([
+        Debugger::log(sprintf(
+            'Calling ParticipantEducationAll for ID_EventEducation: %d, ID_EventEducationCourse: %d.',
+            $eventId,
+            $courseId
+        ));
+
+        $response = $this->skautIs->event->ParticipantEducationAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventEducation' => $eventId,
             'ID_EventEducationCourse' => [$courseId, $courseId],
             'IsActive' => true,
         ]);
 
-        if ($participants instanceof stdClass) {
-            return [];
-        }
+        $response = $response instanceof stdClass ? [] : $response;
 
-        return $participants;
+        Debugger::log(sprintf('Response from ParticipantEducationAll: %s', $response));
+
+        return $response;
     }
 
     /**
@@ -179,12 +178,21 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     private function insertParticipant(int $eventId, int $courseId, int $personId): int
     {
+        Debugger::log(sprintf(
+            'Calling ParticipantEducationInsert for ID_EventEducation: %d, ID_EventEducationCourse: %d, ID_Person: %d.',
+            $eventId,
+            $courseId,
+            $personId
+        ));
+
         $response = $this->skautIs->event->ParticipantEducationInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventEducation' => $eventId,
             'ID_EventEducationCourse' => $courseId,
             'ID_Person' => $personId,
         ]);
+
+        Debugger::log(sprintf('Response from ParticipantEducationInsert: %s', $response));
 
         return $response->ID;
     }
@@ -194,10 +202,14 @@ class SkautIsEventEducationService extends SkautIsEventService
      */
     private function updateParticipant(int $participantId, bool $accept): void
     {
-        $this->skautIs->event->ParticipantEducationUpdate([
+        Debugger::log(sprintf('Calling ParticipantEducationUpdate for ID: %d.', $participantId));
+
+        $response = $this->skautIs->event->ParticipantEducationUpdate([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $participantId,
             'IsAccepted' => $accept,
         ], 'participantEducation');
+
+        Debugger::log(sprintf('Response from ParticipantEducationUpdate: %s', $response));
     }
 }
