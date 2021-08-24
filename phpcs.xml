@@ -37,6 +37,7 @@
 
         <!-- skautIS property -->
         <exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
+        <exclude name="Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
     </rule>
 
     <!-- Metoda _before v testech   -->
