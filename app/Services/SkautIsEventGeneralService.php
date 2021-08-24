@@ -94,7 +94,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
 
         $response = $response instanceof stdClass ? [] : $response;
 
-        Debugger::log(sprintf('Response from ParticipantGeneralAll: %s', $response));
+        Debugger::log(sprintf('ParticipantGeneralAll done, response: %s.', print_r($response, true)));
 
         return $response;
     }
@@ -110,12 +110,12 @@ class SkautIsEventGeneralService extends SkautIsEventService
             $personId
         ));
 
-        $response = $this->skautIs->event->ParticipantGeneralInsert([
+        $this->skautIs->event->ParticipantGeneralInsert([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_EventGeneral' => $eventId,
             'ID_Person' => $personId,
         ]);
 
-        Debugger::log(sprintf('Response from ParticipantGeneralInsert: %s', $response));
+        Debugger::log('ParticipantGeneralInsert done.');
     }
 }

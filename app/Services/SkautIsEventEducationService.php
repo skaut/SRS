@@ -168,7 +168,7 @@ class SkautIsEventEducationService extends SkautIsEventService
 
         $response = $response instanceof stdClass ? [] : $response;
 
-        Debugger::log(sprintf('Response from ParticipantEducationAll: %s', $response));
+        Debugger::log(sprintf('ParticipantEducationAll done, response: %s.', print_r($response, true)));
 
         return $response;
     }
@@ -192,7 +192,7 @@ class SkautIsEventEducationService extends SkautIsEventService
             'ID_Person' => $personId,
         ]);
 
-        Debugger::log(sprintf('Response from ParticipantEducationInsert: %s', $response));
+        Debugger::log(sprintf('ParticipantEducationInsert done, response: %s.', print_r($response, true)));
 
         return $response->ID;
     }
@@ -204,12 +204,12 @@ class SkautIsEventEducationService extends SkautIsEventService
     {
         Debugger::log(sprintf('Calling ParticipantEducationUpdate for ID: %d.', $participantId));
 
-        $response = $this->skautIs->event->ParticipantEducationUpdate([
+        $this->skautIs->event->ParticipantEducationUpdate([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $participantId,
             'IsAccepted' => $accept,
         ], 'participantEducation');
 
-        Debugger::log(sprintf('Response from ParticipantEducationUpdate: %s', $response));
+        Debugger::log('ParticipantEducationUpdate done.');
     }
 }
