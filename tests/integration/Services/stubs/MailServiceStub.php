@@ -24,7 +24,7 @@ class MailServiceStub implements IMailService
     /**
      * @param Collection<int, User>   $recipientsUsers
      * @param Collection<int, string> $recipientsEmails
-     * @param string[]           $parameters
+     * @param string[]                $parameters
      */
     public function sendMailFromTemplate(?Collection $recipientsUsers, ?Collection $recipientsEmails, string $type, array $parameters): void
     {

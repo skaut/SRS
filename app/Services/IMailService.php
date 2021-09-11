@@ -26,7 +26,7 @@ interface IMailService
      *
      * @param Collection<int, User>|null   $recipientsUsers
      * @param Collection<int, string>|null $recipientsEmails
-     * @param string[]                $parameters
+     * @param string[]                     $parameters
      */
     public function sendMailFromTemplate(?Collection $recipientsUsers, ?Collection $recipientsEmails, string $type, array $parameters): void;
 }

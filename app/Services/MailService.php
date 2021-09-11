@@ -159,7 +159,7 @@ class MailService implements IMailService
      *
      * @param Collection<int, User>|null   $recipientsUsers
      * @param Collection<int, string>|null $recipientsEmails
-     * @param string[]                $parameters
+     * @param string[]                     $parameters
      *
      * @throws MailingMailCreationException
      * @throws SettingsItemNotFoundException
