@@ -31,7 +31,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
     /**
      * Vloží účastníky do skautIS.
      *
-     * @param Collection<User> $users
+     * @param Collection<int, User> $users
      */
     public function insertParticipants(int $eventId, Collection $users, bool $accept = false): bool
     {

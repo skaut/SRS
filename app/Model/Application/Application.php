@@ -72,7 +72,7 @@ abstract class Application
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
      *
-     * @var Collection<Role>
+     * @var Collection<int, Role>
      */
     protected Collection $roles;
 
@@ -81,7 +81,7 @@ abstract class Application
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
      *
-     * @var Collection<Subevent>
+     * @var Collection<int, Subevent>
      */
     protected Collection $subevents;
 
@@ -205,7 +205,7 @@ abstract class Application
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRoles(): Collection
     {
@@ -223,7 +223,7 @@ abstract class Application
     }
 
     /**
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function getSubevents(): Collection
     {

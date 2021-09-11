@@ -38,7 +38,7 @@ class Program
      *
      * @ORM\OneToMany(targetEntity="ProgramApplication", mappedBy="program", cascade={"persist"})
      *
-     * @var Collection<ProgramApplication>
+     * @var Collection<int, ProgramApplication>
      */
     protected Collection $programApplications;
 

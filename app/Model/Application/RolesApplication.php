@@ -20,7 +20,7 @@ class RolesApplication extends Application
     protected string $type = Application::ROLES;
 
     /**
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      */
     public function setRoles(Collection $roles): void
     {

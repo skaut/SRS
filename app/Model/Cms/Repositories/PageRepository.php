@@ -111,7 +111,7 @@ class PageRepository extends AbstractRepository
     /**
      * Vrací id podle stránek.
      *
-     * @param Collection<Page> $pages
+     * @param Collection<int, Page> $pages
      *
      * @return int[]
      */
@@ -141,7 +141,7 @@ class PageRepository extends AbstractRepository
     /**
      * Vrací cesty podle stránek.
      *
-     * @param Collection<Page> $pages
+     * @param Collection<int, Page> $pages
      *
      * @return string[]
      */

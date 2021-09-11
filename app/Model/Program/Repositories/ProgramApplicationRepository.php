@@ -104,7 +104,7 @@ class ProgramApplicationRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<ProgramApplication>
+     * @return Collection<int, ProgramApplication>
      */
     private function findByUserAlternateAndBlock(User $user, Block $block): Collection
     {

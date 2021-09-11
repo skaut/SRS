@@ -115,7 +115,7 @@ class ApplicationRepository extends AbstractRepository
     /**
      * Vrací id přihlášek.
      *
-     * @param Collection<Application> $applications
+     * @param Collection<int, Application> $applications
      *
      * @return int[]
      */
@@ -127,7 +127,7 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * @param Collection<Application> $pairedApplications
+     * @param Collection<int, Application> $pairedApplications
      *
      * @return Collection<int, Application>
      */
@@ -160,7 +160,7 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * @param Collection<Application> $pairedApplications
+     * @param Collection<int, Application> $pairedApplications
      *
      * @return string[]
      */

@@ -3,11 +3,19 @@ parameters:
         - %rootDir%/../../../app
         - %rootDir%/../../../code-quality
 
-    checkGenericClassInNonGenericObjectType: false # todo: odstranit
-
-includes:
-    - vendor/phpstan/phpstan-nette/extension.neon
-    - vendor/phpstan/phpstan-doctrine/extension.neon
+    ignoreErrors: # todo: odstranit
+        -
+            message: '#Method [a-zA-Z0-9\\_:()]+ should return [a-zA-Z0-9\\_:,<>& ]+ but returns [a-zA-Z0-9\\_:,]+<(int|\(int\|string\)), object>\.#'
+            path: app/Model/*/Repositories/*Repository.php
+        -
+            message: '#Parameter [a-zA-Z0-9\\_:() \$\#]+ expects [a-zA-Z0-9\\_:,]+<int, object>, [a-zA-Z0-9\\_:,<> ]+ given\.#'
+            path: app/*
+        -
+            message: '#Method App\\Model\\Infrastructure\\Repositories\\AbstractRepository::getRepository\(\) return type with generic class Doctrine\\ORM\\EntityRepository does not specify its types: TEntityClass#'
+            path: app/Model/Infrastructure/Repositories/AbstractRepository.php
+        -
+            message: '#Method App\\Model\\User\\User::[a-zA-Z]+\(\) should return Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\[a-zA-Z]+Application> but returns Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\Application>\.#'
+            path: app/Model/User/User.php
 
 services:
 	- class: CodeQuality\ObjectIdentityComparisonRule

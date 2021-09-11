@@ -84,7 +84,7 @@ class SkautIsCourseRepository extends AbstractRepository
     /**
      * Vrací id skautIS kurzů.
      *
-     * @param Collection<SkautIsCourse> $skautIsCourses
+     * @param Collection<int, SkautIsCourse> $skautIsCourses
      *
      * @return int[]
      */

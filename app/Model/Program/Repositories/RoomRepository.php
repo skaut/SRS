@@ -29,7 +29,7 @@ class RoomRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Room>
+     * @return Collection<int, Room>
      */
     public function findAll(): Collection
     {

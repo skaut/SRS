@@ -37,7 +37,7 @@ class UsersContent extends Content implements IContent
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
      *
-     * @var Collection<Role>
+     * @var Collection<int, Role>
      */
     protected Collection $roles;
 
@@ -65,7 +65,7 @@ class UsersContent extends Content implements IContent
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRoles(): Collection
     {
@@ -73,7 +73,7 @@ class UsersContent extends Content implements IContent
     }
 
     /**
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      */
     public function setRoles(Collection $roles): void
     {

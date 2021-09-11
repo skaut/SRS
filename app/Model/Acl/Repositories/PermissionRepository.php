@@ -43,7 +43,7 @@ class PermissionRepository extends AbstractRepository
     /**
      * Vrací id oprávnění.
      *
-     * @param Collection<Permission> $permissions
+     * @param Collection<int, Permission> $permissions
      *
      * @return int[]
      */

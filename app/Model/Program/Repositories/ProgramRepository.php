@@ -48,7 +48,7 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Program>
+     * @return Collection<int, Program>
      */
     public function findUserAttends(User $user): Collection
     {
@@ -65,7 +65,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * Vrací programy, na které je uživatel zapsaný a jsou v danné kategorii.
      *
-     * @return Collection<Program>
+     * @return Collection<int, Program>
      */
     public function findUserAttendsAndCategory(User $user, Category $category): Collection
     {
@@ -84,7 +84,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * Vrací programy povolené pro uživatele.
      *
-     * @return Collection<Program>
+     * @return Collection<int, Program>
      */
     public function findUserAllowed(User $user, bool $paidOnly): Collection
     {
@@ -115,7 +115,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * Vrací programy se stejným blokem.
      *
-     * @return Collection<Program>
+     * @return Collection<int, Program>
      */
     public function findSameBlockPrograms(Program $program): Collection
     {
@@ -134,7 +134,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * Vrací programy překrývající se s programem.
      *
-     * @return Collection<Program>
+     * @return Collection<int, Program>
      */
     public function findOverlappingPrograms(Program $program): Collection
     {

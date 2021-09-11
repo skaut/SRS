@@ -48,7 +48,7 @@ class Subevent
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Application\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
      *
-     * @var Collection<SubeventsApplication>
+     * @var Collection<int, SubeventsApplication>
      */
     protected Collection $applications;
 
@@ -58,7 +58,7 @@ class Subevent
      * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="subevent", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
      *
-     * @var Collection<Block>
+     * @var Collection<int, Block>
      */
     protected Collection $blocks;
 
@@ -93,7 +93,7 @@ class Subevent
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_subevent_id", referencedColumnName="id")}
      *      )
      *
-     * @var Collection<Subevent>
+     * @var Collection<int, Subevent>
      */
     protected Collection $incompatibleSubevents;
 
@@ -102,7 +102,7 @@ class Subevent
      *
      * @ORM\ManyToMany(targetEntity="Subevent", mappedBy="requiredSubevents", cascade={"persist"})
      *
-     * @var Collection<Subevent>
+     * @var Collection<int, Subevent>
      */
     protected Collection $requiredBySubevent;
 
@@ -115,7 +115,7 @@ class Subevent
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_subevent_id", referencedColumnName="id")}
      *      )
      *
-     * @var Collection<Subevent>
+     * @var Collection<int, Subevent>
      */
     protected Collection $requiredSubevents;
 
@@ -124,7 +124,7 @@ class Subevent
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\SkautIs\SkautIsCourse")
      *
-     * @var Collection<SkautIsCourse>
+     * @var Collection<int, SkautIsCourse>
      */
     protected Collection $skautIsCourses;
 
@@ -178,7 +178,7 @@ class Subevent
     }
 
     /**
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function getBlocks(): Collection
     {
@@ -230,7 +230,7 @@ class Subevent
     }
 
     /**
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function getIncompatibleSubevents(): Collection
     {
@@ -238,7 +238,7 @@ class Subevent
     }
 
     /**
-     * @param Collection<Subevent> $incompatibleSubevents
+     * @param Collection<int, Subevent> $incompatibleSubevents
      */
     public function setIncompatibleSubevents(Collection $incompatibleSubevents): void
     {
@@ -281,7 +281,7 @@ class Subevent
     }
 
     /**
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function getRequiredBySubevent(): Collection
     {
@@ -307,7 +307,7 @@ class Subevent
     /**
      * Vrací všechny (tranzitivně) podakce, kterými je tato podakce vyžadována.
      *
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function getRequiredBySubeventTransitive(): Collection
     {
@@ -320,7 +320,7 @@ class Subevent
     }
 
     /**
-     * @param Collection<Subevent> $allRequiredBySubevent
+     * @param Collection<int, Subevent> $allRequiredBySubevent
      */
     private function getRequiredBySubeventTransitiveRec(Collection &$allRequiredBySubevent, Subevent $subevent): void
     {
@@ -334,7 +334,7 @@ class Subevent
     }
 
     /**
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function getRequiredSubevents(): Collection
     {
@@ -342,7 +342,7 @@ class Subevent
     }
 
     /**
-     * @param Collection<Subevent> $requiredSubevents
+     * @param Collection<int, Subevent> $requiredSubevents
      */
     public function setRequiredSubevents(Collection $requiredSubevents): void
     {
@@ -374,7 +374,7 @@ class Subevent
     /**
      * Vrací všechny (tranzitivně) vyžadované podakce.
      *
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function getRequiredSubeventsTransitive(): Collection
     {
@@ -387,7 +387,7 @@ class Subevent
     }
 
     /**
-     * @param Collection<Subevent> $allRequiredSubevents
+     * @param Collection<int, Subevent> $allRequiredSubevents
      */
     private function getRequiredSubeventsTransitiveRec(Collection &$allRequiredSubevents, Subevent $subevent): void
     {
@@ -414,7 +414,7 @@ class Subevent
     }
 
     /**
-     * @return Collection<SkautIsCourse>
+     * @return Collection<int, SkautIsCourse>
      */
     public function getSkautIsCourses(): Collection
     {
@@ -429,7 +429,7 @@ class Subevent
     }
 
     /**
-     * @param Collection<SkautIsCourse> $skautIsCourses
+     * @param Collection<int, SkautIsCourse> $skautIsCourses
      */
     public function setSkautIsCourses(Collection $skautIsCourses): void
     {

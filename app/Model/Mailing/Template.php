@@ -123,7 +123,7 @@ class Template
      *
      * @ORM\ManyToMany(targetEntity="TemplateVariable")
      *
-     * @var Collection<TemplateVariable>
+     * @var Collection<int, TemplateVariable>
      */
     protected Collection $variables;
 
@@ -185,7 +185,7 @@ class Template
     }
 
     /**
-     * @return Collection<TemplateVariable>
+     * @return Collection<int, TemplateVariable>
      */
     public function getVariables(): Collection
     {

@@ -36,7 +36,7 @@ class Category
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="registerableCategories", cascade={"persist"})
      *
-     * @var Collection<Role>
+     * @var Collection<int, Role>
      */
     protected Collection $registerableRoles;
 
@@ -46,7 +46,7 @@ class Category
      * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist"})
      * @ORM\OrderBy({"name" = "ASC"})
      *
-     * @var Collection<Block>
+     * @var Collection<int, Block>
      */
     protected Collection $blocks;
 
@@ -78,7 +78,7 @@ class Category
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRegisterableRoles(): Collection
     {
@@ -93,7 +93,7 @@ class Category
     }
 
     /**
-     * @param Collection<Role> $registerableRoles
+     * @param Collection<int, Role> $registerableRoles
      */
     public function setRegisterableRoles(Collection $registerableRoles): void
     {
@@ -123,7 +123,7 @@ class Category
     }
 
     /**
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function getBlocks(): Collection
     {

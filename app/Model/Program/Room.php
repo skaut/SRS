@@ -41,7 +41,7 @@ class Room
      * @ORM\OneToMany(targetEntity="Program", mappedBy="room", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
      *
-     * @var Collection<Program>
+     * @var Collection<int, Program>
      */
     protected Collection $programs;
 
@@ -79,7 +79,7 @@ class Room
     }
 
     /**
-     * @return Collection<Program>
+     * @return Collection<int, Program>
      */
     public function getPrograms(): Collection
     {

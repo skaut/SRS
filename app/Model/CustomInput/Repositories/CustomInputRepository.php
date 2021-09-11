@@ -63,7 +63,7 @@ class CustomInputRepository extends AbstractRepository
     /**
      * Vrací pole podle rolí uživatele, seřazené podle pozice.
      *
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      *
      * @return CustomInput[]
      */

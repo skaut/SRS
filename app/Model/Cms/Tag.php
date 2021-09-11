@@ -30,7 +30,7 @@ class Tag
      *
      * @ORM\ManyToMany(targetEntity="Document", mappedBy="tags", cascade={"persist"})
      *
-     * @var Collection<Document>
+     * @var Collection<int, Document>
      */
     protected Collection $documents;
 
@@ -46,7 +46,7 @@ class Tag
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="tags", cascade={"persist"})
      *
-     * @var Collection<Role>
+     * @var Collection<int, Role>
      */
     protected Collection $roles;
 
@@ -62,7 +62,7 @@ class Tag
     }
 
     /**
-     * @return Collection<Document>
+     * @return Collection<int, Document>
      */
     public function getDocuments(): Collection
     {
@@ -96,7 +96,7 @@ class Tag
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRoles(): Collection
     {
@@ -111,7 +111,7 @@ class Tag
     }
 
     /**
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      */
     public function setRoles(Collection $roles): void
     {

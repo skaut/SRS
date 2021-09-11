@@ -267,7 +267,7 @@ class AclService
     /**
      * Vrací názvy všech oprávnění.
      *
-     * @return Collection<string[]>
+     * @return Collection<int, string[]>
      *
      * @throws Throwable
      */

@@ -75,7 +75,7 @@ class SubeventRepository extends AbstractRepository
     /**
      * Vrací podakce splňující podmínku seřazené podle názvu.
      *
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function findFilteredSubevents(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null): Collection
     {
@@ -153,7 +153,7 @@ class SubeventRepository extends AbstractRepository
     /**
      * Vrací id podakcí.
      *
-     * @param Collection<Subevent> $subevents
+     * @param Collection<int, Subevent> $subevents
      *
      * @return int[]
      */

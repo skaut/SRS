@@ -128,7 +128,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function findUserAttends(User $user): Collection
     {
@@ -145,7 +145,7 @@ class BlockRepository extends AbstractRepository
     /**
      * Vrací bloky povolené pro uživatele.
      *
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function findUserAllowed(User $user, bool $paidOnly): Collection
     {

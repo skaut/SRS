@@ -48,7 +48,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     }
 
     /**
-     * @param Collection<User> $users
+     * @param Collection<int, User> $users
      */
     public function insertParticipants(int $eventId, Collection $users, bool $accept = false): bool
     {

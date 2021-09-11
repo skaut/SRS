@@ -36,7 +36,7 @@ class DocumentContent extends Content implements IContent
      *
      * @ORM\ManyToMany(targetEntity="Tag")
      *
-     * @var Collection<Tag>
+     * @var Collection<int, Tag>
      */
     protected Collection $tags;
 
@@ -57,7 +57,7 @@ class DocumentContent extends Content implements IContent
     }
 
     /**
-     * @return Collection<Tag>
+     * @return Collection<int, Tag>
      */
     public function getTags(): Collection
     {
@@ -65,7 +65,7 @@ class DocumentContent extends Content implements IContent
     }
 
     /**
-     * @param Collection<Tag> $tags
+     * @param Collection<int, Tag> $tags
      */
     public function setTags(Collection $tags): void
     {

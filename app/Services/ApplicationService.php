@@ -133,8 +133,8 @@ class ApplicationService
     /**
      * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci).
      *
-     * @param Collection<Role>     $roles
-     * @param Collection<Subevent> $subevents
+     * @param Collection<int, Role>     $roles
+     * @param Collection<int, Subevent> $subevents
      *
      * @throws Throwable
      */
@@ -193,7 +193,7 @@ class ApplicationService
     /**
      * Změní role uživatele a provede historizaci přihlášky.
      *
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -339,7 +339,7 @@ class ApplicationService
     /**
      * Vytvoří novou přihlášku na podakce a provede její historizaci.
      *
-     * @param Collection<Subevent> $subevents
+     * @param Collection<int, Subevent> $subevents
      *
      * @throws Throwable
      */
@@ -363,7 +363,7 @@ class ApplicationService
     /**
      * Aktualizuje podakce přihlášky a provede její historizaci.
      *
-     * @param Collection<Subevent> $subevents
+     * @param Collection<int, Subevent> $subevents
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -556,7 +556,7 @@ class ApplicationService
     /**
      * Aktualizuje platbu a stav spárovaných přihlášek.
      *
-     * @param Collection<Application> $pairedApplications
+     * @param Collection<int, Application> $pairedApplications
      *
      * @throws Throwable
      */
@@ -714,7 +714,7 @@ class ApplicationService
     }
 
     /**
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      *
      * @throws SettingsItemNotFoundException
      * @throws ORMException
@@ -765,7 +765,7 @@ class ApplicationService
     }
 
     /**
-     * @param Collection<Subevent> $subevents
+     * @param Collection<int, Subevent> $subevents
      *
      * @throws SettingsItemNotFoundException
      * @throws ORMException
@@ -854,7 +854,7 @@ class ApplicationService
     /**
      * Vypočítá poplatek za role.
      *
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      */
     private function countRolesFee(Collection $roles): int
     {
@@ -874,8 +874,8 @@ class ApplicationService
     /**
      * Vypočítá poplatek za podakce přihlášky.
      *
-     * @param Collection<Role>     $roles
-     * @param Collection<Subevent> $subevents
+     * @param Collection<int, Role>     $roles
+     * @param Collection<int, Subevent> $subevents
      */
     private function countSubeventsFee(Collection $roles, Collection $subevents): int
     {
@@ -929,7 +929,7 @@ class ApplicationService
     /**
      * Zvýší obsazenost rolí.
      *
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      *
      * @throws ORMException
      * @throws OptimisticLockException
@@ -945,7 +945,7 @@ class ApplicationService
     /**
      * Sníží obsazenost rolí.
      *
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      *
      * @throws ORMException
      * @throws OptimisticLockException
@@ -961,7 +961,7 @@ class ApplicationService
     /**
      * Zvýší obsazenost podakcí.
      *
-     * @param Collection<Subevent> $subevents
+     * @param Collection<int, Subevent> $subevents
      *
      * @throws ORMException
      * @throws OptimisticLockException
@@ -977,7 +977,7 @@ class ApplicationService
     /**
      * Sníží obsazenost podakcí.
      *
-     * @param Collection<Subevent> $subevents
+     * @param Collection<int, Subevent> $subevents
      *
      * @throws ORMException
      * @throws OptimisticLockException

@@ -53,7 +53,7 @@ class TagRepository extends AbstractRepository
     /**
      * Vrátí id tagů.
      *
-     * @param Collection<Tag> $tags
+     * @param Collection<int, Tag> $tags
      *
      * @return int[]
      */
