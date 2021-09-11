@@ -32,7 +32,7 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function findAll(): Collection
     {
@@ -139,7 +139,7 @@ class SubeventRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function findSubeventsByIds(array $ids): Collection
     {

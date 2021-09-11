@@ -27,7 +27,7 @@ class CategoryRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Category>
+     * @return Collection<int, Category>
      */
     public function findAll(): Collection
     {

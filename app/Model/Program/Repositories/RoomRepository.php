@@ -83,7 +83,7 @@ class RoomRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<Room>
+     * @return Collection<int, Room>
      */
     public function findRoomsByIds(array $ids): Collection
     {

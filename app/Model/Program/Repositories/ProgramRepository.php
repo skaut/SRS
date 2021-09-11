@@ -30,7 +30,7 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Program>
+     * @return Collection<int, Program>
      */
     public function findAll(): Collection
     {

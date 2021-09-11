@@ -33,7 +33,7 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function findAll(): Collection
     {
@@ -94,7 +94,7 @@ class RoleRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function findRolesByIds(array $ids): Collection
     {

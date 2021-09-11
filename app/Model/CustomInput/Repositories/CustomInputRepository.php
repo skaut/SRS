@@ -30,7 +30,7 @@ class CustomInputRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<CustomInput>
+     * @return Collection<int, CustomInput>
      */
     public function findAll(): Collection
     {

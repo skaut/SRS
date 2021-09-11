@@ -25,7 +25,7 @@ class PlacePointRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<PlacePoint>
+     * @return Collection<int, PlacePoint>
      */
     public function findAll(): Collection
     {

@@ -36,7 +36,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function findAll(): Collection
     {
@@ -117,7 +117,7 @@ class BlockRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function findBlocksByIds(array $ids): Collection
     {

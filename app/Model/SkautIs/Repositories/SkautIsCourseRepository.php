@@ -28,7 +28,7 @@ class SkautIsCourseRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<SkautIsCourse>
+     * @return Collection<int, SkautIsCourse>
      */
     public function findAll(): Collection
     {
@@ -100,7 +100,7 @@ class SkautIsCourseRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<SkautIsCourse>
+     * @return Collection<int, SkautIsCourse>
      */
     public function findSkautIsCoursesByIds(array $ids): Collection
     {

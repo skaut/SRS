@@ -25,7 +25,7 @@ class DiscountRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Discount>
+     * @return Collection<int, Discount>
      */
     public function findAll(): Collection
     {

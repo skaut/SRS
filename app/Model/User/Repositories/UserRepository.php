@@ -35,7 +35,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<User>
+     * @return Collection<int, User>
      */
     public function findAll(): Collection
     {
@@ -65,7 +65,7 @@ class UserRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<User>
+     * @return Collection<int, User>
      */
     public function findUsersByIds(array $ids): Collection
     {

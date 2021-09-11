@@ -127,7 +127,7 @@ class PageRepository extends AbstractRepository
      *
      * @param string[] $slugs
      *
-     * @return Collection<Page>
+     * @return Collection<int, Page>
      */
     public function findPagesBySlugs(array $slugs): Collection
     {
