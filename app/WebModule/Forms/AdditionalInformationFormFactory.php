@@ -274,7 +274,7 @@ class AdditionalInformationFormFactory
                         $oldValue = $customInputValue->getValue();
                         $newValue = $values->$customInputId;
                         assert($newValue instanceof FileUpload);
-                        if ($newValue->getError() == UPLOAD_ERR_OK) {
+                        if ($newValue->getError() === UPLOAD_ERR_OK) {
                             if ($oldValue !== null) {
                                 $this->filesService->delete($oldValue);
                             }

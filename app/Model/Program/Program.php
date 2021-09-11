@@ -111,7 +111,7 @@ class Program
 
     public function setRoom(?Room $room): void
     {
-        if ($this->room != null) {
+        if ($this->room !== null) {
             $this->room->removeProgram($this);
         }
 

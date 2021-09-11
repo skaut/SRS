@@ -7,7 +7,7 @@
             </strong>
             {_web.common.logged_in_roles, count($user->roles)}
             <strong>
-                {foreach $user->roles as $role}{if $role != $testRole}{$role}{sep}, {/sep}{/if}{/foreach}
+                {foreach $user->roles as $role}{if $role !== $testRole}{$role}{sep}, {/sep}{/if}{/foreach}
             </strong>
             <strong n:if="!$dbuser->isMember()">
                 <a href="{plink :Web:Member:default}" class="text-danger">{_web.member.name}</a>

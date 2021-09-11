@@ -119,7 +119,7 @@ class WebFormFactory
     {
         $logo = $values->logo;
         assert($logo instanceof FileUpload);
-        if ($logo->getError() == UPLOAD_ERR_OK) {
+        if ($logo->getError() === UPLOAD_ERR_OK) {
             $this->filesService->delete($this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO)));
             $path = $this->filesService->save($logo, 'logo', false, $logo->name);
             $this->filesService->resizeImage($path, null, 100);

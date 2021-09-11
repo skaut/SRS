@@ -77,7 +77,7 @@
                             </span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="{plink changeRole!, $r->ID}" n:foreach="$skautIsRoles as $r" n:class="dropdown-item, $r->ID == $skautIsRoleSelected->ID ? active">
+                        <a href="{plink changeRole!, $r->ID}" n:foreach="$skautIsRoles as $r" n:class="dropdown-item, $r->ID === $skautIsRoleSelected->ID ? active">
                             {$r->DisplayName}
                         </a>
                     </div>

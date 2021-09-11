@@ -211,7 +211,7 @@ class ImageContent extends Content implements IContent
 
         $imageData = null;
 
-        if ($file->getError() == UPLOAD_ERR_OK) {
+        if ($file->getError() === UPLOAD_ERR_OK) {
             if ($this->image !== null) {
                 $this->filesService->delete($this->image);
             }

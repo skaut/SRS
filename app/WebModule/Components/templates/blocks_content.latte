@@ -16,9 +16,9 @@
                         {_web.blocks_content.uncategorized}
                         <a href="#" class="stretched-link" data-toggle="collapse" data-target="#uncategorized"></a>
                     </div>
-                    <div id="uncategorized" n:class="collapse, $selectedCategoryId == 'uncategorized' ? show" data-parent="#accordion">
+                    <div id="uncategorized" n:class="collapse, $selectedCategoryId === 'uncategorized' ? show" data-parent="#accordion">
                         <div class="list-group list-group-flush">
-                            <a href="?blockId={$block->getId()}" n:class="list-group-item, list-group-item-action, $block->getId() == $selectedBlockId ? active" n:foreach="$uncategorizedBlocks as $block">
+                            <a href="?blockId={$block->getId()}" n:class="list-group-item, list-group-item-action, $block->getId() === $selectedBlockId ? active" n:foreach="$uncategorizedBlocks as $block">
                                 {$block->getName()}
                             </a>
                         </div>
@@ -29,9 +29,9 @@
                         {$category->getName()}
                         <a href="#" class="stretched-link" data-toggle="collapse" data-target="#category-{$category->getId()}"></a>
                     </div>
-                    <div id="category-{$category->getId()}" n:class="collapse, $selectedCategoryId == $category->getId() ? show" data-parent="#accordion">
+                    <div id="category-{$category->getId()}" n:class="collapse, $selectedCategoryId === $category->getId() ? show" data-parent="#accordion">
                         <div class="list-group list-group-flush">
-                            <a href="?blockId={$block->getId()}" n:class="list-group-item, list-group-item-action, $block->getId() == $selectedBlockId ? active" n:foreach="$category->getBlocks() as $block">
+                            <a href="?blockId={$block->getId()}" n:class="list-group-item, list-group-item-action, $block->getId() === $selectedBlockId ? active" n:foreach="$category->getBlocks() as $block">
                                 {$block->getName()}
                             </a>
                         </div>

@@ -42,8 +42,8 @@
 {form form class => form-horizontal}
     <div class="card-tabs mb-3">
         <ul class="nav nav-tabs nav-justified">
-            <li n:class="nav-item, $area == 'main' ? active">{input submitMain class => 'shadow-none'}</li>
-            <li n:class="nav-item, $area == 'sidebar' ? active">{input submitSidebar class => 'shadow-none'}</li>
+            <li n:class="nav-item, $area === 'main' ? active">{input submitMain class => 'shadow-none'}</li>
+            <li n:class="nav-item, $area === 'sidebar' ? active">{input submitSidebar class => 'shadow-none'}</li>
         </ul>
         <div class="card card-body bg-light pb-1">
             <div class="form-group row">
@@ -90,7 +90,7 @@
                     {foreach $container->getComponents() as $input}
                         {var $prototype = $input->getControlPrototype()}
 
-                        {if $prototype->getAttribute('type') == 'hidden'}
+                        {if $prototype->getAttribute('type') === 'hidden'}
                             {input $input}
                         {else}
                             <div class="form-group row {$input->required ? required}">

@@ -111,7 +111,7 @@ class SlideshowContent extends Content implements IContent
 
             foreach ($values->images as $image) {
                 assert($image instanceof FileUpload);
-                if ($image->getError() == UPLOAD_ERR_OK) {
+                if ($image->getError() === UPLOAD_ERR_OK) {
                     $this->images[] = $this->filesService->save($image, 'images', true, $image->name);
                 }
             }

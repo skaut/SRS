@@ -343,7 +343,7 @@ abstract class Application
 
     public function setPayment(?Payment $payment): void
     {
-        if ($this->payment != null) {
+        if ($this->payment !== null) {
             $this->payment->removePairedApplication($this);
         }
 
@@ -416,12 +416,12 @@ abstract class Application
 
     public function isPaid(): bool
     {
-        return $this->state == ApplicationState::PAID || $this->getState() == ApplicationState::PAID_FREE;
+        return $this->state === ApplicationState::PAID || $this->getState() === ApplicationState::PAID_FREE;
     }
 
     public function isWaitingForPayment(): bool
     {
-        return $this->state == ApplicationState::WAITING_FOR_PAYMENT;
+        return $this->state === ApplicationState::WAITING_FOR_PAYMENT;
     }
 
     public function getPaymentQr(string $accountNumber, string $message): string
