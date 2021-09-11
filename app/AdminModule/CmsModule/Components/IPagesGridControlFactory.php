@@ -6,8 +6,6 @@ namespace App\AdminModule\CmsModule\Components;
 
 /**
  * Factory komponenty pro správu stránek.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 interface IPagesGridControlFactory
 {

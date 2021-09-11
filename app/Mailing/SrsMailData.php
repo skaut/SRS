@@ -9,8 +9,6 @@ use Ublaboo\Mailing\IMessageData;
 
 /**
  * Třída pro parametry hromadného e-mailu.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SrsMailData implements IMessageData
 {

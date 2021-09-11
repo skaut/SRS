@@ -30,8 +30,6 @@ use function count;
 
 /**
  * Komponenta pro správu stránek.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PagesGridControl extends Control
 {

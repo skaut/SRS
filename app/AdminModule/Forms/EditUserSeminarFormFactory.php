@@ -57,10 +57,6 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro úpravu podrobností o účasti uživatele na semináři.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class EditUserSeminarFormFactory
 {

@@ -12,8 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  * Entita přihláška podakcí.
  *
  * @ORM\Entity
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SubeventsApplication extends Application
 {

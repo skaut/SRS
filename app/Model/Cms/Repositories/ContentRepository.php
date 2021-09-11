@@ -12,8 +12,6 @@ use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující obsahy webu.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ContentRepository extends AbstractRepository
 {

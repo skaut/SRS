@@ -12,10 +12,6 @@ use function array_keys;
 
 /**
  * Komponenta s dokumenty.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DocumentContentControl extends Control
 {

@@ -15,9 +15,6 @@ use function array_map;
 
 /**
  * Třída spravující tagy dokumentů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class TagRepository extends AbstractRepository
 {

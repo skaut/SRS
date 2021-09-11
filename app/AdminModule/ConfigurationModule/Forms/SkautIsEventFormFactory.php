@@ -32,9 +32,6 @@ use function count;
 
 /**
  * Formulár pro nastavení propojení se skautIS akcí.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SkautIsEventFormFactory
 {

@@ -6,8 +6,6 @@ namespace App\AdminModule\Components;
 
 /**
  * Factory komponenty pro správu přihlášek.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 interface IApplicationsGridControlFactory
 {

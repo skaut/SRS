@@ -24,8 +24,6 @@ use function assert;
 
 /**
  * Třída spravující přihlášky programů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ProgramApplicationRepository extends AbstractRepository
 {

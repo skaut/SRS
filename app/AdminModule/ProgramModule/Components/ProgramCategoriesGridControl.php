@@ -28,8 +28,6 @@ use function assert;
 
 /**
  * Komponenta pro správu kategorií.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ProgramCategoriesGridControl extends Control
 {

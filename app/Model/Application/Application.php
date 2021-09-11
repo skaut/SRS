@@ -32,8 +32,6 @@ use function str_replace;
  *     "roles_application" = "RolesApplication",
  *     "subevents_application" = "SubeventsApplication"
  * })
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class Application
 {

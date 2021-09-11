@@ -23,8 +23,6 @@ use function count;
 
 /**
  * Komponenta pro správu vlastních polí přihlášky.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CustomInputsGridControl extends Control
 {

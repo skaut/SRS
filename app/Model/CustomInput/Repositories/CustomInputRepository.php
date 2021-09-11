@@ -18,9 +18,6 @@ use const PHP_INT_MAX;
 
 /**
  * Třída spravující vlastní pole přihlášky.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class CustomInputRepository extends AbstractRepository
 {

@@ -15,8 +15,6 @@ use Throwable;
 
 /**
  * Basepresenter pro ConfigurationModule.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class ConfigurationBasePresenter extends AdminBasePresenter
 {

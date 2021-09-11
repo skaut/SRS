@@ -33,8 +33,6 @@ use function preg_replace;
 
 /**
  * Služba pro export do formátu XLSX.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ExcelExportService
 {

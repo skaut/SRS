@@ -27,8 +27,6 @@ use const UPLOAD_ERR_OK;
  *
  * @ORM\Entity
  * @ORM\Table(name="slideshow_content")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SlideshowContent extends Content implements IContent
 {

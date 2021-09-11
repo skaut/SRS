@@ -17,8 +17,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu podakcí.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SubeventsGridControl extends Control
 {

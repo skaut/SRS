@@ -18,8 +18,6 @@ use Throwable;
 
 /**
  * Formulář pro nastavení podakcí.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SubeventsFormFactory
 {

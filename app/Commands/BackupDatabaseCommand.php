@@ -15,8 +15,6 @@ use Throwable;
 
 /**
  * Příkaz pro zálohování databáze.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class BackupDatabaseCommand extends Command
 {

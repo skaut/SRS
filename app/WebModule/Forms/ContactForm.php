@@ -28,8 +28,6 @@ use function str_replace;
 
 /**
  * Komponenta s formulářem pro kontaktaktní formulář.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ContactForm extends UI\Control
 {

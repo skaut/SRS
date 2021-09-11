@@ -21,8 +21,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="payment")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Payment
 {

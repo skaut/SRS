@@ -13,9 +13,6 @@ use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující dokumenty.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DocumentRepository extends AbstractRepository
 {

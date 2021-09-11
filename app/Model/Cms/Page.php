@@ -22,9 +22,6 @@ use function in_array;
  *
  * @ORM\Entity
  * @ORM\Table(name="page")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Page
 {

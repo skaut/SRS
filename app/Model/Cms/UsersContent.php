@@ -25,8 +25,6 @@ use function assert;
  *
  * @ORM\Entity
  * @ORM\Table(name="users_content")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class UsersContent extends Content implements IContent
 {

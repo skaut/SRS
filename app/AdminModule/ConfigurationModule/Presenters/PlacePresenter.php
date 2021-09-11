@@ -16,8 +16,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující nastavení místa semináře.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PlacePresenter extends ConfigurationBasePresenter
 {

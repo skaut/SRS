@@ -15,8 +15,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu automatických e-mailů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class MailTemplatesGridControl extends Control
 {

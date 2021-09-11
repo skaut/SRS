@@ -32,8 +32,6 @@ use function str_replace;
 
 /**
  * Služba pro rozesílání e-mailů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class MailService implements IMailService
 {

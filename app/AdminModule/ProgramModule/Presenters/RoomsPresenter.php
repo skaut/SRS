@@ -14,8 +14,6 @@ use Nette\Application\AbortException;
 
 /**
  * Presenter obsluhující správu místností.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class RoomsPresenter extends ProgramBasePresenter
 {

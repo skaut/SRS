@@ -20,8 +20,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="mail")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Mail
 {

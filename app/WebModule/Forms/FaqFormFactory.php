@@ -16,9 +16,6 @@ use stdClass;
 
 /**
  * Formulář pro položení otázky.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class FaqFormFactory
 {

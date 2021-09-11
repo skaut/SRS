@@ -6,8 +6,6 @@ namespace App\Model\Cms\Dto;
 
 /**
  * DTO obsahu s informací o pořadateli.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class OrganizerContentDto extends ContentDto
 {

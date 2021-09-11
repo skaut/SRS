@@ -58,9 +58,6 @@ use const STR_PAD_LEFT;
 
 /**
  * Služba pro správu přihlašování na akci.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ApplicationService
 {

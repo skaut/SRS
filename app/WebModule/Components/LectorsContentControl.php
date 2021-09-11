@@ -12,8 +12,6 @@ use Nette\Application\UI\Control;
 
 /**
  * Komponenta s přehledem lektorů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class LectorsContentControl extends Control
 {

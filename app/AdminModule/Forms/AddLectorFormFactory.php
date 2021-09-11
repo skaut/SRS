@@ -25,8 +25,6 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro vytvoření externího lektora.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class AddLectorFormFactory
 {

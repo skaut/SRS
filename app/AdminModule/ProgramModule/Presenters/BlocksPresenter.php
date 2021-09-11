@@ -26,9 +26,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující správu programových bloků.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class BlocksPresenter extends ProgramBasePresenter
 {

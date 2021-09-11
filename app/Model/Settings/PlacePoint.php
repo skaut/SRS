@@ -12,8 +12,6 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *
  * @ORM\Entity
  * @ORM\Table(name="place_point")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PlacePoint
 {

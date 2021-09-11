@@ -26,9 +26,6 @@ use Throwable;
 
 /**
  * Formulář pro změnu rolí.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class RolesFormFactory
 {

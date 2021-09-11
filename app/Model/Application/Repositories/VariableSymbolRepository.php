@@ -11,9 +11,6 @@ use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující variabilní symboly.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class VariableSymbolRepository extends AbstractRepository
 {

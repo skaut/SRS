@@ -17,8 +17,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="category")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Category
 {

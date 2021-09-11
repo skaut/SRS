@@ -11,8 +11,6 @@ use Nette\Application\UI\Control;
 
 /**
  * Komponenta s podrobnostmi o programových blocích.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class BlocksContentControl extends Control
 {

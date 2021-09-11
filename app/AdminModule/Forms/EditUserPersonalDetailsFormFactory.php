@@ -23,8 +23,6 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro úpravu osobních údajů externích lektorů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class EditUserPersonalDetailsFormFactory
 {

@@ -28,8 +28,6 @@ use WebLoader\Nette\JavaScriptLoader;
 
 /**
  * BasePresenter pro WebModule.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class WebBasePresenter extends BasePresenter
 {

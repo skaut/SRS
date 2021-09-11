@@ -29,9 +29,6 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro nastavení webové prezentace.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class WebFormFactory
 {

@@ -20,9 +20,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující správu rolí.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class AclPresenter extends AdminBasePresenter
 {

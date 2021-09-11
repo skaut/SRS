@@ -6,8 +6,6 @@ namespace App\WebModule\Components;
 
 /**
  * Factory komponenty pro správu vlastních přihlášek.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 interface IApplicationsGridControlFactory
 {

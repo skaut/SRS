@@ -11,9 +11,6 @@ use Nette\Localization\ITranslator;
 
 /**
  * Služba pro správu podakcí.
- *
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SubeventService
 {

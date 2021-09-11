@@ -31,9 +31,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="user")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class User
 {

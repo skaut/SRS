@@ -22,10 +22,6 @@ use const PHP_INT_MAX;
 
 /**
  * Třída spravující stránky.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PageRepository extends AbstractRepository
 {

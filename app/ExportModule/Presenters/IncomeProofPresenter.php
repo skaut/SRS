@@ -30,8 +30,6 @@ use function random_bytes;
 
 /**
  * Presenter pro generování dokladů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class IncomeProofPresenter extends ExportBasePresenter
 {

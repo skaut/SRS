@@ -31,8 +31,6 @@ use function trim;
 
 /**
  * Formulář pro úpravu vlastních polí přihlášky.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CustomInputFormFactory
 {

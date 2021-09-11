@@ -10,8 +10,6 @@ use Nette\Application\IResponse;
 
 /**
  * IcalResponse.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class IcalResponse implements IResponse
 {

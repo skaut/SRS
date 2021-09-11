@@ -16,9 +16,6 @@ use stdClass;
 
 /**
  * Komponenta s formulářem pro úpravu slevy.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DiscountForm extends UI\Control
 {

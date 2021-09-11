@@ -20,8 +20,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu rolí.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class RolesGridControl extends Control
 {

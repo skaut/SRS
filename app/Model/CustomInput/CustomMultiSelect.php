@@ -13,8 +13,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="custom_multiselect")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CustomMultiSelect extends CustomInput
 {

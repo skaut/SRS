@@ -13,8 +13,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující správu plateb.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PaymentsPresenter extends PaymentsBasePresenter
 {

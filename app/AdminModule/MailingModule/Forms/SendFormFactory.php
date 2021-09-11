@@ -25,9 +25,6 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
  * Formulář pro vytvoření e-mailu.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SendFormFactory
 {

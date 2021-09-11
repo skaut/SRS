@@ -20,8 +20,6 @@ use Nette\Localization\ITranslator;
 
 /**
  * Služba pro správu uživatelů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class UserService
 {

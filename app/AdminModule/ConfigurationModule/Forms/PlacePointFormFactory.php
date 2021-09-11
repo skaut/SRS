@@ -16,8 +16,6 @@ use VojtechDobes\NetteForms\GpsPositionPicker;
 
 /**
  * Formulář pro úpravu mapového bodu.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PlacePointFormFactory
 {

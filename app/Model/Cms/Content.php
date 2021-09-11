@@ -40,9 +40,6 @@ use function ucwords;
  *     "contact_form_content" = "ContactFormContent",
  *     "slideshow_content" = "SlideshowContent"
  * })
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class Content implements IContent
 {

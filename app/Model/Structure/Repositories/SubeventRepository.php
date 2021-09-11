@@ -20,9 +20,6 @@ use function array_map;
 
 /**
  * Třída spravující podakce.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SubeventRepository extends AbstractRepository
 {

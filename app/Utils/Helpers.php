@@ -14,8 +14,6 @@ use function mb_substr;
 
 /**
  * Třída s pomocnými metodami.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Helpers
 {

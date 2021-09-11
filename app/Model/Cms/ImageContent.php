@@ -26,9 +26,6 @@ use const UPLOAD_ERR_OK;
  *
  * @ORM\Entity
  * @ORM\Table(name="image_content")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ImageContent extends Content implements IContent
 {

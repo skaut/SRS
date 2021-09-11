@@ -15,9 +15,6 @@ use function array_map;
 
 /**
  * Třída spravující kategorie programových bloků.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class CategoryRepository extends AbstractRepository
 {

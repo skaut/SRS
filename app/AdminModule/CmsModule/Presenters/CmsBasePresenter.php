@@ -11,8 +11,6 @@ use Nette\Application\AbortException;
 
 /**
  * BasePresenter pro CmsModule.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class CmsBasePresenter extends AdminBasePresenter
 {

@@ -13,9 +13,6 @@ use function assert;
 
 /**
  * Třída spravující nastavení.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SettingsRepository extends AbstractRepository
 {

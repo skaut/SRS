@@ -18,9 +18,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="block")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Block
 {

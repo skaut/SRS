@@ -20,8 +20,6 @@ use function sprintf;
 
 /**
  * Služba pro správu vzdělávací skautIS akce.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SkautIsEventEducationService extends SkautIsEventService
 {

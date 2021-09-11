@@ -23,10 +23,6 @@ use function assert;
 
 /**
  * Třída spravující programové bloky.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class BlockRepository extends AbstractRepository
 {

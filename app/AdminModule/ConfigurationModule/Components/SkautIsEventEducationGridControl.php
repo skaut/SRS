@@ -17,8 +17,6 @@ use Ublaboo\DataGrid\DataGrid;
 
 /**
  * Komponenta pro nastavení propojení se vzdělávací akcí.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SkautIsEventEducationGridControl extends Control
 {

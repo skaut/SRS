@@ -22,8 +22,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="subevent")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Subevent
 {

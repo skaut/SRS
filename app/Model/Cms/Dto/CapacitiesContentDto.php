@@ -6,8 +6,6 @@ namespace App\Model\Cms\Dto;
 
 /**
  * DTO obsahu s přehledem kapacit rolí.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CapacitiesContentDto extends ContentDto
 {

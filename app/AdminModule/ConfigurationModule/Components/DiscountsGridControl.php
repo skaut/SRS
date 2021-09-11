@@ -17,8 +17,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu slev.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class DiscountsGridControl extends Control
 {

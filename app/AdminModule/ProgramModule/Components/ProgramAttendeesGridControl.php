@@ -39,8 +39,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu účastníků programu.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ProgramAttendeesGridControl extends Control
 {

@@ -9,9 +9,6 @@ use stdClass;
 
 /**
  * Rozhraní obsahů.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 interface IContent
 {

@@ -9,9 +9,6 @@ use Nette\Application\UI\Control;
 
 /**
  * Komponenta s textem.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class TextContentControl extends Control
 {

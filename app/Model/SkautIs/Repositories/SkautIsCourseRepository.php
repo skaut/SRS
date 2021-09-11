@@ -16,9 +16,6 @@ use function array_map;
 
 /**
  * Třída spravující skautIS kurzy.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SkautIsCourseRepository extends AbstractRepository
 {

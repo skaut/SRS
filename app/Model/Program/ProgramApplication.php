@@ -14,8 +14,6 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *
  * @ORM\Entity
  * @ORM\Table(name="program_application")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ProgramApplication
 {

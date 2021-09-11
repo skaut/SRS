@@ -29,8 +29,6 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Komponenta pro správu dokumentů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class DocumentsGridControl extends Control
 {

@@ -22,10 +22,6 @@ use function count;
 
 /**
  * Třída spravující uživatele.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class UserRepository extends AbstractRepository
 {

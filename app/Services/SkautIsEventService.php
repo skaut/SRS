@@ -15,8 +15,6 @@ use Tracy\ILogger;
 
 /**
  * Služba pro správu skautIS akce.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class SkautIsEventService
 {

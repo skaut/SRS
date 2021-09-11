@@ -18,8 +18,6 @@ use Throwable;
 
 /**
  * Formulář pro úpravu platby.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class EditPaymentFormFactory
 {

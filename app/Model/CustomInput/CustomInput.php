@@ -28,8 +28,6 @@ use function implode;
  *     "custom_date" = "CustomDate",
  *     "custom_datetime" = "CustomDateTime"
  * })
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class CustomInput
 {

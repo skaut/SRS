@@ -18,8 +18,6 @@ use function array_map;
 
 /**
  * Třída spravující přihlášky.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ApplicationRepository extends AbstractRepository
 {

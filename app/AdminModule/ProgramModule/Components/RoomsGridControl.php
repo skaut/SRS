@@ -28,8 +28,6 @@ use function assert;
 
 /**
  * Komponenta pro správu místností.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class RoomsGridControl extends Control
 {

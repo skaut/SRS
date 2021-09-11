@@ -11,9 +11,6 @@ use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující platby.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PaymentRepository extends AbstractRepository
 {

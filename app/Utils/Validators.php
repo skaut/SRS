@@ -24,8 +24,6 @@ use function trim;
 
 /**
  * Třída s vlastními validátory.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Validators
 {

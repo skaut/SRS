@@ -6,8 +6,6 @@ namespace App\AdminModule\CmsModule\Components;
 
 /**
  * Factory komponenty pro správu dokumentů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 interface IDocumentsGridControlFactory
 {

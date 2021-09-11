@@ -9,8 +9,6 @@ use Throwable;
 
 /**
  * Presenter obshluhující stránku s informacemi o propojení skautIS účtu.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class MemberPresenter extends WebBasePresenter
 {

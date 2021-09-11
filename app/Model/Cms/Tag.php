@@ -17,9 +17,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="tag")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Tag
 {

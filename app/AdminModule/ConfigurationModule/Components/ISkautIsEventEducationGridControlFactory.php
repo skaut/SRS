@@ -6,8 +6,6 @@ namespace App\AdminModule\ConfigurationModule\Components;
 
 /**
  * Factory komponenty pro nastavení propojení se vzdělávací akcí.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 interface ISkautIsEventEducationGridControlFactory
 {

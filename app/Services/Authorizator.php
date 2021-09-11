@@ -11,9 +11,6 @@ use Throwable;
 
 /**
  * Služba nastavující role a oprávnění.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Authorizator extends Nette\Security\Permission
 {

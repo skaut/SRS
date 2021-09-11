@@ -25,8 +25,6 @@ use function count;
 
 /**
  * Komponenta pro správu štítků dokumentů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class DocumentTagsGridControl extends Control
 {

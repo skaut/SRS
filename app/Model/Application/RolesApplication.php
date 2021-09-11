@@ -12,8 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  * Entita přihláška rolí.
  *
  * @ORM\Entity
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class RolesApplication extends Application
 {

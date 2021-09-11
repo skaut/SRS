@@ -21,9 +21,6 @@ use function array_map;
 
 /**
  * Třída spravující role.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class RoleRepository extends AbstractRepository
 {

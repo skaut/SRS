@@ -12,8 +12,6 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /**
  * ExcelResponse.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ExcelResponse implements IResponse
 {

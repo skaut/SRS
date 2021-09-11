@@ -21,9 +21,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="role")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Role
 {

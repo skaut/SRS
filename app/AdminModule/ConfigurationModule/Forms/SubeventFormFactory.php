@@ -24,9 +24,6 @@ use function uniqid;
 
 /**
  * Formulář pro úpravu podakce.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SubeventFormFactory
 {

@@ -6,8 +6,6 @@ namespace App\Model\Cms\Dto;
 
 /**
  * DTO obsahu s dokumenty.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class DocumentContentDto extends ContentDto
 {

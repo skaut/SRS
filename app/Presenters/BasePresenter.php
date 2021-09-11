@@ -11,9 +11,6 @@ use WebLoader\Nette\LoaderFactory;
 
 /**
  * BasePresenter.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {

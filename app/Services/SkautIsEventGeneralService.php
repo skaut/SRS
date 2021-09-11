@@ -17,9 +17,6 @@ use function sprintf;
 
 /**
  * Služba pro správu obecné skautIS akce.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SkautIsEventGeneralService extends SkautIsEventService
 {

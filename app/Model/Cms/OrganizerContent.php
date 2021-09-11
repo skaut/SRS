@@ -18,8 +18,6 @@ use function assert;
  *
  * @ORM\Entity
  * @ORM\Table(name="organizer_content")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class OrganizerContent extends Content implements IContent
 {

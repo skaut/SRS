@@ -17,9 +17,6 @@ use function array_map;
 
 /**
  * Třída spravující místnosti.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class RoomRepository extends AbstractRepository
 {

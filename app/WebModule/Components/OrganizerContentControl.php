@@ -9,8 +9,6 @@ use Nette\Application\UI\Control;
 
 /**
  * Komponenta s informací o pořadateli.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class OrganizerContentControl extends Control
 {

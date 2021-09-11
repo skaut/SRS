@@ -14,8 +14,6 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *
  * @ORM\Entity
  * @ORM\Table(name="room")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Room
 {

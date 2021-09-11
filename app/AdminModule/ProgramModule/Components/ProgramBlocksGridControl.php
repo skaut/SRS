@@ -41,8 +41,6 @@ use function assert;
 
 /**
  * Komponenta pro správu programových bloků.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ProgramBlocksGridControl extends Control
 {

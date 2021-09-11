@@ -27,8 +27,6 @@ use function array_keys;
 
 /**
  * BasePresenter pro AdminModule.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class AdminBasePresenter extends BasePresenter
 {

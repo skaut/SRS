@@ -16,8 +16,6 @@ use Nette\Application\AbortException;
 
 /**
  * Presenter pro generování kalendáře ve formátu ICS.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SchedulePresenter extends ExportBasePresenter
 {
