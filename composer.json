@@ -12,6 +12,7 @@
         "php": ">=7.4",
         "ext-bcmath": "*",
         "ext-iconv": "*",
+        "ext-intl": "*",
         "ext-json": "*",
         "ext-mysqli": "*",
         "ext-soap": "*",
