@@ -20,7 +20,7 @@ class UserAllowedBlocksQueryHandler implements MessageHandlerInterface
     }
 
     /**
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function __invoke(UserAllowedBlocksQuery $query): Collection
     {

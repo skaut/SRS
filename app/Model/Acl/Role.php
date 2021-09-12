@@ -21,9 +21,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="role")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Role
 {
@@ -104,7 +101,7 @@ class Role
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist"})
      *
-     * @var Collection<User>
+     * @var Collection<int, User>
      */
     protected Collection $users;
 
@@ -113,7 +110,7 @@ class Role
      *
      * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist"})
      *
-     * @var Collection<Permission>
+     * @var Collection<int, Permission>
      */
     protected Collection $permissions;
 
@@ -122,7 +119,7 @@ class Role
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Cms\Page", mappedBy="roles", cascade={"persist"})
      *
-     * @var Collection<Page>
+     * @var Collection<int, Page>
      */
     protected Collection $pages;
 
@@ -206,7 +203,7 @@ class Role
      *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
      *      )
      *
-     * @var Collection<Role>
+     * @var Collection<int, Role>
      */
     protected Collection $incompatibleRoles;
 
@@ -215,7 +212,7 @@ class Role
      *
      * @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist"})
      *
-     * @var Collection<Role>
+     * @var Collection<int, Role>
      */
     protected Collection $requiredByRole;
 
@@ -228,7 +225,7 @@ class Role
      *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
      *      )
      *
-     * @var Collection<Role>
+     * @var Collection<int, Role>
      */
     protected Collection $requiredRoles;
 
@@ -237,7 +234,7 @@ class Role
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist"})
      *
-     * @var Collection<Category>
+     * @var Collection<int, Category>
      */
     protected Collection $registerableCategories;
 
@@ -253,7 +250,7 @@ class Role
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Cms\Tag", mappedBy="roles", cascade={"persist"})
      *
-     * @var Collection<Tag>
+     * @var Collection<int, Tag>
      */
     protected Collection $tags;
 
@@ -291,7 +288,7 @@ class Role
     }
 
     /**
-     * @return Collection<User>
+     * @return Collection<int, User>
      */
     public function getUsers(): Collection
     {
@@ -315,7 +312,7 @@ class Role
     }
 
     /**
-     * @return Collection<Permission>
+     * @return Collection<int, Permission>
      */
     public function getPermissions(): Collection
     {
@@ -323,7 +320,7 @@ class Role
     }
 
     /**
-     * @param Collection<Permission> $permissions
+     * @param Collection<int, Permission> $permissions
      */
     public function setPermissions(Collection $permissions): void
     {
@@ -353,7 +350,7 @@ class Role
     }
 
     /**
-     * @return Collection<Page>
+     * @return Collection<int, Page>
      */
     public function getPages(): Collection
     {
@@ -361,7 +358,7 @@ class Role
     }
 
     /**
-     * @param Collection<Page> $pages
+     * @param Collection<int, Page> $pages
      */
     public function setPages(Collection $pages): void
     {
@@ -503,7 +500,7 @@ class Role
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getIncompatibleRoles(): Collection
     {
@@ -511,7 +508,7 @@ class Role
     }
 
     /**
-     * @param Collection<Role> $incompatibleRoles
+     * @param Collection<int, Role> $incompatibleRoles
      */
     public function setIncompatibleRoles(Collection $incompatibleRoles): void
     {
@@ -551,7 +548,7 @@ class Role
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRequiredByRole(): Collection
     {
@@ -577,7 +574,7 @@ class Role
     /**
      * Vrací všechny (tranzitivně) role, kterými je tato role vyžadována.
      *
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRequiredByRoleTransitive(): Collection
     {
@@ -590,7 +587,7 @@ class Role
     }
 
     /**
-     * @param Collection<Role> $allRequiredByRole
+     * @param Collection<int, Role> $allRequiredByRole
      */
     private function getRequiredByRoleTransitiveRec(Collection &$allRequiredByRole, Role $role): void
     {
@@ -604,7 +601,7 @@ class Role
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRequiredRoles(): Collection
     {
@@ -612,7 +609,7 @@ class Role
     }
 
     /**
-     * @param Collection<Role> $requiredRoles
+     * @param Collection<int, Role> $requiredRoles
      */
     public function setRequiredRoles(Collection $requiredRoles): void
     {
@@ -644,7 +641,7 @@ class Role
     /**
      * Vrací všechny (tranzitivně) vyžadované role.
      *
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRequiredRolesTransitive(): Collection
     {
@@ -657,7 +654,7 @@ class Role
     }
 
     /**
-     * @param Collection<Role> $allRequiredRoles
+     * @param Collection<int, Role> $allRequiredRoles
      */
     private function getRequiredRolesTransitiveRec(Collection &$allRequiredRoles, Role $role): void
     {
@@ -681,7 +678,7 @@ class Role
     }
 
     /**
-     * @return Collection<Category>
+     * @return Collection<int, Category>
      */
     public function getRegisterableCategories(): Collection
     {
@@ -715,7 +712,7 @@ class Role
     }
 
     /**
-     * @return Collection<Tag>
+     * @return Collection<int, Tag>
      */
     public function getTags(): Collection
     {

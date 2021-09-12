@@ -56,9 +56,6 @@ use function basename;
 
 /**
  * Komponenta pro správu rolí.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class UsersGridControl extends Control
 {
@@ -731,7 +728,7 @@ class UsersGridControl extends Control
             $this->redirect('this');
         }
 
-        if ($skautIsEventService->insertParticipants($eventId, $users, $accept == 1)) {
+        if ($skautIsEventService->insertParticipants($eventId, $users, $accept === 1)) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_successful', 'success');
         } else {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_skaut_is', 'danger');

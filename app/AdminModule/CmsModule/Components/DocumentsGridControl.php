@@ -29,8 +29,6 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Komponenta pro správu dokumentů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class DocumentsGridControl extends Control
 {
@@ -190,7 +188,7 @@ class DocumentsGridControl extends Control
 
         $file = $values->file;
         assert($file instanceof FileUpload);
-        if ($file->getError() == UPLOAD_ERR_OK) {
+        if ($file->getError() === UPLOAD_ERR_OK) {
             $this->filesService->delete($this->documentRepository->findById((int) $id)->getFile());
             $path = $this->filesService->save($file, Document::PATH, true, $file->name);
             $document->setFile($path);

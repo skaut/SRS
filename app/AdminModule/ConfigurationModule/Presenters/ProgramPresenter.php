@@ -12,9 +12,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující nastavení programu.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ProgramPresenter extends ConfigurationBasePresenter
 {

@@ -19,8 +19,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro zobrazení harmonogramu místnosti.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class RoomScheduleGridControl extends Control
 {

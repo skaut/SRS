@@ -31,8 +31,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu plateb.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PaymentsGridControl extends Control
 {

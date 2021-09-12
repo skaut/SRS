@@ -15,9 +15,6 @@ use function array_map;
 
 /**
  * Třída spravující tagy dokumentů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class TagRepository extends AbstractRepository
 {
@@ -39,7 +36,7 @@ class TagRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<Tag>
+     * @return Collection<int, Tag>
      */
     public function findTagsByIds(array $ids): Collection
     {
@@ -53,7 +50,7 @@ class TagRepository extends AbstractRepository
     /**
      * Vrátí id tagů.
      *
-     * @param Collection<Tag> $tags
+     * @param Collection<int, Tag> $tags
      *
      * @return int[]
      */

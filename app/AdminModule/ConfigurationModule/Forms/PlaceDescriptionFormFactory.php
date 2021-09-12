@@ -18,8 +18,6 @@ use Throwable;
 
 /**
  * Formulář pro nastavení popisu cesty.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PlaceDescriptionFormFactory
 {

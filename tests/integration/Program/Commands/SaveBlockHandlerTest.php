@@ -556,9 +556,6 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         $this->assertNull($programApplication2);
         $programApplication3 = $this->programApplicationRepository->findByUserAndProgram($user3, $program);
         $this->assertNull($programApplication3);
-
-        $blockOld = clone $block;
-        $block->setCapacity(1);
     }
 
     /**

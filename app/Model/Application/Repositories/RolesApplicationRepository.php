@@ -10,9 +10,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Třída spravující přihlášky rolí.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class RolesApplicationRepository extends AbstractRepository
 {

@@ -11,8 +11,6 @@ use Nette\Application\AbortException;
 
 /**
  * Basepresenter pro MailingModule.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class MailingBasePresenter extends AdminBasePresenter
 {

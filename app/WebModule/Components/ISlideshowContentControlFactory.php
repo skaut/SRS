@@ -6,8 +6,6 @@ namespace App\WebModule\Components;
 
 /**
  * Factory komponenty se slideshow.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 interface ISlideshowContentControlFactory
 {

@@ -10,9 +10,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Třída spravující přihlášky podakcí.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SubeventsApplicationRepository extends AbstractRepository
 {

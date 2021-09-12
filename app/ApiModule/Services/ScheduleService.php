@@ -60,8 +60,6 @@ use const DATE_ISO8601;
 
 /**
  * Služba pro zpracování požadavků z API pro správu harmonogramu a zapisování programů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ScheduleService
 {

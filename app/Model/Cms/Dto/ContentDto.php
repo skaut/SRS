@@ -6,8 +6,6 @@ namespace App\Model\Cms\Dto;
 
 /**
  * DTO obsahu.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ContentDto
 {

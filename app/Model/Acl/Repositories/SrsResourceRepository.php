@@ -10,8 +10,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Třída spravující prostředky.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SrsResourceRepository extends AbstractRepository
 {

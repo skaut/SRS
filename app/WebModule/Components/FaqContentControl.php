@@ -16,9 +16,6 @@ use stdClass;
 
 /**
  * Komponenta s FAQ.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class FaqContentControl extends Control
 {

@@ -13,9 +13,6 @@ use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující dokumenty.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DocumentRepository extends AbstractRepository
 {
@@ -38,7 +35,7 @@ class DocumentRepository extends AbstractRepository
      * @param int[] $rolesIds pole id rolí
      * @param int[] $tagsIds
      *
-     * @return Collection<Document>
+     * @return Collection<int, Document>
      */
     public function findRolesAllowedByTagsOrderedByName(array $rolesIds, array $tagsIds): Collection
     {

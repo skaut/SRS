@@ -24,8 +24,6 @@ use function assert;
 
 /**
  * Třída spravující přihlášky programů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ProgramApplicationRepository extends AbstractRepository
 {
@@ -104,7 +102,7 @@ class ProgramApplicationRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<ProgramApplication>
+     * @return Collection<int, ProgramApplication>
      */
     private function findByUserAlternateAndBlock(User $user, Block $block): Collection
     {

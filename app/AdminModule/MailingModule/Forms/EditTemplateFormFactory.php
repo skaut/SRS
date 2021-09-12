@@ -14,8 +14,6 @@ use stdClass;
 
 /**
  * Formulář pro nastavení šablony automatického e-mailu.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class EditTemplateFormFactory
 {

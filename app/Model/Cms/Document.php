@@ -15,9 +15,6 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *
  * @ORM\Entity
  * @ORM\Table(name="document")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Document
 {
@@ -32,7 +29,7 @@ class Document
      *
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents", cascade={"persist"})
      *
-     * @var Collection<Tag>
+     * @var Collection<int, Tag>
      */
     protected Collection $tags;
 
@@ -75,7 +72,7 @@ class Document
     }
 
     /**
-     * @return Collection<Tag>
+     * @return Collection<int, Tag>
      */
     public function getTags(): Collection
     {
@@ -83,7 +80,7 @@ class Document
     }
 
     /**
-     * @param Collection<Tag> $tags
+     * @param Collection<int, Tag> $tags
      */
     public function setTags(Collection $tags): void
     {

@@ -21,9 +21,6 @@ use function file_get_contents;
 
 /**
  * API pro správu harmonogramu a zapisování programů.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SchedulePresenter extends ApiBasePresenter
 {

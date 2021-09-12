@@ -20,8 +20,6 @@ use function sprintf;
 
 /**
  * Služba pro správu vzdělávací skautIS akce.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SkautIsEventEducationService extends SkautIsEventService
 {
@@ -48,7 +46,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     }
 
     /**
-     * @param Collection<User> $users
+     * @param Collection<int, User> $users
      */
     public function insertParticipants(int $eventId, Collection $users, bool $accept = false): bool
     {

@@ -16,9 +16,6 @@ use Throwable;
 
 /**
  * Formulář pro vytvoření role.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class AddRoleFormFactory
 {

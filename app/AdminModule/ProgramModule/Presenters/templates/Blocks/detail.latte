@@ -53,9 +53,9 @@
             <div class="col-9">
                 {if $block->getMandatory() === $programMandatoryTypeVoluntary}
                     {_common.program_mandatory_type.voluntary}
-                {elseif $block->getMandatory() == $programMandatoryTypeMandatory}
+                {elseif $block->getMandatory() === $programMandatoryTypeMandatory}
                     {_common.program_mandatory_type.mandatory}
-                {elseif $block->getMandatory() == $programMandatoryTypeAutoRegistered}
+                {elseif $block->getMandatory() === $programMandatoryTypeAutoRegistered}
                     {_common.program_mandatory_type.auto_registered}
                 {/if}
             </div>
@@ -127,7 +127,7 @@
                             {$program->getAlternatesCount()}
                         </td>
                         <td class="text-right" style="white-space: nowrap; width: 1%;">
-                            {if $programId == $program->getId()}
+                            {if $programId === $program->getId()}
                                 <a class="btn btn-xs btn-warning ajax" n:href="showattendees! 0">
                                     {_admin.program.blocks.programs.action.hide_attendees_list}
                                 </a>
@@ -142,7 +142,7 @@
                             </a>
                         </td>
                     </tr>
-                    <tr style="background-color: #337ab7" class="program-attendees" n:if="$programId == $program->getId()">
+                    <tr style="background-color: #337ab7" class="program-attendees" n:if="$programId === $program->getId()">
                         <td colspan="100%" style="padding: 5px">
                             {control programAttendeesGrid}
                         </td>

@@ -31,9 +31,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="user")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class User
 {
@@ -223,7 +220,7 @@ class User
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="users", cascade={"persist"})
      *
-     * @var Collection<Role>
+     * @var Collection<int, Role>
      */
     protected Collection $roles;
 
@@ -232,7 +229,7 @@ class User
      *
      * @ORM\OneToMany(targetEntity="\App\Model\Application\Application", mappedBy="user", cascade={"persist"})
      *
-     * @var Collection<Application>
+     * @var Collection<int, Application>
      */
     protected Collection $applications;
 
@@ -241,7 +238,7 @@ class User
      *
      * @ORM\OneToMany(targetEntity="\App\Model\Program\ProgramApplication", mappedBy="user", cascade={"persist"})
      *
-     * @var Collection<ProgramApplication>
+     * @var Collection<int, ProgramApplication>
      */
     protected Collection $programApplications;
 
@@ -250,7 +247,7 @@ class User
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block", mappedBy="lectors", cascade={"persist"})
      *
-     * @var Collection<Block>
+     * @var Collection<int, Block>
      */
     protected Collection $lecturersBlocks;
 
@@ -294,7 +291,7 @@ class User
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block")
      *
-     * @var Collection<Block>
+     * @var Collection<int, Block>
      */
     protected Collection $notRegisteredMandatoryBlocks;
 
@@ -310,7 +307,7 @@ class User
      *
      * @ORM\OneToMany(targetEntity="\App\Model\CustomInput\CustomInputValue", mappedBy="user", cascade={"persist"})
      *
-     * @var Collection<CustomInputValue>
+     * @var Collection<int, CustomInputValue>
      */
     protected Collection $customInputValues;
 
@@ -652,7 +649,7 @@ class User
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRoles(): Collection
     {
@@ -660,7 +657,7 @@ class User
     }
 
     /**
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      */
     public function setRoles(Collection $roles): void
     {
@@ -749,7 +746,7 @@ class User
     }
 
     /**
-     * @return Collection<Application>
+     * @return Collection<int, Application>
      */
     public function getApplications(): Collection
     {
@@ -766,7 +763,7 @@ class User
     /**
      * Vrátí platné přihlášky.
      *
-     * @return Collection<Application>
+     * @return Collection<int, Application>
      */
     public function getValidApplications(): Collection
     {
@@ -780,7 +777,7 @@ class User
     /**
      * Vrátí nezrušené přihlášky.
      *
-     * @return Collection<Application>
+     * @return Collection<int, Application>
      */
     public function getNotCanceledApplications(): Collection
     {
@@ -792,7 +789,7 @@ class User
     /**
      * Vrátí nezrušené přihlášky na rolí.
      *
-     * @return Collection<RolesApplication>
+     * @return Collection<int, RolesApplication>
      */
     public function getNotCanceledRolesApplications(): Collection
     {
@@ -804,7 +801,7 @@ class User
     /**
      * Vrátí nezrušené přihlášky na podakce.
      *
-     * @return Collection<SubeventsApplication>
+     * @return Collection<int, SubeventsApplication>
      */
     public function getNotCanceledSubeventsApplications(): Collection
     {
@@ -816,7 +813,7 @@ class User
     /**
      * Vrácí zaplacené přihlášky.
      *
-     * @return Collection<Application>
+     * @return Collection<int, Application>
      */
     public function getPaidApplications(): Collection
     {
@@ -832,7 +829,7 @@ class User
     /**
      * Vrátí přihlášky, které jsou zaplacené nebo zdarma.
      *
-     * @return Collection<Application>
+     * @return Collection<int, Application>
      */
     public function getPaidAndFreeApplications(): Collection
     {
@@ -846,7 +843,7 @@ class User
     /**
      * Vrátí přihlášky čekající na platbu.
      *
-     * @return Collection<Application>
+     * @return Collection<int, Application>
      */
     public function getWaitingForPaymentApplications(): Collection
     {
@@ -862,7 +859,7 @@ class User
     /**
      * Vrátí přihlášky rolí čekající na platbu.
      *
-     * @return Collection<RolesApplication>
+     * @return Collection<int, RolesApplication>
      */
     public function getWaitingForPaymentRolesApplications(): Collection
     {
@@ -886,7 +883,7 @@ class User
     /**
      * Vrátí přihlášky podakcí čekající na platbu.
      *
-     * @return Collection<SubeventsApplication>
+     * @return Collection<int, SubeventsApplication>
      */
     public function getWaitingForPaymentSubeventsApplications(): Collection
     {
@@ -922,7 +919,7 @@ class User
     }
 
     /**
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function getLecturersBlocks(): Collection
     {
@@ -1004,7 +1001,7 @@ class User
     }
 
     /**
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function getNotRegisteredMandatoryBlocks(): Collection
     {
@@ -1019,7 +1016,7 @@ class User
     }
 
     /**
-     * @param Collection<Block> $notRegisteredMandatoryBlocks
+     * @param Collection<int, Block> $notRegisteredMandatoryBlocks
      */
     public function setNotRegisteredMandatoryBlocks(Collection $notRegisteredMandatoryBlocks): void
     {
@@ -1037,7 +1034,7 @@ class User
     }
 
     /**
-     * @return Collection<CustomInputValue>
+     * @return Collection<int, CustomInputValue>
      */
     public function getCustomInputValues(): Collection
     {
@@ -1099,7 +1096,7 @@ class User
     /**
      * Vrací podakce uživatele.
      *
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function getSubevents(): Collection
     {

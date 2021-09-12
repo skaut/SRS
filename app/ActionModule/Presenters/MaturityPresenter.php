@@ -27,9 +27,6 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
  * Presenter obsluhující kontrolu splatnosti přihlášek.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class MaturityPresenter extends ActionBasePresenter
 {

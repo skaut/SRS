@@ -11,9 +11,6 @@ use App\AdminModule\CmsModule\Components\IDocumentTagsGridControlFactory;
 
 /**
  * Presenter starající se o správu dokumentů.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class DocumentsPresenter extends CmsBasePresenter
 {

@@ -66,10 +66,6 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Formulář přihlášky.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class ApplicationFormFactory
 {
@@ -298,7 +294,7 @@ class ApplicationFormFactory
                     assert($customInputValue instanceof CustomFileValue);
                     $file = $values->$customInputId;
                     assert($file instanceof FileUpload);
-                    if ($file->getError() == UPLOAD_ERR_OK) {
+                    if ($file->getError() === UPLOAD_ERR_OK) {
                         $path = $this->filesService->save($file, CustomFile::PATH, true, $file->name);
                         $customInputValue->setValue($path);
                     }

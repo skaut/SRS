@@ -32,8 +32,6 @@ use function str_replace;
  *     "roles_application" = "RolesApplication",
  *     "subevents_application" = "SubeventsApplication"
  * })
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class Application
 {
@@ -72,7 +70,7 @@ abstract class Application
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
      *
-     * @var Collection<Role>
+     * @var Collection<int, Role>
      */
     protected Collection $roles;
 
@@ -81,7 +79,7 @@ abstract class Application
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
      *
-     * @var Collection<Subevent>
+     * @var Collection<int, Subevent>
      */
     protected Collection $subevents;
 
@@ -205,7 +203,7 @@ abstract class Application
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRoles(): Collection
     {
@@ -223,7 +221,7 @@ abstract class Application
     }
 
     /**
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function getSubevents(): Collection
     {
@@ -343,7 +341,7 @@ abstract class Application
 
     public function setPayment(?Payment $payment): void
     {
-        if ($this->payment != null) {
+        if ($this->payment !== null) {
             $this->payment->removePairedApplication($this);
         }
 
@@ -416,12 +414,12 @@ abstract class Application
 
     public function isPaid(): bool
     {
-        return $this->state == ApplicationState::PAID || $this->getState() == ApplicationState::PAID_FREE;
+        return $this->state === ApplicationState::PAID || $this->getState() === ApplicationState::PAID_FREE;
     }
 
     public function isWaitingForPayment(): bool
     {
-        return $this->state == ApplicationState::WAITING_FOR_PAYMENT;
+        return $this->state === ApplicationState::WAITING_FOR_PAYMENT;
     }
 
     public function getPaymentQr(string $accountNumber, string $message): string

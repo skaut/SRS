@@ -14,9 +14,6 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *
  * @ORM\Entity
  * @ORM\Table(name="resource")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SrsResource
 {
@@ -85,7 +82,7 @@ class SrsResource
      *
      * @ORM\OneToMany(targetEntity="Permission", mappedBy="resource", cascade={"persist"})
      *
-     * @var Collection<Permission>
+     * @var Collection<int, Permission>
      */
     protected Collection $permissions;
 
@@ -106,7 +103,7 @@ class SrsResource
     }
 
     /**
-     * @return Collection<Permission>
+     * @return Collection<int, Permission>
      */
     public function getPermissions(): Collection
     {

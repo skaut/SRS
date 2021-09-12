@@ -22,10 +22,6 @@ use const PHP_INT_MAX;
 
 /**
  * Třída spravující stránky.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PageRepository extends AbstractRepository
 {
@@ -111,7 +107,7 @@ class PageRepository extends AbstractRepository
     /**
      * Vrací id podle stránek.
      *
-     * @param Collection<Page> $pages
+     * @param Collection<int, Page> $pages
      *
      * @return int[]
      */
@@ -127,7 +123,7 @@ class PageRepository extends AbstractRepository
      *
      * @param string[] $slugs
      *
-     * @return Collection<Page>
+     * @return Collection<int, Page>
      */
     public function findPagesBySlugs(array $slugs): Collection
     {
@@ -141,7 +137,7 @@ class PageRepository extends AbstractRepository
     /**
      * Vrací cesty podle stránek.
      *
-     * @param Collection<Page> $pages
+     * @param Collection<int, Page> $pages
      *
      * @return string[]
      */

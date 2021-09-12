@@ -13,9 +13,6 @@ use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující mapové body.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PlacePointRepository extends AbstractRepository
 {
@@ -25,7 +22,7 @@ class PlacePointRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<PlacePoint>
+     * @return Collection<int, PlacePoint>
      */
     public function findAll(): Collection
     {

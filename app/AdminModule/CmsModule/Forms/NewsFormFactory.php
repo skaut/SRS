@@ -16,9 +16,6 @@ use stdClass;
 
 /**
  * Formulář pro úpravu aktuality.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class NewsFormFactory
 {

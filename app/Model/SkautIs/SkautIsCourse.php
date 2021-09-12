@@ -12,8 +12,6 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *
  * @ORM\Entity
  * @ORM\Table(name="skaut_is_course")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SkautIsCourse
 {

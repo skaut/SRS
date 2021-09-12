@@ -13,9 +13,6 @@ use App\Model\Cms\Repositories\PageRepository;
 
 /**
  * Presenter starající se o správu stránek.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PagesPresenter extends CmsBasePresenter
 {

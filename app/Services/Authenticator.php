@@ -24,10 +24,6 @@ use function assert;
 
 /**
  * Služba starající se o autentizaci uživatelů.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class Authenticator implements IAuthenticator
 {

@@ -16,9 +16,6 @@ use function array_map;
 
 /**
  * Třída spravující skautIS kurzy.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SkautIsCourseRepository extends AbstractRepository
 {
@@ -28,7 +25,7 @@ class SkautIsCourseRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<SkautIsCourse>
+     * @return Collection<int, SkautIsCourse>
      */
     public function findAll(): Collection
     {
@@ -84,7 +81,7 @@ class SkautIsCourseRepository extends AbstractRepository
     /**
      * Vrací id skautIS kurzů.
      *
-     * @param Collection<SkautIsCourse> $skautIsCourses
+     * @param Collection<int, SkautIsCourse> $skautIsCourses
      *
      * @return int[]
      */
@@ -100,7 +97,7 @@ class SkautIsCourseRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<SkautIsCourse>
+     * @return Collection<int, SkautIsCourse>
      */
     public function findSkautIsCoursesByIds(array $ids): Collection
     {

@@ -11,8 +11,6 @@ use Ublaboo\Mailing\IMessageData;
 
 /**
  * Třída pro vytváření hromadných e-mailů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SrsMail extends AbstractMail implements IComposableMail
 {

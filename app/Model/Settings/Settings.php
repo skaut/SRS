@@ -12,9 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="settings")
  * @ORM\Cache(usage="NONSTRICT_READ_WRITE")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Settings
 {

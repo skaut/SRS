@@ -41,9 +41,6 @@ use Throwable;
 
 /**
  * Presenter obshlující dynamicky vytvářené stránky pomocí administrace.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PagePresenter extends WebBasePresenter
 {

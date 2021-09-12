@@ -6,8 +6,6 @@ namespace App\WebModule\Components;
 
 /**
  * Factory komponenty s kontaktním formulářem.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 interface IContactFormContentControlFactory
 {

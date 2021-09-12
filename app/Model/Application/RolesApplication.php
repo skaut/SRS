@@ -12,15 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
  * Entita přihláška rolí.
  *
  * @ORM\Entity
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class RolesApplication extends Application
 {
     protected string $type = Application::ROLES;
 
     /**
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      */
     public function setRoles(Collection $roles): void
     {

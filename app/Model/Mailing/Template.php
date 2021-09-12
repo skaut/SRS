@@ -14,8 +14,6 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *
  * @ORM\Entity
  * @ORM\Table(name="mail_template")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Template
 {
@@ -123,7 +121,7 @@ class Template
      *
      * @ORM\ManyToMany(targetEntity="TemplateVariable")
      *
-     * @var Collection<TemplateVariable>
+     * @var Collection<int, TemplateVariable>
      */
     protected Collection $variables;
 
@@ -185,7 +183,7 @@ class Template
     }
 
     /**
-     * @return Collection<TemplateVariable>
+     * @return Collection<int, TemplateVariable>
      */
     public function getVariables(): Collection
     {

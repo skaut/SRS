@@ -11,9 +11,6 @@ use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující šablony automatických e-mailů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class TemplateRepository extends AbstractRepository
 {

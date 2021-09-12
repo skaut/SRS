@@ -20,9 +20,6 @@ use function array_map;
 
 /**
  * Třída spravující podakce.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class SubeventRepository extends AbstractRepository
 {
@@ -32,7 +29,7 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function findAll(): Collection
     {
@@ -75,7 +72,7 @@ class SubeventRepository extends AbstractRepository
     /**
      * Vrací podakce splňující podmínku seřazené podle názvu.
      *
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function findFilteredSubevents(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null): Collection
     {
@@ -139,7 +136,7 @@ class SubeventRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function findSubeventsByIds(array $ids): Collection
     {
@@ -153,7 +150,7 @@ class SubeventRepository extends AbstractRepository
     /**
      * Vrací id podakcí.
      *
-     * @param Collection<Subevent> $subevents
+     * @param Collection<int, Subevent> $subevents
      *
      * @return int[]
      */

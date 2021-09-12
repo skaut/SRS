@@ -18,9 +18,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="block")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Block
 {
@@ -39,7 +36,7 @@ class Block
      * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist"})
      * @ORM\OrderBy({"start" = "ASC"})
      *
-     * @var Collection<Program>
+     * @var Collection<int, Program>
      */
     protected Collection $programs;
 
@@ -48,7 +45,7 @@ class Block
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks", cascade={"persist"})
      *
-     * @var Collection<User>
+     * @var Collection<int, User>
      */
     protected Collection $lectors;
 
@@ -147,7 +144,7 @@ class Block
     }
 
     /**
-     * @return Collection<Program>
+     * @return Collection<int, Program>
      */
     public function getPrograms(): Collection
     {
@@ -171,7 +168,7 @@ class Block
     }
 
     /**
-     * @return Collection<User>
+     * @return Collection<int, User>
      */
     public function getLectors(): Collection
     {
@@ -186,7 +183,7 @@ class Block
     }
 
     /**
-     * @param Collection<User> $lectors
+     * @param Collection<int, User> $lectors
      */
     public function setLectors(Collection $lectors): void
     {

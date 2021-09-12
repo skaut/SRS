@@ -27,9 +27,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující profil uživatele.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ProfilePresenter extends WebBasePresenter
 {

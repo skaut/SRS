@@ -10,9 +10,6 @@ use stdClass;
 
 /**
  * Presenter obsluhující rozesílání e-mailu vytvořeného ve formuláři.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SendPresenter extends MailingBasePresenter
 {

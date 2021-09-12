@@ -11,8 +11,6 @@ use Nette\Application\AbortException;
 
 /**
  * Basepresenter pro ProgramModule.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class ProgramBasePresenter extends AdminBasePresenter
 {

@@ -28,8 +28,6 @@ use function implode;
  *     "custom_date" = "CustomDate",
  *     "custom_datetime" = "CustomDateTime"
  * })
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class CustomInput
 {
@@ -112,7 +110,7 @@ abstract class CustomInput
      *
      * @ORM\OneToMany(targetEntity="CustomInputValue", mappedBy="input", cascade={"persist"})
      *
-     * @var Collection<CustomInputValue>
+     * @var Collection<int, CustomInputValue>
      */
     protected Collection $customInputValues;
 
@@ -121,7 +119,7 @@ abstract class CustomInput
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
      *
-     * @var Collection<Role>
+     * @var Collection<int, Role>
      */
     protected Collection $roles;
 
@@ -171,7 +169,7 @@ abstract class CustomInput
     }
 
     /**
-     * @return Collection<CustomInputValue>
+     * @return Collection<int, CustomInputValue>
      */
     public function getCustomInputValues(): Collection
     {
@@ -186,7 +184,7 @@ abstract class CustomInput
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRoles(): Collection
     {
@@ -194,7 +192,7 @@ abstract class CustomInput
     }
 
     /**
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      */
     public function setRoles(Collection $roles): void
     {

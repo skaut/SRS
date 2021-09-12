@@ -21,9 +21,6 @@ use Throwable;
 
 /**
  * Komponenta s výběrem programů.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ProgramsContentControl extends Control
 {

@@ -13,8 +13,6 @@ use function assert;
  *
  * @ORM\Entity
  * @ORM\Table(name="custom_select_value")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CustomSelectValue extends CustomInputValue
 {

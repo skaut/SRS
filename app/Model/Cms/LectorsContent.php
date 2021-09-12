@@ -11,8 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity
  * @ORM\Table(name="lectors_content")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class LectorsContent extends Content implements IContent
 {

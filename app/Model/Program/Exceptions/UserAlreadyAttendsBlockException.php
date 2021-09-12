@@ -6,9 +6,6 @@ namespace App\Model\Program\Exceptions;
 
 use Exception;
 
-/**
- * @author Jan Staněk <jan.stanek@skaut.cz>
- */
 class UserAlreadyAttendsBlockException extends Exception
 {
 }

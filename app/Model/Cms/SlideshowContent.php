@@ -27,8 +27,6 @@ use const UPLOAD_ERR_OK;
  *
  * @ORM\Entity
  * @ORM\Table(name="slideshow_content")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SlideshowContent extends Content implements IContent
 {
@@ -111,7 +109,7 @@ class SlideshowContent extends Content implements IContent
 
             foreach ($values->images as $image) {
                 assert($image instanceof FileUpload);
-                if ($image->getError() == UPLOAD_ERR_OK) {
+                if ($image->getError() === UPLOAD_ERR_OK) {
                     $this->images[] = $this->filesService->save($image, 'images', true, $image->name);
                 }
             }

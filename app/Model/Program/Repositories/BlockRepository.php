@@ -23,10 +23,6 @@ use function assert;
 
 /**
  * Třída spravující programové bloky.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class BlockRepository extends AbstractRepository
 {
@@ -36,7 +32,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function findAll(): Collection
     {
@@ -117,7 +113,7 @@ class BlockRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function findBlocksByIds(array $ids): Collection
     {
@@ -128,7 +124,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function findUserAttends(User $user): Collection
     {
@@ -145,7 +141,7 @@ class BlockRepository extends AbstractRepository
     /**
      * Vrací bloky povolené pro uživatele.
      *
-     * @return Collection<Block>
+     * @return Collection<int, Block>
      */
     public function findUserAllowed(User $user, bool $paidOnly): Collection
     {

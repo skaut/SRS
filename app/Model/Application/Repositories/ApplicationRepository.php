@@ -18,8 +18,6 @@ use function array_map;
 
 /**
  * Třída spravující přihlášky.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ApplicationRepository extends AbstractRepository
 {
@@ -39,7 +37,7 @@ class ApplicationRepository extends AbstractRepository
     /**
      * Vrací přihlášky podle id, které mají společné všechny verze přihlášky.
      *
-     * @return Collection<Application>
+     * @return Collection<int, Application>
      */
     public function findByApplicationId(int $id): Collection
     {
@@ -49,7 +47,7 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Application>
+     * @return Collection<int, Application>
      */
     public function findValid(): Collection
     {
@@ -102,7 +100,7 @@ class ApplicationRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<Application>
+     * @return Collection<int, Application>
      */
     public function findApplicationsByIds(array $ids): Collection
     {
@@ -115,7 +113,7 @@ class ApplicationRepository extends AbstractRepository
     /**
      * Vrací id přihlášek.
      *
-     * @param Collection<Application> $applications
+     * @param Collection<int, Application> $applications
      *
      * @return int[]
      */
@@ -127,9 +125,9 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * @param Collection<Application> $pairedApplications
+     * @param Collection<int, Application> $pairedApplications
      *
-     * @return Collection<Application>
+     * @return Collection<int, Application>
      */
     public function findWaitingForPaymentOrPairedApplications(Collection $pairedApplications): Collection
     {
@@ -160,7 +158,7 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * @param Collection<Application> $pairedApplications
+     * @param Collection<int, Application> $pairedApplications
      *
      * @return string[]
      */

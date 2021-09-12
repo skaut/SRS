@@ -26,9 +26,6 @@ use const UPLOAD_ERR_OK;
  *
  * @ORM\Entity
  * @ORM\Table(name="image_content")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ImageContent extends Content implements IContent
 {
@@ -211,7 +208,7 @@ class ImageContent extends Content implements IContent
 
         $imageData = null;
 
-        if ($file->getError() == UPLOAD_ERR_OK) {
+        if ($file->getError() === UPLOAD_ERR_OK) {
             if ($this->image !== null) {
                 $this->filesService->delete($this->image);
             }

@@ -7,7 +7,7 @@
         <div class="collapse navbar-collapse" id="main-navbar">
             <ul class="navbar-nav mr-auto">
                 {foreach $pages as $item}
-                    {if $item->getSlug() == '/'}
+                    {if $item->getSlug() === '/'}
                         <li n:class="nav-item, $presenter->isLinkCurrent(':Web:Page:default', ['slug' => null]) ? active">
                             <a class="nav-link" href="{plink :Web:Page:default}">{$item->getName()}</a>
                         </li>

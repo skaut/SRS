@@ -18,8 +18,6 @@ use function number_format;
 
 /**
  * Komponenta pro správu mapových bodů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PlacePointsGridControl extends Control
 {

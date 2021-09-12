@@ -11,8 +11,6 @@ use App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory;
 
 /**
  * Presenter obsluhující správu slev.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class DiscountsPresenter extends ConfigurationBasePresenter
 {

@@ -16,8 +16,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující nastavení přihlášky.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ApplicationPresenter extends ConfigurationBasePresenter
 {

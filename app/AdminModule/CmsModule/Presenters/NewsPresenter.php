@@ -13,9 +13,6 @@ use stdClass;
 
 /**
  * Presenter starající se o správu aktualit.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class NewsPresenter extends CmsBasePresenter
 {

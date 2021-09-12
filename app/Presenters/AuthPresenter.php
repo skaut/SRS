@@ -26,9 +26,6 @@ use function strpos;
 
 /**
  * Presenter obsluhující přihlašování a odhlašování pomocí skautIS.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class AuthPresenter extends BasePresenter
 {

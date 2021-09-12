@@ -18,8 +18,6 @@ use Throwable;
 
 /**
  * Komponenta s kontaktním formulářem.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ContactFormContentControl extends Control
 {

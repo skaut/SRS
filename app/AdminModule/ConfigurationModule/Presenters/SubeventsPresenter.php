@@ -16,8 +16,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující správu podakcí.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SubeventsPresenter extends ConfigurationBasePresenter
 {

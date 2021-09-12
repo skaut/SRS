@@ -25,8 +25,6 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro vytvoření externího lektora.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class AddLectorFormFactory
 {
@@ -144,7 +142,7 @@ class AddLectorFormFactory
 
         $photo = $values->photo;
         assert($photo instanceof FileUpload);
-        if ($photo->getError() == UPLOAD_ERR_OK) {
+        if ($photo->getError() === UPLOAD_ERR_OK) {
             $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
             $photoName      = 'ext_' . $user->getId() . $photoExtension;
 

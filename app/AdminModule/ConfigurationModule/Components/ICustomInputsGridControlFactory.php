@@ -6,8 +6,6 @@ namespace App\AdminModule\ConfigurationModule\Components;
 
 /**
  * Factory komponenty pro správu vlastních polí přihlášky.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 interface ICustomInputsGridControlFactory
 {

@@ -11,8 +11,6 @@ use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
 
 /**
  * BaseFormFactory pro WebModule.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class BaseFormFactory
 {

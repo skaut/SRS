@@ -16,8 +16,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
  * Komponenta pro správu častých otázek.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class FaqGridControl extends Control
 {

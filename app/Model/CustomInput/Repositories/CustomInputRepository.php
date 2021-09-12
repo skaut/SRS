@@ -18,9 +18,6 @@ use const PHP_INT_MAX;
 
 /**
  * Třída spravující vlastní pole přihlášky.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class CustomInputRepository extends AbstractRepository
 {
@@ -30,7 +27,7 @@ class CustomInputRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<CustomInput>
+     * @return Collection<int, CustomInput>
      */
     public function findAll(): Collection
     {
@@ -63,7 +60,7 @@ class CustomInputRepository extends AbstractRepository
     /**
      * Vrací pole podle rolí uživatele, seřazené podle pozice.
      *
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      *
      * @return CustomInput[]
      */

@@ -11,8 +11,6 @@ use Nette\Application\AbortException;
 
 /**
  * Basepresenter pro PaymentsModule.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class PaymentsBasePresenter extends AdminBasePresenter
 {

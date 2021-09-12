@@ -10,9 +10,6 @@ use Nette\Application\UI\Control;
 
 /**
  * Komponenta s aktualitami.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class NewsContentControl extends Control
 {

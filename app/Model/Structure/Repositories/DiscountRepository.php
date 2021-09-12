@@ -13,9 +13,6 @@ use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující slevy.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class DiscountRepository extends AbstractRepository
 {
@@ -25,7 +22,7 @@ class DiscountRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Discount>
+     * @return Collection<int, Discount>
      */
     public function findAll(): Collection
     {

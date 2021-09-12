@@ -24,8 +24,6 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *     "custom_date_value" = "CustomDateValue",
  *     "custom_datetime_value" = "CustomDateTimeValue"
  * })
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class CustomInputValue
 {

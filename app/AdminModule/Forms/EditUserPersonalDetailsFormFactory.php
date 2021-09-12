@@ -23,8 +23,6 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro úpravu osobních údajů externích lektorů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class EditUserPersonalDetailsFormFactory
 {
@@ -151,7 +149,7 @@ class EditUserPersonalDetailsFormFactory
         $this->user->setPostcode($values->postcode);
 
         $photo = $values->photo;
-        if ($photo->getError() == UPLOAD_ERR_OK) {
+        if ($photo->getError() === UPLOAD_ERR_OK) {
             $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
             $photoName      = 'ext_' . $this->user->getId() . $photoExtension;
 

@@ -20,8 +20,6 @@ use function unlink;
 
 /**
  * Služba pro správu nahraných souborů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class FilesService
 {

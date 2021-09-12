@@ -26,8 +26,6 @@ use function assert;
 
 /**
  * Formulár pro nastavení párování plateb.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class BankFormFactory
 {

@@ -29,9 +29,6 @@ use function assert;
 
 /**
  * Formulář pro nastavení programu.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ProgramFormFactory
 {

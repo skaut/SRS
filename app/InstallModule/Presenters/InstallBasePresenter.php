@@ -11,8 +11,6 @@ use WebLoader\Nette\JavaScriptLoader;
 
 /**
  * BasePresenter pro InstallModule.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class InstallBasePresenter extends BasePresenter
 {

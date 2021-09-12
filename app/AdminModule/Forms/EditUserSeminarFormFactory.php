@@ -57,10 +57,6 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro úpravu podrobností o účasti uživatele na semináři.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class EditUserSeminarFormFactory
 {
@@ -337,7 +333,7 @@ class EditUserSeminarFormFactory
                         $oldValue = $customInputValue->getValue();
                         $newValue = $values->$customInputId;
                         assert($newValue instanceof FileUpload);
-                        if ($newValue->getError() == UPLOAD_ERR_OK) {
+                        if ($newValue->getError() === UPLOAD_ERR_OK) {
                             if ($oldValue !== null) {
                                 $this->filesService->delete($oldValue);
                             }

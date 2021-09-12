@@ -32,8 +32,6 @@ use function str_replace;
 
 /**
  * Služba pro rozesílání e-mailů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class MailService implements IMailService
 {
@@ -78,10 +76,10 @@ class MailService implements IMailService
     /**
      * Rozešle e-mail.
      *
-     * @param Collection<Role>|null     $recipientsRoles
-     * @param Collection<Subevent>|null $recipientsSubevents
-     * @param Collection<User>|null     $recipientsUsers
-     * @param Collection<string>|null   $recipientEmails
+     * @param Collection<int, Role>|null     $recipientsRoles
+     * @param Collection<int, Subevent>|null $recipientsSubevents
+     * @param Collection<int, User>|null     $recipientsUsers
+     * @param Collection<int, string>|null   $recipientEmails
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -157,9 +155,9 @@ class MailService implements IMailService
     /**
      * Rozešle e-mail podle šablony.
      *
-     * @param Collection<User>|null   $recipientsUsers
-     * @param Collection<string>|null $recipientsEmails
-     * @param string[]                $parameters
+     * @param Collection<int, User>|null   $recipientsUsers
+     * @param Collection<int, string>|null $recipientsEmails
+     * @param string[]                     $parameters
      *
      * @throws MailingMailCreationException
      * @throws SettingsItemNotFoundException

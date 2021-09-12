@@ -21,9 +21,6 @@ use function unlink;
 
 /**
  * Příkaz pro vymazání cache.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ClearCacheCommand extends Command
 {

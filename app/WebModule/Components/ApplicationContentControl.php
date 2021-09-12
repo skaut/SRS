@@ -24,9 +24,6 @@ use Throwable;
 
 /**
  * Komponenta s přihláškou.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ApplicationContentControl extends Control
 {

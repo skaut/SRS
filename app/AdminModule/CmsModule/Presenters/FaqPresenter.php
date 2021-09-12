@@ -13,9 +13,6 @@ use stdClass;
 
 /**
  * Presenter starající se o správu častých otázek.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class FaqPresenter extends CmsBasePresenter
 {

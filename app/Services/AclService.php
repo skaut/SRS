@@ -23,9 +23,6 @@ use function array_map;
 
 /**
  * Služba pro správu rolí.
- *
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class AclService
 {
@@ -267,7 +264,7 @@ class AclService
     /**
      * Vrací názvy všech oprávnění.
      *
-     * @return Collection<string[]>
+     * @return Collection<int, string[]>
      *
      * @throws Throwable
      */

@@ -19,9 +19,6 @@ use Throwable;
 
 /**
  * Služba pro správu plateb.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class BankService
 {

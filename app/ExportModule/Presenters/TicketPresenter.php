@@ -22,8 +22,6 @@ use function random_bytes;
 
 /**
  * Presenter pro generování vstupenek.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class TicketPresenter extends ExportBasePresenter
 {

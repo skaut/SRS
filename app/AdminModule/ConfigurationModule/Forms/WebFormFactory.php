@@ -29,9 +29,6 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Formulář pro nastavení webové prezentace.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class WebFormFactory
 {
@@ -119,7 +116,7 @@ class WebFormFactory
     {
         $logo = $values->logo;
         assert($logo instanceof FileUpload);
-        if ($logo->getError() == UPLOAD_ERR_OK) {
+        if ($logo->getError() === UPLOAD_ERR_OK) {
             $this->filesService->delete($this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO)));
             $path = $this->filesService->save($logo, 'logo', false, $logo->name);
             $this->filesService->resizeImage($path, null, 100);

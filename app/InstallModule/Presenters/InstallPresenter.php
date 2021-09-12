@@ -30,10 +30,6 @@ use Tracy\ILogger;
 
 /**
  * Obsluhuje instalačního průvodce.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class InstallPresenter extends InstallBasePresenter
 {

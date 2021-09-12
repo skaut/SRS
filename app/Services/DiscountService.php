@@ -17,8 +17,6 @@ use function is_numeric;
 
 /**
  * Služba pro správu slev.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class DiscountService
 {

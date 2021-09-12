@@ -25,8 +25,6 @@ use function assert;
  *
  * @ORM\Entity
  * @ORM\Table(name="capacities_content")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CapacitiesContent extends Content implements IContent
 {
@@ -37,7 +35,7 @@ class CapacitiesContent extends Content implements IContent
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
      *
-     * @var Collection<Role>
+     * @var Collection<int, Role>
      */
     protected Collection $roles;
 
@@ -65,7 +63,7 @@ class CapacitiesContent extends Content implements IContent
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRoles(): Collection
     {
@@ -73,7 +71,7 @@ class CapacitiesContent extends Content implements IContent
     }
 
     /**
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      */
     public function setRoles(Collection $roles): void
     {

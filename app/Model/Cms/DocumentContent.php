@@ -23,9 +23,6 @@ use function assert;
  *
  * @ORM\Entity
  * @ORM\Table(name="document_content")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class DocumentContent extends Content implements IContent
 {
@@ -36,7 +33,7 @@ class DocumentContent extends Content implements IContent
      *
      * @ORM\ManyToMany(targetEntity="Tag")
      *
-     * @var Collection<Tag>
+     * @var Collection<int, Tag>
      */
     protected Collection $tags;
 
@@ -57,7 +54,7 @@ class DocumentContent extends Content implements IContent
     }
 
     /**
-     * @return Collection<Tag>
+     * @return Collection<int, Tag>
      */
     public function getTags(): Collection
     {
@@ -65,7 +62,7 @@ class DocumentContent extends Content implements IContent
     }
 
     /**
-     * @param Collection<Tag> $tags
+     * @param Collection<int, Tag> $tags
      */
     public function setTags(Collection $tags): void
     {

@@ -13,8 +13,6 @@ use stdClass;
 
 /**
  * Presenter obsluhující nastavení šablon automatických e-mailů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class TemplatesPresenter extends MailingBasePresenter
 {

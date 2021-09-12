@@ -11,8 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity
  * @ORM\Table(name="place_content")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PlaceContent extends Content implements IContent
 {

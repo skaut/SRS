@@ -20,9 +20,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující nastavení platby a dokladů.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PaymentPresenter extends ConfigurationBasePresenter
 {

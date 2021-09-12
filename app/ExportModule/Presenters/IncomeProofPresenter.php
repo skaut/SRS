@@ -30,8 +30,6 @@ use function random_bytes;
 
 /**
  * Presenter pro generování dokladů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class IncomeProofPresenter extends ExportBasePresenter
 {
@@ -118,7 +116,7 @@ class IncomeProofPresenter extends ExportBasePresenter
     }
 
     /**
-     * @param Collection<Application> $applications
+     * @param Collection<int, Application> $applications
      *
      * @throws AbortException
      * @throws SettingsItemNotFoundException

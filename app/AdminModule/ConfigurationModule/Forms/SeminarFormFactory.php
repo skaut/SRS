@@ -28,9 +28,6 @@ use function assert;
 
 /**
  * Formulář pro nastavení semináře.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SeminarFormFactory
 {

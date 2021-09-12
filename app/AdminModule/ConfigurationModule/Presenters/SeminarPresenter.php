@@ -12,9 +12,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující nastavení semináře.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SeminarPresenter extends ConfigurationBasePresenter
 {

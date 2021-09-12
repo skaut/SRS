@@ -12,15 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
  * Entita přihláška podakcí.
  *
  * @ORM\Entity
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SubeventsApplication extends Application
 {
     protected string $type = Application::SUBEVENTS;
 
     /**
-     * @param Collection<Subevent> $subevents
+     * @param Collection<int, Subevent> $subevents
      */
     public function setSubevents(Collection $subevents): void
     {

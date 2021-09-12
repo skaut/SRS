@@ -14,8 +14,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="custom_select")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CustomSelect extends CustomInput
 {

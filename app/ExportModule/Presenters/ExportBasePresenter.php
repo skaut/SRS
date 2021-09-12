@@ -9,8 +9,6 @@ use WebLoader\Nette\CssLoader;
 
 /**
  * BasePresenter pro ExportModule.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class ExportBasePresenter extends BasePresenter
 {

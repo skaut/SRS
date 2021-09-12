@@ -10,8 +10,6 @@ use Nette\Application\UI\Control;
 
 /**
  * Komponenta s kapacitami rolí.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CapacitiesContentControl extends Control
 {

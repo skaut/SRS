@@ -21,8 +21,6 @@ use Throwable;
 
 /**
  * Formulář pro nastavení přihlášky.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ApplicationFormFactory
 {

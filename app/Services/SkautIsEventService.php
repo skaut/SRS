@@ -15,8 +15,6 @@ use Tracy\ILogger;
 
 /**
  * Služba pro správu skautIS akce.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 abstract class SkautIsEventService
 {
@@ -37,8 +35,8 @@ abstract class SkautIsEventService
     /**
      * Vloží účastníky do skautIS.
      *
-     * @param Collection<User> $users
-     * @param bool             $accept Přijetí účastníků (pouze u vzdělávacích akcí).
+     * @param Collection<int, User> $users
+     * @param bool                  $accept Přijetí účastníků (pouze u vzdělávacích akcí).
      */
     abstract public function insertParticipants(int $eventId, Collection $users, bool $accept = false): bool;
 

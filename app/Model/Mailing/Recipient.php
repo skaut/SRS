@@ -8,8 +8,6 @@ use App\Model\User\User;
 
 /**
  * Objekt příjemce e-mailu.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Recipient
 {

@@ -12,11 +12,11 @@ class CategoryUpdatedEvent
 {
     private Category $category;
 
-    /** @var Collection<Role> */
+    /** @var Collection<int, Role> */
     private Collection $registerableRolesOld;
 
     /**
-     * @param Collection<Role> $registerableRolesOld
+     * @param Collection<int, Role> $registerableRolesOld
      */
     public function __construct(Category $category, Collection $registerableRolesOld)
     {
@@ -30,7 +30,7 @@ class CategoryUpdatedEvent
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRegisterableRolesOld(): Collection
     {

@@ -11,8 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity
  * @ORM\Table(name="custom_text_value")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CustomTextValue extends CustomInputValue
 {

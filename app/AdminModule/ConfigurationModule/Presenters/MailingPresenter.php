@@ -14,9 +14,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující nastavení mailingu.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class MailingPresenter extends ConfigurationBasePresenter
 {

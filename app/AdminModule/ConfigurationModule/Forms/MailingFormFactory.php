@@ -41,9 +41,6 @@ use function uniqid;
 
 /**
  * Formulář pro nastavení mailingu.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class MailingFormFactory
 {

@@ -9,8 +9,6 @@ use App\AdminModule\MailingModule\Components\MailHistoryGridControl;
 
 /**
  * Presenter obsluhující historii e-mailů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class HistoryPresenter extends MailingBasePresenter
 {

@@ -18,9 +18,6 @@ use Nettrine\ORM\Entity\Attributes\Id;
  *
  * @ORM\Entity
  * @ORM\Table(name="program")
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Program
 {
@@ -38,7 +35,7 @@ class Program
      *
      * @ORM\OneToMany(targetEntity="ProgramApplication", mappedBy="program", cascade={"persist"})
      *
-     * @var Collection<ProgramApplication>
+     * @var Collection<int, ProgramApplication>
      */
     protected Collection $programApplications;
 
@@ -111,7 +108,7 @@ class Program
 
     public function setRoom(?Room $room): void
     {
-        if ($this->room != null) {
+        if ($this->room !== null) {
             $this->room->removeProgram($this);
         }
 

@@ -9,8 +9,6 @@ use Nette\Application\UI\Control;
 
 /**
  * Komponenta se slideshow.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SlideshowContentControl extends Control
 {

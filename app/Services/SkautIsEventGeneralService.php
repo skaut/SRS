@@ -17,9 +17,6 @@ use function sprintf;
 
 /**
  * Služba pro správu obecné skautIS akce.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SkautIsEventGeneralService extends SkautIsEventService
 {
@@ -31,7 +28,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
     /**
      * Vloží účastníky do skautIS.
      *
-     * @param Collection<User> $users
+     * @param Collection<int, User> $users
      */
     public function insertParticipants(int $eventId, Collection $users, bool $accept = false): bool
     {

@@ -14,8 +14,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující načítání plateb z API banky.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class BankPresenter extends ActionBasePresenter
 {

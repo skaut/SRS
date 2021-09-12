@@ -14,8 +14,6 @@ use Doctrine\ORM\NoResultException;
 
 /**
  * Třída spravující oprávnění.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class PermissionRepository extends AbstractRepository
 {
@@ -29,7 +27,7 @@ class PermissionRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<Permission>
+     * @return Collection<int, Permission>
      */
     public function findPermissionsByIds(array $ids): Collection
     {
@@ -43,7 +41,7 @@ class PermissionRepository extends AbstractRepository
     /**
      * Vrací id oprávnění.
      *
-     * @param Collection<Permission> $permissions
+     * @param Collection<int, Permission> $permissions
      *
      * @return int[]
      */

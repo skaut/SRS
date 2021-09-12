@@ -29,10 +29,6 @@ use function property_exists;
 
 /**
  * Formulář pro nastavení platby.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class PaymentForm extends UI\Control
 {

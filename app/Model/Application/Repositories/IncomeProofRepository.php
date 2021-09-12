@@ -11,8 +11,6 @@ use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující příjmové doklady.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class IncomeProofRepository extends AbstractRepository
 {

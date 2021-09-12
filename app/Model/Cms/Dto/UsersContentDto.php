@@ -6,8 +6,6 @@ namespace App\Model\Cms\Dto;
 
 /**
  * DTO obsahu se seznamem uživatelů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class UsersContentDto extends ContentDto
 {

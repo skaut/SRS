@@ -8,8 +8,6 @@ use Exception;
 
 /**
  * Výjimka nenalezena položka nastavení.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class SettingsItemNotFoundException extends Exception
 {

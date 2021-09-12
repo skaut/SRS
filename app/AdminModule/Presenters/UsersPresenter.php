@@ -28,9 +28,6 @@ use Throwable;
 
 /**
  * Presenter obsluhující správu uživatelů.
- *
- * @author Michal Májský
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class UsersPresenter extends AdminBasePresenter
 {

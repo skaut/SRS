@@ -10,8 +10,6 @@ use Nette\Application\UI\Control;
 
 /**
  * Komponenta s přehledem uživatelů.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class UsersContentControl extends Control
 {

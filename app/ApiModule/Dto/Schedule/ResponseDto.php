@@ -9,8 +9,6 @@ use Nette;
 
 /**
  * Objekt pro přenos stavu do FullCalendar.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class ResponseDto
 {

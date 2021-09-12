@@ -20,8 +20,6 @@ use function implode;
  *
  * @ORM\Entity
  * @ORM\Table(name="mail")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class Mail
 {
@@ -32,7 +30,7 @@ class Mail
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
      *
-     * @var Collection<Role>
+     * @var Collection<int, Role>
      */
     protected Collection $recipientRoles;
 
@@ -41,7 +39,7 @@ class Mail
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent")
      *
-     * @var Collection<Subevent>
+     * @var Collection<int, Subevent>
      */
     protected Collection $recipientSubevents;
 
@@ -50,7 +48,7 @@ class Mail
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\User\User")
      *
-     * @var Collection<User>
+     * @var Collection<int, User>
      */
     protected Collection $recipientUsers;
 
@@ -95,7 +93,7 @@ class Mail
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRecipientRoles(): Collection
     {
@@ -103,7 +101,7 @@ class Mail
     }
 
     /**
-     * @param Collection<Role> $recipientRoles
+     * @param Collection<int, Role> $recipientRoles
      */
     public function setRecipientRoles(Collection $recipientRoles): void
     {
@@ -124,7 +122,7 @@ class Mail
     }
 
     /**
-     * @return Collection<Subevent>
+     * @return Collection<int, Subevent>
      */
     public function getRecipientSubevents(): Collection
     {
@@ -132,7 +130,7 @@ class Mail
     }
 
     /**
-     * @param Collection<Subevent> $recipientSubevents
+     * @param Collection<int, Subevent> $recipientSubevents
      */
     public function setRecipientSubevents(Collection $recipientSubevents): void
     {
@@ -153,7 +151,7 @@ class Mail
     }
 
     /**
-     * @return Collection<User>
+     * @return Collection<int, User>
      */
     public function getRecipientUsers(): Collection
     {
@@ -161,7 +159,7 @@ class Mail
     }
 
     /**
-     * @param Collection<User> $recipientUsers
+     * @param Collection<int, User> $recipientUsers
      */
     public function setRecipientUsers(Collection $recipientUsers): void
     {

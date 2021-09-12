@@ -13,8 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity
  * @ORM\Table(name="custom_date_value")
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class CustomDateValue extends CustomInputValue
 {

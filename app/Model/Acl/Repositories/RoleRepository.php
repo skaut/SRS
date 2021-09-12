@@ -21,9 +21,6 @@ use function array_map;
 
 /**
  * Třída spravující role.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class RoleRepository extends AbstractRepository
 {
@@ -33,7 +30,7 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function findAll(): Collection
     {
@@ -94,7 +91,7 @@ class RoleRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function findRolesByIds(array $ids): Collection
     {
@@ -127,7 +124,7 @@ class RoleRepository extends AbstractRepository
     /**
      * Vrací id rolí.
      *
-     * @param Collection<Role> $roles
+     * @param Collection<int, Role> $roles
      *
      * @return int[]
      */
@@ -141,7 +138,7 @@ class RoleRepository extends AbstractRepository
     /**
      * Vrací role splňující podmínku seřazené podle názvu.
      *
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function findFilteredRoles(bool $registerableNowOnly, bool $subeventsRoleOnly, bool $includeUsers, ?User $user = null): Collection
     {

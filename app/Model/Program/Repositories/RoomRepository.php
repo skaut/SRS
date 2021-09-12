@@ -17,9 +17,6 @@ use function array_map;
 
 /**
  * Třída spravující místnosti.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
- * @author Petr Parolek <petr.parolek@webnazakazku.cz>
  */
 class RoomRepository extends AbstractRepository
 {
@@ -29,7 +26,7 @@ class RoomRepository extends AbstractRepository
     }
 
     /**
-     * @return Collection<Room>
+     * @return Collection<int, Room>
      */
     public function findAll(): Collection
     {
@@ -83,7 +80,7 @@ class RoomRepository extends AbstractRepository
      *
      * @param int[] $ids
      *
-     * @return Collection<Room>
+     * @return Collection<int, Room>
      */
     public function findRoomsByIds(array $ids): Collection
     {

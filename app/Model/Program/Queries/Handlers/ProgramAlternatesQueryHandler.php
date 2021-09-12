@@ -20,7 +20,7 @@ class ProgramAlternatesQueryHandler implements MessageHandlerInterface
     }
 
     /**
-     * @return Collection<User>
+     * @return Collection<int, User>
      */
     public function __invoke(ProgramAlternatesQuery $query): Collection
     {

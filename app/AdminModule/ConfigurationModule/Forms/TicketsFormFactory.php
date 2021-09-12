@@ -21,8 +21,6 @@ use function assert;
 
 /**
  * Formulář pro nastavení vstupenek.
- *
- * @author Jan Staněk <jan.stanek@skaut.cz>
  */
 class TicketsFormFactory
 {
