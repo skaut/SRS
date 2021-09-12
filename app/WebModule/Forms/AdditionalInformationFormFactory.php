@@ -168,15 +168,17 @@ class AdditionalInformationFormFactory
                     $customInputValue = $this->user->getCustomInputValue($customInput);
                     if ($customInputValue) {
                         assert($customInputValue instanceof CustomFileValue);
-                        $file = $customInputValue->getValue();
-                        $custom->setHtmlAttribute('data-initial-preview', json_encode([$file]))
-                            ->setHtmlAttribute('data-initial-preview-file-type', 'other')
-                            ->setHtmlAttribute('data-initial-preview-config', json_encode([
-                                [
-                                    'caption' => basename($file),
-                                    'downloadUrl' => $file,
-                                ],
-                            ]));
+                        if ($customInputValue->getValue() !== null) {
+                            $file = $customInputValue->getValue();
+                            $custom->setHtmlAttribute('data-initial-preview', json_encode([$file]))
+                                ->setHtmlAttribute('data-initial-preview-file-type', 'other')
+                                ->setHtmlAttribute('data-initial-preview-config', json_encode([
+                                    [
+                                        'caption' => basename($file),
+                                        'downloadUrl' => $file,
+                                    ],
+                                ]));
+                        }
                     }
 
                     break;
