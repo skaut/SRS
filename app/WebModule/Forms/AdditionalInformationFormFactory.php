@@ -166,7 +166,7 @@ class AdditionalInformationFormFactory
                     $custom = $form->addUpload($customInputId, $customInput->getName());
                     $custom->setHtmlAttribute('data-show-preview', 'true');
                     $customInputValue = $this->user->getCustomInputValue($customInput);
-                    if ($customInputValue) {
+                    if ($customInputValue && $customInputValue->getValue() !== null) {
                         assert($customInputValue instanceof CustomFileValue);
                         $file = $customInputValue->getValue();
                         $custom->setHtmlAttribute('data-initial-preview', json_encode([$file]))
