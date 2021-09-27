@@ -91,8 +91,8 @@
         <table class="table table-sm table-bordered table-striped">
             <thead>
                 <tr>
-                    <th class="text-right">{_admin.program.blocks.programs.column.start}</th>
-                    <th class="text-right">{_admin.program.blocks.programs.column.end}</th>
+                    <th class="text-end">{_admin.program.blocks.programs.column.start}</th>
+                    <th class="text-end">{_admin.program.blocks.programs.column.end}</th>
                     <th>{_admin.program.blocks.programs.column.room}</th>
                     <th>{_admin.program.blocks.programs.column.attendees_count}</th>
                     <th n:if="$block->isAlternatesAllowed()">{_admin.program.blocks.programs.column.alternates_count}</th>
@@ -105,12 +105,12 @@
                 {foreach $block->getPrograms() as $program}
                     {var $background = $i % 2 ? '#F2F2F2' : '#FFFFFF'}
                     <tr style="background-color: {$background|noescape}">
-                        <td class="text-right">
+                        <td class="text-end">
                             {var $startDay = $program->getStart()->format('N')}
                             {_common.day.$startDay}
                             {$program->getStart()|date:"j. n. G:i"}
                         </td>
-                        <td class="text-right">
+                        <td class="text-end">
                             {var $endDay = $program->getEnd()->format('N')}
                             {_common.day.$endDay}
                             {$program->getEnd()|date:"j. n. G:i"}
@@ -126,7 +126,7 @@
                         <td n:if="$block->isAlternatesAllowed()">
                             {$program->getAlternatesCount()}
                         </td>
-                        <td class="text-right" style="white-space: nowrap; width: 1%;">
+                        <td class="text-end" style="white-space: nowrap; width: 1%;">
                             {if $programId === $program->getId()}
                                 <a class="btn btn-xs btn-warning ajax" n:href="showattendees! 0">
                                     {_admin.program.blocks.programs.action.hide_attendees_list}

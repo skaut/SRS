@@ -5,7 +5,7 @@
                 <div class="modal-content" v-if="selectedEventInfo">
                     <div class="modal-header">
                         <h5 class="modal-title">{{ selectedEventInfo.event.extendedProps.block.name }}</h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="btn-close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <ul class="list-unstyled">
@@ -32,7 +32,7 @@
                             <div v-for="lector in selectedEventInfo.event.extendedProps.block.lectors">
                                 <b>{{ lector.name }}</b>
                                 <p>
-                                    <img :src="basePath + lector.photo" v-if="lector.photo" class="float-left mr-3 mb-3"/>
+                                    <img :src="basePath + lector.photo" v-if="lector.photo" class="float-left me-3 mb-3"/>
                                     {{ lector.about }}
                                 </p>
                                 <div class="clearfix"></div>
@@ -73,7 +73,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Nápověda</h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="btn-close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <p>Kliknutím na program se zobrazí možnost přihlášení/odhlášení a další informace o programu.</p>
@@ -96,7 +96,7 @@
         </div>
 
         <div class="row mb-2">
-            <div class="col-auto mr-auto mb-1">
+            <div class="col-auto me-auto mb-1">
                 <div class="btn-group">
                     <button @click="handleChangeView('timeGridSeminar')" class="btn btn-sm btn-secondary" :class="{ active: initialView === 'timeGridSeminar' }">
                         Na výšku
@@ -122,10 +122,10 @@
                 </button>
             </div>
             <div class="col-auto mb-1 mr-n2">
-                <div class="spinner float-left mr-2" v-show="loading > 0">
+                <div class="spinner float-start me-2" v-show="loading > 0">
                     <span class="fa fa-spinner fa-pulse fa-2x"></span>
                 </div>
-                <div class="notifications float-left mr-2">
+                <div class="notifications float-start me-2">
                     <div v-if="message" class="alert" :class="'alert-' + message.type" style="padding: 4px 8px; margin: 0">
                         {{ message.text }}
                     </div>

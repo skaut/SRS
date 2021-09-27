@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark" style="min-width: 1200px;">
         <a class="navbar-brand" href="{plink :Web:Page:default}">{_admin.common.heading, [seminar_name => $seminarName]}</a>
 
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav me-auto">
             <li n:class="nav-item, $presenter->isLinkCurrent(':Admin:Dashboard:*') ? active">
                 <a class="nav-link" href="{plink :Admin:Dashboard:default}">{_admin.menu.dashboard}</a>
             </li>
@@ -58,8 +58,8 @@
             </li>
         </ul>
 
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item mr-1">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item me-1">
                 <div class="navbar-btn">
                     <a class="btn btn-light btn-sm" href="https://napoveda.skaut.cz/srs" target="_blank">
                         <i class="fa fa-question-circle"></i> {_admin.menu.help}
@@ -67,7 +67,7 @@
                 </div>
             </li>
 
-            <li class="nav-item dropdown mr-1 ml-1" id="role-menu">
+            <li class="nav-item dropdown me-1 ms-1" id="role-menu">
                 <div class="navbar-btn">
                     <button class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown">
                             <span id="role-menu-text">
@@ -84,7 +84,7 @@
                 </div>
             </li>
 
-            <li class="nav-item dropdown ml-1" id="user-menu">
+            <li class="nav-item dropdown ms-1" id="user-menu">
                 <div class="navbar-btn">
                     <button class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown">
                         <span class="fa fa-user-circle"></span>

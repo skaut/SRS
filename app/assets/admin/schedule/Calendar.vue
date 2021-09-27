@@ -5,7 +5,7 @@
                 <div class="modal-content" v-if="selectedEventInfo">
                     <div class="modal-header">
                         <h5 class="modal-title">Nastavení programu</h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="btn-close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group row">
@@ -63,7 +63,7 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-auto mr-auto">
+            <div class="col-auto me-auto">
                 <div class="btn-group">
                     <button @click="handleChangeView('timeGridSeminar')" class="btn btn-sm btn-secondary" :class="{ active: initialView === 'timeGridSeminar' }">
                         Na výšku
