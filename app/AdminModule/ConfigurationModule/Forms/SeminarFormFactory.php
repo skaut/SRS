@@ -17,7 +17,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
 use Nextras\FormComponents\Controls\DateControl;
-use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
+use Nextras\FormsRendering\Renderers\Bs5FormRenderer;
 use stdClass;
 use Throwable;
 
@@ -56,7 +56,7 @@ class SeminarFormFactory
         $form = $this->baseFormFactory->create();
 
         $renderer = $form->getRenderer();
-        assert($renderer instanceof Bs4FormRenderer);
+        assert($renderer instanceof Bs5FormRenderer);
         $renderer->wrappers['control']['container'] = 'div class="col-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 

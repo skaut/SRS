@@ -7,7 +7,7 @@ namespace App\AdminModule\Forms;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Localization\Translator;
-use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
+use Nextras\FormsRendering\Renderers\Bs5FormRenderer;
 
 /**
  * BaseFormFactory pro AdminModule.
@@ -31,7 +31,7 @@ class BaseFormFactory
         $form = new Form();
         $form->setTranslator($this->translator);
 
-        $renderer                                   = new Bs4FormRenderer();
+        $renderer                                   = new Bs5FormRenderer();
         $renderer->wrappers['control']['container'] = 'div class="col-9"';
         $renderer->wrappers['label']['container']   = 'div class="col-3 col-form-label"';
 
