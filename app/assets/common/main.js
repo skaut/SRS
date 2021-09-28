@@ -3,6 +3,7 @@
 // jquery
 import 'jquery'
 import 'jquery-ui-sortable';
+window.$ = $;
 // jquery mousewheel
 
 // bootstrap
