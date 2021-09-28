@@ -1,9 +1,3 @@
-{block head}
-    <script>
-        var basePath = {$basePath};
-    </script>
-{/block}
-
 {block main}
     <h2>{_admin.program.schedule.heading}</h2>
     <div class="alert alert-warning alert-forever" n:if="!$isAllowedModifySchedule">

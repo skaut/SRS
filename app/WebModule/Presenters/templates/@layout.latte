@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    {if $gaId}
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-9757753-1"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){ dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', {$gaId});
-        </script>
-    {/if}
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -22,9 +10,6 @@
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
 
     {control css}
-    {control js}
-
-    {block head}{/block}
 </head>
 
 <body class="{block body-class}{/block}">
@@ -77,6 +62,21 @@
             <p>{$footer|noescape}</p>
         </footer>
     </div>
+
+    {block scripts}
+        <script src="{$basePath}/dist/web/main.min.js"></script>
+    {/block}
+
+    {if $gaId}
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-9757753-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){ dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', {$gaId});
+        </script>
+    {/if}
 </body>
 </html>
 

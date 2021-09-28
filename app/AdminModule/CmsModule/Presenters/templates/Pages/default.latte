@@ -1,18 +1,3 @@
-{block head}
-    <script src="{$basePath|noescape}/js/libs/jquery/speakingurl.min.js"></script>
-    <script src="{$basePath|noescape}/js/libs/jquery/slugify.min.js"></script>
-
-    <script>
-        $(function () {
-            $.nette.ext('slugify', {
-                complete: function () {
-                    $("#frm-pagesGrid-pagesGrid-filter-inline_add-slug").slugify("#frm-pagesGrid-pagesGrid-filter-inline_add-name");
-                }
-            });
-        });
-    </script>
-{/block}
-
 {block main}
     <h2>{_admin.cms.pages.heading}</h2>
     {control pagesGrid}

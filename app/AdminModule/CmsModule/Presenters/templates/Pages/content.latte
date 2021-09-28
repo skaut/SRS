@@ -2,3 +2,8 @@
     <h2>{_admin.cms.pages.content.heading, ['name' => $page->getName()]}</h2>
     {control pageForm}
 {/block}
+
+{block scripts}
+    {include #parent}
+    {control pageForm:scripts}
+{/block}

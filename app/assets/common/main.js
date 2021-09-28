@@ -1,34 +1,64 @@
-var ALERT_DURATION = 5000;
+'use strict';
 
-$(function () {
-    $.nette.ext('initScripts', {
-        init: function () {
-            init();
-        },
-        complete: function () {
-            init();
-        }
-    });
+// jquery
+import 'jquery'
+import 'jquery-ui-sortable';
+// jquery mousewheel
 
-    $.nette.init();
+// bootstrap
+import 'bootstrap';
+
+// nette-forms + live-form-validation
+import {LiveForm, Nette} from 'live-form-validation';
+window.Nette = Nette;
+window.LiveForm = LiveForm;
+Nette.initOnLoad();
+LiveForm.setOptions({
+    messageErrorPrefix: '<i class="fa fa-exclamation-circle" aria-hidden="true"></i>&nbsp;'
 });
 
+// naja
+import naja from 'naja';
+naja.addEventListener('init', () => {
+    init();
+});
+naja.addEventListener('complete', () => {
+    init();
+});
+document.addEventListener('DOMContentLoaded', () => naja.initialize());
+
+// bootstrap inputs
+import 'bootstrap-datetime-picker'
+import 'bootstrap-datetime-picker/js/locales/bootstrap-datetimepicker.cs'
+import 'bootstrap-select'
+import 'bootstrap-select/dist/js/i18n/defaults-cs_CZ'
+import 'bootstrap-confirmation2'
+import 'bootstrap-fileinput'
+import 'bootstrap-fileinput/themes/fa/theme'
+import 'bootstrap-fileinput/js/locales/cs'
+
+// datagrid
+import Happy from "happy-inputs";
+window.happy = new Happy;
+window.happy.init();
+
+import 'ublaboo-datagrid'
+
+// init funkce
 function init() {
     animateAlerts();
     initSelects();
     initFileInputs();
     initConfirms();
-    initDateTimePicker();
-
-    $('[data-toggle="tooltip"]').tooltip();
-
+    initDateTimePickers();
+    initTooltips();
     // $(".datagrid").floatingScroll();
 }
 
 function animateAlerts() {
     $('.alert:not(.alert-forever)').animate({
         opacity: 1.0
-    }, ALERT_DURATION).slideUp(1000);
+    }, ALERT_DURATION).slideUp(ALERT_ANIMATION);
 }
 
 function initSelects() {
@@ -93,7 +123,7 @@ function initConfirms() {
     });
 }
 
-function initDateTimePicker() {
+function initDateTimePickers() {
     $('input.date, input.datetime-local').each(function (i, el) {
         el = $(el);
         el.get(0).type = 'text';
@@ -111,4 +141,8 @@ function initDateTimePicker() {
         });
         el.attr('value') && el.datetimepicker('setValue');
     });
+}
+
+function initTooltips() {
+    $('[data-toggle="tooltip"]').tooltip();
 }

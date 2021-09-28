@@ -1,47 +1,43 @@
 'use strict';
 
-// import $ from 'jquery';
-// window.$ = $;
-// window.jQuery = $;
+import naja from "naja";
 
-import 'jquery-ui-sortable';
+require('../common/main');
 
-// import 'bootstrap';
+// tinymce
+import tinymce from 'tinymce';
 
-import 'bootstrap-datetime-picker'
-import 'bootstrap-datetime-picker/js/locales/bootstrap-datetimepicker.cs'
-
-import 'bootstrap-select'
-import 'bootstrap-select/dist/js/i18n/defaults-cs_CZ'
-
-import 'bootstrap-fileinput'
-import 'bootstrap-fileinput/themes/fa/theme'
-import 'bootstrap-fileinput/js/locales/cs'
-$('input[type="file"]').fileinput({
+tinymce.init({
+    selector: '.tinymce-paragraph',
     language: 'cs',
-    theme: 'fa',
-    browseLabel: 'Vybrat',
-    msgPlaceholder: 'Vybrat soubor...',
-    showPreview: false,
-    showRemove: false,
-    showUpload: false,
-    showCancel: false,
-    browseClass: 'btn btn-secondary'
+    height: 150,
+    menubar: false,
+    statusbar: false,
+    plugins: 'autolink lists link code fullscreen paste',
+    toolbar: 'undo redo | bold italic | bullist numlist | link unlink | code | fullscreen',
+    paste_auto_cleanup_on_paste: true,
+    convert_urls : false,
+    relative_urls: false
 });
 
-import naja from 'naja';
-document.addEventListener('DOMContentLoaded', () => naja.initialize());
-window.naja = naja;
+tinymce.init({
+    selector: '.tinymce',
+    language: 'cs',
+    height: 250,
+    menubar: false,
+    statusbar: false,
+    plugins: 'autolink lists link code fullscreen paste',
+    toolbar: 'undo redo | formatselect | bold italic | bullist numlist | link unlink | code | fullscreen',
+    paste_auto_cleanup_on_paste: true,
+    convert_urls : false,
+    relative_urls: false,
+    block_formats: 'Paragraph=p;Heading 3=h3;Heading 4=h4;Heading 5=h5;Heading 6=h6;Preformatted=pre'
+});
 
-import {LiveForm, Nette} from 'live-form-validation';
-window.Nette = Nette;
-window.LiveForm = LiveForm;
-
-// import netteForms from 'nette-forms';
-// window.Nette = netteForms;
-// netteForms.initOnLoad();
-
-// import 'ublaboo-datagrid'
-
-
-
+// generování slugu
+import slugify from 'slugify';
+naja.addEventListener('complete', () => {
+    $('#frm-pagesGrid-pagesGrid-filter-inline_add-name').keyup(function() {
+        $('#frm-pagesGrid-pagesGrid-filter-inline_add-slug').val(slugify($(this).val()));
+    });
+});

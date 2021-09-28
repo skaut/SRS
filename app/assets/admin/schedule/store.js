@@ -11,7 +11,7 @@ const COLOR_AUTO_REGISTERED = '#F7BB07';
 
 Vue.use(Vuex);
 Vue.use(VueAxios, axios);
-Vue.axios.defaults.baseURL = basePath + '/api/schedule/';
+Vue.axios.defaults.baseURL = window.location.origin + '/api/schedule/';
 
 export default new Vuex.Store({
     state: {

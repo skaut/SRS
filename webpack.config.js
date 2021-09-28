@@ -2,17 +2,15 @@
 
 const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
+const { ProvidePlugin, DefinePlugin } = require('webpack');
 const window = require('global/window');
 
 module.exports = {
     mode: "production",
     entry: {
         'admin': './app/assets/admin/main.js',
-        'admin-vendor': [
-            'script-loader!jquery',
-            'script-loader!bootstrap'
-        ],
         'admin/schedule': './app/assets/admin/schedule/main.js',
+        'web': './app/assets/web/main.js',
         'web/schedule': './app/assets/web/schedule/main.js'
     },
     output: {
@@ -48,7 +46,18 @@ module.exports = {
         ]
     },
     plugins: [
-        new VueLoaderPlugin()
+        new VueLoaderPlugin(),
+        new ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+        }),
+        new ProvidePlugin({
+            naja: ['naja', 'default'],
+        }),
+        new DefinePlugin({
+            ALERT_DURATION: 5000,
+            ALERT_ANIMATION: 1000,
+        })
     ],
     optimization: {
         minimize: false

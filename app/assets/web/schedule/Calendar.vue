@@ -158,7 +158,7 @@
                 initialView: localStorage.getItem('fcInitialView') || 'timeGridSeminar',
                 selectedEventInfo: null,
                 registerProgramsAllowed: registerProgramsAllowed,
-                basePath: basePath
+                basePath: window.location.origin
             }
         },
         computed: {
@@ -244,7 +244,7 @@
             message: function () {
                 $('.notifications').show().animate({
                     opacity: 1.0
-                }, ALERT_DURATION).slideUp(1000);
+                }, ALERT_DURATION).slideUp(ALERT_ANIMATION);
             },
             config: function () {
                 if (!localStorage.getItem('fcInitialView')) {
