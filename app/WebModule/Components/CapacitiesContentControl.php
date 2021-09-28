@@ -6,7 +6,6 @@ namespace App\WebModule\Components;
 
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Cms\Dto\CapacitiesContentDto;
-use Nette\Application\UI\Control;
 
 /**
  * Komponenta s kapacitami rolí.

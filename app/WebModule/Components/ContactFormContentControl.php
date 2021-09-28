@@ -13,7 +13,6 @@ use App\Model\Settings\Settings;
 use App\Services\QueryBus;
 use App\WebModule\Forms\ContactForm;
 use App\WebModule\Forms\IContactFormFactory;
-use Nette\Application\UI\Control;
 use Throwable;
 
 /**

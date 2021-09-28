@@ -10,7 +10,6 @@ use App\Model\Cms\Dto\ContentDto;
 use App\Model\Cms\Repositories\FaqRepository;
 use App\WebModule\Forms\FaqFormFactory;
 use Doctrine\ORM\Mapping as ORM;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use stdClass;
 

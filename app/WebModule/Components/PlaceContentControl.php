@@ -10,7 +10,6 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Repositories\PlacePointRepository;
 use App\Model\Settings\Settings;
 use App\Services\QueryBus;
-use Nette\Application\UI\Control;
 use Throwable;
 
 /**
@@ -44,7 +43,8 @@ class PlaceContentControl extends BaseContentControl
         $template->render();
     }
 
-    public function renderScripts() {
+    public function renderScripts(): void
+    {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/place_content_scripts.latte');
         $template->render();

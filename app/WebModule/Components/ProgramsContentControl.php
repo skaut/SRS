@@ -16,7 +16,6 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\QueryBus;
-use Nette\Application\UI\Control;
 use Throwable;
 
 /**

@@ -24,7 +24,6 @@ use App\Utils\Helpers;
 use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Localization\ITranslator;

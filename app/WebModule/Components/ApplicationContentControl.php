@@ -17,7 +17,6 @@ use App\Services\Authenticator;
 use App\Services\QueryBus;
 use App\WebModule\Forms\ApplicationFormFactory;
 use Doctrine\ORM\NonUniqueResultException;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
@@ -111,7 +110,8 @@ class ApplicationContentControl extends BaseContentControl
         $template->render();
     }
 
-    public function renderScripts() {
+    public function renderScripts(): void
+    {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/application_content_scripts.latte');
         $template->render();
