@@ -18,3 +18,14 @@
     {/foreach}
 {/block}
 
+{block scripts}
+    {include #parent}
+
+    {foreach $page->getMainContents() as $content}
+        {control $content->getComponentName():scripts, $content}
+    {/foreach}
+    {foreach $page->getSidebarContents() as $content}
+        {control $content->getComponentName():scripts, $content}
+    {/foreach}
+{/block}
+

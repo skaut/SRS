@@ -9,9 +9,7 @@ module.exports = {
     mode: "production",
     entry: {
         'admin': './app/assets/admin/main.js',
-        'admin/schedule': './app/assets/admin/schedule/main.js',
         'web': './app/assets/web/main.js',
-        'web/schedule': './app/assets/web/schedule/main.js'
     },
     output: {
         filename: '[name]/main.min.js',

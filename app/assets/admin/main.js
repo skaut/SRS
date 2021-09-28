@@ -59,3 +59,6 @@ naja.addEventListener('complete', () => {
         $('#frm-pagesGrid-pagesGrid-filter-inline_add-slug').val(slugify($(this).val()));
     });
 });
+
+//
+import './schedule/main'
