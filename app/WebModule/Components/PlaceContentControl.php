@@ -16,7 +16,7 @@ use Throwable;
 /**
  * Komponenta s místem.
  */
-class PlaceContentControl extends Control
+class PlaceContentControl extends BaseContentControl
 {
     private QueryBus $queryBus;
 
@@ -41,6 +41,12 @@ class PlaceContentControl extends Control
         $template->description = $this->queryBus->handle(new SettingStringValueQuery(Settings::PLACE_DESCRIPTION));
         $template->points      = $this->placePointRepository->findAll();
 
+        $template->render();
+    }
+
+    public function renderScripts() {
+        $template = $this->template;
+        $template->setFile(__DIR__ . '/templates/place_content_scripts.latte');
         $template->render();
     }
 }

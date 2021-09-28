@@ -11,7 +11,7 @@ use Nette\Application\UI\Control;
 /**
  * Komponenta s aktualitami.
  */
-class NewsContentControl extends Control
+class NewsContentControl extends BaseContentControl
 {
     private NewsRepository $newsRepository;
 

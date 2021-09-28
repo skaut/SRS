@@ -10,7 +10,7 @@ use Nette\Application\UI\Control;
 /**
  * Komponenta s obrázkem.
  */
-class ImageContentControl extends Control
+class ImageContentControl extends BaseContentControl
 {
     public function render(ImageContentDto $content): void
     {

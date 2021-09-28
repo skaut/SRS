@@ -17,7 +17,7 @@ use stdClass;
 /**
  * Komponenta s FAQ.
  */
-class FaqContentControl extends Control
+class FaqContentControl extends BaseContentControl
 {
     /** @ORM\Column(type="string") */
     private FaqFormFactory $faqFormFactory;

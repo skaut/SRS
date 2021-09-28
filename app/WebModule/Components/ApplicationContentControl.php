@@ -25,7 +25,7 @@ use Throwable;
 /**
  * Komponenta s přihláškou.
  */
-class ApplicationContentControl extends Control
+class ApplicationContentControl extends BaseContentControl
 {
     private QueryBus $queryBus;
 
@@ -108,6 +108,12 @@ class ApplicationContentControl extends Control
 
         $template->explicitSubeventsExists = $explicitSubeventsExists;
 
+        $template->render();
+    }
+
+    public function renderScripts() {
+        $template = $this->template;
+        $template->setFile(__DIR__ . '/templates/application_content_scripts.latte');
         $template->render();
     }
 

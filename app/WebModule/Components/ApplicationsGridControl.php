@@ -38,7 +38,7 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
 /**
  * Komponenta pro správu vlastních přihlášek.
  */
-class ApplicationsGridControl extends Control
+class ApplicationsGridControl extends BaseContentControl
 {
     private QueryBus $queryBus;
 

@@ -1,0 +1,8 @@
+<script>
+    $(function () {
+        $('form#frm-applicationContent-applicationForm').submit(function () {
+            if(!LiveForm.forms[this.id].hasError)
+                $(this).find(':input[type=submit]').prop('disabled', true);
+        });
+    });
+</script>

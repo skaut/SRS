@@ -10,7 +10,7 @@ use Nette\Application\UI\Control;
 /**
  * Komponenta se slideshow.
  */
-class SlideshowContentControl extends Control
+class SlideshowContentControl extends BaseContentControl
 {
     public function render(SlideshowContentDto $content): void
     {

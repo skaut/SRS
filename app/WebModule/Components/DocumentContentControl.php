@@ -13,7 +13,7 @@ use function array_keys;
 /**
  * Komponenta s dokumenty.
  */
-class DocumentContentControl extends Control
+class DocumentContentControl extends BaseContentControl
 {
     private DocumentRepository $documentRepository;
 

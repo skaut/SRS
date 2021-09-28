@@ -12,7 +12,7 @@ use Nette\Application\UI\Control;
 /**
  * Komponenta s podrobnostmi o programových blocích.
  */
-class BlocksContentControl extends Control
+class BlocksContentControl extends BaseContentControl
 {
     private BlockRepository $blockRepository;
 

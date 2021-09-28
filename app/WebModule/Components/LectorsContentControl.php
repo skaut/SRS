@@ -13,7 +13,7 @@ use Nette\Application\UI\Control;
 /**
  * Komponenta s přehledem lektorů.
  */
-class LectorsContentControl extends Control
+class LectorsContentControl extends BaseContentControl
 {
     private UserRepository $userRepository;
 

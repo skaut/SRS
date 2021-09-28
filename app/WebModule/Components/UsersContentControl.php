@@ -11,7 +11,7 @@ use Nette\Application\UI\Control;
 /**
  * Komponenta s přehledem uživatelů.
  */
-class UsersContentControl extends Control
+class UsersContentControl extends BaseContentControl
 {
     private UserRepository $userRepository;
 

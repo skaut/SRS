@@ -10,7 +10,7 @@ use Nette\Application\UI\Control;
 /**
  * Komponenta s HTML.
  */
-class HtmlContentControl extends Control
+class HtmlContentControl extends BaseContentControl
 {
     public function render(HtmlContentDto $content): void
     {

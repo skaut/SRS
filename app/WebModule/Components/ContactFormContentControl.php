@@ -19,7 +19,7 @@ use Throwable;
 /**
  * Komponenta s kontaktním formulářem.
  */
-class ContactFormContentControl extends Control
+class ContactFormContentControl extends BaseContentControl
 {
     private QueryBus $queryBus;
 

@@ -22,7 +22,7 @@ use Throwable;
 /**
  * Komponenta s výběrem programů.
  */
-class ProgramsContentControl extends Control
+class ProgramsContentControl extends BaseContentControl
 {
     private QueryBus $queryBus;
 

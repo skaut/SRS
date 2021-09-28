@@ -10,7 +10,7 @@ use Nette\Application\UI\Control;
 /**
  * Komponenta s informací o pořadateli.
  */
-class OrganizerContentControl extends Control
+class OrganizerContentControl extends BaseContentControl
 {
     public function render(OrganizerContentDto $content): void
     {
