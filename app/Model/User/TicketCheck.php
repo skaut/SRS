@@ -21,8 +21,6 @@ class TicketCheck
      * Uživatel.
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="ticketChecks", cascade={"persist"})
-     *
-     * @var User
      */
     protected User $user;
 

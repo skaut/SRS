@@ -348,7 +348,7 @@ class User
         $this->programApplications          = new ArrayCollection();
         $this->lecturersBlocks              = new ArrayCollection();
         $this->notRegisteredMandatoryBlocks = new ArrayCollection();
-        $this->ticketChecks            = new ArrayCollection();
+        $this->ticketChecks                 = new ArrayCollection();
     }
 
     public function getId(): int
@@ -1104,9 +1104,9 @@ class User
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, TicketCheck>
      */
-    public function getTicketChecks()
+    public function getTicketChecks(): Collection
     {
         return $this->ticketChecks;
     }
