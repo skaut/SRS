@@ -332,6 +332,15 @@ class User
      */
     protected ?DateTimeImmutable $photoUpdate = null;
 
+    /**
+     * Kontroly vstupenky.
+     *
+     * @ORM\OneToMany(type="TicketCheck", mappedBy="user", cascade={"persist"})
+     *
+     * @var Collection<int, TicketCheck>
+     */
+    protected Collection $ticketChecks;
+
     public function __construct()
     {
         $this->applications                 = new ArrayCollection();
@@ -339,6 +348,7 @@ class User
         $this->programApplications          = new ArrayCollection();
         $this->lecturersBlocks              = new ArrayCollection();
         $this->notRegisteredMandatoryBlocks = new ArrayCollection();
+        $this->ticketChecks            = new ArrayCollection();
     }
 
     public function getId(): int
@@ -1091,6 +1101,22 @@ class User
     public function setPhotoUpdate(?DateTimeImmutable $photoUpdate): void
     {
         $this->photoUpdate = $photoUpdate;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getTicketChecks()
+    {
+        return $this->ticketChecks;
+    }
+
+    public function addTicketCheck(TicketCheck $ticketCheck): void
+    {
+        if (! $this->ticketChecks->contains($ticketCheck)) {
+            $this->ticketChecks->add($ticketCheck);
+            $ticketCheck->setUser($this);
+        }
     }
 
     /**
