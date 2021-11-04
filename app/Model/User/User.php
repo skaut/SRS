@@ -335,7 +335,7 @@ class User
     /**
      * Kontroly vstupenky.
      *
-     * @ORM\OneToMany(type="TicketCheck", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="TicketCheck", mappedBy="user", cascade={"persist"})
      *
      * @var Collection<int, TicketCheck>
      */
