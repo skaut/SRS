@@ -114,7 +114,7 @@ class ProgramAttendeesGridControl extends Control
 
             $grid->setTranslator($this->translator);
 
-            $qb = $this->userRepository->blockAllowedQuery($program->getBlock(), $registrationBeforePaymentAllowed)
+            $qb = $this->userRepository->blockAllowedQuery($program->getBlock(), ! $registrationBeforePaymentAllowed)
                 ->leftJoin('u.programApplications', 'pa', 'WITH', 'pa.program = :program')
                 ->setParameter('program', $program);
 
