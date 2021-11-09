@@ -76,15 +76,15 @@ class PaymentForm extends UI\Control
         $renderer->wrappers['control']['container'] = 'div class="col-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 
-        $form->addText('accountNumber', 'admin.configuration.account_number')
-            ->addRule(Form::FILLED, 'admin.configuration.account_number_empty')
-            ->addRule(Form::PATTERN, 'admin.configuration.account_number_format', '^(\d{1,6}-|)\d{2,10}\/\d{4}$');
+        $form->addText('accountNumber', 'admin.configuration.payment.payment.account_number')
+            ->addRule(Form::FILLED, 'admin.configuration.payment.payment.account_number_empty')
+            ->addRule(Form::PATTERN, 'admin.configuration.payment.payment.account_number_format', '^(\d{1,6}-|)\d{2,10}\/\d{4}$');
 
-        $form->addText('variableSymbolCode', 'admin.configuration.variable_symbol_code')
+        $form->addText('variableSymbolCode', 'admin.configuration.payment.payment.variable_symbol_code')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::PATTERN, 'admin.configuration.variable_symbol_code_format', '^\d{0,4}$');
+            ->addRule(Form::PATTERN, 'admin.configuration.payment.payment.variable_symbol_code_format', '^\d{0,4}$');
 
-        $maturityTypeSelect = $form->addSelect('maturityType', 'admin.configuration.maturity_type', $this->prepareMaturityTypeOptions());
+        $maturityTypeSelect = $form->addSelect('maturityType', 'admin.configuration.payment.payment.maturity_type', $this->prepareMaturityTypeOptions());
         $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::DATE)
             ->toggle('maturity-date')
             ->toggle('maturity-reminder')
@@ -98,29 +98,29 @@ class PaymentForm extends UI\Control
             ->toggle('maturity-reminder')
             ->toggle('cancel-registration-after-maturity');
 
-        $maturityDateDate = new DateControl('admin.configuration.maturity_date');
+        $maturityDateDate = new DateControl('admin.configuration.payment.payment.maturity_date');
         $maturityDateDate->setOption('id', 'maturity-date');
         $form->addComponent($maturityDateDate, 'maturityDate');
 
-        $form->addText('maturityDays', 'admin.configuration.maturity_days')
+        $form->addText('maturityDays', 'admin.configuration.payment.payment.maturity_days')
             ->setOption('id', 'maturity-days')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::INTEGER, 'admin.configuration.maturity_days_format');
+            ->addRule(Form::INTEGER, 'admin.configuration.payment.payment.maturity_days_format');
 
-        $form->addText('maturityWorkDays', 'admin.configuration.maturity_work_days')
+        $form->addText('maturityWorkDays', 'admin.configuration.payment.payment.maturity_work_days')
             ->setOption('id', 'maturity-work-days')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::INTEGER, 'admin.configuration.maturity_work_days_format');
+            ->addRule(Form::INTEGER, 'admin.configuration.payment.payment.maturity_work_days_format');
 
-        $form->addText('maturityReminder', 'admin.configuration.maturity_reminder')
+        $form->addText('maturityReminder', 'admin.configuration.payment.payment.maturity_reminder')
             ->setOption('id', 'maturity-reminder')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::INTEGER, 'admin.configuration.maturity_reminder_format');
+            ->addRule(Form::INTEGER, 'admin.configuration.payment.payment.maturity_reminder_format');
 
-        $form->addText('cancelRegistrationAfterMaturity', 'admin.configuration.cancel_registration_after_maturity')
+        $form->addText('cancelRegistrationAfterMaturity', 'admin.configuration.payment.payment.cancel_registration_after_maturity')
             ->setOption('id', 'cancel-registration-after-maturity')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::INTEGER, 'admin.configuration.cancel_registration_after_maturity_format');
+            ->addRule(Form::INTEGER, 'admin.configuration.payment.payment.cancel_registration_after_maturity_format');
 
         $form->addSubmit('submit', 'admin.common.save');
 

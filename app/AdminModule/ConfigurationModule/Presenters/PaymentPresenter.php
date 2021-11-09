@@ -108,20 +108,4 @@ class PaymentPresenter extends ConfigurationBasePresenter
 
         return $form;
     }
-
-    /**
-     * @throws SettingsItemNotFoundException
-     * @throws Throwable
-     */
-    protected function createComponentTicketsForm(): Form
-    {
-        $form = $this->ticketsFormFactory->create();
-
-        $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            $this->flashMessage('admin.configuration.configuration_saved', 'success');
-            $this->redirect('this');
-        };
-
-        return $form;
-    }
 }

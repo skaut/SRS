@@ -1,5 +1,5 @@
 {block main}
-    <h2>{_admin.configuration.payment_heading}</h2>
+    <h2>{_admin.configuration.payment.payment.heading}</h2>
     <div class="card card-body bg-light pb-1 mb-3">
         {control paymentForm}
     </div>
@@ -17,13 +17,8 @@
         {/if}
     </div>
 
-    <h2>{_admin.configuration.payment_proof_heading}</h2>
+    <h2>{_admin.configuration.payment.payment_proofs.heading}</h2>
     <div class="card card-body bg-light pb-1 mb-3">
         {control paymentProofForm}
-    </div>
-
-    <h2>{_admin.configuration.payment.tickets.heading}</h2>
-    <div class="card card-body bg-light pb-1 mb-3">
-        {control ticketsForm}
     </div>
 {/block}
