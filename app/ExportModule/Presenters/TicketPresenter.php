@@ -67,7 +67,7 @@ class TicketPresenter extends ExportBasePresenter
 
         $this->pdfResponse->documentTitle = 'vstupenka';
         $this->pdfResponse->pageFormat    = 'A4';
-        $this->pdfResponse->getMPDF()->SetProtection(['copy', 'print', 'print-highres'], '', random_bytes(30));
+        $this->pdfResponse->getMPDF()->SetProtection(['copy', 'print', 'print-highres'], '', bin2hex(random_bytes(40)));
 
         $this->sendResponse($this->pdfResponse);
     }

@@ -33,6 +33,37 @@ class TicketsPresenter extends ConfigurationBasePresenter
      * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
+    public function renderDefault(): void
+    {
+        $apiToken = $this->queryBus->handle(new SettingStringValueQuery(Settings::TICKETS_API_TOKEN));
+
+        $this->template->apiToken = $apiToken;
+
+        $connectionInfo = [];
+        $connectionInfo['apiUrl'] = $this->getHttpRequest()->getUrl()->getBasePath() . "/api/tickets";
+        $connectionInfo['apiToken'] = $apiToken;
+
+        $this->template->connectionInfo = json_encode($connectionInfo);
+    }
+
+    /**
+     * Vygeneruje token pro aplikaci.
+     *
+     * @throws SettingsItemNotFoundException
+     * @throws Throwable
+     */
+    public function handleGenerateToken(): void
+    {
+//        $this->commandBus->handle(new SetSettingStringValue(Settings::BANK_TOKEN, null));
+//
+//        $this->flashMessage('admin.configuration.payment.bank.disconnect_successful', 'success');
+//        $this->redirect('this');
+    }
+
+    /**
+     * @throws SettingsItemNotFoundException
+     * @throws Throwable
+     */
     protected function createComponentTicketsForm(): Form
     {
         $form = $this->ticketsFormFactory->create();

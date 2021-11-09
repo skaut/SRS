@@ -3,4 +3,17 @@
     <div class="card card-body bg-light pb-1 mb-3">
         {control ticketsForm}
     </div>
+
+    <h2>{_admin.configuration.tickets.scanner.heading}</h2>
+    <div class="card card-body bg-light pb-1 mb-3">
+        {if $apiToken}
+            <barcode class="barcode" code="{$connectionInfo}" type="QR" error="M" disableborder="1"/>
+        {/if}
+
+        <p>
+            <a class="btn btn-danger" id="disconnect-button" href="{link disconnect!}">
+                {_admin.configuration.tickets.scanner.generate_token}
+            </a>
+        </p>
+    </div>
 {/block}
