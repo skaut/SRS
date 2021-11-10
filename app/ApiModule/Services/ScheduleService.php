@@ -7,7 +7,7 @@ namespace App\ApiModule\Services;
 use App\ApiModule\Dto\Schedule\BlockDetailDto;
 use App\ApiModule\Dto\Schedule\CalendarConfigDto;
 use App\ApiModule\Dto\Schedule\LectorDetailDto;
-use App\ApiModule\Dto\Schedule\ProgramDetailDto;
+use App\ApiModule\Dto\Schedule\TicketDetailDto;
 use App\ApiModule\Dto\Schedule\ProgramSaveDto;
 use App\ApiModule\Dto\Schedule\ResponseDto;
 use App\ApiModule\Dto\Schedule\RoomDetailDto;
@@ -107,7 +107,7 @@ class ScheduleService
     /**
      * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
      *
-     * @return ProgramDetailDto[]
+     * @return TicketDetailDto[]
      *
      * @throws Exception
      */
@@ -125,7 +125,7 @@ class ScheduleService
     /**
      * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
      *
-     * @return ProgramDetailDto[]
+     * @return TicketDetailDto[]
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -333,7 +333,7 @@ class ScheduleService
         } elseif (! $program) {
             throw new ApiException($this->translator->translate('common.api.schedule.program_not_found'));
         } else {
-            $programDetailDto = new ProgramDetailDto();
+            $programDetailDto = new TicketDetailDto();
             $programDetailDto->setId($program->getId());
 
             $this->commandBus->handle(new RemoveProgram($program));
@@ -460,9 +460,9 @@ class ScheduleService
      *
      * @throws Exception
      */
-    private function convertProgramToProgramDetailDto(Program $program): ProgramDetailDto
+    private function convertProgramToProgramDetailDto(Program $program): TicketDetailDto
     {
-        $programDetailDto = new ProgramDetailDto();
+        $programDetailDto = new TicketDetailDto();
 
         $programDetailDto->setId($program->getId());
         $programDetailDto->setStart($program->getStart()->format(DATE_ISO8601));

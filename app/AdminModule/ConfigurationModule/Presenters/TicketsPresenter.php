@@ -14,6 +14,7 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
+use Endroid\QrCode\QrCode;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
@@ -44,6 +45,23 @@ class TicketsPresenter extends ConfigurationBasePresenter
         $connectionInfo['apiToken'] = $apiToken;
 
         $this->template->connectionInfo = json_encode($connectionInfo);
+
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([])
+            ->data('Custom QR code contents')
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(300)
+            ->margin(10)
+            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+            ->logoPath(__DIR__.'/assets/symfony.png')
+            ->labelText('This is the label')
+            ->labelFont(new NotoSans(20))
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+
+
     }
 
     /**
@@ -54,10 +72,10 @@ class TicketsPresenter extends ConfigurationBasePresenter
      */
     public function handleGenerateToken(): void
     {
-//        $this->commandBus->handle(new SetSettingStringValue(Settings::BANK_TOKEN, null));
-//
-//        $this->flashMessage('admin.configuration.payment.bank.disconnect_successful', 'success');
-//        $this->redirect('this');
+        $apiToken = bin2hex(random_bytes(40));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::TICKETS_API_TOKEN, $apiToken));
+        $this->flashMessage('admin.configuration.payment.bank.disconnect_successful', 'success');
+        $this->redirect('this');
     }
 
     /**
