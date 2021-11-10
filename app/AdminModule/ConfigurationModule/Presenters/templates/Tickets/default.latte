@@ -7,7 +7,7 @@
     <h2>{_admin.configuration.tickets.scanner.heading}</h2>
     <div class="card card-body bg-light pb-1 mb-3">
         {if $apiToken}
-            <barcode class="barcode" code="{$connectionInfo}" type="QR" error="M" disableborder="1"/>
+            <img src="{$qrkod|dataStream}"/>
         {/if}
 
         <p>

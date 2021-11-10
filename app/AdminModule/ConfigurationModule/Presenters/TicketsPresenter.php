@@ -18,6 +18,7 @@ use Endroid\QrCode\QrCode;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
+use Tracy\Debugger;
 
 /**
  * Presenter obsluhující nastavení vstupenek.
@@ -44,24 +45,17 @@ class TicketsPresenter extends ConfigurationBasePresenter
         $connectionInfo['apiUrl'] = $this->getHttpRequest()->getUrl()->getBasePath() . "/api/tickets";
         $connectionInfo['apiToken'] = $apiToken;
 
-        $this->template->connectionInfo = json_encode($connectionInfo);
+        $connectionInfoJson = json_encode($connectionInfo);
 
-        $result = Builder::create()
-            ->writer(new PngWriter())
-            ->writerOptions([])
-            ->data('Custom QR code contents')
-            ->encoding(new Encoding('UTF-8'))
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-            ->size(300)
-            ->margin(10)
-            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
-            ->logoPath(__DIR__.'/assets/symfony.png')
-            ->labelText('This is the label')
-            ->labelFont(new NotoSans(20))
-            ->labelAlignment(new LabelAlignmentCenter())
-            ->build();
-
-
+        $qrCode = new QrCode();
+        $qrCode
+            ->setText((string) $connectionInfoJson)
+            ->setSize(300)
+            ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
+            ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+        $qrImg = $qrCode->writeDataUri();
+        $this->template->qrkod = $qrImg;
+        // Debugger::dump($qrImg);
     }
 
     /**
