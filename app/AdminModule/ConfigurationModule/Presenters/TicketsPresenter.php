@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ConfigurationModule\Presenters;
 
-use App\AdminModule\ConfigurationModule\Forms\BankFormFactory;
-use App\AdminModule\ConfigurationModule\Forms\IPaymentFormFactory;
-use App\AdminModule\ConfigurationModule\Forms\PaymentForm;
-use App\AdminModule\ConfigurationModule\Forms\PaymentProofFormFactory;
 use App\AdminModule\ConfigurationModule\Forms\TicketsFormFactory;
 use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
@@ -18,7 +14,10 @@ use Endroid\QrCode\QrCode;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
-use Tracy\Debugger;
+
+use function bin2hex;
+use function json_encode;
+use function random_bytes;
 
 /**
  * Presenter obsluhující nastavení vstupenek.
@@ -41,8 +40,8 @@ class TicketsPresenter extends ConfigurationBasePresenter
 
         $this->template->apiToken = $apiToken;
 
-        $connectionInfo = [];
-        $connectionInfo['apiUrl'] = $this->getHttpRequest()->getUrl()->getBasePath() . "/api/tickets";
+        $connectionInfo             = [];
+        $connectionInfo['apiUrl']   = $this->getHttpRequest()->getUrl()->getBasePath() . '/api/tickets';
         $connectionInfo['apiToken'] = $apiToken;
 
         $connectionInfoJson = json_encode($connectionInfo);
@@ -53,9 +52,8 @@ class TicketsPresenter extends ConfigurationBasePresenter
             ->setSize(300)
             ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
             ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
-        $qrImg = $qrCode->writeDataUri();
+        $qrImg                 = $qrCode->writeDataUri();
         $this->template->qrkod = $qrImg;
-        // Debugger::dump($qrImg);
     }
 
     /**

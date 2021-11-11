@@ -36,17 +36,11 @@ class TicketDto
      */
     private array $checks;
 
-    /**
-     * @return string
-     */
     public function getAttendeeName(): string
     {
         return $this->attendeeName;
     }
 
-    /**
-     * @param string $attendeeName
-     */
     public function setAttendeeName(string $attendeeName): void
     {
         $this->attendeeName = $attendeeName;

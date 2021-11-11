@@ -26,6 +26,7 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Throwable;
 
 use function assert;
+use function bin2hex;
 use function random_bytes;
 
 /**

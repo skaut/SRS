@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ApiModule\Presenters;
 
 use App\ApiModule\Dto\Tickets\ConnectionDto;
@@ -19,10 +21,10 @@ use App\Services\CommandBus;
 use App\Services\QueryBus;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
-use Tracy\Debugger;
+
+use function array_key_exists;
 
 /**
  * API pro kontrolu vstupenek.
@@ -54,22 +56,23 @@ class TicketsPresenter extends ApiBasePresenter
 
         $apiToken = $this->queryBus->handle(new SettingStringValueQuery(Settings::TICKETS_API_TOKEN));
         if ($apiToken == null) {
-            throw new BadRequestException("API access token not generated.", 403);
+            throw new BadRequestException('API access token not generated.', 403);
         }
 
         $headers = $this->getHttpRequest()->getHeaders();
-        if (!array_key_exists('authorization', $headers)) {
-            throw new BadRequestException("No authorization token.", 403);
+        if (! array_key_exists('authorization', $headers)) {
+            throw new BadRequestException('No authorization token.', 403);
         }
+
         if ($headers['authorization'] != 'Bearer ' . $apiToken) {
-            throw new BadRequestException("Invalid authorization token.", 403);
+            throw new BadRequestException('Invalid authorization token.', 403);
         }
     }
 
     public function actionConnect(): void
     {
         $seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
-        $data = new ConnectionDto();
+        $data        = new ConnectionDto();
         $data->setSeminarName($seminarName);
         $json     = $this->serializer->serialize($data, 'json');
         $response = new JsonResponse($json);
@@ -86,16 +89,16 @@ class TicketsPresenter extends ApiBasePresenter
         $data = new TicketDto();
         $data->setAttendeeName($user->getDisplayName());
 
-        $roles = [];
+        $roles     = [];
         $subevents = [];
 
-        $user->getPaidAndFreeApplications()->forAll(function (Application $application) {
+        $user->getPaidAndFreeApplications()->forAll(static function (Application $application): void {
             if ($application instanceof RolesApplication) {
-                $application->getRoles()->forAll(function (Role $role) {
+                $application->getRoles()->forAll(static function (Role $role): void {
                     $roles[] = $role->getName();
                 });
-            } else if ($application instanceof SubeventsApplication) {
-                $application->getSubevents()->forAll(function (Subevent $subevent) {
+            } elseif ($application instanceof SubeventsApplication) {
+                $application->getSubevents()->forAll(static function (Subevent $subevent): void {
                     $subevent[] = $subevent->getName();
                 });
             }
@@ -104,7 +107,7 @@ class TicketsPresenter extends ApiBasePresenter
         $data->setRoles($roles);
         $data->setSubevents($subevents);
 
-        $checks = $user->getTicketChecks()->map(fn(TicketCheck $check) => $check->getDatetime())->toArray();
+        $checks = $user->getTicketChecks()->map(static fn (TicketCheck $check) => $check->getDatetime())->toArray();
         $data->setChecks($checks);
 
         $ticketCheck = new TicketCheck();

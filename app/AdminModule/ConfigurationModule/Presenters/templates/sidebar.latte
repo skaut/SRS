@@ -10,17 +10,17 @@
             <a n:href="Subevents:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Configuration:Subevents:*') ? active">
                 {_admin.configuration.menu.subevents}
             </a>
-            <a n:if="$explicitSubeventsExists" n:href="Discounts:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Configuration:Discounts:*') ? active">
-                {_admin.configuration.menu.discounts}
+            <a n:href="Application:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Configuration:Application:*') ? active">
+                {_admin.configuration.menu.application}
             </a>
             <a n:href="Payment:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Configuration:Payment:*') ? active">
                 {_admin.configuration.menu.payment}
             </a>
+            <a n:if="$explicitSubeventsExists" n:href="Discounts:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Configuration:Discounts:*') ? active">
+                {_admin.configuration.menu.discounts}
+            </a>
             <a n:href="Tickets:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Configuration:Tickets:*') ? active">
                 {_admin.configuration.menu.tickets}
-            </a>
-            <a n:href="Application:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Configuration:Application:*') ? active">
-                {_admin.configuration.menu.application}
             </a>
             <a n:href="Place:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Configuration:Place:*') ? active">
                 {_admin.configuration.menu.place}
