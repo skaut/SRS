@@ -92,17 +92,17 @@ class TicketsPresenter extends ApiBasePresenter
         $roles     = [];
         $subevents = [];
 
-        $user->getPaidAndFreeApplications()->forAll(static function (Application $application): void {
+        foreach ($user->getPaidAndFreeApplications() as $application) {
             if ($application instanceof RolesApplication) {
-                $application->getRoles()->forAll(static function (Role $role): void {
+                foreach ($application->getRoles() as $role) {
                     $roles[] = $role->getName();
-                });
+                }
             } elseif ($application instanceof SubeventsApplication) {
-                $application->getSubevents()->forAll(static function (Subevent $subevent): void {
+                foreach ($application->getSubevents() as $subevent) {
                     $subevent[] = $subevent->getName();
-                });
+                }
             }
-        });
+        };
 
         $data->setRoles($roles);
         $data->setSubevents($subevents);
