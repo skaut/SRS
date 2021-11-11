@@ -764,6 +764,7 @@ configuration:
 
         scanner:
             heading: "Propojení se čtečkou"
+            generate_token: "Vygenerovat token"
 
     application_heading: "Přihláška"
     application_agreement: "Text souhlasu s podmínkami"

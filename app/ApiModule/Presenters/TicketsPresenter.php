@@ -22,7 +22,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 
 use function array_key_exists;
-use function array_values;
 
 /**
  * API pro kontrolu vstupenek.
@@ -105,9 +104,7 @@ class TicketsPresenter extends ApiBasePresenter
         $data->setRoles($roles);
         $data->setSubevents($subevents);
 
-        $checks = array_values(
-            $user->getTicketChecks()->map(static fn (TicketCheck $check) => $check->getDatetime())->toArray()
-        );
+        $checks = $user->getTicketChecks()->map(static fn (TicketCheck $check) => $check->getDatetime())->toArray();
         $data->setChecks($checks);
 
         $ticketCheck = new TicketCheck();

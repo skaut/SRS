@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ApiModule\Dto\Tickets;
 
-use DateTime;
+use DateTimeImmutable;
 use JMS\Serializer\Annotation as JMS;
 use Nette;
 
@@ -32,7 +32,7 @@ class TicketDto
 
     /**
      * @JMS\Type("array")
-     * @var DateTime[]
+     * @var DateTimeImmutable[]
      */
     private array $checks;
 
@@ -79,7 +79,7 @@ class TicketDto
     }
 
     /**
-     * @return DateTime[]
+     * @return DateTimeImmutable[]
      */
     public function getChecks(): array
     {
@@ -87,7 +87,7 @@ class TicketDto
     }
 
     /**
-     * @param DateTime[] $checks
+     * @param DateTimeImmutable[] $checks
      */
     public function setChecks(array $checks): void
     {
