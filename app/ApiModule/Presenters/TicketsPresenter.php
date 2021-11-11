@@ -7,13 +7,10 @@ namespace App\ApiModule\Presenters;
 use App\ApiModule\Dto\Tickets\ConnectionDto;
 use App\ApiModule\Dto\Tickets\TicketDto;
 use App\ApiModule\Services\ApiException;
-use App\Model\Acl\Role;
-use App\Model\Application\Application;
 use App\Model\Application\RolesApplication;
 use App\Model\Application\SubeventsApplication;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
-use App\Model\Structure\Subevent;
 use App\Model\User\Repositories\TicketCheckRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\TicketCheck;
@@ -25,6 +22,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 
 use function array_key_exists;
+use function array_values;
 
 /**
  * API pro kontrolu vstupenek.
@@ -102,12 +100,14 @@ class TicketsPresenter extends ApiBasePresenter
                     $subevent[] = $subevent->getName();
                 }
             }
-        };
+        }
 
         $data->setRoles($roles);
         $data->setSubevents($subevents);
 
-        $checks = $user->getTicketChecks()->map(static fn (TicketCheck $check) => $check->getDatetime())->toArray();
+        $checks = array_values(
+            $user->getTicketChecks()->map(static fn (TicketCheck $check) => $check->getDatetime())->toArray()
+        );
         $data->setChecks($checks);
 
         $ticketCheck = new TicketCheck();
