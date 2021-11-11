@@ -21,7 +21,7 @@ class ResponseDto
     private string $status;
 
     /** @JMS\Type("App\ApiModule\Dto\Schedule\ProgramDetailDto") */
-    private ?TicketDetailDto $program = null;
+    private ?ProgramDetailDto $program = null;
 
     public function getMessage(): string
     {
@@ -43,12 +43,12 @@ class ResponseDto
         $this->status = $status;
     }
 
-    public function getProgram(): ?TicketDetailDto
+    public function getProgram(): ?ProgramDetailDto
     {
         return $this->program;
     }
 
-    public function setProgram(TicketDetailDto $program): void
+    public function setProgram(ProgramDetailDto $program): void
     {
         $this->program = $program;
     }
