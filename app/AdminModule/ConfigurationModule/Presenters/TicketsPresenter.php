@@ -40,7 +40,7 @@ class TicketsPresenter extends ConfigurationBasePresenter
         $this->template->apiToken = $apiToken;
 
         $connectionInfo             = [];
-        $connectionInfo['apiUrl']   = $this->getHttpRequest()->getUrl()->getBasePath() . '/api/tickets';
+        $connectionInfo['apiUrl']   = $this->getHttpRequest()->getUrl()->getBaseUrl() . '/api';
         $connectionInfo['apiToken'] = $apiToken;
         $this->template->qr         = $this->generateQr(json_encode($connectionInfo));
     }
