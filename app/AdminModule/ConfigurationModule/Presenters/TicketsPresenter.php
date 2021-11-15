@@ -37,23 +37,12 @@ class TicketsPresenter extends ConfigurationBasePresenter
     public function renderDefault(): void
     {
         $apiToken = $this->queryBus->handle(new SettingStringValueQuery(Settings::TICKETS_API_TOKEN));
-
         $this->template->apiToken = $apiToken;
 
         $connectionInfo             = [];
         $connectionInfo['apiUrl']   = $this->getHttpRequest()->getUrl()->getBasePath() . '/api/tickets';
         $connectionInfo['apiToken'] = $apiToken;
-
-        $connectionInfoJson = json_encode($connectionInfo);
-
-        $qrCode = new QrCode();
-        $qrCode
-            ->setText((string) $connectionInfoJson)
-            ->setSize(300)
-            ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
-            ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
-        $qrImg                 = $qrCode->writeDataUri();
-        $this->template->qrkod = $qrImg;
+        $this->template->qr = $this->generateQr(json_encode($connectionInfo));
     }
 
     /**
@@ -66,7 +55,20 @@ class TicketsPresenter extends ConfigurationBasePresenter
     {
         $apiToken = bin2hex(random_bytes(40));
         $this->commandBus->handle(new SetSettingStringValue(Settings::TICKETS_API_TOKEN, $apiToken));
-        $this->flashMessage('admin.configuration.payment.bank.disconnect_successful', 'success');
+        $this->flashMessage('admin.configuration.tickets.scanner.generate_token_success', 'success');
+        $this->redirect('this');
+    }
+
+    /**
+     * Odstraní token pro aplikaci.
+     *
+     * @throws SettingsItemNotFoundException
+     * @throws Throwable
+     */
+    public function handleDeleteToken(): void
+    {
+        $this->commandBus->handle(new SetSettingStringValue(Settings::TICKETS_API_TOKEN, null));
+        $this->flashMessage('admin.configuration.tickets.scanner.delete_token_success', 'success');
         $this->redirect('this');
     }
 
@@ -84,5 +86,16 @@ class TicketsPresenter extends ConfigurationBasePresenter
         };
 
         return $form;
+    }
+
+    private function generateQr(string $text): string
+    {
+        $qrCode = new QrCode();
+        $qrCode
+            ->setText($text)
+            ->setSize(300)
+            ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
+            ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+        return $qrCode->writeString();
     }
 }

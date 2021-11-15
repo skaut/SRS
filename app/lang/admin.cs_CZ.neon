@@ -765,6 +765,12 @@ configuration:
         scanner:
             heading: "Propojení se čtečkou"
             generate_token: "Vygenerovat token"
+            generate_token_success: "Token úspěšně vygenerován. Nyní můžete SRS propojit s aplikací."
+            generate_new_token: "Vygenerovat nový token"
+            generate_new_token_confirm: "Vygenerováním nového tokenu dojde ke zrušení přístupu aktuálně propojeným aplikacím. Opravdu chcete vygenerovat nový?"
+            delete_token: "Odstranit token"
+            delete_token_confirm: "Ostraněním tokenu dojde ke zrušení přístupu propojeným aplikacím. Opravdu jej chcete odstranit?"
+            delete_token_success: "Token úspěšně odstraněn."
 
     application_heading: "Přihláška"
     application_agreement: "Text souhlasu s podmínkami"
