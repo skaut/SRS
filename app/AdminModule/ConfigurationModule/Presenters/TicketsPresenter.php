@@ -36,13 +36,13 @@ class TicketsPresenter extends ConfigurationBasePresenter
      */
     public function renderDefault(): void
     {
-        $apiToken = $this->queryBus->handle(new SettingStringValueQuery(Settings::TICKETS_API_TOKEN));
+        $apiToken                 = $this->queryBus->handle(new SettingStringValueQuery(Settings::TICKETS_API_TOKEN));
         $this->template->apiToken = $apiToken;
 
         $connectionInfo             = [];
         $connectionInfo['apiUrl']   = $this->getHttpRequest()->getUrl()->getBasePath() . '/api/tickets';
         $connectionInfo['apiToken'] = $apiToken;
-        $this->template->qr = $this->generateQr(json_encode($connectionInfo));
+        $this->template->qr         = $this->generateQr(json_encode($connectionInfo));
     }
 
     /**
@@ -96,6 +96,7 @@ class TicketsPresenter extends ConfigurationBasePresenter
             ->setSize(300)
             ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
             ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+
         return $qrCode->writeString();
     }
 }
