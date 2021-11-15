@@ -57,11 +57,11 @@ class TicketsPresenter extends ApiBasePresenter
         }
 
         $headers = $this->getHttpRequest()->getHeaders();
-        if (! array_key_exists('authorization', $headers)) {
+        if (! array_key_exists('api-token', $headers)) {
             throw new BadRequestException('No authorization token.', 403);
         }
 
-        if ($headers['authorization'] != 'Bearer ' . $apiToken) {
+        if ($headers['api-token'] != $apiToken) {
             throw new BadRequestException('Invalid authorization token.', 403);
         }
     }
