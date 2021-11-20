@@ -9,7 +9,7 @@ jobs:
     name: "Create release package"
     runs-on: ubuntu-18.04
     container:
-      image: fmasa/lebeda:7.4
+      image: fmasa/lebeda:8.0
     steps:
       - uses: actions/checkout@v2
       # Copy & paste from https://github.com/actions/cache/blob/master/examples.md#php---composer
