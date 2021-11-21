@@ -16,8 +16,9 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\TicketCheck;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
+use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
-use JMS\Serializer\SerializerInterface;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
@@ -40,10 +41,10 @@ class TicketsPresenter extends ApiBasePresenter
     /** @inject */
     public TicketCheckRepository $ticketCheckRepository;
 
-    private SerializerInterface $serializer;
+    private Serializer $serializer;
 
     /**
-     * @throws BadRequestException
+     * @throws AbortException
      */
     public function startup(): void
     {
