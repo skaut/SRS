@@ -19,7 +19,6 @@ use App\Services\QueryBus;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
 use function array_key_exists;
