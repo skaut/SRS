@@ -53,22 +53,16 @@ class TicketsPresenter extends ApiBasePresenter
 
         $apiToken = $this->queryBus->handle(new SettingStringValueQuery(Settings::TICKETS_API_TOKEN));
         if ($apiToken == null) {
-            $httpResponse = $this->getHttpResponse();
-            $httpResponse->setCode(IResponse::S403_FORBIDDEN);
-            $this->sendJson(['error' => 'authorization token not generated']);
+            $this->sendErrorResponse(IResponse::S403_FORBIDDEN, 'authorization token not generated');
         }
 
         $headers = $this->getHttpRequest()->getHeaders();
         if (! array_key_exists('api-token', $headers)) {
-            $httpResponse = $this->getHttpResponse();
-            $httpResponse->setCode(IResponse::S403_FORBIDDEN);
-            $this->sendJson(['error' => 'no authorization token']);
+            $this->sendErrorResponse(IResponse::S403_FORBIDDEN, 'no authorization token');
         }
 
         if ($headers['api-token'] != $apiToken) {
-            $httpResponse = $this->getHttpResponse();
-            $httpResponse->setCode(IResponse::S403_FORBIDDEN);
-            $this->sendJson(['error' => 'invalid authorization token']);
+            $this->sendErrorResponse(IResponse::S403_FORBIDDEN, 'invalid authorization token');
         }
     }
 
@@ -85,7 +79,7 @@ class TicketsPresenter extends ApiBasePresenter
     {
         $user = $this->userRepository->findById($id);
         if ($user == null) {
-            throw new ApiException("User with id ID doesn't exist.");
+            $this->sendErrorResponse(IResponse::S404_NOT_FOUND, 'user not found');
         }
 
         $data = new TicketDto();
@@ -101,7 +95,7 @@ class TicketsPresenter extends ApiBasePresenter
                 }
             } elseif ($application instanceof SubeventsApplication) {
                 foreach ($application->getSubevents() as $subevent) {
-                    $subevent[] = $subevent->getName();
+                    $subevents[] = $subevent->getName();
                 }
             }
         }
@@ -121,5 +115,11 @@ class TicketsPresenter extends ApiBasePresenter
 
         $dataArray = $this->serializer->toArray($data);
         $this->sendJson($dataArray);
+    }
+
+    private function sendErrorResponse(int $code, string $message) {
+        $httpResponse = $this->getHttpResponse();
+        $httpResponse->setCode($code);
+        $this->sendJson($message);
     }
 }

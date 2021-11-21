@@ -348,6 +348,7 @@ class User
         $this->programApplications          = new ArrayCollection();
         $this->lecturersBlocks              = new ArrayCollection();
         $this->notRegisteredMandatoryBlocks = new ArrayCollection();
+        $this->customInputValues            = new ArrayCollection();
         $this->ticketChecks                 = new ArrayCollection();
     }
 
