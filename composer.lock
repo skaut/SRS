@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d2da8e04dc18e004aeae753bf40c98e",
+    "content-hash": "ced0a134893da49e2b687472505c7df1",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -12699,6 +12699,7 @@
     "platform": {
         "php": ">=8.0",
         "ext-bcmath": "*",
+        "ext-fileinfo": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
         "ext-json": "*",

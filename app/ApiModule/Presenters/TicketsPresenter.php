@@ -19,7 +19,7 @@ use App\Services\QueryBus;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 use Nette\Application\BadRequestException;
-use Nette\Application\Responses\JsonResponse;
+use Nette\Http\IResponse;
 
 use function array_key_exists;
 
@@ -53,16 +53,22 @@ class TicketsPresenter extends ApiBasePresenter
 
         $apiToken = $this->queryBus->handle(new SettingStringValueQuery(Settings::TICKETS_API_TOKEN));
         if ($apiToken == null) {
-            throw new BadRequestException('API access token not generated.', 403);
+            $httpResponse = $this->getHttpResponse();
+            $httpResponse->setCode(IResponse::S403_FORBIDDEN);
+            $this->sendJson(['error' => 'authorization token not generated']);
         }
 
         $headers = $this->getHttpRequest()->getHeaders();
         if (! array_key_exists('api-token', $headers)) {
-            throw new BadRequestException('No authorization token.', 403);
+            $httpResponse = $this->getHttpResponse();
+            $httpResponse->setCode(IResponse::S403_FORBIDDEN);
+            $this->sendJson(['error' => 'no authorization token']);
         }
 
         if ($headers['api-token'] != $apiToken) {
-            throw new BadRequestException('Invalid authorization token.', 403);
+            $httpResponse = $this->getHttpResponse();
+            $httpResponse->setCode(IResponse::S403_FORBIDDEN);
+            $this->sendJson(['error' => 'invalid authorization token']);
         }
     }
 
@@ -71,9 +77,8 @@ class TicketsPresenter extends ApiBasePresenter
         $seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
         $data        = new ConnectionDto();
         $data->setSeminarName($seminarName);
-        $json     = $this->serializer->serialize($data, 'json');
-        $response = new JsonResponse($json);
-        $this->sendResponse($response);
+        $dataArray = $this->serializer->toArray($data);
+        $this->sendJson($dataArray);
     }
 
     public function actionCheckTicket(int $id): void
@@ -114,8 +119,7 @@ class TicketsPresenter extends ApiBasePresenter
         $user->addTicketCheck($ticketCheck);
         $this->userRepository->save($user);
 
-        $json     = $this->serializer->serialize($data, 'json');
-        $response = new JsonResponse($json);
-        $this->sendResponse($response);
+        $dataArray = $this->serializer->toArray($data);
+        $this->sendJson($dataArray);
     }
 }
