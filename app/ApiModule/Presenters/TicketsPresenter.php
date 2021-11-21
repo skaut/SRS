@@ -6,7 +6,6 @@ namespace App\ApiModule\Presenters;
 
 use App\ApiModule\Dto\Tickets\ConnectionDto;
 use App\ApiModule\Dto\Tickets\TicketDto;
-use App\ApiModule\Services\ApiException;
 use App\Model\Application\RolesApplication;
 use App\Model\Application\SubeventsApplication;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -117,7 +116,8 @@ class TicketsPresenter extends ApiBasePresenter
         $this->sendJson($dataArray);
     }
 
-    private function sendErrorResponse(int $code, string $message) {
+    private function sendErrorResponse(int $code, string $message): void
+    {
         $httpResponse = $this->getHttpResponse();
         $httpResponse->setCode($code);
         $this->sendJson($message);
