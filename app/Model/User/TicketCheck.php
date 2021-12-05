@@ -22,7 +22,7 @@ class TicketCheck
     /**
      * Uživatel.
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="ticketChecks", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
      */
     protected User $user;
 
@@ -42,7 +42,7 @@ class TicketCheck
 
     public function __construct(User $user, Subevent $subevent)
     {
-        $this->user = $user;
+        $this->user     = $user;
         $this->subevent = $subevent;
         $this->datetime = new DateTimeImmutable();
     }

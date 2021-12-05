@@ -74,7 +74,7 @@ class SubeventRepository extends AbstractRepository
      *
      * @return Collection<int, Subevent>
      */
-    public function findFilteredSubevents(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null): Collection
+    public function findFilteredSubevents(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user): Collection
     {
         $qb = $this->createQueryBuilder('s');
 
@@ -162,21 +162,6 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * Vrací počet vytvořených podakcí.
-     *
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
-    public function countExplicitSubevents(): int
-    {
-        return (int) $this->createQueryBuilder('s')
-            ->select('COUNT(s.id)')
-            ->where('s.implicit = FALSE')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
      * Vrací, zda jsou vytvořeny podakce.
      *
      * @throws NonUniqueResultException
@@ -184,7 +169,13 @@ class SubeventRepository extends AbstractRepository
      */
     public function explicitSubeventsExists(): bool
     {
-        return $this->countExplicitSubevents() > 0;
+        $explicitSubeventsCount = (int) $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->where('s.implicit = FALSE')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $explicitSubeventsCount > 0;
     }
 
     /**

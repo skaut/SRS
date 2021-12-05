@@ -5,13 +5,19 @@ declare(strict_types=1);
 namespace App\ApiModule\Presenters;
 
 use App\ApiModule\Dto\Tickets\SeminarInfo;
+use App\ApiModule\Dto\Tickets\SubeventInfo;
 use App\ApiModule\Dto\Tickets\TicketInfo;
 use App\Model\Application\RolesApplication;
 use App\Model\Application\SubeventsApplication;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
-use App\Model\User\Repositories\TicketCheckRepository;
-use App\Model\User\Repositories\UserRepository;
+use App\Model\Structure\Queries\SubeventByIdQuery;
+use App\Model\Structure\Queries\SubeventsQuery;
+use App\Model\Structure\Subevent;
+use App\Model\User\Commands\SaveTicketCheck;
+use App\Model\User\Commands\SaveUser;
+use App\Model\User\Queries\TicketChecksByUserAndSubeventQuery;
+use App\Model\User\Queries\UserByIdQuery;
 use App\Model\User\TicketCheck;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
@@ -32,12 +38,6 @@ class TicketsPresenter extends ApiBasePresenter
 
     /** @inject */
     public QueryBus $queryBus;
-
-    /** @inject */
-    public UserRepository $userRepository;
-
-    /** @inject */
-    public TicketCheckRepository $ticketCheckRepository;
 
     private Serializer $serializer;
 
@@ -65,20 +65,29 @@ class TicketsPresenter extends ApiBasePresenter
         }
     }
 
-    public function actionSeminarInfo(): void
+    public function actionSeminar(): void
     {
         $seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
-        $data        = new SeminarInfo();
+        $subevents   = $this->queryBus->handle(new SubeventsQuery(true))->map(static fn (Subevent $subevent) => new SubeventInfo($subevent->getId(), $subevent->getName()))->toArray();
+
+        $data = new SeminarInfo();
         $data->setName($seminarName);
+        $data->setSubevents($subevents);
+
         $dataArray = $this->serializer->toArray($data);
         $this->sendJson($dataArray);
     }
 
-    public function actionCheckTicket(int $userId, int $subeventId): void
+    public function actionCheckTicket(int $userId, ?int $subeventId): void
     {
-        $user = $this->userRepository->findById($userId);
+        $user = $this->queryBus->handle(new UserByIdQuery($userId));
         if ($user == null) {
             $this->sendErrorResponse(IResponse::S404_NOT_FOUND, 'user not found');
+        }
+
+        $subevent = $this->queryBus->handle(new SubeventByIdQuery($subeventId));
+        if ($subevent == null) {
+            $this->sendErrorResponse(IResponse::S404_NOT_FOUND, 'subevent not found');
         }
 
         $data = new TicketInfo();
@@ -89,12 +98,12 @@ class TicketsPresenter extends ApiBasePresenter
 
         foreach ($user->getPaidAndFreeApplications() as $application) {
             if ($application instanceof RolesApplication) {
-                foreach ($application->getRoles() as $role) {
-                    $roles[] = $role->getName();
+                foreach ($application->getRoles() as $r) {
+                    $roles[] = $r->getName();
                 }
             } elseif ($application instanceof SubeventsApplication) {
-                foreach ($application->getSubevents() as $subevent) {
-                    $subevents[] = $subevent->getName();
+                foreach ($application->getSubevents() as $s) {
+                    $subevents[] = $s->getName();
                 }
             }
         }
@@ -102,15 +111,13 @@ class TicketsPresenter extends ApiBasePresenter
         $data->setRoles($roles);
         $data->setSubevents($subevents);
 
-        $checks = $user->getTicketChecks()->map(static fn (TicketCheck $check) => $check->getDatetime())->toArray();
+        $checks = $this->queryBus->handle(new TicketChecksByUserAndSubeventQuery($user, $subevent))->map(static fn (TicketCheck $check) => $check->getDatetime())->toArray();
         $data->setChecks($checks);
 
-        $ticketCheck = new TicketCheck();
-        $this->ticketCheckRepository->save($ticketCheck);
+        $this->commandBus->handle(new SaveTicketCheck(new TicketCheck($user, $subevent)));
 
         $user->setAttended(true);
-        $user->addTicketCheck($ticketCheck);
-        $this->userRepository->save($user);
+        $this->commandBus->handle(new SaveUser($user));
 
         $dataArray = $this->serializer->toArray($data);
         $this->sendJson($dataArray);
