@@ -7,7 +7,7 @@ namespace App\Model\User\Queries\Handlers;
 use App\Model\User\Queries\TicketChecksByUserAndSubeventQuery;
 use App\Model\User\Repositories\TicketCheckRepository;
 use App\Model\User\TicketCheck;
-use phpDocumentor\Reflection\Types\Collection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class TicketChecksByUserAndSubeventQueryHandler implements MessageHandlerInterface

@@ -103,7 +103,7 @@ class TicketsPresenter extends ApiBasePresenter
                 }
             } elseif ($application instanceof SubeventsApplication) {
                 foreach ($application->getSubevents() as $s) {
-                    $subevents[] = $s->getName();
+                    $subevents[] = new SubeventInfo($s->getId(), $s->getName());
                 }
             }
         }
