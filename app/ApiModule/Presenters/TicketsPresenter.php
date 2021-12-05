@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\ApiModule\Presenters;
 
-use App\ApiModule\Dto\Tickets\ConnectionDto;
-use App\ApiModule\Dto\Tickets\TicketDto;
+use App\ApiModule\Dto\Tickets\SeminarInfo;
+use App\ApiModule\Dto\Tickets\TicketInfo;
 use App\Model\Application\RolesApplication;
 use App\Model\Application\SubeventsApplication;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -65,23 +65,23 @@ class TicketsPresenter extends ApiBasePresenter
         }
     }
 
-    public function actionConnect(): void
+    public function actionSeminarInfo(): void
     {
         $seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
-        $data        = new ConnectionDto();
-        $data->setSeminarName($seminarName);
+        $data        = new SeminarInfo();
+        $data->setName($seminarName);
         $dataArray = $this->serializer->toArray($data);
         $this->sendJson($dataArray);
     }
 
-    public function actionCheckTicket(int $id): void
+    public function actionCheckTicket(int $userId, int $subeventId): void
     {
-        $user = $this->userRepository->findById($id);
+        $user = $this->userRepository->findById($userId);
         if ($user == null) {
             $this->sendErrorResponse(IResponse::S404_NOT_FOUND, 'user not found');
         }
 
-        $data = new TicketDto();
+        $data = new TicketInfo();
         $data->setAttendeeName($user->getDisplayName());
 
         $roles     = [];

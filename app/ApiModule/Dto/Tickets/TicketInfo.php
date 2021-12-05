@@ -11,7 +11,7 @@ use Nette;
 /**
  * Objekt pro přenos údajů o vstupence.
  */
-class TicketDto
+class TicketInfo
 {
     use Nette\SmartObject;
 
@@ -25,8 +25,8 @@ class TicketDto
     private array $roles;
 
     /**
-     * @JMS\Type("array")
-     * @var string[]
+     * @JMS\Type("array<App\ApiModule\Dto\Tickets\SubeventInfo>")
+     * @var SubeventInfo[]
      */
     private array $subevents;
 
@@ -63,7 +63,7 @@ class TicketDto
     }
 
     /**
-     * @return string[]
+     * @return SubeventInfo[]
      */
     public function getSubevents(): array
     {
@@ -71,7 +71,7 @@ class TicketDto
     }
 
     /**
-     * @param string[] $subevents
+     * @param SubeventInfo[] $subevents
      */
     public function setSubevents(array $subevents): void
     {
