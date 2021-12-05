@@ -74,7 +74,7 @@ class SubeventRepository extends AbstractRepository
      *
      * @return Collection<int, Subevent>
      */
-    public function findFilteredSubevents(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user): Collection
+    public function findFilteredSubevents(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null): Collection
     {
         $qb = $this->createQueryBuilder('s');
 
