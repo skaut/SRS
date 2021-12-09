@@ -15,7 +15,7 @@ jobs:
     name: "Build"
     runs-on: ubuntu-20.04
     container:
-      image: skaut/lebeda:8.0
+      image: skaut/lebeda:8.1
     steps:
       - uses: actions/checkout@v2
       # Copy & paste from https://github.com/actions/cache/blob/master/examples.md#php---composer
@@ -46,7 +46,7 @@ jobs:
     name: "Unit tests"
     runs-on: ubuntu-20.04
     container:
-      image: skaut/lebeda:8.0
+      image: skaut/lebeda:8.1
     needs: workdir
     steps:
       - name: Download workdir
@@ -102,7 +102,7 @@ jobs:
     name: "PHPStan analysis"
     runs-on: ubuntu-20.04
     container:
-      image: skaut/lebeda:8.0
+      image: skaut/lebeda:8.1
     needs: workdir
     steps:
       - name: Download workdir
@@ -118,7 +118,7 @@ jobs:
     name: "Coding standard"
     runs-on: ubuntu-20.04
     container:
-      image: skaut/lebeda:8.0
+      image: skaut/lebeda:8.1
     needs: workdir
     steps:
       - name: Download workdir
@@ -134,7 +134,7 @@ jobs:
     name: "Doctrine checks"
     runs-on: ubuntu-20.04
     container:
-      image: skaut/lebeda:8.0
+      image: skaut/lebeda:8.1
     services:
       mysql-test:
         image: mysql:8.0
