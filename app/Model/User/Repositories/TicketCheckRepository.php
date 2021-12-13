@@ -8,6 +8,7 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\TicketCheck;
 use App\Model\User\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -26,7 +27,7 @@ class TicketCheckRepository extends AbstractRepository
      */
     public function findByUserAndSubevent(User $user, Subevent $subevent): Collection
     {
-        return $this->getRepository()
+        $result = $this->getRepository()
             ->createQueryBuilder('t')
             ->where('t.user = :user')
             ->andWhere('t.subevent = :subevent')
@@ -35,6 +36,8 @@ class TicketCheckRepository extends AbstractRepository
             ->setParameter('subevent', $subevent)
             ->getQuery()
             ->getResult();
+
+        return new ArrayCollection($result);
     }
 
     public function save(TicketCheck $ticketCheck): void

@@ -31,9 +31,9 @@ final class CheckTicketHandlerTest extends CommandHandlerTest
     private ApplicationRepository $applicationRepository;
 
     /**
-     * TODO null subevent
+     * Test vytvoření kontroly vstupenky a nastavení uživatele jako přítomného.
      */
-    public function testSubevent(): void
+    public function testCheckTicket(): void
     {
         $role = new Role('role');
         $this->roleRepository->save($role);
@@ -52,37 +52,16 @@ final class CheckTicketHandlerTest extends CommandHandlerTest
         ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
         ApplicationFactory::createSubeventsApplication($this->applicationRepository, $user, $subevent);
 
+        $this->assertFalse($user->isAttended());
+
         $this->commandBus->handle(new CheckTicket($user, $subevent));
+
         $ticketChecks = $this->ticketCheckRepository->findByUserAndSubevent($user, $subevent);
         $this->assertEquals(1, $ticketChecks->count());
         $this->assertEquals($user, $ticketChecks->get(0)->getUser());
         $this->assertEquals($subevent, $ticketChecks->get(0)->getSubevent());
         $this->assertLessThanOrEqual(new DateTimeImmutable(), $ticketChecks->get(0)->getDatetime());
-    }
-
-    /**
-     * TODO null subevent
-     */
-    public function testNoSubevent(): void
-    {
-        $role = new Role('role');
-        $this->roleRepository->save($role);
-
-        $user = new User();
-        $user->setFirstName('First');
-        $user->setLastName('Last');
-        $user->addRole($role);
-        $user->setApproved(true);
-        $this->userRepository->save($user);
-
-        ApplicationFactory::createRolesApplication($this->applicationRepository, $user, $role);
-
-        $this->commandBus->handle(new CheckTicket($user, null));
-        $ticketChecks = $this->ticketCheckRepository->findByUserAndSubevent($user, null);
-        $this->assertEquals(1, $ticketChecks->count());
-        $this->assertEquals($user, $ticketChecks->get(0)->getUser());
-        $this->assertNull($ticketChecks->get(0)->getSubevent());
-        $this->assertLessThanOrEqual(new DateTimeImmutable(), $ticketChecks->get(0)->getDatetime());
+        $this->assertTrue($user->isAttended());
     }
 
     /**

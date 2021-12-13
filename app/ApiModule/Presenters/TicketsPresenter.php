@@ -67,7 +67,9 @@ class TicketsPresenter extends ApiBasePresenter
     public function actionSeminar(): void
     {
         $seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
-        $subevents   = $this->queryBus->handle(new SubeventsQuery(true))->map(static fn (Subevent $subevent) => new SubeventInfo($subevent->getId(), $subevent->getName()))->toArray();
+        $subevents   = $this->queryBus->handle(new SubeventsQuery(true))
+            ->map(static fn (Subevent $subevent) => new SubeventInfo($subevent->getId(), $subevent->getName()))
+            ->toArray();
 
         $data = new SeminarInfo();
         $data->setName($seminarName);
@@ -77,7 +79,7 @@ class TicketsPresenter extends ApiBasePresenter
         $this->sendJson($dataArray);
     }
 
-    public function actionCheckTicket(int $userId, ?int $subeventId): void
+    public function actionCheckTicket(int $userId, int $subeventId): void
     {
         $user = $this->queryBus->handle(new UserByIdQuery($userId));
         if ($user == null) {
