@@ -14,8 +14,7 @@ use App\Model\Settings\Settings;
 use App\Model\Structure\Queries\SubeventByIdQuery;
 use App\Model\Structure\Queries\SubeventsQuery;
 use App\Model\Structure\Subevent;
-use App\Model\User\Commands\SaveTicketCheck;
-use App\Model\User\Commands\SaveUser;
+use App\Model\User\Commands\CheckTicket;
 use App\Model\User\Queries\TicketChecksByUserAndSubeventQuery;
 use App\Model\User\Queries\UserByIdQuery;
 use App\Model\User\TicketCheck;
@@ -108,16 +107,15 @@ class TicketsPresenter extends ApiBasePresenter
             }
         }
 
+        $checks = $this->queryBus->handle(new TicketChecksByUserAndSubeventQuery($user, $subevent))
+            ->map(static fn (TicketCheck $check) => $check->getDatetime())
+            ->toArray();
+
         $data->setRoles($roles);
         $data->setSubevents($subevents);
-
-        $checks = $this->queryBus->handle(new TicketChecksByUserAndSubeventQuery($user, $subevent))->map(static fn (TicketCheck $check) => $check->getDatetime())->toArray();
         $data->setChecks($checks);
 
-        $this->commandBus->handle(new SaveTicketCheck(new TicketCheck($user, $subevent)));
-
-        $user->setAttended(true);
-        $this->commandBus->handle(new SaveUser($user));
+        $this->commandBus->handle(new CheckTicket($user, $subevent));
 
         $dataArray = $this->serializer->toArray($data);
         $this->sendJson($dataArray);
