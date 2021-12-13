@@ -30,7 +30,7 @@ class TicketCheckRepository extends AbstractRepository
             ->createQueryBuilder('t')
             ->where('t.user = :user')
             ->andWhere('t.subevent = :subevent')
-            ->orderBy('t.dateTime')
+            ->orderBy('t.datetime')
             ->setParameter('user', $user)
             ->setParameter('subevent', $subevent)
             ->getQuery()
