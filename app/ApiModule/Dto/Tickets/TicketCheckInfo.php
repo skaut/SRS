@@ -9,9 +9,9 @@ use JMS\Serializer\Annotation as JMS;
 use Nette;
 
 /**
- * Objekt pro přenos údajů o vstupence.
+ * Objekt pro přenos údajů o kontrole vstupenky.
  */
-class TicketInfo
+class TicketCheckInfo
 {
     use Nette\SmartObject;
 
@@ -34,7 +34,7 @@ class TicketInfo
      * @JMS\Type("array")
      * @var DateTimeImmutable[]
      */
-    private array $checks;
+    private array $subeventChecks;
 
     public function getAttendeeName(): string
     {
@@ -81,16 +81,16 @@ class TicketInfo
     /**
      * @return DateTimeImmutable[]
      */
-    public function getChecks(): array
+    public function getSubeventChecks(): array
     {
-        return $this->checks;
+        return $this->subeventChecks;
     }
 
     /**
-     * @param DateTimeImmutable[] $checks
+     * @param DateTimeImmutable[] $subeventChecks
      */
-    public function setChecks(array $checks): void
+    public function setSubeventChecks(array $subeventChecks): void
     {
-        $this->checks = $checks;
+        $this->subeventChecks = $subeventChecks;
     }
 }

@@ -6,7 +6,7 @@ namespace App\ApiModule\Presenters;
 
 use App\ApiModule\Dto\Tickets\SeminarInfo;
 use App\ApiModule\Dto\Tickets\SubeventInfo;
-use App\ApiModule\Dto\Tickets\TicketInfo;
+use App\ApiModule\Dto\Tickets\TicketCheckInfo;
 use App\Model\Application\RolesApplication;
 use App\Model\Application\SubeventsApplication;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -51,16 +51,16 @@ class TicketsPresenter extends ApiBasePresenter
 
         $apiToken = $this->queryBus->handle(new SettingStringValueQuery(Settings::TICKETS_API_TOKEN));
         if ($apiToken == null) {
-            $this->sendErrorResponse(IResponse::S403_FORBIDDEN, 'authorization token not generated');
+            $this->sendErrorResponse(IResponse::S403_FORBIDDEN, 'autorizační token nebyl vygenerován');
         }
 
         $headers = $this->getHttpRequest()->getHeaders();
         if (! array_key_exists('api-token', $headers)) {
-            $this->sendErrorResponse(IResponse::S403_FORBIDDEN, 'no authorization token');
+            $this->sendErrorResponse(IResponse::S403_FORBIDDEN, 'žádný autorizační token');
         }
 
         if ($headers['api-token'] != $apiToken) {
-            $this->sendErrorResponse(IResponse::S403_FORBIDDEN, 'invalid authorization token');
+            $this->sendErrorResponse(IResponse::S403_FORBIDDEN, 'špatný autorizační token');
         }
     }
 
@@ -83,19 +83,17 @@ class TicketsPresenter extends ApiBasePresenter
     {
         $user = $this->queryBus->handle(new UserByIdQuery($userId));
         if ($user == null) {
-            $this->sendErrorResponse(IResponse::S404_NOT_FOUND, 'user not found');
+            $this->sendErrorResponse(IResponse::S404_NOT_FOUND, 'neexistující uživatel');
         }
 
         $subevent = $this->queryBus->handle(new SubeventByIdQuery($subeventId));
         if ($subevent == null) {
-            $this->sendErrorResponse(IResponse::S404_NOT_FOUND, 'subevent not found');
+            $this->sendErrorResponse(IResponse::S404_NOT_FOUND, 'neexistující podakce');
         }
 
-        $data = new TicketInfo();
-        $data->setAttendeeName($user->getDisplayName());
-
-        $roles     = [];
-        $subevents = [];
+        $roles       = [];
+        $subevents   = [];
+        $hasSubevent = false;
 
         foreach ($user->getPaidAndFreeApplications() as $application) {
             if ($application instanceof RolesApplication) {
@@ -105,17 +103,26 @@ class TicketsPresenter extends ApiBasePresenter
             } elseif ($application instanceof SubeventsApplication) {
                 foreach ($application->getSubevents() as $s) {
                     $subevents[] = new SubeventInfo($s->getId(), $s->getName());
+                    if ($s->getId() === $subeventId) {
+                        $hasSubevent = true;
+                    }
                 }
             }
+        }
+
+        if (!$hasSubevent) {
+            $this->sendErrorResponse(IResponse::S400_BAD_REQUEST, 'uživatel není na podakci přihlášen');
         }
 
         $checks = $this->queryBus->handle(new TicketChecksByUserAndSubeventQuery($user, $subevent))
             ->map(static fn (TicketCheck $check) => $check->getDatetime())
             ->toArray();
 
+        $data = new TicketCheckInfo();
+        $data->setAttendeeName($user->getDisplayName());
         $data->setRoles($roles);
         $data->setSubevents($subevents);
-        $data->setChecks($checks);
+        $data->setSubeventChecks($checks);
 
         $this->commandBus->handle(new CheckTicket($user, $subevent));
 
