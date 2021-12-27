@@ -110,7 +110,7 @@ class TicketsPresenter extends ApiBasePresenter
             }
         }
 
-        if (!$hasSubevent) {
+        if (! $hasSubevent) {
             $this->sendErrorResponse(IResponse::S400_BAD_REQUEST, 'uživatel není na podakci přihlášen');
         }
 
