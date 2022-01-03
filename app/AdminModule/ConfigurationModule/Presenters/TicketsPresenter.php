@@ -93,7 +93,7 @@ class TicketsPresenter extends ConfigurationBasePresenter
         $qrCode = new QrCode();
         $qrCode
             ->setText($text)
-            ->setSize(300)
+            ->setSize(200)
             ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
             ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
 
