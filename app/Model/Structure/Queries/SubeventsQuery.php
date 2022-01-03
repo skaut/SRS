@@ -18,8 +18,13 @@ class SubeventsQuery
 
     private bool $includeUserRegistered;
 
-    public function __construct(bool $explicitOnly = false, bool $registerableNowOnly = false, ?User $user = null, bool $userNotRegisteredOnly = false, bool $includeUserRegistered = false)
-    {
+    public function __construct(
+        bool $explicitOnly = false,
+        bool $registerableNowOnly = false,
+        ?User $user = null,
+        bool $userNotRegisteredOnly = false,
+        bool $includeUserRegistered = false
+    ) {
         $this->explicitOnly          = $explicitOnly;
         $this->registerableNowOnly   = $registerableNowOnly;
         $this->user                  = $user;
