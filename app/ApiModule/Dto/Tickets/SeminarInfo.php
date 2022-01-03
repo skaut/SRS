@@ -23,22 +23,9 @@ class SeminarInfo
      */
     private array $subevents;
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
     public function setName(string $name): void
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return SubeventInfo[]
-     */
-    public function getSubevents(): array
-    {
-        return $this->subevents;
     }
 
     /**

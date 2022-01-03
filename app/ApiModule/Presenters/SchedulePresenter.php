@@ -42,7 +42,7 @@ class SchedulePresenter extends ApiBasePresenter
             $this->scheduleService->setUser($this->user->id);
         } else {
             $data = new ResponseDto();
-            $data->setMessage($this->translator->translate('common.api.authentification_error'));
+            $data->setMessage($this->translator->translate('api.common.authentification_error'));
             $data->setStatus('danger');
 
             $json     = $this->serializer->serialize($data, 'json');

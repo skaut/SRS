@@ -30,28 +30,18 @@ class TicketCheckInfo
      */
     private array $subevents;
 
+    /** @JMS\Type("boolean") */
+    private bool $hasSubevent;
+
     /**
      * @JMS\Type("array")
      * @var DateTimeImmutable[]
      */
     private array $subeventChecks;
 
-    public function getAttendeeName(): string
-    {
-        return $this->attendeeName;
-    }
-
     public function setAttendeeName(string $attendeeName): void
     {
         $this->attendeeName = $attendeeName;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getRoles(): array
-    {
-        return $this->roles;
     }
 
     /**
@@ -63,14 +53,6 @@ class TicketCheckInfo
     }
 
     /**
-     * @return SubeventInfo[]
-     */
-    public function getSubevents(): array
-    {
-        return $this->subevents;
-    }
-
-    /**
      * @param SubeventInfo[] $subevents
      */
     public function setSubevents(array $subevents): void
@@ -78,12 +60,9 @@ class TicketCheckInfo
         $this->subevents = $subevents;
     }
 
-    /**
-     * @return DateTimeImmutable[]
-     */
-    public function getSubeventChecks(): array
+    public function setHasSubevent(bool $hasSubevent): void
     {
-        return $this->subeventChecks;
+        $this->hasSubevent = $hasSubevent;
     }
 
     /**
