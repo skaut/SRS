@@ -18,6 +18,7 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Throwable;
 
 use function assert;
+use function bin2hex;
 use function random_bytes;
 
 /**
@@ -67,7 +68,7 @@ class TicketPresenter extends ExportBasePresenter
 
         $this->pdfResponse->documentTitle = 'vstupenka';
         $this->pdfResponse->pageFormat    = 'A4';
-        $this->pdfResponse->getMPDF()->SetProtection(['copy', 'print', 'print-highres'], '', random_bytes(30));
+        $this->pdfResponse->getMPDF()->SetProtection(['copy', 'print', 'print-highres'], '', bin2hex(random_bytes(40)));
 
         $this->sendResponse($this->pdfResponse);
     }

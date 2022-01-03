@@ -54,18 +54,15 @@ class PaymentProofFormFactory
         $renderer->wrappers['control']['container'] = 'div class="col-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 
-        $form->addTextArea('company', 'admin.configuration.company')
-            ->addRule(Form::FILLED, 'admin.configuration.company_empty');
+        $form->addTextArea('company', 'admin.configuration.payment.payment_proofs.company')
+            ->addRule(Form::FILLED, 'admin.configuration.payment.payment_proofs.company_empty');
 
-        $form->addText('ico', 'admin.configuration.ico')
-            ->addRule(Form::FILLED, 'admin.configuration.ico_empty')
-            ->addRule(Form::PATTERN, 'admin.configuration.ico_format', '^\d{8}$');
+        $form->addText('ico', 'admin.configuration.payment.payment_proofs.ico')
+            ->addRule(Form::FILLED, 'admin.configuration.payment.payment_proofs.ico_empty')
+            ->addRule(Form::PATTERN, 'admin.configuration.payment.payment_proofs.ico_format', '^\d{8}$');
 
-        $form->addText('accountant', 'admin.configuration.accountant')
-            ->addRule(Form::FILLED, 'admin.configuration.accountant_empty');
-
-//        $form->addText('printLocation', 'admin.configuration.print_location') todo: odstranit, pokud se nebude pouzivat v dokladech
-//            ->addRule(Form::FILLED, 'admin.configuration.print_location_empty');
+        $form->addText('accountant', 'admin.configuration.payment.payment_proofs.accountant')
+            ->addRule(Form::FILLED, 'admin.configuration.payment.payment_proofs.accountant_empty');
 
         $form->addSubmit('submit', 'admin.common.save');
 
@@ -73,7 +70,6 @@ class PaymentProofFormFactory
             'company' => $this->queryBus->handle(new SettingStringValueQuery(Settings::COMPANY)),
             'ico' => $this->queryBus->handle(new SettingStringValueQuery(Settings::ICO)),
             'accountant' => $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNTANT)),
-//            'printLocation' => $this->queryBus->handle(new SettingStringValueQuery(Settings::PRINT_LOCATION)), todo: odstranit, pokud se nebude pouzivat v dokladech
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -92,6 +88,5 @@ class PaymentProofFormFactory
         $this->commandBus->handle(new SetSettingStringValue(Settings::COMPANY, $values->company));
         $this->commandBus->handle(new SetSettingStringValue(Settings::ICO, $values->ico));
         $this->commandBus->handle(new SetSettingStringValue(Settings::ACCOUNTANT, $values->accountant));
-//        $this->commandBus->handle(new SetSettingStringValue(Settings::PRINT_LOCATION, $values->printLocation)); todo: odstranit, pokud se nebude pouzivat v dokladech
     }
 }

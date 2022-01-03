@@ -339,6 +339,7 @@ class User
         $this->programApplications          = new ArrayCollection();
         $this->lecturersBlocks              = new ArrayCollection();
         $this->notRegisteredMandatoryBlocks = new ArrayCollection();
+        $this->customInputValues            = new ArrayCollection();
     }
 
     public function getId(): int

@@ -1,0 +1,28 @@
+common:
+    authentification_error: "Uživatel musí být přihlášen."
+
+schedule:
+    saved: "Program byl úspěšně uložen."
+    saved_room_capacity: "Program byl úspěšně uložen, ale kapacita místnosti není dostatečná."
+    deleted: "Program byl úspěšně odstraněn."
+    program_not_found: "Program nebyl nalezen."
+    user_not_allowed_manage: "Nemáte právo upravovat harmonogram."
+    not_allowed_modify: "Úprava harmonogramu není povolena."
+    register_programs_not_allowed: "Přihlašování na programy není v tuto chvíli povoleno."
+    program_already_registered: "Program už máte přihlášený."
+    program_no_vacancies: "Kapacita programu je již obsazena."
+    program_not_allowed: "Nemáte oprávnění pro zápis tohoto programu."
+    program_blocked: "Tento programový blok už máte zapsaný nebo máte jiný program ve stejný čas."
+    program_registered: "Program byl úspěšně přihlášen."
+    program_not_registered: "Na tento program jste nebyli přihlášeni."
+    program_unregistered: "Program byl úspěšně odhlášen."
+    lector_has_another_program: "Lektor má v tuto dobu již jiný program."
+    room_occupied: "Místnost \"%name%\" je v tuto dobu již obsazena."
+    auto_registered_not_allowed: "Automaticky přihlašovaný program nesmí být ve stejnou dobu jako jiný program."
+
+tickets:
+    token_not_generated: "Autorizační token nebyl vygenerován. Je třeba jej vygenerovat v nastavení SRS."
+    token_not_set: "Žádný autorizační token. Proveďte znovu propojení se SRS."
+    token_invalid: "Špatný autorizační token. Proveďte znovu propojení se SRS."
+    user_not_found: "Účastník nebyl v systému nalezen."
+    subevent_not_found: "Zvolená podakce nebyla nalezena. Obnovte propojení se SRS a vyberte podakci."

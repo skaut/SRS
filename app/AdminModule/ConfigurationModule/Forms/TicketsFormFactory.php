@@ -52,11 +52,11 @@ class TicketsFormFactory
         $renderer->wrappers['control']['container'] = 'div class="col-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 
-        $ticketsAllowedCheckbox = $form->addCheckbox('ticketsAllowed', 'admin.configuration.payment.tickets.allowed');
+        $ticketsAllowedCheckbox = $form->addCheckbox('ticketsAllowed', 'admin.configuration.tickets.tickets.allowed');
         $ticketsAllowedCheckbox->addCondition($form::EQUAL, true)
             ->toggle('tickets-from');
 
-        $ticketsFromDateTime = new DateTimeControl('admin.configuration.payment.tickets.from');
+        $ticketsFromDateTime = new DateTimeControl('admin.configuration.tickets.tickets.from');
         $ticketsFromDateTime->setOption('id', 'tickets-from');
         $form->addComponent($ticketsFromDateTime, 'ticketsFrom');
 

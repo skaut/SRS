@@ -1,0 +1,29 @@
+{block main}
+    <h2>{_admin.configuration.tickets.tickets.heading}</h2>
+    <div class="card card-body bg-light pb-1 mb-3">
+        {control ticketsForm}
+    </div>
+
+    <h2>{_admin.configuration.tickets.scanner.heading}</h2>
+    <div class="card card-body bg-light pb-1 mb-3">
+        {if $apiToken}
+            <p>
+                <img src="{$qr|dataStream}">
+            </p>
+            <p>
+                <a n:href="generateToken!" class="btn btn-warning" data-toggle="confirmation" data-content="{_admin.configuration.tickets.scanner.generate_new_token_confirm}">
+                    {_admin.configuration.tickets.scanner.generate_new_token}
+                </a>
+                <a n:href="deleteToken!" class="btn btn-danger" data-toggle="confirmation" data-content="{_admin.configuration.tickets.scanner.delete_token_confirm}">
+                    {_admin.configuration.tickets.scanner.delete_token}
+                </a>
+            </p>
+        {else}
+            <p>
+                <a n:href="generateToken!" class="btn btn-primary" >
+                    {_admin.configuration.tickets.scanner.generate_token}
+                </a>
+            </p>
+        {/if}
+    </div>
+{/block}

@@ -216,6 +216,11 @@ class Settings
     public const TICKETS_FROM = 'tickets_from';
 
     /**
+     * Token pro přístup k API pro kontrolu vstupenek.
+     */
+    public const TICKETS_API_TOKEN = 'tickets_api_token';
+
+    /**
      * Google Analytics kód měření.
      */
     public const GA_ID = 'ga_id';

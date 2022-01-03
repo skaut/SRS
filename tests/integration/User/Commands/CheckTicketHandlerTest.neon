@@ -1,0 +1,14 @@
+services:
+    - App\Model\User\Repositories\TicketCheckRepository
+    - App\Model\User\Repositories\UserRepository
+    - App\Model\Application\Repositories\ApplicationRepository
+    - App\Model\Structure\Repositories\SubeventRepository
+    - App\Model\Acl\Repositories\RoleRepository
+
+    - class: App\Model\User\Commands\Handlers\CheckTicketHandler
+      tags:
+        messenger.messageHandler:
+        bus: commandBus
+
+includes:
+- ../../config/common.neon

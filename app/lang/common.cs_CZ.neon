@@ -141,28 +141,6 @@ program_mandatory_type:
     mandatory: "Povinný"
     auto_registered: "Automaticky přihlašovaný"
 
-api:
-    authentification_error: "Uživatel musí být přihlášen."
-
-    schedule:
-        saved: "Program byl úspěšně uložen."
-        saved_room_capacity: "Program byl úspěšně uložen, ale kapacita místnosti není dostatečná."
-        deleted: "Program byl úspěšně odstraněn."
-        program_not_found: "Program nebyl nalezen."
-        user_not_allowed_manage: "Nemáte právo upravovat harmonogram."
-        not_allowed_modify: "Úprava harmonogramu není povolena."
-        register_programs_not_allowed: "Přihlašování na programy není v tuto chvíli povoleno."
-        program_already_registered: "Program už máte přihlášený."
-        program_no_vacancies: "Kapacita programu je již obsazena."
-        program_not_allowed: "Nemáte oprávnění pro zápis tohoto programu."
-        program_blocked: "Tento programový blok už máte zapsaný nebo máte jiný program ve stejný čas."
-        program_registered: "Program byl úspěšně přihlášen."
-        program_not_registered: "Na tento program jste nebyli přihlášeni."
-        program_unregistered: "Program byl úspěšně odhlášen."
-        lector_has_another_program: "Lektor má v tuto dobu již jiný program."
-        room_occupied: "Místnost \"%name%\" je v tuto dobu již obsazena."
-        auto_registered_not_allowed: "Automaticky přihlašovaný program nesmí být ve stejnou dobu jako jiný program."
-
 export:
     common:
         yes: "Ano"
