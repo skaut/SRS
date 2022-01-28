@@ -1,21 +1,24 @@
 {
-    "name": "Testovací projekt",
-    "short-description": "Tohle je demo - 1 řádek textu",
-    "description": "Tohle je projekt, který je jen demo... - 1-2 odstavce textu",
+    "name": "Skautský rezervační systém",
+    "short-description": "Rezervační systém pro velké celostátní akce",
+    "description": "Rezervační systém pro velké celostátní akce",
     "help-issue-label": "help wanted",
     "tags": [
         "php",
-        "wordpress"
+        "nette",
+        "MySQL",
+        "bootstrap"
     ],
     "maintainers": [
         {
-            "name": "Pan Testovací"
+            "name": "Petra Meslová",
+            "email": "petra.meslova@gmail.com"
         }
     ],
     "links": [
         {
             "type": "email",
-            "uri": "mailto:user@skaut.cz"
+            "uri": "mailto:srs@skaut.cz"
         },
         {
             "type": "homepage",
@@ -23,24 +26,11 @@
         },
         {
             "type": "demo",
-            "uri": "https://ITpoptavky.skaut.cz"
+            "uri": "https://srs.skauting.cz"
         },
         {
             "type": "issue-tracker",
-            "uri": "https://github.com/skaut/poptavky/issues"
-        },
-        {
-            "type": "wiki",
-            "uri": "https://github.com/skaut/poptavky/wiki"
-        },
-        {
-            "type": "docs",
-            "uri": "https://napoveda.skaut.cz"
-        },
-        {
-            "type": "github-repo",
-            "uri": "https://github.com/skaut/poptavky",
-            "name": "skaut/poptavky"
+            "uri": "https://github.com/skaut/srs/issues"
         },
         {
             "type": "slack",
@@ -52,11 +42,6 @@
             "type": "facebook-page",
             "uri": "https://www.facebook.com/skautis",
             "name": "skautIS a informační technologie"
-        },
-        {
-            "type": "facebook-group",
-            "uri": "https://www.facebook.com/groups/109571433077978",
-            "name": "Dobrý skautský web - Podpora"
         }
     ]
 }
