@@ -1,13 +1,13 @@
 {
     "name": "Skautský rezervační systém",
     "short-description": "Rezervační systém pro velké celostátní akce",
-    "description": "Rezervační systém pro velké celostátní akce",
+    "description": "Rezervační systém, který využívají velké akce jako například Miquik, Helpdesk, Poradní skála a další..",
     "help-issue-label": "help wanted",
     "tags": [
         "php",
         "nette",
-        "MySQL",
-        "bootstrap"
+        "bootstrap",
+        "MySQL"
     ],
     "maintainers": [
         {
@@ -19,10 +19,6 @@
         {
             "type": "email",
             "uri": "mailto:srs@skaut.cz"
-        },
-        {
-            "type": "homepage",
-            "uri": "https://ITpoptavky.skaut.cz"
         },
         {
             "type": "demo",
