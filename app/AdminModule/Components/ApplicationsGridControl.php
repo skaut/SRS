@@ -243,12 +243,14 @@ class ApplicationsGridControl extends Control
         if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
             $p->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
             $p->redrawControl('flashes');
+
             return;
         }
 
         if (! $this->validators->validateSubeventsRegistered($selectedSubevents, $this->user)) {
             $p->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
             $p->redrawControl('flashes');
+
             return;
         }
 
@@ -278,12 +280,14 @@ class ApplicationsGridControl extends Control
             if (! $selectedSubevents->isEmpty()) {
                 $p->flashMessage('admin.users.users_applications_subevents_not_empty', 'danger');
                 $p->redrawControl('flashes');
+
                 return;
             }
         } else {
             if ($selectedSubevents->isEmpty()) {
                 $p->flashMessage('admin.users.users_applications_subevents_empty', 'danger');
                 $p->redrawControl('flashes');
+
                 return;
             }
         }
@@ -291,12 +295,14 @@ class ApplicationsGridControl extends Control
         if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
             $p->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
             $p->redrawControl('flashes');
+
             return;
         }
 
         if (! $this->validators->validateSubeventsRegistered($selectedSubevents, $this->user, $application)) {
             $p->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
             $p->redrawControl('flashes');
+
             return;
         }
 

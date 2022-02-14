@@ -244,6 +244,7 @@ class ApplicationsGridControl extends BaseContentControl
         if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
             $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
             $p->redrawControl('flashes');
+
             return;
         }
 
@@ -256,6 +257,7 @@ class ApplicationsGridControl extends BaseContentControl
                 );
                 $p->flashMessage($message, 'danger');
                 $p->redrawControl('flashes');
+
                 return;
             }
 
@@ -267,6 +269,7 @@ class ApplicationsGridControl extends BaseContentControl
                 );
                 $p->flashMessage($message, 'danger');
                 $p->redrawControl('flashes');
+
                 return;
             }
         }
@@ -305,6 +308,7 @@ class ApplicationsGridControl extends BaseContentControl
             if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
                 $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
                 $p->redrawControl('flashes');
+
                 return;
             }
 
@@ -317,6 +321,7 @@ class ApplicationsGridControl extends BaseContentControl
                     );
                     $p->flashMessage($message, 'danger');
                     $p->redrawControl('flashes');
+
                     return;
                 }
 
@@ -328,6 +333,7 @@ class ApplicationsGridControl extends BaseContentControl
                     );
                     $p->flashMessage($message, 'danger');
                     $p->redrawControl('flashes');
+
                     return;
                 }
             }
