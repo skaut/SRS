@@ -240,7 +240,6 @@ class ProgramBlocksGridControl extends Control
         $this->commandBus->handle(new RemoveBlock($block));
 
         $this->getPresenter()->flashMessage('admin.program.blocks.message.delete_success', 'success');
-
         $this->redirect('this');
     }
 

@@ -172,8 +172,7 @@ class DocumentsGridControl extends Control
         $this->documentRepository->save($document);
 
         $this->getPresenter()->flashMessage('admin.cms.documents.message.save_success', 'success');
-
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 
     /**
@@ -202,8 +201,7 @@ class DocumentsGridControl extends Control
         $this->documentRepository->save($document);
 
         $this->getPresenter()->flashMessage('admin.cms.documents.message.save_success', 'success');
-
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 
     /**
@@ -219,7 +217,6 @@ class DocumentsGridControl extends Control
         $this->documentRepository->remove($document);
 
         $this->getPresenter()->flashMessage('admin.cms.documents.message.delete_success', 'success');
-
         $this->redirect('this');
     }
 }

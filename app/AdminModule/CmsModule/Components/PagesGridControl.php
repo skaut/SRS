@@ -189,8 +189,7 @@ class PagesGridControl extends Control
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages.message.save_success', 'success');
-
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**
@@ -214,8 +213,7 @@ class PagesGridControl extends Control
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages.message.save_success', 'success');
-
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**
@@ -232,7 +230,6 @@ class PagesGridControl extends Control
         $this->cmsService->removePage($page);
 
         $this->getPresenter()->flashMessage('admin.cms.pages.message.delete_success', 'success');
-
         $this->redirect('this');
     }
 

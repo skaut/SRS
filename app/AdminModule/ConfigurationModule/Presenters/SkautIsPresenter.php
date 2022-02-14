@@ -69,7 +69,6 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         }
 
         $this->flashMessage('admin.configuration.skautis_event_disconnect_successful', 'success');
-
         $this->redirect('this');
     }
 
@@ -83,7 +82,6 @@ class SkautIsPresenter extends ConfigurationBasePresenter
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('admin.configuration.skautis_event_connect_successful', 'success');
-
             $this->redirect('this');
         };
 

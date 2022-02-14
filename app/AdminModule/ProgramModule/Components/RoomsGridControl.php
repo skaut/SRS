@@ -151,8 +151,7 @@ class RoomsGridControl extends Control
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.program.rooms.message.save_success', 'success');
-
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**
@@ -172,8 +171,7 @@ class RoomsGridControl extends Control
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.program.rooms.message.save_success', 'success');
-
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**
@@ -189,7 +187,6 @@ class RoomsGridControl extends Control
         $this->commandBus->handle(new RemoveRoom($room));
 
         $this->getPresenter()->flashMessage('admin.program.rooms.message.delete_success', 'success');
-
         $this->redirect('this');
     }
 

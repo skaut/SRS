@@ -102,7 +102,6 @@ class FaqGridControl extends Control
         $this->faqRepository->remove($faq);
 
         $this->getPresenter()->flashMessage('admin.cms.faq.message.delete_success', 'success');
-
         $this->redirect('this');
     }
 

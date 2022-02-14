@@ -173,7 +173,7 @@ class PaymentsGridControl extends Control
         $this->applicationService->createPaymentManual($values->date, $values->amount, $values->variableSymbol, $loggedUser);
 
         $this->getPresenter()->flashMessage('admin.payments.payments.saved', 'success');
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 
     /**

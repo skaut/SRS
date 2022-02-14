@@ -92,7 +92,6 @@ class PlacePointsGridControl extends Control
         $this->placePointRepository->remove($input);
 
         $this->getPresenter()->flashMessage('admin.configuration.place_points_deleted', 'success');
-
         $this->redirect('this');
     }
 }

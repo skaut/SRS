@@ -135,8 +135,7 @@ class DocumentTagsGridControl extends Control
         $this->tagRepository->save($tag);
 
         $this->getPresenter()->flashMessage('admin.cms.documents.tags.message.save_success', 'success');
-
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 
     /**
@@ -155,8 +154,7 @@ class DocumentTagsGridControl extends Control
         $this->tagRepository->save($tag);
 
         $this->getPresenter()->flashMessage('admin.cms.documents.tags.message.save_success', 'success');
-
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 
     /**
@@ -171,7 +169,6 @@ class DocumentTagsGridControl extends Control
         $this->tagRepository->remove($tag);
 
         $this->getPresenter()->flashMessage('admin.cms.documents.tags.message.delete_success', 'success');
-
         $this->redirect('this');
     }
 }

@@ -125,7 +125,6 @@ class CustomInputsGridControl extends Control
         $this->customInputRepository->remove($input);
 
         $this->getPresenter()->flashMessage('admin.configuration.custom_inputs_deleted', 'success');
-
         $this->redirect('this');
     }
 

@@ -137,8 +137,7 @@ class ProgramCategoriesGridControl extends Control
         $this->commandBus->handle(new SaveCategory($category, null));
 
         $this->getPresenter()->flashMessage('admin.program.categories.message.save_success', 'success');
-
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 
     /**
@@ -158,7 +157,7 @@ class ProgramCategoriesGridControl extends Control
         $this->commandBus->handle(new SaveCategory($category, $categoryOld));
 
         $this->getPresenter()->flashMessage('admin.program.categories.message.save_success', 'success');
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 
     /**

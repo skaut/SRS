@@ -242,12 +242,14 @@ class ApplicationsGridControl extends Control
 
         if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
             $p->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
-            $this->redirect('this');
+            $p->redrawControl('flashes');
+            return;
         }
 
         if (! $this->validators->validateSubeventsRegistered($selectedSubevents, $this->user)) {
             $p->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
-            $this->redirect('this');
+            $p->redrawControl('flashes');
+            return;
         }
 
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
@@ -255,7 +257,7 @@ class ApplicationsGridControl extends Control
         $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $loggedUser);
 
         $p->flashMessage('admin.users.users_applications_saved', 'success');
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**
@@ -275,23 +277,27 @@ class ApplicationsGridControl extends Control
         if ($application instanceof RolesApplication) {
             if (! $selectedSubevents->isEmpty()) {
                 $p->flashMessage('admin.users.users_applications_subevents_not_empty', 'danger');
-                $this->redirect('this');
+                $p->redrawControl('flashes');
+                return;
             }
         } else {
             if ($selectedSubevents->isEmpty()) {
                 $p->flashMessage('admin.users.users_applications_subevents_empty', 'danger');
-                $this->redirect('this');
+                $p->redrawControl('flashes');
+                return;
             }
         }
 
         if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
             $p->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
-            $this->redirect('this');
+            $p->redrawControl('flashes');
+            return;
         }
 
         if (! $this->validators->validateSubeventsRegistered($selectedSubevents, $this->user, $application)) {
             $p->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
-            $this->redirect('this');
+            $p->redrawControl('flashes');
+            return;
         }
 
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
@@ -311,7 +317,7 @@ class ApplicationsGridControl extends Control
         });
 
         $p->flashMessage('admin.users.users_applications_saved', 'success');
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**

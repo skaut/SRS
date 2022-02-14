@@ -243,7 +243,8 @@ class ApplicationsGridControl extends BaseContentControl
 
         if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
             $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
-            $this->redirect('this');
+            $p->redrawControl('flashes');
+            return;
         }
 
         foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
@@ -254,7 +255,8 @@ class ApplicationsGridControl extends BaseContentControl
                     ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
                 );
                 $p->flashMessage($message, 'danger');
-                $this->redirect('this');
+                $p->redrawControl('flashes');
+                return;
             }
 
             if (! $this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
@@ -264,14 +266,15 @@ class ApplicationsGridControl extends BaseContentControl
                     ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
                 );
                 $p->flashMessage($message, 'danger');
-                $this->redirect('this');
+                $p->redrawControl('flashes');
+                return;
             }
         }
 
         $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $this->user);
 
         $p->flashMessage('web.profile.applications_add_subevents_successful', 'success');
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**
@@ -301,7 +304,8 @@ class ApplicationsGridControl extends BaseContentControl
 
             if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
                 $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
-                $this->redirect('this');
+                $p->redrawControl('flashes');
+                return;
             }
 
             foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
@@ -312,7 +316,8 @@ class ApplicationsGridControl extends BaseContentControl
                         ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
                     );
                     $p->flashMessage($message, 'danger');
-                    $this->redirect('this');
+                    $p->redrawControl('flashes');
+                    return;
                 }
 
                 if (! $this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
@@ -322,14 +327,15 @@ class ApplicationsGridControl extends BaseContentControl
                         ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
                     );
                     $p->flashMessage($message, 'danger');
-                    $this->redirect('this');
+                    $p->redrawControl('flashes');
+                    return;
                 }
             }
 
             $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $this->user);
 
             $p->flashMessage('web.profile.applications_edit_successful', 'success');
-            $this->redirect('this');
+            $p->redrawControl('flashes');
         }
     }
 

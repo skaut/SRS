@@ -98,7 +98,6 @@ class NewsGridControl extends Control
         $this->newsRepository->remove($news);
 
         $this->getPresenter()->flashMessage('admin.cms.news.message.delete_success', 'success');
-
         $this->redirect('this');
     }
 

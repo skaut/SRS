@@ -494,7 +494,6 @@ class UsersGridControl extends Control
         $this->userRepository->remove($user);
 
         $this->getPresenter()->flashMessage('admin.users.users_deleted', 'success');
-
         $this->redirect('this');
     }
 

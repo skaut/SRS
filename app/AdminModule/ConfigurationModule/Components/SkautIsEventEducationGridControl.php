@@ -91,6 +91,6 @@ class SkautIsEventEducationGridControl extends Control
         $this->subeventRepository->save($subevent);
 
         $this->getPresenter()->flashMessage('admin.configuration.skautis_event_education_connection_saved', 'success');
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 }

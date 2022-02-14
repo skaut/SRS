@@ -97,7 +97,6 @@ class DiscountsGridControl extends Control
         $this->discountRepository->remove($discount);
 
         $this->getPresenter()->flashMessage('admin.configuration.discounts_deleted', 'success');
-
         $this->redirect('this');
     }
 }
