@@ -8,12 +8,10 @@ window.$ = $;
 // bootstrap
 import 'bootstrap';
 
-// fontawesome
-import '@fortawesome/fontawesome-free/js/fontawesome'
-import '@fortawesome/fontawesome-free/js/solid'
-
 // CSS
 import 'bootstrap/dist/css/bootstrap.css'
+import '@fortawesome/fontawesome-free/css/fontawesome.css'
+import '@fortawesome/fontawesome-free/css/solid.css'
 import 'bootstrap-datetime-picker/css/bootstrap-datetimepicker.css'
 import 'bootstrap-select/dist/css/bootstrap-select.css'
 import 'bootstrap-fileinput/css/fileinput.css'
