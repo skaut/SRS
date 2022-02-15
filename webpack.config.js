@@ -23,25 +23,8 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                use: ['source-map-loader'],
+                use: 'source-map-loader',
                 enforce: 'pre'
-            },
-            {
-                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
-                use: [
-                    {
-                        loader: 'url-loader',
-                        options: {
-                            limit: 4096,
-                            fallback: {
-                                loader: 'file-loader',
-                                options: {
-                                    name: 'fonts/[name].[hash:8].[ext]'
-                                }
-                            }
-                        }
-                    }
-                ]
             },
             {
                 test: /\.(css|scss|sass)$/,
