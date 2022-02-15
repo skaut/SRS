@@ -3,7 +3,7 @@
         <div class="card card-body bg-light mb-3">
             <div class="input-group mb-2">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><span class="fa fa-search fa-fw"></span></span>
+                    <span class="input-group-text"><span class="fa fa-magnifying-glass fa-fw"></span></span>
                 </div>
                 <input id="textbox-search" class="form-control" type="text" v-model="search">
             </div>

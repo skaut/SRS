@@ -4,10 +4,22 @@
 import 'jquery'
 import 'jquery-ui-sortable';
 window.$ = $;
-// jquery mousewheel
 
 // bootstrap
 import 'bootstrap';
+
+// fontawesome
+import '@fortawesome/fontawesome-free/js/fontawesome'
+import '@fortawesome/fontawesome-free/js/solid'
+
+// CSS
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-datetime-picker/css/bootstrap-datetimepicker.css'
+import 'bootstrap-select/dist/css/bootstrap-select.css'
+import 'bootstrap-fileinput/css/fileinput.css'
+import 'happy-inputs/src/happy.css'
+import 'ublaboo-datagrid/assets/datagrid.css'
+import 'ublaboo-datagrid/assets/datagrid-spinners.css'
 
 // nette-forms + live-form-validation
 import {LiveForm, Nette} from 'live-form-validation';
@@ -15,7 +27,7 @@ window.Nette = Nette;
 window.LiveForm = LiveForm;
 Nette.initOnLoad();
 LiveForm.setOptions({
-    messageErrorPrefix: '<i class="fa fa-exclamation-circle" aria-hidden="true"></i>&nbsp;'
+    messageErrorPrefix: '<i class="fa fa-circle-exclamation" aria-hidden="true"></i>&nbsp;'
 });
 
 // naja
@@ -119,7 +131,7 @@ function initConfirms() {
         btnOkIcon: 'fa fa-check',
         btnOkLabel: 'Ano',
         btnCancelClass: 'btn btn-sm btn-secondary',
-        btnCancelIcon: 'fa fa-times',
+        btnCancelIcon: 'fa fa-xmark',
         btnCancelLabel: 'Ne'
     });
 }

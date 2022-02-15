@@ -35,7 +35,7 @@
                                         <option v-for="resource in resources" :value="resource.id">{{ resource.title }}</option>
                                     </select>
                                     <span v-if="(getResourceById(selectedEventInfo.resourceId).extendedProps.capacity || Number.MAX_VALUE) < (selectedEventInfo.event.extendedProps.block.capacity || 0)" class="text-warning">
-                                        <span class="fa fa-exclamation-triangle"></span>
+                                        <span class="fa fa-triangle-exclamation"></span>
                                         Kapacita místnosti je menší než kapacita bloku.
                                     </span>
                                 </div>

@@ -120,7 +120,7 @@
                                         {/if}
                                     {case $customInputTypeFile}
                                         <a href="{$customInputValue->getValue()}" target="_blank" class="btn btn-sm btn-secondary" n:if="$customInputValue->getValue() !== null">
-                                            <span class="fa fa-download"></span>
+                                            <span class="fa fa-file-arrow-down"></span>
                                             {basename($customInputValue->getValue())}
                                         </a>
                                     {default}

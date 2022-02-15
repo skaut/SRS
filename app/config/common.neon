@@ -126,34 +126,6 @@ forms:
 
 webloader:
     css:
-        web:
-            files:
-                - css/libs/jquery/jquery-ui.min.css
-                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
-                - css/libs/font-awesome.min.css
-                - css/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css
-                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/css/bootstrap-select.css
-                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/css/fileinput.min.css
-                - css/libs/ublaboo-datagrid/happy.min.css
-                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid.css
-                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid-spinners.css
-                - css/web/layout.css
-                - css/web/style.css
-
-        admin:
-            files:
-                - css/libs/jquery/jquery-ui.min.css
-#                - libs/jquery/jquery.floatingscroll.css
-                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
-                - css/libs/font-awesome.min.css
-                - css/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css
-                - %appDir%/../vendor/snapappointments/bootstrap-select/dist/css/bootstrap-select.css
-                - %appDir%/../vendor/kartik-v/bootstrap-fileinput/css/fileinput.min.css
-                - css/libs/ublaboo-datagrid/happy.min.css
-                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid.css
-                - %appDir%/../vendor/ublaboo/datagrid/assets/datagrid-spinners.css
-                - css/admin/style.css
-
         install:
             files:
                 - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css

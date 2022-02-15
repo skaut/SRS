@@ -3,7 +3,7 @@
 const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
 const { ProvidePlugin, DefinePlugin } = require('webpack');
-const window = require('global/window');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     mode: "production",
@@ -22,25 +22,36 @@ module.exports = {
                 use: 'vue-loader'
             },
             {
-                test: /\.css$/i,
-                use: [
-                    'style-loader',
-                    'css-loader'
-                ]
-            },
-            {
-                test: /\.scss$/,
-                use: [
-                    'vue-style-loader',
-                    'css-loader',
-                    'sass-loader'
-                ]
-            },
-            {
                 test: /\.js$/,
                 use: ['source-map-loader'],
                 enforce: 'pre'
-            }
+            },
+            {
+                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 4096,
+                            fallback: {
+                                loader: 'file-loader',
+                                options: {
+                                    name: 'fonts/[name].[hash:8].[ext]'
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.(css|scss|sass)$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'postcss-loader',
+                    'sass-loader'
+                ],
+            },
         ]
     },
     plugins: [
@@ -55,7 +66,11 @@ module.exports = {
         new DefinePlugin({
             ALERT_DURATION: 5000,
             ALERT_ANIMATION: 1000,
-        })
+        }),
+        new MiniCssExtractPlugin({
+            filename: '[name]/bundle.min.css',
+        }),
+        // new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin),
     ],
     optimization: {
         minimize: false

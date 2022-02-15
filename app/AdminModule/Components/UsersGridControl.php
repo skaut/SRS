@@ -358,7 +358,7 @@ class UsersGridControl extends Control
                                         ->setAttribute('title', basename($customInputValue->getValue()))
                                         ->setAttribute('target', '_blank')
                                         ->setAttribute('class', 'btn btn-xs btn-secondary')
-                                        ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-download'))
+                                        ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-file-arrow-down'))
                                     : '';
 
                             default:

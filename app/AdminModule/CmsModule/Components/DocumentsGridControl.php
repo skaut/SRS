@@ -95,7 +95,7 @@ class DocumentsGridControl extends Control
                     ->setAttribute('href', $document->getFile())
                     ->setAttribute('target', '_blank')
                     ->setAttribute('class', 'btn btn-xs btn-secondary')
-                    ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-download'))
+                    ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-file-arrow-down'))
                     ->addText(' ' . basename($document->getFile()));
             });
 

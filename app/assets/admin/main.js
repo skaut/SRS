@@ -1,7 +1,5 @@
 'use strict';
 
-import naja from "naja";
-
 require('../common/main');
 
 // tinymce
@@ -60,5 +58,5 @@ naja.addEventListener('complete', () => {
     });
 });
 
-//
+// kalendář programů
 import './schedule/main'
