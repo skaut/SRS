@@ -23,8 +23,7 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                use: 'source-map-loader',
-                enforce: 'pre'
+                use: 'babel-loader'
             },
             {
                 test: /\.(css|scss|sass)$/,
@@ -59,8 +58,5 @@ module.exports = {
         }),
         // new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin),
     ],
-    optimization: {
-        minimize: false
-    },
     devtool: 'source-map'
 };
