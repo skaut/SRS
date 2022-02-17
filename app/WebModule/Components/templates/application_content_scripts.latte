@@ -1,8 +1,46 @@
 <script>
+    // zabraňuje opakovanému odeslání formuláře
     $(function () {
         $('form#frm-applicationContent-applicationForm').submit(function () {
-            if(!LiveForm.forms[this.id].hasError)
+            if(!LiveForm.forms[this.id].hasError) {
                 $(this).find(':input[type=submit]').prop('disabled', true);
+            }
         });
     });
+
+    Nette.validators['AppWebModuleFormsApplicationFormFactory_toggleCustomInputVisibility'] = (elem, arg, value) => {
+        let i;
+        for (i = 0; i < value.length; i++) {
+            if ($.inArray(parseInt(value[i]), arg) !== -1) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    Nette.validators['AppWebModuleFormsApplicationFormFactory_toggleCustomInputRequired'] = (elem, arg, value) => {
+        const label = $('#form-group-' + arg.id + ' label');
+        let i;
+        for (i = 0; i < value.length; i++) {
+            if ($.inArray(parseInt(value[i]), arg.roles) !== -1) {
+                label.addClass('required');
+                return true;
+            }
+        }
+        label.removeClass('required');
+        return false;
+    };
+
+    Nette.validators['AppWebModuleFormsApplicationFormFactory_toggleSubeventsRequired'] = (elem, arg, value) => {
+        const label = $('#form-group-subevents label');
+        let i;
+        for (i = 0; i < value.length; i++) {
+            if ($.inArray(parseInt(value[i]), arg) !== -1) {
+                label.addClass('required');
+                return true;
+            }
+        }
+        label.removeClass('required');
+        return false;
+    };
 </script>

@@ -420,18 +420,18 @@ class ApplicationFormFactory
             $subeventsOptions
         );
         $subeventsSelect->setOption('id', 'form-group-subevents');
-        $subeventsSelect
-            ->setRequired(false)
-            ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
 
         $rolesSelect = $form['roles'];
         assert($rolesSelect instanceof MultiSelectBox);
-
         $subeventsSelect->addConditionOn(
             $rolesSelect,
             self::class . '::toggleSubeventsRequired',
             Helpers::getIds($this->roleRepository->findFilteredRoles(false, true, false))
         )->addRule(Form::FILLED, 'web.application_content.subevents_empty');
+
+        $subeventsSelect
+            ->setRequired(false)
+            ->addRule([$this, 'validateSubeventsCapacities'], 'web.application_content.subevents_capacity_occupied');
 
         // generovani chybovych hlasek pro vsechny kombinace podakci
         foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
@@ -470,8 +470,15 @@ class ApplicationFormFactory
 
         $rolesSelect = $form->addMultiSelect('roles', 'web.application_content.roles')->setItems(
             $registerableOptions
-        )
-            ->addRule(Form::FILLED, 'web.application_content.roles_empty')
+        );
+
+        foreach ($this->customInputRepository->findAll() as $customInput) {
+            $customInputId = 'custom' . $customInput->getId();
+            $rolesSelect->addCondition(self::class . '::toggleCustomInputVisibility', Helpers::getIds($customInput->getRoles()))
+                ->toggle('form-group-' . $customInputId);
+        }
+
+        $rolesSelect->addRule(Form::FILLED, 'web.application_content.roles_empty')
             ->addRule([$this, 'validateRolesCapacities'], 'web.application_content.roles_capacity_occupied')
             ->addRule([$this, 'validateRolesRegisterable'], 'web.application_content.roles_not_registerable')
             ->addRule([$this, 'validateRolesMinimumAge'], 'web.application_content.roles_require_minimum_age');
@@ -501,12 +508,6 @@ class ApplicationFormFactory
                     [$role]
                 );
             }
-        }
-
-        foreach ($this->customInputRepository->findAll() as $customInput) {
-            $customInputId = 'custom' . $customInput->getId();
-            $rolesSelect->addCondition(self::class . '::toggleCustomInputVisibility', Helpers::getIds($customInput->getRoles()))
-                ->toggle('form-group-' . $customInputId);
         }
 
         // pokud je na vyber jen jedna role, je oznacena
