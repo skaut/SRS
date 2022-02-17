@@ -49,8 +49,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button @click="handleEventUpdateRoom()" class="btn btn-primary pull-left" :disabled="!config.allowed_modify_schedule">Uložit</button>
-                        <button @click="handleEventRemove()" class="btn btn-danger pull-right" :disabled="!config.allowed_modify_schedule">Odstranit</button>
+                        <button @click="handleEventRemove()" class="btn btn-danger" :disabled="!config.allowed_modify_schedule">Odstranit</button>
+                        <button @click="handleEventUpdateRoom()" class="btn btn-primary" :disabled="!config.allowed_modify_schedule">Uložit</button>
                     </div>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="col-auto">
-                <div class="spinner float-left" v-show="loading > 0">
+                <div class="spinner" v-show="loading > 0">
                     <span class="fa fa-spinner fa-pulse fa-2x" style=""></span>
                 </div>
             </div>

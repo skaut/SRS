@@ -9,6 +9,7 @@ window.$ = $;
 import 'bootstrap';
 
 // CSS
+import 'jquery-ui/themes/base/sortable.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import '@fortawesome/fontawesome-free/css/fontawesome.css'
 import '@fortawesome/fontawesome-free/css/solid.css'
