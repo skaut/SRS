@@ -79,6 +79,12 @@ class DiscountForm extends UI\Control
         $this->template->render();
     }
 
+    public function renderScripts(): void
+    {
+        $this->template->setFile(__DIR__ . '/templates/discount_form_scripts.latte');
+        $this->template->render();
+    }
+
     /**
      * Vytvoří formulář.
      */
