@@ -139,10 +139,7 @@ class EditUserSeminarFormFactory
                 'roles',
                 'admin.users.users_roles',
                 $this->aclService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED])
-            )
-                ->addRule(Form::FILLED, 'admin.users.users_edit_roles_empty')
-                ->addRule([$this, 'validateRolesNonregistered'], 'admin.users.users_edit_roles_nonregistered')
-                ->addRule([$this, 'validateRolesCapacities'], 'admin.users.users_edit_roles_occupied');
+            );
 
             $form->addCheckbox('approved', 'admin.users.users_approved_form');
 
@@ -255,6 +252,10 @@ class EditUserSeminarFormFactory
                     ->toggle('form-group-' . $customInputId);
             }
         }
+
+        $rolesSelect->addRule(Form::FILLED, 'admin.users.users_edit_roles_empty')
+            ->addRule([$this, 'validateRolesNonregistered'], 'admin.users.users_edit_roles_nonregistered')
+            ->addRule([$this, 'validateRolesCapacities'], 'admin.users.users_edit_roles_occupied');
 
         $form->addTextArea('about', 'admin.users.users_about_me');
 
