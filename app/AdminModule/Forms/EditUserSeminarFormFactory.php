@@ -251,11 +251,11 @@ class EditUserSeminarFormFactory
                 $rolesSelect->addCondition(self::class . '::toggleCustomInputVisibility', Helpers::getIds($customInput->getRoles()))
                     ->toggle('form-group-' . $customInputId);
             }
-        }
 
-        $rolesSelect->addRule(Form::FILLED, 'admin.users.users_edit_roles_empty')
-            ->addRule([$this, 'validateRolesNonregistered'], 'admin.users.users_edit_roles_nonregistered')
-            ->addRule([$this, 'validateRolesCapacities'], 'admin.users.users_edit_roles_occupied');
+            $rolesSelect->addRule(Form::FILLED, 'admin.users.users_edit_roles_empty')
+                ->addRule([$this, 'validateRolesNonregistered'], 'admin.users.users_edit_roles_nonregistered')
+                ->addRule([$this, 'validateRolesCapacities'], 'admin.users.users_edit_roles_occupied');
+        }
 
         $form->addTextArea('about', 'admin.users.users_about_me');
 
