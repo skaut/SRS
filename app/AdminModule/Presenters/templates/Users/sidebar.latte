@@ -26,12 +26,7 @@
             $('#textbox-search').on('keyup', function () {
                 var value = $(this).val();
                 if (value.length >= 2) {
-                    $.nette.ajax({
-                        'url': {link search!},
-                        'data': {
-                            text: value
-                        }
-                    });
+                    naja.makeRequest('GET', '?do=search', {'text': value});
                 }
                 else {
                     $('div#results').hide();

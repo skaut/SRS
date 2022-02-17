@@ -7,7 +7,8 @@
         {else}
             <div class="alert alert-info alert-forever">{_admin.configuration.skautis_event_name, ['name' => $event]}</div>
             <p>
-                <a class="btn btn-danger" id="disconnect-button" n:href="disconnect!">
+                <a class="btn btn-danger" id="disconnect-button" n:href="disconnect!" data-toggle="confirmation"
+                   data-content="{_admin.configuration.skautis_event_disconnect_confirm}">
                     {_admin.configuration.skautis_event_disconnect}
                 </a>
             </p>
@@ -18,16 +19,4 @@
         <h2>{_admin.configuration.skautis_event_education_heading}</h2>
         {control skautIsEventEducationGrid}
     {/if}
-{/block}
-
-{block scripts}
-    {include #parent}
-
-    <script>
-        $(function () {
-            $("#disconnect-button").confirm({
-                text: {_admin.configuration.skautis_event_disconnect_confirm}
-            });
-        });
-    </script>
 {/block}

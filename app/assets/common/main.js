@@ -31,6 +31,7 @@ LiveForm.setOptions({
 
 // naja
 import naja from 'naja';
+window.naja = naja;
 naja.addEventListener('init', () => {
     init();
 });
