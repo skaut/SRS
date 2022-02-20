@@ -250,9 +250,7 @@ abstract class Application
     {
         $numbersWords = new Numbers_Words();
         $feeWord      = $numbersWords->toWords($this->getFee(), 'cs');
-        $feeWord      = str_replace(' ', '', $feeWord);
-
-        return $feeWord;
+        return str_replace(' ', '', $feeWord);
     }
 
     public function setFee(int $fee): void

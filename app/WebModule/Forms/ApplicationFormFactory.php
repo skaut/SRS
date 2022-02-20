@@ -511,7 +511,7 @@ class ApplicationFormFactory
 
         // pokud je na vyber jen jedna role, je oznacena
         if (count($registerableOptions) === 1) {
-            $rolesSelect->setDisabled(true);
+            $rolesSelect->setDisabled();
             $rolesSelect->setDefaultValue(array_keys($registerableOptions));
         }
     }

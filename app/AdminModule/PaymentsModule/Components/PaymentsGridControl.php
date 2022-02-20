@@ -95,7 +95,7 @@ class PaymentsGridControl extends Control
             ->setSortable();
 
         $grid->addColumnNumber('amount', 'admin.payments.payments.amount')
-            ->setFormat(2, ',', ' ')
+            ->setFormat(2, ',')
             ->setSortable();
 
         $grid->addColumnText('variableSymbol', 'admin.payments.payments.variable_symbol')
