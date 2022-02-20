@@ -116,7 +116,6 @@ class CustomInputsGridControl extends Control
     /**
      * Zpracuje odstranění vlastního pole.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void

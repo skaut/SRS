@@ -111,7 +111,6 @@ class AddLectorFormFactory
      * Zpracuje formulář.
      *
      * @throws Nette\Utils\UnknownImageFileException
-     * @throws ORMException
      * @throws Exception
      */
     public function processForm(Form $form, stdClass $values): void

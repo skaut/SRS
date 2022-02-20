@@ -334,7 +334,6 @@ class EditUserSeminarFormFactory
                         $customInputValue = $customInputValue ?: new CustomFileValue($customInput, $this->user);
                         assert($customInputValue instanceof CustomFileValue);
                         $oldValue = $customInputValue->getValue();
-                        $newValue = $values->$customInputId;
                         assert($newValue instanceof FileUpload);
                         if ($newValue->getError() === UPLOAD_ERR_OK) {
                             if ($oldValue !== null) {

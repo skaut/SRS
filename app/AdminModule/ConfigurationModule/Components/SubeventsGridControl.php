@@ -95,8 +95,6 @@ class SubeventsGridControl extends Control
     /**
      * Zpracuje odstranění podakce.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function handleDelete(int $id): void

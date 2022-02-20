@@ -93,7 +93,6 @@ class FaqGridControl extends Control
     /**
      * Zpracuje odstranění otázky.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void

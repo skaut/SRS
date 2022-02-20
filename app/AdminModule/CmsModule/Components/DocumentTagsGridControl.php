@@ -122,7 +122,6 @@ class DocumentTagsGridControl extends Control
     /**
      * Zpracuje přidání štítku dokumentu.
      *
-     * @throws ORMException
      */
     public function add(stdClass $values): void
     {
@@ -140,7 +139,6 @@ class DocumentTagsGridControl extends Control
     /**
      * Zpracuje úpravu štítku dokumentu.
      *
-     * @throws ORMException
      */
     public function edit(string $id, stdClass $values): void
     {
@@ -158,7 +156,6 @@ class DocumentTagsGridControl extends Control
     /**
      * Zpracuje odstranění štítku dokumentu.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void

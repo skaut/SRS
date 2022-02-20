@@ -76,7 +76,6 @@ class EditTemplateFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws ORMException
      */
     public function processForm(Form $form, stdClass $values): void
     {

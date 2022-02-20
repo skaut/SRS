@@ -89,7 +89,6 @@ class NewsGridControl extends Control
     /**
      * Zpracuje odstranění aktuality.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void

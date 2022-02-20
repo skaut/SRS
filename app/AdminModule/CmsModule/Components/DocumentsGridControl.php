@@ -153,7 +153,6 @@ class DocumentsGridControl extends Control
     /**
      * Zpracuje přidání dokumentu.
      *
-     * @throws ORMException
      */
     public function add(stdClass $values): void
     {
@@ -177,7 +176,6 @@ class DocumentsGridControl extends Control
     /**
      * Zpracuje úpravu dokumentu.
      *
-     * @throws ORMException
      */
     public function edit(string $id, stdClass $values): void
     {
@@ -205,7 +203,6 @@ class DocumentsGridControl extends Control
     /**
      * Zpracuje odstranění dokumentu.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void

@@ -88,7 +88,6 @@ class DiscountsGridControl extends Control
     /**
      * Zpracuje odstranění slevy.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void

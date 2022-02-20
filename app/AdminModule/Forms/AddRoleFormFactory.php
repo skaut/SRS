@@ -66,8 +66,6 @@ class AddRoleFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function processForm(Form $form, stdClass $values): void
     {

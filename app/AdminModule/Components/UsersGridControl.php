@@ -483,7 +483,6 @@ class UsersGridControl extends Control
     /**
      * Zpracuje odstranění externího uživatele.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void

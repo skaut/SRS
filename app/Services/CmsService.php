@@ -58,8 +58,6 @@ class CmsService
      * Odstraní stránku.
      *
      * @throws PageException
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function removePage(Page $page): void
     {
@@ -126,8 +124,6 @@ class CmsService
     /**
      * Uloží obsah.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function saveContent(Content $content): void
     {
@@ -139,8 +135,6 @@ class CmsService
     /**
      * Odstraní obsah.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function removeContent(Content $content): void
     {

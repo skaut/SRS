@@ -123,7 +123,6 @@ class SkautIsEventFormFactory
      *
      * @throws NonUniqueResultException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void

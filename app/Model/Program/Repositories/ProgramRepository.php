@@ -14,6 +14,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 /**
  * Třída spravující programy.
@@ -131,6 +132,7 @@ class ProgramRepository extends AbstractRepository
      * Vrací programy překrývající se s programem.
      *
      * @return Collection<int, Program>
+     * @throws Exception
      */
     public function findOverlappingPrograms(Program $program): Collection
     {

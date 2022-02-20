@@ -922,8 +922,6 @@ class ApplicationService
      *
      * @param Collection<int, Role> $roles
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     private function incrementRolesOccupancy(Collection $roles): void
     {
@@ -938,8 +936,6 @@ class ApplicationService
      *
      * @param Collection<int, Role> $roles
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     private function decrementRolesOccupancy(Collection $roles): void
     {
@@ -954,8 +950,6 @@ class ApplicationService
      *
      * @param Collection<int, Subevent> $subevents
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     private function incrementSubeventsOccupancy(Collection $subevents): void
     {
@@ -970,8 +964,6 @@ class ApplicationService
      *
      * @param Collection<int, Subevent> $subevents
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     private function decrementSubeventsOccupancy(Collection $subevents): void
     {
@@ -982,7 +974,6 @@ class ApplicationService
     }
 
     /**
-     * @throws ORMException
      */
     private function updateUserPaymentInfo(User $user): void
     {

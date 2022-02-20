@@ -218,8 +218,6 @@ class PagesGridControl extends Control
      * Zpracuje odstranění stránky.
      *
      * @throws AbortException
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws PageException
      */
     public function handleDelete(int $id): void
