@@ -4,6 +4,7 @@
 import 'jquery'
 import 'jquery-ui-sortable';
 window.$ = $;
+window.jQuery = $;
 
 // bootstrap
 import 'bootstrap';
