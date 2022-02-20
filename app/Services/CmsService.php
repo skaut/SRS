@@ -14,7 +14,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
+use Nette\Caching\Storage;
 use Throwable;
 
 use function array_map;
@@ -32,7 +32,7 @@ class CmsService
 
     private ContentRepository $contentRepository;
 
-    public function __construct(PageRepository $pageRepository, ContentRepository $contentRepository, IStorage $storage)
+    public function __construct(PageRepository $pageRepository, ContentRepository $contentRepository, Storage $storage)
     {
         $this->pageRepository    = $pageRepository;
         $this->contentRepository = $contentRepository;

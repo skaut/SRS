@@ -13,7 +13,7 @@ use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;
 use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
+use Nette\Caching\Storage;
 use Nette\Security as NS;
 use Nette\Security\IAuthenticator;
 use Nette\Security\Identity;
@@ -44,7 +44,7 @@ class Authenticator implements IAuthenticator
         RoleRepository $roleRepository,
         SkautIsService $skautIsService,
         FilesService $filesService,
-        IStorage $storage
+        Storage $storage
     ) {
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;

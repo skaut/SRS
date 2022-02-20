@@ -15,7 +15,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
+use Nette\Caching\Storage;
 use Nette\Localization\Translator;
 use Throwable;
 
@@ -47,7 +47,7 @@ class AclService
         PermissionRepository $permissionRepository,
         SrsResourceRepository $resourceRepository,
         Translator $translator,
-        IStorage $storage
+        Storage $storage
     ) {
         $this->roleRepository       = $roleRepository;
         $this->permissionRepository = $permissionRepository;
