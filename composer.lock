@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "33992e7605e0aff6de5079ea140cb7e0",
+    "content-hash": "b118d7e30075acfd58eee219cd40876e",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -2082,16 +2082,16 @@
         },
         {
             "name": "endroid/qr-code",
-            "version": "4.4.7",
+            "version": "4.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/endroid/qr-code.git",
-                "reference": "d9f12af739c11c70fa1e8132dba8f849395e939b"
+                "reference": "52e064c8303595132f6df94a0b0951176e7a095b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/endroid/qr-code/zipball/d9f12af739c11c70fa1e8132dba8f849395e939b",
-                "reference": "d9f12af739c11c70fa1e8132dba8f849395e939b",
+                "url": "https://api.github.com/repos/endroid/qr-code/zipball/52e064c8303595132f6df94a0b0951176e7a095b",
+                "reference": "52e064c8303595132f6df94a0b0951176e7a095b",
                 "shasum": ""
             },
             "require": {
@@ -2142,7 +2142,7 @@
             ],
             "support": {
                 "issues": "https://github.com/endroid/qr-code/issues",
-                "source": "https://github.com/endroid/qr-code/tree/4.4.7"
+                "source": "https://github.com/endroid/qr-code/tree/4.4.6"
             },
             "funding": [
                 {
@@ -2150,7 +2150,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-01-05T21:27:44+00:00"
+            "time": "2022-01-05T21:05:12+00:00"
         },
         {
             "name": "endroid/qrcode",

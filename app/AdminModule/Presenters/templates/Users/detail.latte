@@ -65,7 +65,9 @@
                 </div>
 
                 <div class="form-group row" n:if="$detailUser->isExternalLector()">
-                    <div class="col-9 offset-3"><a n:href="editPersonalDetails!" class="btn btn-secondary ajax">{_admin.common.edit}</a></div>
+                    <div class="col-9 offset-3">
+                        <a n:href="editPersonalDetails!" class="btn btn-secondary ajax">{_admin.common.edit}</a>
+                    </div>
                 </div>
             {else}
                 {control editUserPersonalDetailsForm}
