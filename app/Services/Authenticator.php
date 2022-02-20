@@ -16,8 +16,7 @@ use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Security as NS;
 use Nette\Security\IAuthenticator;
-use Nette\Security\Identity;
-use Nette\Security\IIdentity;
+use Nette\Security\SimpleIdentity;
 use stdClass;
 
 use function assert;
@@ -62,7 +61,7 @@ class Authenticator implements IAuthenticator
      * @throws ORMException
      * @throws Exception
      */
-    public function authenticate(array $credentials): IIdentity
+    public function authenticate(array $credentials): SimpleIdentity
     {
         $skautISUser = $this->skautIsService->getUserDetail();
 
@@ -94,7 +93,7 @@ class Authenticator implements IAuthenticator
         // invalidace cache roli ze skautIS
         $this->userRolesCache->remove($user->getSkautISUserId());
 
-        return new Identity($user->getId(), $netteRoles, ['firstLogin' => $firstLogin]);
+        return new SimpleIdentity($user->getId(), $netteRoles, ['firstLogin' => $firstLogin]);
     }
 
     /**
@@ -169,7 +168,7 @@ class Authenticator implements IAuthenticator
         }
 
         $identity = $user->identity;
-        assert($identity instanceof Identity);
+        assert($identity instanceof SimpleIdentity);
         $identity->setRoles($netteRoles);
     }
 }
