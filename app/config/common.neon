@@ -82,7 +82,6 @@ services:
 
 extensions:
     console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
-    webloader: WebLoader\Nette\Extension
     skautis: Skautis\Nette\SkautisExtension
     translation: Contributte\Translation\DI\TranslationExtension
     mailing: Ublaboo\Mailing\DI\MailingExtension
