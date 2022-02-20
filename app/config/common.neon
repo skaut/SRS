@@ -124,22 +124,5 @@ forms:
     messages:
         MAX_FILE_SIZE: 'Velikost nahraného souboru může být nejvýše %d bytů.'
 
-webloader:
-    css:
-        install:
-            files:
-                - %appDir%/../vendor/twbs/bootstrap/dist/css/bootstrap.min.css
-                - css/install/style.css
-
-        export:
-            files:
-                - css/export/style.css
-
-    js:
-        install:
-            files:
-#                - js/libs/jquery/jquery-3.4.1.min.js
-                - %appDir%/../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js
-
 includes:
     - doctrine.neon

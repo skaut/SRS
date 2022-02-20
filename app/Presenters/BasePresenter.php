@@ -7,16 +7,12 @@ namespace App\Presenters;
 use Nette;
 use Nette\Localization\Translator;
 use stdClass;
-use WebLoader\Nette\LoaderFactory;
 
 /**
  * BasePresenter.
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
-    /** @inject */
-    public LoaderFactory $webLoader;
-
     /** @inject */
     public Translator $translator;
 

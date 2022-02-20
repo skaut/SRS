@@ -48,8 +48,6 @@
         "vojtys/nette-forms-gpspicker": "dev-master",
         "contributte/recaptcha": "^3.4",
 
-        "bicisteadm/webloader-reload": "^3.0",
-
         "twbs/bootstrap": "^4.6",
         "snapappointments/bootstrap-select": "^1.13",
         "kartik-v/bootstrap-fileinput": "^5.2",

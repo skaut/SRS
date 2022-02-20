@@ -10,6 +10,7 @@ module.exports = {
     entry: {
         'admin': './app/assets/admin/main.js',
         'web': './app/assets/web/main.js',
+        'install': './app/assets/install/main.js',
     },
     output: {
         filename: '[name]/main.min.js',

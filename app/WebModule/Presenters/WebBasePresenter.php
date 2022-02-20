@@ -23,8 +23,6 @@ use App\Services\SkautIsService;
 use Nette\Application\AbortException;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
-use WebLoader\Nette\CssLoader;
-use WebLoader\Nette\JavaScriptLoader;
 
 /**
  * BasePresenter pro WebModule.
@@ -53,22 +51,6 @@ abstract class WebBasePresenter extends BasePresenter
     public SkautIsService $skautIsService;
 
     protected ?User $dbuser = null;
-
-    /**
-     * Načte css podle konfigurace v common.neon.
-     */
-    protected function createComponentCss(): CssLoader
-    {
-        return $this->webLoader->createCssLoader('web');
-    }
-
-    /**
-     * Načte javascript podle konfigurace v common.neon.
-     */
-    protected function createComponentJs(): JavaScriptLoader
-    {
-        return $this->webLoader->createJavaScriptLoader('web');
-    }
 
     /**
      * @throws AbortException
