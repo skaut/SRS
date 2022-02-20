@@ -21,7 +21,6 @@ class WebPresenter extends ConfigurationBasePresenter
     public WebFormFactory $webFormFactory;
 
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void

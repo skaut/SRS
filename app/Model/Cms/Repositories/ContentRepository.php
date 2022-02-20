@@ -23,8 +23,6 @@ class ContentRepository extends AbstractRepository
     /**
      * Uloží obsah.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Content $content): void
     {
@@ -35,8 +33,6 @@ class ContentRepository extends AbstractRepository
     /**
      * Odstraní obsah.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Content $content): void
     {

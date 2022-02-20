@@ -81,7 +81,6 @@ class MailService implements IMailService
      * @param Collection<int, User>|null     $recipientsUsers
      * @param Collection<int, string>|null   $recipientEmails
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */

@@ -39,7 +39,6 @@ class PaymentPresenter extends ConfigurationBasePresenter
     public TicketsFormFactory $ticketsFormFactory;
 
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
@@ -55,7 +54,6 @@ class PaymentPresenter extends ConfigurationBasePresenter
     /**
      * Zruší propojení s API banky.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function handleDisconnect(): void

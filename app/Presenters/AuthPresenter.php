@@ -94,7 +94,6 @@ class AuthPresenter extends BasePresenter
     /**
      * Provede přesměrování po úspěšném přihlášení, v závislosti na nastavení, nastavení role nebo returnUrl.
      *
-     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */

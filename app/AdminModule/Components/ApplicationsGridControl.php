@@ -265,7 +265,6 @@ class ApplicationsGridControl extends Control
     /**
      * Zpracuje úpravu přihlášky.
      *
-     * @throws AbortException
      * @throws Throwable
      */
     public function edit(string $id, stdClass $values): void

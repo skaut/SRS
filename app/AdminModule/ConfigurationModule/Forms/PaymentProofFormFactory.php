@@ -42,7 +42,6 @@ class PaymentProofFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -80,7 +79,6 @@ class PaymentProofFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void

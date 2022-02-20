@@ -61,7 +61,6 @@ class WebFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -109,7 +108,6 @@ class WebFormFactory
      * Zpracuje formulář.
      *
      * @throws Nette\Utils\UnknownImageFileException
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void

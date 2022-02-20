@@ -45,7 +45,6 @@ class SkautIsCourseRepository extends AbstractRepository
     /**
      * Uloží skautIS kurz.
      *
-     * @throws ORMException
      */
     public function save(SkautIsCourse $skautIsCourse): void
     {
@@ -56,7 +55,6 @@ class SkautIsCourseRepository extends AbstractRepository
     /**
      * Odstraní skautIS kurz.
      *
-     * @throws ORMException
      */
     public function remove(SkautIsCourse $skautIsCourse): void
     {
@@ -67,7 +65,6 @@ class SkautIsCourseRepository extends AbstractRepository
     /**
      * Odstraní všechny skautIS kurzy.
      *
-     * @throws ORMException
      */
     public function removeAll(): void
     {

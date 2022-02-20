@@ -90,8 +90,6 @@ class SlideshowContent extends Content implements IContent
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      *
-     * @throws UnknownImageFileException
-     * @throws ImageException
      */
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {

@@ -76,7 +76,6 @@ class ApplicationRepository extends AbstractRepository
     /**
      * Uloží přihlášku.
      *
-     * @throws ORMException
      */
     public function save(Application $application): void
     {
@@ -87,7 +86,6 @@ class ApplicationRepository extends AbstractRepository
     /**
      * Odstraní přihlášku.
      *
-     * @throws ORMException
      */
     public function remove(Application $application): void
     {

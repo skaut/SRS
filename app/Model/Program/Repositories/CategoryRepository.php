@@ -110,7 +110,6 @@ class CategoryRepository extends AbstractRepository
     /**
      * Uloží kategorii.
      *
-     * @throws ORMException
      */
     public function save(Category $category): void
     {
@@ -121,7 +120,6 @@ class CategoryRepository extends AbstractRepository
     /**
      * Odstraní kategorii.
      *
-     * @throws ORMException
      */
     public function remove(Category $category): void
     {

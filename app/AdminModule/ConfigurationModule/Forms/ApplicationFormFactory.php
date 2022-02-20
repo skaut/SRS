@@ -42,7 +42,6 @@ class ApplicationFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -71,7 +70,6 @@ class ApplicationFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void

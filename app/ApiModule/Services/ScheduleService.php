@@ -255,7 +255,6 @@ class ScheduleService
      * Uloží nebo vytvoří program.
      *
      * @throws ApiException
-     * @throws ORMException
      * @throws Throwable
      */
     public function saveProgram(ProgramSaveDto $programSaveDto): ResponseDto

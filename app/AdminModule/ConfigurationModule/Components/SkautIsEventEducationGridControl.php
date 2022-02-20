@@ -79,7 +79,6 @@ class SkautIsEventEducationGridControl extends Control
     /**
      * Zpracuje úpravu propojení podakce s kurzy.
      *
-     * @throws AbortException
      * @throws Throwable
      */
     public function edit(string $id, stdClass $values): void

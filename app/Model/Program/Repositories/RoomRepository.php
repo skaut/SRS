@@ -115,7 +115,6 @@ class RoomRepository extends AbstractRepository
     /**
      * Uloží místnost.
      *
-     * @throws ORMException
      */
     public function save(Room $room): void
     {
@@ -126,7 +125,6 @@ class RoomRepository extends AbstractRepository
     /**
      * Odstraní místnost.
      *
-     * @throws ORMException
      */
     public function remove(Room $room): void
     {

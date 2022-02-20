@@ -120,7 +120,6 @@ class PageForm extends UI\Control
     /**
      * Vykreslí skripty komponenty.
      *
-     * @throws PageException
      */
     public function renderScripts(): void
     {

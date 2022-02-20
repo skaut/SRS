@@ -41,7 +41,6 @@ class TicketsPresenter extends ApiBasePresenter
     private Serializer $serializer;
 
     /**
-     * @throws AbortException
      */
     public function startup(): void
     {

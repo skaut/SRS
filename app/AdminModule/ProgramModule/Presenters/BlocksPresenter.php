@@ -58,7 +58,6 @@ class BlocksPresenter extends ProgramBasePresenter
     }
 
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDetail(int $id): void
@@ -110,7 +109,6 @@ class BlocksPresenter extends ProgramBasePresenter
     /**
      * Odstraní vybraný program.
      *
-     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */

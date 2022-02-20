@@ -123,7 +123,6 @@ class DocumentTagsGridControl extends Control
      * Zpracuje přidání štítku dokumentu.
      *
      * @throws ORMException
-     * @throws AbortException
      */
     public function add(stdClass $values): void
     {
@@ -142,7 +141,6 @@ class DocumentTagsGridControl extends Control
      * Zpracuje úpravu štítku dokumentu.
      *
      * @throws ORMException
-     * @throws AbortException
      */
     public function edit(string $id, stdClass $values): void
     {

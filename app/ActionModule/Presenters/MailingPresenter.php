@@ -29,7 +29,6 @@ class MailingPresenter extends ActionBasePresenter
     /**
      * Ověří e-mail semináře.
      *
-     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */

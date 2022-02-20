@@ -37,7 +37,6 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     public SkautIsCourseRepository $skautIsCourseRepository;
 
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
@@ -55,7 +54,6 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     /**
      * Zruší propojení s akcí ve skautIS.
      *
-     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */

@@ -173,7 +173,6 @@ class PagesGridControl extends Control
     /**
      * Zpracuje přidání stránky.
      *
-     * @throws AbortException
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -195,7 +194,6 @@ class PagesGridControl extends Control
     /**
      * Zpracuje upravení stránky.
      *
-     * @throws AbortException
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

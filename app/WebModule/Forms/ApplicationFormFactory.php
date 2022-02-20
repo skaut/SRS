@@ -146,7 +146,6 @@ class ApplicationFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws Throwable
      */

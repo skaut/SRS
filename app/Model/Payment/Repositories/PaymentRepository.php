@@ -38,7 +38,6 @@ class PaymentRepository extends AbstractRepository
     /**
      * Uloží platbu.
      *
-     * @throws ORMException
      */
     public function save(Payment $payment): void
     {
@@ -49,7 +48,6 @@ class PaymentRepository extends AbstractRepository
     /**
      * Odstraní platbu.
      *
-     * @throws ORMException
      */
     public function remove(Payment $payment): void
     {

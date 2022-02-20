@@ -88,7 +88,6 @@ class FaqRepository extends AbstractRepository
     /**
      * Odstraní otázku.
      *
-     * @throws ORMException
      */
     public function remove(Faq $faq): void
     {

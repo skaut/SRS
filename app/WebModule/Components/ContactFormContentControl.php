@@ -34,7 +34,6 @@ class ContactFormContentControl extends BaseContentControl
     }
 
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function render(ContentDto $content): void

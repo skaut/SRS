@@ -22,7 +22,6 @@ class IncomeProofRepository extends AbstractRepository
     /**
      * Uloží příjmový doklad.
      *
-     * @throws ORMException
      */
     public function save(IncomeProof $incomeProof): void
     {

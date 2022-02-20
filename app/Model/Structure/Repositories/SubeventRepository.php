@@ -181,8 +181,6 @@ class SubeventRepository extends AbstractRepository
     /**
      * Uloží podakci.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Subevent $subevent): void
     {
@@ -193,8 +191,6 @@ class SubeventRepository extends AbstractRepository
     /**
      * Odstraní podakci.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Subevent $subevent): void
     {

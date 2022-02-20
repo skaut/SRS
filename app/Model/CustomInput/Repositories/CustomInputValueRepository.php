@@ -30,7 +30,6 @@ class CustomInputValueRepository extends AbstractRepository
     /**
      * Uloží hodnotu vlastního pole přihlášky.
      *
-     * @throws ORMException
      */
     public function save(CustomInputValue $value): void
     {
@@ -41,7 +40,6 @@ class CustomInputValueRepository extends AbstractRepository
     /**
      * Odstraní hodnotu vlastního pole přihlášky.
      *
-     * @throws ORMException
      */
     public function remove(CustomInputValue $value): void
     {

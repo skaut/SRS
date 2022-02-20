@@ -64,7 +64,6 @@ class PlaceDescriptionFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void

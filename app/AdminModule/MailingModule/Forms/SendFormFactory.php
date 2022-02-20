@@ -130,9 +130,7 @@ class SendFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
-     * @throws MailingMailCreationException
      */
     public function processForm(Form $form, stdClass $values): void
     {

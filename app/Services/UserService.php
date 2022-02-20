@@ -101,7 +101,6 @@ class UserService
     /**
      * Nastaví registraci uživatele jako schválenou nebo nechválenou.
      *
-     * @throws ORMException
      */
     public function setApproved(User $user, bool $approved): void
     {

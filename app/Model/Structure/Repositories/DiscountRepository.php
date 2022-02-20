@@ -42,7 +42,6 @@ class DiscountRepository extends AbstractRepository
     /**
      * Uloží slevu.
      *
-     * @throws ORMException
      */
     public function save(Discount $discount): void
     {
@@ -53,7 +52,6 @@ class DiscountRepository extends AbstractRepository
     /**
      * Odstraní slevu.
      *
-     * @throws ORMException
      */
     public function remove(Discount $discount): void
     {

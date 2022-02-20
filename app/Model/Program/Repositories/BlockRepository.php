@@ -187,7 +187,6 @@ class BlockRepository extends AbstractRepository
     /**
      * Uloží blok.
      *
-     * @throws ORMException
      */
     public function save(Block $block): void
     {
@@ -210,7 +209,6 @@ class BlockRepository extends AbstractRepository
     /**
      * Odstraní blok.
      *
-     * @throws ORMException
      */
     public function remove(Block $block): void
     {

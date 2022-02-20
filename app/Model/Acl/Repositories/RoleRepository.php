@@ -228,8 +228,6 @@ class RoleRepository extends AbstractRepository
     /**
      * Uloží roli.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Role $role): void
     {
@@ -240,8 +238,6 @@ class RoleRepository extends AbstractRepository
     /**
      * Odstraní roli.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Role $role): void
     {

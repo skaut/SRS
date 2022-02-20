@@ -37,7 +37,6 @@ class PlacePointRepository extends AbstractRepository
     }
 
     /**
-     * @throws ORMException
      */
     public function save(PlacePoint $placePoint): void
     {
@@ -46,7 +45,6 @@ class PlacePointRepository extends AbstractRepository
     }
 
     /**
-     * @throws ORMException
      */
     public function remove(PlacePoint $placePoint): void
     {

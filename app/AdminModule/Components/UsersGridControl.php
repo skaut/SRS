@@ -135,7 +135,6 @@ class UsersGridControl extends Control
     /**
      * Vytvoří komponentu.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws DataGridColumnStatusException
      * @throws DataGridException

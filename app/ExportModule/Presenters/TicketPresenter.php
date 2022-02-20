@@ -42,7 +42,6 @@ class TicketPresenter extends ExportBasePresenter
      * Vygeneruje vstupenku v PDF.
      *
      * @throws AbortException
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function actionPdf(): void

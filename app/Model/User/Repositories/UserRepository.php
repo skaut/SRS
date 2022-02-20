@@ -285,7 +285,6 @@ class UserRepository extends AbstractRepository
     /**
      * Uloží uživatele.
      *
-     * @throws ORMException
      */
     public function save(User $user): void
     {
@@ -296,7 +295,6 @@ class UserRepository extends AbstractRepository
     /**
      * Odstraní externího uživatele.
      *
-     * @throws ORMException
      */
     public function remove(User $user): void
     {

@@ -96,7 +96,6 @@ class TagRepository extends AbstractRepository
     /**
      * Uloží tag.
      *
-     * @throws ORMException
      */
     public function save(Tag $tag): void
     {
@@ -107,7 +106,6 @@ class TagRepository extends AbstractRepository
     /**
      * Odstraní tag.
      *
-     * @throws ORMException
      */
     public function remove(Tag $tag): void
     {

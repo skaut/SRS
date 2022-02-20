@@ -52,7 +52,6 @@ class SeminarFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -102,7 +101,6 @@ class SeminarFormFactory
      *
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void

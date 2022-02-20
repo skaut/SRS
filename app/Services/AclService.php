@@ -11,8 +11,6 @@ use App\Model\Acl\Role;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
@@ -82,9 +80,6 @@ class AclService
 
     /**
      * Uloží roli.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function saveRole(Role $role): void
     {
@@ -95,9 +90,6 @@ class AclService
 
     /**
      * Odstraní roli.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function removeRole(Role $role): void
     {

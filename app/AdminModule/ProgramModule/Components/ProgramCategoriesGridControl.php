@@ -125,8 +125,6 @@ class ProgramCategoriesGridControl extends Control
     /**
      * Zpracuje přidání kategorie.
      *
-     * @throws ORMException
-     * @throws AbortException
      */
     public function add(stdClass $values): void
     {
@@ -143,7 +141,6 @@ class ProgramCategoriesGridControl extends Control
     /**
      * Zpracuje úpravu kategorie.
      *
-     * @throws AbortException
      * @throws Throwable
      */
     public function edit(string $id, stdClass $values): void

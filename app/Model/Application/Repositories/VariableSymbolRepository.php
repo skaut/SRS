@@ -22,7 +22,6 @@ class VariableSymbolRepository extends AbstractRepository
     /**
      * Uloží variabilní symbol.
      *
-     * @throws ORMException
      */
     public function save(VariableSymbol $variableSymbol): void
     {

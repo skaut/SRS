@@ -77,7 +77,6 @@ class MailingFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(int $id): Form
@@ -116,9 +115,7 @@ class MailingFormFactory
      * Zpracuje formulář.
      *
      * @throws Nette\Application\UI\InvalidLinkException
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
-     * @throws MailingMailCreationException
      */
     public function processForm(Form $form, stdClass $values): void
     {

@@ -79,7 +79,6 @@ class PaymentsGridControl extends Control
      * Vytvoří komponentu.
      *
      * @throws DataGridException
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function createComponentPaymentsGrid(string $name): void

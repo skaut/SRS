@@ -39,7 +39,6 @@ class SubeventsFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -62,7 +61,6 @@ class SubeventsFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void

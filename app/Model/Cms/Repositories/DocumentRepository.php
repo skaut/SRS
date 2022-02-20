@@ -57,7 +57,6 @@ class DocumentRepository extends AbstractRepository
     /**
      * Uloží dokument.
      *
-     * @throws ORMException
      */
     public function save(Document $document): void
     {
@@ -68,7 +67,6 @@ class DocumentRepository extends AbstractRepository
     /**
      * Odstraní dokument.
      *
-     * @throws ORMException
      */
     public function remove(Document $document): void
     {

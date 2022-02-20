@@ -64,7 +64,6 @@ class ApplicationContentControl extends BaseContentControl
 
     /**
      * @throws NonUniqueResultException
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function render(?ContentDto $content = null): void

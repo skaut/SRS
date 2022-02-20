@@ -662,7 +662,6 @@ class ApplicationService
     /**
      * Může uživatel upravovat role?
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedEditRegistration(User $user): bool
@@ -675,7 +674,6 @@ class ApplicationService
     /**
      * Je uživateli povoleno upravit nebo zrušit přihlášku?
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedEditApplication(Application $application): bool
@@ -688,7 +686,6 @@ class ApplicationService
     /**
      * Může uživatel dodatečně přidávat podakce?
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedAddApplication(User $user): bool
@@ -702,7 +699,6 @@ class ApplicationService
     /**
      * Může uživatel upravovat vlastní pole přihlášky?
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedEditCustomInputs(): bool
@@ -795,7 +791,6 @@ class ApplicationService
     }
 
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     private function generateVariableSymbol(): VariableSymbol
@@ -816,7 +811,6 @@ class ApplicationService
     /**
      * Vypočítá datum splatnosti podle zvolené metody.
      *
-     * @throws SettingsItemNotFoundException
      * @throws ReflectionException
      * @throws Throwable
      */

@@ -51,7 +51,6 @@ class MaturityPresenter extends ActionBasePresenter
     /**
      * Zruší přihlášky po splatnosti.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function actionCancelApplications(): void
@@ -108,9 +107,7 @@ class MaturityPresenter extends ActionBasePresenter
     /**
      * Rozešle přípomínky splatnosti.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
-     * @throws MailingMailCreationException
      */
     public function actionSendReminders(): void
     {

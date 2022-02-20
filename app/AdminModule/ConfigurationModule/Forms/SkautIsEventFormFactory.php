@@ -72,7 +72,6 @@ class SkautIsEventFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -122,7 +121,6 @@ class SkautIsEventFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException

@@ -21,7 +21,6 @@ class MailingPresenter extends ConfigurationBasePresenter
     public MailingFormFactory $mailingFormFactory;
 
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void

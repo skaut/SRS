@@ -15,7 +15,6 @@ use Throwable;
 class SchedulePresenter extends ProgramBasePresenter
 {
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
