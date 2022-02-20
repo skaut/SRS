@@ -8,7 +8,6 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Cms\Repositories\TagRepository;
 use App\Model\Cms\Tag;
 use App\Services\AclService;
-use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -121,7 +120,6 @@ class DocumentTagsGridControl extends Control
 
     /**
      * Zpracuje přidání štítku dokumentu.
-     *
      */
     public function add(stdClass $values): void
     {
@@ -138,7 +136,6 @@ class DocumentTagsGridControl extends Control
 
     /**
      * Zpracuje úpravu štítku dokumentu.
-     *
      */
     public function edit(string $id, stdClass $values): void
     {

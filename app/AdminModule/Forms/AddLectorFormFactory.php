@@ -9,7 +9,6 @@ use App\Model\Acl\Role;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\FilesService;
-use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;
 use Nette\Application\UI\Form;

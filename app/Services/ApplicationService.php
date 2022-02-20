@@ -921,7 +921,6 @@ class ApplicationService
      * Zvýší obsazenost rolí.
      *
      * @param Collection<int, Role> $roles
-     *
      */
     private function incrementRolesOccupancy(Collection $roles): void
     {
@@ -935,7 +934,6 @@ class ApplicationService
      * Sníží obsazenost rolí.
      *
      * @param Collection<int, Role> $roles
-     *
      */
     private function decrementRolesOccupancy(Collection $roles): void
     {
@@ -949,7 +947,6 @@ class ApplicationService
      * Zvýší obsazenost podakcí.
      *
      * @param Collection<int, Subevent> $subevents
-     *
      */
     private function incrementSubeventsOccupancy(Collection $subevents): void
     {
@@ -963,7 +960,6 @@ class ApplicationService
      * Sníží obsazenost podakcí.
      *
      * @param Collection<int, Subevent> $subevents
-     *
      */
     private function decrementSubeventsOccupancy(Collection $subevents): void
     {
@@ -973,8 +969,6 @@ class ApplicationService
         }
     }
 
-    /**
-     */
     private function updateUserPaymentInfo(User $user): void
     {
         $fee = 0;

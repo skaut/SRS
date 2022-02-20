@@ -132,6 +132,7 @@ class ProgramRepository extends AbstractRepository
      * Vrací programy překrývající se s programem.
      *
      * @return Collection<int, Program>
+     *
      * @throws Exception
      */
     public function findOverlappingPrograms(Program $program): Collection

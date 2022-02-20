@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 use App\Model\Cms\Dto\ContentDto;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Repositories\PlacePointRepository;
 use App\Model\Settings\Settings;

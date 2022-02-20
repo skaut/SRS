@@ -47,7 +47,6 @@ use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use DateInterval;
-use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;
 use Nette\Localization\Translator;

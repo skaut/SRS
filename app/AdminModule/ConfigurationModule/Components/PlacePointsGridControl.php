@@ -6,7 +6,6 @@ namespace App\AdminModule\ConfigurationModule\Components;
 
 use App\Model\Settings\PlacePoint;
 use App\Model\Settings\Repositories\PlacePointRepository;
-use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;

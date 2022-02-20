@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\ExportModule\Presenters;
 
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;

@@ -106,7 +106,6 @@ class CustomInputRepository extends AbstractRepository
 
     /**
      * Odstraní pole.
-     *
      */
     public function remove(CustomInput $input): void
     {

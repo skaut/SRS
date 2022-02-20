@@ -10,7 +10,6 @@ use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Commands\SetSettingArrayValue;
 use App\Model\Settings\Commands\SetSettingBoolValue;
 use App\Model\Settings\Commands\SetSettingStringValue;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingArrayValueQuery;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -27,7 +26,6 @@ use Nette\Forms\Controls\TextInput;
 use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
 use stdClass;
 use Throwable;
-use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 use function array_map;
 use function assert;

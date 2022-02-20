@@ -10,7 +10,6 @@ use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Commands\SetSettingBoolValue;
 use App\Model\Settings\Commands\SetSettingDateTimeValue;
 use App\Model\Settings\Commands\SetSettingStringValue;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;

@@ -13,8 +13,6 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 
 use function array_map;
 
@@ -180,7 +178,6 @@ class SubeventRepository extends AbstractRepository
 
     /**
      * Uloží podakci.
-     *
      */
     public function save(Subevent $subevent): void
     {
@@ -190,7 +187,6 @@ class SubeventRepository extends AbstractRepository
 
     /**
      * Odstraní podakci.
-     *
      */
     public function remove(Subevent $subevent): void
     {

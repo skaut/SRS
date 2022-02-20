@@ -10,7 +10,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 
 use function array_map;
 
@@ -44,7 +43,6 @@ class SkautIsCourseRepository extends AbstractRepository
 
     /**
      * Uloží skautIS kurz.
-     *
      */
     public function save(SkautIsCourse $skautIsCourse): void
     {
@@ -54,7 +52,6 @@ class SkautIsCourseRepository extends AbstractRepository
 
     /**
      * Odstraní skautIS kurz.
-     *
      */
     public function remove(SkautIsCourse $skautIsCourse): void
     {
@@ -64,7 +61,6 @@ class SkautIsCourseRepository extends AbstractRepository
 
     /**
      * Odstraní všechny skautIS kurzy.
-     *
      */
     public function removeAll(): void
     {

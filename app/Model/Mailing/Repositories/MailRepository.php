@@ -7,7 +7,6 @@ namespace App\Model\Mailing\Repositories;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Mailing\Mail;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující historii e-mailů.
@@ -21,7 +20,6 @@ class MailRepository extends AbstractRepository
 
     /**
      * Uloží e-mail.
-     *
      */
     public function save(Mail $mail): void
     {

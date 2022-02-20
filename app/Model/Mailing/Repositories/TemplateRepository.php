@@ -7,7 +7,6 @@ namespace App\Model\Mailing\Repositories;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Mailing\Template;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující šablony automatických e-mailů.
@@ -37,7 +36,6 @@ class TemplateRepository extends AbstractRepository
 
     /**
      * Uloží šablonu e-mailu.
-     *
      */
     public function save(Template $template): void
     {

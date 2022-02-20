@@ -19,7 +19,6 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;

@@ -186,6 +186,7 @@ class UsersPresenter extends AdminBasePresenter
             if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.users.users_saved', 'success');
             }
+
             $this->redirect('Users:default');
         };
 
@@ -200,6 +201,7 @@ class UsersPresenter extends AdminBasePresenter
             if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.users.users_saved', 'success');
             }
+
             $this->redirect('this');
         };
 

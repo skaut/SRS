@@ -7,8 +7,6 @@ namespace App\AdminModule\ConfigurationModule\Components;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use App\Utils\Helpers;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;

@@ -7,7 +7,6 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\AclService;
@@ -21,7 +20,6 @@ use stdClass;
 use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
-use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
  * Formulář pro vytvoření e-mailu.

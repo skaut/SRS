@@ -123,7 +123,6 @@ class CmsService
 
     /**
      * Uloží obsah.
-     *
      */
     public function saveContent(Content $content): void
     {
@@ -134,7 +133,6 @@ class CmsService
 
     /**
      * Odstraní obsah.
-     *
      */
     public function removeContent(Content $content): void
     {

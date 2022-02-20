@@ -7,7 +7,6 @@ namespace App\AdminModule\ConfigurationModule\Components;
 use App\Model\Structure\Discount;
 use App\Model\Structure\Repositories\DiscountRepository;
 use App\Services\DiscountService;
-use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;

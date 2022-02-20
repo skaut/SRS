@@ -8,7 +8,6 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\News;
 use App\Model\Cms\Repositories\NewsRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\FormComponents\Controls\DateTimeControl;
@@ -86,7 +85,6 @@ class NewsFormFactory
 
     /**
      * Zpracuje formulář.
-     *
      */
     public function processForm(Form $form, stdClass $values): void
     {

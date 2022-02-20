@@ -6,7 +6,6 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\Commands\SetSettingBoolValue;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;

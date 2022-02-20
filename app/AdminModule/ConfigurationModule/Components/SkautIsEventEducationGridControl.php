@@ -7,7 +7,6 @@ namespace App\AdminModule\ConfigurationModule\Components;
 use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Container;
 use Nette\Localization\Translator;

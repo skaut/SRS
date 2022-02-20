@@ -10,7 +10,6 @@ use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
 use App\Services\CommandBus;
 use App\Services\ExcelExportService;
-use Doctrine\ORM\ORMException;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -139,7 +138,6 @@ class RoomsGridControl extends Control
 
     /**
      * Zpracuje přidání místnosti.
-     *
      */
     public function add(stdClass $values): void
     {
@@ -154,7 +152,6 @@ class RoomsGridControl extends Control
 
     /**
      * Zpracuje úpravu místnosti.
-     *
      */
     public function edit(string $id, stdClass $values): void
     {

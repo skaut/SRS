@@ -10,8 +10,6 @@ use App\Model\Structure\Subevent;
 use App\Services\SubeventService;
 use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -155,7 +153,6 @@ class SubeventFormFactory
 
     /**
      * Zpracuje formulář.
-     *
      */
     public function processForm(Form $form, stdClass $values): void
     {

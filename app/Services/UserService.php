@@ -14,7 +14,6 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Localization\Translator;
 
@@ -100,7 +99,6 @@ class UserService
 
     /**
      * Nastaví registraci uživatele jako schválenou nebo nechválenou.
-     *
      */
     public function setApproved(User $user, bool $approved): void
     {

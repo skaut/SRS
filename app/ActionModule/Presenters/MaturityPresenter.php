@@ -9,7 +9,6 @@ use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -23,7 +22,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Nette\Application\Responses\TextResponse;
 use Throwable;
-use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
  * Presenter obsluhující kontrolu splatnosti přihlášek.

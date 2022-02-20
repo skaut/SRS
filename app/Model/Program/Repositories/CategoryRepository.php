@@ -9,7 +9,6 @@ use App\Model\Program\Category;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 
 use function array_map;
 
@@ -109,7 +108,6 @@ class CategoryRepository extends AbstractRepository
 
     /**
      * Uloží kategorii.
-     *
      */
     public function save(Category $category): void
     {
@@ -119,7 +117,6 @@ class CategoryRepository extends AbstractRepository
 
     /**
      * Odstraní kategorii.
-     *
      */
     public function remove(Category $category): void
     {

@@ -10,7 +10,6 @@ use App\Model\Cms\Repositories\TagRepository;
 use App\Services\FilesService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
-use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -152,7 +151,6 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje přidání dokumentu.
-     *
      */
     public function add(stdClass $values): void
     {
@@ -175,7 +173,6 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje úpravu dokumentu.
-     *
      */
     public function edit(string $id, stdClass $values): void
     {

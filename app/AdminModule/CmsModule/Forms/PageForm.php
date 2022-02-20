@@ -119,7 +119,6 @@ class PageForm extends UI\Control
 
     /**
      * Vykreslí skripty komponenty.
-     *
      */
     public function renderScripts(): void
     {

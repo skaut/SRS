@@ -12,7 +12,6 @@ use App\Model\Program\Commands\SaveCategory;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Services\AclService;
 use App\Services\CommandBus;
-use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -124,7 +123,6 @@ class ProgramCategoriesGridControl extends Control
 
     /**
      * Zpracuje přidání kategorie.
-     *
      */
     public function add(stdClass $values): void
     {
