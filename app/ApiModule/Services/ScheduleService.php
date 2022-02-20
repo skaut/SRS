@@ -285,8 +285,6 @@ class ScheduleService
         } elseif ($this->programRepository->hasOverlappingAutoRegisteredProgram($programId, $start, $end)) {
             throw new ApiException($this->translator->translate('api.schedule.auto_registered_not_allowed'));
         } else {
-            $program = null;
-
             if ($programId === null) {
                 $program = new Program($start);
                 $program->setBlock($block);

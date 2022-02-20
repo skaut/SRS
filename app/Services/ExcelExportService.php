@@ -347,8 +347,6 @@ class ExcelExportService
         $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            $width = null;
-
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
                 case CustomInput::SELECT:

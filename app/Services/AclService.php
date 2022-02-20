@@ -264,7 +264,7 @@ class AclService
     {
         $names = $this->permissionNamesCache->load(null);
         if ($names === null) {
-            $names = $result = $this->permissionRepository->createQueryBuilder('p')
+            $names = $this->permissionRepository->createQueryBuilder('p')
                 ->select('p.name')
                 ->addSelect('role.name AS roleName')->join('p.roles', 'role')
                 ->addSelect('resource.name AS resourceName')->join('p.resource', 'resource')
