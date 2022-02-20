@@ -48,10 +48,6 @@
         "vojtys/nette-forms-gpspicker": "dev-master",
         "contributte/recaptcha": "^3.4",
 
-        "twbs/bootstrap": "^4.6",
-        "snapappointments/bootstrap-select": "^1.13",
-        "kartik-v/bootstrap-fileinput": "^5.2",
-
         "ublaboo/datagrid": "6.9.2",
         "ublaboo/mailing": "^1.2",
 
