@@ -22,7 +22,7 @@ use App\Model\User\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Nette;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Ublaboo\Mailing\MailFactory;
@@ -51,7 +51,7 @@ class MailService implements IMailService
 
     private TemplateRepository $templateRepository;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     public function __construct(
         QueryBus $queryBus,
@@ -61,7 +61,7 @@ class MailService implements IMailService
         RoleRepository $roleRepository,
         SubeventRepository $subeventRepository,
         TemplateRepository $templateRepository,
-        ITranslator $translator
+        Translator $translator
     ) {
         $this->queryBus           = $queryBus;
         $this->mailFactory        = $mailFactory;

@@ -14,7 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\TextInput;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -28,7 +28,7 @@ use function count;
  */
 class DocumentTagsGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private RoleRepository $roleRepository;
 
@@ -37,7 +37,7 @@ class DocumentTagsGridControl extends Control
     private TagRepository $tagRepository;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         RoleRepository $roleRepository,
         AclService $aclService,
         TagRepository $tagRepository

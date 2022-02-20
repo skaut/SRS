@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 use Nette;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 
 /**
  * Služba pro správu uživatelů.
@@ -29,7 +29,7 @@ class UserService
 
     private EventBus $eventBus;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private UserRepository $userRepository;
 
@@ -40,7 +40,7 @@ class UserService
     public function __construct(
         QueryBus $queryBus,
         EventBus $eventBus,
-        ITranslator $translator,
+        Translator $translator,
         UserRepository $userRepository,
         MailService $mailService,
         EntityManagerInterface $em

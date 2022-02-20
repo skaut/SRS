@@ -24,7 +24,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
@@ -37,7 +37,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class ApplicationsGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private EntityManagerInterface $em;
 
@@ -56,7 +56,7 @@ class ApplicationsGridControl extends Control
     private Validators $validators;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         EntityManagerInterface $em,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,

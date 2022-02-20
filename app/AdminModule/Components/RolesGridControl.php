@@ -12,7 +12,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -23,13 +23,13 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class RolesGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private AclService $aclService;
 
     private RoleRepository $roleRepository;
 
-    public function __construct(ITranslator $translator, AclService $aclService, RoleRepository $roleRepository)
+    public function __construct(Translator $translator, AclService $aclService, RoleRepository $roleRepository)
     {
         $this->translator     = $translator;
         $this->aclService     = $aclService;

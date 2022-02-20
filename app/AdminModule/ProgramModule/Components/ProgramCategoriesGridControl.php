@@ -18,7 +18,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\TextInput;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use stdClass;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
@@ -33,7 +33,7 @@ class ProgramCategoriesGridControl extends Control
 {
     private CommandBus $commandBus;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private CategoryRepository $categoryRepository;
 
@@ -43,7 +43,7 @@ class ProgramCategoriesGridControl extends Control
 
     public function __construct(
         CommandBus $commandBus,
-        ITranslator $translator,
+        Translator $translator,
         CategoryRepository $categoryRepository,
         RoleRepository $roleRepository,
         AclService $aclService

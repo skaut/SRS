@@ -47,7 +47,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Http\FileUpload;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use Skautis\Wsdl\WsdlException;
@@ -107,7 +107,7 @@ class ApplicationFormFactory
 
     private SubeventService $subeventService;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     public function __construct(
         BaseFormFactory $baseFormFactory,
@@ -124,7 +124,7 @@ class ApplicationFormFactory
         Validators $validators,
         FilesService $filesService,
         SubeventService $subeventService,
-        ITranslator $translator
+        Translator $translator
     ) {
         $this->baseFormFactory            = $baseFormFactory;
         $this->queryBus                   = $queryBus;

@@ -9,7 +9,7 @@ use App\Model\Settings\Repositories\PlacePointRepository;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -21,11 +21,11 @@ use function number_format;
  */
 class PlacePointsGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private PlacePointRepository $placePointRepository;
 
-    public function __construct(ITranslator $translator, PlacePointRepository $placePointRepository)
+    public function __construct(Translator $translator, PlacePointRepository $placePointRepository)
     {
         $this->translator           = $translator;
         $this->placePointRepository = $placePointRepository;

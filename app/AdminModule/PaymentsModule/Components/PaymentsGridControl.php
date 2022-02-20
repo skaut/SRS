@@ -22,7 +22,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Http\Session;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use Throwable;
@@ -36,7 +36,7 @@ class PaymentsGridControl extends Control
 {
     private QueryBus $queryBus;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private PaymentRepository $paymentRepository;
 
@@ -50,7 +50,7 @@ class PaymentsGridControl extends Control
 
     public function __construct(
         QueryBus $queryBus,
-        ITranslator $translator,
+        Translator $translator,
         PaymentRepository $paymentRepository,
         UserRepository $userRepository,
         ApplicationService $applicationService,

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\InstallModule\Presenters;
 
 use App\Presenters\BasePresenter;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 
@@ -15,7 +15,7 @@ use WebLoader\Nette\JavaScriptLoader;
 abstract class InstallBasePresenter extends BasePresenter
 {
     /** @inject */
-    public ITranslator $translator;
+    public Translator $translator;
 
     /**
      * Načte css podle konfigurace v common.neon.

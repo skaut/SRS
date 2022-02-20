@@ -13,7 +13,7 @@ use App\Utils\Helpers;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -27,7 +27,7 @@ class RoomScheduleGridControl extends Control
      */
     private ?Room $room = null;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private RoomRepository $roomRepository;
 
@@ -36,7 +36,7 @@ class RoomScheduleGridControl extends Control
     private ExcelExportService $excelExportService;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         RoomRepository $roomRepository,
         ProgramRepository $programRepository,
         ExcelExportService $excelExportService

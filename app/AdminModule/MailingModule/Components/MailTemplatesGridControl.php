@@ -8,7 +8,7 @@ use App\Model\Mailing\Repositories\TemplateRepository;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -18,11 +18,11 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class MailTemplatesGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private TemplateRepository $templateRepository;
 
-    public function __construct(ITranslator $translator, TemplateRepository $templateRepository)
+    public function __construct(Translator $translator, TemplateRepository $templateRepository)
     {
         $this->translator         = $translator;
         $this->templateRepository = $templateRepository;

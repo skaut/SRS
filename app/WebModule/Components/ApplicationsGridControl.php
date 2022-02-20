@@ -26,7 +26,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use stdClass;
 use Throwable;
@@ -41,7 +41,7 @@ class ApplicationsGridControl extends BaseContentControl
 {
     private QueryBus $queryBus;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private ApplicationRepository $applicationRepository;
 
@@ -63,7 +63,7 @@ class ApplicationsGridControl extends BaseContentControl
 
     public function __construct(
         QueryBus $queryBus,
-        ITranslator $translator,
+        Translator $translator,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
         SubeventRepository $subeventRepository,

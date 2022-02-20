@@ -14,7 +14,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -26,14 +26,14 @@ use function count;
  */
 class CustomInputsGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private CustomInputRepository $customInputRepository;
 
     private AclService $aclService;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         CustomInputRepository $customInputRepository,
         AclService $aclService
     ) {

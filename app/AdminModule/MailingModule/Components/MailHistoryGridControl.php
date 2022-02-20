@@ -11,7 +11,7 @@ use App\Services\SubeventService;
 use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 use Ublaboo\DataGrid\DataGrid;
 
@@ -20,7 +20,7 @@ use Ublaboo\DataGrid\DataGrid;
  */
 class MailHistoryGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private MailRepository $mailRepository;
 
@@ -29,7 +29,7 @@ class MailHistoryGridControl extends Control
     private SubeventService $subeventService;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         MailRepository $mailRepository,
         AclService $aclService,
         SubeventService $subeventService

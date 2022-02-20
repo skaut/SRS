@@ -10,7 +10,7 @@ use App\Services\DiscountService;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -20,14 +20,14 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class DiscountsGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private DiscountRepository $discountRepository;
 
     private DiscountService $discountService;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         DiscountRepository $discountRepository,
         DiscountService $discountService
     ) {

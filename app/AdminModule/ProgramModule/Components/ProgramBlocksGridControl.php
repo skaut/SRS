@@ -28,7 +28,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 use Throwable;
 use Tracy\Debugger;
@@ -48,7 +48,7 @@ class ProgramBlocksGridControl extends Control
 
     private QueryBus $queryBus;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private BlockRepository $blockRepository;
 
@@ -69,7 +69,7 @@ class ProgramBlocksGridControl extends Control
     public function __construct(
         CommandBus $commandBus,
         QueryBus $queryBus,
-        ITranslator $translator,
+        Translator $translator,
         BlockRepository $blockRepository,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,

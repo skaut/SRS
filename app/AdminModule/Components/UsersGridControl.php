@@ -44,7 +44,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Throwable;
@@ -61,7 +61,7 @@ class UsersGridControl extends Control
 {
     private QueryBus $queryBus;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private EntityManagerInterface $em;
 
@@ -91,7 +91,7 @@ class UsersGridControl extends Control
 
     public function __construct(
         QueryBus $queryBus,
-        ITranslator $translator,
+        Translator $translator,
         EntityManagerInterface $em,
         UserRepository $userRepository,
         CustomInputRepository $customInputRepository,

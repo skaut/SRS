@@ -50,7 +50,7 @@ use DateInterval;
 use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
@@ -67,7 +67,7 @@ class ScheduleService
 
     private ?User $user = null;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private UserRepository $userRepository;
 
@@ -82,7 +82,7 @@ class ScheduleService
     private QueryBus $queryBus;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         UserRepository $userRepository,
         ProgramRepository $programRepository,
         BlockRepository $blockRepository,

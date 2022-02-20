@@ -20,7 +20,7 @@ use DateTimeImmutable;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use stdClass;
 use Throwable;
 
@@ -46,7 +46,7 @@ class RolesFormFactory
 
     private ApplicationService $applicationService;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private Validators $validators;
 
@@ -58,7 +58,7 @@ class RolesFormFactory
         UserRepository $userRepository,
         RoleRepository $roleRepository,
         ApplicationService $applicationService,
-        ITranslator $translator,
+        Translator $translator,
         Validators $validators,
         AclService $aclService
     ) {

@@ -43,7 +43,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Nette;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use ReflectionException;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
@@ -85,7 +85,7 @@ class ApplicationService
 
     private UserService $userService;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private PaymentRepository $paymentRepository;
 
@@ -105,7 +105,7 @@ class ApplicationService
         VariableSymbolRepository $variableSymbolRepository,
         MailService $mailService,
         UserService $userService,
-        ITranslator $translator,
+        Translator $translator,
         PaymentRepository $paymentRepository,
         IncomeProofRepository $incomeProofRepository,
         EventBus $eventBus

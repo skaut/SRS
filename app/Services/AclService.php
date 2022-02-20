@@ -16,7 +16,7 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Throwable;
 
 use function array_map;
@@ -34,7 +34,7 @@ class AclService
 
     private SrsResourceRepository $resourceRepository;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private Cache $roleNamesCache;
 
@@ -46,7 +46,7 @@ class AclService
         RoleRepository $roleRepository,
         PermissionRepository $permissionRepository,
         SrsResourceRepository $resourceRepository,
-        ITranslator $translator,
+        Translator $translator,
         IStorage $storage
     ) {
         $this->roleRepository       = $roleRepository;

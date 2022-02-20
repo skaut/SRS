@@ -9,7 +9,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -19,11 +19,11 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class FaqGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private FaqRepository $faqRepository;
 
-    public function __construct(ITranslator $translator, FaqRepository $faqRepository)
+    public function __construct(Translator $translator, FaqRepository $faqRepository)
     {
         $this->translator    = $translator;
         $this->faqRepository = $faqRepository;
