@@ -170,3 +170,8 @@ p {
 .file-drag-handle {
     display: none;
 }
+
+/* oprava seznam mapy */
+.smap .cluster div {
+    box-sizing: unset;
+}
