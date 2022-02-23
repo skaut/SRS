@@ -584,6 +584,7 @@ class UsersGridControl extends Control
         if ($selectedRoles->isEmpty()) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_empty', 'danger');
             $this->reload();
+
             return;
         }
 
@@ -611,6 +612,7 @@ class UsersGridControl extends Control
         if (! $capacitiesOk) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_capacity', 'danger');
             $this->reload();
+
             return;
         }
 
@@ -702,7 +704,8 @@ class UsersGridControl extends Control
 
         if ($eventId === null) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_connected', 'danger');
-            $this->reload($p);
+            $this->reload();
+
             return;
         }
 
@@ -715,7 +718,8 @@ class UsersGridControl extends Control
                 $skautIsEventService = $this->skautIsEventEducationService;
                 if (! $skautIsEventService->isSubeventConnected()) {
                     $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_subevent_not_connected', 'danger');
-                    $this->reload($p);
+                    $this->reload();
+
                     return;
                 }
 
@@ -727,7 +731,8 @@ class UsersGridControl extends Control
 
         if (! $skautIsEventService->isEventDraft($eventId)) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_draft', 'danger');
-            $this->reload($p);
+            $this->reload();
+
             return;
         }
 
@@ -920,7 +925,8 @@ class UsersGridControl extends Control
         return $options;
     }
 
-    private function reload() {
+    private function reload(): void
+    {
         $p = $this->getPresenter();
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
