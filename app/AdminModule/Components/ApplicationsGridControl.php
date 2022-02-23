@@ -355,13 +355,15 @@ class ApplicationsGridControl extends Control
     {
         $application = $this->applicationRepository->findById($id);
 
+        $p = $this->getPresenter();
+
         if ($application instanceof SubeventsApplication && ! $application->isCanceled()) {
             $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
             $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $loggedUser);
-            $this->getPresenter()->flashMessage('admin.users.users_applications_application_canceled', 'success');
+            $p->flashMessage('admin.users.users_applications_application_canceled', 'success');
         }
 
-        $this->redirect('this');
+        $p->redirect('this');
     }
 
     /**

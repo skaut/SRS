@@ -165,13 +165,15 @@ class ProgramCategoriesGridControl extends Control
     {
         $category = $this->categoryRepository->findById($id);
 
+        $p = $this->getPresenter();
+
         if ($category->getBlocks()->isEmpty()) {
             $this->commandBus->handle(new RemoveCategory($category));
-            $this->getPresenter()->flashMessage('admin.program.categories.message.delete_success', 'success');
+            $p->flashMessage('admin.program.categories.message.delete_success', 'success');
         } else {
-            $this->getPresenter()->flashMessage('admin.program.categories.message.delete_failed', 'danger');
+            $p->flashMessage('admin.program.categories.message.delete_failed', 'danger');
         }
 
-        $this->redirect('this');
+        $p->redirect('this');
     }
 }

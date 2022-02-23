@@ -225,8 +225,9 @@ class PagesGridControl extends Control
         $page = $this->pageRepository->findById($id);
         $this->cmsService->removePage($page);
 
-        $this->getPresenter()->flashMessage('admin.cms.pages.message.delete_success', 'success');
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.pages.message.delete_success', 'success');
+        $p->redirect('this');
     }
 
     /**
@@ -245,10 +246,9 @@ class PagesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $pagesGrid = $this->getComponent('pagesGrid');
-            $pagesGrid->reload();
+            $this->getComponent('pagesGrid')->reload();
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -277,10 +277,9 @@ class PagesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $pagesGrid = $this->getComponent('pagesGrid');
-            $pagesGrid->redrawItem($id);
+            $this->getComponent('pagesGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 }

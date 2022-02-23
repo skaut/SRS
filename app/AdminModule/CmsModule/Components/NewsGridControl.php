@@ -96,8 +96,9 @@ class NewsGridControl extends Control
         $news = $this->newsRepository->findById($id);
         $this->newsRepository->remove($news);
 
-        $this->getPresenter()->flashMessage('admin.cms.news.message.delete_success', 'success');
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.news.message.delete_success', 'success');
+        $p->redirect('this');
     }
 
     /**
@@ -117,10 +118,9 @@ class NewsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $newsGrid = $this->getComponent('newsGrid');
-            $newsGrid->redrawItem($id);
+            $this->getComponent('newsGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 }

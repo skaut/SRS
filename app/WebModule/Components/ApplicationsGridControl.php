@@ -366,13 +366,13 @@ class ApplicationsGridControl extends BaseContentControl
     {
         $application = $this->applicationRepository->findById($id);
 
-        if ($application instanceof SubeventsApplication) {
-            if ($this->applicationService->isAllowedEditApplication($application)) {
-                $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $application->getUser());
-                $this->getPresenter()->flashMessage('web.profile.applications_application_canceled', 'success');
-            }
+        $p = $this->getPresenter();
 
-            $this->redirect('this');
+        if ($application instanceof SubeventsApplication && $this->applicationService->isAllowedEditApplication($application)) {
+            $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $application->getUser());
+            $p->flashMessage('web.profile.applications_application_canceled', 'success');
         }
+
+        $p->redirect('this');
     }
 }

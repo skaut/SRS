@@ -53,8 +53,9 @@ class FaqContentControl extends BaseContentControl
         $form = $this->faqFormFactory->create($this->getPresenter()->getUser()->id);
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            $this->getPresenter()->flashMessage('web.faq_content.add_question_successful', 'success');
-            $this->getPresenter()->redirect('this');
+            $p = $this->getPresenter();
+            $p->flashMessage('web.faq_content.add_question_successful', 'success');
+            $p->redirect('this');
         };
 
         return $form;

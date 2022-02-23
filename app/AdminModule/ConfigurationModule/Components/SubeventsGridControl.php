@@ -99,13 +99,15 @@ class SubeventsGridControl extends Control
     {
         $subevent = $this->subeventRepository->findById($id);
 
+        $p = $this->getPresenter();
+
         if ($subevent->getBlocks()->isEmpty()) {
             $this->subeventRepository->remove($subevent);
-            $this->getPresenter()->flashMessage('admin.configuration.subevents_deleted', 'success');
+            $p->flashMessage('admin.configuration.subevents_deleted', 'success');
         } else {
-            $this->getPresenter()->flashMessage('admin.configuration.subevents_deleted_error', 'danger');
+            $p->flashMessage('admin.configuration.subevents_deleted_error', 'danger');
         }
 
-        $this->redirect('this');
+        $p->redirect('this');
     }
 }

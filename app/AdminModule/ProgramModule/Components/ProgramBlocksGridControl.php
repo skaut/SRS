@@ -230,15 +230,17 @@ class ProgramBlocksGridControl extends Control
     {
         $block = $this->blockRepository->findById($id);
 
+        $p = $this->getPresenter();
+
         if (! $this->userRepository->findById($this->getPresenter()->getUser()->getId())->isAllowedModifyBlock($block)) {
-            $this->getPresenter()->flashMessage('admin.program.blocks.message.delete_not_allowed', 'danger');
-            $this->redirect('this');
+            $p->flashMessage('admin.program.blocks.message.delete_not_allowed', 'danger');
+            $p->redirect('this');
         }
 
         $this->commandBus->handle(new RemoveBlock($block));
 
-        $this->getPresenter()->flashMessage('admin.program.blocks.message.delete_success', 'success');
-        $this->redirect('this');
+        $p->flashMessage('admin.program.blocks.message.delete_success', 'success');
+        $p->redirect('this');
     }
 
     /**
@@ -270,10 +272,9 @@ class ProgramBlocksGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $programBlocksGrid = $this->getComponent('programBlocksGrid');
-            $programBlocksGrid->redrawItem($id);
+            $this->getComponent('programBlocksGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -287,7 +288,7 @@ class ProgramBlocksGridControl extends Control
     public function groupExportBlocksAttendees(array $ids): void
     {
         $this->sessionSection->blockIds = $ids;
-        $this->redirect('exportblocksattendees'); // presmerovani kvuli zruseni ajax
+        $this->redirect('exportblocksattendees');
     }
 
     /**

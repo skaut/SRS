@@ -188,8 +188,9 @@ class PaymentsGridControl extends Control
 
         $this->applicationService->removePayment($payment, $loggedUser);
 
-        $this->getPresenter()->flashMessage('admin.payments.payments.deleted', 'success');
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.payments.payments.deleted', 'success');
+        $p->redirect('this');
     }
 
     /**

@@ -178,8 +178,9 @@ class RoomsGridControl extends Control
 
         $this->commandBus->handle(new RemoveRoom($room));
 
-        $this->getPresenter()->flashMessage('admin.program.rooms.message.delete_success', 'success');
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.program.rooms.message.delete_success', 'success');
+        $p->redirect('this');
     }
 
     /**
@@ -192,7 +193,7 @@ class RoomsGridControl extends Control
     public function groupExportRoomsSchedules(array $ids): void
     {
         $this->sessionSection->roomIds = $ids;
-        $this->redirect('exportroomsschedules'); // presmerovani kvuli zruseni ajax
+        $this->redirect('exportroomsschedules');
     }
 
     /**

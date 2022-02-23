@@ -125,14 +125,16 @@ class RolesGridControl extends Control
     {
         $role = $this->roleRepository->findById($id);
 
+        $p = $this->getPresenter();
+
         if ($role->getUsers()->isEmpty()) {
             $this->aclService->removeRole($role);
-            $this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');
+            $p->flashMessage('admin.acl.roles_deleted', 'success');
         } else {
-            $this->getPresenter()->flashMessage('admin.acl.roles_deleted_error', 'danger');
+            $p->flashMessage('admin.acl.roles_deleted_error', 'danger');
         }
 
-        $this->redirect('this');
+        $p->redirect('this');
     }
 
     /**
@@ -154,10 +156,9 @@ class RolesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $rolesGrid = $this->getComponent('rolesGrid');
-            $rolesGrid->redrawItem($id);
+            $this->getComponent('rolesGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 }

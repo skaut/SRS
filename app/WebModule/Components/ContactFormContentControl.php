@@ -56,8 +56,9 @@ class ContactFormContentControl extends BaseContentControl
         $form = $this->contactFormFactory->create();
 
         $form->onSave[] = function (): void {
-            $this->getPresenter()->flashMessage('web.contact_form_content.send_message_successful', 'success');
-            $this->getPresenter()->redirect('this');
+            $p = $this->getPresenter();
+            $p->flashMessage('web.contact_form_content.send_message_successful', 'success');
+            $p->redirect('this');
         };
 
         return $form;

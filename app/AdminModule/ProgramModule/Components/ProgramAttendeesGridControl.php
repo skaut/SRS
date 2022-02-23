@@ -254,7 +254,7 @@ class ProgramAttendeesGridControl extends Control
             $p->redrawControl('flashes');
             $p->redrawControl('programs');
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -289,7 +289,7 @@ class ProgramAttendeesGridControl extends Control
             $p->redrawControl('flashes');
             $p->redrawControl('programs');
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -325,7 +325,7 @@ class ProgramAttendeesGridControl extends Control
             $p->redrawControl('flashes');
             $p->redrawControl('programs');
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -361,7 +361,7 @@ class ProgramAttendeesGridControl extends Control
             $p->redrawControl('flashes');
             $p->redrawControl('programs');
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 

@@ -208,7 +208,8 @@ class DocumentsGridControl extends Control
         $this->filesService->delete($document->getFile());
         $this->documentRepository->remove($document);
 
-        $this->getPresenter()->flashMessage('admin.cms.documents.message.delete_success', 'success');
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.documents.message.delete_success', 'success');
+        $p->redirect('this');
     }
 }

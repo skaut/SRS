@@ -123,8 +123,9 @@ class CustomInputsGridControl extends Control
         $input = $this->customInputRepository->findById($id);
         $this->customInputRepository->remove($input);
 
-        $this->getPresenter()->flashMessage('admin.configuration.custom_inputs_deleted', 'success');
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.configuration.custom_inputs_deleted', 'success');
+        $p->redirect('this');
     }
 
     /**
@@ -142,10 +143,9 @@ class CustomInputsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $customInputsGrid = $this->getComponent('customInputsGrid');
-            $customInputsGrid->reload();
+            $this->getComponent('customInputsGrid')->reload();
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -167,10 +167,9 @@ class CustomInputsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $customInputsGrid = $this->getComponent('customInputsGrid');
-            $customInputsGrid->redrawItem($id);
+            $this->getComponent('customInputsGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 }

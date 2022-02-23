@@ -39,6 +39,11 @@ naja.addEventListener('init', () => {
 naja.addEventListener('complete', () => {
     init();
 });
+naja.redirectHandler.addEventListener('redirect', (event) => {
+    if (event.detail.url.includes('export')) {
+        event.detail.setHardRedirect(true);
+    }
+});
 document.addEventListener('DOMContentLoaded', () => naja.initialize());
 
 // bootstrap inputs

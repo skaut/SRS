@@ -94,10 +94,9 @@ class MailTemplatesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $mailTemplatesGrid = $this->getComponent('mailTemplatesGrid');
-            $mailTemplatesGrid->redrawItem($id);
+            $this->getComponent('mailTemplatesGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 }

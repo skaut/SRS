@@ -160,7 +160,8 @@ class DocumentTagsGridControl extends Control
         $tag = $this->tagRepository->findById($id);
         $this->tagRepository->remove($tag);
 
-        $this->getPresenter()->flashMessage('admin.cms.documents.tags.message.delete_success', 'success');
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.documents.tags.message.delete_success', 'success');
+        $p->redirect('this');
     }
 }
