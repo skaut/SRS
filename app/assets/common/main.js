@@ -61,7 +61,8 @@ import Happy from "happy-inputs";
 window.happy = new Happy;
 window.happy.init();
 
-import 'ublaboo-datagrid'
+// import 'ublaboo-datagrid'
+import './datagrid'
 
 // init funkce
 function init() {
@@ -81,6 +82,18 @@ function animateAlerts() {
 }
 
 function initSelects() {
+    const datagridSelects = $('[data-datagrid-multiselect-id]');
+    datagridSelects.each(function() {
+        let id;
+        if ($(this).hasClass('selectpicker')) {
+            $(this).removeAttr('id');
+            id = $(this).data('datagrid-multiselect-id');
+            return $(this).on('rendered.bs.select', function(e) {
+                return $(this).parent().attr('id', id);
+            });
+        }
+    });
+
     $('select')
         .not('.datagrid .row-group-actions select')
         .not('.datagrid .col-per-page select')

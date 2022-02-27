@@ -146,21 +146,6 @@ p {
     font-size: 12px !important;
 }
 
-/* oprava file input v inline editaci */
-.datagrid-inline-edit .kv-fileinput-caption {
-    font-size: 12px !important;
-    padding: 4px 12px 5px 12px !important;
-    margin-top: 0 !important;
-    height: 28px !important;
-}
-
-.datagrid-inline-edit .btn-file {
-    font-size: 12px !important;
-    padding: 4px 12px 5px 12px !important;
-    margin-left: -4px !important;
-    height: 28px !important;
-}
-
 /* neaktivni zaznamy */
 .datagrid .disabled {
     color: #70757D !important;
