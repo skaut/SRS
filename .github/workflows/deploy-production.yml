@@ -11,7 +11,7 @@ on:
 jobs:
   deploy:
     name: "Deploy to production"
-    environment: ${{ inputs.environment }}
+    environment: ${{ github.event.inputs.environment }}
     runs-on: ubuntu-18.04
     container:
       image: fmasa/lebeda:8.0
