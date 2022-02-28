@@ -68,5 +68,3 @@ jobs:
           eval `ssh-agent -s`
           echo "${DEPLOY_SSH_KEY}" | tr -d '\r' | ssh-add -
           phing deploy
-
-
