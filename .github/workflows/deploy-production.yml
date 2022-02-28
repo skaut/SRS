@@ -1,4 +1,4 @@
-name: deploy
+name: deploy-production
 
 on:
   workflow_dispatch:
@@ -11,6 +11,7 @@ on:
 jobs:
   deploy:
     name: "Deploy to production"
+    environment: ${{ inputs.environment }}
     runs-on: ubuntu-18.04
     container:
       image: fmasa/lebeda:8.0
