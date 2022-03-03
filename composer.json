@@ -24,14 +24,14 @@
         "nette/database": "^3.1",
         "nette/di": "^3.0",
         "nette/finder": "^2.5",
-        "nette/forms": "^3.1",
+        "nette/forms": "3.1.5",
         "nette/http": "^3.1",
         "nette/mail": "^3.1",
         "nette/robot-loader": "^3.4",
         "nette/security": "^3.1",
         "nette/utils": "^3.2",
         "latte/latte": "^2.10",
-        "tracy/tracy": "^2.8",
+        "tracy/tracy": "^2.9",
 
         "contributte/console": "^0.9",
         "contributte/translation": "^0.9",
@@ -41,27 +41,22 @@
         "beberlei/doctrineextensions": "^1.3",
         "dg/mysql-dump": "^1.5",
 
-        "fmasa/messenger": "^1.0",
+        "fmasa/messenger": "^1.1",
 
-        "nextras/form-components": "^1.0",
+        "nextras/form-components": "^1.1",
         "nextras/forms-rendering": "^1.1",
         "vojtys/nette-forms-gpspicker": "dev-master",
         "contributte/recaptcha": "^3.4",
 
-        "bicisteadm/webloader-reload": "^3.0",
-
-        "twbs/bootstrap": "^4.6",
-        "snapappointments/bootstrap-select": "^1.13",
-        "kartik-v/bootstrap-fileinput": "^5.2",
-
-        "ublaboo/datagrid": "^6.9",
+        "ublaboo/datagrid": "6.9.2",
         "ublaboo/mailing": "^1.2",
 
-        "jms/serializer": "^3.14",
-        "phpoffice/phpspreadsheet": "^1.18",
+        "jms/serializer": "^3.17",
+        "phpoffice/phpspreadsheet": "^1.21",
         "contributte/pdf": "^6.1",
-        "mpdf/qrcode": "^1.1",
+        "mpdf/qrcode": "^1.2",
         "dfridrich/qr-platba": "^1.0",
+        "endroid/qr-code": "4.4.6",
         "eluceo/ical": "^0.16",
 
         "skautis/skautis": "^2.2",
@@ -71,7 +66,7 @@
         "azuyalabs/yasumi": "^1.8",
 
         "mhujer/fio-api-php": "^4.1",
-        "composer/ca-bundle": "^1.2"
+        "composer/ca-bundle": "^1.3"
     },
 
     "require-dev": {

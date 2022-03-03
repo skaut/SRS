@@ -22,13 +22,14 @@ use App\Model\User\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Nette;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Ublaboo\Mailing\MailFactory;
 
 use function in_array;
 use function str_replace;
+use function strval;
 
 /**
  * Služba pro rozesílání e-mailů.
@@ -51,7 +52,7 @@ class MailService implements IMailService
 
     private TemplateRepository $templateRepository;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     public function __construct(
         QueryBus $queryBus,
@@ -61,7 +62,7 @@ class MailService implements IMailService
         RoleRepository $roleRepository,
         SubeventRepository $subeventRepository,
         TemplateRepository $templateRepository,
-        ITranslator $translator
+        Translator $translator
     ) {
         $this->queryBus           = $queryBus;
         $this->mailFactory        = $mailFactory;
@@ -81,7 +82,6 @@ class MailService implements IMailService
      * @param Collection<int, User>|null     $recipientsUsers
      * @param Collection<int, string>|null   $recipientEmails
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws MailingMailCreationException
      */
@@ -178,8 +178,8 @@ class MailService implements IMailService
             $variableName = '%' . $this->translator->translate('common.mailing.variable_name.' . $variable->getName()) . '%';
             $value        = $parameters[$variable->getName()];
 
-            $subject = str_replace($variableName, $value, $subject);
-            $text    = str_replace($variableName, $value, $text);
+            $subject = str_replace($variableName, strval($value), $subject);
+            $text    = str_replace($variableName, strval($value), $text);
         }
 
         $this->sendMail(null, null, $recipientsUsers, $recipientsEmails, $subject, $text, true);

@@ -7,10 +7,9 @@ namespace App\AdminModule\ConfigurationModule\Components;
 use App\Model\Structure\Discount;
 use App\Model\Structure\Repositories\DiscountRepository;
 use App\Services\DiscountService;
-use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -20,14 +19,14 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class DiscountsGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private DiscountRepository $discountRepository;
 
     private DiscountService $discountService;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         DiscountRepository $discountRepository,
         DiscountService $discountService
     ) {
@@ -88,7 +87,6 @@ class DiscountsGridControl extends Control
     /**
      * Zpracuje odstranění slevy.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void
@@ -96,8 +94,8 @@ class DiscountsGridControl extends Control
         $discount = $this->discountRepository->findById($id);
         $this->discountRepository->remove($discount);
 
-        $this->getPresenter()->flashMessage('admin.configuration.discounts_deleted', 'success');
-
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.configuration.discounts_deleted', 'success');
+        $p->redirect('this');
     }
 }

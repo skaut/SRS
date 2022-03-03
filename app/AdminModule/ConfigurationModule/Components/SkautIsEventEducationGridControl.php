@@ -7,10 +7,9 @@ namespace App\AdminModule\ConfigurationModule\Components;
 use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Container;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use stdClass;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
@@ -20,14 +19,14 @@ use Ublaboo\DataGrid\DataGrid;
  */
 class SkautIsEventEducationGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private SubeventRepository $subeventRepository;
 
     private SkautIsCourseRepository $skautIsCourseRepository;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         SubeventRepository $subeventRepository,
         SkautIsCourseRepository $skautIsCourseRepository
     ) {
@@ -79,7 +78,6 @@ class SkautIsEventEducationGridControl extends Control
     /**
      * Zpracuje úpravu propojení podakce s kurzy.
      *
-     * @throws AbortException
      * @throws Throwable
      */
     public function edit(string $id, stdClass $values): void
@@ -91,6 +89,6 @@ class SkautIsEventEducationGridControl extends Control
         $this->subeventRepository->save($subevent);
 
         $this->getPresenter()->flashMessage('admin.configuration.skautis_event_education_connection_saved', 'success');
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 }

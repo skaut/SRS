@@ -11,8 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Http\FileUpload;
-use Nette\Utils\ImageException;
-use Nette\Utils\UnknownImageFileException;
 use stdClass;
 
 use function array_map;
@@ -89,9 +87,6 @@ class SlideshowContent extends Content implements IContent
 
     /**
      * Zpracuje při uložení stránky část formuláře týkající se obsahu.
-     *
-     * @throws UnknownImageFileException
-     * @throws ImageException
      */
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {

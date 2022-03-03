@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 
 use function array_map;
 
@@ -114,8 +113,6 @@ class RoomRepository extends AbstractRepository
 
     /**
      * Uloží místnost.
-     *
-     * @throws ORMException
      */
     public function save(Room $room): void
     {
@@ -125,8 +122,6 @@ class RoomRepository extends AbstractRepository
 
     /**
      * Odstraní místnost.
-     *
-     * @throws ORMException
      */
     public function remove(Room $room): void
     {

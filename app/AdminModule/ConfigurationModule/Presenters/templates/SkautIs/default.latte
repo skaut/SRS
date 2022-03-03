@@ -1,13 +1,3 @@
-{block head}
-    <script>
-        $(function () {
-            $("#disconnect-button").confirm({
-                text: {_admin.configuration.skautis_event_disconnect_confirm}
-            });
-        });
-    </script>
-{/block}
-
 {block main}
     <h2>{_admin.configuration.skautis_event_heading}</h2>
     <div class="card card-body bg-light pb-1 mb-3">
@@ -17,7 +7,8 @@
         {else}
             <div class="alert alert-info alert-forever">{_admin.configuration.skautis_event_name, ['name' => $event]}</div>
             <p>
-                <a class="btn btn-danger" id="disconnect-button" n:href="disconnect!">
+                <a class="btn btn-danger" id="disconnect-button" n:href="disconnect!" data-toggle="confirmation"
+                   data-content="{_admin.configuration.skautis_event_disconnect_confirm}">
                     {_admin.configuration.skautis_event_disconnect}
                 </a>
             </p>

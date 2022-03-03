@@ -6,12 +6,11 @@ namespace App\WebModule\Components;
 
 use App\Model\Cms\Dto\UsersContentDto;
 use App\Model\User\Repositories\UserRepository;
-use Nette\Application\UI\Control;
 
 /**
  * Komponenta s přehledem uživatelů.
  */
-class UsersContentControl extends Control
+class UsersContentControl extends BaseContentControl
 {
     private UserRepository $userRepository;
 

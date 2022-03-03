@@ -1,6 +1,6 @@
 {define role-test}
     <div class="alert alert-warning alert-forever" n:if="$user->isInRole($testRole)">
-        <i class="fa fa-exclamation-circle"></i>
+        <i class="fa fa-triangle-exclamation"></i>
         {_web.common.role_test_warning_begin}
         <a n:href="exitroletest" class="alert-link">{_web.common.role_test_warning_link}</a>{_web.common.role_test_warning_end}
     </div>

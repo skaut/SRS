@@ -11,12 +11,10 @@ use App\Model\Acl\Role;
 use App\Model\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
-use Nette\Localization\ITranslator;
+use Nette\Caching\Storage;
+use Nette\Localization\Translator;
 use Throwable;
 
 use function array_map;
@@ -34,7 +32,7 @@ class AclService
 
     private SrsResourceRepository $resourceRepository;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private Cache $roleNamesCache;
 
@@ -46,8 +44,8 @@ class AclService
         RoleRepository $roleRepository,
         PermissionRepository $permissionRepository,
         SrsResourceRepository $resourceRepository,
-        ITranslator $translator,
-        IStorage $storage
+        Translator $translator,
+        Storage $storage
     ) {
         $this->roleRepository       = $roleRepository;
         $this->permissionRepository = $permissionRepository;
@@ -82,9 +80,6 @@ class AclService
 
     /**
      * Uloží roli.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function saveRole(Role $role): void
     {
@@ -95,9 +90,6 @@ class AclService
 
     /**
      * Odstraní roli.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function removeRole(Role $role): void
     {
@@ -272,7 +264,7 @@ class AclService
     {
         $names = $this->permissionNamesCache->load(null);
         if ($names === null) {
-            $names = $result = $this->permissionRepository->createQueryBuilder('p')
+            $names = $this->permissionRepository->createQueryBuilder('p')
                 ->select('p.name')
                 ->addSelect('role.name AS roleName')->join('p.roles', 'role')
                 ->addSelect('resource.name AS resourceName')->join('p.resource', 'resource')

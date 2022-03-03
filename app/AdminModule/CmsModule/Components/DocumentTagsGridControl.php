@@ -8,13 +8,12 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Cms\Repositories\TagRepository;
 use App\Model\Cms\Tag;
 use App\Services\AclService;
-use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\TextInput;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -28,7 +27,7 @@ use function count;
  */
 class DocumentTagsGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private RoleRepository $roleRepository;
 
@@ -37,7 +36,7 @@ class DocumentTagsGridControl extends Control
     private TagRepository $tagRepository;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         RoleRepository $roleRepository,
         AclService $aclService,
         TagRepository $tagRepository
@@ -121,9 +120,6 @@ class DocumentTagsGridControl extends Control
 
     /**
      * Zpracuje přidání štítku dokumentu.
-     *
-     * @throws ORMException
-     * @throws AbortException
      */
     public function add(stdClass $values): void
     {
@@ -135,15 +131,11 @@ class DocumentTagsGridControl extends Control
         $this->tagRepository->save($tag);
 
         $this->getPresenter()->flashMessage('admin.cms.documents.tags.message.save_success', 'success');
-
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 
     /**
      * Zpracuje úpravu štítku dokumentu.
-     *
-     * @throws ORMException
-     * @throws AbortException
      */
     public function edit(string $id, stdClass $values): void
     {
@@ -155,14 +147,12 @@ class DocumentTagsGridControl extends Control
         $this->tagRepository->save($tag);
 
         $this->getPresenter()->flashMessage('admin.cms.documents.tags.message.save_success', 'success');
-
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 
     /**
      * Zpracuje odstranění štítku dokumentu.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void
@@ -170,8 +160,8 @@ class DocumentTagsGridControl extends Control
         $tag = $this->tagRepository->findById($id);
         $this->tagRepository->remove($tag);
 
-        $this->getPresenter()->flashMessage('admin.cms.documents.tags.message.delete_success', 'success');
-
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.documents.tags.message.delete_success', 'success');
+        $p->redirect('this');
     }
 }

@@ -14,8 +14,6 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 
 use function array_map;
 
@@ -227,9 +225,6 @@ class RoleRepository extends AbstractRepository
 
     /**
      * Uloží roli.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Role $role): void
     {
@@ -239,9 +234,6 @@ class RoleRepository extends AbstractRepository
 
     /**
      * Odstraní roli.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Role $role): void
     {

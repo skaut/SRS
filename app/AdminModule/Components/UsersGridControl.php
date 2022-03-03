@@ -19,7 +19,6 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -44,7 +43,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Throwable;
@@ -61,7 +60,7 @@ class UsersGridControl extends Control
 {
     private QueryBus $queryBus;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private EntityManagerInterface $em;
 
@@ -91,7 +90,7 @@ class UsersGridControl extends Control
 
     public function __construct(
         QueryBus $queryBus,
-        ITranslator $translator,
+        Translator $translator,
         EntityManagerInterface $em,
         UserRepository $userRepository,
         CustomInputRepository $customInputRepository,
@@ -135,7 +134,6 @@ class UsersGridControl extends Control
     /**
      * Vytvoří komponentu.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws DataGridColumnStatusException
      * @throws DataGridException
@@ -358,7 +356,7 @@ class UsersGridControl extends Control
                                         ->setAttribute('title', basename($customInputValue->getValue()))
                                         ->setAttribute('target', '_blank')
                                         ->setAttribute('class', 'btn btn-xs btn-secondary')
-                                        ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-download'))
+                                        ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-file-arrow-down'))
                                     : '';
 
                             default:
@@ -484,7 +482,6 @@ class UsersGridControl extends Control
     /**
      * Zpracuje odstranění externího uživatele.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void
@@ -493,9 +490,9 @@ class UsersGridControl extends Control
 
         $this->userRepository->remove($user);
 
-        $this->getPresenter()->flashMessage('admin.users.users_deleted', 'success');
-
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.users.users_deleted', 'success');
+        $p->redirect('this');
     }
 
     /**
@@ -515,10 +512,9 @@ class UsersGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $usersGrid = $this->getComponent('usersGrid');
-            $usersGrid->redrawItem($id);
+            $this->getComponent('usersGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -539,10 +535,9 @@ class UsersGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $usersGrid = $this->getComponent('usersGrid');
-            $usersGrid->redrawItem($id);
+            $this->getComponent('usersGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -564,8 +559,10 @@ class UsersGridControl extends Control
             }
         });
 
-        $this->getPresenter()->flashMessage('admin.users.users_group_action_approved', 'success');
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.users.users_group_action_approved', 'success');
+
+        $this->reload();
     }
 
     /**
@@ -586,7 +583,9 @@ class UsersGridControl extends Control
         // neni vybrana zadna role
         if ($selectedRoles->isEmpty()) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_empty', 'danger');
-            $this->redirect('this');
+            $this->reload();
+
+            return;
         }
 
         // v rolich musi byt dostatek volnych mist
@@ -612,7 +611,9 @@ class UsersGridControl extends Control
 
         if (! $capacitiesOk) {
             $p->flashMessage('admin.users.users_group_action_change_roles_error_capacity', 'danger');
-            $this->redirect('this');
+            $this->reload();
+
+            return;
         }
 
         $loggedUser = $this->userRepository->findById($p->getUser()->id);
@@ -624,7 +625,7 @@ class UsersGridControl extends Control
         });
 
         $p->flashMessage('admin.users.users_group_action_changed_roles', 'success');
-        $this->redirect('this');
+        $this->reload();
     }
 
     /**
@@ -646,8 +647,9 @@ class UsersGridControl extends Control
             }
         });
 
-        $this->getPresenter()->flashMessage('admin.users.users_group_action_marked_attended', 'success');
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.users.users_group_action_marked_attended', 'success');
+        $this->reload();
     }
 
     /**
@@ -681,7 +683,7 @@ class UsersGridControl extends Control
         });
 
         $p->flashMessage('admin.users.users_group_action_marked_paid_today', 'success');
-        $this->redirect('this');
+        $this->reload();
     }
 
     /**
@@ -702,7 +704,9 @@ class UsersGridControl extends Control
 
         if ($eventId === null) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_connected', 'danger');
-            $this->redirect('this');
+            $this->reload();
+
+            return;
         }
 
         switch ($this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE))) {
@@ -714,7 +718,9 @@ class UsersGridControl extends Control
                 $skautIsEventService = $this->skautIsEventEducationService;
                 if (! $skautIsEventService->isSubeventConnected()) {
                     $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_subevent_not_connected', 'danger');
-                    $this->redirect('this');
+                    $this->reload();
+
+                    return;
                 }
 
                 break;
@@ -725,7 +731,9 @@ class UsersGridControl extends Control
 
         if (! $skautIsEventService->isEventDraft($eventId)) {
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_not_draft', 'danger');
-            $this->redirect('this');
+            $this->reload();
+
+            return;
         }
 
         if ($skautIsEventService->insertParticipants($eventId, $users, $accept === 1)) {
@@ -734,7 +742,7 @@ class UsersGridControl extends Control
             $p->flashMessage('admin.users.users_group_action_insert_into_skaut_is_error_skaut_is', 'danger');
         }
 
-        $this->redirect('this');
+        $this->reload();
     }
 
     /**
@@ -747,7 +755,7 @@ class UsersGridControl extends Control
     public function groupGeneratePaymentProofs(array $ids): void
     {
         $this->sessionSection->userIds = $ids;
-        $this->presenter->redirect(':Export:IncomeProof:users');
+        $this->getPresenter()->redirect(':Export:IncomeProof:users');
     }
 
     /**
@@ -760,7 +768,7 @@ class UsersGridControl extends Control
     public function groupExportUsers(array $ids): void
     {
         $this->sessionSection->userIds = $ids;
-        $this->redirect('exportusers'); // presmerovani kvuli zruseni ajax
+        $this->redirect('exportusers');
     }
 
     /**
@@ -790,7 +798,7 @@ class UsersGridControl extends Control
     public function groupExportRoles(array $ids): void
     {
         $this->sessionSection->userIds = $ids;
-        $this->redirect('exportroles'); // presmerovani kvuli zruseni ajax
+        $this->redirect('exportroles');
     }
 
     /**
@@ -821,7 +829,7 @@ class UsersGridControl extends Control
     public function groupExportSubeventsAndCategories(array $ids): void
     {
         $this->sessionSection->userIds = $ids;
-        $this->redirect('exportsubeventsandcategories'); // presmerovani kvuli zruseni ajax
+        $this->redirect('exportsubeventsandcategories');
     }
 
     /**
@@ -851,7 +859,7 @@ class UsersGridControl extends Control
     public function groupExportSchedules(array $ids): void
     {
         $this->sessionSection->userIds = $ids;
-        $this->redirect('exportschedules'); // presmerovani kvuli zruseni ajax
+        $this->redirect('exportschedules');
     }
 
     /**
@@ -915,5 +923,16 @@ class UsersGridControl extends Control
         $options[1] = 'common.skautis_event_insert_type.accepted';
 
         return $options;
+    }
+
+    private function reload(): void
+    {
+        $p = $this->getPresenter();
+        if ($p->isAjax()) {
+            $p->redrawControl('flashes');
+            $this->getComponent('usersGrid')->reload();
+        } else {
+            $p->redirect('this');
+        }
     }
 }

@@ -9,7 +9,6 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující aktuality.
@@ -61,8 +60,6 @@ class NewsRepository extends AbstractRepository
 
     /**
      * Uloží aktualitu.
-     *
-     * @throws ORMException
      */
     public function save(News $news): void
     {
@@ -72,8 +69,6 @@ class NewsRepository extends AbstractRepository
 
     /**
      * Odstraní aktualitu.
-     *
-     * @throws ORMException
      */
     public function remove(News $document): void
     {

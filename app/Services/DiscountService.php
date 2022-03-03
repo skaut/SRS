@@ -9,7 +9,7 @@ use App\Model\Structure\Repositories\DiscountRepository;
 use App\Model\Structure\Repositories\SubeventRepository;
 use InvalidArgumentException;
 use Nette;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 
 use function explode;
 use function in_array;
@@ -45,12 +45,12 @@ class DiscountService
 
     private SubeventRepository $subeventRepository;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     public function __construct(
         DiscountRepository $discountRepository,
         SubeventRepository $subeventRepository,
-        ITranslator $translator
+        Translator $translator
     ) {
         $this->discountRepository = $discountRepository;
         $this->subeventRepository = $subeventRepository;

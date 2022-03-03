@@ -7,8 +7,6 @@ namespace App\AdminModule\Forms;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Services\AclService;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -65,9 +63,6 @@ class AddRoleFormFactory
 
     /**
      * Zpracuje formulář.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function processForm(Form $form, stdClass $values): void
     {

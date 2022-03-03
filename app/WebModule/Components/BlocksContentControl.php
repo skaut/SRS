@@ -7,12 +7,11 @@ namespace App\WebModule\Components;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
-use Nette\Application\UI\Control;
 
 /**
  * Komponenta s podrobnostmi o programových blocích.
  */
-class BlocksContentControl extends Control
+class BlocksContentControl extends BaseContentControl
 {
     private BlockRepository $blockRepository;
 

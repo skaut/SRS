@@ -19,8 +19,6 @@ use App\Services\SkautIsService;
 use Nette\Application\AbortException;
 use stdClass;
 use Throwable;
-use WebLoader\Nette\CssLoader;
-use WebLoader\Nette\JavaScriptLoader;
 
 use function array_filter;
 use function array_keys;
@@ -51,22 +49,6 @@ abstract class AdminBasePresenter extends BasePresenter
      * Přihlášený uživatel.
      */
     public ?User $dbuser = null;
-
-    /**
-     * Načte css podle konfigurace v common.neon.
-     */
-    protected function createComponentCss(): CssLoader
-    {
-        return $this->webLoader->createCssLoader('admin');
-    }
-
-    /**
-     * Načte javascript podle konfigurace v common.neon.
-     */
-    protected function createComponentJs(): JavaScriptLoader
-    {
-        return $this->webLoader->createJavaScriptLoader('admin');
-    }
 
     /**
      * @throws AbortException

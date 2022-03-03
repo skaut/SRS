@@ -24,7 +24,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
@@ -37,7 +37,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class ApplicationsGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private EntityManagerInterface $em;
 
@@ -56,7 +56,7 @@ class ApplicationsGridControl extends Control
     private Validators $validators;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         EntityManagerInterface $em,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
@@ -242,12 +242,16 @@ class ApplicationsGridControl extends Control
 
         if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
             $p->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
-            $this->redirect('this');
+            $p->redrawControl('flashes');
+
+            return;
         }
 
         if (! $this->validators->validateSubeventsRegistered($selectedSubevents, $this->user)) {
             $p->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
-            $this->redirect('this');
+            $p->redrawControl('flashes');
+
+            return;
         }
 
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
@@ -255,13 +259,12 @@ class ApplicationsGridControl extends Control
         $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $loggedUser);
 
         $p->flashMessage('admin.users.users_applications_saved', 'success');
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**
      * Zpracuje úpravu přihlášky.
      *
-     * @throws AbortException
      * @throws Throwable
      */
     public function edit(string $id, stdClass $values): void
@@ -275,23 +278,31 @@ class ApplicationsGridControl extends Control
         if ($application instanceof RolesApplication) {
             if (! $selectedSubevents->isEmpty()) {
                 $p->flashMessage('admin.users.users_applications_subevents_not_empty', 'danger');
-                $this->redirect('this');
+                $p->redrawControl('flashes');
+
+                return;
             }
         } else {
             if ($selectedSubevents->isEmpty()) {
                 $p->flashMessage('admin.users.users_applications_subevents_empty', 'danger');
-                $this->redirect('this');
+                $p->redrawControl('flashes');
+
+                return;
             }
         }
 
         if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
             $p->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
-            $this->redirect('this');
+            $p->redrawControl('flashes');
+
+            return;
         }
 
         if (! $this->validators->validateSubeventsRegistered($selectedSubevents, $this->user, $application)) {
             $p->flashMessage('admin.users.users_applications_subevents_registered', 'danger');
-            $this->redirect('this');
+            $p->redrawControl('flashes');
+
+            return;
         }
 
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
@@ -311,7 +322,7 @@ class ApplicationsGridControl extends Control
         });
 
         $p->flashMessage('admin.users.users_applications_saved', 'success');
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**
@@ -344,13 +355,15 @@ class ApplicationsGridControl extends Control
     {
         $application = $this->applicationRepository->findById($id);
 
+        $p = $this->getPresenter();
+
         if ($application instanceof SubeventsApplication && ! $application->isCanceled()) {
             $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
             $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $loggedUser);
-            $this->getPresenter()->flashMessage('admin.users.users_applications_application_canceled', 'success');
+            $p->flashMessage('admin.users.users_applications_application_canceled', 'success');
         }
 
-        $this->redirect('this');
+        $p->redirect('this');
     }
 
     /**

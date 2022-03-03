@@ -22,7 +22,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Http\Session;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use Throwable;
@@ -36,7 +36,7 @@ class PaymentsGridControl extends Control
 {
     private QueryBus $queryBus;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private PaymentRepository $paymentRepository;
 
@@ -50,7 +50,7 @@ class PaymentsGridControl extends Control
 
     public function __construct(
         QueryBus $queryBus,
-        ITranslator $translator,
+        Translator $translator,
         PaymentRepository $paymentRepository,
         UserRepository $userRepository,
         ApplicationService $applicationService,
@@ -79,7 +79,6 @@ class PaymentsGridControl extends Control
      * Vytvoří komponentu.
      *
      * @throws DataGridException
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function createComponentPaymentsGrid(string $name): void
@@ -96,7 +95,7 @@ class PaymentsGridControl extends Control
             ->setSortable();
 
         $grid->addColumnNumber('amount', 'admin.payments.payments.amount')
-            ->setFormat(2, ',', ' ')
+            ->setFormat(2, ',')
             ->setSortable();
 
         $grid->addColumnText('variableSymbol', 'admin.payments.payments.variable_symbol')
@@ -173,7 +172,7 @@ class PaymentsGridControl extends Control
         $this->applicationService->createPaymentManual($values->date, $values->amount, $values->variableSymbol, $loggedUser);
 
         $this->getPresenter()->flashMessage('admin.payments.payments.saved', 'success');
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 
     /**
@@ -189,8 +188,9 @@ class PaymentsGridControl extends Control
 
         $this->applicationService->removePayment($payment, $loggedUser);
 
-        $this->getPresenter()->flashMessage('admin.payments.payments.deleted', 'success');
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.payments.payments.deleted', 'success');
+        $p->redirect('this');
     }
 
     /**

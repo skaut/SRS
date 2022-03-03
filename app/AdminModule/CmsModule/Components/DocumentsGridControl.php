@@ -10,13 +10,12 @@ use App\Model\Cms\Repositories\TagRepository;
 use App\Services\FilesService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
-use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Http\FileUpload;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
@@ -32,7 +31,7 @@ use const UPLOAD_ERR_OK;
  */
 class DocumentsGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private DocumentRepository $documentRepository;
 
@@ -41,7 +40,7 @@ class DocumentsGridControl extends Control
     private TagRepository $tagRepository;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         DocumentRepository $documentRepository,
         TagRepository $tagRepository,
         FilesService $filesService
@@ -95,7 +94,7 @@ class DocumentsGridControl extends Control
                     ->setAttribute('href', $document->getFile())
                     ->setAttribute('target', '_blank')
                     ->setAttribute('class', 'btn btn-xs btn-secondary')
-                    ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-download'))
+                    ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-file-arrow-down'))
                     ->addText(' ' . basename($document->getFile()));
             });
 
@@ -152,9 +151,6 @@ class DocumentsGridControl extends Control
 
     /**
      * Zpracuje přidání dokumentu.
-     *
-     * @throws ORMException
-     * @throws AbortException
      */
     public function add(stdClass $values): void
     {
@@ -172,15 +168,11 @@ class DocumentsGridControl extends Control
         $this->documentRepository->save($document);
 
         $this->getPresenter()->flashMessage('admin.cms.documents.message.save_success', 'success');
-
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 
     /**
      * Zpracuje úpravu dokumentu.
-     *
-     * @throws ORMException
-     * @throws AbortException
      */
     public function edit(string $id, stdClass $values): void
     {
@@ -202,14 +194,12 @@ class DocumentsGridControl extends Control
         $this->documentRepository->save($document);
 
         $this->getPresenter()->flashMessage('admin.cms.documents.message.save_success', 'success');
-
-        $this->redirect('this');
+        $this->getPresenter()->redrawControl('flashes');
     }
 
     /**
      * Zpracuje odstranění dokumentu.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void
@@ -218,8 +208,8 @@ class DocumentsGridControl extends Control
         $this->filesService->delete($document->getFile());
         $this->documentRepository->remove($document);
 
-        $this->getPresenter()->flashMessage('admin.cms.documents.message.delete_success', 'success');
-
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.documents.message.delete_success', 'success');
+        $p->redirect('this');
     }
 }

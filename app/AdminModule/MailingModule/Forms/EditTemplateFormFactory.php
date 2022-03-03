@@ -7,7 +7,6 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Mailing\Repositories\TemplateRepository;
 use App\Model\Mailing\Template;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -75,8 +74,6 @@ class EditTemplateFormFactory
 
     /**
      * Zpracuje formulář.
-     *
-     * @throws ORMException
      */
     public function processForm(Form $form, stdClass $values): void
     {

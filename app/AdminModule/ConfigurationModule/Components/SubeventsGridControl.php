@@ -7,11 +7,9 @@ namespace App\AdminModule\ConfigurationModule\Components;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use App\Utils\Helpers;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -20,11 +18,11 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class SubeventsGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private SubeventRepository $subeventRepository;
 
-    public function __construct(ITranslator $translator, SubeventRepository $subeventRepository)
+    public function __construct(Translator $translator, SubeventRepository $subeventRepository)
     {
         $this->translator         = $translator;
         $this->subeventRepository = $subeventRepository;
@@ -95,21 +93,21 @@ class SubeventsGridControl extends Control
     /**
      * Zpracuje odstranění podakce.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws AbortException
      */
     public function handleDelete(int $id): void
     {
         $subevent = $this->subeventRepository->findById($id);
 
+        $p = $this->getPresenter();
+
         if ($subevent->getBlocks()->isEmpty()) {
             $this->subeventRepository->remove($subevent);
-            $this->getPresenter()->flashMessage('admin.configuration.subevents_deleted', 'success');
+            $p->flashMessage('admin.configuration.subevents_deleted', 'success');
         } else {
-            $this->getPresenter()->flashMessage('admin.configuration.subevents_deleted_error', 'danger');
+            $p->flashMessage('admin.configuration.subevents_deleted_error', 'danger');
         }
 
-        $this->redirect('this');
+        $p->redirect('this');
     }
 }

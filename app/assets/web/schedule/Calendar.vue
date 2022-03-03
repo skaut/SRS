@@ -32,7 +32,7 @@
                             <div v-for="lector in selectedEventInfo.event.extendedProps.block.lectors">
                                 <b>{{ lector.name }}</b>
                                 <p>
-                                    <img :src="basePath + lector.photo" v-if="lector.photo" class="pull-left mr-3 mb-3"/>
+                                    <img :src="basePath + lector.photo" v-if="lector.photo" class="float-left mr-3 mb-3"/>
                                     {{ lector.about }}
                                 </p>
                                 <div class="clearfix"></div>
@@ -48,19 +48,19 @@
                         <button @click="handleAttendEvent()"
                                 v-show="!(selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates) && !(selectedEventInfo.event.extendedProps.block.alternatesAllowed && selectedEventInfo.event.extendedProps.occupied)"
                                 :disabled="selectedEventInfo.event.extendedProps.blocked || selectedEventInfo.event.extendedProps.occupied || !selectedEventInfo.event.extendedProps.paid"
-                                class="btn btn-sm btn-success pull-left">
+                                class="btn btn-sm btn-success">
                             Přihlásit se na program
                         </button>
                         <button @click="handleAttendEvent()"
                                 v-show="!(selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates) && (selectedEventInfo.event.extendedProps.block.alternatesAllowed && selectedEventInfo.event.extendedProps.occupied)"
                                 :disabled="selectedEventInfo.event.extendedProps.blocked || !selectedEventInfo.event.extendedProps.paid"
-                                class="btn btn-sm btn-success pull-left">
+                                class="btn btn-sm btn-success">
                             Přihlásit se na program jako náhradník
                         </button>
                         <button @click="handleUnattendEvent()"
                                 v-show="selectedEventInfo.event.extendedProps.userAttends || selectedEventInfo.event.extendedProps.userAlternates"
                                 :disabled="selectedEventInfo.event.extendedProps.block.autoRegistered"
-                                class="btn btn-sm btn-danger pull-left">
+                                class="btn btn-sm btn-danger">
                             Odhlásit se z programu
                         </button>
                     </div>
@@ -95,8 +95,8 @@
             Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je.
         </div>
 
-        <div class="row mb-3">
-            <div class="col-auto mr-auto">
+        <div class="row mb-2">
+            <div class="col-auto mr-auto mb-1">
                 <div class="btn-group">
                     <button @click="handleChangeView('timeGridSeminar')" class="btn btn-sm btn-secondary" :class="{ active: initialView === 'timeGridSeminar' }">
                         Na výšku
@@ -121,11 +121,11 @@
                     <i class="fa fa-question-circle"></i> Nápověda
                 </button>
             </div>
-            <div class="col-auto">
-                <div class="spinner float-left" v-show="loading > 0">
-                    <span class="fa fa-spinner fa-pulse fa-2x" style=""></span>
+            <div class="col-auto mb-1 mr-n2">
+                <div class="spinner float-left mr-2" v-show="loading > 0">
+                    <span class="fa fa-spinner fa-pulse fa-2x"></span>
                 </div>
-                <div class="notifications float-left ml-2 mt-2 mt-sm-0">
+                <div class="notifications float-left mr-2">
                     <div v-if="message" class="alert" :class="'alert-' + message.type" style="padding: 4px 8px; margin: 0">
                         {{ message.text }}
                     </div>
@@ -158,7 +158,7 @@
                 initialView: localStorage.getItem('fcInitialView') || 'timeGridSeminar',
                 selectedEventInfo: null,
                 registerProgramsAllowed: registerProgramsAllowed,
-                basePath: basePath
+                basePath: window.location.origin
             }
         },
         computed: {
@@ -244,7 +244,7 @@
             message: function () {
                 $('.notifications').show().animate({
                     opacity: 1.0
-                }, ALERT_DURATION).slideUp(1000);
+                }, ALERT_DURATION).slideUp(ALERT_ANIMATION);
             },
             config: function () {
                 if (!localStorage.getItem('fcInitialView')) {

@@ -35,7 +35,7 @@
                                         <option v-for="resource in resources" :value="resource.id">{{ resource.title }}</option>
                                     </select>
                                     <span v-if="(getResourceById(selectedEventInfo.resourceId).extendedProps.capacity || Number.MAX_VALUE) < (selectedEventInfo.event.extendedProps.block.capacity || 0)" class="text-warning">
-                                        <span class="fa fa-exclamation-triangle"></span>
+                                        <span class="fa fa-triangle-exclamation"></span>
                                         Kapacita místnosti je menší než kapacita bloku.
                                     </span>
                                 </div>
@@ -49,8 +49,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button @click="handleEventUpdateRoom()" class="btn btn-primary pull-left" :disabled="!config.allowed_modify_schedule">Uložit</button>
-                        <button @click="handleEventRemove()" class="btn btn-danger pull-right" :disabled="!config.allowed_modify_schedule">Odstranit</button>
+                        <button @click="handleEventRemove()" class="btn btn-danger" :disabled="!config.allowed_modify_schedule">Odstranit</button>
+                        <button @click="handleEventUpdateRoom()" class="btn btn-primary" :disabled="!config.allowed_modify_schedule">Uložit</button>
                     </div>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="col-auto">
-                <div class="spinner float-left" v-show="loading > 0">
+                <div class="spinner" v-show="loading > 0">
                     <span class="fa fa-spinner fa-pulse fa-2x" style=""></span>
                 </div>
             </div>
@@ -185,7 +185,7 @@
             message: function () {
                 $('.notifications').show().animate({
                     opacity: 1.0
-                }, ALERT_DURATION).slideUp(1000);
+                }, ALERT_DURATION).slideUp(ALERT_ANIMATION);
             },
             config: function () {
                 $('#calendar').css('visibility', 'visible');

@@ -174,7 +174,6 @@ class PageRepository extends AbstractRepository
      *
      * @throws NonUniqueResultException
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Page $page): void
     {
@@ -190,8 +189,6 @@ class PageRepository extends AbstractRepository
      * Odstraní stránku.
      *
      * @throws PageException
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Page $page): void
     {

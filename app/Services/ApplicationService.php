@@ -43,7 +43,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Nette;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use ReflectionException;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
@@ -85,7 +85,7 @@ class ApplicationService
 
     private UserService $userService;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private PaymentRepository $paymentRepository;
 
@@ -105,7 +105,7 @@ class ApplicationService
         VariableSymbolRepository $variableSymbolRepository,
         MailService $mailService,
         UserService $userService,
-        ITranslator $translator,
+        Translator $translator,
         PaymentRepository $paymentRepository,
         IncomeProofRepository $incomeProofRepository,
         EventBus $eventBus
@@ -662,7 +662,6 @@ class ApplicationService
     /**
      * Může uživatel upravovat role?
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedEditRegistration(User $user): bool
@@ -675,7 +674,6 @@ class ApplicationService
     /**
      * Je uživateli povoleno upravit nebo zrušit přihlášku?
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedEditApplication(Application $application): bool
@@ -688,7 +686,6 @@ class ApplicationService
     /**
      * Může uživatel dodatečně přidávat podakce?
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedAddApplication(User $user): bool
@@ -702,7 +699,6 @@ class ApplicationService
     /**
      * Může uživatel upravovat vlastní pole přihlášky?
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function isAllowedEditCustomInputs(): bool
@@ -795,7 +791,6 @@ class ApplicationService
     }
 
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     private function generateVariableSymbol(): VariableSymbol
@@ -816,7 +811,6 @@ class ApplicationService
     /**
      * Vypočítá datum splatnosti podle zvolené metody.
      *
-     * @throws SettingsItemNotFoundException
      * @throws ReflectionException
      * @throws Throwable
      */
@@ -927,9 +921,6 @@ class ApplicationService
      * Zvýší obsazenost rolí.
      *
      * @param Collection<int, Role> $roles
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     private function incrementRolesOccupancy(Collection $roles): void
     {
@@ -943,9 +934,6 @@ class ApplicationService
      * Sníží obsazenost rolí.
      *
      * @param Collection<int, Role> $roles
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     private function decrementRolesOccupancy(Collection $roles): void
     {
@@ -959,9 +947,6 @@ class ApplicationService
      * Zvýší obsazenost podakcí.
      *
      * @param Collection<int, Subevent> $subevents
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     private function incrementSubeventsOccupancy(Collection $subevents): void
     {
@@ -975,9 +960,6 @@ class ApplicationService
      * Sníží obsazenost podakcí.
      *
      * @param Collection<int, Subevent> $subevents
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     private function decrementSubeventsOccupancy(Collection $subevents): void
     {
@@ -987,9 +969,6 @@ class ApplicationService
         }
     }
 
-    /**
-     * @throws ORMException
-     */
     private function updateUserPaymentInfo(User $user): void
     {
         $fee = 0;

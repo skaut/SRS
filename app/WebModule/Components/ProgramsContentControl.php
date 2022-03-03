@@ -8,7 +8,6 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Enums\ProgramRegistrationType;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingDateTimeValueQuery;
@@ -16,13 +15,12 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\QueryBus;
-use Nette\Application\UI\Control;
 use Throwable;
 
 /**
  * Komponenta s výběrem programů.
  */
-class ProgramsContentControl extends Control
+class ProgramsContentControl extends BaseContentControl
 {
     private QueryBus $queryBus;
 
@@ -41,7 +39,6 @@ class ProgramsContentControl extends Control
     }
 
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function render(ContentDto $content): void

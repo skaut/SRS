@@ -10,7 +10,6 @@ use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
 use App\Services\CommandBus;
 use App\Services\ExcelExportService;
-use Doctrine\ORM\ORMException;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -19,7 +18,7 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\TextInput;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -33,7 +32,7 @@ class RoomsGridControl extends Control
 {
     private CommandBus $commandBus;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private RoomRepository $roomRepository;
 
@@ -45,7 +44,7 @@ class RoomsGridControl extends Control
 
     public function __construct(
         CommandBus $commandBus,
-        ITranslator $translator,
+        Translator $translator,
         RoomRepository $roomRepository,
         ExcelExportService $excelExportService,
         Session $session
@@ -139,9 +138,6 @@ class RoomsGridControl extends Control
 
     /**
      * Zpracuje přidání místnosti.
-     *
-     * @throws ORMException
-     * @throws AbortException
      */
     public function add(stdClass $values): void
     {
@@ -151,15 +147,11 @@ class RoomsGridControl extends Control
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.program.rooms.message.save_success', 'success');
-
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**
      * Zpracuje úpravu místnosti.
-     *
-     * @throws ORMException
-     * @throws AbortException
      */
     public function edit(string $id, stdClass $values): void
     {
@@ -172,14 +164,12 @@ class RoomsGridControl extends Control
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.program.rooms.message.save_success', 'success');
-
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**
      * Odstraní místnost.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void
@@ -188,9 +178,9 @@ class RoomsGridControl extends Control
 
         $this->commandBus->handle(new RemoveRoom($room));
 
-        $this->getPresenter()->flashMessage('admin.program.rooms.message.delete_success', 'success');
-
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.program.rooms.message.delete_success', 'success');
+        $p->redirect('this');
     }
 
     /**
@@ -203,7 +193,7 @@ class RoomsGridControl extends Control
     public function groupExportRoomsSchedules(array $ids): void
     {
         $this->sessionSection->roomIds = $ids;
-        $this->redirect('exportroomsschedules'); // presmerovani kvuli zruseni ajax
+        $this->redirect('exportroomsschedules');
     }
 
     /**

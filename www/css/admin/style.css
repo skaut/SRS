@@ -69,7 +69,12 @@ div > .datagrid {
 .bootstrap-select > .btn {
     background-color: #ffffff;
     border-color: #ced4da;
-    border-radius: 0.3rem;
+    border-radius: 0.2rem;
+}
+
+/* file input barva */
+.kv-fileinput-caption {
+    background-color: #ffffff !important;
 }
 
 /* oprava select a multiselect v inline editaci */
@@ -89,18 +94,23 @@ div > .datagrid {
 /* oprava file input v inline editaci */
 .datagrid-inline-edit .kv-fileinput-caption {
     font-size: 12px !important;
-    padding: 4px 12px 5px 12px !important;
+    padding: 4px 31px 5px 23px !important;
     margin-top: 0 !important;
     height: 28px !important;
+}
+
+.datagrid-inline-edit .file-caption-icon {
+    font-size: 12px !important;
+    padding: 4px 5px 5px 5px !important;
 }
 
 .datagrid-inline-edit .btn-file {
     font-size: 12px !important;
     padding: 4px 12px 5px 12px !important;
-    margin-left: -4px !important;
     height: 28px !important;
 }
 
+/* pozadi v datagrid detail */
 .datagrid .row-item-detail {
     background-color: #337ab7 !important;
 }

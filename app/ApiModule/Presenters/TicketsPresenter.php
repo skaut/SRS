@@ -22,7 +22,6 @@ use App\Services\CommandBus;
 use App\Services\QueryBus;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
-use Nette\Application\AbortException;
 use Nette\Http\IResponse;
 
 use function array_key_exists;
@@ -40,9 +39,6 @@ class TicketsPresenter extends ApiBasePresenter
 
     private Serializer $serializer;
 
-    /**
-     * @throws AbortException
-     */
     public function startup(): void
     {
         parent::startup();

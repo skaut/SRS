@@ -31,7 +31,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
@@ -47,7 +47,7 @@ class ProgramAttendeesGridControl extends Control
      */
     private Program $program;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private ProgramRepository $programRepository;
 
@@ -62,7 +62,7 @@ class ProgramAttendeesGridControl extends Control
     private EntityManagerInterface $em;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         ProgramRepository $programRepository,
         UserRepository $userRepository,
         Session $session,
@@ -254,7 +254,7 @@ class ProgramAttendeesGridControl extends Control
             $p->redrawControl('flashes');
             $p->redrawControl('programs');
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -289,7 +289,7 @@ class ProgramAttendeesGridControl extends Control
             $p->redrawControl('flashes');
             $p->redrawControl('programs');
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -325,7 +325,7 @@ class ProgramAttendeesGridControl extends Control
             $p->redrawControl('flashes');
             $p->redrawControl('programs');
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -361,7 +361,7 @@ class ProgramAttendeesGridControl extends Control
             $p->redrawControl('flashes');
             $p->redrawControl('programs');
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 

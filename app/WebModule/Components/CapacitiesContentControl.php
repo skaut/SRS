@@ -6,12 +6,11 @@ namespace App\WebModule\Components;
 
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Cms\Dto\CapacitiesContentDto;
-use Nette\Application\UI\Control;
 
 /**
  * Komponenta s kapacitami rolí.
  */
-class CapacitiesContentControl extends Control
+class CapacitiesContentControl extends BaseContentControl
 {
     private RoleRepository $roleRepository;
 

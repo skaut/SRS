@@ -9,7 +9,6 @@ use App\Model\Settings\PlacePoint;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující mapové body.
@@ -36,18 +35,12 @@ class PlacePointRepository extends AbstractRepository
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
-    /**
-     * @throws ORMException
-     */
     public function save(PlacePoint $placePoint): void
     {
         $this->em->persist($placePoint);
         $this->em->flush();
     }
 
-    /**
-     * @throws ORMException
-     */
     public function remove(PlacePoint $placePoint): void
     {
         $this->em->remove($placePoint);

@@ -47,10 +47,9 @@ use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use DateInterval;
-use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
@@ -67,7 +66,7 @@ class ScheduleService
 
     private ?User $user = null;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private UserRepository $userRepository;
 
@@ -82,7 +81,7 @@ class ScheduleService
     private QueryBus $queryBus;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         UserRepository $userRepository,
         ProgramRepository $programRepository,
         BlockRepository $blockRepository,
@@ -255,7 +254,6 @@ class ScheduleService
      * Uloží nebo vytvoří program.
      *
      * @throws ApiException
-     * @throws ORMException
      * @throws Throwable
      */
     public function saveProgram(ProgramSaveDto $programSaveDto): ResponseDto
@@ -287,8 +285,6 @@ class ScheduleService
         } elseif ($this->programRepository->hasOverlappingAutoRegisteredProgram($programId, $start, $end)) {
             throw new ApiException($this->translator->translate('api.schedule.auto_registered_not_allowed'));
         } else {
-            $program = null;
-
             if ($programId === null) {
                 $program = new Program($start);
                 $program->setBlock($block);

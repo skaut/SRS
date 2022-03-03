@@ -8,7 +8,6 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Enums\SkautIsEventType;
 use App\Model\Settings\Commands\SetSettingIntValue;
 use App\Model\Settings\Commands\SetSettingStringValue;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
@@ -19,7 +18,6 @@ use App\Services\QueryBus;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
@@ -72,7 +70,6 @@ class SkautIsEventFormFactory
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function create(): Form
@@ -122,10 +119,8 @@ class SkautIsEventFormFactory
     /**
      * Zpracuje formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void

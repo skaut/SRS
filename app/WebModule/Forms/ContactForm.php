@@ -132,9 +132,6 @@ class ContactForm extends UI\Control
         $recipientsUsers  = new ArrayCollection();
         $recipientsEmails = new ArrayCollection();
 
-        $senderName  = null;
-        $senderEmail = null;
-
         if ($this->user) {
             $senderName  = $this->user->getDisplayName();
             $senderEmail = $this->user->getEmail();

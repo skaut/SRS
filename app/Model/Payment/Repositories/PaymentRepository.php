@@ -7,7 +7,6 @@ namespace App\Model\Payment\Repositories;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Payment\Payment;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující platby.
@@ -37,8 +36,6 @@ class PaymentRepository extends AbstractRepository
 
     /**
      * Uloží platbu.
-     *
-     * @throws ORMException
      */
     public function save(Payment $payment): void
     {
@@ -48,8 +45,6 @@ class PaymentRepository extends AbstractRepository
 
     /**
      * Odstraní platbu.
-     *
-     * @throws ORMException
      */
     public function remove(Payment $payment): void
     {

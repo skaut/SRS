@@ -77,7 +77,7 @@ class InstallPresenter extends InstallBasePresenter
                 $this->redirect('installed');
             }
 
-            $this->flashMessage('install.schema.schema_already_created', 'info');
+            $this->flashMessage('install.schema.schema_already_created');
             $this->redirect('admin');
         } catch (HandlerFailedException $ex) {
             // ignoruje se, tabulky ještě nejsou vytvořeny
@@ -118,7 +118,7 @@ class InstallPresenter extends InstallBasePresenter
     {
         try {
             if ($this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
-                $this->flashMessage('install.admin.admin_already_created', 'info');
+                $this->flashMessage('install.admin.admin_already_created');
                 $this->redirect('finish');
             }
         } catch (HandlerFailedException $ex) {

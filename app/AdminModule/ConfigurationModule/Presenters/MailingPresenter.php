@@ -21,7 +21,6 @@ class MailingPresenter extends ConfigurationBasePresenter
     public MailingFormFactory $mailingFormFactory;
 
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
@@ -39,7 +38,6 @@ class MailingPresenter extends ConfigurationBasePresenter
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
-
             $this->redirect('this');
         };
 

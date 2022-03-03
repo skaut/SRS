@@ -18,7 +18,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\TextInput;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -33,7 +33,7 @@ use function count;
  */
 class PagesGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private CmsService $cmsService;
 
@@ -44,7 +44,7 @@ class PagesGridControl extends Control
     private AclService $aclService;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         CmsService $cmsService,
         PageRepository $pageRepository,
         RoleRepository $roleRepository,
@@ -173,7 +173,6 @@ class PagesGridControl extends Control
     /**
      * Zpracuje přidání stránky.
      *
-     * @throws AbortException
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -189,14 +188,12 @@ class PagesGridControl extends Control
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages.message.save_success', 'success');
-
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**
      * Zpracuje upravení stránky.
      *
-     * @throws AbortException
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -214,16 +211,13 @@ class PagesGridControl extends Control
 
         $p = $this->getPresenter();
         $p->flashMessage('admin.cms.pages.message.save_success', 'success');
-
-        $this->redirect('this');
+        $p->redrawControl('flashes');
     }
 
     /**
      * Zpracuje odstranění stránky.
      *
      * @throws AbortException
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws PageException
      */
     public function handleDelete(int $id): void
@@ -231,9 +225,9 @@ class PagesGridControl extends Control
         $page = $this->pageRepository->findById($id);
         $this->cmsService->removePage($page);
 
-        $this->getPresenter()->flashMessage('admin.cms.pages.message.delete_success', 'success');
-
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.pages.message.delete_success', 'success');
+        $p->redirect('this');
     }
 
     /**
@@ -252,10 +246,9 @@ class PagesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $pagesGrid = $this->getComponent('pagesGrid');
-            $pagesGrid->reload();
+            $this->getComponent('pagesGrid')->reload();
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -284,10 +277,9 @@ class PagesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $pagesGrid = $this->getComponent('pagesGrid');
-            $pagesGrid->redrawItem($id);
+            $this->getComponent('pagesGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 }

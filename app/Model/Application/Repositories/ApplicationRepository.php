@@ -12,7 +12,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 
 use function array_map;
 
@@ -75,8 +74,6 @@ class ApplicationRepository extends AbstractRepository
 
     /**
      * Uloží přihlášku.
-     *
-     * @throws ORMException
      */
     public function save(Application $application): void
     {
@@ -86,8 +83,6 @@ class ApplicationRepository extends AbstractRepository
 
     /**
      * Odstraní přihlášku.
-     *
-     * @throws ORMException
      */
     public function remove(Application $application): void
     {

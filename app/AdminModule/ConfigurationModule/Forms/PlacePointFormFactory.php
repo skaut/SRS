@@ -7,7 +7,6 @@ namespace App\AdminModule\ConfigurationModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Settings\PlacePoint;
 use App\Model\Settings\Repositories\PlacePointRepository;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -74,8 +73,6 @@ class PlacePointFormFactory
 
     /**
      * Zpracuje formulář.
-     *
-     * @throws ORMException
      */
     public function processForm(Form $form, stdClass $values): void
     {

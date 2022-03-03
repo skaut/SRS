@@ -9,7 +9,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -19,11 +19,11 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class FaqGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private FaqRepository $faqRepository;
 
-    public function __construct(ITranslator $translator, FaqRepository $faqRepository)
+    public function __construct(Translator $translator, FaqRepository $faqRepository)
     {
         $this->translator    = $translator;
         $this->faqRepository = $faqRepository;
@@ -93,7 +93,6 @@ class FaqGridControl extends Control
     /**
      * Zpracuje odstranění otázky.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void
@@ -101,9 +100,9 @@ class FaqGridControl extends Control
         $faq = $this->faqRepository->findById($id);
         $this->faqRepository->remove($faq);
 
-        $this->getPresenter()->flashMessage('admin.cms.faq.message.delete_success', 'success');
-
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.faq.message.delete_success', 'success');
+        $p->redirect('this');
     }
 
     /**
@@ -121,10 +120,9 @@ class FaqGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $faqGrid = $this->getComponent('faqGrid');
-            $faqGrid->reload();
+            $this->getComponent('faqGrid')->reload();
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -146,10 +144,9 @@ class FaqGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $faqGrid = $this->getComponent('faqGrid');
-            $faqGrid->redrawItem($id);
+            $this->getComponent('faqGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 }

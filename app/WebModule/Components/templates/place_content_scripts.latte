@@ -1,0 +1,39 @@
+<script src="https://api.mapy.cz/loader.js"></script>
+<script>Loader.load()</script>
+
+<script>
+    var m = new SMap(JAK.gel("m"), SMap.Coords.fromWGS84(14.41790, 50.12655), 13);
+    m.addDefaultLayer(SMap.DEF_BASE).enable();
+    m.addDefaultControls();
+
+    var markers = [];
+    var coords = [];
+
+    {foreach $points as $point}
+    var gps = SMap.Coords.fromWGS84({$point->getGpsLon()}, {$point->getGpsLat()});
+
+    var options = {
+        title: {$point->getName()}
+    }
+    var marker = new SMap.Marker(gps, "", options);
+
+    var card = new SMap.Card();
+    card.getHeader().innerHTML = "<strong>" + {$point->getName()} + "</strong>";
+    card.getHeader().style = "font-size: 18px"
+    card.getBody().innerHTML = "<strong>GPS:</strong> {$point->getGpsLat()|round:7}N, {$point->getGpsLon()|round:7}E";
+    card.getFooter().style = "display: none";
+    card.getContainer().style.padding = "0";
+    marker.decorate(SMap.Marker.Feature.Card, card);
+
+    coords.push(gps);
+    markers.push(marker);
+    {/foreach}
+
+    var layer = new SMap.Layer.Marker();
+    m.addLayer(layer);
+    layer.addMarker(markers);
+    layer.enable();
+
+    var center = m.computeCenterZoom(coords, false);
+    m.setCenterZoom(center[0], center[1]);
+</script>

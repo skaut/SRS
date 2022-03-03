@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 use App\Model\Cms\Dto\SlideshowContentDto;
-use Nette\Application\UI\Control;
 
 /**
  * Komponenta se slideshow.
  */
-class SlideshowContentControl extends Control
+class SlideshowContentControl extends BaseContentControl
 {
     public function render(SlideshowContentDto $content): void
     {

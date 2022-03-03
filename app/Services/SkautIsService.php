@@ -7,7 +7,7 @@ namespace App\Services;
 use DateTimeImmutable;
 use Nette;
 use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
+use Nette\Caching\Storage;
 use Skautis\Skautis;
 use stdClass;
 use Throwable;
@@ -23,7 +23,7 @@ class SkautIsService
 
     private Cache $userRolesCache;
 
-    public function __construct(Skautis $skautIS, IStorage $storage)
+    public function __construct(Skautis $skautIS, Storage $storage)
     {
         $this->skautIs        = $skautIS;
         $this->userRolesCache = new Cache($storage, 'UserRoles');

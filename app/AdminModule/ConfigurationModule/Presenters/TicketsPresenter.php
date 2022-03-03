@@ -31,7 +31,6 @@ class TicketsPresenter extends ConfigurationBasePresenter
     public TicketsFormFactory $ticketsFormFactory;
 
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
@@ -48,7 +47,6 @@ class TicketsPresenter extends ConfigurationBasePresenter
     /**
      * Vygeneruje token pro aplikaci.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function handleGenerateToken(): void
@@ -62,7 +60,6 @@ class TicketsPresenter extends ConfigurationBasePresenter
     /**
      * Odstraní token pro aplikaci.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function handleDeleteToken(): void
@@ -97,6 +94,6 @@ class TicketsPresenter extends ConfigurationBasePresenter
             ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
             ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
 
-        return $qrCode->writeString();
+        return $qrCode->get();
     }
 }

@@ -8,12 +8,11 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\User\Repositories\UserRepository;
-use Nette\Application\UI\Control;
 
 /**
  * Komponenta s přehledem lektorů.
  */
-class LectorsContentControl extends Control
+class LectorsContentControl extends BaseContentControl
 {
     private UserRepository $userRepository;
 

@@ -13,7 +13,6 @@ use App\Model\Program\Commands\RemoveBlock;
 use App\Model\Program\Commands\SaveBlock;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
@@ -28,7 +27,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 use Throwable;
 use Tracy\Debugger;
@@ -48,7 +47,7 @@ class ProgramBlocksGridControl extends Control
 
     private QueryBus $queryBus;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private BlockRepository $blockRepository;
 
@@ -69,7 +68,7 @@ class ProgramBlocksGridControl extends Control
     public function __construct(
         CommandBus $commandBus,
         QueryBus $queryBus,
-        ITranslator $translator,
+        Translator $translator,
         BlockRepository $blockRepository,
         UserRepository $userRepository,
         CategoryRepository $categoryRepository,
@@ -104,7 +103,6 @@ class ProgramBlocksGridControl extends Control
     /**
      * Vytvoří komponentu.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      * @throws DataGridColumnStatusException
      * @throws DataGridException
@@ -232,16 +230,17 @@ class ProgramBlocksGridControl extends Control
     {
         $block = $this->blockRepository->findById($id);
 
+        $p = $this->getPresenter();
+
         if (! $this->userRepository->findById($this->getPresenter()->getUser()->getId())->isAllowedModifyBlock($block)) {
-            $this->getPresenter()->flashMessage('admin.program.blocks.message.delete_not_allowed', 'danger');
-            $this->redirect('this');
+            $p->flashMessage('admin.program.blocks.message.delete_not_allowed', 'danger');
+            $p->redirect('this');
         }
 
         $this->commandBus->handle(new RemoveBlock($block));
 
-        $this->getPresenter()->flashMessage('admin.program.blocks.message.delete_success', 'success');
-
-        $this->redirect('this');
+        $p->flashMessage('admin.program.blocks.message.delete_success', 'success');
+        $p->redirect('this');
     }
 
     /**
@@ -273,10 +272,9 @@ class ProgramBlocksGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $programBlocksGrid = $this->getComponent('programBlocksGrid');
-            $programBlocksGrid->redrawItem($id);
+            $this->getComponent('programBlocksGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -290,7 +288,7 @@ class ProgramBlocksGridControl extends Control
     public function groupExportBlocksAttendees(array $ids): void
     {
         $this->sessionSection->blockIds = $ids;
-        $this->redirect('exportblocksattendees'); // presmerovani kvuli zruseni ajax
+        $this->redirect('exportblocksattendees');
     }
 
     /**

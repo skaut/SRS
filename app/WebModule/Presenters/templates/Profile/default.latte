@@ -1,15 +1,3 @@
-{block head}
-    <script>
-        $(function () {
-            // otevreni accordion podle url
-            if (location.hash != null && location.hash != "") {
-                $('.collapse').removeClass('show');
-                $(location.hash + '.collapse').collapse('show');
-            }
-        });
-    </script>
-{/block}
-
 {block body-class}body-profile{/block}
 
 {block main}
@@ -194,4 +182,17 @@
     </div>
 {/block}
 
+{block scripts}
+    {include #parent}
+
+    <script>
+        $(function () {
+            // otevreni accordion podle url
+            if (location.hash != null && location.hash != "") {
+                $('.collapse').removeClass('show');
+                $(location.hash + '.collapse').collapse('show');
+            }
+        });
+    </script>
+{/block}
 

@@ -14,7 +14,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -26,14 +26,14 @@ use function count;
  */
 class CustomInputsGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private CustomInputRepository $customInputRepository;
 
     private AclService $aclService;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         CustomInputRepository $customInputRepository,
         AclService $aclService
     ) {
@@ -116,7 +116,6 @@ class CustomInputsGridControl extends Control
     /**
      * Zpracuje odstranění vlastního pole.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void
@@ -124,9 +123,9 @@ class CustomInputsGridControl extends Control
         $input = $this->customInputRepository->findById($id);
         $this->customInputRepository->remove($input);
 
-        $this->getPresenter()->flashMessage('admin.configuration.custom_inputs_deleted', 'success');
-
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.configuration.custom_inputs_deleted', 'success');
+        $p->redirect('this');
     }
 
     /**
@@ -144,10 +143,9 @@ class CustomInputsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $customInputsGrid = $this->getComponent('customInputsGrid');
-            $customInputsGrid->reload();
+            $this->getComponent('customInputsGrid')->reload();
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 
@@ -169,10 +167,9 @@ class CustomInputsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $customInputsGrid = $this->getComponent('customInputsGrid');
-            $customInputsGrid->redrawItem($id);
+            $this->getComponent('customInputsGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 }

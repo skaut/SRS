@@ -22,7 +22,7 @@ use Doctrine\Common\Collections\Collection;
 use Exception;
 use InvalidArgumentException;
 use Nette;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -40,7 +40,7 @@ class ExcelExportService
 
     private Spreadsheet $spreadsheet;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private CustomInputRepository $customInputRepository;
 
@@ -55,7 +55,7 @@ class ExcelExportService
     private QueryBus $queryBus;
 
     public function __construct(
-        ITranslator $translator,
+        Translator $translator,
         CustomInputRepository $customInputRepository,
         UserService $userService,
         SubeventRepository $subeventRepository,
@@ -347,8 +347,6 @@ class ExcelExportService
         $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
 
         foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
-            $width = null;
-
             switch ($customInput->getType()) {
                 case CustomInput::TEXT:
                 case CustomInput::SELECT:

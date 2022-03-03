@@ -17,7 +17,7 @@ use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Application\AbortException;
 use Nette\Security\AuthenticationException;
-use Nette\Security\Identity;
+use Nette\Security\SimpleIdentity;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
@@ -62,7 +62,7 @@ class AuthPresenter extends BasePresenter
         $this->user->setExpiration('+30 minutes');
 
         $userIdentity = $this->user->identity;
-        assert($userIdentity instanceof Identity);
+        assert($userIdentity instanceof SimpleIdentity);
         if ($userIdentity->data['firstLogin']) {
             $user = $this->userRepository->findById($this->user->id);
 
@@ -94,7 +94,6 @@ class AuthPresenter extends BasePresenter
     /**
      * Provede přesměrování po úspěšném přihlášení, v závislosti na nastavení, nastavení role nebo returnUrl.
      *
-     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */

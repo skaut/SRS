@@ -15,7 +15,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 
 use function count;
@@ -284,8 +283,6 @@ class UserRepository extends AbstractRepository
 
     /**
      * Uloží uživatele.
-     *
-     * @throws ORMException
      */
     public function save(User $user): void
     {
@@ -295,8 +292,6 @@ class UserRepository extends AbstractRepository
 
     /**
      * Odstraní externího uživatele.
-     *
-     * @throws ORMException
      */
     public function remove(User $user): void
     {

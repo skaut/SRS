@@ -7,7 +7,6 @@ namespace App\Model\Application\Repositories;
 use App\Model\Application\IncomeProof;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující příjmové doklady.
@@ -21,8 +20,6 @@ class IncomeProofRepository extends AbstractRepository
 
     /**
      * Uloží příjmový doklad.
-     *
-     * @throws ORMException
      */
     public function save(IncomeProof $incomeProof): void
     {

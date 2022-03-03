@@ -65,7 +65,9 @@
                 </div>
 
                 <div class="form-group row" n:if="$detailUser->isExternalLector()">
-                    <div class="col-9 offset-3"><a n:href="editPersonalDetails!" class="btn btn-secondary ajax">{_admin.common.edit}</a></div>
+                    <div class="col-9 offset-3">
+                        <a n:href="editPersonalDetails!" class="btn btn-secondary ajax">{_admin.common.edit}</a>
+                    </div>
                 </div>
             {else}
                 {control editUserPersonalDetailsForm}
@@ -120,7 +122,7 @@
                                         {/if}
                                     {case $customInputTypeFile}
                                         <a href="{$customInputValue->getValue()}" target="_blank" class="btn btn-sm btn-secondary" n:if="$customInputValue->getValue() !== null">
-                                            <span class="fa fa-download"></span>
+                                            <span class="fa fa-file-arrow-down"></span>
                                             {basename($customInputValue->getValue())}
                                         </a>
                                     {default}
@@ -157,17 +159,6 @@
                 </div>
             {else}
                 {control editUserSeminarForm}
-                <script>
-                    Nette.validators.AppAdminModuleFormsEditUserSeminarFormFactory_toggleCustomInputVisibility = function (elem, arg, value) {
-                        let i;
-                        for (i = 0; i < value.length; i++) {
-                            if (jQuery.inArray(parseInt(value[i]), arg) !== -1) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    };
-                </script>
             {/if}
         </div>
 
@@ -201,4 +192,19 @@
             </tbody>
         </table>
     {/snippet}
+{/block}
+
+{block scripts}
+    {include #parent}
+    <script>
+        Nette.validators['AppAdminModuleFormsEditUserSeminarFormFactory_toggleCustomInputVisibility'] = (elem, arg, value) => {
+            let i;
+            for (i = 0; i < value.length; i++) {
+                if ($.inArray(parseInt(value[i]), arg) !== -1) {
+                    return true;
+                }
+            }
+            return false;
+        };
+    </script>
 {/block}

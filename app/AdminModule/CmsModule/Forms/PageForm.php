@@ -118,6 +118,15 @@ class PageForm extends UI\Control
     }
 
     /**
+     * Vykreslí skripty komponenty.
+     */
+    public function renderScripts(): void
+    {
+        $this->template->setFile(__DIR__ . '/templates/page_form_scripts.latte');
+        $this->template->render();
+    }
+
+    /**
      * Vytvoří komponentu.
      *
      * @throws PageException

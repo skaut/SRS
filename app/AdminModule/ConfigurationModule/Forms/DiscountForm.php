@@ -79,6 +79,12 @@ class DiscountForm extends UI\Control
         $this->template->render();
     }
 
+    public function renderScripts(): void
+    {
+        $this->template->setFile(__DIR__ . '/templates/discount_form_scripts.latte');
+        $this->template->render();
+    }
+
     /**
      * Vytvoří formulář.
      */
@@ -91,7 +97,7 @@ class DiscountForm extends UI\Control
         $form->addHidden('condition');
 
         $form->addTextArea('conditionText', 'admin.configuration.discounts_condition')
-            ->setHtmlAttribute('readonly', true);
+            ->setHtmlAttribute('readonly');
 
         $form->addInteger('discount', 'admin.configuration.discounts_discount')
             ->addRule(Form::FILLED, 'admin.configuration.discounts_discount_empty')

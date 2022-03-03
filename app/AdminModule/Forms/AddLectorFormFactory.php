@@ -9,7 +9,6 @@ use App\Model\Acl\Role;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\FilesService;
-use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;
 use Nette\Application\UI\Form;
@@ -111,7 +110,6 @@ class AddLectorFormFactory
      * Zpracuje formulář.
      *
      * @throws Nette\Utils\UnknownImageFileException
-     * @throws ORMException
      * @throws Exception
      */
     public function processForm(Form $form, stdClass $values): void

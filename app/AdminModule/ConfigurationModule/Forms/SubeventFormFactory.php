@@ -10,8 +10,6 @@ use App\Model\Structure\Subevent;
 use App\Services\SubeventService;
 use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -155,9 +153,6 @@ class SubeventFormFactory
 
     /**
      * Zpracuje formulář.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function processForm(Form $form, stdClass $values): void
     {
@@ -187,8 +182,6 @@ class SubeventFormFactory
      *
      * @param int[][] $args
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws ConnectionException
      */
     public function validateIncompatibleAndRequiredCollision(MultiSelectBox $field, array $args): bool

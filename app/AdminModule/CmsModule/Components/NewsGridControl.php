@@ -9,7 +9,7 @@ use App\Utils\Helpers;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -19,11 +19,11 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class NewsGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private NewsRepository $newsRepository;
 
-    public function __construct(ITranslator $translator, NewsRepository $newsRepository)
+    public function __construct(Translator $translator, NewsRepository $newsRepository)
     {
         $this->translator     = $translator;
         $this->newsRepository = $newsRepository;
@@ -89,7 +89,6 @@ class NewsGridControl extends Control
     /**
      * Zpracuje odstranění aktuality.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function handleDelete(int $id): void
@@ -97,9 +96,9 @@ class NewsGridControl extends Control
         $news = $this->newsRepository->findById($id);
         $this->newsRepository->remove($news);
 
-        $this->getPresenter()->flashMessage('admin.cms.news.message.delete_success', 'success');
-
-        $this->redirect('this');
+        $p = $this->getPresenter();
+        $p->flashMessage('admin.cms.news.message.delete_success', 'success');
+        $p->redirect('this');
     }
 
     /**
@@ -119,10 +118,9 @@ class NewsGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $newsGrid = $this->getComponent('newsGrid');
-            $newsGrid->redrawItem($id);
+            $this->getComponent('newsGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 }

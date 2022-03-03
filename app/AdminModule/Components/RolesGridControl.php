@@ -12,7 +12,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -23,13 +23,13 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class RolesGridControl extends Control
 {
-    private ITranslator $translator;
+    private Translator $translator;
 
     private AclService $aclService;
 
     private RoleRepository $roleRepository;
 
-    public function __construct(ITranslator $translator, AclService $aclService, RoleRepository $roleRepository)
+    public function __construct(Translator $translator, AclService $aclService, RoleRepository $roleRepository)
     {
         $this->translator     = $translator;
         $this->aclService     = $aclService;
@@ -125,14 +125,16 @@ class RolesGridControl extends Control
     {
         $role = $this->roleRepository->findById($id);
 
+        $p = $this->getPresenter();
+
         if ($role->getUsers()->isEmpty()) {
             $this->aclService->removeRole($role);
-            $this->getPresenter()->flashMessage('admin.acl.roles_deleted', 'success');
+            $p->flashMessage('admin.acl.roles_deleted', 'success');
         } else {
-            $this->getPresenter()->flashMessage('admin.acl.roles_deleted_error', 'danger');
+            $p->flashMessage('admin.acl.roles_deleted_error', 'danger');
         }
 
-        $this->redirect('this');
+        $p->redirect('this');
     }
 
     /**
@@ -154,10 +156,9 @@ class RolesGridControl extends Control
 
         if ($p->isAjax()) {
             $p->redrawControl('flashes');
-            $rolesGrid = $this->getComponent('rolesGrid');
-            $rolesGrid->redrawItem($id);
+            $this->getComponent('rolesGrid')->redrawItem($id);
         } else {
-            $this->redirect('this');
+            $p->redirect('this');
         }
     }
 }

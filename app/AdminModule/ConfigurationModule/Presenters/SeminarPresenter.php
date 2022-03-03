@@ -28,7 +28,6 @@ class SeminarPresenter extends ConfigurationBasePresenter
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('admin.configuration.configuration_saved', 'success');
-
             $this->redirect('this');
         };
 

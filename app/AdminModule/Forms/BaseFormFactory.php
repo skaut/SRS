@@ -6,7 +6,7 @@ namespace App\AdminModule\Forms;
 
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
 
 /**
@@ -16,9 +16,9 @@ class BaseFormFactory
 {
     use Nette\SmartObject;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
-    public function __construct(ITranslator $translator)
+    public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }

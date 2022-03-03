@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Presenters;
 
 use Nette;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use stdClass;
-use WebLoader\Nette\LoaderFactory;
 
 /**
  * BasePresenter.
@@ -15,10 +14,7 @@ use WebLoader\Nette\LoaderFactory;
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
     /** @inject */
-    public LoaderFactory $webLoader;
-
-    /** @inject */
-    public ITranslator $translator;
+    public Translator $translator;
 
     /**
      * Zobrazí přeloženou zprávu.

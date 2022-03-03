@@ -7,8 +7,6 @@ namespace App\Model\Cms\Repositories;
 use App\Model\Cms\Content;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující obsahy webu.
@@ -22,9 +20,6 @@ class ContentRepository extends AbstractRepository
 
     /**
      * Uloží obsah.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save(Content $content): void
     {
@@ -34,9 +29,6 @@ class ContentRepository extends AbstractRepository
 
     /**
      * Odstraní obsah.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(Content $content): void
     {

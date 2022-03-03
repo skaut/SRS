@@ -1,44 +1,3 @@
-{include '../../../Presenters/templates/includes/tinymce_init.latte'}
-
-<script>
-    $(function () {
-        // razeni contentu
-        $('#contents').sortable({
-            delay: 300,
-            handle: '.card-header',
-            update: function (event, ui) {
-            },
-            start: function (event, ui) {
-            },
-            stop: function (event, ui) {
-                $('.tinymce').each(function () {
-                    tinymce.EditorManager.execCommand('mceRemoveEditor', false, $(this).attr('id'));
-                    tinymce.EditorManager.execCommand('mceAddEditor', false, $(this).attr('id'));
-                });
-
-                var sorted = $("#contents").sortable("toArray");
-                for (var i = 0; i < sorted.length; i++) {
-                    $('#' + sorted[i]).find('input.position').val(i + 1);
-                }
-            }
-        });
-
-        // mazani contentu
-        $('.delete-content').click(function (event) {
-            event.preventDefault();
-
-            var contentToDelete = $(this).attr('href').replace('#', '');
-            $('#' + contentToDelete + ' .delete').val(1);
-
-            var contentToDeleteSelector = $('#' + contentToDelete);
-            contentToDeleteSelector.find('input[type=text]').prop('disabled', true).val('');
-            contentToDeleteSelector.find('input[type=file]').prop('disabled', true).val('');
-            contentToDeleteSelector.find('textarea').prop('disabled', true).val('');
-            contentToDeleteSelector.fadeOut();
-        });
-    });
-</script>
-
 {form form class => form-horizontal}
     <div class="card-tabs mb-3">
         <ul class="nav nav-tabs nav-justified">
@@ -72,15 +31,15 @@
 
             <div id="content-{$id}" class="card contents-item mb-3">
                 <div class="card-header">
-                    <div class="pull-left">
+                    <div class="float-left">
                         {_common.content.name.$type}
                     </div>
-                    <div class="pull-right">
+                    <div class="float-right">
                         <a href="#content-{$id}" class="btn btn-xs btn-danger delete-content">
                             <i class="fa fa-trash"></i>
                         </a>
                         <a href="#" class="btn btn-xs btn-secondary" onclick="return false;">
-                            <i class="fa fa-arrows-v"></i>
+                            <i class="fa fa-up-down"></i>
                         </a>
                     </div>
                 </div>

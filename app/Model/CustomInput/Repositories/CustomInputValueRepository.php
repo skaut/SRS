@@ -7,7 +7,6 @@ namespace App\Model\CustomInput\Repositories;
 use App\Model\CustomInput\CustomInputValue;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující hodnoty vlastních polí přihlášky.
@@ -29,8 +28,6 @@ class CustomInputValueRepository extends AbstractRepository
 
     /**
      * Uloží hodnotu vlastního pole přihlášky.
-     *
-     * @throws ORMException
      */
     public function save(CustomInputValue $value): void
     {
@@ -40,8 +37,6 @@ class CustomInputValueRepository extends AbstractRepository
 
     /**
      * Odstraní hodnotu vlastního pole přihlášky.
-     *
-     * @throws ORMException
      */
     public function remove(CustomInputValue $value): void
     {

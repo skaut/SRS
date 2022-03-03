@@ -9,7 +9,6 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 
 use function array_map;
 
@@ -95,8 +94,6 @@ class TagRepository extends AbstractRepository
 
     /**
      * Uloží tag.
-     *
-     * @throws ORMException
      */
     public function save(Tag $tag): void
     {
@@ -106,8 +103,6 @@ class TagRepository extends AbstractRepository
 
     /**
      * Odstraní tag.
-     *
-     * @throws ORMException
      */
     public function remove(Tag $tag): void
     {

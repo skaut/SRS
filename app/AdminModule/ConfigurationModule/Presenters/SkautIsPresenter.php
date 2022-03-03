@@ -37,7 +37,6 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     public SkautIsCourseRepository $skautIsCourseRepository;
 
     /**
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function renderDefault(): void
@@ -55,7 +54,6 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     /**
      * Zruší propojení s akcí ve skautIS.
      *
-     * @throws SettingsItemNotFoundException
      * @throws AbortException
      * @throws Throwable
      */
@@ -69,7 +67,6 @@ class SkautIsPresenter extends ConfigurationBasePresenter
         }
 
         $this->flashMessage('admin.configuration.skautis_event_disconnect_successful', 'success');
-
         $this->redirect('this');
     }
 
@@ -83,7 +80,6 @@ class SkautIsPresenter extends ConfigurationBasePresenter
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('admin.configuration.skautis_event_connect_successful', 'success');
-
             $this->redirect('this');
         };
 

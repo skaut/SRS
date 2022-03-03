@@ -103,7 +103,6 @@ class ProfilePresenter extends WebBasePresenter
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('web.profile.personal_details_update_successful', 'success');
-
             $this->redirect('this#personal-details');
         };
 

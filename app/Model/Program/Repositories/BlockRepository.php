@@ -16,7 +16,6 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 
 use function array_map;
 use function assert;
@@ -186,8 +185,6 @@ class BlockRepository extends AbstractRepository
 
     /**
      * Uloží blok.
-     *
-     * @throws ORMException
      */
     public function save(Block $block): void
     {
@@ -209,8 +206,6 @@ class BlockRepository extends AbstractRepository
 
     /**
      * Odstraní blok.
-     *
-     * @throws ORMException
      */
     public function remove(Block $block): void
     {

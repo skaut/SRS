@@ -6,14 +6,13 @@ namespace App\WebModule\Components;
 
 use App\Model\Cms\Dto\DocumentContentDto;
 use App\Model\Cms\Repositories\DocumentRepository;
-use Nette\Application\UI\Control;
 
 use function array_keys;
 
 /**
  * Komponenta s dokumenty.
  */
-class DocumentContentControl extends Control
+class DocumentContentControl extends BaseContentControl
 {
     private DocumentRepository $documentRepository;
 

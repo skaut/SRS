@@ -64,7 +64,6 @@ class PaymentForm extends UI\Control
     /**
      * Vytvoří formulář.
      *
-     * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function createComponentForm(): Form

@@ -9,7 +9,6 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 
 /**
  * Třída spravující dokumenty.
@@ -56,8 +55,6 @@ class DocumentRepository extends AbstractRepository
 
     /**
      * Uloží dokument.
-     *
-     * @throws ORMException
      */
     public function save(Document $document): void
     {
@@ -67,8 +64,6 @@ class DocumentRepository extends AbstractRepository
 
     /**
      * Odstraní dokument.
-     *
-     * @throws ORMException
      */
     public function remove(Document $document): void
     {
