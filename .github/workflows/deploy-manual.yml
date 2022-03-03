@@ -1,4 +1,4 @@
-name: deploy-production
+name: deploy-manual
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy:
-    name: "Deploy to production"
+    name: "Manual deployment"
     environment: ${{ github.event.inputs.environment }}
     runs-on: ubuntu-18.04
     container:
