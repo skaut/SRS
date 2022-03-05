@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be5b3dd2b8f11454d5ab07b968795147",
+    "content-hash": "f8851c11edde59e893ec37a9b0c560e5",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -2271,16 +2271,16 @@
         },
         {
             "name": "fmasa/messenger",
-            "version": "1.1.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fmasa/messenger.git",
-                "reference": "b3917541e32edd528cd6205cd831dfa4070183fe"
+                "reference": "9b3b3d0aa65091fde3baa1f8cd1025cec63df8e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fmasa/messenger/zipball/b3917541e32edd528cd6205cd831dfa4070183fe",
-                "reference": "b3917541e32edd528cd6205cd831dfa4070183fe",
+                "url": "https://api.github.com/repos/fmasa/messenger/zipball/9b3b3d0aa65091fde3baa1f8cd1025cec63df8e0",
+                "reference": "9b3b3d0aa65091fde3baa1f8cd1025cec63df8e0",
                 "shasum": ""
             },
             "require": {
@@ -2297,7 +2297,7 @@
                 "doctrine/coding-standard": "^8.1",
                 "mockery/mockery": "^1.2",
                 "nette/bootstrap": "^3.0",
-                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan": "^1.2.0",
                 "phpunit/phpunit": "^9.5"
             },
             "type": "library",
@@ -2328,9 +2328,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fmasa/messenger/issues",
-                "source": "https://github.com/fmasa/messenger/tree/1.1.0"
+                "source": "https://github.com/fmasa/messenger/tree/2.0.0"
             },
-            "time": "2021-10-24T23:46:35+00:00"
+            "time": "2022-01-31T12:22:07+00:00"
         },
         {
             "name": "friendsofphp/proxy-manager-lts",
@@ -8286,22 +8286,22 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.7.7",
+            "version": "v2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "100e72717b2c199fd3e1d1724d576edc07b252eb"
+                "reference": "4180b3221ff852fe10d5eab30d80be6f6ab7221e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/100e72717b2c199fd3e1d1724d576edc07b252eb",
-                "reference": "100e72717b2c199fd3e1d1724d576edc07b252eb",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/4180b3221ff852fe10d5eab30d80be6f6ab7221e",
+                "reference": "4180b3221ff852fe10d5eab30d80be6f6ab7221e",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-session": "*",
-                "php": ">=7.1"
+                "php": ">=7.2 <8.2"
             },
             "conflict": {
                 "nette/di": "<3.0"
@@ -8312,21 +8312,18 @@
                 "nette/mail": "^3.0",
                 "nette/tester": "^2.2",
                 "nette/utils": "^3.0",
-                "phpstan/phpstan": "^0.12",
-                "psr/log": "^1.0"
-            },
-            "suggest": {
-                "https://nette.org/donate": "Please support Tracy via a donation"
+                "phpstan/phpstan": "^1.0",
+                "psr/log": "^1.0 || ^2.0 || ^3.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.7-dev"
+                    "dev-master": "2.9-dev"
                 }
             },
             "autoload": {
                 "files": [
-                    "src/Tracy/shortcuts.php"
+                    "src/Tracy/functions.php"
                 ],
                 "classmap": [
                     "src"
@@ -8357,9 +8354,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/tracy/issues",
-                "source": "https://github.com/nette/tracy/tree/v2.7.7"
+                "source": "https://github.com/nette/tracy/tree/v2.9.1"
             },
-            "time": "2020-12-16T23:36:16+00:00"
+            "time": "2022-02-15T16:38:30+00:00"
         },
         {
             "name": "ublaboo/datagrid",
