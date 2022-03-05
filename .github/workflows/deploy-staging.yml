@@ -11,7 +11,7 @@ jobs:
   deploy:
     name: "Deploy to srs.skauting.cz"
     environment: srs.skauting.cz
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     container:
       image: fmasa/lebeda:8.0
     env:

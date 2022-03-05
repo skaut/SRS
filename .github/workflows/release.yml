@@ -7,7 +7,7 @@ on:
 jobs:
   package:
     name: "Create release package"
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     container:
       image: fmasa/lebeda:8.0
     steps:
