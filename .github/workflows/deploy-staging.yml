@@ -4,6 +4,9 @@ on:
   push:
     branches: [master]
 
+concurrency:
+  group: environment-staging
+
 jobs:
   deploy:
     name: "Deploy to srs.skauting.cz"

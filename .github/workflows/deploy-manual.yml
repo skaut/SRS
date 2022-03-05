@@ -4,9 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment to deploy"
+        description: "Environment"
         type: environment
         required: true
+
+concurrency:
+  group: environment-${{ github.event.inputs.environment }}
 
 jobs:
   deploy:

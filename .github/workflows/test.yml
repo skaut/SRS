@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ master ]
 
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   workdir:
     name: "Build"
@@ -57,6 +61,8 @@ jobs:
   tests-integration:
     name: "Integration tests"
     runs-on: ubuntu-18.04
+    container:
+      image: fmasa/lebeda:8.0
     needs: workdir
     steps:
       - name: Download workdir
@@ -74,6 +80,8 @@ jobs:
     name: "Code coverage"
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-18.04
+    container:
+      image: fmasa/lebeda:8.0
     needs: workdir
     steps:
       - name: Download workdir
@@ -133,7 +141,7 @@ jobs:
       image: fmasa/lebeda:8.0
     services:
       mysql-test:
-        image: mysql:5.7
+        image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: 'root'
           MYSQL_DATABASE: srs

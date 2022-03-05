@@ -5,6 +5,9 @@ on:
     branches: [master]
   workflow_dispatch:
 
+concurrency:
+  group: environment-dev
+
 jobs:
   deploy:
     name: "Deploy to test-srs.skauting.cz"
