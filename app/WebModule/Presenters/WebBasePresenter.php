@@ -86,7 +86,6 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->logo        = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
         $this->template->footer      = $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER));
         $this->template->seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
-        $this->template->gaId        = $this->queryBus->handle(new SettingStringValueQuery(Settings::GA_ID));
 
         $this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
         $this->template->unapprovedRole    = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
