@@ -123,5 +123,8 @@ forms:
     messages:
         MAX_FILE_SIZE: 'Velikost nahraného souboru může být nejvýše %d bytů.'
 
+tracy:
+    maxDepth: 7
+
 includes:
     - doctrine.neon
