@@ -119,7 +119,7 @@ class EditRoleFormFactory
 
         $form->addText('fee', 'admin.acl.roles_fee')
             ->setOption('id', 'fee')
-            ->addCondition(Form::FILLED)
+            ->addRule(Form::FILLED)
             ->addRule(Form::INTEGER, 'admin.acl.roles_fee_format');
 
         $form->addText('minimumAge', 'admin.acl.roles.minimum_age.label')
