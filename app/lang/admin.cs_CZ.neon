@@ -551,6 +551,7 @@ acl:
     roles_occupancy: "Obsazenost"
     roles_fee_from_subevents_checkbox: "určit cenu podle podakcí"
     roles_fee: "Cena"
+    roles_fee_empty: "Zadejte cenu."
     roles_fee_format: "Zadejte číslo."
     roles_fee_from_subevents: "Podle podakcí"
     roles_approved_after_registration: "nevyžadovat schválení registrace organizátorem"
