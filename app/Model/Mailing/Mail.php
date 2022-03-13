@@ -27,7 +27,7 @@ class Mail
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer", nullable=FALSE)
      */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * Role, kterým byl e-mail odeslán.

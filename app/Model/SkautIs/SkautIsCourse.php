@@ -19,7 +19,7 @@ class SkautIsCourse
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer", nullable=FALSE)
      */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * SkautIS id kurzu.
