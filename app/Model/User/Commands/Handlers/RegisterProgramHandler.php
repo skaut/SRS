@@ -49,7 +49,7 @@ class RegisterProgramHandler implements MessageHandlerInterface
             throw new UserNotAllowedProgramException();
         }
 
-        $this->em->transactional(function () use ($command): void {
+        $this->em->wrapInTransaction(function () use ($command): void {
             $programApplication = new ProgramApplication($command->getUser(), $command->getProgram());
             $this->programApplicationRepository->save($programApplication);
             $this->eventBus->handle(new ProgramRegisteredEvent($command->getUser(), $command->getProgram(), $programApplication->isAlternate(), $command->isNotifyUser()));

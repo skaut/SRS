@@ -294,7 +294,7 @@ class EditUserSeminarFormFactory
 
         $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
-        $this->em->transactional(function () use ($values, $loggedUser): void {
+        $this->em->wrapInTransaction(function () use ($values, $loggedUser): void {
             $customInputValueChanged = false;
 
             if (! $this->user->isExternalLector()) {

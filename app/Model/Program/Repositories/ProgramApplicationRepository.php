@@ -42,7 +42,7 @@ class ProgramApplicationRepository extends AbstractRepository
      */
     public function save(ProgramApplication $programApplication): void
     {
-        $this->em->transactional(function (EntityManager $em) use ($programApplication): void {
+        $this->em->wrapInTransaction(function (EntityManager $em) use ($programApplication): void {
             $program = $em->getRepository(Program::class)->find($programApplication->getProgram()->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 
@@ -86,7 +86,7 @@ class ProgramApplicationRepository extends AbstractRepository
      */
     public function remove(ProgramApplication $programApplication): void
     {
-        $this->em->transactional(function (EntityManager $em) use ($programApplication): void {
+        $this->em->wrapInTransaction(function (EntityManager $em) use ($programApplication): void {
             $program = $em->getRepository(Program::class)->find($programApplication->getProgram()->getId(), LockMode::PESSIMISTIC_WRITE);
             assert($program instanceof Program);
 

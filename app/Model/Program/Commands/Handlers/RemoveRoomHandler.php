@@ -29,7 +29,7 @@ class RemoveRoomHandler implements MessageHandlerInterface
 
     public function __invoke(RemoveRoom $command): void
     {
-        $this->em->transactional(function (EntityManager $em) use ($command): void {
+        $this->em->wrapInTransaction(function (EntityManager $em) use ($command): void {
             $room = $command->getRoom();
 
             foreach ($room->getPrograms() as $program) {

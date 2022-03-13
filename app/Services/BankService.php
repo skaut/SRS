@@ -71,7 +71,7 @@ class BankService
     private function createPayments(TransactionList $transactionList): void
     {
         foreach ($transactionList->getTransactions() as $transaction) {
-            $this->em->transactional(function () use ($transaction): void {
+            $this->em->wrapInTransaction(function () use ($transaction): void {
                 $id = $transaction->getId();
 
                 if ($transaction->getAmount() > 0 && $this->paymentRepository->findByTransactionId($id) === null) {

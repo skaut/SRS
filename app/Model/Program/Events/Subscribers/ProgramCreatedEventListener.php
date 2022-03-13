@@ -42,7 +42,7 @@ class ProgramCreatedEventListener implements MessageHandlerInterface
      */
     public function __invoke(ProgramCreatedEvent $event): void
     {
-        $this->em->transactional(function () use ($event): void {
+        $this->em->wrapInTransaction(function () use ($event): void {
             $block = $event->getProgram()->getBlock();
 
             if ($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED) {

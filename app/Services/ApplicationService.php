@@ -204,7 +204,7 @@ class ApplicationService
             return;
         }
 
-        $this->em->transactional(function () use ($user, $roles, $createdBy, $approve, $rolesOld): void {
+        $this->em->wrapInTransaction(function () use ($user, $roles, $createdBy, $approve, $rolesOld): void {
             if ($rolesOld->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
                 $this->createRolesApplication($user, $roles, $createdBy, $approve);
                 $this->createSubeventsApplication($user, new ArrayCollection([$this->subeventRepository->findImplicit()]), $createdBy);
@@ -283,7 +283,7 @@ class ApplicationService
      */
     public function cancelRegistration(User $user, string $state, ?User $createdBy): void
     {
-        $this->em->transactional(function () use ($user, $state, $createdBy): void {
+        $this->em->wrapInTransaction(function () use ($user, $state, $createdBy): void {
             $user->setApproved(true);
             $user->getRoles()->clear();
             $user->setRolesApplicationDate(null);
@@ -342,7 +342,7 @@ class ApplicationService
      */
     public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy): void
     {
-        $this->em->transactional(function () use ($user, $subevents, $createdBy): void {
+        $this->em->wrapInTransaction(function () use ($user, $subevents, $createdBy): void {
             $this->incrementSubeventsOccupancy($subevents);
 
             $this->createSubeventsApplication($user, $subevents, $createdBy);
@@ -378,7 +378,7 @@ class ApplicationService
             return;
         }
 
-        $this->em->transactional(function () use ($application, $subevents, $createdBy): void {
+        $this->em->wrapInTransaction(function () use ($application, $subevents, $createdBy): void {
             $this->incrementSubeventsOccupancy($subevents);
 
             $user = $application->getUser();
@@ -419,7 +419,7 @@ class ApplicationService
             return;
         }
 
-        $this->em->transactional(function () use ($application, $state, $createdBy): void {
+        $this->em->wrapInTransaction(function () use ($application, $state, $createdBy): void {
             $user = $application->getUser();
 
             $newApplication = clone $application;
@@ -473,7 +473,7 @@ class ApplicationService
             return;
         }
 
-        $this->em->transactional(function () use ($application, $paymentMethod, $paymentDate, $maturityDate, $createdBy): void {
+        $this->em->wrapInTransaction(function () use ($application, $paymentMethod, $paymentDate, $maturityDate, $createdBy): void {
             $user = $application->getUser();
 
             $newApplication = clone $application;
@@ -507,7 +507,7 @@ class ApplicationService
      */
     public function createPayment(DateTimeImmutable $date, float $amount, ?string $variableSymbol, ?string $transactionId, ?string $accountNumber, ?string $accountName, ?string $message, ?User $createdBy = null): void
     {
-        $this->em->transactional(function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy): void {
+        $this->em->wrapInTransaction(function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy): void {
             $payment = new Payment();
 
             $payment->setDate($date);
@@ -559,7 +559,7 @@ class ApplicationService
      */
     public function updatePayment(Payment $payment, ?DateTimeImmutable $date, ?float $amount, ?string $variableSymbol, Collection $pairedApplications, User $createdBy): void
     {
-        $this->em->transactional(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy): void {
+        $this->em->wrapInTransaction(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy): void {
             if ($date !== null) {
                 $payment->setDate($date);
             }
@@ -612,7 +612,7 @@ class ApplicationService
      */
     public function removePayment(Payment $payment, User $createdBy): void
     {
-        $this->em->transactional(function () use ($payment, $createdBy): void {
+        $this->em->wrapInTransaction(function () use ($payment, $createdBy): void {
             foreach ($payment->getPairedValidApplications() as $pairedApplication) {
                 $this->updateApplicationPayment($pairedApplication, null, null, $pairedApplication->getMaturityDate(), $createdBy);
             }
@@ -630,7 +630,7 @@ class ApplicationService
             return;
         }
 
-        $this->em->transactional(function () use ($application, $createdBy): void {
+        $this->em->wrapInTransaction(function () use ($application, $createdBy): void {
             $incomeProof = new IncomeProof();
             $this->incomeProofRepository->save($incomeProof);
 

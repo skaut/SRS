@@ -46,7 +46,7 @@ class CategoryUpdatedEventListener implements MessageHandlerInterface
      */
     public function __invoke(CategoryUpdatedEvent $event): void
     {
-        $this->em->transactional(function () use ($event): void {
+        $this->em->wrapInTransaction(function () use ($event): void {
             $registerableRoles    = $event->getCategory()->getRegisterableRoles();
             $registerableRolesOld = $event->getRegisterableRolesOld();
 

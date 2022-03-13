@@ -307,7 +307,7 @@ class ApplicationsGridControl extends Control
 
         $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
-        $this->em->transactional(function () use ($application, $selectedSubevents, $values, $loggedUser): void {
+        $this->em->wrapInTransaction(function () use ($application, $selectedSubevents, $values, $loggedUser): void {
             if ($application instanceof SubeventsApplication) {
                 $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $loggedUser);
             }
