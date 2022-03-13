@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\SkautIs;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita skautIS kurz.
@@ -15,7 +14,12 @@ use Nettrine\ORM\Entity\Attributes\Id;
  */
 class SkautIsCourse
 {
-    use Id;
+    /**
+     * @ORM\Column(type="integer", nullable=FALSE)
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    private int $id;
 
     /**
      * SkautIS id kurzu.

@@ -22,7 +22,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 use function implode;
 
@@ -38,7 +37,13 @@ class User
      * Adresář pro ukládání profilových fotek.
      */
     public const PHOTO_PATH = 'user_photos';
-    use Id;
+
+    /**
+     * @ORM\Column(type="integer", nullable=FALSE)
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    private int $id;
 
     /**
      * Uživatelské jméno skautIS.

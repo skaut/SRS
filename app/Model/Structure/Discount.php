@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\Structure;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita sleva.
@@ -21,7 +20,13 @@ class Discount
     public const LEFT_PARENTHESIS  = '(';
     public const RIGHT_PARENTHESIS = ')';
     public const END               = '';
-    use Id;
+
+    /**
+     * @ORM\Column(type="integer", nullable=FALSE)
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    private int $id;
 
     /**
      * Podmínka.

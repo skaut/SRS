@@ -13,7 +13,6 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 use function implode;
 
@@ -25,7 +24,12 @@ use function implode;
  */
 class Subevent
 {
-    use Id;
+    /**
+     * @ORM\Column(type="integer", nullable=FALSE)
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    private int $id;
 
     /**
      * Název podakce.

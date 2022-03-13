@@ -8,7 +8,6 @@ use App\Model\Cms\Dto\ContentDto;
 use App\Model\Cms\Exceptions\PageException;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 use stdClass;
 
 use function lcfirst;
@@ -164,7 +163,13 @@ abstract class Content implements IContent
      * Typ obsahu.
      */
     protected string $type;
-    use Identifier;
+
+    /**
+     * @ORM\Column(type="integer", nullable=FALSE)
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    private int $id;
 
     /**
      * Nadpis obsahu.

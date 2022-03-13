@@ -7,7 +7,6 @@ namespace App\Model\Program;
 use App\Model\User\User;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita přihlášky na program.
@@ -17,7 +16,12 @@ use Nettrine\ORM\Entity\Attributes\Id;
  */
 class ProgramApplication
 {
-    use Id;
+    /**
+     * @ORM\Column(type="integer", nullable=FALSE)
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    private int $id;
 
     /**
      * Uživatel.

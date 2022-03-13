@@ -7,7 +7,6 @@ namespace App\Model\User;
 use App\Model\Structure\Subevent;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita kontrola vstupenky.
@@ -17,7 +16,12 @@ use Nettrine\ORM\Entity\Attributes\Id;
  */
 class TicketCheck
 {
-    use Id;
+    /**
+     * @ORM\Column(type="integer", nullable=FALSE)
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    private int $id;
 
     /**
      * Uživatel.

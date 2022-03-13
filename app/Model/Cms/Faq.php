@@ -6,7 +6,6 @@ namespace App\Model\Cms;
 
 use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita FAQ.
@@ -16,7 +15,12 @@ use Nettrine\ORM\Entity\Attributes\Id;
  */
 class Faq
 {
-    use Id;
+    /**
+     * @ORM\Column(type="integer", nullable=FALSE)
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    private int $id;
 
     /**
      * Otázka.

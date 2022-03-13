@@ -6,7 +6,6 @@ namespace App\Model\CustomInput;
 
 use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Abstraktní entita hodnota vlastního pole přihlášky.
@@ -27,7 +26,12 @@ use Nettrine\ORM\Entity\Attributes\Id;
  */
 abstract class CustomInputValue
 {
-    use Id;
+    /**
+     * @ORM\Column(type="integer", nullable=FALSE)
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    private int $id;
 
     /**
      * Vlastní pole přihlášky.

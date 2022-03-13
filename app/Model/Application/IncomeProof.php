@@ -7,7 +7,6 @@ namespace App\Model\Application;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita příjmového dokladu.
@@ -17,7 +16,12 @@ use Nettrine\ORM\Entity\Attributes\Id;
  */
 class IncomeProof
 {
-    use Id;
+    /**
+     * @ORM\Column(type="integer", nullable=FALSE)
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    private int $id;
 
     /**
      * Datum vystavení příjmového dokladu.
