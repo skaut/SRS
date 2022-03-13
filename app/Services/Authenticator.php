@@ -15,7 +15,6 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Security as NS;
-use Nette\Security\IAuthenticator;
 use Nette\Security\SimpleIdentity;
 use stdClass;
 
@@ -24,7 +23,7 @@ use function assert;
 /**
  * Služba starající se o autentizaci uživatelů.
  */
-class Authenticator implements IAuthenticator
+class Authenticator implements Nette\Security\Authenticator
 {
     use Nette\SmartObject;
 

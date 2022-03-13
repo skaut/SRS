@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use Nette;
-use Nette\Application\IResponse;
+use Nette\Application\Response;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -13,7 +13,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 /**
  * ExcelResponse.
  */
-class ExcelResponse implements IResponse
+class ExcelResponse implements Response
 {
     use Nette\SmartObject;
 

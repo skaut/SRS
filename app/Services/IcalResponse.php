@@ -6,12 +6,12 @@ namespace App\Services;
 
 use Eluceo\iCal\Component\Calendar;
 use Nette;
-use Nette\Application\IResponse;
+use Nette\Application\Response;
 
 /**
  * IcalResponse.
  */
-class IcalResponse implements IResponse
+class IcalResponse implements Response
 {
     use Nette\SmartObject;
 
