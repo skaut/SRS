@@ -59,8 +59,8 @@
         "eluceo/ical": "^2.5",
         "endroid/qr-code": "^4.0",
 
-        "skautis/skautis": "^2.2",
-        "skautis/nette": "^2.2",
+        "skautis/skautis": "3.0.0-alpha.2",
+        "skautis/nette": "3.0.0-alpha.1",
 
         "pear/numbers_words": "^0.18",
         "azuyalabs/yasumi": "^2.5",
