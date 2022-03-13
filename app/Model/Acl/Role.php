@@ -81,11 +81,11 @@ class Role
     ];
 
     /**
-     * @ORM\Column(type="integer", nullable=FALSE)
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
      */
-    private int $id;
+    private ?int $id;
 
     /**
      * Název role.
@@ -272,7 +272,7 @@ class Role
         $this->tags                   = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

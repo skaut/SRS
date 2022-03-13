@@ -21,11 +21,11 @@ use Exception;
 class Program
 {
     /**
-     * @ORM\Column(type="integer", nullable=FALSE)
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
      */
-    private int $id;
+    private ?int $id;
 
     /**
      * Programový blok.

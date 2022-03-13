@@ -87,11 +87,11 @@ class Template
     public const CONTACT_FORM = 'contact_form';
 
     /**
-     * @ORM\Column(type="integer", nullable=FALSE)
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
      */
-    private int $id;
+    private ?int $id;
 
     /**
      * Typ e-mailu.
@@ -142,7 +142,7 @@ class Template
         $this->variables = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

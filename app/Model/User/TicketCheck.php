@@ -17,11 +17,11 @@ use Doctrine\ORM\Mapping as ORM;
 class TicketCheck
 {
     /**
-     * @ORM\Column(type="integer", nullable=FALSE)
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
      */
-    private int $id;
+    private ?int $id;
 
     /**
      * Uživatel.
@@ -51,7 +51,7 @@ class TicketCheck
         $this->datetime = new DateTimeImmutable();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

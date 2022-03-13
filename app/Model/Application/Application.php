@@ -50,11 +50,11 @@ abstract class Application
     protected string $type;
 
     /**
-     * @ORM\Column(type="integer", nullable=FALSE)
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
      */
-    private int $id;
+    private ?int $id;
 
     /**
      * Id přihlášky.
@@ -187,7 +187,7 @@ abstract class Application
         }
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

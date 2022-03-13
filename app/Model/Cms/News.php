@@ -16,11 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
 class News
 {
     /**
-     * @ORM\Column(type="integer", nullable=FALSE)
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
      */
-    private int $id;
+    private ?int $id;
 
     /**
      * Text aktuality.
@@ -43,7 +43,7 @@ class News
      */
     protected bool $pinned = false;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

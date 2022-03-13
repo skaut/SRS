@@ -23,11 +23,11 @@ use function implode;
 class Mail
 {
     /**
-     * @ORM\Column(type="integer", nullable=FALSE)
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
      */
-    private int $id;
+    private ?int $id;
 
     /**
      * Role, kterým byl e-mail odeslán.
@@ -91,7 +91,7 @@ class Mail
         $this->recipientUsers     = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

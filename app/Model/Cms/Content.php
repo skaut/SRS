@@ -165,11 +165,11 @@ abstract class Content implements IContent
     protected string $type;
 
     /**
-     * @ORM\Column(type="integer", nullable=FALSE)
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
      */
-    private int $id;
+    private ?int $id;
 
     /**
      * Nadpis obsahu.
@@ -222,7 +222,7 @@ abstract class Content implements IContent
         return lcfirst(str_replace('_', '', ucwords($this->type, '_'))) . 'Content';
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

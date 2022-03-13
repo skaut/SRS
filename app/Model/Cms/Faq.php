@@ -16,11 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Faq
 {
     /**
-     * @ORM\Column(type="integer", nullable=FALSE)
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
      */
-    private int $id;
+    private ?int $id;
 
     /**
      * Otázka.
@@ -57,7 +57,7 @@ class Faq
      */
     protected int $position = 0;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
