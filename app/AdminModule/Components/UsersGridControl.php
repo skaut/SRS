@@ -546,14 +546,13 @@ class UsersGridControl extends Control
      *
      * @param int[] $ids
      *
-     * @throws AbortException
      * @throws Throwable
      */
     public function groupApprove(array $ids): void
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
-        $this->em->transactional(function () use ($users): void {
+        $this->em->wrapInTransaction(function () use ($users): void {
             foreach ($users as $user) {
                 $this->userService->setApproved($user, true);
             }
@@ -618,7 +617,7 @@ class UsersGridControl extends Control
 
         $loggedUser = $this->userRepository->findById($p->getUser()->id);
 
-        $this->em->transactional(function () use ($selectedRoles, $users, $loggedUser): void {
+        $this->em->wrapInTransaction(function () use ($selectedRoles, $users, $loggedUser): void {
             foreach ($users as $user) {
                 $this->applicationService->updateRoles($user, $selectedRoles, $loggedUser, true);
             }
@@ -633,14 +632,13 @@ class UsersGridControl extends Control
      *
      * @param int[] $ids
      *
-     * @throws AbortException
      * @throws Throwable
      */
     public function groupMarkAttended(array $ids): void
     {
         $users = $this->userRepository->findUsersByIds($ids);
 
-        $this->em->transactional(function () use ($users): void {
+        $this->em->wrapInTransaction(function () use ($users): void {
             foreach ($users as $user) {
                 $user->setAttended(true);
                 $this->userRepository->save($user);
@@ -657,7 +655,6 @@ class UsersGridControl extends Control
      *
      * @param int[] $ids
      *
-     * @throws AbortException
      * @throws Throwable
      */
     public function groupMarkPaidToday(array $ids, string $paymentMethod): void
@@ -668,7 +665,7 @@ class UsersGridControl extends Control
 
         $loggedUser = $this->userRepository->findById($p->getUser()->id);
 
-        $this->em->transactional(function () use ($users, $paymentMethod, $loggedUser): void {
+        $this->em->wrapInTransaction(function () use ($users, $paymentMethod, $loggedUser): void {
             foreach ($users as $user) {
                 foreach ($user->getWaitingForPaymentApplications() as $application) {
                     $this->applicationService->updateApplicationPayment(
@@ -691,7 +688,6 @@ class UsersGridControl extends Control
      *
      * @param int[] $ids
      *
-     * @throws AbortException
      * @throws Throwable
      */
     public function groupInsertIntoSkautIs(array $ids, ?int $accept): void

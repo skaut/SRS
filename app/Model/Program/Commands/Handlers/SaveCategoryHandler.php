@@ -34,7 +34,7 @@ class SaveCategoryHandler implements MessageHandlerInterface
         if ($category->getId() === null) {
             $this->categoryRepository->save($category);
         } else {
-            $this->em->transactional(function () use ($category, $categoryOld): void {
+            $this->em->wrapInTransaction(function () use ($category, $categoryOld): void {
                 $registerableRolesOld = $categoryOld->getRegisterableRoles();
 
                 $this->categoryRepository->save($category);

@@ -21,7 +21,7 @@ class SettingArrayValueQueryHandler implements MessageHandlerInterface
     }
 
     /**
-     * @return mixed[]
+     * @return mixed[]|null
      *
      * @throws SettingsItemNotFoundException
      */

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\Application;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita variabilní symbol.
@@ -15,7 +14,12 @@ use Nettrine\ORM\Entity\Attributes\Id;
  */
 class VariableSymbol
 {
-    use Id;
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
+     */
+    private ?int $id = null;
 
     /**
      * Variabilní symbol.
@@ -24,7 +28,7 @@ class VariableSymbol
      */
     protected ?string $variableSymbol = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

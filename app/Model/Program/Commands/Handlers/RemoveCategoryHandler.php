@@ -28,7 +28,7 @@ class RemoveCategoryHandler implements MessageHandlerInterface
 
     public function __invoke(RemoveCategory $command): void
     {
-        $this->em->transactional(function () use ($command): void {
+        $this->em->wrapInTransaction(function () use ($command): void {
             $category = $command->getCategory();
 
             foreach ($category->getBlocks() as $block) {

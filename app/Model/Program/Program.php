@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita program.
@@ -21,7 +20,12 @@ use Nettrine\ORM\Entity\Attributes\Id;
  */
 class Program
 {
-    use Id;
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
+     */
+    private ?int $id = null;
 
     /**
      * Programový blok.

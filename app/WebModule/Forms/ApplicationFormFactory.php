@@ -234,7 +234,7 @@ class ApplicationFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->em->transactional(function () use ($values): void {
+        $this->em->wrapInTransaction(function () use ($values): void {
             if (property_exists($values, 'sex')) {
                 $this->user->setSex($values->sex);
             }

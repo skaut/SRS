@@ -205,7 +205,7 @@ class EditRoleFormFactory
             return;
         }
 
-        $this->em->transactional(function () use ($values): void {
+        $this->em->wrapInTransaction(function () use ($values): void {
             $capacity = $values->capacity !== '' ? $values->capacity : null;
 
             $this->role->setName($values->name);

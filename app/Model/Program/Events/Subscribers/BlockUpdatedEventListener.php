@@ -47,7 +47,7 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
 
     public function __invoke(BlockUpdatedEvent $event): void
     {
-        $this->em->transactional(function (EntityManager $em) use ($event): void {
+        $this->em->wrapInTransaction(function (EntityManager $em) use ($event): void {
             $block             = $event->getBlock();
             $category          = $block->getCategory();
             $subevent          = $block->getSubevent();

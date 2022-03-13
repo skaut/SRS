@@ -129,7 +129,7 @@ class InstallPresenter extends InstallBasePresenter
             return;
         }
 
-        $this->em->transactional(function (): void {
+        $this->em->wrapInTransaction(function (): void {
             $user = $this->userRepository->findById($this->user->id);
             $this->userRepository->save($user);
 

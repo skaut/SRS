@@ -236,7 +236,7 @@ class AdditionalInformationFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->em->transactional(function () use ($values): void {
+        $this->em->wrapInTransaction(function () use ($values): void {
             $customInputValueChanged = false;
 
             if ($this->applicationService->isAllowedEditCustomInputs()) {

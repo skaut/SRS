@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\Mailing;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita proměnná v automatickém e-mailu.
@@ -89,7 +88,13 @@ class TemplateVariable
      * Zpráva.
      */
     public const MESSAGE = 'message';
-    use Id;
+
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
+     */
+    private ?int $id = null;
 
     /**
      * Název proměnné.
@@ -98,7 +103,7 @@ class TemplateVariable
      */
     protected string $name;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

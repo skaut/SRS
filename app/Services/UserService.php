@@ -102,7 +102,7 @@ class UserService
      */
     public function setApproved(User $user, bool $approved): void
     {
-        $this->em->transactional(function () use ($user, $approved): void {
+        $this->em->wrapInTransaction(function () use ($user, $approved): void {
             $approvedOld = $user->isApproved();
             $user->setApproved($approved);
             $this->userRepository->save($user);

@@ -309,7 +309,7 @@ class ProgramAttendeesGridControl extends Control
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         } else {
             try {
-                $this->em->transactional(function () use ($ids): void {
+                $this->em->wrapInTransaction(function () use ($ids): void {
                     foreach ($ids as $id) {
                         $user = $this->userRepository->findById($id);
                         $this->commandBus->handle(new RegisterProgram($user, $this->program));
@@ -345,7 +345,7 @@ class ProgramAttendeesGridControl extends Control
             $p->flashMessage('admin.program.blocks_edit_not_allowed', 'danger');
         } else {
             try {
-                $this->em->transactional(function () use ($ids): void {
+                $this->em->wrapInTransaction(function () use ($ids): void {
                     foreach ($ids as $id) {
                         $user = $this->userRepository->findById($id);
                         $this->commandBus->handle(new UnregisterProgram($user, $this->program));

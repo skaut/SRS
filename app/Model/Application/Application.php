@@ -15,7 +15,6 @@ use Defr\QRPlatba\QRPlatba;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 use Numbers_Words;
 
 use function implode;
@@ -49,7 +48,13 @@ abstract class Application
      * Typ přihlášky.
      */
     protected string $type;
-    use Id;
+
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
+     */
+    private ?int $id = null;
 
     /**
      * Id přihlášky.
@@ -182,7 +187,7 @@ abstract class Application
         }
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

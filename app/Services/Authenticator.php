@@ -15,7 +15,6 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Security as NS;
-use Nette\Security\IAuthenticator;
 use Nette\Security\SimpleIdentity;
 use stdClass;
 
@@ -24,7 +23,7 @@ use function assert;
 /**
  * Služba starající se o autentizaci uživatelů.
  */
-class Authenticator implements IAuthenticator
+class Authenticator implements Nette\Security\Authenticator
 {
     use Nette\SmartObject;
 
@@ -56,12 +55,10 @@ class Authenticator implements IAuthenticator
     /**
      * Autentizuje uživatele a případně vytvoří nového.
      *
-     * @param string[] $credentials
-     *
      * @throws ORMException
      * @throws Exception
      */
-    public function authenticate(array $credentials): SimpleIdentity
+    public function authenticate(string $user, string $password): SimpleIdentity
     {
         $skautISUser = $this->skautIsService->getUserDetail();
 

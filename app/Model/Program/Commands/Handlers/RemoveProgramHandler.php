@@ -38,7 +38,7 @@ class RemoveProgramHandler implements MessageHandlerInterface
 
     public function __invoke(RemoveProgram $command): void
     {
-        $this->em->transactional(function () use ($command): void {
+        $this->em->wrapInTransaction(function () use ($command): void {
             $program = $command->getProgram();
 
             $alternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));

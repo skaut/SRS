@@ -7,7 +7,6 @@ namespace App\Model\Mailing;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita šablona automatického e-mailu.
@@ -86,7 +85,13 @@ class Template
      * Zpráva z kontaktního formuláře.
      */
     public const CONTACT_FORM = 'contact_form';
-    use Id;
+
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
+     */
+    private ?int $id = null;
 
     /**
      * Typ e-mailu.
@@ -137,7 +142,7 @@ class Template
         $this->variables = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

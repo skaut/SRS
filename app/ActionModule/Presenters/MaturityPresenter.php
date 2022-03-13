@@ -61,7 +61,7 @@ class MaturityPresenter extends ActionBasePresenter
         }
 
         foreach ($this->userRepository->findAllWithWaitingForPaymentApplication() as $user) {
-            $this->em->transactional(function () use ($user, $cancelRegistrationDate): void {
+            $this->em->wrapInTransaction(function () use ($user, $cancelRegistrationDate): void {
                 // odhlášení účastníků s nezaplacnou přihláškou rolí
                 foreach ($user->getWaitingForPaymentRolesApplications() as $application) {
                     $maturityDate = $application->getMaturityDate();

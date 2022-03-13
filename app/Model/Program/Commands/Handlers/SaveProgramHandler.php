@@ -31,7 +31,7 @@ class SaveProgramHandler implements MessageHandlerInterface
         $program = $command->getProgram();
 
         if ($program->getId() === null) {
-            $this->em->transactional(function () use ($program): void {
+            $this->em->wrapInTransaction(function () use ($program): void {
                 $this->programRepository->save($program);
                 $this->eventBus->handle(new ProgramCreatedEvent($program));
             });

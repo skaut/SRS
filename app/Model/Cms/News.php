@@ -6,7 +6,6 @@ namespace App\Model\Cms;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita aktuality.
@@ -16,7 +15,12 @@ use Nettrine\ORM\Entity\Attributes\Id;
  */
 class News
 {
-    use Id;
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=FALSE)
+     */
+    private ?int $id = null;
 
     /**
      * Text aktuality.
@@ -39,7 +43,7 @@ class News
      */
     protected bool $pinned = false;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
