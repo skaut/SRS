@@ -55,12 +55,10 @@ class Authenticator implements Nette\Security\Authenticator
     /**
      * Autentizuje uživatele a případně vytvoří nového.
      *
-     * @param string[] $credentials
-     *
      * @throws ORMException
      * @throws Exception
      */
-    public function authenticate(array $credentials): SimpleIdentity
+    public function authenticate(string $user, string $password): SimpleIdentity
     {
         $skautISUser = $this->skautIsService->getUserDetail();
 
