@@ -59,9 +59,11 @@ class Mail
     /**
      * Příjemci e-mailu - e-maily.
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="simple_array")
+     *
+     * @var string[]
      */
-    protected ?string $recipientEmails;
+    protected array $recipientEmails = [];
 
     /**
      * Předmět e-mailu.
@@ -197,14 +199,16 @@ class Mail
         })->toArray());
     }
 
-    public function getRecipientEmail(): ?string
+    /** @return string[] */
+    public function getRecipientEmails(): array
     {
-        return $this->recipientEmail;
+        return $this->recipientEmails;
     }
 
-    public function setRecipientEmail(?string $recipientEmail): void
+    /** @param string[] $recipientEmails */
+    public function setRecipientEmails(array $recipientEmails): void
     {
-        $this->recipientEmail = $recipientEmail;
+        $this->recipientEmails = $recipientEmails;
     }
 
     public function getSubject(): string
