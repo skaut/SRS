@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Commands\Handlers;
 
-use App\Model\Program\Commands\EnqueMail;
-use App\Model\Program\Commands\RemoveBlock;
+use App\Model\Program\Commands\EnqueTemplateMail;
 use App\Model\Program\Commands\RemoveProgram;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Services\CommandBus;
@@ -27,9 +26,9 @@ class EnqueMailHandler implements MessageHandlerInterface
         $this->blockRepository = $blockRepository;
     }
 
-    public function __invoke(EnqueMail $command): void
+    public function __invoke(EnqueTemplateMail $command): void
     {
-        $this->em->transactional(function () use ($command): void {
+        $this->em->wrapInTransaction(function () use ($command): void {
             $block = $command->getBlock();
 
             foreach ($block->getPrograms() as $program) {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Commands\Handlers;
 
-use App\Model\Program\Commands\RemoveBlock;
 use App\Model\Program\Commands\RemoveProgram;
 use App\Model\Program\Commands\SendMail;
 use App\Model\Program\Repositories\BlockRepository;
@@ -29,7 +28,7 @@ class SendMailHandler implements MessageHandlerInterface
 
     public function __invoke(SendMail $command): void
     {
-        $this->em->transactional(function () use ($command): void {
+        $this->em->wrapInTransaction(function () use ($command): void {
             $block = $command->getBlock();
 
             foreach ($block->getPrograms() as $program) {

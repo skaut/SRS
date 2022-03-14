@@ -4,19 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Commands;
 
-use App\Model\Program\Block;
-
 class SendQueue
 {
-    private Block $block;
-
-    public function __construct(Block $block)
+    public function __construct()
     {
-        $this->block = $block;
-    }
-
-    public function getBlock(): Block
-    {
-        return $this->block;
     }
 }
