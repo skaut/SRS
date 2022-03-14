@@ -11,12 +11,16 @@ use Doctrine\Common\Collections\Collection;
 
 class SendMail
 {
+    /** @var Collection<int, User>|null */
     private ?Collection $recipientsUsers;
 
+    /** @var Collection<int, Role>|null */
     private ?Collection $recipientsRoles;
 
+    /** @var Collection<int, Subevent>|null */
     private ?Collection $recipientsSubevents;
 
+    /** @var Collection<int, string>|null */
     private ?Collection $recipientEmails;
 
     private string $subject;

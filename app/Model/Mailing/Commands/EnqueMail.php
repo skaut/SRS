@@ -7,14 +7,17 @@ namespace App\Model\Program\Commands;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 
-class EnqueTemplateMail
+class EnqueMail
 {
+    /** @var Collection<int, User>|null */
     private ?Collection $recipientUsers;
 
+    /** @var Collection<int, string>|null */
     private ?Collection $recipientEmails;
 
     private string $template;
 
+    /** @var string[] */
     private array $parameters;
 
     /**
@@ -31,7 +34,7 @@ class EnqueTemplateMail
     }
 
     /**
-     * @return Collection|null
+     * @return Collection<int, User>|null
      */
     public function getRecipientUsers(): ?Collection
     {
@@ -39,7 +42,7 @@ class EnqueTemplateMail
     }
 
     /**
-     * @return Collection|null
+     * @return Collection<int, string>|null
      */
     public function getRecipientEmails(): ?Collection
     {
@@ -52,7 +55,7 @@ class EnqueTemplateMail
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getParameters(): array
     {

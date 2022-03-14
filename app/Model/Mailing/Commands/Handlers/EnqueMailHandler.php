@@ -4,38 +4,24 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Commands\Handlers;
 
-use App\Model\Program\Commands\EnqueTemplateMail;
-use App\Model\Program\Commands\RemoveProgram;
-use App\Model\Program\Repositories\BlockRepository;
-use App\Services\CommandBus;
+use App\Model\Mailing\Repositories\MailRepository;
+use App\Model\Program\Commands\SendQueue;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class EnqueMailHandler implements MessageHandlerInterface
 {
-    private CommandBus $commandBus;
-
     private EntityManagerInterface $em;
 
-    private BlockRepository $blockRepository;
+    private MailRepository $mailRepository;
 
-    public function __construct(CommandBus $commandBus, EntityManagerInterface $em, BlockRepository $blockRepository)
+    public function __construct(EntityManagerInterface $em, MailRepository $mailRepository)
     {
-        $this->commandBus      = $commandBus;
-        $this->em              = $em;
-        $this->blockRepository = $blockRepository;
+        $this->em             = $em;
+        $this->mailRepository = $mailRepository;
     }
 
-    public function __invoke(EnqueTemplateMail $command): void
+    public function __invoke(SendQueue $command): void
     {
-        $this->em->wrapInTransaction(function () use ($command): void {
-            $block = $command->getBlock();
-
-            foreach ($block->getPrograms() as $program) {
-                $this->commandBus->handle(new RemoveProgram($program));
-            }
-
-            $this->blockRepository->remove($block);
-        });
     }
 }
