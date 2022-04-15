@@ -94,11 +94,11 @@ class Mail
     protected bool $automatic = false;
 
     /**
-     * E-mail byl odeslán.
+     * Dávka e-mailů.
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\ManyToOne(targetEntity="MailBatch", inversedBy="mails", cascade={"persist"})
      */
-    protected bool $sent = false;
+    protected ?MailBatch $batch;
 
     public function __construct()
     {
@@ -249,5 +249,15 @@ class Mail
     public function setAutomatic(bool $automatic): void
     {
         $this->automatic = $automatic;
+    }
+
+    public function getBatch(): ?MailBatch
+    {
+        return $this->batch;
+    }
+
+    public function setBatch(?MailBatch $batch): void
+    {
+        $this->batch = $batch;
     }
 }

@@ -12,13 +12,13 @@ use Doctrine\Common\Collections\Collection;
 class SendMail
 {
     /** @var Collection<int, User>|null */
-    private ?Collection $recipientsUsers;
+    private ?Collection $recipientUsers;
 
     /** @var Collection<int, Role>|null */
-    private ?Collection $recipientsRoles;
+    private ?Collection $recipientRoles;
 
     /** @var Collection<int, Subevent>|null */
-    private ?Collection $recipientsSubevents;
+    private ?Collection $recipientSubevents;
 
     /** @var Collection<int, string>|null */
     private ?Collection $recipientEmails;
@@ -28,16 +28,16 @@ class SendMail
     private string $text;
 
     /**
-     * @param Collection<int, User>|null     $recipientsUsers
-     * @param Collection<int, Role>|null     $recipientsRoles
-     * @param Collection<int, Subevent>|null $recipientsSubevents
+     * @param Collection<int, User>|null     $recipientUsers
+     * @param Collection<int, Role>|null     $recipientRoles
+     * @param Collection<int, Subevent>|null $recipientSubevents
      * @param Collection<int, string>|null   $recipientEmails
      */
-    public function __construct(?Collection $recipientsUsers, ?Collection $recipientsRoles, ?Collection $recipientsSubevents, ?Collection $recipientEmails, string $subject, string $text)
+    public function __construct(?Collection $recipientUsers, ?Collection $recipientRoles, ?Collection $recipientSubevents, ?Collection $recipientEmails, string $subject, string $text)
     {
-        $this->recipientsUsers     = $recipientsUsers;
-        $this->recipientsRoles     = $recipientsRoles;
-        $this->recipientsSubevents = $recipientsSubevents;
+        $this->recipientUsers     = $recipientUsers;
+        $this->recipientRoles     = $recipientRoles;
+        $this->recipientSubevents = $recipientSubevents;
         $this->recipientEmails     = $recipientEmails;
         $this->subject             = $subject;
         $this->text                = $text;
@@ -46,25 +46,25 @@ class SendMail
     /**
      * @return Collection<int, User>|null
      */
-    public function getRecipientsUsers(): ?Collection
+    public function getRecipientUsers(): ?Collection
     {
-        return $this->recipientsUsers;
+        return $this->recipientUsers;
     }
 
     /**
      * @return Collection<int, Role>|null
      */
-    public function getRecipientsRoles(): ?Collection
+    public function getRecipientRoles(): ?Collection
     {
-        return $this->recipientsRoles;
+        return $this->recipientRoles;
     }
 
     /**
      * @return Collection<int, Subevent>|null
      */
-    public function getRecipientsSubevents(): ?Collection
+    public function getRecipientSubevents(): ?Collection
     {
-        return $this->recipientsSubevents;
+        return $this->recipientSubevents;
     }
 
     /**
