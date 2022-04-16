@@ -17,7 +17,7 @@ class SkautIsCourse
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=FALSE)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private ?int $id = null;
 

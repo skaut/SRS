@@ -20,7 +20,7 @@ class CustomMultiSelectValue extends CustomInputValue
     /**
      * Vybrané položky výběrového pole s více možnostmi přihlášky.
      *
-     * @ORM\Column(type="simple_array", nullable=true)
+     * @ORM\Column(type="simple_array")
      *
      * @var string[]
      */
