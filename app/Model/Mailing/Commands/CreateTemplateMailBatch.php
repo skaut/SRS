@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Commands;
 
+use App\Model\Mailing\MailBatch;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
 
-class EnqueMail
+class CreateTemplateMailBatch
 {
+    private MailBatch $batch;
+
     /** @var Collection<int, User>|null */
     private ?Collection $recipientUsers;
 
@@ -25,8 +28,9 @@ class EnqueMail
      * @param Collection<int, string>|null $recipientEmails
      * @param string[]                     $parameters
      */
-    public function __construct(?Collection $recipientUsers, ?Collection $recipientEmails, string $template, array $parameters)
+    public function __construct(MailBatch $batch, ?Collection $recipientUsers, ?Collection $recipientEmails, string $template, array $parameters)
     {
+        $this->batch           = $batch;
         $this->recipientUsers  = $recipientUsers;
         $this->recipientEmails = $recipientEmails;
         $this->template        = $template;
@@ -60,5 +64,10 @@ class EnqueMail
     public function getParameters(): array
     {
         return $this->parameters;
+    }
+
+    public function getBatch(): MailBatch
+    {
+        return $this->batch;
     }
 }

@@ -38,9 +38,9 @@ class SendMail
         $this->recipientUsers     = $recipientUsers;
         $this->recipientRoles     = $recipientRoles;
         $this->recipientSubevents = $recipientSubevents;
-        $this->recipientEmails     = $recipientEmails;
-        $this->subject             = $subject;
-        $this->text                = $text;
+        $this->recipientEmails    = $recipientEmails;
+        $this->subject            = $subject;
+        $this->text               = $text;
     }
 
     /**

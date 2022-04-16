@@ -258,6 +258,14 @@ class Mail
 
     public function setBatch(?MailBatch $batch): void
     {
+        if ($this->batch !== null) {
+            $this->batch->removeMail($this);
+        }
+
+        if ($batch !== null) {
+            $batch->addMail($this);
+        }
+
         $this->batch = $batch;
     }
 }

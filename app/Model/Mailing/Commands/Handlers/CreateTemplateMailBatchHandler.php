@@ -7,18 +7,18 @@ namespace App\Model\Program\Commands\Handlers;
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\Repositories\MailRepository;
 use App\Model\Mailing\Repositories\TemplateRepository;
-use App\Model\Program\Commands\EnqueMail;
+use App\Model\Program\Commands\CreateTemplateMailBatch;
 use Contributte\Translation\Translator;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class EnqueMailHandler implements MessageHandlerInterface
+use function str_replace;
+use function strval;
+
+class CreateTemplateMailBatchHandler implements MessageHandlerInterface
 {
     private MailRepository $mailRepository;
-
     private TemplateRepository $templateRepository;
-
     private Translator $translator;
 
     public function __construct(MailRepository $mailRepository, TemplateRepository $templateRepository, Translator $translator)
@@ -28,7 +28,7 @@ class EnqueMailHandler implements MessageHandlerInterface
         $this->translator         = $translator;
     }
 
-    public function __invoke(EnqueMail $command): void
+    public function __invoke(CreateTemplateMailBatch $command): void
     {
         $template = $this->templateRepository->findByType($command->getTemplate());
 
@@ -49,6 +49,8 @@ class EnqueMailHandler implements MessageHandlerInterface
 
         $mail = new Mail();
 
+        $mail->setBatch($command->getBatch());
+
         if ($command->getRecipientUsers() !== null) {
             $mail->setRecipientUsers($command->getRecipientUsers());
         }
@@ -61,6 +63,7 @@ class EnqueMailHandler implements MessageHandlerInterface
         $mail->setText($text);
         $mail->setDatetime(new DateTimeImmutable());
         $mail->setAutomatic(true);
+
         $this->mailRepository->save($mail);
     }
 }

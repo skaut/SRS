@@ -4,15 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\Mailing;
 
-use App\Model\Acl\Role;
-use App\Model\Structure\Subevent;
-use App\Model\User\User;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
-use function implode;
 
 /**
  * Entita dávka e-mailů.
@@ -55,6 +49,25 @@ class MailBatch
         return $this->id;
     }
 
+    public function addMail(Mail $mail): void
+    {
+        if (! $this->mails->contains($mail)) {
+            $this->mails->add($mail);
+            $mail->setBatch($this);
+        }
+    }
+
+    public function removeMail(Mail $mail): void
+    {
+        if ($this->mails->contains($mail)) {
+            $this->mails->removeElement($mail);
+            $mail->setBatch(null);
+        }
+    }
+
+    /**
+     * @return Collection<int, Mail>
+     */
     public function getMails(): Collection
     {
         return $this->mails;
