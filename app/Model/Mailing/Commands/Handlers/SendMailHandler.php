@@ -18,7 +18,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class SendMailHandler implements MessageHandlerInterface
 {
     private CommandBus $commandBus;
+
     private EntityManagerInterface $em;
+
     private MailRepository $mailRepository;
 
     public function __construct(CommandBus $commandBus, EntityManagerInterface $em, MailRepository $mailRepository)
@@ -50,7 +52,7 @@ class SendMailHandler implements MessageHandlerInterface
             }
 
             if ($command->getRecipientEmails() !== null) {
-                $mail->setRecipientEmails($command->getRecipientEmails());
+                $mail->setRecipientEmails($command->getRecipientEmails()->toArray());
             }
 
             $mail->setSubject($command->getSubject());

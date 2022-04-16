@@ -18,11 +18,16 @@ use function strval;
 class CreateTemplateMailBatchHandler implements MessageHandlerInterface
 {
     private MailRepository $mailRepository;
+
     private TemplateRepository $templateRepository;
+
     private Translator $translator;
 
-    public function __construct(MailRepository $mailRepository, TemplateRepository $templateRepository, Translator $translator)
-    {
+    public function __construct(
+        MailRepository $mailRepository,
+        TemplateRepository $templateRepository,
+        Translator $translator
+    ) {
         $this->mailRepository     = $mailRepository;
         $this->templateRepository = $templateRepository;
         $this->translator         = $translator;
@@ -56,7 +61,7 @@ class CreateTemplateMailBatchHandler implements MessageHandlerInterface
         }
 
         if ($command->getRecipientEmails() !== null) {
-            $mail->setRecipientEmails($command->getRecipientEmails());
+            $mail->setRecipientEmails($command->getRecipientEmails()->toArray());
         }
 
         $mail->setSubject($subject);

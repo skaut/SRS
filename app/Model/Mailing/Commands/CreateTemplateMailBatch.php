@@ -28,8 +28,13 @@ class CreateTemplateMailBatch
      * @param Collection<int, string>|null $recipientEmails
      * @param string[]                     $parameters
      */
-    public function __construct(MailBatch $batch, ?Collection $recipientUsers, ?Collection $recipientEmails, string $template, array $parameters)
-    {
+    public function __construct(
+        MailBatch $batch,
+        ?Collection $recipientUsers,
+        ?Collection $recipientEmails,
+        string $template,
+        array $parameters
+    ) {
         $this->batch           = $batch;
         $this->recipientUsers  = $recipientUsers;
         $this->recipientEmails = $recipientEmails;

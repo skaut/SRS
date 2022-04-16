@@ -9,7 +9,6 @@ use App\Mailing\SrsMailData;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Mailing\Recipient;
 use App\Model\Mailing\Repositories\MailBatchRepository;
-use App\Model\Mailing\Repositories\MailRepository;
 use App\Model\Program\Commands\SendBatch;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -24,18 +23,27 @@ use function in_array;
 class SendBatchHandler implements MessageHandlerInterface
 {
     private QueryBus $queryBus;
+
     private MailFactory $mailFactory;
-    private MailRepository $mailRepository;
+
     private MailBatchRepository $mailBatchRepository;
+
     private UserRepository $userRepository;
+
     private RoleRepository $roleRepository;
+
     private SubeventRepository $subeventRepository;
 
-    public function __construct(QueryBus $queryBus, MailFactory $mailFactory, MailRepository $mailRepository, MailBatchRepository $mailBatchRepository, UserRepository $userRepository, RoleRepository $roleRepository, SubeventRepository $subeventRepository)
-    {
+    public function __construct(
+        QueryBus $queryBus,
+        MailFactory $mailFactory,
+        MailBatchRepository $mailBatchRepository,
+        UserRepository $userRepository,
+        RoleRepository $roleRepository,
+        SubeventRepository $subeventRepository
+    ) {
         $this->queryBus            = $queryBus;
         $this->mailFactory         = $mailFactory;
-        $this->mailRepository      = $mailRepository;
         $this->mailBatchRepository = $mailBatchRepository;
         $this->userRepository      = $userRepository;
         $this->roleRepository      = $roleRepository;

@@ -33,8 +33,14 @@ class SendMail
      * @param Collection<int, Subevent>|null $recipientSubevents
      * @param Collection<int, string>|null   $recipientEmails
      */
-    public function __construct(?Collection $recipientUsers, ?Collection $recipientRoles, ?Collection $recipientSubevents, ?Collection $recipientEmails, string $subject, string $text)
-    {
+    public function __construct(
+        ?Collection $recipientUsers,
+        ?Collection $recipientRoles,
+        ?Collection $recipientSubevents,
+        ?Collection $recipientEmails,
+        string $subject,
+        string $text
+    ) {
         $this->recipientUsers     = $recipientUsers;
         $this->recipientRoles     = $recipientRoles;
         $this->recipientSubevents = $recipientSubevents;
