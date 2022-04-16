@@ -94,6 +94,7 @@
     },
 
     "minimum-stability": "stable",
+
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
