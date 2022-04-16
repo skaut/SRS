@@ -11,7 +11,7 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\IMailService;
+use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,6 +30,9 @@ use function strpos;
 class AuthPresenter extends BasePresenter
 {
     /** @inject */
+    public CommandBus $commandBus;
+
+    /** @inject */
     public QueryBus $queryBus;
 
     /** @inject */
@@ -37,9 +40,6 @@ class AuthPresenter extends BasePresenter
 
     /** @inject */
     public UserRepository $userRepository;
-
-    /** @inject */
-    public IMailService $mailService;
 
     /**
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.
@@ -66,7 +66,7 @@ class AuthPresenter extends BasePresenter
         if ($userIdentity->data['firstLogin']) {
             $user = $this->userRepository->findById($this->user->id);
 
-            assert($user instanceof User);
+            assert($user instanceof User); // todo: odeslat hned
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::SIGN_IN, [
                 TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             ]);

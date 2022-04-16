@@ -12,7 +12,6 @@ use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramUnregisteredEvent;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
-use App\Services\IMailService;
 use App\Services\QueryBus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -25,18 +24,11 @@ class ProgramUnregisteredEventListener implements MessageHandlerInterface
 
     private UserRepository $userRepository;
 
-    private IMailService $mailService;
-
-    public function __construct(
-        CommandBus $commandBus,
-        QueryBus $queryBus,
-        UserRepository $userRepository,
-        IMailService $mailService
-    ) {
+    public function __construct(CommandBus $commandBus, QueryBus $queryBus, UserRepository $userRepository)
+    {
         $this->commandBus     = $commandBus;
         $this->queryBus       = $queryBus;
         $this->userRepository = $userRepository;
-        $this->mailService    = $mailService;
     }
 
     public function __invoke(ProgramUnregisteredEvent $event): void

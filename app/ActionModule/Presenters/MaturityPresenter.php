@@ -9,12 +9,13 @@ use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
+use App\Model\Program\Commands\CreateTemplateMailBatch;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\IMailService;
+use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use DateTimeImmutable;
@@ -29,6 +30,9 @@ use Throwable;
 class MaturityPresenter extends ActionBasePresenter
 {
     /** @inject */
+    public CommandBus $commandBus;
+
+    /** @inject */
     public QueryBus $queryBus;
 
     /** @inject */
@@ -39,9 +43,6 @@ class MaturityPresenter extends ActionBasePresenter
 
     /** @inject */
     public RoleRepository $roleRepository;
-
-    /** @inject */
-    public IMailService $mailService;
 
     /** @inject */
     public ApplicationService $applicationService;
@@ -120,11 +121,11 @@ class MaturityPresenter extends ActionBasePresenter
             foreach ($user->getWaitingForPaymentApplications() as $application) {
                 $maturityDate = $application->getMaturityDate();
 
-                if ($maturityReminderDate == $maturityDate) {
-                    $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::MATURITY_REMINDER, [
+                if ($maturityReminderDate == $maturityDate) { // todo: mail poslat hned
+                    $this->commandBus->handle(new CreateTemplateMailBatch($mailBatch, new ArrayCollection([$application->getUser()]), null, Template::MATURITY_REMINDER, [
                         TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                         TemplateVariable::APPLICATION_MATURITY => $maturityDate->format(Helpers::DATE_FORMAT),
-                    ]);
+                    ]));
                 }
             }
         }

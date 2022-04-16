@@ -63,7 +63,11 @@ class ApplicationService
 {
     use Nette\SmartObject;
 
+    private CommandBus $commandBus;
+
     private QueryBus $queryBus;
+
+    private EventBus $eventBus;
 
     private EntityManagerInterface $em;
 
@@ -81,8 +85,6 @@ class ApplicationService
 
     private VariableSymbolRepository $variableSymbolRepository;
 
-    private MailService $mailService;
-
     private UserService $userService;
 
     private Translator $translator;
@@ -91,10 +93,10 @@ class ApplicationService
 
     private IncomeProofRepository $incomeProofRepository;
 
-    private EventBus $eventBus;
-
     public function __construct(
+        CommandBus $commandBus,
         QueryBus $queryBus,
+        EventBus $eventBus,
         EntityManagerInterface $em,
         ApplicationRepository $applicationRepository,
         UserRepository $userRepository,
@@ -103,14 +105,14 @@ class ApplicationService
         SubeventRepository $subeventRepository,
         DiscountService $discountService,
         VariableSymbolRepository $variableSymbolRepository,
-        MailService $mailService,
         UserService $userService,
         Translator $translator,
         PaymentRepository $paymentRepository,
-        IncomeProofRepository $incomeProofRepository,
-        EventBus $eventBus
+        IncomeProofRepository $incomeProofRepository
     ) {
+        $this->commandBus               = $commandBus;
         $this->queryBus                 = $queryBus;
+        $this->eventBus                 = $eventBus;
         $this->em                       = $em;
         $this->applicationRepository    = $applicationRepository;
         $this->userRepository           = $userRepository;
@@ -119,12 +121,10 @@ class ApplicationService
         $this->subeventRepository       = $subeventRepository;
         $this->discountService          = $discountService;
         $this->variableSymbolRepository = $variableSymbolRepository;
-        $this->mailService              = $mailService;
         $this->userService              = $userService;
         $this->translator               = $translator;
         $this->paymentRepository        = $paymentRepository;
         $this->incomeProofRepository    = $incomeProofRepository;
-        $this->eventBus                 = $eventBus;
     }
 
     /**
@@ -177,6 +177,7 @@ class ApplicationService
 
         $editRegistrationToText = $this->queryBus->handle(new SettingDateValueAsTextQuery(Settings::EDIT_REGISTRATION_TO));
 
+        // todo: mail odeslat hned
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION, [
             TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             TemplateVariable::EDIT_REGISTRATION_TO => $editRegistrationToText ?? '-',
@@ -266,6 +267,7 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
+        // todo: odeslat mail hned
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::ROLES_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             TemplateVariable::USERS_ROLES => implode(', ', $roles->map(static function (Role $role) {
@@ -322,6 +324,7 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
+        // todo: odeslat mail hned
         if ($state === ApplicationState::CANCELED) {
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_CANCELED, [
                 TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
@@ -351,6 +354,7 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
+        // todo: odeslat mail hned
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::SUBEVENTS_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             TemplateVariable::USERS_SUBEVENTS => $user->getSubeventsText(),
@@ -400,6 +404,7 @@ class ApplicationService
             $this->decrementSubeventsOccupancy($application->getSubevents());
         });
 
+        // todo: odeslat mail hned
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::SUBEVENTS_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
@@ -446,6 +451,7 @@ class ApplicationService
             $this->decrementSubeventsOccupancy($application->getSubevents());
         });
 
+        // todo: odeslat mail hned
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::SUBEVENTS_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
@@ -492,6 +498,7 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
+        // todo: odeslat mail hned
         if ($paymentDate !== null && $oldPaymentDate === null) {
             $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::PAYMENT_CONFIRMED, [
                 TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),

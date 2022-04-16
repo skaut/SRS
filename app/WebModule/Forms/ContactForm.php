@@ -12,7 +12,7 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\IMailService;
+use App\Services\CommandBus;
 use App\Services\QueryBus;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
 use Contributte\ReCaptcha\ReCaptchaProvider;
@@ -45,26 +45,26 @@ class ContactForm extends UI\Control
 
     private BaseFormFactory $baseFormFactory;
 
+    private CommandBus $commandBus;
+
     private QueryBus $queryBus;
 
     private UserRepository $userRepository;
 
     private ReCaptchaProvider $recaptchaProvider;
 
-    private IMailService $mailService;
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
+        CommandBus $commandBus,
         QueryBus $queryBus,
         UserRepository $userRepository,
-        ReCaptchaProvider $recaptchaProvider,
-        IMailService $mailService
+        ReCaptchaProvider $recaptchaProvider
     ) {
         $this->baseFormFactory   = $baseFormFactory;
+        $this->commandBus        = $commandBus;
         $this->queryBus          = $queryBus;
         $this->userRepository    = $userRepository;
         $this->recaptchaProvider = $recaptchaProvider;
-        $this->mailService       = $mailService;
     }
 
     /**
@@ -151,6 +151,7 @@ class ContactForm extends UI\Control
             $recipientsEmails->add($recipient);
         }
 
+        // todo: odeslat mail hned
         $this->mailService->sendMailFromTemplate(
             $recipientsUsers,
             $recipientsEmails,

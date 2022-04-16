@@ -7,10 +7,11 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
+use App\Model\Program\Commands\SendMail;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\AclService;
-use App\Services\IMailService;
+use App\Services\CommandBus;
 use App\Services\SubeventService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
@@ -33,9 +34,9 @@ class SendFormFactory
      */
     public bool $mailSuccess;
 
-    private BaseFormFactory $baseFormFactory;
+    private CommandBus $commandBus;
 
-    private IMailService $mailService;
+    private BaseFormFactory $baseFormFactory;
 
     private RoleRepository $roleRepository;
 
@@ -48,16 +49,16 @@ class SendFormFactory
     private SubeventService $subeventService;
 
     public function __construct(
+        CommandBus $commandBus,
         BaseFormFactory $baseFormFactory,
-        IMailService $mailService,
         RoleRepository $roleRepository,
         UserRepository $userRepository,
         SubeventRepository $subeventRepository,
         AclService $aclService,
         SubeventService $subeventService
     ) {
+        $this->commandBus         = $commandBus;
         $this->baseFormFactory    = $baseFormFactory;
-        $this->mailService        = $mailService;
         $this->roleRepository     = $roleRepository;
         $this->userRepository     = $userRepository;
         $this->subeventRepository = $subeventRepository;
@@ -141,9 +142,16 @@ class SendFormFactory
                 $recipientsEmails->add($values->copy);
             }
 
-            $this->mailService->sendMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $recipientsEmails, $values->subject, $values->text);
+            $this->commandBus->handle(new SendMail(
+                $recipientsUsers,
+                $recipientsRoles,
+                $recipientsSubevents,
+                $recipientsEmails,
+                $values->subject,
+                $values->text
+            ));
             $this->mailSuccess = true;
-        } catch (SendException $ex) {
+        } catch (SendException $ex) { // todo: catch z commandu
             Debugger::log($ex, ILogger::WARNING);
             $this->mailSuccess = false;
         }

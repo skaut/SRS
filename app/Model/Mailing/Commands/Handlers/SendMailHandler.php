@@ -7,7 +7,6 @@ namespace App\Model\Program\Commands\Handlers;
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailBatch;
 use App\Model\Mailing\Repositories\MailRepository;
-use App\Model\Program\Commands\SaveBatch;
 use App\Model\Program\Commands\SendBatch;
 use App\Model\Program\Commands\SendMail;
 use App\Services\CommandBus;
@@ -34,7 +33,6 @@ class SendMailHandler implements MessageHandlerInterface
     {
         $this->em->wrapInTransaction(function () use ($command): void {
             $batch = new MailBatch();
-            $this->commandBus->handle(new SaveBatch($batch));
 
             $mail = new Mail();
             $mail->setBatch($batch);

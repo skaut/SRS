@@ -31,7 +31,6 @@ use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\FilesService;
-use App\Services\IMailService;
 use App\Services\QueryBus;
 use App\Services\UserService;
 use App\Utils\Helpers;
@@ -87,8 +86,6 @@ class EditUserSeminarFormFactory
 
     private FilesService $filesService;
 
-    private IMailService $mailService;
-
     private AclService $aclService;
 
     private UserService $userService;
@@ -104,7 +101,6 @@ class EditUserSeminarFormFactory
         ApplicationService $applicationService,
         Validators $validators,
         FilesService $filesService,
-        IMailService $mailService,
         AclService $aclService,
         UserService $userService
     ) {
@@ -118,7 +114,6 @@ class EditUserSeminarFormFactory
         $this->applicationService         = $applicationService;
         $this->validators                 = $validators;
         $this->filesService               = $filesService;
-        $this->mailService                = $mailService;
         $this->aclService                 = $aclService;
         $this->userService                = $userService;
     }
@@ -369,7 +364,7 @@ class EditUserSeminarFormFactory
 
             $this->userRepository->save($this->user);
 
-            if ($customInputValueChanged) {
+            if ($customInputValueChanged) { // todo: poslat hned
                 assert($this->user instanceof User);
                 $this->mailService->sendMailFromTemplate(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),

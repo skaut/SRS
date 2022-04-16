@@ -28,8 +28,8 @@ use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
+use App\Services\CommandBus;
 use App\Services\FilesService;
-use App\Services\IMailService;
 use App\Services\QueryBus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -63,6 +63,8 @@ class AdditionalInformationFormFactory
 
     private BaseFormFactory $baseFormFactory;
 
+    private CommandBus $commandBus;
+
     private QueryBus $queryBus;
 
     private EntityManagerInterface $em;
@@ -77,20 +79,19 @@ class AdditionalInformationFormFactory
 
     private FilesService $filesService;
 
-    private IMailService $mailService;
-
     public function __construct(
         BaseFormFactory $baseFormFactory,
+        CommandBus $commandBus,
         QueryBus $queryBus,
         EntityManagerInterface $em,
         UserRepository $userRepository,
         CustomInputRepository $customInputRepository,
         ApplicationService $applicationService,
         CustomInputValueRepository $customInputValueRepository,
-        FilesService $filesService,
-        IMailService $mailService
+        FilesService $filesService
     ) {
         $this->baseFormFactory            = $baseFormFactory;
+        $this->commandBus                 = $commandBus;
         $this->queryBus                   = $queryBus;
         $this->em                         = $em;
         $this->userRepository             = $userRepository;
@@ -98,7 +99,6 @@ class AdditionalInformationFormFactory
         $this->applicationService         = $applicationService;
         $this->customInputValueRepository = $customInputValueRepository;
         $this->filesService               = $filesService;
-        $this->mailService                = $mailService;
     }
 
     /**
@@ -303,7 +303,7 @@ class AdditionalInformationFormFactory
 
             $this->userRepository->save($this->user);
 
-            if ($customInputValueChanged) {
+            if ($customInputValueChanged) { //todo: odeslat mail hned
                 assert($this->user instanceof User);
                 $this->mailService->sendMailFromTemplate(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),

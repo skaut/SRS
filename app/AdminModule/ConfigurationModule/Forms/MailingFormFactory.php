@@ -15,7 +15,6 @@ use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
-use App\Services\IMailService;
 use App\Services\QueryBus;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -50,8 +49,6 @@ class MailingFormFactory
 
     private QueryBus $queryBus;
 
-    private IMailService $mailService;
-
     private LinkGenerator $linkGenerator;
 
     private Validators $validators;
@@ -60,14 +57,12 @@ class MailingFormFactory
         BaseFormFactory $baseForm,
         CommandBus $commandBus,
         QueryBus $queryBus,
-        IMailService $mailService,
         LinkGenerator $linkGenerator,
         Validators $validators
     ) {
         $this->baseFormFactory = $baseForm;
         $this->commandBus      = $commandBus;
         $this->queryBus        = $queryBus;
-        $this->mailService     = $mailService;
         $this->linkGenerator   = $linkGenerator;
         $this->validators      = $validators;
     }
@@ -125,7 +120,7 @@ class MailingFormFactory
 
             $link = $this->linkGenerator->link('Action:Mailing:verify', ['code' => $verificationCode]);
 
-            $this->mailService->sendMailFromTemplate(
+            $this->mailService->sendMailFromTemplate( // todo: poslat hned
                 null,
                 new ArrayCollection([$values->seminarEmail]),
                 Template::EMAIL_VERIFICATION,
