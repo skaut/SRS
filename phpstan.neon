@@ -17,6 +17,76 @@ parameters:
             message: '#Method App\\Model\\User\\User::[a-zA-Z]+\(\) should return Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\[a-zA-Z]+Application> but returns Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\Application>\.#'
             path: app/Model/User/User.php
 
+        -
+            message: "#^Call to an undefined method Endroid\\\\QrCode\\\\QrCode\\:\\:get\\(\\)\\.$#"
+            count: 1
+            path: app/AdminModule/ConfigurationModule/Presenters/TicketsPresenter.php
+
+        -
+            message: "#^Call to an undefined method Endroid\\\\QrCode\\\\QrCode\\:\\:setText\\(\\)\\.$#"
+            count: 1
+            path: app/AdminModule/ConfigurationModule/Presenters/TicketsPresenter.php
+
+        -
+            message: "#^Class Endroid\\\\QrCode\\\\QrCode constructor invoked with 0 parameters, 1\\-8 required\\.$#"
+            count: 1
+            path: app/AdminModule/ConfigurationModule/Presenters/TicketsPresenter.php
+
+        -
+            message: "#^Property App\\\\ApiModule\\\\Dto\\\\Tickets\\\\SeminarInfo\\:\\:\\$name is never read, only written\\.$#"
+            count: 1
+            path: app/ApiModule/Dto/Tickets/SeminarInfo.php
+
+        -
+            message: "#^Property App\\\\ApiModule\\\\Dto\\\\Tickets\\\\SeminarInfo\\:\\:\\$subevents is never read, only written\\.$#"
+            count: 1
+            path: app/ApiModule/Dto/Tickets/SeminarInfo.php
+
+        -
+            message: "#^Property App\\\\ApiModule\\\\Dto\\\\Tickets\\\\SubeventInfo\\:\\:\\$id is never read, only written\\.$#"
+            count: 1
+            path: app/ApiModule/Dto/Tickets/SubeventInfo.php
+
+        -
+            message: "#^Property App\\\\ApiModule\\\\Dto\\\\Tickets\\\\SubeventInfo\\:\\:\\$name is never read, only written\\.$#"
+            count: 1
+            path: app/ApiModule/Dto/Tickets/SubeventInfo.php
+
+        -
+            message: "#^Property App\\\\ApiModule\\\\Dto\\\\Tickets\\\\TicketCheckInfo\\:\\:\\$attendeeName is never read, only written\\.$#"
+            count: 1
+            path: app/ApiModule/Dto/Tickets/TicketCheckInfo.php
+
+        -
+            message: "#^Property App\\\\ApiModule\\\\Dto\\\\Tickets\\\\TicketCheckInfo\\:\\:\\$hasSubevent is never read, only written\\.$#"
+            count: 1
+            path: app/ApiModule/Dto/Tickets/TicketCheckInfo.php
+
+        -
+            message: "#^Property App\\\\ApiModule\\\\Dto\\\\Tickets\\\\TicketCheckInfo\\:\\:\\$roles is never read, only written\\.$#"
+            count: 1
+            path: app/ApiModule/Dto/Tickets/TicketCheckInfo.php
+
+        -
+            message: "#^Property App\\\\ApiModule\\\\Dto\\\\Tickets\\\\TicketCheckInfo\\:\\:\\$subeventChecks is never read, only written\\.$#"
+            count: 1
+            path: app/ApiModule/Dto/Tickets/TicketCheckInfo.php
+
+        -
+            message: "#^Property App\\\\ApiModule\\\\Dto\\\\Tickets\\\\TicketCheckInfo\\:\\:\\$subevents is never read, only written\\.$#"
+            count: 1
+            path: app/ApiModule/Dto/Tickets/TicketCheckInfo.php
+
+        -
+            message: "#^Variable \\$programs in empty\\(\\) always exists and is not falsy\\.$#"
+            count: 1
+            path: app/ApiModule/Services/ScheduleService.php
+
+        -
+            message: "#^Property App\\\\Model\\\\Settings\\\\PlacePoint\\:\\:\\$id is never read, only written\\.$#"
+            count: 1
+            path: app/Model/Settings/PlacePoint.php
+
 services:
 	- class: CodeQuality\ObjectIdentityComparisonRule
 	  tags: [ phpstan.rules.rule ]
