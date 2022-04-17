@@ -68,13 +68,6 @@ class Permission
     private ?int $id = null;
 
     /**
-     * Název oprávnění.
-     *
-     * @ORM\Column(type="string")
-     */
-    protected string $name;
-
-    /**
      * Role s tímto oprávněním.
      *
      * @ORM\ManyToMany(targetEntity="Role", mappedBy="permissions", cascade={"persist"})
@@ -82,6 +75,13 @@ class Permission
      * @var Collection<int, Role>
      */
     protected Collection $roles;
+
+    /**
+     * Název oprávnění.
+     *
+     * @ORM\Column(type="string")
+     */
+    protected string $name;
 
     /**
      * Prostředek oprávnění.

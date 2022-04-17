@@ -8,14 +8,8 @@ use App\Model\User\User;
 
 class UserUpdatedEvent
 {
-    private User $user;
-
-    private bool $approvedOld;
-
-    public function __construct(User $user, bool $approvedOld)
+    public function __construct(private User $user, private bool $approvedOld)
     {
-        $this->user        = $user;
-        $this->approvedOld = $approvedOld;
     }
 
     public function getUser(): User

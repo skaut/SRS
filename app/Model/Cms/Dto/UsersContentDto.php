@@ -10,19 +10,11 @@ namespace App\Model\Cms\Dto;
 class UsersContentDto extends ContentDto
 {
     /**
-     * Role, jejichž uživatelé budou vypsáni.
-     *
-     * @var int[]
+     * @param int[] $roles Role, jejichž uživatelé budou vypsáni.
      */
-    protected array $roles;
-
-    /**
-     * @param int[] $roles
-     */
-    public function __construct(string $type, string $heading, array $roles)
+    public function __construct(string $type, string $heading, protected array $roles)
     {
         parent::__construct($type, $heading);
-        $this->roles = $roles;
     }
 
     /**

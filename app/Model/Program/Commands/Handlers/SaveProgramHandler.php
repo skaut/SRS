@@ -13,17 +13,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SaveProgramHandler implements MessageHandlerInterface
 {
-    private EventBus $eventBus;
-
-    private EntityManagerInterface $em;
-
-    private ProgramRepository $programRepository;
-
-    public function __construct(EventBus $eventBus, EntityManagerInterface $em, ProgramRepository $programRepository)
-    {
-        $this->eventBus          = $eventBus;
-        $this->em                = $em;
-        $this->programRepository = $programRepository;
+    public function __construct(
+        private EventBus $eventBus,
+        private EntityManagerInterface $em,
+        private ProgramRepository $programRepository
+    ) {
     }
 
     public function __invoke(SaveProgram $command): void

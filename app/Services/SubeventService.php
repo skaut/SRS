@@ -16,14 +16,8 @@ class SubeventService
 {
     use Nette\SmartObject;
 
-    private SubeventRepository $subeventRepository;
-
-    private Translator $translator;
-
-    public function __construct(SubeventRepository $subeventRepository, Translator $translator)
+    public function __construct(private SubeventRepository $subeventRepository, private Translator $translator)
     {
-        $this->subeventRepository = $subeventRepository;
-        $this->translator         = $translator;
     }
 
     /**

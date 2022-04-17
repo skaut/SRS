@@ -8,14 +8,8 @@ use App\Model\Program\Block;
 
 class SaveBlock
 {
-    private Block $block;
-
-    private ?Block $blockOld;
-
-    public function __construct(Block $block, ?Block $blockOld = null)
+    public function __construct(private Block $block, private ?Block $blockOld = null)
     {
-        $this->block    = $block;
-        $this->blockOld = $blockOld;
     }
 
     public function getBlock(): Block

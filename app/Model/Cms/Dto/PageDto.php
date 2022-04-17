@@ -7,54 +7,36 @@ namespace App\Model\Cms\Dto;
 class PageDto
 {
     /**
-     * Název stránky.
-     */
-    protected string $name;
-
-    /**
-     * Cesta stránky.
-     */
-    protected string $slug;
-
-    /**
-     * Role, které mají na stránku přístup.
-     *
-     * @var string[]
-     */
-    protected array $allowedRoles;
-
-    /**
-     * Obsahy v hlavní části stránky.
-     *
-     * @var ContentDto[]
-     */
-    protected array $mainContents;
-
-    /**
-     * Obsahy v postranní části stránky.
-     *
-     * @var ContentDto[]
-     */
-    protected array $sidebarContents;
-
-    /**
-     * Má stránka sidebar?
-     */
-    protected bool $hasSidebar;
-
-    /**
      * @param string[]     $allowedRoles
      * @param ContentDto[] $mainContents
      * @param ContentDto[] $sidebarContents
      */
-    public function __construct(string $name, string $slug, array $allowedRoles, array $mainContents, array $sidebarContents, bool $hasSidebar)
-    {
-        $this->name            = $name;
-        $this->slug            = $slug;
-        $this->allowedRoles    = $allowedRoles;
-        $this->mainContents    = $mainContents;
-        $this->sidebarContents = $sidebarContents;
-        $this->hasSidebar      = $hasSidebar;
+    public function __construct(
+        /**
+         * Název stránky.
+         */
+        protected string $name,
+        /**
+         * Cesta stránky.
+         */
+        protected string $slug,
+        /**
+         * Role, které mají na stránku přístup.
+         */
+        protected array $allowedRoles,
+        /**
+         * Obsahy v hlavní části stránky.
+         */
+        protected array $mainContents,
+        /**
+         * Obsahy v postranní části stránky.
+         */
+        protected array $sidebarContents,
+        /**
+         * Má stránka sidebar?
+         */
+        protected bool $hasSidebar
+    ) {
     }
 
     public function getName(): string

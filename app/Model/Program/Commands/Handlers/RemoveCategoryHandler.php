@@ -13,17 +13,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class RemoveCategoryHandler implements MessageHandlerInterface
 {
-    private CommandBus $commandBus;
-
-    private EntityManagerInterface $em;
-
-    private CategoryRepository $categoryRepository;
-
-    public function __construct(CommandBus $commandBus, EntityManagerInterface $em, CategoryRepository $categoryRepository)
-    {
-        $this->commandBus         = $commandBus;
-        $this->em                 = $em;
-        $this->categoryRepository = $categoryRepository;
+    public function __construct(
+        private CommandBus $commandBus,
+        private EntityManagerInterface $em,
+        private CategoryRepository $categoryRepository
+    ) {
     }
 
     public function __invoke(RemoveCategory $command): void

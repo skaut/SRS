@@ -10,32 +10,18 @@ namespace App\Model\Cms\Dto;
 class ImageContentDto extends ContentDto
 {
     /**
-     * Adresa obrázku.
+     * @param string|null $image Adresa obrázku.
+     * @param string|null $align Zarovnání obrázku v textu.
      */
-    protected ?string $image = null;
-
-    /**
-     * Zarovnání obrázku v textu.
-     */
-    protected ?string $align = null;
-
-    /**
-     * Šířka obrázku.
-     */
-    protected ?int $width = null;
-
-    /**
-     * Výška obrázku.
-     */
-    protected ?int $height = null;
-
-    public function __construct(string $type, string $heading, ?string $image, ?string $align, ?int $width, ?int $height)
-    {
+    public function __construct(
+        string $type,
+        string $heading,
+        protected ?string $image,
+        protected ?string $align,
+        protected ?int $width,
+        protected ?int $height
+    ) {
         parent::__construct($type, $heading);
-        $this->image  = $image;
-        $this->align  = $align;
-        $this->width  = $width;
-        $this->height = $height;
     }
 
     public function getImage(): ?string

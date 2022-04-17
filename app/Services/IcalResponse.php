@@ -15,14 +15,8 @@ class IcalResponse implements Response
 {
     use Nette\SmartObject;
 
-    private Calendar $calendar;
-
-    private string $filename;
-
-    public function __construct(Calendar $calendar, string $filename)
+    public function __construct(private Calendar $calendar, private string $filename)
     {
-        $this->calendar = $calendar;
-        $this->filename = $filename;
     }
 
     public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse): void

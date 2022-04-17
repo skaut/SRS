@@ -8,14 +8,8 @@ use DateTimeImmutable;
 
 class SetSettingDateValue
 {
-    private string $item;
-
-    private ?DateTimeImmutable $value;
-
-    public function __construct(string $item, ?DateTimeImmutable $value)
+    public function __construct(private string $item, private ?DateTimeImmutable $value)
     {
-        $this->item  = $item;
-        $this->value = $value;
     }
 
     public function getItem(): string

@@ -15,11 +15,8 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class IsAllowedRegisterProgramsQueryHandler implements MessageHandlerInterface
 {
-    private QueryBus $queryBus;
-
-    public function __construct(QueryBus $queryBus)
+    public function __construct(private QueryBus $queryBus)
     {
-        $this->queryBus = $queryBus;
     }
 
     public function __invoke(IsAllowedRegisterProgramsQuery $query): bool

@@ -18,6 +18,7 @@ use function assert;
 use function basename;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
@@ -37,7 +38,7 @@ class SlideshowContent extends Content implements IContent
      *
      * @var string[]|null
      */
-    protected ?array $images;
+    protected ?array $images = null;
 
     private FilesService $filesService;
 
@@ -75,10 +76,8 @@ class SlideshowContent extends Content implements IContent
         $formContainer->addMultiUpload('images', 'admin.cms.pages.content.form.slideshow_images')
             ->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
-            ->setHtmlAttribute('data-initial-preview', json_encode($this->images))
-            ->setHtmlAttribute('data-initial-preview-config', json_encode(array_map(static function (string $image) {
-                return ['caption' => basename($image)];
-            }, $this->images)))
+            ->setHtmlAttribute('data-initial-preview', json_encode($this->images, JSON_THROW_ON_ERROR))
+            ->setHtmlAttribute('data-initial-preview-config', json_encode(array_map(static fn (string $image) => ['caption' => basename($image)], $this->images), JSON_THROW_ON_ERROR))
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.cms.pages.content.form.slideshow_images_format');
 

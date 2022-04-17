@@ -63,68 +63,23 @@ class ApplicationService
 {
     use Nette\SmartObject;
 
-    private QueryBus $queryBus;
-
-    private EntityManagerInterface $em;
-
-    private ApplicationRepository $applicationRepository;
-
-    private UserRepository $userRepository;
-
-    private AclService $aclService;
-
-    private RoleRepository $roleRepository;
-
-    private SubeventRepository $subeventRepository;
-
-    private DiscountService $discountService;
-
-    private VariableSymbolRepository $variableSymbolRepository;
-
-    private MailService $mailService;
-
-    private UserService $userService;
-
-    private Translator $translator;
-
-    private PaymentRepository $paymentRepository;
-
-    private IncomeProofRepository $incomeProofRepository;
-
-    private EventBus $eventBus;
-
     public function __construct(
-        QueryBus $queryBus,
-        EntityManagerInterface $em,
-        ApplicationRepository $applicationRepository,
-        UserRepository $userRepository,
-        AclService $aclService,
-        RoleRepository $roleRepository,
-        SubeventRepository $subeventRepository,
-        DiscountService $discountService,
-        VariableSymbolRepository $variableSymbolRepository,
-        MailService $mailService,
-        UserService $userService,
-        Translator $translator,
-        PaymentRepository $paymentRepository,
-        IncomeProofRepository $incomeProofRepository,
-        EventBus $eventBus
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em,
+        private ApplicationRepository $applicationRepository,
+        private UserRepository $userRepository,
+        private AclService $aclService,
+        private RoleRepository $roleRepository,
+        private SubeventRepository $subeventRepository,
+        private DiscountService $discountService,
+        private VariableSymbolRepository $variableSymbolRepository,
+        private MailService $mailService,
+        private UserService $userService,
+        private Translator $translator,
+        private PaymentRepository $paymentRepository,
+        private IncomeProofRepository $incomeProofRepository,
+        private EventBus $eventBus
     ) {
-        $this->queryBus                 = $queryBus;
-        $this->em                       = $em;
-        $this->applicationRepository    = $applicationRepository;
-        $this->userRepository           = $userRepository;
-        $this->aclService               = $aclService;
-        $this->roleRepository           = $roleRepository;
-        $this->subeventRepository       = $subeventRepository;
-        $this->discountService          = $discountService;
-        $this->variableSymbolRepository = $variableSymbolRepository;
-        $this->mailService              = $mailService;
-        $this->userService              = $userService;
-        $this->translator               = $translator;
-        $this->paymentRepository        = $paymentRepository;
-        $this->incomeProofRepository    = $incomeProofRepository;
-        $this->eventBus                 = $eventBus;
     }
 
     /**
@@ -215,15 +170,11 @@ class ApplicationService
                 $this->userRepository->save($user);
 
                 if (
-                    $roles->forAll(static function (int $key, Role $role) {
-                        return $role->isApprovedAfterRegistration();
-                    })
+                    $roles->forAll(static fn (int $key, Role $role) => $role->isApprovedAfterRegistration())
                 ) {
                     $user->setApproved(true);
                 } elseif (
-                    ! $approve && $roles->exists(static function (int $key, Role $role) use ($rolesOld) {
-                        return ! $role->isApprovedAfterRegistration() && ! $rolesOld->contains($role);
-                    })
+                    ! $approve && $roles->exists(static fn (int $key, Role $role) => ! $role->isApprovedAfterRegistration() && ! $rolesOld->contains($role))
                 ) {
                     $user->setApproved(false);
                 }
@@ -268,9 +219,7 @@ class ApplicationService
 
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::ROLES_CHANGED, [
             TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
-            TemplateVariable::USERS_ROLES => implode(', ', $roles->map(static function (Role $role) {
-                return $role->getName();
-            })->toArray()),
+            TemplateVariable::USERS_ROLES => implode(', ', $roles->map(static fn (Role $role) => $role->getName())->toArray()),
         ]);
     }
 
@@ -725,9 +674,7 @@ class ApplicationService
 
         $user->setApproved(true);
         if (
-            ! $approve && $roles->exists(static function (int $key, Role $role) {
-                return ! $role->isApprovedAfterRegistration();
-            })
+            ! $approve && $roles->exists(static fn (int $key, Role $role) => ! $role->isApprovedAfterRegistration())
         ) {
             $user->setApproved(false);
         }

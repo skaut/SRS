@@ -120,9 +120,7 @@ class Mail
      */
     public function getRecipientRolesText(): string
     {
-        return implode(', ', $this->recipientRoles->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->recipientRoles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
     /**
@@ -149,9 +147,7 @@ class Mail
      */
     public function getRecipientSubeventsText(): string
     {
-        return implode(', ', $this->recipientSubevents->map(static function (Subevent $subevent) {
-            return $subevent->getName();
-        })->toArray());
+        return implode(', ', $this->recipientSubevents->map(static fn (Subevent $subevent) => $subevent->getName())->toArray());
     }
 
     /**
@@ -178,9 +174,7 @@ class Mail
      */
     public function getRecipientUsersText(): string
     {
-        return implode(', ', $this->recipientUsers->map(static function (User $user) {
-            return $user->getDisplayName();
-        })->toArray());
+        return implode(', ', $this->recipientUsers->map(static fn (User $user) => $user->getDisplayName())->toArray());
     }
 
     public function getSubject(): string

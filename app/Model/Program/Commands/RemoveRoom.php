@@ -8,11 +8,8 @@ use App\Model\Program\Room;
 
 class RemoveRoom
 {
-    private Room $room;
-
-    public function __construct(Room $room)
+    public function __construct(private Room $room)
     {
-        $this->room = $room;
     }
 
     public function getRoom(): Room

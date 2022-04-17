@@ -22,7 +22,7 @@ use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 use function assert;
-use function strpos;
+use function str_contains;
 
 /**
  * Presenter obsluhující přihlašování a odhlašování pomocí skautIS.
@@ -100,7 +100,7 @@ class AuthPresenter extends BasePresenter
     private function redirectAfterLogin(?string $returnUrl): void
     {
         if ($returnUrl) {
-            if (strpos($returnUrl, ':') !== false) {
+            if (str_contains($returnUrl, ':')) {
                 $this->redirect($returnUrl);
             } else {
                 $this->redirectUrl($returnUrl);

@@ -6,11 +6,8 @@ namespace App\Model\Settings\Queries;
 
 class SettingDateValueAsTextQuery
 {
-    private string $item;
-
-    public function __construct(string $item)
+    public function __construct(private string $item)
     {
-        $this->item = $item;
     }
 
     public function getItem(): string

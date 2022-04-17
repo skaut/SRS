@@ -11,11 +11,8 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UserRegisteredProgramAtQueryHandler implements MessageHandlerInterface
 {
-    private ProgramApplicationRepository $programApplicationRepository;
-
-    public function __construct(ProgramApplicationRepository $programApplicationRepository)
+    public function __construct(private ProgramApplicationRepository $programApplicationRepository)
     {
-        $this->programApplicationRepository = $programApplicationRepository;
     }
 
     public function __invoke(UserRegisteredProgramAtQuery $query): ?DateTimeImmutable

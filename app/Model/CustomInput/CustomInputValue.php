@@ -33,24 +33,20 @@ abstract class CustomInputValue
      */
     private ?int $id = null;
 
-    /**
-     * Vlastní pole přihlášky.
-     *
-     * @ORM\ManyToOne(targetEntity="CustomInput", inversedBy="customInputValues", cascade={"persist"})
-     */
-    protected CustomInput $input;
-
-    /**
-     * Uživatel.
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="customInputValues", cascade={"persist"})
-     */
-    protected User $user;
-
-    public function __construct(CustomInput $input, User $user)
-    {
-        $this->input = $input;
-        $this->user  = $user;
+    public function __construct(
+        /**
+         * Vlastní pole přihlášky.
+         *
+         * @ORM\ManyToOne(targetEntity="CustomInput", inversedBy="customInputValues", cascade={"persist"})
+         */
+        protected CustomInput $input,
+        /**
+         * Uživatel.
+         *
+         * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="customInputValues", cascade={"persist"})
+         */
+        protected User $user
+    ) {
     }
 
     public function getId(): ?int

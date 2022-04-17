@@ -19,24 +19,12 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class RegisterProgramHandler implements MessageHandlerInterface
 {
-    private QueryBus $queryBus;
-
-    private EventBus $eventBus;
-
-    private EntityManagerInterface $em;
-
-    private ProgramApplicationRepository $programApplicationRepository;
-
     public function __construct(
-        QueryBus $queryBus,
-        EventBus $eventBus,
-        EntityManagerInterface $em,
-        ProgramApplicationRepository $programApplicationRepository
+        private QueryBus $queryBus,
+        private EventBus $eventBus,
+        private EntityManagerInterface $em,
+        private ProgramApplicationRepository $programApplicationRepository
     ) {
-        $this->queryBus                     = $queryBus;
-        $this->eventBus                     = $eventBus;
-        $this->em                           = $em;
-        $this->programApplicationRepository = $programApplicationRepository;
     }
 
     /**

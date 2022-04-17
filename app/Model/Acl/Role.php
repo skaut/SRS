@@ -88,13 +88,6 @@ class Role
     private ?int $id = null;
 
     /**
-     * Název role.
-     *
-     * @ORM\Column(type="string", unique=true)
-     */
-    protected string $name;
-
-    /**
      * Systémový název systémové role.
      *
      * @ORM\Column(type="string", unique=true, nullable=true)
@@ -258,6 +251,13 @@ class Role
      * @var Collection<int, Tag>
      */
     protected Collection $tags;
+
+    /**
+     * Název role.
+     *
+     * @ORM\Column(type="string", unique=true)
+     */
+    protected string $name;
 
     public function __construct(string $name)
     {
@@ -531,9 +531,7 @@ class Role
      */
     public function getIncompatibleRolesText(): string
     {
-        return implode(', ', $this->incompatibleRoles->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->incompatibleRoles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
     public function addIncompatibleRole(Role $role): void
@@ -677,9 +675,7 @@ class Role
      */
     public function getRequiredRolesTransitiveText(): string
     {
-        return implode(', ', $this->getRequiredRolesTransitive()->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->getRequiredRolesTransitive()->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
     /**

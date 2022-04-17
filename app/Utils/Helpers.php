@@ -49,9 +49,7 @@ class Helpers
      */
     public static function getIds(Collection $collection): array
     {
-        return array_map(static function ($o) {
-            return $o->getId();
-        }, $collection->toArray());
+        return array_map(static fn ($o) => $o->getId(), $collection->toArray());
     }
 
     /**

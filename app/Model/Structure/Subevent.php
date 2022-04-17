@@ -425,9 +425,7 @@ class Subevent
 
     public function getSkautIsCoursesText(): string
     {
-        return implode(', ', $this->skautIsCourses->map(static function (SkautIsCourse $skautIsCourse) {
-            return $skautIsCourse->getName();
-        })->toArray());
+        return implode(', ', $this->skautIsCourses->map(static fn (SkautIsCourse $skautIsCourse) => $skautIsCourse->getName())->toArray());
     }
 
     /**
@@ -469,12 +467,10 @@ class Subevent
 //
 //        return $this->applications->matching($criteria)->count();
 
-        return $this->applications->filter(static function (Application $application) {
-            return $application->getValidTo() === null && (
-                $application->getState() === ApplicationState::WAITING_FOR_PAYMENT ||
-                $application->getState() === ApplicationState::PAID_FREE ||
-                $application->getState() === ApplicationState::PAID);
-        })->count();
+        return $this->applications->filter(static fn (Application $application) => $application->getValidTo() === null && (
+            $application->getState() === ApplicationState::WAITING_FOR_PAYMENT ||
+            $application->getState() === ApplicationState::PAID_FREE ||
+            $application->getState() === ApplicationState::PAID))->count();
     }
 
     public function countUnoccupied(): ?int

@@ -235,26 +235,21 @@ class Settings
      */
     public const CONTACT_FORM_GUESTS_ALLOWED = 'contact_form_guests_allowed';
 
-
-    /**
-     * Název položky nastavení.
-     *
-     * @ORM\Column(type="string", unique=true)
-     * @ORM\Id
-     */
-    protected string $item;
-
-    /**
-     * Hodnota položky nastavení.
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    protected ?string $value = null;
-
-    public function __construct(string $item, ?string $value)
-    {
-        $this->item  = $item;
-        $this->value = $value;
+    public function __construct(
+        /**
+         * Název položky nastavení.
+         *
+         * @ORM\Column(type="string", unique=true)
+         * @ORM\Id
+         */
+        protected string $item,
+        /**
+         * Hodnota položky nastavení.
+         *
+         * @ORM\Column(type="text", nullable=true)
+         */
+        protected ?string $value
+    ) {
     }
 
     public function getValue(): ?string

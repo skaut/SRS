@@ -26,40 +26,16 @@ use Throwable;
  */
 class ApplicationContentControl extends BaseContentControl
 {
-    private QueryBus $queryBus;
-
-    private ApplicationFormFactory $applicationFormFactory;
-
-    private UserRepository $userRepository;
-
-    private RoleRepository $roleRepository;
-
-    private Authenticator $authenticator;
-
-    private SubeventRepository $subeventRepository;
-
-    public IApplicationsGridControlFactory $applicationsGridControlFactory;
-
-    public CustomInputRepository $customInputRepository;
-
     public function __construct(
-        QueryBus $queryBus,
-        ApplicationFormFactory $applicationFormFactory,
-        Authenticator $authenticator,
-        UserRepository $userRepository,
-        RoleRepository $roleRepository,
-        SubeventRepository $subeventRepository,
-        IApplicationsGridControlFactory $applicationsGridControlFactory,
-        CustomInputRepository $customInputRepository
+        private QueryBus $queryBus,
+        private ApplicationFormFactory $applicationFormFactory,
+        private Authenticator $authenticator,
+        private UserRepository $userRepository,
+        private RoleRepository $roleRepository,
+        private SubeventRepository $subeventRepository,
+        public IApplicationsGridControlFactory $applicationsGridControlFactory,
+        public CustomInputRepository $customInputRepository
     ) {
-        $this->queryBus                       = $queryBus;
-        $this->applicationFormFactory         = $applicationFormFactory;
-        $this->authenticator                  = $authenticator;
-        $this->userRepository                 = $userRepository;
-        $this->roleRepository                 = $roleRepository;
-        $this->subeventRepository             = $subeventRepository;
-        $this->applicationsGridControlFactory = $applicationsGridControlFactory;
-        $this->customInputRepository          = $customInputRepository;
     }
 
     /**

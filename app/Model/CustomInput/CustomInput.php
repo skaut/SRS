@@ -206,8 +206,6 @@ abstract class CustomInput
 
     public function getRolesText(): string
     {
-        return implode(', ', $this->roles->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->roles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 }

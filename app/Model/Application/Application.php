@@ -64,13 +64,6 @@ abstract class Application
     protected ?int $applicationId = null;
 
     /**
-     * Uživatel.
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="applications", cascade={"persist"})
-     */
-    protected User $user;
-
-    /**
      * Role.
      *
      * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
@@ -172,6 +165,13 @@ abstract class Application
      */
     protected ?DateTimeImmutable $validTo = null;
 
+    /**
+     * Uživatel.
+     *
+     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="applications", cascade={"persist"})
+     */
+    protected User $user;
+
     public function __construct(User $user)
     {
         $this->user      = $user;
@@ -220,9 +220,7 @@ abstract class Application
      */
     public function getRolesText(): string
     {
-        return implode(', ', $this->roles->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->roles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
     /**
@@ -238,9 +236,7 @@ abstract class Application
      */
     public function getSubeventsText(): string
     {
-        return implode(', ', $this->subevents->map(static function (Subevent $subevent) {
-            return $subevent->getName();
-        })->toArray());
+        return implode(', ', $this->subevents->map(static fn (Subevent $subevent) => $subevent->getName())->toArray());
     }
 
     public function getFee(): int

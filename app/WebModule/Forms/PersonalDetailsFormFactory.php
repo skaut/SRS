@@ -34,17 +34,11 @@ class PersonalDetailsFormFactory
     /** @var callable[] */
     public array $onSkautIsError = [];
 
-    private BaseFormFactory $baseFormFactory;
-
-    private UserRepository $userRepository;
-
-    private SkautIsService $skautIsService;
-
-    public function __construct(BaseFormFactory $baseFormFactory, UserRepository $userRepository, SkautIsService $skautIsService)
-    {
-        $this->baseFormFactory = $baseFormFactory;
-        $this->userRepository  = $userRepository;
-        $this->skautIsService  = $skautIsService;
+    public function __construct(
+        private BaseFormFactory $baseFormFactory,
+        private UserRepository $userRepository,
+        private SkautIsService $skautIsService
+    ) {
     }
 
     /**

@@ -12,11 +12,8 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class TicketChecksByUserAndSubeventQueryHandler implements MessageHandlerInterface
 {
-    private TicketCheckRepository $ticketCheckRepository;
-
-    public function __construct(TicketCheckRepository $ticketCheckRepository)
+    public function __construct(private TicketCheckRepository $ticketCheckRepository)
     {
-        $this->ticketCheckRepository = $ticketCheckRepository;
     }
 
     /**

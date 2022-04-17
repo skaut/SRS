@@ -13,11 +13,8 @@ use function unserialize;
 
 class SettingArrayValueQueryHandler implements MessageHandlerInterface
 {
-    private SettingsRepository $settingsRepository;
-
-    public function __construct(SettingsRepository $settingsRepository)
+    public function __construct(private SettingsRepository $settingsRepository)
     {
-        $this->settingsRepository = $settingsRepository;
     }
 
     /**

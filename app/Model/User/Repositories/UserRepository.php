@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 
 use function count;
+use function is_countable;
 
 /**
  * Třída spravující uživatele.
@@ -213,7 +214,7 @@ class UserRepository extends AbstractRepository
             ->getQuery()
             ->getResult();
 
-        return count($result) === 1 ? $result[0] : null;
+        return (is_countable($result) ? count($result) : 0) === 1 ? $result[0] : null;
     }
 
     /**

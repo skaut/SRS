@@ -705,9 +705,7 @@ class User
      */
     public function hasFixedFeeRole(): bool
     {
-        return $this->roles->exists(static function (int $key, Role $role) {
-            return $role->getFee() !== null;
-        });
+        return $this->roles->exists(static fn (int $key, Role $role) => $role->getFee() !== null);
     }
 
     /**
@@ -787,9 +785,7 @@ class User
      */
     public function getNotCanceledApplications(): Collection
     {
-        return $this->getValidApplications()->filter(static function (Application $application) {
-            return ! $application->isCanceled();
-        });
+        return $this->getValidApplications()->filter(static fn (Application $application) => ! $application->isCanceled());
     }
 
     /**
@@ -799,9 +795,7 @@ class User
      */
     public function getNotCanceledRolesApplications(): Collection
     {
-        return $this->getNotCanceledApplications()->filter(static function (Application $application) {
-            return $application instanceof RolesApplication;
-        });
+        return $this->getNotCanceledApplications()->filter(static fn (Application $application) => $application instanceof RolesApplication);
     }
 
     /**
@@ -811,9 +805,7 @@ class User
      */
     public function getNotCanceledSubeventsApplications(): Collection
     {
-        return $this->getNotCanceledApplications()->filter(static function (Application $application) {
-            return $application instanceof SubeventsApplication;
-        });
+        return $this->getNotCanceledApplications()->filter(static fn (Application $application) => $application instanceof SubeventsApplication);
     }
 
     /**
@@ -839,11 +831,9 @@ class User
      */
     public function getPaidAndFreeApplications(): Collection
     {
-        return $this->applications->filter(static function (Application $application) {
-            return $application->getValidTo() === null && (
-                    $application->getState() === ApplicationState::PAID_FREE ||
-                    $application->getState() === ApplicationState::PAID);
-        });
+        return $this->applications->filter(static fn (Application $application) => $application->getValidTo() === null && (
+                $application->getState() === ApplicationState::PAID_FREE ||
+                $application->getState() === ApplicationState::PAID));
     }
 
     /**
@@ -869,9 +859,7 @@ class User
      */
     public function getWaitingForPaymentRolesApplications(): Collection
     {
-        return $this->getWaitingForPaymentApplications()->filter(static function (Application $application) {
-            return $application instanceof RolesApplication;
-        });
+        return $this->getWaitingForPaymentApplications()->filter(static fn (Application $application) => $application instanceof RolesApplication);
     }
 
     /**
@@ -893,9 +881,7 @@ class User
      */
     public function getWaitingForPaymentSubeventsApplications(): Collection
     {
-        return $this->getWaitingForPaymentApplications()->filter(static function (Application $application) {
-            return $application instanceof SubeventsApplication;
-        });
+        return $this->getWaitingForPaymentApplications()->filter(static fn (Application $application) => $application instanceof SubeventsApplication);
     }
 
     /**
@@ -911,9 +897,7 @@ class User
      */
     public function hasPaidEveryApplication(): bool
     {
-        return $this->getValidApplications()->forAll(static function (int $key, Application $application) {
-            return $application->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
-        });
+        return $this->getValidApplications()->forAll(static fn (int $key, Application $application) => $application->getState() !== ApplicationState::WAITING_FOR_PAYMENT);
     }
 
     /**
@@ -1016,9 +1000,7 @@ class User
 
     public function getNotRegisteredMandatoryBlocksText(): string
     {
-        return implode(', ', $this->notRegisteredMandatoryBlocks->map(static function (Block $block) {
-            return $block->getName();
-        })->toArray());
+        return implode(', ', $this->notRegisteredMandatoryBlocks->map(static fn (Block $block) => $block->getName())->toArray());
     }
 
     /**
@@ -1122,9 +1104,7 @@ class User
      */
     public function getSubeventsText(): string
     {
-        $subeventsNames = $this->getSubevents()->map(static function (Subevent $subevent) {
-            return $subevent->getName();
-        });
+        $subeventsNames = $this->getSubevents()->map(static fn (Subevent $subevent) => $subevent->getName());
 
         return implode(', ', $subeventsNames->toArray());
     }
@@ -1156,9 +1136,7 @@ class User
      */
     public function getVariableSymbolsText(): string
     {
-        $variableSymbols = $this->getNotCanceledApplications()->map(static function (Application $application) {
-            return $application->getVariableSymbolText();
-        });
+        $variableSymbols = $this->getNotCanceledApplications()->map(static fn (Application $application) => $application->getVariableSymbolText());
 
         return implode(', ', $variableSymbols->toArray());
     }

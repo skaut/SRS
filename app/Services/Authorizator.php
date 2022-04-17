@@ -33,7 +33,7 @@ class Authorizator extends Nette\Security\Permission
             foreach ($aclService->findAllPermissionNames() as $permission) {
                 $this->allow($permission['roleName'], $permission['resourceName'], $permission['name']);
             }
-        } catch (TableNotFoundException $ex) {
+        } catch (TableNotFoundException) {
             // prvni spusteni pred vytvorenim databaze
         }
     }

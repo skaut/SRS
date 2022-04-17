@@ -28,16 +28,10 @@ class CmsService
 
     private Cache $menuCache;
 
-    private PageRepository $pageRepository;
-
-    private ContentRepository $contentRepository;
-
-    public function __construct(PageRepository $pageRepository, ContentRepository $contentRepository, Storage $storage)
+    public function __construct(private PageRepository $pageRepository, private ContentRepository $contentRepository, Storage $storage)
     {
-        $this->pageRepository    = $pageRepository;
-        $this->contentRepository = $contentRepository;
-        $this->pageCache         = new Cache($storage, 'Page');
-        $this->menuCache         = new Cache($storage, 'Menu');
+        $this->pageCache = new Cache($storage, 'Page');
+        $this->menuCache = new Cache($storage, 'Menu');
     }
 
     /**
@@ -110,9 +104,7 @@ class CmsService
         $pagesDto = $this->menuCache->load(null);
         if ($pagesDto === null) {
             $pagesDto = array_map(
-                static function (Page $page) {
-                    return $page->convertToDto();
-                },
+                static fn (Page $page) => $page->convertToDto(),
                 $this->pageRepository->findPublishedOrderedByPosition()
             );
             $this->menuCache->save(null, $pagesDto);

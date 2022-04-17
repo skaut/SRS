@@ -19,17 +19,11 @@ use Throwable;
  */
 class ContactFormContentControl extends BaseContentControl
 {
-    private QueryBus $queryBus;
-
-    private IContactFormFactory $contactFormFactory;
-
-    private RoleRepository $roleRepository;
-
-    public function __construct(QueryBus $queryBus, IContactFormFactory $contactFormFactory, RoleRepository $roleRepository)
-    {
-        $this->queryBus           = $queryBus;
-        $this->contactFormFactory = $contactFormFactory;
-        $this->roleRepository     = $roleRepository;
+    public function __construct(
+        private QueryBus $queryBus,
+        private IContactFormFactory $contactFormFactory,
+        private RoleRepository $roleRepository
+    ) {
     }
 
     /**

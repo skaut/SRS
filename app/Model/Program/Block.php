@@ -28,13 +28,6 @@ class Block
     private ?int $id = null;
 
     /**
-     * Název programového bloku.
-     *
-     * @ORM\Column(type="string", unique=true)
-     */
-    protected string $name;
-
-    /**
      * Programy v bloku.
      *
      * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist"})
@@ -68,34 +61,6 @@ class Block
     protected Subevent $subevent;
 
     /**
-     * Povinnost.
-     *
-     * @ORM\Column(type="string")
-     */
-    protected string $mandatory;
-
-    /**
-     * Délka programového bloku.
-     *
-     * @ORM\Column(type="integer")
-     */
-    protected int $duration;
-
-    /**
-     * Kapacita.
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected ?int $capacity = null;
-
-    /**
-     * Povoleno přihlašování náhradníků?
-     *
-     * @ORM\Column(type="boolean")
-     */
-    protected bool $alternatesAllowed = false;
-
-    /**
      * Pomůcky.
      *
      * @ORM\Column(type="string", nullable=true)
@@ -117,19 +82,39 @@ class Block
     protected ?string $description = null;
 
     public function __construct(
-        string $name,
-        int $duration,
-        ?int $capacity,
-        bool $alternatesAllowed,
-        string $mandatory
+        /**
+         * Název programového bloku.
+         *
+         * @ORM\Column(type="string", unique=true)
+         */
+        protected string $name,
+        /**
+         * Délka programového bloku.
+         *
+         * @ORM\Column(type="integer")
+         */
+        protected int $duration,
+        /**
+         * Kapacita.
+         *
+         * @ORM\Column(type="integer", nullable=true)
+         */
+        protected ?int $capacity,
+        /**
+         * Povoleno přihlašování náhradníků?
+         *
+         * @ORM\Column(type="boolean")
+         */
+        protected bool $alternatesAllowed,
+        /**
+         * Povinnost.
+         *
+         * @ORM\Column(type="string")
+         */
+        protected string $mandatory
     ) {
-        $this->name              = $name;
-        $this->duration          = $duration;
-        $this->capacity          = $capacity;
-        $this->alternatesAllowed = $alternatesAllowed;
-        $this->mandatory         = $mandatory;
-        $this->programs          = new ArrayCollection();
-        $this->lectors           = new ArrayCollection();
+        $this->programs = new ArrayCollection();
+        $this->lectors  = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,9 +166,7 @@ class Block
 
     public function getLectorsText(): string
     {
-        return implode(', ', $this->lectors->map(static function (User $lector) {
-            return $lector->getDisplayName();
-        })->toArray());
+        return implode(', ', $this->lectors->map(static fn (User $lector) => $lector->getDisplayName())->toArray());
     }
 
     /**

@@ -8,11 +8,8 @@ use App\Model\Program\Program;
 
 class ProgramAttendeesQuery
 {
-    private Program $program;
-
-    public function __construct(Program $program)
+    public function __construct(private Program $program)
     {
-        $this->program = $program;
     }
 
     public function getProgram(): Program

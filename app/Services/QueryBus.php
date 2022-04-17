@@ -11,11 +11,8 @@ use function assert;
 
 final class QueryBus
 {
-    private MessageBusInterface $bus;
-
-    public function __construct(MessageBusInterface $bus)
+    public function __construct(private MessageBusInterface $bus)
     {
-        $this->bus = $bus;
     }
 
     public function handle(object $query): mixed

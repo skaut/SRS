@@ -80,9 +80,7 @@ class SkautIsCourseRepository extends AbstractRepository
      */
     public function findSkautIsCoursesIds(Collection $skautIsCourses): array
     {
-        return array_map(static function (SkautIsCourse $skautIsCourse) {
-            return $skautIsCourse->getId();
-        }, $skautIsCourses->toArray());
+        return array_map(static fn (SkautIsCourse $skautIsCourse) => $skautIsCourse->getId(), $skautIsCourses->toArray());
     }
 
     /**

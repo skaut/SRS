@@ -119,7 +119,7 @@ abstract class WebBasePresenter extends BasePresenter
             if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect(':Install:Install:default');
             }
-        } catch (HandlerFailedException $ex) {
+        } catch (HandlerFailedException) {
             $this->redirect(':Install:Install:default');
         }
     }

@@ -10,19 +10,11 @@ namespace App\Model\Cms\Dto;
 class DocumentContentDto extends ContentDto
 {
     /**
-     * Tagy dokumentů, které se zobrazí.
-     *
-     * @var int[]
-     */
-    protected array $tags;
-
-    /**
      * @param int[] $tags
      */
-    public function __construct(string $type, string $heading, array $tags)
+    public function __construct(string $type, string $heading, protected array $tags)
     {
         parent::__construct($type, $heading);
-        $this->tags = $tags;
     }
 
     /**

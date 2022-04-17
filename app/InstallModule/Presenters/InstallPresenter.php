@@ -79,7 +79,7 @@ class InstallPresenter extends InstallBasePresenter
 
             $this->flashMessage('install.schema.schema_already_created');
             $this->redirect('admin');
-        } catch (HandlerFailedException $ex) {
+        } catch (HandlerFailedException) {
             // ignoruje se, tabulky ještě nejsou vytvořeny
         }
     }
@@ -121,7 +121,7 @@ class InstallPresenter extends InstallBasePresenter
                 $this->flashMessage('install.admin.admin_already_created');
                 $this->redirect('finish');
             }
-        } catch (HandlerFailedException $ex) {
+        } catch (HandlerFailedException) {
             $this->redirect('default');
         }
 
@@ -178,7 +178,7 @@ class InstallPresenter extends InstallBasePresenter
             if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect('default');
             }
-        } catch (HandlerFailedException $ex) {
+        } catch (HandlerFailedException) {
             $this->redirect('default');
         }
     }
@@ -195,7 +195,7 @@ class InstallPresenter extends InstallBasePresenter
             if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect('default');
             }
-        } catch (HandlerFailedException $ex) {
+        } catch (HandlerFailedException) {
             $this->redirect('default');
         }
     }

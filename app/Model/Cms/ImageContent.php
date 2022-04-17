@@ -19,6 +19,7 @@ use function assert;
 use function basename;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
@@ -160,7 +161,7 @@ class ImageContent extends Content implements IContent
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.cms.pages.content.form.image_format');
         if ($this->image !== null) {
-            $imageUpload->setHtmlAttribute('data-initial-preview', json_encode([$this->image]))
+            $imageUpload->setHtmlAttribute('data-initial-preview', json_encode([$this->image], JSON_THROW_ON_ERROR))
                 ->setHtmlAttribute('data-initial-preview-config', json_encode([['caption' => basename($this->image)]]));
         }
 

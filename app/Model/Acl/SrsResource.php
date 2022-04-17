@@ -76,13 +76,6 @@ class SrsResource
     private ?int $id = null;
 
     /**
-     * Název prostředku.
-     *
-     * @ORM\Column(type="string", unique=true)
-     */
-    protected string $name;
-
-    /**
      * Oprávnění s tímto prostředkem.
      *
      * @ORM\OneToMany(targetEntity="Permission", mappedBy="resource", cascade={"persist"})
@@ -90,6 +83,13 @@ class SrsResource
      * @var Collection<int, Permission>
      */
     protected Collection $permissions;
+
+    /**
+     * Název prostředku.
+     *
+     * @ORM\Column(type="string", unique=true)
+     */
+    protected string $name;
 
     public function __construct(string $name)
     {

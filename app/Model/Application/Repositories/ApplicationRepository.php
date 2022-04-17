@@ -114,9 +114,7 @@ class ApplicationRepository extends AbstractRepository
      */
     public function findApplicationsIds(Collection $applications): array
     {
-        return array_map(static function (Application $o) {
-            return $o->getId();
-        }, $applications->toArray());
+        return array_map(static fn (Application $o) => $o->getId(), $applications->toArray());
     }
 
     /**
@@ -130,9 +128,7 @@ class ApplicationRepository extends AbstractRepository
             ->where(Criteria::expr()->isNull('validTo'))
             ->andWhere(Criteria::expr()->orX(
                 Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
-                Criteria::expr()->in('id', $pairedApplications->map(static function (Application $application) {
-                    return $application->getId();
-                })
+                Criteria::expr()->in('id', $pairedApplications->map(static fn (Application $application) => $application->getId())
                     ->toArray())
             ));
 

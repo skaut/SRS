@@ -154,9 +154,7 @@ class SubeventRepository extends AbstractRepository
      */
     public function findSubeventsIds(Collection $subevents): array
     {
-        return array_map(static function (Subevent $o) {
-            return $o->getId();
-        }, $subevents->toArray());
+        return array_map(static fn (Subevent $o) => $o->getId(), $subevents->toArray());
     }
 
     /**
