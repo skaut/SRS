@@ -24,6 +24,7 @@ use function assert;
 use function basename;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
@@ -33,28 +34,13 @@ class WebFormFactory
 {
     use Nette\SmartObject;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
-
-    private PageRepository $pageRepository;
-
-    private FilesService $filesService;
-
     public function __construct(
-        BaseFormFactory $baseFormFactory,
-        CommandBus $commandBus,
-        QueryBus $queryBus,
-        PageRepository $pageRepository,
-        FilesService $filesService
+        private BaseFormFactory $baseFormFactory,
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private PageRepository $pageRepository,
+        private FilesService $filesService
     ) {
-        $this->baseFormFactory = $baseFormFactory;
-        $this->commandBus      = $commandBus;
-        $this->queryBus        = $queryBus;
-        $this->pageRepository  = $pageRepository;
-        $this->filesService    = $filesService;
     }
 
     /**
@@ -75,7 +61,7 @@ class WebFormFactory
         $form->addUpload('logo', 'admin.configuration.web_logo')
             ->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
-            ->setHtmlAttribute('data-initial-preview', json_encode([$logo]))
+            ->setHtmlAttribute('data-initial-preview', json_encode([$logo], JSON_THROW_ON_ERROR))
             ->setHtmlAttribute('data-initial-preview-config', json_encode([['caption' => basename($logo)]]))
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.configuration.web_logo_format');

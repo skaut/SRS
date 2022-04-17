@@ -10,44 +10,32 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita kontrola vstupenky.
- *
- * @ORM\Entity
- * @ORM\Table(name="ticket_check")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'ticket_check')]
 class TicketCheck
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
-     * Uživatel.
-     *
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     */
-    protected User $user;
-
-    /**
-     * Podakce.
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", cascade={"persist"})
-     */
-    protected Subevent $subevent;
-
-    /**
      * Datum a čas kontroly.
-     *
-     * @ORM\Column(type="datetime_immutable")
      */
+    #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $datetime;
 
-    public function __construct(User $user, Subevent $subevent)
-    {
-        $this->user     = $user;
-        $this->subevent = $subevent;
+    /**
+     * @param User     $user     Uživatel
+     * @param Subevent $subevent Podakce
+     */
+    public function __construct(
+        #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
+        protected User $user,
+        #[ORM\ManyToOne(targetEntity: Subevent::class, cascade: ['persist'])]
+        protected Subevent $subevent
+    ) {
         $this->datetime = new DateTimeImmutable();
     }
 

@@ -58,67 +58,24 @@ use function basename;
  */
 class UsersGridControl extends Control
 {
-    private QueryBus $queryBus;
-
-    private Translator $translator;
-
-    private EntityManagerInterface $em;
-
-    private UserRepository $userRepository;
-
-    private CustomInputRepository $customInputRepository;
-
-    private RoleRepository $roleRepository;
-
-    private Session $session;
-
     private SessionSection $sessionSection;
 
-    private ExcelExportService $excelExportService;
-
-    private AclService $aclService;
-
-    private ApplicationService $applicationService;
-
-    private UserService $userService;
-
-    private SkautIsEventEducationService $skautIsEventEducationService;
-
-    private SkautIsEventGeneralService $skautIsEventGeneralService;
-
-    private SubeventService $subeventService;
-
     public function __construct(
-        QueryBus $queryBus,
-        Translator $translator,
-        EntityManagerInterface $em,
-        UserRepository $userRepository,
-        CustomInputRepository $customInputRepository,
-        RoleRepository $roleRepository,
-        ExcelExportService $excelExportService,
-        Session $session,
-        AclService $aclService,
-        ApplicationService $applicationService,
-        UserService $userService,
-        SkautIsEventEducationService $skautIsEventEducationService,
-        SkautIsEventGeneralService $skautIsEventGeneralService,
-        SubeventService $subeventService
+        private QueryBus $queryBus,
+        private Translator $translator,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository,
+        private CustomInputRepository $customInputRepository,
+        private RoleRepository $roleRepository,
+        private ExcelExportService $excelExportService,
+        private Session $session,
+        private AclService $aclService,
+        private ApplicationService $applicationService,
+        private UserService $userService,
+        private SkautIsEventEducationService $skautIsEventEducationService,
+        private SkautIsEventGeneralService $skautIsEventGeneralService,
+        private SubeventService $subeventService
     ) {
-        $this->queryBus                     = $queryBus;
-        $this->translator                   = $translator;
-        $this->em                           = $em;
-        $this->userRepository               = $userRepository;
-        $this->customInputRepository        = $customInputRepository;
-        $this->roleRepository               = $roleRepository;
-        $this->excelExportService           = $excelExportService;
-        $this->aclService                   = $aclService;
-        $this->applicationService           = $applicationService;
-        $this->userService                  = $userService;
-        $this->skautIsEventEducationService = $skautIsEventEducationService;
-        $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
-        $this->subeventService              = $subeventService;
-
-        $this->session        = $session;
         $this->sessionSection = $session->getSection('srs');
     }
 
@@ -163,45 +120,37 @@ class UsersGridControl extends Control
         $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
             ->onSelect[] = [$this, 'groupMarkPaidToday'];
 
-        switch ($this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE))) {
-            case SkautIsEventType::GENERAL:
-                $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is')
-                    ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
-                break;
+        $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is')
+            ->onSelect[] = match ($this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE))) {
+            SkautIsEventType::GENERAL => [$this, 'groupInsertIntoSkautIs'],
+            SkautIsEventType::EDUCATION => [$this, 'groupInsertIntoSkautIs'],
+            default => throw new InvalidArgumentException(),
+            };
 
-            case SkautIsEventType::EDUCATION:
-                $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is', $this->prepareInsertIntoSkautIsOptions())
-                    ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
-                break;
-
-            default:
-                throw new InvalidArgumentException();
-        }
-
-        $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
+            $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
             ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
 
-        $grid->addGroupAction('admin.users.users_group_action_export_users')
+            $grid->addGroupAction('admin.users.users_group_action_export_users')
             ->onSelect[] = [$this, 'groupExportUsers'];
 
-        $grid->addGroupAction('admin.users.users_group_action_export_subevents_and_categories')
+            $grid->addGroupAction('admin.users.users_group_action_export_subevents_and_categories')
             ->onSelect[] = [$this, 'groupExportSubeventsAndCategories'];
 
-        $grid->addGroupAction('admin.users.users_group_action_export_roles')
+            $grid->addGroupAction('admin.users.users_group_action_export_roles')
             ->onSelect[] = [$this, 'groupExportRoles'];
 
-        $grid->addGroupAction('admin.users.users_group_action_export_schedules')
+            $grid->addGroupAction('admin.users.users_group_action_export_schedules')
             ->onSelect[] = [$this, 'groupExportSchedules'];
 
-        $grid->addColumnText('displayName', 'admin.users.users_name')
+            $grid->addColumnText('displayName', 'admin.users.users_name')
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('username', 'admin.users.users_username')
+            $grid->addColumnText('username', 'admin.users.users_username')
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
+            $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
             ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
             ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
                 $qb->join('u.roles', 'uR')
@@ -240,13 +189,9 @@ class UsersGridControl extends Control
             ->setTranslateOptions();
 
         $grid->addColumnText('unit', 'admin.users.users_membership')
-            ->setRendererOnCondition(function (User $row) {
-                return Html::el('span')
-                    ->class('text-danger')
-                    ->setText($this->userService->getMembershipText($row));
-            }, static function (User $row) {
-                return $row->getUnit() === null;
-            })
+            ->setRendererOnCondition(fn (User $row) => Html::el('span')
+                ->class('text-danger')
+                ->setText($this->userService->getMembershipText($row)), static fn (User $row) => $row->getUnit() === null)
             ->setSortable()
             ->setSortableCallback(static function (QueryBuilder $qb, array $sort): void {
                 $sortOrig = $sort['unit'];
@@ -265,11 +210,9 @@ class UsersGridControl extends Control
             });
 
         $grid->addColumnText('email', 'admin.users.users_email')
-            ->setRenderer(static function (User $row) {
-                return Html::el('a')
-                    ->href('mailto:' . $row->getEmail())
-                    ->setText($row->getEmail());
-            })
+            ->setRenderer(static fn (User $row) => Html::el('a')
+                ->href('mailto:' . $row->getEmail())
+                ->setText($row->getEmail()))
             ->setSortable()
             ->setFilterText();
 
@@ -293,9 +236,7 @@ class UsersGridControl extends Control
             });
 
         $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
-            ->setRenderer(function (User $user) {
-                return $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '';
-            })
+            ->setRenderer(fn (User $user) => $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '')
             ->setFilterMultiSelect($this->preparePaymentMethodOptionsWithMixed())
             ->setTranslateOptions();
 
@@ -340,28 +281,21 @@ class UsersGridControl extends Control
                 ->setRenderer(function (User $user) use ($customInput) {
                     $customInputValue = $user->getCustomInputValue($customInput);
                     if ($customInputValue) {
-                        switch (true) {
-                            case $customInputValue instanceof CustomTextValue:
-                                return Helpers::truncate($customInputValue->getValue(), 20);
-
-                            case $customInputValue instanceof CustomCheckboxValue:
-                                return $customInputValue->getValue()
-                                    ? $this->translator->translate('admin.common.yes')
-                                    : $this->translator->translate('admin.common.no');
-
-                            case $customInputValue instanceof CustomFileValue:
-                                return $customInputValue->getValue()
-                                    ? Html::el('a')
-                                        ->setAttribute('href', $customInputValue->getValue())
-                                        ->setAttribute('title', basename($customInputValue->getValue()))
-                                        ->setAttribute('target', '_blank')
-                                        ->setAttribute('class', 'btn btn-xs btn-secondary')
-                                        ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-file-arrow-down'))
-                                    : '';
-
-                            default:
-                                return $customInputValue->getValueText();
-                        }
+                        return match (true) {
+                            $customInputValue instanceof CustomTextValue => Helpers::truncate($customInputValue->getValue(), 20),
+                            $customInputValue instanceof CustomCheckboxValue => $customInputValue->getValue()
+                                ? $this->translator->translate('admin.common.yes')
+                                : $this->translator->translate('admin.common.no'),
+                            $customInputValue instanceof CustomFileValue => $customInputValue->getValue()
+                                ? Html::el('a')
+                                    ->setAttribute('href', $customInputValue->getValue())
+                                    ->setAttribute('title', basename($customInputValue->getValue()))
+                                    ->setAttribute('target', '_blank')
+                                    ->setAttribute('class', 'btn btn-xs btn-secondary')
+                                    ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-file-arrow-down'))
+                                : '',
+                            default => $customInputValue->getValueText(),
+                        };
                     }
 
                     return null;
@@ -470,9 +404,7 @@ class UsersGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.users.users_delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', static function (User $item) {
-            return $item->isExternalLector();
-        });
+        $grid->allowRowsAction('delete', static fn (User $item) => $item->isExternalLector());
 
         $grid->setColumnsSummary(['fee', 'feeRemaining']);
 

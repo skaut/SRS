@@ -13,16 +13,17 @@ use Eluceo\iCal\Component\Event;
 use Eluceo\iCal\Property\Event\Organizer;
 use Exception;
 use Nette\Application\AbortException;
+use Nette\DI\Attributes\Inject;
 
 /**
  * Presenter pro generování kalendáře ve formátu ICS.
  */
 class SchedulePresenter extends ExportBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public UserRepository $userRepository;
 
-    /** @inject  */
+    #[Inject]
     public QueryBus $queryBus;
 
     /**

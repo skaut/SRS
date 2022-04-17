@@ -21,6 +21,7 @@ use App\Services\CmsService;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Nette\Application\AbortException;
+use Nette\DI\Attributes\Inject;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
@@ -29,25 +30,25 @@ use Throwable;
  */
 abstract class WebBasePresenter extends BasePresenter
 {
-    /** @inject */
+    #[Inject]
     public QueryBus $queryBus;
 
-    /** @inject */
+    #[Inject]
     public Authorizator $authorizator;
 
-    /** @inject */
+    #[Inject]
     public Authenticator $authenticator;
 
-    /** @inject */
+    #[Inject]
     public RoleRepository $roleRepository;
 
-    /** @inject */
+    #[Inject]
     public CmsService $cmsService;
 
-    /** @inject */
+    #[Inject]
     public UserRepository $userRepository;
 
-    /** @inject */
+    #[Inject]
     public SkautIsService $skautIsService;
 
     protected ?User $dbuser = null;

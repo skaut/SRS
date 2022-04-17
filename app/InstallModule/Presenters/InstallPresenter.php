@@ -20,6 +20,7 @@ use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Nette\Application\AbortException;
+use Nette\DI\Attributes\Inject;
 use Skautis\Skautis;
 use Skautis\Wsdl\WsdlException;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -33,31 +34,31 @@ use Tracy\ILogger;
  */
 class InstallPresenter extends InstallBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public CommandBus $commandBus;
 
-    /** @inject */
+    #[Inject]
     public QueryBus $queryBus;
 
-    /** @inject */
+    #[Inject]
     public Application $consoleApplication;
 
-    /** @inject */
+    #[Inject]
     public EntityManagerInterface $em;
 
-    /** @inject */
+    #[Inject]
     public RoleRepository $roleRepository;
 
-    /** @inject */
+    #[Inject]
     public UserRepository $userRepository;
 
-    /** @inject */
+    #[Inject]
     public SubeventRepository $subeventRepository;
 
-    /** @inject */
+    #[Inject]
     public ApplicationService $applicationService;
 
-    /** @inject */
+    #[Inject]
     public Skautis $skautIs;
 
     /**

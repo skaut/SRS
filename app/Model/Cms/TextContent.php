@@ -15,19 +15,17 @@ use function assert;
 
 /**
  * Entita obsahu s textem.
- *
- * @ORM\Entity
- * @ORM\Table(name="text_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'text_content')]
 class TextContent extends Content implements IContent
 {
     protected string $type = Content::TEXT;
 
     /**
      * Text.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $text = null;
 
     public function getText(): ?string

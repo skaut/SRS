@@ -14,103 +14,88 @@ use function implode;
 
 /**
  * Entita programový blok.
- *
- * @ORM\Entity
- * @ORM\Table(name="block")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'block')]
 class Block
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Programy v bloku.
      *
-     * @ORM\OneToMany(targetEntity="Program", mappedBy="block", cascade={"persist"})
-     * @ORM\OrderBy({"start" = "ASC"})
-     *
      * @var Collection<int, Program>
      */
+    #[ORM\OneToMany(targetEntity: Program::class, mappedBy: 'block', cascade: ['persist'])]
+    #[ORM\OrderBy(['start' => 'ASC'])]
     protected Collection $programs;
 
     /**
      * Lektor.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", inversedBy="lecturersBlocks", cascade={"persist"})
-     *
      * @var Collection<int, User>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\User\User', inversedBy: 'lecturersBlocks', cascade: ['persist'])]
     protected Collection $lectors;
 
     /**
      * Kategorie bloku.
-     *
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="blocks", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'blocks', cascade: ['persist'])]
     protected ?Category $category = null;
 
     /**
      * Podakce bloku.
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", inversedBy="blocks", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: '\App\Model\Structure\Subevent', inversedBy: 'blocks', cascade: ['persist'])]
     protected Subevent $subevent;
 
     /**
      * Pomůcky.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $tools = null;
 
     /**
      * Stručný popis.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $perex = null;
 
     /**
      * Podrobný popis.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
     public function __construct(
         /**
          * Název programového bloku.
-         *
-         * @ORM\Column(type="string", unique=true)
          */
+        #[ORM\Column(type: 'string', unique: true)]
         protected string $name,
         /**
          * Délka programového bloku.
-         *
-         * @ORM\Column(type="integer")
          */
+        #[ORM\Column(type: 'integer')]
         protected int $duration,
         /**
          * Kapacita.
-         *
-         * @ORM\Column(type="integer", nullable=true)
          */
+        #[ORM\Column(type: 'integer', nullable: true)]
         protected ?int $capacity,
         /**
          * Povoleno přihlašování náhradníků?
-         *
-         * @ORM\Column(type="boolean")
          */
+        #[ORM\Column(type: 'boolean')]
         protected bool $alternatesAllowed,
         /**
          * Povinnost.
-         *
-         * @ORM\Column(type="string")
          */
+        #[ORM\Column(type: 'string')]
         protected string $mandatory
     ) {
         $this->programs = new ArrayCollection();

@@ -59,44 +59,17 @@ class BlockFormFactory
      */
     private bool $subeventsExists;
 
-    private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
-
-    private BaseFormFactory $baseFormFactory;
-
-    private BlockRepository $blockRepository;
-
-    private UserRepository $userRepository;
-
-    private CategoryRepository $categoryRepository;
-
-    private SubeventRepository $subeventRepository;
-
-    private SubeventService $subeventService;
-
-    private Validators $validators;
-
     public function __construct(
-        CommandBus $commandBus,
-        QueryBus $queryBus,
-        BaseFormFactory $baseFormFactory,
-        BlockRepository $blockRepository,
-        UserRepository $userRepository,
-        CategoryRepository $categoryRepository,
-        SubeventRepository $subeventRepository,
-        SubeventService $subeventService,
-        Validators $validators
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private BaseFormFactory $baseFormFactory,
+        private BlockRepository $blockRepository,
+        private UserRepository $userRepository,
+        private CategoryRepository $categoryRepository,
+        private SubeventRepository $subeventRepository,
+        private SubeventService $subeventService,
+        private Validators $validators
     ) {
-        $this->commandBus         = $commandBus;
-        $this->queryBus           = $queryBus;
-        $this->baseFormFactory    = $baseFormFactory;
-        $this->blockRepository    = $blockRepository;
-        $this->userRepository     = $userRepository;
-        $this->categoryRepository = $categoryRepository;
-        $this->subeventRepository = $subeventRepository;
-        $this->subeventService    = $subeventService;
-        $this->validators         = $validators;
     }
 
     /**

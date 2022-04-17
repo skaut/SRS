@@ -26,20 +26,8 @@ use function count;
  */
 class CustomInputsGridControl extends Control
 {
-    private Translator $translator;
-
-    private CustomInputRepository $customInputRepository;
-
-    private AclService $aclService;
-
-    public function __construct(
-        Translator $translator,
-        CustomInputRepository $customInputRepository,
-        AclService $aclService
-    ) {
-        $this->translator            = $translator;
-        $this->customInputRepository = $customInputRepository;
-        $this->aclService            = $aclService;
+    public function __construct(private Translator $translator, private CustomInputRepository $customInputRepository, private AclService $aclService)
+    {
     }
 
     /**
@@ -69,16 +57,10 @@ class CustomInputsGridControl extends Control
         $grid->addColumnText('name', 'admin.configuration.custom_inputs_name');
 
         $grid->addColumnText('roles', 'admin.configuration.custom_inputs_roles', 'rolesText')
-            ->setRendererOnCondition(function () {
-                return $this->translator->translate('admin.configuration.custom_inputs_roles_all');
-            }, function (CustomInput $input) {
-                return count($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])) === $input->getRoles()->count();
-            });
+            ->setRendererOnCondition(fn () => $this->translator->translate('admin.configuration.custom_inputs_roles_all'), fn (CustomInput $input) => count($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])) === $input->getRoles()->count());
 
         $grid->addColumnText('type', 'admin.configuration.custom_inputs_type')
-            ->setRenderer(function (CustomInput $input) {
-                return $this->translator->translate('admin.common.custom_' . $input->getType());
-            });
+            ->setRenderer(fn (CustomInput $input) => $this->translator->translate('admin.common.custom_' . $input->getType()));
 
         $columnMandatory = $grid->addColumnStatus('mandatory', 'admin.configuration.custom_inputs_mandatory');
         $columnMandatory
@@ -91,9 +73,7 @@ class CustomInputsGridControl extends Control
             ->onChange[] = [$this, 'changeMandatory'];
 
         $grid->addColumnText('options', 'admin.configuration.custom_inputs_options')
-            ->setRenderer(static function (CustomInput $input) {
-                return $input instanceof CustomSelect || $input instanceof CustomMultiSelect ? $input->getOptionsText() : null;
-            });
+            ->setRenderer(static fn (CustomInput $input) => $input instanceof CustomSelect || $input instanceof CustomMultiSelect ? $input->getOptionsText() : null);
 
         $grid->addToolbarButton('Application:add')
             ->setIcon('plus')

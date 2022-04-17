@@ -10,9 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita přihláška rolí.
- *
- * @ORM\Entity
  */
+#[ORM\Entity]
 class RolesApplication extends Application
 {
     protected string $type = Application::ROLES;

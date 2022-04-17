@@ -12,6 +12,7 @@ use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
 use Nette\Application\AbortException;
+use Nette\DI\Attributes\Inject;
 use Throwable;
 
 /**
@@ -19,10 +20,10 @@ use Throwable;
  */
 class MailingPresenter extends ActionBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public CommandBus $commandBus;
 
-    /** @inject */
+    #[Inject]
     public QueryBus $queryBus;
 
     /**

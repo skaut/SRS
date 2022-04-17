@@ -14,6 +14,7 @@ use Contributte\PdfResponse\PdfResponse;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\DI\Attributes\Inject;
 use Throwable;
 
 use function assert;
@@ -25,16 +26,16 @@ use function random_bytes;
  */
 class TicketPresenter extends ExportBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public PdfResponse $pdfResponse;
 
-    /** @inject */
+    #[Inject]
     public SubeventRepository $subeventRepository;
 
-    /** @inject */
+    #[Inject]
     public UserRepository $userRepository;
 
-    /** @inject */
+    #[Inject]
     public QueryBus $queryBus;
 
     /**

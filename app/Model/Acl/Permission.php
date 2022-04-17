@@ -10,10 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita oprávnění.
- *
- * @ORM\Entity
- * @ORM\Table(name="permission")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'permission')]
 class Permission
 {
     /**
@@ -60,41 +59,30 @@ class Permission
         self::MANAGE_SCHEDULE,
     ];
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Role s tímto oprávněním.
      *
-     * @ORM\ManyToMany(targetEntity="Role", mappedBy="permissions", cascade={"persist"})
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'permissions', cascade: ['persist'])]
     protected Collection $roles;
 
     /**
-     * Název oprávnění.
-     *
-     * @ORM\Column(type="string")
+     * @param string      $name     Název oprávnění.
+     * @param SrsResource $resource Prostředek oprávnění.
      */
-    protected string $name;
-
-    /**
-     * Prostředek oprávnění.
-     *
-     * @ORM\ManyToOne(targetEntity="SrsResource", inversedBy="permissions", cascade={"persist"})
-     */
-    protected SrsResource $resource;
-
-    public function __construct(string $name, SrsResource $resource)
-    {
-        $this->name     = $name;
-        $this->resource = $resource;
-        $this->roles    = new ArrayCollection();
+    public function __construct(
+        #[ORM\Column(type: 'string')]
+        protected string $name,
+        #[ORM\ManyToOne(targetEntity: SrsResource::class, inversedBy: 'permissions', cascade: ['persist'])]
+        protected SrsResource $resource
+    ) {
+        $this->roles = new ArrayCollection();
     }
 
     public function getId(): ?int

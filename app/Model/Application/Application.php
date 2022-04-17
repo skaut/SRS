@@ -22,16 +22,15 @@ use function str_replace;
 
 /**
  * Abstraktní entita přihláška.
- *
- * @ORM\Entity
- * @ORM\Table(name="application")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *     "roles_application" = "RolesApplication",
- *     "subevents_application" = "SubeventsApplication"
- * })
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'application')]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap([
+    'roles_application' => RolesApplication::class,
+    'subevents_application' => SubeventsApplication::class,
+])]
 abstract class Application
 {
     /**
@@ -49,132 +48,109 @@ abstract class Application
      */
     protected string $type;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Id přihlášky.
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $applicationId = null;
 
     /**
      * Role.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\Acl\Role')]
     protected Collection $roles;
 
     /**
      * Podakce.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
-     *
      * @var Collection<int, Subevent>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\Structure\Subevent', inversedBy: 'applications', cascade: ['persist'])]
     protected Collection $subevents;
 
     /**
      * Poplatek.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $fee;
 
     /**
      * Variabilní symbol.
-     *
-     * @ORM\ManyToOne(targetEntity="VariableSymbol", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: VariableSymbol::class, cascade: ['persist'])]
     protected VariableSymbol $variableSymbol;
 
     /**
      * Datum podání přihlášky.
-     *
-     * @ORM\Column(type="datetime_immutable")
      */
+    #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $applicationDate;
 
     /**
      * Datum splatnosti.
-     *
-     * @ORM\Column(type="date_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?DateTimeImmutable $maturityDate = null;
 
     /**
      * Platební metoda.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $paymentMethod = null;
 
     /**
      * Datum zaplacení.
-     *
-     * @ORM\Column(type="date_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?DateTimeImmutable $paymentDate = null;
 
     /**
      * Spárovaná platba.
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Model\Payment\Payment", inversedBy="pairedApplications", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: Payment::class, inversedBy: 'pairedApplications', cascade: ['persist'])]
     protected ?Payment $payment = null;
 
     /**
      * Příjmový doklad. Používá se pro generování id.
-     *
-     * @ORM\ManyToOne(targetEntity="IncomeProof", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: IncomeProof::class, cascade: ['persist'])]
     protected ?IncomeProof $incomeProof = null;
 
     /**
      * Stav přihlášky.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected ?string $state = null;
 
     /**
      * Uživatel, který vytvořil přihlášku.
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: '\App\Model\User\User', cascade: ['persist'])]
     protected ?User $createdBy = null;
 
     /**
      * Platnost záznamu od.
-     *
-     * @ORM\Column(type="datetime_immutable")
      */
+    #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $validFrom;
 
     /**
      * Platnost záznamu do.
-     *
-     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $validTo = null;
 
-    /**
-     * Uživatel.
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="applications", cascade={"persist"})
-     */
-    protected User $user;
-
-    public function __construct(User $user)
-    {
-        $this->user      = $user;
+    public function __construct(
+        #[ORM\ManyToOne(targetEntity: '\App\Model\User\User', inversedBy: 'applications', cascade: ['persist'])]
+        protected User $user
+    ) {
         $this->roles     = new ArrayCollection();
         $this->subevents = new ArrayCollection();
     }

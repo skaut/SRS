@@ -8,10 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita obsahu s kontaktním formulářem.
- *
- * @ORM\Entity
- * @ORM\Table(name="contact_form_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'contact_form_content')]
 class ContactFormContent extends Content implements IContent
 {
     protected string $type = Content::CONTACT_FORM;

@@ -17,6 +17,7 @@ use App\Services\Authorizator;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Nette\Application\AbortException;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -30,19 +31,19 @@ abstract class AdminBasePresenter extends BasePresenter
 {
     protected string $resource = SrsResource::ADMIN;
 
-    /** @inject */
+    #[Inject]
     public QueryBus $queryBus;
 
-    /** @inject */
+    #[Inject]
     public Authorizator $authorizator;
 
-    /** @inject */
+    #[Inject]
     public RoleRepository $roleRepository;
 
-    /** @inject */
+    #[Inject]
     public UserRepository $userRepository;
 
-    /** @inject */
+    #[Inject]
     public SkautIsService $skautIsService;
 
     /**
@@ -107,9 +108,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $skautIsUserId                = $this->dbuser->getSkautISUserId();
         $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId);
         $skautIsRoleSelectedId        = $this->skautIsService->getUserRoleId();
-        $skautIsRoleSelected          = array_filter($skautIsRoles, static function (stdClass $r) use ($skautIsRoleSelectedId) {
-            return $r->ID === $skautIsRoleSelectedId;
-        });
+        $skautIsRoleSelected          = array_filter($skautIsRoles, static fn (stdClass $r) => $r->ID === $skautIsRoleSelectedId);
         $this->template->skautIsRoles = $skautIsRoles;
         if (empty($skautIsRoleSelected)) {
             $this->template->skautIsRoleSelected = null;

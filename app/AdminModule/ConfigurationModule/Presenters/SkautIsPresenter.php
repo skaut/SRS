@@ -16,6 +16,7 @@ use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
 use App\Services\CommandBus;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -24,16 +25,16 @@ use Throwable;
  */
 class SkautIsPresenter extends ConfigurationBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public CommandBus $commandBus;
 
-    /** @inject */
+    #[Inject]
     public SkautIsEventFormFactory $skautIsEventFormFactory;
 
-    /** @inject */
+    #[Inject]
     public ISkautIsEventEducationGridControlFactory $skautISEventEducationGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public SkautIsCourseRepository $skautIsCourseRepository;
 
     /**

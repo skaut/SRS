@@ -16,6 +16,7 @@ use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Application\AbortException;
+use Nette\DI\Attributes\Inject;
 use Nette\Security\AuthenticationException;
 use Nette\Security\SimpleIdentity;
 use Throwable;
@@ -29,16 +30,16 @@ use function str_contains;
  */
 class AuthPresenter extends BasePresenter
 {
-    /** @inject */
+    #[Inject]
     public QueryBus $queryBus;
 
-    /** @inject */
+    #[Inject]
     public SkautIsService $skautIsService;
 
-    /** @inject */
+    #[Inject]
     public UserRepository $userRepository;
 
-    /** @inject */
+    #[Inject]
     public IMailService $mailService;
 
     /**

@@ -11,6 +11,7 @@ use App\AdminModule\ConfigurationModule\Forms\SubeventsFormFactory;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Structure\Repositories\SubeventRepository;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -19,16 +20,16 @@ use Throwable;
  */
 class SubeventsPresenter extends ConfigurationBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public ISubeventsGridControlFactory $subeventsGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public SubeventFormFactory $subeventFormFactory;
 
-    /** @inject */
+    #[Inject]
     public SubeventsFormFactory $subeventsFormFactory;
 
-    /** @inject */
+    #[Inject]
     public SubeventRepository $subeventRepository;
 
     public function renderEdit(int $id): void

@@ -12,6 +12,7 @@ use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use Endroid\QrCode\QrCode;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -19,15 +20,17 @@ use function bin2hex;
 use function json_encode;
 use function random_bytes;
 
+use const JSON_THROW_ON_ERROR;
+
 /**
  * Presenter obsluhující nastavení vstupenek.
  */
 class TicketsPresenter extends ConfigurationBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public CommandBus $commandBus;
 
-    /** @inject */
+    #[Inject]
     public TicketsFormFactory $ticketsFormFactory;
 
     /**
@@ -41,7 +44,7 @@ class TicketsPresenter extends ConfigurationBasePresenter
         $connectionInfo             = [];
         $connectionInfo['apiUrl']   = $this->getHttpRequest()->getUrl()->getBaseUrl() . 'api/';
         $connectionInfo['apiToken'] = $apiToken;
-        $this->template->qr         = $this->generateQr(json_encode($connectionInfo));
+        $this->template->qr         = $this->generateQr(json_encode($connectionInfo, JSON_THROW_ON_ERROR));
     }
 
     /**

@@ -16,72 +16,62 @@ use function implode;
 
 /**
  * Entita e-mail.
- *
- * @ORM\Entity
- * @ORM\Table(name="mail")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'mail')]
 class Mail
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Role, kterým byl e-mail odeslán.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\Acl\Role')]
     protected Collection $recipientRoles;
 
     /**
      * Podakce, jejichž účastníkům byl e-mail odeslán.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent")
-     *
      * @var Collection<int, Subevent>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\Structure\Subevent')]
     protected Collection $recipientSubevents;
 
     /**
      * Uživatelé, kterém byl e-mail odeslán.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\User")
-     *
      * @var Collection<int, User>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\User\User')]
     protected Collection $recipientUsers;
 
     /**
      * Předmět e-mailu.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $subject;
 
     /**
      * Text e-mailu.
-     *
-     * @ORM\Column(type="text")
      */
+    #[ORM\Column(type: 'text')]
     protected string $text;
 
     /**
      * Datum a čas odeslání.
-     *
-     * @ORM\Column(type="datetime_immutable")
      */
+    #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $datetime;
 
     /**
      * Automatický e-mail.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $automatic = false;
 
     public function __construct()

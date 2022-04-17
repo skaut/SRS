@@ -11,14 +11,12 @@ use App\Model\User\User;
  */
 class Recipient
 {
+    /**
+     * @param string      $email E-mail příjemce
+     * @param string|null $name  Jméno příjemce
+     */
     public function __construct(
-        /**
-         * E-mail příjemce.
-         */
         private string $email,
-        /**
-         * Jméno příjemce.
-         */
         private ?string $name = null
     ) {
     }

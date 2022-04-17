@@ -16,30 +16,29 @@ use function ucwords;
 
 /**
  * Abstraktní entita obsahu.
- *
- * @ORM\Entity
- * @ORM\Table(name="content")
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *     "text_content" = "TextContent",
- *     "document_content" = "DocumentContent",
- *     "application_content" = "ApplicationContent",
- *     "html_content" = "HtmlContent",
- *     "faq_content" = "FaqContent",
- *     "news_content" = "NewsContent",
- *     "place_content" = "PlaceContent",
- *     "programs_content" = "ProgramsContent",
- *     "image_content" = "ImageContent",
- *     "users_content" = "UsersContent",
- *     "lectors_content" = "LectorsContent",
- *     "blocks_content" = "BlocksContent",
- *     "capacities_content" = "CapacitiesContent",
- *     "organizer_content" = "OrganizerContent",
- *     "contact_form_content" = "ContactFormContent",
- *     "slideshow_content" = "SlideshowContent"
- * })
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'content')]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap([
+    'text_content' => TextContent::class,
+    'document_content' => DocumentContent::class,
+    'application_content' => ApplicationContent::class,
+    'html_content' => HtmlContent::class,
+    'faq_content' => FaqContent::class,
+    'news_content' => NewsContent::class,
+    'place_content' => PlaceContent::class,
+    'programs_content' => ProgramsContent::class,
+    'image_content' => ImageContent::class,
+    'users_content' => UsersContent::class,
+    'lectors_content' => LectorsContent::class,
+    'blocks_content' => BlocksContent::class,
+    'capacities_content' => CapacitiesContent::class,
+    'organizer_content' => OrganizerContent::class,
+    'contact_form_content' => ContactFormContent::class,
+    'slideshow_content' => SlideshowContent::class,
+])]
 abstract class Content implements IContent
 {
     /**
@@ -50,6 +49,7 @@ abstract class Content implements IContent
     /**
      * ImageContent.
      */
+
     public const IMAGE = 'image';
 
     /**
@@ -132,7 +132,6 @@ abstract class Content implements IContent
      */
     public const SIDEBAR = 'sidebar';
 
-
     /** @var string[] */
     public static array $types = [
         self::TEXT,
@@ -164,49 +163,35 @@ abstract class Content implements IContent
      */
     protected string $type;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Nadpis obsahu.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $heading = null;
 
     /**
-     * Stránka, na které je obsah umístěn.
-     *
-     * @ORM\ManyToOne(targetEntity="Page", inversedBy="contents", cascade={"persist"})
-     */
-    protected Page $page;
-
-    /**
-     * Oblast stránky, ve které se obsah nachází.
-     *
-     * @ORM\Column(type="string")
-     */
-    protected string $area;
-
-    /**
      * Pořadí obsahu na stránce.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $position = 0;
 
     /**
+     * @param Page   $page Stránka, na které je obsah umístěn
+     * @param string $area Oblast stránky, ve které se obsah nachází
+     *
      * @throws PageException
      */
-    public function __construct(Page $page, string $area)
-    {
-        $this->page = $page;
-        $this->area = $area;
-
+    public function __construct(
+        #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'contents', cascade: ['persist'])]
+        protected Page $page,
+        #[ORM\Column(type: 'string')]
+        protected string $area
+    ) {
         $contentsCount = $page->getContents($area)->count();
 
         $this->position = $contentsCount + 1;

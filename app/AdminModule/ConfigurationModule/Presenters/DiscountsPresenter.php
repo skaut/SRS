@@ -8,16 +8,17 @@ use App\AdminModule\ConfigurationModule\Components\DiscountsGridControl;
 use App\AdminModule\ConfigurationModule\Components\IDiscountsGridControlFactory;
 use App\AdminModule\ConfigurationModule\Forms\DiscountForm;
 use App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory;
+use Nette\DI\Attributes\Inject;
 
 /**
  * Presenter obsluhující správu slev.
  */
 class DiscountsPresenter extends ConfigurationBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public IDiscountsGridControlFactory $discountsGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IDiscountFormFactory $discountFormFactory;
 
     protected function createComponentDiscountsGrid(): DiscountsGridControl

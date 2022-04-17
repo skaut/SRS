@@ -14,59 +14,49 @@ use Exception;
 
 /**
  * Entita program.
- *
- * @ORM\Entity
- * @ORM\Table(name="program")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'program')]
 class Program
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Programový blok.
-     *
-     * @ORM\ManyToOne(targetEntity="Block", inversedBy="programs", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: Block::class, inversedBy: 'programs', cascade: ['persist'])]
     protected Block $block;
 
     /**
      * Přihlášky na program.
      *
-     * @ORM\OneToMany(targetEntity="ProgramApplication", mappedBy="program", cascade={"persist"})
-     *
      * @var Collection<int, ProgramApplication>
      */
+    #[ORM\OneToMany(targetEntity: ProgramApplication::class, mappedBy: 'program', cascade: ['persist'])]
     protected Collection $programApplications;
 
     /**
      * Počet účastníků.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $attendeesCount = 0;
 
     /**
      * Místnost.
-     *
-     * @ORM\ManyToOne(targetEntity="Room", inversedBy="programs", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: Room::class, inversedBy: 'programs', cascade: ['persist'])]
     protected ?Room $room = null;
 
     /**
-     * Začátek programu.
-     *
-     * @ORM\Column(type="datetime_immutable")
+     * @param DateTimeImmutable $start Začátek programu.
      */
-    protected DateTimeImmutable $start;
-
-    public function __construct(DateTimeImmutable $start)
-    {
-        $this->start               = $start;
+    public function __construct(
+        #[ORM\Column(type: 'datetime_immutable')]
+        protected DateTimeImmutable $start
+    ) {
         $this->programApplications = new ArrayCollection();
     }
 

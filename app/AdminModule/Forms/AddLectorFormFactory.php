@@ -29,24 +29,12 @@ class AddLectorFormFactory
 {
     use Nette\SmartObject;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private UserRepository $userRepository;
-
-    private RoleRepository $roleRepository;
-
-    private FilesService $filesService;
-
     public function __construct(
-        BaseFormFactory $baseFormFactory,
-        UserRepository $userRepository,
-        RoleRepository $roleRepository,
-        FilesService $filesService
+        private BaseFormFactory $baseFormFactory,
+        private UserRepository $userRepository,
+        private RoleRepository $roleRepository,
+        private FilesService $filesService
     ) {
-        $this->baseFormFactory = $baseFormFactory;
-        $this->userRepository  = $userRepository;
-        $this->roleRepository  = $roleRepository;
-        $this->filesService    = $filesService;
     }
 
     /**

@@ -9,6 +9,7 @@ use App\AdminModule\MailingModule\Components\MailTemplatesGridControl;
 use App\AdminModule\MailingModule\Forms\EditTemplateFormFactory;
 use App\Model\Mailing\Repositories\TemplateRepository;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 
 /**
@@ -16,13 +17,13 @@ use stdClass;
  */
 class TemplatesPresenter extends MailingBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public TemplateRepository $templateRepository;
 
-    /** @inject */
+    #[Inject]
     public IMailTemplatesGridControlFactory $mailTemplatesGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public EditTemplateFormFactory $editTemplateFormFactory;
 
     public function renderEdit(int $id): void

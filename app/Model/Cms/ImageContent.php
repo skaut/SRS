@@ -24,10 +24,9 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Entita obsahu s obrázkem.
- *
- * @ORM\Entity
- * @ORM\Table(name="image_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'image_content')]
 class ImageContent extends Content implements IContent
 {
     protected string $type = Content::IMAGE;
@@ -56,30 +55,26 @@ class ImageContent extends Content implements IContent
 
     /**
      * Adresa obrázku.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $image = null;
 
     /**
      * Zarovnání obrázku v textu.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $align = null;
 
     /**
      * Šířka obrázku.
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $width = null;
 
     /**
      * Výška obrázku.
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $height = null;
 
     private FilesService $filesService;

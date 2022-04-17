@@ -8,13 +8,14 @@ use App\AdminModule\ProgramModule\Components\IProgramCategoriesGridControlFactor
 use App\AdminModule\ProgramModule\Components\ProgramCategoriesGridControl;
 use App\Model\Acl\Permission;
 use Nette\Application\AbortException;
+use Nette\DI\Attributes\Inject;
 
 /**
  * Presenter obsluhující správu kategorií.
  */
 class CategoriesPresenter extends ProgramBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public IProgramCategoriesGridControlFactory $programCategoriesGridControlFactory;
 
     /**

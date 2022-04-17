@@ -24,13 +24,9 @@ use function unlink;
  */
 class ClearCacheCommand extends Command
 {
-    private string $dir;
-
-    public function __construct(string $dir)
+    public function __construct(private string $dir)
     {
         parent::__construct();
-
-        $this->dir = $dir;
     }
 
     /**
@@ -61,7 +57,7 @@ class ClearCacheCommand extends Command
             $output->writeln('Cache cleared successfully.');
 
             return 0;
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             $output->writeln('Cache clearing failed.');
 
             return 1;

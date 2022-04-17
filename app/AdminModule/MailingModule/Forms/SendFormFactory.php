@@ -33,36 +33,15 @@ class SendFormFactory
      */
     public bool $mailSuccess;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private IMailService $mailService;
-
-    private RoleRepository $roleRepository;
-
-    private UserRepository $userRepository;
-
-    private SubeventRepository $subeventRepository;
-
-    private AclService $aclService;
-
-    private SubeventService $subeventService;
-
     public function __construct(
-        BaseFormFactory $baseFormFactory,
-        IMailService $mailService,
-        RoleRepository $roleRepository,
-        UserRepository $userRepository,
-        SubeventRepository $subeventRepository,
-        AclService $aclService,
-        SubeventService $subeventService
+        private BaseFormFactory $baseFormFactory,
+        private IMailService $mailService,
+        private RoleRepository $roleRepository,
+        private UserRepository $userRepository,
+        private SubeventRepository $subeventRepository,
+        private AclService $aclService,
+        private SubeventService $subeventService
     ) {
-        $this->baseFormFactory    = $baseFormFactory;
-        $this->mailService        = $mailService;
-        $this->roleRepository     = $roleRepository;
-        $this->userRepository     = $userRepository;
-        $this->subeventRepository = $subeventRepository;
-        $this->aclService         = $aclService;
-        $this->subeventService    = $subeventService;
     }
 
     /**

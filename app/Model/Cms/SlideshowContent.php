@@ -23,10 +23,9 @@ use const UPLOAD_ERR_OK;
 
 /**
  * Entita obsahu se slideshow.
- *
- * @ORM\Entity
- * @ORM\Table(name="slideshow_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'slideshow_content')]
 class SlideshowContent extends Content implements IContent
 {
     protected string $type = Content::SLIDESHOW;
@@ -34,10 +33,9 @@ class SlideshowContent extends Content implements IContent
     /**
      * Adresy obrázků.
      *
-     * @ORM\Column(type="simple_array", nullable=true)
-     *
      * @var string[]|null
      */
+    #[ORM\Column(type: 'simple_array', nullable: true)]
     protected ?array $images = null;
 
     private FilesService $filesService;

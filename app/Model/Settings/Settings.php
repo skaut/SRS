@@ -8,11 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita nastavení.
- *
- * @ORM\Entity
- * @ORM\Table(name="settings")
- * @ORM\Cache(usage="NONSTRICT_READ_WRITE")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'settings')]
+#[ORM\Cache(usage: 'NONSTRICT_READ_WRITE')]
 class Settings
 {
     /**
@@ -34,12 +33,11 @@ class Settings
      * Neověřený změněný e-mail semináře.
      */
     public const SEMINAR_EMAIL_UNVERIFIED = 'seminar_email_unverified';
-
     /**
      * Ověřovací kód pro změnu e-mailu.
      */
-    public const SEMINAR_EMAIL_VERIFICATION_CODE = 'seminar_email_verification_code';
 
+    public const SEMINAR_EMAIL_VERIFICATION_CODE = 'seminar_email_verification_code';
     /**
      * Začátek semináře.
      */
@@ -238,16 +236,13 @@ class Settings
     public function __construct(
         /**
          * Název položky nastavení.
-         *
-         * @ORM\Column(type="string", unique=true)
-         * @ORM\Id
          */
+        #[ORM\Column(type: 'string', unique: true)] #[ORM\Id]
         protected string $item,
         /**
          * Hodnota položky nastavení.
-         *
-         * @ORM\Column(type="text", nullable=true)
          */
+        #[ORM\Column(type: 'text', nullable: true)]
         protected ?string $value
     ) {
     }

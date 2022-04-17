@@ -9,6 +9,7 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -17,7 +18,7 @@ use Throwable;
  */
 class WebPresenter extends ConfigurationBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public WebFormFactory $webFormFactory;
 
     /**

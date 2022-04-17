@@ -17,7 +17,8 @@ use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 
 use function md5;
-use function mt_rand;
+use function mt_getrandmax;
+use function random_int;
 use function uniqid;
 
 /**
@@ -32,24 +33,12 @@ class SubeventFormFactory
      */
     private ?Subevent $subevent = null;
 
-    private EntityManagerInterface $em;
-
-    private BaseFormFactory $baseFormFactory;
-
-    private SubeventRepository $subeventRepository;
-
-    private SubeventService $subeventService;
-
     public function __construct(
-        EntityManagerInterface $em,
-        BaseFormFactory $baseFormFactory,
-        SubeventRepository $subeventRepository,
-        SubeventService $subeventService
+        private EntityManagerInterface $em,
+        private BaseFormFactory $baseFormFactory,
+        private SubeventRepository $subeventRepository,
+        private SubeventService $subeventService
     ) {
-        $this->em                 = $em;
-        $this->baseFormFactory    = $baseFormFactory;
-        $this->subeventRepository = $subeventRepository;
-        $this->subeventService    = $subeventService;
     }
 
     /**
@@ -195,7 +184,7 @@ class SubeventFormFactory
             $editedSubevent = $this->subevent;
         } else {
             $editedSubevent = new Subevent();
-            $editedSubevent->setName(md5(uniqid((string) mt_rand(), true)));
+            $editedSubevent->setName(md5(uniqid((string) random_int(0, mt_getrandmax()), true)));
             $this->subeventRepository->save($editedSubevent);
         }
 

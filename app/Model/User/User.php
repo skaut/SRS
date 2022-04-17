@@ -27,10 +27,9 @@ use function implode;
 
 /**
  * Entita uživatele.
- *
- * @ORM\Entity
- * @ORM\Table(name="user")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'user')]
 class User
 {
     /**
@@ -38,303 +37,261 @@ class User
      */
     public const PHOTO_PATH = 'user_photos';
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Uživatelské jméno skautIS.
-     *
-     * @ORM\Column(type="string", unique=true, nullable=true, options={"collation":"utf8_bin"})
      */
+    #[ORM\Column(type: 'string', unique: true, nullable: true, options: ['collation' => 'utf8_bin'])]
     protected ?string $username = null;
 
     /**
      * E-mail.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $email = null;
 
     /**
      * Schválený.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $approved = true;
 
     /**
      * Jméno.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected ?string $firstName = null;
 
     /**
      * Příjmení.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected ?string $lastName = null;
 
     /**
      * Přezdívka.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $nickName = null;
 
     /**
      * Titul před jménem.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $degreePre = null;
 
     /**
      * Titul za jménem.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $degreePost = null;
 
     /**
      * Zobrazované jméno - Příjmení Jméno (Přezdívka).
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $displayName;
 
     /**
      * Zobrazované jméno lektora, včetně titulů.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $lectorName = null;
 
     /**
      * Bezpečnostní kód.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $securityCode = null;
 
     /**
      * Propojený účet.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $member = false;
 
     /**
      * Externí lektor.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $externalLector = false;
 
     /**
      * Jednotka.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $unit = null;
 
     /**
      * Pohlaví.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $sex = null;
 
     /**
      * Datum narození.
-     *
-     * @ORM\Column(type="date_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?DateTimeImmutable $birthdate = null;
 
     /**
      * Id uživatele ve skautIS.
-     *
-     * @ORM\Column(type="integer", unique=true, nullable=true, name="skautis_user_id")
      */
+    #[ORM\Column(type: 'integer', unique: true, nullable: true, name: 'skautis_user_id')]
     protected ?int $skautISUserId = null;
 
     /**
      * Id osoby ve skautIS.
-     *
-     * @ORM\Column(type="integer", unique=true, nullable=true, name="skautis_person_id")
      */
+    #[ORM\Column(type: 'integer', unique: true, nullable: true, name: 'skautis_person_id')]
     protected ?int $skautISPersonId = null;
 
     /**
      * Datum posledního přihlášení.
-     *
-     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $lastLogin = null;
 
     /**
      * O mně.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $about = null;
 
     /**
      * Ulice.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $street = null;
 
     /**
      * Město.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $city = null;
 
     /**
      * Poštovní směrovací číslo.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $postcode = null;
 
     /**
      * Stát.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $state = null;
 
     /**
      * Zúčastnil se.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $attended = false;
 
     /**
      * Role.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="users", cascade={"persist"})
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\Acl\Role', inversedBy: 'users', cascade: ['persist'])]
     protected Collection $roles;
 
     /**
      * Přihlášky.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\Application\Application", mappedBy="user", cascade={"persist"})
-     *
      * @var Collection<int, Application>
      */
+    #[ORM\OneToMany(targetEntity: '\App\Model\Application\Application', mappedBy: 'user', cascade: ['persist'])]
     protected Collection $applications;
 
     /**
      * Přihlášené programy.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\Program\ProgramApplication", mappedBy="user", cascade={"persist"})
-     *
      * @var Collection<int, ProgramApplication>
      */
+    #[ORM\OneToMany(targetEntity: '\App\Model\Program\ProgramApplication', mappedBy: 'user', cascade: ['persist'])]
     protected Collection $programApplications;
 
     /**
      * Lektorované bloky.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block", mappedBy="lectors", cascade={"persist"})
-     *
      * @var Collection<int, Block>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\Program\Block', mappedBy: 'lectors', cascade: ['persist'])]
     protected Collection $lecturersBlocks;
 
     /**
      * Poplatek uživatele.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $fee = 0;
 
     /**
      * Zbývající poplatek uživatele.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $feeRemaining = 0;
 
     /**
      * Platební metoda.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $paymentMethod = null;
 
     /**
      * Datum poslední platby.
-     *
-     * @ORM\Column(type="date_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?DateTimeImmutable $lastPaymentDate = null;
 
     /**
      * Datum a čas vytvoření přihlášky rolí.
-     *
-     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $rolesApplicationDate = null;
 
     /**
      * Programové bloky, které jsou pro uživatele povinné, ale nemá je zapsané.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Block")
-     *
      * @var Collection<int, Block>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\Program\Block')]
     protected Collection $notRegisteredMandatoryBlocks;
 
     /**
      * Počet programových bloků, které jsou pro uživatele povinné, ale nemá je zapsané.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $notRegisteredMandatoryBlocksCount = 0;
 
     /**
      * Hodnoty vlastních polí přihlášky.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\CustomInput\CustomInputValue", mappedBy="user", cascade={"persist"})
-     *
      * @var Collection<int, CustomInputValue>
      */
+    #[ORM\OneToMany(targetEntity: '\App\Model\CustomInput\CustomInputValue', mappedBy: 'user', cascade: ['persist'])]
     protected Collection $customInputValues;
 
     /**
      * Neveřejná poznámka.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $note = null;
 
     /**
      * Fotka.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $photo = null;
 
     /**
      * Datum aktualizace fotky.
-     *
-     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $photoUpdate = null;
 
     public function __construct()

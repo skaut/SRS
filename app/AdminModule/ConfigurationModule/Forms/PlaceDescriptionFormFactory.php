@@ -23,17 +23,8 @@ class PlaceDescriptionFormFactory
 {
     use Nette\SmartObject;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
-
-    public function __construct(BaseFormFactory $baseForm, CommandBus $commandBus, QueryBus $queryBus)
+    public function __construct(private BaseFormFactory $baseFormFactory, private CommandBus $commandBus, private QueryBus $queryBus)
     {
-        $this->baseFormFactory = $baseForm;
-        $this->commandBus      = $commandBus;
-        $this->queryBus        = $queryBus;
     }
 
     /**

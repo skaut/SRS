@@ -13,48 +13,40 @@ use function implode;
 
 /**
  * Entita kategorie programového bloku.
- *
- * @ORM\Entity
- * @ORM\Table(name="category")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'category')]
 class Category
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
-
-    /**
-     * Název kategorie.
-     *
-     * @ORM\Column(type="string", unique=true)
-     */
-    protected string $name;
 
     /**
      * Role, které si mohou přihlašovat programy z kategorie.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="registerableCategories", cascade={"persist"})
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\Acl\Role', inversedBy: 'registerableCategories', cascade: ['persist'])]
     protected Collection $registerableRoles;
 
     /**
      * Bloky v kategorii.
      *
-     * @ORM\OneToMany(targetEntity="Block", mappedBy="category", cascade={"persist"})
-     * @ORM\OrderBy({"name" = "ASC"})
-     *
      * @var Collection<int, Block>
      */
+    #[ORM\OneToMany(targetEntity: Block::class, mappedBy: 'category', cascade: ['persist'])]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     protected Collection $blocks;
 
-    public function __construct(string $name)
-    {
-        $this->name              = $name;
+    /**
+     * @param string $name Název kategorie
+     */
+    public function __construct(
+        #[ORM\Column(type: 'string', unique: true)]
+        protected string $name
+    ) {
         $this->registerableRoles = new ArrayCollection();
         $this->blocks            = new ArrayCollection();
     }
@@ -89,9 +81,7 @@ class Category
 
     public function getRegisterableRolesText(): string
     {
-        return implode(', ', $this->registerableRoles->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->registerableRoles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
     /**

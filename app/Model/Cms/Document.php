@@ -11,10 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita dokumentu.
- *
- * @ORM\Entity
- * @ORM\Table(name="document")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'document')]
 class Document
 {
     /**
@@ -22,48 +21,41 @@ class Document
      */
     public const PATH = 'documents';
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Tagy dokumentu.
      *
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents", cascade={"persist"})
-     *
      * @var Collection<int, Tag>
      */
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'documents', cascade: ['persist'])]
     protected Collection $tags;
 
     /**
      * Název dokumentu.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
      * Adresa souboru.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $file;
 
     /**
      * Popis.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
     /**
      * Datum změny souboru.
-     *
-     * @ORM\Column(type="datetime_immutable");
      */
+    #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $timestamp;
 
     public function __construct()

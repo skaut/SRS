@@ -25,14 +25,8 @@ class NewsFormFactory
      */
     private ?News $news = null;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private NewsRepository $newsRepository;
-
-    public function __construct(BaseFormFactory $baseFormFactory, NewsRepository $newsRepository)
+    public function __construct(private BaseFormFactory $baseFormFactory, private NewsRepository $newsRepository)
     {
-        $this->baseFormFactory = $baseFormFactory;
-        $this->newsRepository  = $newsRepository;
     }
 
     /**

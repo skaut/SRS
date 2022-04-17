@@ -19,20 +19,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class DiscountsGridControl extends Control
 {
-    private Translator $translator;
-
-    private DiscountRepository $discountRepository;
-
-    private DiscountService $discountService;
-
-    public function __construct(
-        Translator $translator,
-        DiscountRepository $discountRepository,
-        DiscountService $discountService
-    ) {
-        $this->translator         = $translator;
-        $this->discountRepository = $discountRepository;
-        $this->discountService    = $discountService;
+    public function __construct(private Translator $translator, private DiscountRepository $discountRepository, private DiscountService $discountService)
+    {
     }
 
     /**

@@ -9,42 +9,35 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Abstraktní entita hodnota vlastního pole přihlášky.
- *
- * @ORM\Entity
- * @ORM\Table(name="custom_input_value")
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *     "custom_checkbox_value" = "CustomCheckboxValue",
- *     "custom_text_value" = "CustomTextValue",
- *     "custom_select_value" = "CustomSelectValue",
- *     "custom_multiselect_value" = "CustomMultiSelectValue",
- *     "custom_file_value" = "CustomFileValue",
- *     "custom_date_value" = "CustomDateValue",
- *     "custom_datetime_value" = "CustomDateTimeValue"
- * })
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'custom_input_value')]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap([
+    'custom_checkbox_value' => CustomCheckboxValue::class,
+    'custom_text_value' => CustomTextValue::class,
+    'custom_select_value' => CustomSelectValue::class,
+    'custom_multiselect_value' => CustomMultiSelectValue::class,
+    'custom_file_value' => CustomFileValue::class,
+    'custom_date_value' => CustomDateValue::class,
+    'custom_datetime_value' => CustomDateTimeValue::class,
+])]
 abstract class CustomInputValue
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
+    /**
+     * @param CustomInput $input Vlastní pole přihlášky.
+     * @param User        $user  Uživatel
+     */
     public function __construct(
-        /**
-         * Vlastní pole přihlášky.
-         *
-         * @ORM\ManyToOne(targetEntity="CustomInput", inversedBy="customInputValues", cascade={"persist"})
-         */
+        #[ORM\ManyToOne(targetEntity: CustomInput::class, inversedBy: 'customInputValues', cascade: ['persist'])]
         protected CustomInput $input,
-        /**
-         * Uživatel.
-         *
-         * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="customInputValues", cascade={"persist"})
-         */
+        #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'customInputValues', cascade: ['persist'])]
         protected User $user
     ) {
     }

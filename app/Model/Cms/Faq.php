@@ -9,52 +9,44 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita FAQ.
- *
- * @ORM\Entity
- * @ORM\Table(name="faq")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'faq')]
 class Faq
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Otázka.
-     *
-     * @ORM\Column(type="text")
      */
+    #[ORM\Column(type: 'text')]
     protected string $question;
 
     /**
      * Autor otázky.
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: '\App\Model\User\User', cascade: ['persist'])]
     protected User $author;
 
     /**
      * Odpověď.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $answer = null;
 
     /**
      * Otázka zveřejněna všem.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $public = false;
 
     /**
      * Pozice otázky.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $position = 0;
 
     public function getId(): ?int

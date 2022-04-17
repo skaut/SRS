@@ -22,10 +22,9 @@ use function assert;
 
 /**
  * Entita obsahu s přehledem kapacit rolí.
- *
- * @ORM\Entity
- * @ORM\Table(name="capacities_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'capacities_content')]
 class CapacitiesContent extends Content implements IContent
 {
     protected string $type = Content::CAPACITIES;
@@ -33,14 +32,11 @@ class CapacitiesContent extends Content implements IContent
     /**
      * Role, jejichž obsazenosti se vypíší.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\Acl\Role')]
     protected Collection $roles;
-
     private RoleRepository $roleRepository;
-
     private AclService $aclService;
 
     /**

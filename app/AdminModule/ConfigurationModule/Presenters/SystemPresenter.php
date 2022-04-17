@@ -7,6 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\Commands\ClearCacheCommand;
 use Contributte\Console\Application;
 use Exception;
+use Nette\DI\Attributes\Inject;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -15,10 +16,10 @@ use Symfony\Component\Console\Output\BufferedOutput;
  */
 class SystemPresenter extends ConfigurationBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public ClearCacheCommand $clearCacheCommand;
 
-    /** @inject */
+    #[Inject]
     public Application $consoleApplication;
 
     /**

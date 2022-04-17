@@ -10,9 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita přihláška podakcí.
- *
- * @ORM\Entity
  */
+#[ORM\Entity]
 class SubeventsApplication extends Application
 {
     protected string $type = Application::SUBEVENTS;
