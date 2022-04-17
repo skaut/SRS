@@ -56,7 +56,6 @@
         "contributte/pdf": "^6.1",
         "mpdf/qrcode": "^1.2",
         "dfridrich/qr-platba": "^1.0",
-        "endroid/qr-code": "^4.4",
         "eluceo/ical": "^0.16",
 
         "skautis/skautis": "^2.2",

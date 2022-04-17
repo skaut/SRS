@@ -18,21 +18,6 @@ parameters:
             path: app/Model/User/User.php
 
         -
-            message: "#^Call to an undefined method Endroid\\\\QrCode\\\\QrCode\\:\\:get\\(\\)\\.$#"
-            count: 1
-            path: app/AdminModule/ConfigurationModule/Presenters/TicketsPresenter.php
-
-        -
-            message: "#^Call to an undefined method Endroid\\\\QrCode\\\\QrCode\\:\\:setText\\(\\)\\.$#"
-            count: 1
-            path: app/AdminModule/ConfigurationModule/Presenters/TicketsPresenter.php
-
-        -
-            message: "#^Class Endroid\\\\QrCode\\\\QrCode constructor invoked with 0 parameters, 1\\-8 required\\.$#"
-            count: 1
-            path: app/AdminModule/ConfigurationModule/Presenters/TicketsPresenter.php
-
-        -
             message: "#^Property App\\\\ApiModule\\\\Dto\\\\Tickets\\\\SeminarInfo\\:\\:\\$name is never read, only written\\.$#"
             count: 1
             path: app/ApiModule/Dto/Tickets/SeminarInfo.php
