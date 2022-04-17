@@ -25,7 +25,6 @@ use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
 
-use function get_class;
 use function str_replace;
 use function ucwords;
 
@@ -140,7 +139,7 @@ class PageForm extends UI\Control
         $form->addSelect('type', 'admin.cms.pages.content.form.type', $this->prepareContentTypesOptions());
 
         foreach ($this->page->getContents($this->area) as $content) {
-            switch (get_class($content)) {
+            switch ($content::class) {
                 case CapacitiesContent::class:
                     $content->injectRoleRepository($this->roleRepository);
                     $content->injectAclService($this->aclService);

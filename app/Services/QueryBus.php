@@ -18,10 +18,7 @@ final class QueryBus
         $this->bus = $bus;
     }
 
-    /**
-     * @return mixed
-     */
-    public function handle(object $query)
+    public function handle(object $query): mixed
     {
         $stamp = $this->bus->dispatch($query)->last(HandledStamp::class);
         assert($stamp instanceof HandledStamp);
