@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6c1009979a3f00de23080f0b3f509e16",
+    "content-hash": "e1e0bd69e40e372cd0cd66f5190174f5",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -2789,16 +2789,16 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.11.1",
+            "version": "v2.10.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "21316b42fb0a4e43df01f73c55d52bd531823fda"
+                "reference": "7527f17dd3f8f18a63366bd2517e1c0bf79ebb32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/21316b42fb0a4e43df01f73c55d52bd531823fda",
-                "reference": "21316b42fb0a4e43df01f73c55d52bd531823fda",
+                "url": "https://api.github.com/repos/nette/latte/zipball/7527f17dd3f8f18a63366bd2517e1c0bf79ebb32",
+                "reference": "7527f17dd3f8f18a63366bd2517e1c0bf79ebb32",
                 "shasum": ""
             },
             "require": {
@@ -2829,7 +2829,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.11-dev"
+                    "dev-master": "2.10-dev"
                 }
             },
             "autoload": {
@@ -2867,9 +2867,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/latte/issues",
-                "source": "https://github.com/nette/latte/tree/v2.11.1"
+                "source": "https://github.com/nette/latte/tree/v2.10.9"
             },
-            "time": "2022-04-07T13:21:53+00:00"
+            "time": "2022-02-22T18:38:38+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
