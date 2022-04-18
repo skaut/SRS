@@ -45,7 +45,7 @@ class Page
      *
      * @var Collection<int, Role>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\Acl\Role', inversedBy: 'pages', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'pages', cascade: ['persist'])]
     protected Collection $roles;
 
     /**

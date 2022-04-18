@@ -95,7 +95,7 @@ class Role
      *
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\User\User', mappedBy: 'roles', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', cascade: ['persist'])]
     protected Collection $users;
 
     /**
@@ -181,9 +181,9 @@ class Role
      * @var Collection<int, Role>
      */
     #[ORM\ManyToMany(targetEntity: self::class)]
-    #[ORM\JoinTable(name: 'role_role_incompatible', joinColumns: [], inverseJoinColumns: [])]
+    #[ORM\JoinTable(name: 'role_role_incompatible')]
     #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id')]
-    #[ORM\JoinColumn(name: 'incompatible_role_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'incompatible_role_id', referencedColumnName: 'id')]
     protected Collection $incompatibleRoles;
 
     /**
@@ -200,9 +200,9 @@ class Role
      * @var Collection<int, Role>
      */
     #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'requiredByRole')]
-    #[ORM\JoinTable(name: 'role_role_required', joinColumns: [], inverseJoinColumns: [])]
+    #[ORM\JoinTable(name: 'role_role_required')]
     #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id')]
-    #[ORM\JoinColumn(name: 'required_role_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'required_role_id', referencedColumnName: 'id')]
     protected Collection $requiredRoles;
 
     /**

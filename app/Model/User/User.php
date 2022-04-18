@@ -197,7 +197,7 @@ class User
      *
      * @var Collection<int, Role>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\Acl\Role', inversedBy: 'users', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users', cascade: ['persist'])]
     protected Collection $roles;
 
     /**
@@ -205,7 +205,7 @@ class User
      *
      * @var Collection<int, Application>
      */
-    #[ORM\OneToMany(targetEntity: '\App\Model\Application\Application', mappedBy: 'user', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'user', cascade: ['persist'])]
     protected Collection $applications;
 
     /**
@@ -213,7 +213,7 @@ class User
      *
      * @var Collection<int, ProgramApplication>
      */
-    #[ORM\OneToMany(targetEntity: '\App\Model\Program\ProgramApplication', mappedBy: 'user', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: ProgramApplication::class, mappedBy: 'user', cascade: ['persist'])]
     protected Collection $programApplications;
 
     /**
@@ -221,7 +221,7 @@ class User
      *
      * @var Collection<int, Block>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\Program\Block', mappedBy: 'lectors', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Block::class, mappedBy: 'lectors', cascade: ['persist'])]
     protected Collection $lecturersBlocks;
 
     /**
@@ -259,7 +259,7 @@ class User
      *
      * @var Collection<int, Block>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\Program\Block')]
+    #[ORM\ManyToMany(targetEntity: Block::class)]
     protected Collection $notRegisteredMandatoryBlocks;
 
     /**
@@ -273,7 +273,7 @@ class User
      *
      * @var Collection<int, CustomInputValue>
      */
-    #[ORM\OneToMany(targetEntity: '\App\Model\CustomInput\CustomInputValue', mappedBy: 'user', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: CustomInputValue::class, mappedBy: 'user', cascade: ['persist'])]
     protected Collection $customInputValues;
 
     /**

@@ -64,7 +64,7 @@ abstract class Application
      *
      * @var Collection<int, Role>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\Acl\Role')]
+    #[ORM\ManyToMany(targetEntity: Role::class)]
     protected Collection $roles;
 
     /**
@@ -72,7 +72,7 @@ abstract class Application
      *
      * @var Collection<int, Subevent>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\Structure\Subevent', inversedBy: 'applications', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Subevent::class, inversedBy: 'applications', cascade: ['persist'])]
     protected Collection $subevents;
 
     /**
@@ -132,7 +132,7 @@ abstract class Application
     /**
      * Uživatel, který vytvořil přihlášku.
      */
-    #[ORM\ManyToOne(targetEntity: '\App\Model\User\User', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     protected ?User $createdBy = null;
 
     /**
@@ -148,7 +148,7 @@ abstract class Application
     protected ?DateTimeImmutable $validTo = null;
 
     public function __construct(
-        #[ORM\ManyToOne(targetEntity: '\App\Model\User\User', inversedBy: 'applications', cascade: ['persist'])]
+        #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'applications', cascade: ['persist'])]
         protected User $user
     ) {
         $this->roles     = new ArrayCollection();

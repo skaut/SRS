@@ -45,7 +45,7 @@ class Subevent
      *
      * @var Collection<int, SubeventsApplication>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\Application\SubeventsApplication', mappedBy: 'subevents', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: SubeventsApplication::class, mappedBy: 'subevents', cascade: ['persist'])]
     protected Collection $applications;
 
     /**
@@ -53,7 +53,7 @@ class Subevent
      *
      * @var Collection<int, Block>
      */
-    #[ORM\OneToMany(targetEntity: '\App\Model\Program\Block', mappedBy: 'subevent', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Block::class, mappedBy: 'subevent', cascade: ['persist'])]
     #[ORM\OrderBy(['name' => 'ASC'])]
     protected Collection $blocks;
 
@@ -82,9 +82,9 @@ class Subevent
      * @var Collection<int, Subevent>
      */
     #[ORM\ManyToMany(targetEntity: self::class)]
-    #[ORM\JoinTable(name: 'subevent_subevent_incompatible', joinColumns: [], inverseJoinColumns: [])]
+    #[ORM\JoinTable(name: 'subevent_subevent_incompatible')]
     #[ORM\JoinColumn(name: 'subevent_id', referencedColumnName: 'id')]
-    #[ORM\JoinColumn(name: 'incompatible_subevent_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'incompatible_subevent_id', referencedColumnName: 'id')]
     protected Collection $incompatibleSubevents;
 
     /**
@@ -101,9 +101,9 @@ class Subevent
      * @var Collection<int, Subevent>
      */
     #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'requiredBySubevent')]
-    #[ORM\JoinTable(name: 'subevent_subevent_required', joinColumns: [], inverseJoinColumns: [])]
+    #[ORM\JoinTable(name: 'subevent_subevent_required')]
     #[ORM\JoinColumn(name: 'subevent_id', referencedColumnName: 'id')]
-    #[ORM\JoinColumn(name: 'required_subevent_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'required_subevent_id', referencedColumnName: 'id')]
     protected Collection $requiredSubevents;
 
     /**
@@ -111,7 +111,7 @@ class Subevent
      *
      * @var Collection<int, SkautIsCourse>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\SkautIs\SkautIsCourse')]
+    #[ORM\ManyToMany(targetEntity: SkautIsCourse::class)]
     protected Collection $skautIsCourses;
 
     /**

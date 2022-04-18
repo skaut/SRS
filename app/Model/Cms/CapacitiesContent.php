@@ -34,7 +34,7 @@ class CapacitiesContent extends Content implements IContent
      *
      * @var Collection<int, Role>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\Acl\Role')]
+    #[ORM\ManyToMany(targetEntity: Role::class)]
     protected Collection $roles;
     private RoleRepository $roleRepository;
     private AclService $aclService;

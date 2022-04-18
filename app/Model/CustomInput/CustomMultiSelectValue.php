@@ -21,7 +21,7 @@ class CustomMultiSelectValue extends CustomInputValue
      *
      * @var string[]
      */
-    #[ORM\Column(type: 'simple_array')]
+    #[ORM\Column(type: 'simple_array', nullable: true)]
     protected array $value = [];
 
     /**

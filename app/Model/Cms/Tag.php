@@ -42,7 +42,7 @@ class Tag
      *
      * @var Collection<int, Role>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\Acl\Role', inversedBy: 'tags', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'tags', cascade: ['persist'])]
     protected Collection $roles;
 
     public function __construct()

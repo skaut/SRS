@@ -38,7 +38,7 @@ class Block
      *
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\User\User', inversedBy: 'lecturersBlocks', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'lecturersBlocks', cascade: ['persist'])]
     protected Collection $lectors;
 
     /**
@@ -50,7 +50,7 @@ class Block
     /**
      * Podakce bloku.
      */
-    #[ORM\ManyToOne(targetEntity: '\App\Model\Structure\Subevent', inversedBy: 'blocks', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Subevent::class, inversedBy: 'blocks', cascade: ['persist'])]
     protected Subevent $subevent;
 
     /**

@@ -31,7 +31,7 @@ class Mail
      *
      * @var Collection<int, Role>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\Acl\Role')]
+    #[ORM\ManyToMany(targetEntity: Role::class)]
     protected Collection $recipientRoles;
 
     /**
@@ -39,7 +39,7 @@ class Mail
      *
      * @var Collection<int, Subevent>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\Structure\Subevent')]
+    #[ORM\ManyToMany(targetEntity: Subevent::class)]
     protected Collection $recipientSubevents;
 
     /**
@@ -47,7 +47,7 @@ class Mail
      *
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\User\User')]
+    #[ORM\ManyToMany(targetEntity: User::class)]
     protected Collection $recipientUsers;
 
     /**

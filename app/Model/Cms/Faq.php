@@ -28,7 +28,7 @@ class Faq
     /**
      * Autor otázky.
      */
-    #[ORM\ManyToOne(targetEntity: '\App\Model\User\User', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     protected User $author;
 
     /**

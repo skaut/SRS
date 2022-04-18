@@ -28,7 +28,7 @@ class Category
      *
      * @var Collection<int, Role>
      */
-    #[ORM\ManyToMany(targetEntity: '\App\Model\Acl\Role', inversedBy: 'registerableCategories', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'registerableCategories', cascade: ['persist'])]
     protected Collection $registerableRoles;
 
     /**
