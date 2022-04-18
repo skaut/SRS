@@ -89,7 +89,11 @@ class IncomeProofPresenter extends ExportBasePresenter
     public function actionApplications(): void
     {
         $ids          = $this->session->getSection('srs')->applicationIds;
-        $applications = $this->applicationRepository->findApplicationsByIds($ids)->filter(static fn (Application $application) => $application->getState() === ApplicationState::PAID && $application->isValid());
+        $applications = $this->applicationRepository->findApplicationsByIds($ids)
+            ->filter(
+                static fn (Application $application) => $application->getState()
+                    === ApplicationState::PAID && $application->isValid()
+            );
 
         $this->generateIncomeProofs($applications);
     }

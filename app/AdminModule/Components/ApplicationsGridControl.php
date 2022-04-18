@@ -122,9 +122,8 @@ class ApplicationsGridControl extends Control
                     'subevents',
                     '',
                     $this->subeventService->getSubeventsOptionsWithCapacity(false, false, true, false, $this->user)
-                )
-                    ->setHtmlAttribute('class', 'datagrid-multiselect')
-                    ->addRule(Form::FILLED, 'admin.users.users_applications_subevents_empty');
+                )->setHtmlAttribute('class', 'datagrid-multiselect')
+                ->addRule(Form::FILLED, 'admin.users.users_applications_subevents_empty');
             };
             $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
         }
@@ -134,8 +133,7 @@ class ApplicationsGridControl extends Control
                 'subevents',
                 '',
                 $this->subeventService->getSubeventsOptionsWithCapacity(false, false, false, false)
-            )
-                ->setHtmlAttribute('class', 'datagrid-multiselect');
+            )->setHtmlAttribute('class', 'datagrid-multiselect');
 
             $paymentMethodSelect = $container->addSelect(
                 'paymentMethod',
@@ -165,14 +163,20 @@ class ApplicationsGridControl extends Control
         $grid->allowRowsInlineEdit(static fn (Application $item) => ! $item->isCanceled());
 
         $grid->addAction('generatePaymentProofCash', 'admin.users.users_applications_download_payment_proof_cash');
-        $grid->allowRowsAction('generatePaymentProofCash', static fn (Application $item) => $item->getState() === ApplicationState::PAID
-            && $item->getPaymentMethod() === PaymentType::CASH
-            && $item->getPaymentDate());
+        $grid->allowRowsAction(
+            'generatePaymentProofCash',
+            static fn (Application $item) => $item->getState() === ApplicationState::PAID
+                && $item->getPaymentMethod() === PaymentType::CASH
+                && $item->getPaymentDate()
+        );
 
         $grid->addAction('generatePaymentProofBank', 'admin.users.users_applications_download_payment_proof_bank');
-        $grid->allowRowsAction('generatePaymentProofBank', static fn (Application $item) => $item->getState() === ApplicationState::PAID
-            && $item->getPaymentMethod() === PaymentType::BANK
-            && $item->getPaymentDate());
+        $grid->allowRowsAction(
+            'generatePaymentProofBank',
+            static fn (Application $item) => $item->getState() === ApplicationState::PAID
+                && $item->getPaymentMethod() === PaymentType::BANK
+                && $item->getPaymentDate()
+        );
 
         if ($this->user->getNotCanceledSubeventsApplications()->count() > 1) {
             $grid->addAction('cancelApplication', 'admin.users.users_applications_cancel_application')
@@ -180,7 +184,11 @@ class ApplicationsGridControl extends Control
                     'data-toggle' => 'confirmation',
                     'data-content' => $this->translator->translate('admin.users.users_applications_cancel_application_confirm'),
                 ])->setClass('btn btn-xs btn-danger');
-            $grid->allowRowsAction('cancelApplication', static fn (Application $application) => $application instanceof SubeventsApplication && ! $application->isCanceled());
+            $grid->allowRowsAction(
+                'cancelApplication',
+                static fn (Application $application) => $application instanceof SubeventsApplication &&
+                    ! $application->isCanceled()
+            );
         }
 
         $grid->setColumnsSummary(['fee'], static fn (Application $item, $column) => $item->isCanceled() ? 0 : $item->getFee());

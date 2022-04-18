@@ -122,41 +122,41 @@ class UsersGridControl extends Control
 
         $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is')
             ->onSelect[] = match ($this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE))) {
-            SkautIsEventType::GENERAL => [$this, 'groupInsertIntoSkautIs'],
-            SkautIsEventType::EDUCATION => [$this, 'groupInsertIntoSkautIs'],
-            default => throw new InvalidArgumentException(),
+                SkautIsEventType::GENERAL => [$this, 'groupInsertIntoSkautIs'],
+                SkautIsEventType::EDUCATION => [$this, 'groupInsertIntoSkautIs'],
+                default => throw new InvalidArgumentException(),
             };
 
             $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
-            ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
+                ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
 
             $grid->addGroupAction('admin.users.users_group_action_export_users')
-            ->onSelect[] = [$this, 'groupExportUsers'];
+                ->onSelect[] = [$this, 'groupExportUsers'];
 
             $grid->addGroupAction('admin.users.users_group_action_export_subevents_and_categories')
-            ->onSelect[] = [$this, 'groupExportSubeventsAndCategories'];
+                ->onSelect[] = [$this, 'groupExportSubeventsAndCategories'];
 
             $grid->addGroupAction('admin.users.users_group_action_export_roles')
-            ->onSelect[] = [$this, 'groupExportRoles'];
+                ->onSelect[] = [$this, 'groupExportRoles'];
 
             $grid->addGroupAction('admin.users.users_group_action_export_schedules')
-            ->onSelect[] = [$this, 'groupExportSchedules'];
+                ->onSelect[] = [$this, 'groupExportSchedules'];
 
             $grid->addColumnText('displayName', 'admin.users.users_name')
-            ->setSortable()
-            ->setFilterText();
+                ->setSortable()
+                ->setFilterText();
 
             $grid->addColumnText('username', 'admin.users.users_username')
-            ->setSortable()
-            ->setFilterText();
+                ->setSortable()
+                ->setFilterText();
 
             $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
-            ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
-            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
-                $qb->join('u.roles', 'uR')
-                    ->andWhere('uR.id IN (:rids)')
-                    ->setParameter('rids', (array) $values);
-            });
+                ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
+                ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
+                    $qb->join('u.roles', 'uR')
+                        ->andWhere('uR.id IN (:rids)')
+                        ->setParameter('rids', (array) $values);
+                });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
             ->setFilterMultiSelect($this->subeventService->getSubeventsOptions())
