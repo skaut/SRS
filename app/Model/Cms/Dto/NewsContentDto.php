@@ -10,7 +10,7 @@ namespace App\Model\Cms\Dto;
 class NewsContentDto extends ContentDto
 {
     /**
-     * @param int|null $count Počet posledních novinek k zobrazení.
+     * @param ?int $count Počet posledních novinek k zobrazení.
      */
     public function __construct(string $type, string $heading, protected ?int $count)
     {

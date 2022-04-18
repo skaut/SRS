@@ -31,7 +31,7 @@
         "nette/security": "^3.1",
         "nette/utils": "^3.2",
         "latte/latte": "~2.10.0",
-        "tracy/tracy": "2.8.10",
+        "tracy/tracy": "~2.8.0",
 
         "contributte/console": "^0.9",
         "contributte/translation": "^1.0",
