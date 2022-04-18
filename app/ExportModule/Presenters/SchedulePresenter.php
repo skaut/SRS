@@ -8,9 +8,11 @@ use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\IcalResponse;
 use App\Services\QueryBus;
-use Eluceo\iCal\Component\Calendar;
-use Eluceo\iCal\Component\Event;
-use Eluceo\iCal\Property\Event\Organizer;
+use Eluceo\iCal\Domain\Entity\Calendar;
+use Eluceo\iCal\Domain\Entity\Event;
+use Eluceo\iCal\Domain\ValueObject\DateTime;
+use Eluceo\iCal\Domain\ValueObject\Organizer;
+use Eluceo\iCal\Domain\ValueObject\TimeSpan;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\DI\Attributes\Inject;
@@ -32,17 +34,21 @@ class SchedulePresenter extends ExportBasePresenter
      */
     public function actionIcal(int $id): void
     {
-        $calendar = new Calendar('-//Junák - český skaut//SRS//CS');
+        $calendar = new Calendar();
+        $calendar->setProductIdentifier('-//Junák - český skaut//SRS//CS');
 
         $user         = $this->userRepository->findById($id);
         $userPrograms = $this->queryBus->handle(new UserAttendsProgramsQuery($user));
 
         foreach ($userPrograms as $program) {
+            $start      = new DateTime($program->getStart(), false);
+            $end        = new DateTime($program->getEnd(), false);
+            $occurrence = new TimeSpan($start, $end);
+
             $event = new Event();
-            $event->setDtStart($program->getStart())
-                ->setDtEnd($program->getEnd())
-                ->setSummary($program->getBlock()->getName())
-                ->setDescription($program->getBlock()->getDescription());
+            $event->setSummary($program->getBlock()->getName())
+                ->setDescription($program->getBlock()->getDescription())
+                ->setOccurrence($occurrence);
 
             if (! $program->getBlock()->getLectors()->isEmpty()) {
                 $event->setOrganizer(new Organizer($program->getBlock()->getLectorsText()));
@@ -52,7 +58,7 @@ class SchedulePresenter extends ExportBasePresenter
                 $event->setLocation($program->getRoom()->getName());
             }
 
-            $calendar->addComponent($event);
+            $calendar->addEvent($event);
         }
 
         $icalResponse = new IcalResponse($calendar, 'harmonogram.ics');

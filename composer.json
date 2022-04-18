@@ -56,7 +56,7 @@
         "contributte/pdf": "^6.1",
         "mpdf/qrcode": "^1.2",
         "swejzi/qr-platba": "^1.0",
-        "eluceo/ical": "^0.16",
+        "eluceo/ical": "^2.5",
 
         "skautis/skautis": "^2.2",
         "skautis/nette": "^2.2",
