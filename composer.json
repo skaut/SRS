@@ -34,7 +34,7 @@
         "tracy/tracy": "2.8.10",
 
         "contributte/console": "^0.9",
-        "contributte/translation": "^0.9",
+        "contributte/translation": "^1.0",
 
         "nettrine/orm": "^0.8",
         "nettrine/migrations": "^0.7",
@@ -55,14 +55,14 @@
         "phpoffice/phpspreadsheet": "^1.21",
         "contributte/pdf": "^6.1",
         "mpdf/qrcode": "^1.2",
-        "dfridrich/qr-platba": "^1.0",
+        "swejzi/qr-platba": "^1.0",
         "eluceo/ical": "^0.16",
 
         "skautis/skautis": "^2.2",
         "skautis/nette": "^2.2",
 
         "pear/numbers_words": "^0.18",
-        "azuyalabs/yasumi": "^1.8",
+        "azuyalabs/yasumi": "^2.5",
 
         "mhujer/fio-api-php": "^4.1",
         "composer/ca-bundle": "^1.3"

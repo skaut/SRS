@@ -10,7 +10,9 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
+use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 use Nette\Application\UI\Form;
 use Nette\DI\Attributes\Inject;
 use stdClass;
@@ -90,13 +92,16 @@ class TicketsPresenter extends ConfigurationBasePresenter
 
     private function generateQr(string $text): string
     {
-        $qrCode = new QrCode();
+        $qrCode = QrCode::create($text);
         $qrCode
-            ->setText($text)
             ->setSize(200)
-            ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
-            ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+            ->setForegroundColor(new Color(0, 0, 0))
+            ->setBackgroundColor(new Color(255, 255, 255));
 
-        return $qrCode->get();
+        $writer = new PngWriter();
+
+        $result = $writer->write($qrCode);
+
+        return $result->getString();
     }
 }
