@@ -130,8 +130,8 @@ jobs:
         run: tar -xzf workdir.tar.gz
       - run: phing coding-standard
 
-  doctrine-migrations:
-    name: "Doctrine migrations"
+  doctrine-checks:
+    name: "Doctrine checks"
     runs-on: ubuntu-20.04
     container:
       image: skaut/lebeda:8.0
@@ -156,3 +156,5 @@ jobs:
         run: mv app/config/ci.local.neon app/config/local.neon
       - name: Run migrations:migrate
         run: php www/console.php migrations:migrate --no-interaction
+      - name: Run orm:validate
+        run: php www/console.php orm:validate
