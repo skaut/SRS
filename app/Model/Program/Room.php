@@ -21,6 +21,18 @@ class Room
     private ?int $id = null;
 
     /**
+     * Název místnosti.
+     */
+    #[ORM\Column(type: 'string', unique: true)]
+    protected string $name;
+
+    /**
+     * Kapacita.
+     */
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $capacity;
+
+    /**
      * Programy v místnosti.
      *
      * @var Collection<int, Program>
@@ -29,16 +41,10 @@ class Room
     #[ORM\OrderBy(['start' => 'ASC'])]
     protected Collection $programs;
 
-    /**
-     * @param string   $name     Název místnosti
-     * @param int|null $capacity Kapacita
-     */
-    public function __construct(
-        #[ORM\Column(type: 'string', unique: true)]
-        protected string $name,
-        #[ORM\Column(type: 'integer', nullable: true)]
-        protected ?int $capacity
-    ) {
+    public function __construct(string $name, ?int $capacity)
+    {
+        $this->name     = $name;
+        $this->capacity = $capacity;
         $this->programs = new ArrayCollection();
     }
 

@@ -72,6 +72,9 @@ class SrsResource
     #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
+    #[ORM\Column(type: 'string', unique: true)]
+    protected string $name;
+
     /**
      * Oprávnění s tímto prostředkem.
      *
@@ -83,10 +86,9 @@ class SrsResource
     /**
      * @param string $name Název prostředku.
      */
-    public function __construct(
-        #[ORM\Column(type: 'string', unique: true)]
-        protected string $name
-    ) {
+    public function __construct(string $name)
+    {
+        $this->name        = $name;
         $this->permissions = new ArrayCollection();
     }
 

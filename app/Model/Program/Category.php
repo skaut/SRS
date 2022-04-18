@@ -24,6 +24,12 @@ class Category
     private ?int $id = null;
 
     /**
+     * Název kategorie.
+     */
+    #[ORM\Column(type: 'string', unique: true)]
+    protected string $name;
+
+    /**
      * Role, které si mohou přihlašovat programy z kategorie.
      *
      * @var Collection<int, Role>
@@ -40,13 +46,9 @@ class Category
     #[ORM\OrderBy(['name' => 'ASC'])]
     protected Collection $blocks;
 
-    /**
-     * @param string $name Název kategorie
-     */
-    public function __construct(
-        #[ORM\Column(type: 'string', unique: true)]
-        protected string $name
-    ) {
+    public function __construct(string $name)
+    {
+        $this->name              = $name;
         $this->registerableRoles = new ArrayCollection();
         $this->blocks            = new ArrayCollection();
     }

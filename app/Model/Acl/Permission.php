@@ -65,6 +65,12 @@ class Permission
     private ?int $id = null;
 
     /**
+     * Název oprávnění.
+     */
+    #[ORM\Column(type: 'string')]
+    protected string $name;
+
+    /**
      * Role s tímto oprávněním.
      *
      * @var Collection<int, Role>
@@ -73,16 +79,16 @@ class Permission
     protected Collection $roles;
 
     /**
-     * @param string      $name     Název oprávnění.
-     * @param SrsResource $resource Prostředek oprávnění.
+     * Prostředek oprávnění.
      */
-    public function __construct(
-        #[ORM\Column(type: 'string')]
-        protected string $name,
-        #[ORM\ManyToOne(targetEntity: SrsResource::class, inversedBy: 'permissions', cascade: ['persist'])]
-        protected SrsResource $resource
-    ) {
-        $this->roles = new ArrayCollection();
+    #[ORM\ManyToOne(targetEntity: SrsResource::class, inversedBy: 'permissions', cascade: ['persist'])]
+    protected SrsResource $resource;
+
+    public function __construct(string $name, SrsResource $resource)
+    {
+        $this->name     = $name;
+        $this->resource = $resource;
+        $this->roles    = new ArrayCollection();
     }
 
     public function getId(): ?int

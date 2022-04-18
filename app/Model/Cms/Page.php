@@ -28,6 +28,12 @@ class Page
     #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
+    #[ORM\Column(type: 'string')]
+    protected string $name;
+
+    #[ORM\Column(type: 'string', unique: true)]
+    protected string $slug;
+
     /**
      * Pořadí v menu.
      */
@@ -57,16 +63,10 @@ class Page
     #[ORM\OrderBy(['position' => 'ASC'])]
     protected Collection $contents;
 
-    /**
-     * @param string $name Název stránky
-     * @param string $slug Cesta stránky
-     */
-    public function __construct(
-        #[ORM\Column(type: 'string')]
-        protected string $name,
-        #[ORM\Column(type: 'string', unique: true)]
-        protected string $slug
-    ) {
+    public function __construct(string $name, string $slug)
+    {
+        $this->name     = $name;
+        $this->slug     = $slug;
         $this->roles    = new ArrayCollection();
         $this->contents = new ArrayCollection();
     }

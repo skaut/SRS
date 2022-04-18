@@ -20,6 +20,15 @@ class ProgramApplication
     #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'programApplications', cascade: ['persist'])]
+    protected User $user;
+
+    /**
+     * Zapsaný program.
+     */
+    #[ORM\ManyToOne(targetEntity: Program::class, inversedBy: 'programApplications', cascade: ['persist'])]
+    protected Program $program;
+
     /**
      * Náhradník.
      */
@@ -32,16 +41,10 @@ class ProgramApplication
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $createdAt;
 
-    /**
-     * @param User    $user    Uživatel
-     * @param Program $program Zapsaný program
-     */
-    public function __construct(
-        #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'programApplications', cascade: ['persist'])]
-        protected User $user,
-        #[ORM\ManyToOne(targetEntity: Program::class, inversedBy: 'programApplications', cascade: ['persist'])]
-        protected Program $program
-    ) {
+    public function __construct(User $user, Program $program)
+    {
+        $this->user      = $user;
+        $this->program   = $program;
         $this->createdAt = new DateTimeImmutable();
     }
 

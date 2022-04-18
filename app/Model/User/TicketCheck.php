@@ -21,21 +21,27 @@ class TicketCheck
     private ?int $id = null;
 
     /**
-     * Datum a čas kontroly.
+     * Uživatel
+     */
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
+    protected User $user;
+
+    /**
+     * Podakce
+     */
+    #[ORM\ManyToOne(targetEntity: Subevent::class, cascade: ['persist'])]
+    protected Subevent $subevent;
+
+    /**
+     * Datum a čas kontroly
      */
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $datetime;
 
-    /**
-     * @param User     $user     Uživatel
-     * @param Subevent $subevent Podakce
-     */
-    public function __construct(
-        #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
-        protected User $user,
-        #[ORM\ManyToOne(targetEntity: Subevent::class, cascade: ['persist'])]
-        protected Subevent $subevent
-    ) {
+    public function __construct(User $user, Subevent $subevent)
+    {
+        $this->user     = $user;
+        $this->subevent = $subevent;
         $this->datetime = new DateTimeImmutable();
     }
 

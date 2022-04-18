@@ -59,6 +59,9 @@ abstract class Application
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $applicationId = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'applications', cascade: ['persist'])]
+    protected User $user;
+
     /**
      * Role.
      *
@@ -147,10 +150,9 @@ abstract class Application
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $validTo = null;
 
-    public function __construct(
-        #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'applications', cascade: ['persist'])]
-        protected User $user
-    ) {
+    public function __construct(User $user)
+    {
+        $this->user      = $user;
         $this->roles     = new ArrayCollection();
         $this->subevents = new ArrayCollection();
     }

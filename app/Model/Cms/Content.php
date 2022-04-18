@@ -174,6 +174,12 @@ abstract class Content implements IContent
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $heading = null;
 
+    #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'contents', cascade: ['persist'])]
+    protected Page $page;
+
+    #[ORM\Column(type: 'string')]
+    protected string $area;
+
     /**
      * Pořadí obsahu na stránce.
      */
@@ -181,17 +187,13 @@ abstract class Content implements IContent
     protected int $position = 0;
 
     /**
-     * @param Page   $page Stránka, na které je obsah umístěn
-     * @param string $area Oblast stránky, ve které se obsah nachází
-     *
      * @throws PageException
      */
-    public function __construct(
-        #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'contents', cascade: ['persist'])]
-        protected Page $page,
-        #[ORM\Column(type: 'string')]
-        protected string $area
-    ) {
+    public function __construct(Page $page, string $area)
+    {
+        $this->page = $page;
+        $this->area = $area;
+
         $contentsCount = $page->getContents($area)->count();
 
         $this->position = $contentsCount + 1;

@@ -51,12 +51,14 @@ class Program
     protected ?Room $room = null;
 
     /**
-     * @param DateTimeImmutable $start Začátek programu.
+     * Začátek programu
      */
-    public function __construct(
-        #[ORM\Column(type: 'datetime_immutable')]
-        protected DateTimeImmutable $start
-    ) {
+    #[ORM\Column(type: 'datetime_immutable')]
+    protected DateTimeImmutable $start;
+
+    public function __construct(DateTimeImmutable $start)
+    {
+        $this->start               = $start;
         $this->programApplications = new ArrayCollection();
     }
 
