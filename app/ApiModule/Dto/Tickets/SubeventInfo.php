@@ -14,12 +14,16 @@ class SubeventInfo
 {
     use Nette\SmartObject;
 
-    public function __construct(
-        /** @JMS\Type("int") */
-        private int $id,
-        /** @JMS\Type("string") */
-        private string $name
-    ) {
+    /** @JMS\Type("int") */
+    private int $id;
+
+    /** @JMS\Type("string") */
+    private string $name;
+
+    public function __construct(int $id, string $name)
+    {
+        $this->id   = $id;
+        $this->name = $name;
     }
 
     public function setId(int $id): void
