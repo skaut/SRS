@@ -103,7 +103,7 @@ class MailingFormFactory
         if ($this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL)) !== $values->seminarEmail) {
             $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values->seminarEmail));
 
-            $verificationCode = substr(md5(uniqid((string) random_int(0, mt_getrandmax()), true)), 0, 8);
+            $verificationCode = substr(md5(uniqid((string) mt_rand(), true)), 0, 8);
             $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode));
 
             $link = $this->linkGenerator->link('Action:Mailing:verify', ['code' => $verificationCode]);

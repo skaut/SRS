@@ -214,7 +214,7 @@ class UserRepository extends AbstractRepository
             ->getQuery()
             ->getResult();
 
-        return (is_countable($result) ? count($result) : 0) === 1 ? $result[0] : null;
+        return count($result) === 1 ? $result[0] : null;
     }
 
     /**

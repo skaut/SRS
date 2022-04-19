@@ -184,7 +184,7 @@ class SubeventFormFactory
             $editedSubevent = $this->subevent;
         } else {
             $editedSubevent = new Subevent();
-            $editedSubevent->setName(md5(uniqid((string) random_int(0, mt_getrandmax()), true)));
+            $editedSubevent->setName(md5(uniqid((string) mt_rand(), true)));
             $this->subeventRepository->save($editedSubevent);
         }
 
