@@ -85,6 +85,12 @@ class Role
     private ?int $id           = null;
 
     /**
+     * @var string Název role
+     */
+    #[ORM\Column(type: 'string', unique: true)]
+    protected string $name;
+
+    /**
      * Systémový název systémové role.
      */
     #[ORM\Column(type: 'string', unique: true, nullable: true)]
@@ -227,13 +233,9 @@ class Role
     #[ORM\ManyToMany(targetEntity: '\App\Model\Cms\Tag', mappedBy: 'roles', cascade: ['persist'])]
     protected Collection $tags;
 
-    /**
-     * @param string $name Název role
-     */
-    public function __construct(
-        #[ORM\Column(type: 'string', unique: true)]
-        protected string $name
-    ) {
+    public function __construct(string $name)
+    {
+        $this->name                   = $name;
         $this->users                  = new ArrayCollection();
         $this->permissions            = new ArrayCollection();
         $this->pages                  = new ArrayCollection();
