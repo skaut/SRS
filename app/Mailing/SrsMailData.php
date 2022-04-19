@@ -13,24 +13,15 @@ use Ublaboo\Mailing\IMessageData;
 class SrsMailData implements IMessageData
 {
     /**
-     * @param Recipient[] $recipients
+     * @param Recipient   $from       Odesilatel mailu
+     * @param Recipient[] $recipients Příjemci mailu
+     * @param string      $subject    Předmět mailu
+     * @param string      $text       Text mailu
      */
     public function __construct(
-        /**
-         * Odesilatel mailu.
-         */
         private Recipient $from,
-        /**
-         * Příjemci mailu.
-         */
         private array $recipients,
-        /**
-         * Předmět mailu.
-         */
         private string $subject,
-        /**
-         * Text mailu.
-         */
         private string $text
     ) {
     }

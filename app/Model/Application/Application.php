@@ -59,6 +59,9 @@ abstract class Application
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $applicationId = null;
 
+    /**
+     * Uživatel
+     */
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'applications', cascade: ['persist'])]
     protected User $user;
 

@@ -72,6 +72,9 @@ class SrsResource
     #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
+    /**
+     * Název prostředku
+     */
     #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 

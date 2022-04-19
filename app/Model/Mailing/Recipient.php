@@ -12,8 +12,8 @@ use App\Model\User\User;
 class Recipient
 {
     /**
-     * @param string      $email E-mail příjemce
-     * @param string|null $name  Jméno příjemce
+     * @param string  $email E-mail příjemce
+     * @param ?string $name  Jméno příjemce
      */
     public function __construct(
         private string $email,

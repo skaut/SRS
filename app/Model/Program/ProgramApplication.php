@@ -20,6 +20,9 @@ class ProgramApplication
     #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
+    /**
+     * Uživatwl
+     */
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'programApplications', cascade: ['persist'])]
     protected User $user;
 

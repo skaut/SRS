@@ -49,7 +49,6 @@ abstract class Content implements IContent
     /**
      * ImageContent.
      */
-
     public const IMAGE = 'image';
 
     /**

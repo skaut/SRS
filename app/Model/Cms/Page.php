@@ -31,6 +31,9 @@ class Page
     #[ORM\Column(type: 'string')]
     protected string $name;
 
+    /**
+     * Cesta stránky
+     */
     #[ORM\Column(type: 'string', unique: true)]
     protected string $slug;
 
