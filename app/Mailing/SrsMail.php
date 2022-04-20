@@ -10,7 +10,7 @@ use Ublaboo\Mailing\IComposableMail;
 use Ublaboo\Mailing\IMessageData;
 
 /**
- * Třída pro vytváření hromadných e-mailů.
+ * Třída pro vytváření hromadných e-mailů
  */
 class SrsMail extends AbstractMail implements IComposableMail
 {

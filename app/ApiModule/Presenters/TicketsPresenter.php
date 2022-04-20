@@ -28,7 +28,7 @@ use Nette\Http\IResponse;
 use function array_key_exists;
 
 /**
- * API pro kontrolu vstupenek.
+ * API pro kontrolu vstupenek
  */
 class TicketsPresenter extends ApiBasePresenter
 {

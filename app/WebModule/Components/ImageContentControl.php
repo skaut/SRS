@@ -7,7 +7,7 @@ namespace App\WebModule\Components;
 use App\Model\Cms\Dto\ImageContentDto;
 
 /**
- * Komponenta s obrázkem.
+ * Komponenta s obrázkem
  */
 class ImageContentControl extends BaseContentControl
 {

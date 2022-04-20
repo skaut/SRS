@@ -13,7 +13,7 @@ use App\Model\Cms\Repositories\PageRepository;
 use Nette\DI\Attributes\Inject;
 
 /**
- * Presenter starající se o správu stránek.
+ * Presenter starající se o správu stránek
  */
 class PagesPresenter extends CmsBasePresenter
 {

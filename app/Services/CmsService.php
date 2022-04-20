@@ -20,7 +20,7 @@ use Throwable;
 use function array_map;
 
 /**
- * Služba pro správu stránek.
+ * Služba pro správu stránek
  */
 class CmsService
 {
@@ -35,7 +35,7 @@ class CmsService
     }
 
     /**
-     * Uloží stránku.
+     * Uloží stránku
      *
      * @throws NonUniqueResultException
      * @throws ORMException
@@ -49,7 +49,7 @@ class CmsService
     }
 
     /**
-     * Odstraní stránku.
+     * Odstraní stránku
      *
      * @throws PageException
      */
@@ -61,7 +61,7 @@ class CmsService
     }
 
     /**
-     * Přesune stránku mezi stránky s id prevId a nextId.
+     * Přesune stránku mezi stránky s id prevId a nextId
      *
      * @throws ORMException
      * @throws OptimisticLockException
@@ -74,7 +74,7 @@ class CmsService
     }
 
     /**
-     * Vrací DTO viditelné stránky se zadaným slugem.
+     * Vrací DTO viditelné stránky se zadaným slugem
      *
      * @throws Throwable
      */
@@ -93,7 +93,7 @@ class CmsService
     }
 
     /**
-     * Vrací DTO viditelných stránek, seřazená podle pozice.
+     * Vrací DTO viditelných stránek, seřazená podle pozice
      *
      * @return PageDto[]
      *
@@ -114,7 +114,7 @@ class CmsService
     }
 
     /**
-     * Uloží obsah.
+     * Uloží obsah
      */
     public function saveContent(Content $content): void
     {
@@ -124,7 +124,7 @@ class CmsService
     }
 
     /**
-     * Odstraní obsah.
+     * Odstraní obsah
      */
     public function removeContent(Content $content): void
     {

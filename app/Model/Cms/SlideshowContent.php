@@ -22,7 +22,7 @@ use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
- * Entita obsahu se slideshow.
+ * Entita obsahu se slideshow
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'slideshow_content')]
@@ -31,7 +31,7 @@ class SlideshowContent extends Content implements IContent
     protected string $type = Content::SLIDESHOW;
 
     /**
-     * Adresy obrázků.
+     * Adresy obrázků
      *
      * @var string[]|null
      */
@@ -62,7 +62,7 @@ class SlideshowContent extends Content implements IContent
     }
 
     /**
-     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
+     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu
      */
     public function addContentForm(Form $form): Form
     {
@@ -83,7 +83,7 @@ class SlideshowContent extends Content implements IContent
     }
 
     /**
-     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
+     * Zpracuje při uložení stránky část formuláře týkající se obsahu
      */
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {

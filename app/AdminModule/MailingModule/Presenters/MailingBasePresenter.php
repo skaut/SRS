@@ -10,7 +10,7 @@ use App\Model\Acl\SrsResource;
 use Nette\Application\AbortException;
 
 /**
- * Basepresenter pro MailingModule.
+ * Basepresenter pro MailingModule
  */
 abstract class MailingBasePresenter extends AdminBasePresenter
 {

@@ -31,7 +31,7 @@ use function bin2hex;
 use function random_bytes;
 
 /**
- * Presenter pro generování dokladů.
+ * Presenter pro generování dokladů
  */
 class IncomeProofPresenter extends ExportBasePresenter
 {
@@ -63,7 +63,7 @@ class IncomeProofPresenter extends ExportBasePresenter
     }
 
     /**
-     * Vygeneruje doklad pro přihlášku.
+     * Vygeneruje doklad pro přihlášku
      *
      * @throws AbortException
      * @throws Throwable
@@ -81,7 +81,7 @@ class IncomeProofPresenter extends ExportBasePresenter
     }
 
     /**
-     * Vygeneruje doklady pro přihlášky.
+     * Vygeneruje doklady pro přihlášky
      *
      * @throws AbortException
      * @throws Throwable
@@ -99,7 +99,7 @@ class IncomeProofPresenter extends ExportBasePresenter
     }
 
     /**
-     * Vygeneruje doklady pro uživatele.
+     * Vygeneruje doklady pro uživatele
      *
      * @throws AbortException
      * @throws Throwable

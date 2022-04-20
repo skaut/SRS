@@ -9,7 +9,7 @@ use App\AdminModule\MailingModule\Components\MailHistoryGridControl;
 use Nette\DI\Attributes\Inject;
 
 /**
- * Presenter obsluhující historii e-mailů.
+ * Presenter obsluhující historii e-mailů
  */
 class HistoryPresenter extends MailingBasePresenter
 {

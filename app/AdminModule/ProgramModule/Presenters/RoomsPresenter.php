@@ -14,7 +14,7 @@ use Nette\Application\AbortException;
 use Nette\DI\Attributes\Inject;
 
 /**
- * Presenter obsluhující správu místností.
+ * Presenter obsluhující správu místností
  */
 class RoomsPresenter extends ProgramBasePresenter
 {

@@ -29,24 +29,24 @@ use function str_replace;
 use function ucwords;
 
 /**
- * Komponenta s formulářem pro úpravu obsahu stránky.
+ * Komponenta s formulářem pro úpravu obsahu stránky
  */
 class PageForm extends UI\Control
 {
     /**
-     * Upravovaná stránka.
+     * Upravovaná stránka
      */
     private ?Page $page;
 
     /**
-     * Událost při uložení formuláře.
+     * Událost při uložení formuláře
      *
      * @var callable[]
      */
     public array $onPageSave = [];
 
     /**
-     * Událost při chybě ukládání stránky.
+     * Událost při chybě ukládání stránky
      *
      * @var callable[]
      */
@@ -71,7 +71,7 @@ class PageForm extends UI\Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      *
      * @throws PageException
      */
@@ -86,7 +86,7 @@ class PageForm extends UI\Control
     }
 
     /**
-     * Vykreslí skripty komponenty.
+     * Vykreslí skripty komponenty
      */
     public function renderScripts(): void
     {
@@ -95,7 +95,7 @@ class PageForm extends UI\Control
     }
 
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      *
      * @throws PageException
      */
@@ -150,7 +150,7 @@ class PageForm extends UI\Control
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws PageException
      * @throws ORMException
@@ -197,7 +197,7 @@ class PageForm extends UI\Control
     }
 
     /**
-     * Připraví možnosti obsahů stránky pro select.
+     * Připraví možnosti obsahů stránky pro select
      *
      * @return string[]
      */

@@ -7,7 +7,7 @@ namespace App\Model\Cms;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita obsahu s výběrem programů.
+ * Entita obsahu s výběrem programů
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'programs_content')]

@@ -10,7 +10,7 @@ use App\Model\Acl\SrsResource;
 use Nette\Application\AbortException;
 
 /**
- * BasePresenter pro CmsModule.
+ * BasePresenter pro CmsModule
  */
 abstract class CmsBasePresenter extends AdminBasePresenter
 {

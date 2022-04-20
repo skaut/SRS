@@ -10,7 +10,7 @@ use App\Model\Acl\SrsResource;
 use Nette\Application\AbortException;
 
 /**
- * Basepresenter pro PaymentsModule.
+ * Basepresenter pro PaymentsModule
  */
 abstract class PaymentsBasePresenter extends AdminBasePresenter
 {

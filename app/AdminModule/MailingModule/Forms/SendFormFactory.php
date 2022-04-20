@@ -22,14 +22,14 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Formulář pro vytvoření e-mailu.
+ * Formulář pro vytvoření e-mailu
  */
 class SendFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Stav odeslání e-mailu.
+     * Stav odeslání e-mailu
      */
     public bool $mailSuccess;
 
@@ -45,7 +45,7 @@ class SendFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      */
     public function create(): Form
     {
@@ -105,7 +105,7 @@ class SendFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws Throwable
      */

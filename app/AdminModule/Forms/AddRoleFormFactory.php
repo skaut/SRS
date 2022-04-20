@@ -13,7 +13,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Formulář pro vytvoření role.
+ * Formulář pro vytvoření role
  */
 class AddRoleFormFactory
 {
@@ -24,7 +24,7 @@ class AddRoleFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      *
      * @throws Throwable
      */
@@ -53,7 +53,7 @@ class AddRoleFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      */
     public function processForm(Form $form, stdClass $values): void
     {

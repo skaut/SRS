@@ -10,7 +10,7 @@ use Nette\DI\Attributes\Inject;
 use stdClass;
 
 /**
- * Presenter obsluhující rozesílání e-mailu vytvořeného ve formuláři.
+ * Presenter obsluhující rozesílání e-mailu vytvořeného ve formuláři
  */
 class SendPresenter extends MailingBasePresenter
 {

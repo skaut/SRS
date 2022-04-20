@@ -7,7 +7,7 @@ namespace App\Model\Application;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita variabilní symbol.
+ * Entita variabilní symbol
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'variable_symbol')]
@@ -19,7 +19,7 @@ class VariableSymbol
     private ?int $id = null;
 
     /**
-     * Variabilní symbol.
+     * Variabilní symbol
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $variableSymbol = null;

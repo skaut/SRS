@@ -9,79 +9,79 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita šablona automatického e-mailu.
+ * Entita šablona automatického e-mailu
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'mail_template')]
 class Template
 {
     /**
-     * Přihlášení přes skautIS.
+     * Přihlášení přes skautIS
      */
     public const SIGN_IN = 'sign_in';
 
     /**
-     * Potvrzení registrace.
+     * Potvrzení registrace
      */
     public const REGISTRATION = 'registration';
 
     /**
-     * Odhlášení ze semináře.
+     * Odhlášení ze semináře
      */
     public const REGISTRATION_CANCELED = 'registration_canceled';
 
     /**
-     * Odhlášení ze semináře - nezaplaceno.
+     * Odhlášení ze semináře - nezaplaceno
      */
     public const REGISTRATION_CANCELED_NOT_PAID = 'registration_canceled_not_paid';
 
     /**
-     * Potvrzení schválení registrace.
+     * Potvrzení schválení registrace
      */
     public const REGISTRATION_APPROVED = 'registration_approved';
 
     /**
-     * Potvrzení změny rolí.
+     * Potvrzení změny rolí
      */
     public const ROLES_CHANGED = 'roles_changed';
 
     /**
-     * Potvrzení změny podakcí.
+     * Potvrzení změny podakcí
      */
     public const SUBEVENTS_CHANGED = 'subevents_changed';
 
     /**
-     * Potvrzení přijetí platby.
+     * Potvrzení přijetí platby
      */
     public const PAYMENT_CONFIRMED = 'payment_confirmed';
 
     /**
-     * Upozornění na splatnost.
+     * Upozornění na splatnost
      */
     public const MATURITY_REMINDER = 'maturity_reminder';
 
     /**
-     * Účastníkovi byl zapsán program.
+     * Účastníkovi byl zapsán program
      */
     public const PROGRAM_REGISTERED = 'program_registered';
 
     /**
-     * Účastníkovi byl odhlášen program.
+     * Účastníkovi byl odhlášen program
      */
     public const PROGRAM_UNREGISTERED = 'program_unregistered';
 
     /**
-     * Ověření e-mailu pro mailing.
+     * Ověření e-mailu pro mailing
      */
     public const EMAIL_VERIFICATION = 'email_verification';
 
     /**
-     * Potvrzení změny vlastního pole.
+     * Potvrzení změny vlastního pole
      */
     public const CUSTOM_INPUT_VALUE_CHANGED = 'custom_input_value_changed';
 
     /**
-     * Zpráva z kontaktního formuláře.
+     * Zpráva z kontaktního formuláře
      */
     public const CONTACT_FORM = 'contact_form';
 
@@ -91,31 +91,31 @@ class Template
     private ?int $id = null;
 
     /**
-     * Typ e-mailu.
+     * Typ e-mailu
      */
     #[ORM\Column(type: 'string', unique: true)]
     protected string $type;
 
     /**
-     * Předmět e-mailu.
+     * Předmět e-mailu
      */
     #[ORM\Column(type: 'string')]
     protected string $subject;
 
     /**
-     * Text e-mailu.
+     * Text e-mailu
      */
     #[ORM\Column(type: 'text')]
     protected string $text;
 
     /**
-     * Aktivní.
+     * Aktivní
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $active;
 
     /**
-     * Proměnné použitelné v šabloně.
+     * Proměnné použitelné v šabloně
      *
      * @var Collection<int, TemplateVariable>
      */
@@ -123,7 +123,7 @@ class Template
     protected Collection $variables;
 
     /**
-     * Systémový e-mail. Nezobrazuje se v přehledu a nelze jej editovat.
+     * Systémový e-mail. Nezobrazuje se v přehledu a nelze jej editovat
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $systemTemplate;

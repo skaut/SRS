@@ -9,7 +9,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita přihlášky na program.
+ * Entita přihlášky na program
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'program_application')]
@@ -21,25 +21,25 @@ class ProgramApplication
     private ?int $id = null;
 
     /**
-     * Uživatwl
+     * Uživatel
      */
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'programApplications', cascade: ['persist'])]
     protected User $user;
 
     /**
-     * Zapsaný program.
+     * Zapsaný program
      */
     #[ORM\ManyToOne(targetEntity: Program::class, inversedBy: 'programApplications', cascade: ['persist'])]
     protected Program $program;
 
     /**
-     * Náhradník.
+     * Náhradník
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $alternate = false;
 
     /**
-     * Čas přihlášení na program.
+     * Čas přihlášení na program
      */
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $createdAt;

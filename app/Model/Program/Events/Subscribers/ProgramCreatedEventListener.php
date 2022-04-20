@@ -26,7 +26,7 @@ class ProgramCreatedEventListener implements MessageHandlerInterface
     }
 
     /**
-     * Pokud je nový program automaticky zapisovaný, je přidán všem oprávněným uživatelům.
+     * Pokud je nový program automaticky zapisovaný, je přidán všem oprávněným uživatelům
      */
     public function __invoke(ProgramCreatedEvent $event): void
     {

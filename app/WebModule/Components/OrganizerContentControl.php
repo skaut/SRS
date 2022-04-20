@@ -7,7 +7,7 @@ namespace App\WebModule\Components;
 use App\Model\Cms\Dto\OrganizerContentDto;
 
 /**
- * Komponenta s informací o pořadateli.
+ * Komponenta s informací o pořadateli
  */
 class OrganizerContentControl extends BaseContentControl
 {

@@ -23,14 +23,14 @@ use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
- * Formulář pro úpravu osobních údajů externích lektorů.
+ * Formulář pro úpravu osobních údajů externích lektorů
  */
 class EditUserPersonalDetailsFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Upravovaný uživatel.
+     * Upravovaný uživatel
      */
     private ?User $user = null;
 
@@ -42,7 +42,7 @@ class EditUserPersonalDetailsFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      */
     public function create(int $id): Form
     {
@@ -120,7 +120,7 @@ class EditUserPersonalDetailsFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws Nette\Utils\UnknownImageFileException
      * @throws ORMException

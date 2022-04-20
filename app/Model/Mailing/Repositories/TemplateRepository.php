@@ -9,7 +9,7 @@ use App\Model\Mailing\Template;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující šablony automatických e-mailů.
+ * Třída spravující šablony automatických e-mailů
  */
 class TemplateRepository extends AbstractRepository
 {
@@ -19,7 +19,7 @@ class TemplateRepository extends AbstractRepository
     }
 
     /**
-     * Vrací šablonu podle id.
+     * Vrací šablonu podle id
      */
     public function findById(?int $id): ?Template
     {
@@ -27,7 +27,7 @@ class TemplateRepository extends AbstractRepository
     }
 
     /**
-     * Vrací šablonu podle typu.
+     * Vrací šablonu podle typu
      */
     public function findByType(string $type): ?Template
     {
@@ -35,7 +35,7 @@ class TemplateRepository extends AbstractRepository
     }
 
     /**
-     * Uloží šablonu e-mailu.
+     * Uloží šablonu e-mailu
      */
     public function save(Template $template): void
     {

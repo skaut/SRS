@@ -33,7 +33,7 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
- * Komponenta pro správu přihlášek.
+ * Komponenta pro správu přihlášek
  */
 class ApplicationsGridControl extends Control
 {
@@ -52,7 +52,7 @@ class ApplicationsGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -61,7 +61,7 @@ class ApplicationsGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      *
      * @throws NonUniqueResultException
      * @throws DataGridException
@@ -201,7 +201,7 @@ class ApplicationsGridControl extends Control
     }
 
     /**
-     * Zpracuje přidání podakcí.
+     * Zpracuje přidání podakcí
      *
      * @throws AbortException
      * @throws Throwable
@@ -235,7 +235,7 @@ class ApplicationsGridControl extends Control
     }
 
     /**
-     * Zpracuje úpravu přihlášky.
+     * Zpracuje úpravu přihlášky
      *
      * @throws Throwable
      */
@@ -298,7 +298,7 @@ class ApplicationsGridControl extends Control
     }
 
     /**
-     * Vygeneruje příjmový pokladní doklad.
+     * Vygeneruje příjmový pokladní doklad
      *
      * @throws Throwable
      */
@@ -308,7 +308,7 @@ class ApplicationsGridControl extends Control
     }
 
     /**
-     * Vygeneruje potvrzení o přijetí platby.
+     * Vygeneruje potvrzení o přijetí platby
      *
      * @throws Throwable
      */
@@ -318,7 +318,7 @@ class ApplicationsGridControl extends Control
     }
 
     /**
-     * Zruší přihlášku.
+     * Zruší přihlášku
      *
      * @throws AbortException
      * @throws Throwable
@@ -339,7 +339,7 @@ class ApplicationsGridControl extends Control
     }
 
     /**
-     * Vrátí platební metody jako možnosti pro select.
+     * Vrátí platební metody jako možnosti pro select
      *
      * @return string[]
      */

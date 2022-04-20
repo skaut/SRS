@@ -14,7 +14,7 @@ use stdClass;
 use function assert;
 
 /**
- * Entita obsahu s aktualitami.
+ * Entita obsahu s aktualitami
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'news_content')]
@@ -23,7 +23,7 @@ class NewsContent extends Content implements IContent
     protected string $type = Content::NEWS;
 
     /**
-     * Počet posledních novinek k zobrazení.
+     * Počet posledních novinek k zobrazení
      */
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $count = null;
@@ -39,7 +39,7 @@ class NewsContent extends Content implements IContent
     }
 
     /**
-     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
+     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu
      */
     public function addContentForm(Form $form): Form
     {
@@ -58,7 +58,7 @@ class NewsContent extends Content implements IContent
     }
 
     /**
-     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
+     * Zpracuje při uložení stránky část formuláře týkající se obsahu
      */
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {

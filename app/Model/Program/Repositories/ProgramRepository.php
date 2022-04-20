@@ -17,7 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
 /**
- * Třída spravující programy.
+ * Třída spravující programy
  */
 class ProgramRepository extends AbstractRepository
 {
@@ -37,7 +37,7 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
-     * Vrací program podle id.
+     * Vrací program podle id
      */
     public function findById(?int $id): ?Program
     {
@@ -60,7 +60,7 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
-     * Vrací programy, na které je uživatel zapsaný a jsou v danné kategorii.
+     * Vrací programy, na které je uživatel zapsaný a jsou v danné kategorii
      *
      * @return Collection<int, Program>
      */
@@ -79,7 +79,7 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
-     * Vrací programy povolené pro uživatele.
+     * Vrací programy povolené pro uživatele
      *
      * @return Collection<int, Program>
      */
@@ -110,7 +110,7 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
-     * Vrací programy se stejným blokem.
+     * Vrací programy se stejným blokem
      *
      * @return Collection<int, Program>
      */
@@ -129,7 +129,7 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
-     * Vrací programy překrývající se s programem.
+     * Vrací programy překrývající se s programem
      *
      * @return Collection<int, Program>
      *
@@ -190,7 +190,7 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
-     * Uloží program.
+     * Uloží program
      */
     public function save(Program $program): void
     {
@@ -199,7 +199,7 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní program.
+     * Odstraní program
      */
     public function remove(Program $program): void
     {

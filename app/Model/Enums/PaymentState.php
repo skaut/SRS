@@ -7,37 +7,37 @@ namespace App\Model\Enums;
 class PaymentState
 {
     /**
-     * Spárováno automaticky.
+     * Spárováno automaticky
      */
     public const PAIRED_AUTO = 'paired_auto';
 
     /**
-     * Spárováno ručně.
+     * Spárováno ručně
      */
     public const PAIRED_MANUAL = 'paired_manual';
 
     /**
-     * Nespárováno - nesouhlasí poplatek.
+     * Nespárováno - nesouhlasí poplatek
      */
     public const NOT_PAIRED_FEE = 'not_paired_fee';
 
     /**
-     * Nespárováno - neexistující variabilní symbol.
+     * Nespárováno - neexistující variabilní symbol
      */
     public const NOT_PAIRED_VS = 'not_paired_vs';
 
     /**
-     * Nespárováno - spárovaná přihláška zrušena.
+     * Nespárováno - spárovaná přihláška zrušena
      */
     public const NOT_PAIRED_CANCELED = 'not_paired_canceled';
 
     /**
-     * Nespárováni - přihláška již byla zaplacena.
+     * Nespárováni - přihláška již byla zaplacena
      */
     public const NOT_PAIRED_PAID = 'not_paired_paid';
 
     /**
-     * Nespárováno - nevybrána spárovaná přihláška.
+     * Nespárováno - nevybrána spárovaná přihláška
      */
     public const NOT_PAIRED = 'not_paired';
 

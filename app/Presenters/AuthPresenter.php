@@ -26,7 +26,7 @@ use function assert;
 use function str_contains;
 
 /**
- * Presenter obsluhující přihlašování a odhlašování pomocí skautIS.
+ * Presenter obsluhující přihlašování a odhlašování pomocí skautIS
  */
 class AuthPresenter extends BasePresenter
 {
@@ -43,7 +43,7 @@ class AuthPresenter extends BasePresenter
     public IMailService $mailService;
 
     /**
-     * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.
+     * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení
      *
      * @throws SettingsItemNotFoundException
      * @throws AbortException
@@ -77,7 +77,7 @@ class AuthPresenter extends BasePresenter
     }
 
     /**
-     * Přesměruje na odhlašovací stránku skautIS.
+     * Přesměruje na odhlašovací stránku skautIS
      *
      * @throws AbortException
      */
@@ -93,7 +93,7 @@ class AuthPresenter extends BasePresenter
     }
 
     /**
-     * Provede přesměrování po úspěšném přihlášení, v závislosti na nastavení, nastavení role nebo returnUrl.
+     * Provede přesměrování po úspěšném přihlášení, v závislosti na nastavení, nastavení role nebo returnUrl
      *
      * @throws AbortException
      * @throws Throwable

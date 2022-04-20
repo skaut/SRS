@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující dokumenty.
+ * Třída spravující dokumenty
  */
 class DocumentRepository extends AbstractRepository
 {
@@ -21,7 +21,7 @@ class DocumentRepository extends AbstractRepository
     }
 
     /**
-     * Vrátí dokument podle id.
+     * Vrátí dokument podle id
      */
     public function findById(?int $id): ?Document
     {
@@ -29,7 +29,7 @@ class DocumentRepository extends AbstractRepository
     }
 
     /**
-     * Vrací dokumenty podle rolí a vybraných tagů, seřazené podle názvu.
+     * Vrací dokumenty podle rolí a vybraných tagů, seřazené podle názvu
      *
      * @param int[] $rolesIds pole id rolí
      * @param int[] $tagsIds
@@ -54,7 +54,7 @@ class DocumentRepository extends AbstractRepository
     }
 
     /**
-     * Uloží dokument.
+     * Uloží dokument
      */
     public function save(Document $document): void
     {
@@ -63,7 +63,7 @@ class DocumentRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní dokument.
+     * Odstraní dokument
      */
     public function remove(Document $document): void
     {

@@ -15,7 +15,7 @@ use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
- * Komponenta pro správu aktualit.
+ * Komponenta pro správu aktualit
  */
 class NewsGridControl extends Control
 {
@@ -24,7 +24,7 @@ class NewsGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -33,7 +33,7 @@ class NewsGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
@@ -81,7 +81,7 @@ class NewsGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění aktuality.
+     * Zpracuje odstranění aktuality
      *
      * @throws AbortException
      */
@@ -96,7 +96,7 @@ class NewsGridControl extends Control
     }
 
     /**
-     * Změní připíchnutí aktuality.
+     * Změní připíchnutí aktuality
      *
      * @throws ORMException
      * @throws AbortException

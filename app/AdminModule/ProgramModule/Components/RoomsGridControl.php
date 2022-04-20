@@ -26,7 +26,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use function assert;
 
 /**
- * Komponenta pro správu místností.
+ * Komponenta pro správu místností
  */
 class RoomsGridControl extends Control
 {
@@ -43,7 +43,7 @@ class RoomsGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -52,7 +52,7 @@ class RoomsGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      *
      * @throws DataGridException
      */
@@ -117,7 +117,7 @@ class RoomsGridControl extends Control
     }
 
     /**
-     * Zpracuje přidání místnosti.
+     * Zpracuje přidání místnosti
      */
     public function add(stdClass $values): void
     {
@@ -131,7 +131,7 @@ class RoomsGridControl extends Control
     }
 
     /**
-     * Zpracuje úpravu místnosti.
+     * Zpracuje úpravu místnosti
      */
     public function edit(string $id, stdClass $values): void
     {
@@ -148,7 +148,7 @@ class RoomsGridControl extends Control
     }
 
     /**
-     * Odstraní místnost.
+     * Odstraní místnost
      *
      * @throws AbortException
      */
@@ -164,7 +164,7 @@ class RoomsGridControl extends Control
     }
 
     /**
-     * Hromadně vyexportuje harmonogramy místností.
+     * Hromadně vyexportuje harmonogramy místností
      *
      * @param int[] $ids
      *
@@ -177,7 +177,7 @@ class RoomsGridControl extends Control
     }
 
     /**
-     * Zpracuje export harmonogramů místností.
+     * Zpracuje export harmonogramů místností
      *
      * @throws AbortException
      * @throws Exception

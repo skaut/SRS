@@ -7,22 +7,22 @@ namespace App\Model\Enums;
 class MaturityType
 {
     /**
-     * Neomezená splatnost.
+     * Neomezená splatnost
      */
     public const UNLIMITED = 'unlimited';
 
     /**
-     * Pevné datum splatnosti.
+     * Pevné datum splatnosti
      */
     public const DATE = 'date';
 
     /**
-     * Splatnost vypočtená podle počtu dní od odeslání přihlášky.
+     * Splatnost vypočtená podle počtu dní od odeslání přihlášky
      */
     public const DAYS = 'days';
 
     /**
-     * Splatnost vypočtená podle počtu pracovních dní od odeslání přihlášky.
+     * Splatnost vypočtená podle počtu pracovních dní od odeslání přihlášky
      */
     public const WORK_DAYS = 'work_days';
 

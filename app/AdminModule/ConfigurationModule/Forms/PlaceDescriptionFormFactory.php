@@ -17,7 +17,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Formulář pro nastavení popisu cesty.
+ * Formulář pro nastavení popisu cesty
  */
 class PlaceDescriptionFormFactory
 {
@@ -28,7 +28,7 @@ class PlaceDescriptionFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -53,7 +53,7 @@ class PlaceDescriptionFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws Throwable
      */

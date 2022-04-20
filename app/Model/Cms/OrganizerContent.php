@@ -14,7 +14,7 @@ use stdClass;
 use function assert;
 
 /**
- * Entita obsahu s informací o pořadateli.
+ * Entita obsahu s informací o pořadateli
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'organizer_content')]
@@ -23,7 +23,7 @@ class OrganizerContent extends Content implements IContent
     protected string $type = Content::ORGANIZER;
 
     /**
-     * Pořadatel.
+     * Pořadatel
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $organizer = null;
@@ -39,7 +39,7 @@ class OrganizerContent extends Content implements IContent
     }
 
     /**
-     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
+     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu
      */
     public function addContentForm(Form $form): Form
     {
@@ -54,7 +54,7 @@ class OrganizerContent extends Content implements IContent
     }
 
     /**
-     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
+     * Zpracuje při uložení stránky část formuláře týkající se obsahu
      */
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {

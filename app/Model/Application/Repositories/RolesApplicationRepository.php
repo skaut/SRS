@@ -9,7 +9,7 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující přihlášky rolí.
+ * Třída spravující přihlášky rolí
  */
 class RolesApplicationRepository extends AbstractRepository
 {

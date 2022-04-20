@@ -8,7 +8,7 @@ use App\Model\Mailing\Recipient;
 use Ublaboo\Mailing\IMessageData;
 
 /**
- * Třída pro parametry hromadného e-mailu.
+ * Třída pro parametry hromadného e-mailu
  */
 class SrsMailData implements IMessageData
 {

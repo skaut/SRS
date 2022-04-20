@@ -7,7 +7,7 @@ namespace App\Model\CustomInput;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita vlastní textové pole přihlášky.
+ * Entita vlastní textové pole přihlášky
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'custom_text')]

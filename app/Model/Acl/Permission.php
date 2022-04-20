@@ -9,44 +9,44 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita oprávnění.
+ * Entita oprávnění
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'permission')]
 class Permission
 {
     /**
-     * Oprávnění spravovat.
+     * Oprávnění spravovat
      */
     public const MANAGE = 'manage';
 
     /**
-     * Oprávnění přistupovat.
+     * Oprávnění přistupovat
      */
     public const ACCESS = 'access';
 
     /**
-     * Oprávnění spravovat programy, u kterých je uživatel lektor.
+     * Oprávnění spravovat programy, u kterých je uživatel lektor
      */
     public const MANAGE_OWN_PROGRAMS = 'manage_own_programs';
 
     /**
-     * Oprávnění spravovat všechny programy.
+     * Oprávnění spravovat všechny programy
      */
     public const MANAGE_ALL_PROGRAMS = 'manage_all_programs';
 
     /**
-     * Oprávnění spravovat harmonogram.
+     * Oprávnění spravovat harmonogram
      */
     public const MANAGE_SCHEDULE = 'manage_schedule';
 
     /**
-     * Oprávnění spravovat místnosti.
+     * Oprávnění spravovat místnosti
      */
     public const MANAGE_ROOMS = 'manage_rooms';
 
     /**
-     * Oprávnění spravovat kategorie bloků.
+     * Oprávnění spravovat kategorie bloků
      */
     public const MANAGE_CATEGORIES = 'manage_categories';
 
@@ -65,13 +65,13 @@ class Permission
     private ?int $id = null;
 
     /**
-     * Název oprávnění.
+     * Název oprávnění
      */
     #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
-     * Role s tímto oprávněním.
+     * Role s tímto oprávněním
      *
      * @var Collection<int, Role>
      */
@@ -79,7 +79,7 @@ class Permission
     protected Collection $roles;
 
     /**
-     * Prostředek oprávnění.
+     * Prostředek oprávnění
      */
     #[ORM\ManyToOne(targetEntity: SrsResource::class, inversedBy: 'permissions', cascade: ['persist'])]
     protected SrsResource $resource;

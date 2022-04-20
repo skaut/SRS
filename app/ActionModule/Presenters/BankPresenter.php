@@ -14,7 +14,7 @@ use Nette\DI\Attributes\Inject;
 use Throwable;
 
 /**
- * Presenter obsluhující načítání plateb z API banky.
+ * Presenter obsluhující načítání plateb z API banky
  */
 class BankPresenter extends ActionBasePresenter
 {
@@ -25,7 +25,7 @@ class BankPresenter extends ActionBasePresenter
     public BankService $bankService;
 
     /**
-     * Zkontroluje splatnost přihlášek.
+     * Zkontroluje splatnost přihlášek
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable

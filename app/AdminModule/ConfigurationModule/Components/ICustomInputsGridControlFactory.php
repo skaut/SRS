@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Components;
 
 /**
- * Factory komponenty pro správu vlastních polí přihlášky.
+ * Factory komponenty pro správu vlastních polí přihlášky
  */
 interface ICustomInputsGridControlFactory
 {
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      */
     public function create(): CustomInputsGridControl;
 }

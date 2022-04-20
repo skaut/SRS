@@ -16,7 +16,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use function array_map;
 
 /**
- * Třída spravující přihlášky.
+ * Třída spravující přihlášky
  */
 class ApplicationRepository extends AbstractRepository
 {
@@ -26,7 +26,7 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * Vrací přihlášku podle id.
+     * Vrací přihlášku podle id
      */
     public function findById(?int $id): ?Application
     {
@@ -34,7 +34,7 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * Vrací přihlášky podle id, které mají společné všechny verze přihlášky.
+     * Vrací přihlášky podle id, které mají společné všechny verze přihlášky
      *
      * @return Collection<int, Application>
      */
@@ -73,7 +73,7 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * Uloží přihlášku.
+     * Uloží přihlášku
      */
     public function save(Application $application): void
     {
@@ -82,7 +82,7 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní přihlášku.
+     * Odstraní přihlášku
      */
     public function remove(Application $application): void
     {
@@ -91,7 +91,7 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * Vrací přihlášky podle id.
+     * Vrací přihlášky podle id
      *
      * @param int[] $ids
      *
@@ -106,7 +106,7 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * Vrací id přihlášek.
+     * Vrací id přihlášek
      *
      * @param Collection<int, Application> $applications
      *

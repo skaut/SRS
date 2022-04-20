@@ -9,7 +9,7 @@ use Nette\DI\Attributes\Inject;
 use Nette\Localization\Translator;
 
 /**
- * BasePresenter pro InstallModule.
+ * BasePresenter pro InstallModule
  */
 abstract class InstallBasePresenter extends BasePresenter
 {

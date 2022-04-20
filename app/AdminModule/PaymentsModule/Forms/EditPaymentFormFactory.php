@@ -17,14 +17,14 @@ use stdClass;
 use Throwable;
 
 /**
- * Formulář pro úpravu platby.
+ * Formulář pro úpravu platby
  */
 class EditPaymentFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Upravovaná platba.
+     * Upravovaná platba
      */
     private ?Payment $payment = null;
 
@@ -38,7 +38,7 @@ class EditPaymentFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      */
     public function create(int $id): Form
     {
@@ -101,7 +101,7 @@ class EditPaymentFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws Throwable
      */

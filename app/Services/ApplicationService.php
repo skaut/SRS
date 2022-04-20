@@ -57,7 +57,7 @@ use function strval;
 use const STR_PAD_LEFT;
 
 /**
- * Služba pro správu přihlašování na akci.
+ * Služba pro správu přihlašování na akci
  */
 class ApplicationService
 {
@@ -83,7 +83,7 @@ class ApplicationService
     }
 
     /**
-     * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci).
+     * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci)
      *
      * @param Collection<int, Role>     $roles
      * @param Collection<int, Subevent> $subevents
@@ -154,7 +154,7 @@ class ApplicationService
     }
 
     /**
-     * Změní role uživatele a provede historizaci přihlášky.
+     * Změní role uživatele a provede historizaci přihlášky
      *
      * @param Collection<int, Role> $roles
      *
@@ -253,7 +253,7 @@ class ApplicationService
     }
 
     /**
-     * Zruší registraci uživatele na seminář a provede historizaci přihlášky.
+     * Zruší registraci uživatele na seminář a provede historizaci přihlášky
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -332,7 +332,7 @@ class ApplicationService
     }
 
     /**
-     * Vytvoří novou přihlášku na podakce a provede její historizaci.
+     * Vytvoří novou přihlášku na podakce a provede její historizaci
      *
      * @param Collection<int, Subevent> $subevents
      *
@@ -365,7 +365,7 @@ class ApplicationService
     }
 
     /**
-     * Aktualizuje podakce přihlášky a provede její historizaci.
+     * Aktualizuje podakce přihlášky a provede její historizaci
      *
      * @param Collection<int, Subevent> $subevents
      *
@@ -423,7 +423,7 @@ class ApplicationService
     }
 
     /**
-     * Zruší přihlášku na podakce a provede její historizaci.
+     * Zruší přihlášku na podakce a provede její historizaci
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -478,7 +478,7 @@ class ApplicationService
     }
 
     /**
-     * Aktualizuje stav platby přihlášky a provede její historizaci.
+     * Aktualizuje stav platby přihlášky a provede její historizaci
      *
      * @throws Throwable
      */
@@ -537,7 +537,7 @@ class ApplicationService
     }
 
     /**
-     * Vytvoří platbu a označí spárované přihlášky jako zaplacené.
+     * Vytvoří platbu a označí spárované přihlášky jako zaplacené
      *
      * @throws Throwable
      */
@@ -591,7 +591,7 @@ class ApplicationService
     }
 
     /**
-     * Vytvoří platbu a označí spárované přihlášky jako zaplacené (bez údajů z banky).
+     * Vytvoří platbu a označí spárované přihlášky jako zaplacené (bez údajů z banky)
      *
      * @throws Throwable
      */
@@ -605,7 +605,7 @@ class ApplicationService
     }
 
     /**
-     * Aktualizuje platbu a stav spárovaných přihlášek.
+     * Aktualizuje platbu a stav spárovaných přihlášek
      *
      * @param Collection<int, Application> $pairedApplications
      *
@@ -666,7 +666,7 @@ class ApplicationService
     }
 
     /**
-     * Odstraní platbu a označí spárované přihlášky jako nezaplacené.
+     * Odstraní platbu a označí spárované přihlášky jako nezaplacené
      *
      * @throws Throwable
      */
@@ -682,7 +682,7 @@ class ApplicationService
     }
 
     /**
-     * Vytvoří příjmový doklad a provede historizaci přihlášky.
+     * Vytvoří příjmový doklad a provede historizaci přihlášky
      */
     public function createIncomeProof(Application $application, User $createdBy): void
     {
@@ -706,7 +706,7 @@ class ApplicationService
     }
 
     /**
-     * Vrací stav přihlášky jako text.
+     * Vrací stav přihlášky jako text
      */
     public function getStateText(Application $application): string
     {
@@ -887,7 +887,7 @@ class ApplicationService
     }
 
     /**
-     * Vypočítá datum splatnosti podle zvolené metody.
+     * Vypočítá datum splatnosti podle zvolené metody
      *
      * @throws ReflectionException
      * @throws Throwable
@@ -925,7 +925,7 @@ class ApplicationService
     }
 
     /**
-     * Vypočítá poplatek za role.
+     * Vypočítá poplatek za role
      *
      * @param Collection<int, Role> $roles
      */
@@ -945,7 +945,7 @@ class ApplicationService
     }
 
     /**
-     * Vypočítá poplatek za podakce přihlášky.
+     * Vypočítá poplatek za podakce přihlášky
      *
      * @param Collection<int, Role>     $roles
      * @param Collection<int, Subevent> $subevents
@@ -976,7 +976,7 @@ class ApplicationService
     }
 
     /**
-     * Určí stav přihlášky.
+     * Určí stav přihlášky
      */
     private function getApplicationState(Application $application): string
     {
@@ -1000,7 +1000,7 @@ class ApplicationService
     }
 
     /**
-     * Zvýší obsazenost rolí.
+     * Zvýší obsazenost rolí
      *
      * @param Collection<int, Role> $roles
      */
@@ -1013,7 +1013,7 @@ class ApplicationService
     }
 
     /**
-     * Sníží obsazenost rolí.
+     * Sníží obsazenost rolí
      *
      * @param Collection<int, Role> $roles
      */
@@ -1026,7 +1026,7 @@ class ApplicationService
     }
 
     /**
-     * Zvýší obsazenost podakcí.
+     * Zvýší obsazenost podakcí
      *
      * @param Collection<int, Subevent> $subevents
      */
@@ -1039,7 +1039,7 @@ class ApplicationService
     }
 
     /**
-     * Sníží obsazenost podakcí.
+     * Sníží obsazenost podakcí
      *
      * @param Collection<int, Subevent> $subevents
      */

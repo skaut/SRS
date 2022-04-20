@@ -7,12 +7,12 @@ namespace App\Model\Enums;
 class ConditionOperator
 {
     /**
-     * A.
+     * A
      */
     public const OPERATOR_AND = 'and';
 
     /**
-     * Nebo.
+     * Nebo
      */
     public const OPERATOR_OR = 'or';
 

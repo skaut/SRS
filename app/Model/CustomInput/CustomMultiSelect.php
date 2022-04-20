@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use function implode;
 
 /**
- * Entita vlastní výběrové pole s více možnostmi přihlášky.
+ * Entita vlastní výběrové pole s více možnostmi přihlášky
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'custom_multiselect')]
@@ -18,7 +18,7 @@ class CustomMultiSelect extends CustomInput
     protected string $type = CustomInput::MULTISELECT;
 
     /**
-     * Možnosti výběrového pole oddělené čárkou.
+     * Možnosti výběrového pole oddělené čárkou
      *
      * @var string[]
      */
@@ -42,7 +42,7 @@ class CustomMultiSelect extends CustomInput
     }
 
     /**
-     * Vrátí možnosti jako možnosti pro select.
+     * Vrátí možnosti jako možnosti pro select
      *
      * @return string[]
      */

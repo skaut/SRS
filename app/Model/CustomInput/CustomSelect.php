@@ -10,7 +10,7 @@ use function count;
 use function implode;
 
 /**
- * Entita vlastní výběrové pole přihlášky.
+ * Entita vlastní výběrové pole přihlášky
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'custom_select')]
@@ -19,7 +19,7 @@ class CustomSelect extends CustomInput
     protected string $type = CustomInput::SELECT;
 
     /**
-     * Možnosti výběrového pole oddělené čárkou.
+     * Možnosti výběrového pole oddělené čárkou
      *
      * @var string[]
      */
@@ -43,7 +43,7 @@ class CustomSelect extends CustomInput
     }
 
     /**
-     * Vrátí možnosti jako možnosti pro select.
+     * Vrátí možnosti jako možnosti pro select
      *
      * @return string[]
      */
@@ -63,7 +63,7 @@ class CustomSelect extends CustomInput
     }
 
     /**
-     * Vrátí možnosti jako možnosti pro filter.
+     * Vrátí možnosti jako možnosti pro filter
      *
      * @return string[]
      */

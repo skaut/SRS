@@ -19,7 +19,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Formulář pro nastavení přihlášky.
+ * Formulář pro nastavení přihlášky
  */
 class ApplicationFormFactory
 {
@@ -30,7 +30,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      *
      * @throws Throwable
      */
@@ -58,7 +58,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws Throwable
      */

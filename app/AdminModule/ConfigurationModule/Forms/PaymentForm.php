@@ -28,12 +28,12 @@ use function assert;
 use function property_exists;
 
 /**
- * Formulář pro nastavení platby.
+ * Formulář pro nastavení platby
  */
 class PaymentForm extends UI\Control
 {
     /**
-     * Událost při uložení formuláře.
+     * Událost při uložení formuláře
      *
      * @var callable[]
      */
@@ -44,7 +44,7 @@ class PaymentForm extends UI\Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -53,7 +53,7 @@ class PaymentForm extends UI\Control
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      *
      * @throws Throwable
      */
@@ -131,7 +131,7 @@ class PaymentForm extends UI\Control
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -178,7 +178,7 @@ class PaymentForm extends UI\Control
     }
 
     /**
-     * Vrátí způsoby výpočtu splatnosti jako možnosti pro select.
+     * Vrátí způsoby výpočtu splatnosti jako možnosti pro select
      *
      * @return string[]
      */

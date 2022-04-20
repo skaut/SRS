@@ -9,49 +9,49 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita prostředek.
+ * Entita prostředek
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'resource')]
 class SrsResource
 {
     /**
-     * Administrace.
+     * Administrace
      */
     public const ADMIN = 'admin';
 
     /**
-     * Web.
+     * Web
      */
     public const CMS = 'cms';
 
     /**
-     * Role.
+     * Role
      */
     public const ACL = 'acl';
 
     /**
-     * Program.
+     * Program
      */
     public const PROGRAM = 'program';
 
     /**
-     * Nastavení.
+     * Nastavení
      */
     public const CONFIGURATION = 'configuration';
 
     /**
-     * Uživatelé.
+     * Uživatelé
      */
     public const USERS = 'users';
 
     /**
-     * Mailing.
+     * Mailing
      */
     public const MAILING = 'mailing';
 
     /**
-     * Platby.
+     * Platby
      */
     public const PAYMENTS = 'payments';
 
@@ -79,7 +79,7 @@ class SrsResource
     protected string $name;
 
     /**
-     * Oprávnění s tímto prostředkem.
+     * Oprávnění s tímto prostředkem
      *
      * @var Collection<int, Permission>
      */
@@ -87,7 +87,7 @@ class SrsResource
     protected Collection $permissions;
 
     /**
-     * @param string $name Název prostředku.
+     * @param string $name Název prostředku
      */
     public function __construct(string $name)
     {

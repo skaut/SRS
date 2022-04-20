@@ -7,7 +7,7 @@ namespace App\Model\SkautIs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita skautIS kurz.
+ * Entita skautIS kurz
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'skaut_is_course')]
@@ -19,13 +19,13 @@ class SkautIsCourse
     private ?int $id = null;
 
     /**
-     * SkautIS id kurzu.
+     * SkautIS id kurzu
      */
     #[ORM\Column(type: 'integer')]
     protected int $skautIsCourseId;
 
     /**
-     * Název kurzu.
+     * Název kurzu
      */
     #[ORM\Column(type: 'string')]
     protected string $name;

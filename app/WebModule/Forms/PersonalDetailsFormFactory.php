@@ -20,14 +20,14 @@ use Tracy\ILogger;
 use function property_exists;
 
 /**
- * Formulář pro úpravu osobních údajů.
+ * Formulář pro úpravu osobních údajů
  */
 class PersonalDetailsFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Přihlášený uživatel.
+     * Přihlášený uživatel
      */
     private ?User $user = null;
 
@@ -42,7 +42,7 @@ class PersonalDetailsFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      */
     public function create(int $id): Form
     {
@@ -114,7 +114,7 @@ class PersonalDetailsFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws ORMException
      */

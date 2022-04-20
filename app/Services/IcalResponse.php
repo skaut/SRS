@@ -10,7 +10,7 @@ use Nette;
 use Nette\Application\Response;
 
 /**
- * IcalResponse.
+ * IcalResponse
  */
 class IcalResponse implements Response
 {

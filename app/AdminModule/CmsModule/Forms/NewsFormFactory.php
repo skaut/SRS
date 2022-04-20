@@ -14,14 +14,14 @@ use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 
 /**
- * Formulář pro úpravu aktuality.
+ * Formulář pro úpravu aktuality
  */
 class NewsFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Upravovaná aktualita.
+     * Upravovaná aktualita
      */
     private ?News $news = null;
 
@@ -30,7 +30,7 @@ class NewsFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      */
     public function create(?int $id): Form
     {
@@ -78,7 +78,7 @@ class NewsFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      */
     public function processForm(Form $form, stdClass $values): void
     {

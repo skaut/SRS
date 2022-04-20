@@ -23,7 +23,7 @@ use Throwable;
 use function assert;
 
 /**
- * Třída spravující přihlášky programů.
+ * Třída spravující přihlášky programů
  */
 class ProgramApplicationRepository extends AbstractRepository
 {

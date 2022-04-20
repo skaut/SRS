@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation as JMS;
 use Nette;
 
 /**
- * Objekt pro přenos údajů o nově vytvořeném bloku z FullCalendar.
+ * Objekt pro přenos údajů o nově vytvořeném bloku z FullCalendar
  */
 class ProgramSaveDto
 {

@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use function implode;
 
 /**
- * Entita tagu pro dokumenty.
+ * Entita tagu pro dokumenty
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'tag')]
@@ -24,7 +24,7 @@ class Tag
     private ?int $id = null;
 
     /**
-     * Dokumenty s tagem.
+     * Dokumenty s tagem
      *
      * @var Collection<int, Document>
      */
@@ -32,13 +32,13 @@ class Tag
     protected Collection $documents;
 
     /**
-     * Název tagu.
+     * Název tagu
      */
     #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 
     /**
-     * Role oprávněné zobrazit dokumenty v této kategorií.
+     * Role oprávněné zobrazit dokumenty v této kategorií
      *
      * @var Collection<int, Role>
      */

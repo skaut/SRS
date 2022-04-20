@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita přihláška rolí.
+ * Entita přihláška rolí
  */
 #[ORM\Entity]
 class RolesApplication extends Application

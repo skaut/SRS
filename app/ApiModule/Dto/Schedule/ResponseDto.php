@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 use Nette;
 
 /**
- * Objekt pro přenos stavu do FullCalendar.
+ * Objekt pro přenos stavu do FullCalendar
  */
 class ResponseDto
 {

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Model\Cms\Dto;
 
 /**
- * DTO obsahu.
+ * DTO obsahu
  */
 class ContentDto
 {
     /**
-     * @param string $componentName Název komponenty.
-     * @param string $heading       Nadpis obsahu.
+     * @param string $componentName Název komponenty
+     * @param string $heading       Nadpis obsahu
      */
     public function __construct(protected string $componentName, protected string $heading)
     {

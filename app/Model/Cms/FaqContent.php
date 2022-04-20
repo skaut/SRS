@@ -7,7 +7,7 @@ namespace App\Model\Cms;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita obsahu s FAQ.
+ * Entita obsahu s FAQ
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'faq_content')]

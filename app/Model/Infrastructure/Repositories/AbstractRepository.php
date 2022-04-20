@@ -11,7 +11,7 @@ use Doctrine\ORM\QueryBuilder;
 use function assert;
 
 /**
- * Třída spravující programy.
+ * Třída spravující programy
  */
 class AbstractRepository
 {

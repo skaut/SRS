@@ -13,7 +13,7 @@ use Nette\DI\Attributes\Inject;
 use stdClass;
 
 /**
- * Presenter obsluhující nastavení šablon automatických e-mailů.
+ * Presenter obsluhující nastavení šablon automatických e-mailů
  */
 class TemplatesPresenter extends MailingBasePresenter
 {

@@ -25,7 +25,7 @@ use Nette\DI\Attributes\Inject;
 use Throwable;
 
 /**
- * Presenter obsluhující kontrolu splatnosti přihlášek.
+ * Presenter obsluhující kontrolu splatnosti přihlášek
  */
 class MaturityPresenter extends ActionBasePresenter
 {
@@ -48,7 +48,7 @@ class MaturityPresenter extends ActionBasePresenter
     public ApplicationService $applicationService;
 
     /**
-     * Zruší přihlášky po splatnosti.
+     * Zruší přihlášky po splatnosti
      *
      * @throws Throwable
      */
@@ -102,7 +102,7 @@ class MaturityPresenter extends ActionBasePresenter
     }
 
     /**
-     * Rozešle přípomínky splatnosti.
+     * Rozešle přípomínky splatnosti
      *
      * @throws Throwable
      */

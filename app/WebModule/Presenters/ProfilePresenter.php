@@ -27,7 +27,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující profil uživatele.
+ * Presenter obsluhující profil uživatele
  */
 class ProfilePresenter extends WebBasePresenter
 {
@@ -86,7 +86,7 @@ class ProfilePresenter extends WebBasePresenter
     }
 
     /**
-     * Vyexportuje rozvrh uživatele.
+     * Vyexportuje rozvrh uživatele
      *
      * @throws AbortException
      * @throws Exception

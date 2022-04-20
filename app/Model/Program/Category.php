@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use function implode;
 
 /**
- * Entita kategorie programového bloku.
+ * Entita kategorie programového bloku
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'category')]
@@ -24,13 +24,13 @@ class Category
     private ?int $id = null;
 
     /**
-     * Název kategorie.
+     * Název kategorie
      */
     #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 
     /**
-     * Role, které si mohou přihlašovat programy z kategorie.
+     * Role, které si mohou přihlašovat programy z kategorie
      *
      * @var Collection<int, Role>
      */
@@ -38,7 +38,7 @@ class Category
     protected Collection $registerableRoles;
 
     /**
-     * Bloky v kategorii.
+     * Bloky v kategorii
      *
      * @var Collection<int, Block>
      */

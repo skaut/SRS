@@ -18,7 +18,7 @@ use App\Services\QueryBus;
 use Throwable;
 
 /**
- * Komponenta s výběrem programů.
+ * Komponenta s výběrem programů
  */
 class ProgramsContentControl extends BaseContentControl
 {

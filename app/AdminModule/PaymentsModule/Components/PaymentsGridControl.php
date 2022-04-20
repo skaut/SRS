@@ -30,7 +30,7 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
- * Komponenta pro správu plateb.
+ * Komponenta pro správu plateb
  */
 class PaymentsGridControl extends Control
 {
@@ -46,7 +46,7 @@ class PaymentsGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -55,7 +55,7 @@ class PaymentsGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      *
      * @throws DataGridException
      * @throws Throwable
@@ -133,7 +133,7 @@ class PaymentsGridControl extends Control
     }
 
     /**
-     * Zpracuje přidání platby.
+     * Zpracuje přidání platby
      *
      * @throws AbortException
      * @throws Throwable
@@ -149,7 +149,7 @@ class PaymentsGridControl extends Control
     }
 
     /**
-     * Odstraní platbu.
+     * Odstraní platbu
      *
      * @throws Throwable
      */
@@ -167,7 +167,7 @@ class PaymentsGridControl extends Control
     }
 
     /**
-     * Vygeneruje potvrzení o přijetí platby.
+     * Vygeneruje potvrzení o přijetí platby
      *
      * @throws Throwable
      */
@@ -180,7 +180,7 @@ class PaymentsGridControl extends Control
     }
 
     /**
-     * Zkontroluje platby na bankovním účtu.
+     * Zkontroluje platby na bankovním účtu
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -192,7 +192,7 @@ class PaymentsGridControl extends Control
     }
 
     /**
-     * Vrátí stavy plateb jako možnosti pro select.
+     * Vrátí stavy plateb jako možnosti pro select
      *
      * @return string[]
      */

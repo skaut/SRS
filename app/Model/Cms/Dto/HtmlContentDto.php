@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Cms\Dto;
 
 /**
- * DTO obsahu s HTML.
+ * DTO obsahu s HTML
  */
 class HtmlContentDto extends ContentDto
 {

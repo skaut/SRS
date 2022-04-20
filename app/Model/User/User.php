@@ -26,14 +26,14 @@ use Doctrine\ORM\Mapping as ORM;
 use function implode;
 
 /**
- * Entita uživatele.
+ * Entita uživatele
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'user')]
 class User
 {
     /**
-     * Adresář pro ukládání profilových fotek.
+     * Adresář pro ukládání profilových fotek
      */
     public const PHOTO_PATH = 'user_photos';
 
@@ -43,157 +43,157 @@ class User
     private ?int $id = null;
 
     /**
-     * Uživatelské jméno skautIS.
+     * Uživatelské jméno skautIS
      */
     #[ORM\Column(type: 'string', unique: true, nullable: true, options: ['collation' => 'utf8_bin'])]
     protected ?string $username = null;
 
     /**
-     * E-mail.
+     * E-mail
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $email = null;
 
     /**
-     * Schválený.
+     * Schválený
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $approved = true;
 
     /**
-     * Jméno.
+     * Jméno
      */
     #[ORM\Column(type: 'string')]
     protected ?string $firstName = null;
 
     /**
-     * Příjmení.
+     * Příjmení
      */
     #[ORM\Column(type: 'string')]
     protected ?string $lastName = null;
 
     /**
-     * Přezdívka.
+     * Přezdívka
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $nickName = null;
 
     /**
-     * Titul před jménem.
+     * Titul před jménem
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $degreePre = null;
 
     /**
-     * Titul za jménem.
+     * Titul za jménem
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $degreePost = null;
 
     /**
-     * Zobrazované jméno - Příjmení Jméno (Přezdívka).
+     * Zobrazované jméno - Příjmení Jméno (Přezdívka)
      */
     #[ORM\Column(type: 'string')]
     protected string $displayName;
 
     /**
-     * Zobrazované jméno lektora, včetně titulů.
+     * Zobrazované jméno lektora, včetně titulů
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $lectorName = null;
 
     /**
-     * Bezpečnostní kód.
+     * Bezpečnostní kód
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $securityCode = null;
 
     /**
-     * Propojený účet.
+     * Propojený účet
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $member = false;
 
     /**
-     * Externí lektor.
+     * Externí lektor
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $externalLector = false;
 
     /**
-     * Jednotka.
+     * Jednotka
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $unit = null;
 
     /**
-     * Pohlaví.
+     * Pohlaví
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $sex = null;
 
     /**
-     * Datum narození.
+     * Datum narození
      */
     #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?DateTimeImmutable $birthdate = null;
 
     /**
-     * Id uživatele ve skautIS.
+     * Id uživatele ve skautIS
      */
     #[ORM\Column(type: 'integer', unique: true, nullable: true, name: 'skautis_user_id')]
     protected ?int $skautISUserId = null;
 
     /**
-     * Id osoby ve skautIS.
+     * Id osoby ve skautIS
      */
     #[ORM\Column(type: 'integer', unique: true, nullable: true, name: 'skautis_person_id')]
     protected ?int $skautISPersonId = null;
 
     /**
-     * Datum posledního přihlášení.
+     * Datum posledního přihlášení
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $lastLogin = null;
 
     /**
-     * O mně.
+     * O mně
      */
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $about = null;
 
     /**
-     * Ulice.
+     * Ulice
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $street = null;
 
     /**
-     * Město.
+     * Město
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $city = null;
 
     /**
-     * Poštovní směrovací číslo.
+     * Poštovní směrovací číslo
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $postcode = null;
 
     /**
-     * Stát.
+     * Stát
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $state = null;
 
     /**
-     * Zúčastnil se.
+     * Zúčastnil se
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $attended = false;
 
     /**
-     * Role.
+     * Role
      *
      * @var Collection<int, Role>
      */
@@ -201,7 +201,7 @@ class User
     protected Collection $roles;
 
     /**
-     * Přihlášky.
+     * Přihlášky
      *
      * @var Collection<int, Application>
      */
@@ -209,7 +209,7 @@ class User
     protected Collection $applications;
 
     /**
-     * Přihlášené programy.
+     * Přihlášené programy
      *
      * @var Collection<int, ProgramApplication>
      */
@@ -217,7 +217,7 @@ class User
     protected Collection $programApplications;
 
     /**
-     * Lektorované bloky.
+     * Lektorované bloky
      *
      * @var Collection<int, Block>
      */
@@ -225,37 +225,37 @@ class User
     protected Collection $lecturersBlocks;
 
     /**
-     * Poplatek uživatele.
+     * Poplatek uživatele
      */
     #[ORM\Column(type: 'integer')]
     protected int $fee = 0;
 
     /**
-     * Zbývající poplatek uživatele.
+     * Zbývající poplatek uživatele
      */
     #[ORM\Column(type: 'integer')]
     protected int $feeRemaining = 0;
 
     /**
-     * Platební metoda.
+     * Platební metoda
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $paymentMethod = null;
 
     /**
-     * Datum poslední platby.
+     * Datum poslední platby
      */
     #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?DateTimeImmutable $lastPaymentDate = null;
 
     /**
-     * Datum a čas vytvoření přihlášky rolí.
+     * Datum a čas vytvoření přihlášky rolí
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $rolesApplicationDate = null;
 
     /**
-     * Programové bloky, které jsou pro uživatele povinné, ale nemá je zapsané.
+     * Programové bloky, které jsou pro uživatele povinné, ale nemá je zapsané
      *
      * @var Collection<int, Block>
      */
@@ -263,13 +263,13 @@ class User
     protected Collection $notRegisteredMandatoryBlocks;
 
     /**
-     * Počet programových bloků, které jsou pro uživatele povinné, ale nemá je zapsané.
+     * Počet programových bloků, které jsou pro uživatele povinné, ale nemá je zapsané
      */
     #[ORM\Column(type: 'integer')]
     protected int $notRegisteredMandatoryBlocksCount = 0;
 
     /**
-     * Hodnoty vlastních polí přihlášky.
+     * Hodnoty vlastních polí přihlášky
      *
      * @var Collection<int, CustomInputValue>
      */
@@ -277,19 +277,19 @@ class User
     protected Collection $customInputValues;
 
     /**
-     * Neveřejná poznámka.
+     * Neveřejná poznámka
      */
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $note = null;
 
     /**
-     * Fotka.
+     * Fotka
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $photo = null;
 
     /**
-     * Datum aktualizace fotky.
+     * Datum aktualizace fotky
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $photoUpdate = null;
@@ -403,7 +403,7 @@ class User
     }
 
     /**
-     * Aktualizuje zobrazované jméno.
+     * Aktualizuje zobrazované jméno
      */
     private function updateDisplayName(): void
     {
@@ -420,7 +420,7 @@ class User
     }
 
     /**
-     * Aktualizuje jméno lektora.
+     * Aktualizuje jméno lektora
      */
     private function updateLectorName(): void
     {
@@ -590,7 +590,7 @@ class User
     }
 
     /**
-     * Vrátí adresu uživatele.
+     * Vrátí adresu uživatele
      */
     public function getAddress(): ?string
     {
@@ -658,7 +658,7 @@ class User
     }
 
     /**
-     * Vrací, zda má uživatel nějakou roli, která nemá cenu podle podakcí.
+     * Vrací, zda má uživatel nějakou roli, která nemá cenu podle podakcí
      */
     public function hasFixedFeeRole(): bool
     {
@@ -666,7 +666,7 @@ class User
     }
 
     /**
-     * Vrátí role uživatele oddělené čárkou.
+     * Vrátí role uživatele oddělené čárkou
      */
     public function getRolesText(): string
     {
@@ -722,7 +722,7 @@ class User
     }
 
     /**
-     * Vrátí platné přihlášky.
+     * Vrátí platné přihlášky
      *
      * @return Collection<int, Application>
      */
@@ -736,7 +736,7 @@ class User
     }
 
     /**
-     * Vrátí nezrušené přihlášky.
+     * Vrátí nezrušené přihlášky
      *
      * @return Collection<int, Application>
      */
@@ -746,7 +746,7 @@ class User
     }
 
     /**
-     * Vrátí nezrušené přihlášky na rolí.
+     * Vrátí nezrušené přihlášky na rolí
      *
      * @return Collection<int, RolesApplication>
      */
@@ -756,7 +756,7 @@ class User
     }
 
     /**
-     * Vrátí nezrušené přihlášky na podakce.
+     * Vrátí nezrušené přihlášky na podakce
      *
      * @return Collection<int, SubeventsApplication>
      */
@@ -766,7 +766,7 @@ class User
     }
 
     /**
-     * Vrácí zaplacené přihlášky.
+     * Vrácí zaplacené přihlášky
      *
      * @return Collection<int, Application>
      */
@@ -782,7 +782,7 @@ class User
     }
 
     /**
-     * Vrátí přihlášky, které jsou zaplacené nebo zdarma.
+     * Vrátí přihlášky, které jsou zaplacené nebo zdarma
      *
      * @return Collection<int, Application>
      */
@@ -794,7 +794,7 @@ class User
     }
 
     /**
-     * Vrátí přihlášky čekající na platbu.
+     * Vrátí přihlášky čekající na platbu
      *
      * @return Collection<int, Application>
      */
@@ -810,7 +810,7 @@ class User
     }
 
     /**
-     * Vrátí přihlášky rolí čekající na platbu.
+     * Vrátí přihlášky rolí čekající na platbu
      *
      * @return Collection<int, RolesApplication>
      */
@@ -820,7 +820,7 @@ class User
     }
 
     /**
-     * Vrací přihlášku rolí.
+     * Vrací přihlášku rolí
      */
     public function getRolesApplication(): ?RolesApplication
     {
@@ -832,7 +832,7 @@ class User
     }
 
     /**
-     * Vrátí přihlášky podakcí čekající na platbu.
+     * Vrátí přihlášky podakcí čekající na platbu
      *
      * @return Collection<int, SubeventsApplication>
      */
@@ -842,7 +842,7 @@ class User
     }
 
     /**
-     * Vrací zda uživatel zaplatil nějakou přihlášku.
+     * Vrací zda uživatel zaplatil nějakou přihlášku
      */
     public function hasPaidAnyApplication(): bool
     {
@@ -850,7 +850,7 @@ class User
     }
 
     /**
-     * Vrací zda uživatel zaplatil všechny přihlášky.
+     * Vrací zda uživatel zaplatil všechny přihlášky
      */
     public function hasPaidEveryApplication(): bool
     {
@@ -858,7 +858,7 @@ class User
     }
 
     /**
-     * Vrací zda uživatel zaplatil přihlášku rolí.
+     * Vrací zda uživatel zaplatil přihlášku rolí
      */
     public function hasPaidRolesApplication(): bool
     {
@@ -1039,7 +1039,7 @@ class User
     }
 
     /**
-     * Vrací podakce uživatele.
+     * Vrací podakce uživatele
      *
      * @return Collection<int, Subevent>
      */
@@ -1057,7 +1057,7 @@ class User
     }
 
     /**
-     * Vrátí podakce uživatele oddělené čárkou.
+     * Vrátí podakce uživatele oddělené čárkou
      */
     public function getSubeventsText(): string
     {
@@ -1067,7 +1067,7 @@ class User
     }
 
     /**
-     * Vrací, zda je uživatel přihlášen na podakci.
+     * Vrací, zda je uživatel přihlášen na podakci
      */
     public function hasSubevent(Subevent $subevent): bool
     {
@@ -1075,7 +1075,7 @@ class User
     }
 
     /**
-     * Vrácí, zda má uživatel zaplacenou přihlášku s podakcí.
+     * Vrácí, zda má uživatel zaplacenou přihlášku s podakcí
      */
     public function hasPaidSubevent(Subevent $subevent): bool
     {
@@ -1089,7 +1089,7 @@ class User
     }
 
     /**
-     * Vrátí variabilní symboly oddělené čárkou.
+     * Vrátí variabilní symboly oddělené čárkou
      */
     public function getVariableSymbolsText(): string
     {

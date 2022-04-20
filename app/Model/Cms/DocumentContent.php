@@ -19,7 +19,7 @@ use stdClass;
 use function assert;
 
 /**
- * Entita obsahu s dokumenty.
+ * Entita obsahu s dokumenty
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'document_content')]
@@ -28,7 +28,7 @@ class DocumentContent extends Content implements IContent
     protected string $type = Content::DOCUMENT;
 
     /**
-     * Tagy dokumentů, které se zobrazí.
+     * Tagy dokumentů, které se zobrazí
      *
      * @var Collection<int, Tag>
      */
@@ -71,7 +71,7 @@ class DocumentContent extends Content implements IContent
     }
 
     /**
-     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
+     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu
      */
     public function addContentForm(Form $form): Form
     {
@@ -86,7 +86,7 @@ class DocumentContent extends Content implements IContent
     }
 
     /**
-     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
+     * Zpracuje při uložení stránky část formuláře týkající se obsahu
      */
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {

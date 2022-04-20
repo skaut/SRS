@@ -25,7 +25,7 @@ use function random_bytes;
 use const JSON_THROW_ON_ERROR;
 
 /**
- * Presenter obsluhující nastavení vstupenek.
+ * Presenter obsluhující nastavení vstupenek
  */
 class TicketsPresenter extends ConfigurationBasePresenter
 {
@@ -50,7 +50,7 @@ class TicketsPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * Vygeneruje token pro aplikaci.
+     * Vygeneruje token pro aplikaci
      *
      * @throws Throwable
      */
@@ -63,7 +63,7 @@ class TicketsPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * Odstraní token pro aplikaci.
+     * Odstraní token pro aplikaci
      *
      * @throws Throwable
      */

@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use function array_map;
 
 /**
- * Třída spravující místnosti.
+ * Třída spravující místnosti
  */
 class RoomRepository extends AbstractRepository
 {
@@ -35,7 +35,7 @@ class RoomRepository extends AbstractRepository
     }
 
     /**
-     * Vrací místnost podle id.
+     * Vrací místnost podle id
      */
     public function findById(?int $id): ?Room
     {
@@ -43,7 +43,7 @@ class RoomRepository extends AbstractRepository
     }
 
     /**
-     * Vrací názvy všech místností.
+     * Vrací názvy všech místností
      *
      * @return string[]
      */
@@ -58,7 +58,7 @@ class RoomRepository extends AbstractRepository
     }
 
     /**
-     * Vrací názvy místností, kromě místnosti s id.
+     * Vrací názvy místností, kromě místnosti s id
      *
      * @return string[]
      */
@@ -75,7 +75,7 @@ class RoomRepository extends AbstractRepository
     }
 
     /**
-     * Vrací místnosti podle id.
+     * Vrací místnosti podle id
      *
      * @param int[] $ids
      *
@@ -112,7 +112,7 @@ class RoomRepository extends AbstractRepository
     }
 
     /**
-     * Uloží místnost.
+     * Uloží místnost
      */
     public function save(Room $room): void
     {
@@ -121,7 +121,7 @@ class RoomRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní místnost.
+     * Odstraní místnost
      */
     public function remove(Room $room): void
     {

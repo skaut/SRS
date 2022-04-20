@@ -21,7 +21,7 @@ use function implode;
 use function str_replace;
 
 /**
- * Abstraktní entita přihláška.
+ * Abstraktní entita přihláška
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'application')]
@@ -34,17 +34,17 @@ use function str_replace;
 abstract class Application
 {
     /**
-     * Přihláška rolí.
+     * Přihláška rolí
      */
     public const ROLES = 'roles';
 
     /**
-     * Přihláška na podakce.
+     * Přihláška na podakce
      */
     public const SUBEVENTS = 'subevents';
 
     /**
-     * Typ přihlášky.
+     * Typ přihlášky
      */
     protected string $type;
 
@@ -54,7 +54,7 @@ abstract class Application
     private ?int $id = null;
 
     /**
-     * Id přihlášky.
+     * Id přihlášky
      */
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $applicationId = null;
@@ -66,7 +66,7 @@ abstract class Application
     protected User $user;
 
     /**
-     * Role.
+     * Role
      *
      * @var Collection<int, Role>
      */
@@ -74,7 +74,7 @@ abstract class Application
     protected Collection $roles;
 
     /**
-     * Podakce.
+     * Podakce
      *
      * @var Collection<int, Subevent>
      */
@@ -82,73 +82,73 @@ abstract class Application
     protected Collection $subevents;
 
     /**
-     * Poplatek.
+     * Poplatek
      */
     #[ORM\Column(type: 'integer')]
     protected int $fee;
 
     /**
-     * Variabilní symbol.
+     * Variabilní symbol
      */
     #[ORM\ManyToOne(targetEntity: VariableSymbol::class, cascade: ['persist'])]
     protected VariableSymbol $variableSymbol;
 
     /**
-     * Datum podání přihlášky.
+     * Datum podání přihlášky
      */
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $applicationDate;
 
     /**
-     * Datum splatnosti.
+     * Datum splatnosti
      */
     #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?DateTimeImmutable $maturityDate = null;
 
     /**
-     * Platební metoda.
+     * Platební metoda
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $paymentMethod = null;
 
     /**
-     * Datum zaplacení.
+     * Datum zaplacení
      */
     #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?DateTimeImmutable $paymentDate = null;
 
     /**
-     * Spárovaná platba.
+     * Spárovaná platba
      */
     #[ORM\ManyToOne(targetEntity: Payment::class, inversedBy: 'pairedApplications', cascade: ['persist'])]
     protected ?Payment $payment = null;
 
     /**
-     * Příjmový doklad. Používá se pro generování id.
+     * Příjmový doklad. Používá se pro generování id
      */
     #[ORM\ManyToOne(targetEntity: IncomeProof::class, cascade: ['persist'])]
     protected ?IncomeProof $incomeProof = null;
 
     /**
-     * Stav přihlášky.
+     * Stav přihlášky
      */
     #[ORM\Column(type: 'string')]
     protected ?string $state = null;
 
     /**
-     * Uživatel, který vytvořil přihlášku.
+     * Uživatel, který vytvořil přihlášku
      */
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     protected ?User $createdBy = null;
 
     /**
-     * Platnost záznamu od.
+     * Platnost záznamu od
      */
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $validFrom;
 
     /**
-     * Platnost záznamu do.
+     * Platnost záznamu do
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $validTo = null;
@@ -197,7 +197,7 @@ abstract class Application
     }
 
     /**
-     * Vrací názvy rolí oddělené čárkou.
+     * Vrací názvy rolí oddělené čárkou
      */
     public function getRolesText(): string
     {
@@ -213,7 +213,7 @@ abstract class Application
     }
 
     /**
-     * Vrací názvy podakcí oddělené čárkou.
+     * Vrací názvy podakcí oddělené čárkou
      */
     public function getSubeventsText(): string
     {
@@ -226,7 +226,7 @@ abstract class Application
     }
 
     /**
-     * Vrací poplatek slovy.
+     * Vrací poplatek slovy
      */
     public function getFeeWords(): string
     {
@@ -247,7 +247,7 @@ abstract class Application
     }
 
     /**
-     * Vrací text variabilního symbolu.
+     * Vrací text variabilního symbolu
      */
     public function getVariableSymbolText(): string
     {
@@ -275,7 +275,7 @@ abstract class Application
     }
 
     /**
-     * Vrací datum splastnosti jako text.
+     * Vrací datum splastnosti jako text
      */
     public function getMaturityDateText(): ?string
     {
@@ -303,7 +303,7 @@ abstract class Application
     }
 
     /**
-     * Vrací datum platby jako text.
+     * Vrací datum platby jako text
      */
     public function getPaymentDateText(): ?string
     {

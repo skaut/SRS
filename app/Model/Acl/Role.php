@@ -16,55 +16,54 @@ use Doctrine\ORM\Mapping as ORM;
 use function implode;
 
 /**
- * Entita role.
+ * Entita role
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'role')]
 class Role
 {
     /**
-     * Role nepřihlášeného uživatele.
+     * Role nepřihlášeného uživatele
      */
     public const GUEST = 'guest';
 
     /**
-     * Role uživatele nepřihlášeného na seminář.
+     * Role uživatele nepřihlášeného na seminář
      */
     public const NONREGISTERED = 'nonregistered';
 
     /**
-     * Role neschváleného uživatele.
+     * Role neschváleného uživatele
      */
     public const UNAPPROVED = 'unapproved';
 
     /**
-     * Role účastníka.
+     * Role účastníka
      */
     public const ATTENDEE = 'attendee';
 
     /**
-     * Role servis týmu.
+     * Role servis týmu
      */
     public const SERVICE_TEAM = 'service_team';
 
     /**
-     * Role lektora.
+     * Role lektora
      */
     public const LECTOR = 'lector';
 
     /**
-     * Role organizátora.
+     * Role organizátora
      */
-
     public const ORGANIZER = 'organizer';
 
     /**
-     * Role administrátora.
+     * Role administrátora
      */
     public const ADMIN = 'admin';
 
     /**
-     * Role, která je uživateli nastavena při testování jiné role.
+     * Role, která je uživateli nastavena při testování jiné role
      */
     public const TEST = 'test';
 
@@ -89,13 +88,13 @@ class Role
     protected string $name;
 
     /**
-     * Systémový název systémové role.
+     * Systémový název systémové role
      */
     #[ORM\Column(type: 'string', unique: true, nullable: true)]
     protected ?string $systemName = null;
 
     /**
-     * Uživatelé v roli.
+     * Uživatelé v roli
      *
      * @var Collection<int, User>
      */
@@ -103,7 +102,7 @@ class Role
     protected Collection $users;
 
     /**
-     * Oprávnění role.
+     * Oprávnění role
      *
      * @var Collection<int, Permission>
      */
@@ -111,7 +110,7 @@ class Role
     protected Collection $permissions;
 
     /**
-     * Stránky, ke kterým má role přístup.
+     * Stránky, ke kterým má role přístup
      *
      * @var Collection<int, Page>
      */
@@ -119,68 +118,68 @@ class Role
     protected Collection $pages;
 
     /**
-     * Systémová role. Systémovou roli nelze odstranit.
+     * Systémová role. Systémovou roli nelze odstranit
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $systemRole = true;
 
     /**
-     * Registrovatelná role. Lze vybrat v přihlášce.
+     * Registrovatelná role. Lze vybrat v přihlášce
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $registerable = true;
 
     /**
-     * Automaticky schválit. Role nevyžaduje schválení registrace organizátory.
+     * Automaticky schválit. Role nevyžaduje schválení registrace organizátory
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $approvedAfterRegistration = false;
 
     /**
-     * Registrovatelná od.
+     * Registrovatelná od
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $registerableFrom = null;
 
     /**
-     * Registrovatelná do.
+     * Registrovatelná do
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $registerableTo = null;
 
     /**
-     * Kapacita.
+     * Kapacita
      */
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $capacity = null;
 
     /**
-     * Obsazenost.
-     * Bude se používat pro kontrolu kapacity.
+     * Obsazenost
+     * Bude se používat pro kontrolu kapacity
      */
     #[ORM\Column(type: 'integer')]
     protected int $occupancy = 0;
 
     /**
-     * Poplatek.
+     * Poplatek
      */
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $fee = 0;
 
     /**
-     * Minimální věk.
+     * Minimální věk
      */
     #[ORM\Column(type: 'integer')]
     protected int $minimumAge = 0;
 
     /**
-     * Synchronizovat účastníky v roli se skautIS.
+     * Synchronizovat účastníky v roli se skautIS
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $syncedWithSkautIS = true;
 
     /**
-     * Role neregistrovatelné současně s touto rolí.
+     * Role neregistrovatelné současně s touto rolí
      *
      * @var Collection<int, Role>
      */
@@ -191,7 +190,7 @@ class Role
     protected Collection $incompatibleRoles;
 
     /**
-     * Role vyžadující tuto roli.
+     * Role vyžadující tuto roli
      *
      * @var Collection<int, Role>
      */
@@ -199,7 +198,7 @@ class Role
     protected Collection $requiredByRole;
 
     /**
-     * Role vyžadované touto rolí.
+     * Role vyžadované touto rolí
      *
      * @var Collection<int, Role>
      */
@@ -210,7 +209,7 @@ class Role
     protected Collection $requiredRoles;
 
     /**
-     * Kategorie programů, na které se mohou účastníci v roli přihlásit.
+     * Kategorie programů, na které se mohou účastníci v roli přihlásit
      *
      * @var Collection<int, Category>
      */
@@ -218,13 +217,13 @@ class Role
     protected Collection $registerableCategories;
 
     /**
-     * Adresa, na kterou budou uživatelé v roli přesměrováni po přihlášení.
+     * Adresa, na kterou budou uživatelé v roli přesměrováni po přihlášení
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $redirectAfterLogin = null;
 
     /**
-     * Kategorie dokumentů, ke kterým má role přístup.
+     * Kategorie dokumentů, ke kterým má role přístup
      *
      * @var Collection<int, Tag>
      */
@@ -385,7 +384,7 @@ class Role
     }
 
     /**
-     * Vrací true, pokud je role v tuto chvíli registrovatelná.
+     * Vrací true, pokud je role v tuto chvíli registrovatelná
      */
     public function isRegisterableNow(): bool
     {
@@ -499,7 +498,7 @@ class Role
     }
 
     /**
-     * Vrací názvy všech nekompatibilních rolí.
+     * Vrací názvy všech nekompatibilních rolí
      */
     public function getIncompatibleRolesText(): string
     {
@@ -547,7 +546,7 @@ class Role
     }
 
     /**
-     * Vrací všechny (tranzitivně) role, kterými je tato role vyžadována.
+     * Vrací všechny (tranzitivně) role, kterými je tato role vyžadována
      *
      * @return Collection<int, Role>
      */
@@ -614,7 +613,7 @@ class Role
     }
 
     /**
-     * Vrací všechny (tranzitivně) vyžadované role.
+     * Vrací všechny (tranzitivně) vyžadované role
      *
      * @return Collection<int, Role>
      */
@@ -643,7 +642,7 @@ class Role
     }
 
     /**
-     * Vrací názvy všech vyžadovaných rolí.
+     * Vrací názvy všech vyžadovaných rolí
      */
     public function getRequiredRolesTransitiveText(): string
     {

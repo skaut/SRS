@@ -13,7 +13,7 @@ use function mb_strrpos;
 use function mb_substr;
 
 /**
- * Třída s pomocnými metodami.
+ * Třída s pomocnými metodami
  */
 class Helpers
 {
@@ -22,7 +22,7 @@ class Helpers
     public const DATETIME_FORMAT = 'j. n. Y H:i';
 
     /**
-     * Zkrátí $text na maximálně $length znaků včetně '…'.
+     * Zkrátí $text na maximálně $length znaků včetně '…'
      */
     public static function truncate(string $text, int $length): string
     {
@@ -41,7 +41,7 @@ class Helpers
     }
 
     /**
-     * Vrátí id prvků v kolekci.
+     * Vrátí id prvků v kolekci
      *
      * @param Collection<int, object> $collection
      *
@@ -53,7 +53,7 @@ class Helpers
     }
 
     /**
-     * Porovnává kolekce entit podle id.
+     * Porovnává kolekce entit podle id
      *
      * @param Collection<int, object> $collection1
      * @param Collection<int, object> $collection2

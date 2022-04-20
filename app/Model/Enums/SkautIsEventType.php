@@ -7,12 +7,12 @@ namespace App\Model\Enums;
 class SkautIsEventType
 {
     /**
-     * Vzdělávací akce.
+     * Vzdělávací akce
      */
     public const EDUCATION = 'education';
 
     /**
-     * Další akce.
+     * Další akce
      */
     public const GENERAL = 'general';
 
@@ -23,7 +23,7 @@ class SkautIsEventType
     ];
 
     /**
-     * Vrací možnosti typů akcí pro select.
+     * Vrací možnosti typů akcí pro select
      *
      * @return string[]
      */

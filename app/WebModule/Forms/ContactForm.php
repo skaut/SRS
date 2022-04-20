@@ -27,17 +27,17 @@ use function nl2br;
 use function str_replace;
 
 /**
- * Komponenta s formulářem pro kontaktaktní formulář.
+ * Komponenta s formulářem pro kontaktaktní formulář
  */
 class ContactForm extends UI\Control
 {
     /**
-     * Přihlášený uživatel.
+     * Přihlášený uživatel
      */
     private ?User $user = null;
 
     /**
-     * Událost při úspěšném odeslání formuláře.
+     * Událost při úspěšném odeslání formuláře
      *
      * @var callable[]
      */
@@ -53,7 +53,7 @@ class ContactForm extends UI\Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -62,7 +62,7 @@ class ContactForm extends UI\Control
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      */
     public function createComponentForm(): Form
     {
@@ -106,7 +106,7 @@ class ContactForm extends UI\Control
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable

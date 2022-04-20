@@ -57,14 +57,14 @@ use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
- * Formulář pro úpravu podrobností o účasti uživatele na semináři.
+ * Formulář pro úpravu podrobností o účasti uživatele na semináři
  */
 class EditUserSeminarFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Upravovaný uživatel.
+     * Upravovaný uživatel
      */
     private ?User $user = null;
 
@@ -86,7 +86,7 @@ class EditUserSeminarFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      */
     public function create(int $id): Form
     {
@@ -244,7 +244,7 @@ class EditUserSeminarFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws Throwable
      */
@@ -342,7 +342,7 @@ class EditUserSeminarFormFactory
     }
 
     /**
-     * Ověří, že není vybrána role "Neregistrovaný".
+     * Ověří, že není vybrána role "Neregistrovaný"
      */
     public function validateRolesNonregistered(MultiSelectBox $field): bool
     {
@@ -352,7 +352,7 @@ class EditUserSeminarFormFactory
     }
 
     /**
-     * Ověří kapacitu rolí.
+     * Ověří kapacitu rolí
      */
     public function validateRolesCapacities(MultiSelectBox $field): bool
     {
@@ -362,8 +362,8 @@ class EditUserSeminarFormFactory
     }
 
     /**
-     * Přepíná zobrazení vlastních polí podle kombinace rolí.
-     * Je nutná, na výsledku nezáleží (používá se javascript funkce).
+     * Přepíná zobrazení vlastních polí podle kombinace rolí
+     * Je nutná, na výsledku nezáleží (používá se javascript funkce)
      *
      * @param int[] $customInputRoles
      */

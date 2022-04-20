@@ -15,7 +15,7 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
- * Komponenta pro správu slev.
+ * Komponenta pro správu slev
  */
 class DiscountsGridControl extends Control
 {
@@ -24,7 +24,7 @@ class DiscountsGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -33,7 +33,7 @@ class DiscountsGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      *
      * @throws DataGridException
      */
@@ -73,7 +73,7 @@ class DiscountsGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění slevy.
+     * Zpracuje odstranění slevy
      *
      * @throws AbortException
      */

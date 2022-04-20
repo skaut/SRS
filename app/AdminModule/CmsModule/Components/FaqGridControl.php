@@ -15,7 +15,7 @@ use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
- * Komponenta pro správu častých otázek.
+ * Komponenta pro správu častých otázek
  */
 class FaqGridControl extends Control
 {
@@ -24,7 +24,7 @@ class FaqGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -33,7 +33,7 @@ class FaqGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
@@ -85,7 +85,7 @@ class FaqGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění otázky.
+     * Zpracuje odstranění otázky
      *
      * @throws AbortException
      */
@@ -100,7 +100,7 @@ class FaqGridControl extends Control
     }
 
     /**
-     * Přesuene otázku $item_id mezi $prev_id a $next_id.
+     * Přesuene otázku $item_id mezi $prev_id a $next_id
      *
      * @throws ORMException
      * @throws AbortException
@@ -121,7 +121,7 @@ class FaqGridControl extends Control
     }
 
     /**
-     * Změní viditelnost otázky.
+     * Změní viditelnost otázky
      *
      * @throws NonUniqueResultException
      * @throws ORMException

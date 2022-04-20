@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Cms\Dto;
 
 /**
- * DTO obsahu s informací o pořadateli.
+ * DTO obsahu s informací o pořadateli
  */
 class OrganizerContentDto extends ContentDto
 {

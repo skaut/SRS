@@ -8,7 +8,7 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Cms\Dto\CapacitiesContentDto;
 
 /**
- * Komponenta s kapacitami rolí.
+ * Komponenta s kapacitami rolí
  */
 class CapacitiesContentControl extends BaseContentControl
 {

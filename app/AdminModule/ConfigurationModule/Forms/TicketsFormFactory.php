@@ -19,7 +19,7 @@ use Throwable;
 use function assert;
 
 /**
- * Formulář pro nastavení vstupenek.
+ * Formulář pro nastavení vstupenek
  */
 class TicketsFormFactory
 {
@@ -28,7 +28,7 @@ class TicketsFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      *
      * @throws Throwable
      */
@@ -64,7 +64,7 @@ class TicketsFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws Throwable
      */

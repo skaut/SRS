@@ -9,14 +9,14 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita hodnota vlastního pole přihlášky typu datum a čas.
+ * Entita hodnota vlastního pole přihlášky typu datum a čas
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'custom_datetime_value')]
 class CustomDateTimeValue extends CustomInputValue
 {
     /**
-     * Hodnota pole přihlášky typu datum a čas.
+     * Hodnota pole přihlášky typu datum a čas
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $value = null;

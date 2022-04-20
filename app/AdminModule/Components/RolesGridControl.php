@@ -19,7 +19,7 @@ use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
- * Komponenta pro správu rolí.
+ * Komponenta pro správu rolí
  */
 class RolesGridControl extends Control
 {
@@ -31,7 +31,7 @@ class RolesGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -40,7 +40,7 @@ class RolesGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
@@ -104,7 +104,7 @@ class RolesGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění role.
+     * Zpracuje odstranění role
      *
      * @throws AbortException
      * @throws Throwable
@@ -126,7 +126,7 @@ class RolesGridControl extends Control
     }
 
     /**
-     * Změní registrovatelnost role.
+     * Změní registrovatelnost role
      *
      * @throws AbortException
      * @throws ORMException

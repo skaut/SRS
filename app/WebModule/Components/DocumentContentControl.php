@@ -10,7 +10,7 @@ use App\Model\Cms\Repositories\DocumentRepository;
 use function array_keys;
 
 /**
- * Komponenta s dokumenty.
+ * Komponenta s dokumenty
  */
 class DocumentContentControl extends BaseContentControl
 {

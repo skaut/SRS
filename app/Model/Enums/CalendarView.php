@@ -7,17 +7,17 @@ namespace App\Model\Enums;
 class CalendarView
 {
     /**
-     * Zobrazení na výšku.
+     * Zobrazení na výšku
      */
     public const TIME_GRID = 'timeGridSeminar';
 
     /**
-     * Zobrazení na šířku.
+     * Zobrazení na šířku
      */
     public const RESOURCE_TIMELINE = 'resourceTimelineSeminar';
 
     /**
-     * Zobrazení seznam.
+     * Zobrazení seznam
      */
     public const LIST = 'listSeminar';
 
@@ -29,7 +29,7 @@ class CalendarView
     ];
 
     /**
-     * Vrací možnosti zobrazení pro select.
+     * Vrací možnosti zobrazení pro select
      *
      * @return string[]
      */

@@ -8,7 +8,7 @@ use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Abstraktní entita hodnota vlastního pole přihlášky.
+ * Abstraktní entita hodnota vlastního pole přihlášky
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'custom_input_value')]
@@ -31,13 +31,13 @@ abstract class CustomInputValue
     private ?int $id = null;
 
     /**
-     * Vlastní pole přihlášky.
+     * Vlastní pole přihlášky
      */
     #[ORM\ManyToOne(targetEntity: CustomInput::class, inversedBy: 'customInputValues', cascade: ['persist'])]
     protected CustomInput $input;
 
     /**
-     * Uživatel.
+     * Uživatel
      */
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'customInputValues', cascade: ['persist'])]
     protected User $user;

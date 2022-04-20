@@ -21,7 +21,7 @@ use stdClass;
 use function assert;
 
 /**
- * Entita obsahu s přehledem kapacit rolí.
+ * Entita obsahu s přehledem kapacit rolí
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'capacities_content')]
@@ -30,7 +30,7 @@ class CapacitiesContent extends Content implements IContent
     protected string $type = Content::CAPACITIES;
 
     /**
-     * Role, jejichž obsazenosti se vypíší.
+     * Role, jejichž obsazenosti se vypíší
      *
      * @var Collection<int, Role>
      */
@@ -78,7 +78,7 @@ class CapacitiesContent extends Content implements IContent
     }
 
     /**
-     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
+     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu
      */
     public function addContentForm(Form $form): Form
     {
@@ -97,7 +97,7 @@ class CapacitiesContent extends Content implements IContent
     }
 
     /**
-     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
+     * Zpracuje při uložení stránky část formuláře týkající se obsahu
      */
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {

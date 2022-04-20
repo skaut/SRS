@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use function implode;
 
 /**
- * Entita programový blok.
+ * Entita programový blok
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'block')]
@@ -25,13 +25,13 @@ class Block
     private ?int $id = null;
 
     /**
-     * Název programového bloku.
+     * Název programového bloku
      */
     #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 
     /**
-     * Programy v bloku.
+     * Programy v bloku
      *
      * @var Collection<int, Program>
      */
@@ -40,7 +40,7 @@ class Block
     protected Collection $programs;
 
     /**
-     * Lektor.
+     * Lektor
      *
      * @var Collection<int, User>
      */
@@ -48,31 +48,31 @@ class Block
     protected Collection $lectors;
 
     /**
-     * Kategorie bloku.
+     * Kategorie bloku
      */
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'blocks', cascade: ['persist'])]
     protected ?Category $category = null;
 
     /**
-     * Podakce bloku.
+     * Podakce bloku
      */
     #[ORM\ManyToOne(targetEntity: Subevent::class, inversedBy: 'blocks', cascade: ['persist'])]
     protected Subevent $subevent;
 
     /**
-     * Povinnost.
+     * Povinnost
      */
     #[ORM\Column(type: 'string')]
     protected string $mandatory;
 
     /**
-     * Délka programového bloku.
+     * Délka programového bloku
      */
     #[ORM\Column(type: 'integer')]
     protected int $duration;
 
     /**
-     * Kapacita.
+     * Kapacita
      */
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $capacity = null;
@@ -84,19 +84,19 @@ class Block
     protected bool $alternatesAllowed = false;
 
     /**
-     * Pomůcky.
+     * Pomůcky
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $tools = null;
 
     /**
-     * Stručný popis.
+     * Stručný popis
      */
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $perex = null;
 
     /**
-     * Podrobný popis.
+     * Podrobný popis
      */
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
@@ -141,7 +141,7 @@ class Block
     }
 
     /**
-     * Vrací počet programů bloku.
+     * Vrací počet programů bloku
      */
     public function getProgramsCount(): int
     {

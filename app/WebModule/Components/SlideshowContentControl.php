@@ -7,7 +7,7 @@ namespace App\WebModule\Components;
 use App\Model\Cms\Dto\SlideshowContentDto;
 
 /**
- * Komponenta se slideshow.
+ * Komponenta se slideshow
  */
 class SlideshowContentControl extends BaseContentControl
 {

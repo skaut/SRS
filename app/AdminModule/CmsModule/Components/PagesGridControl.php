@@ -29,7 +29,7 @@ use function assert;
 use function count;
 
 /**
- * Komponenta pro správu stránek.
+ * Komponenta pro správu stránek
  */
 class PagesGridControl extends Control
 {
@@ -43,7 +43,7 @@ class PagesGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -52,7 +52,7 @@ class PagesGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
@@ -156,7 +156,7 @@ class PagesGridControl extends Control
     }
 
     /**
-     * Zpracuje přidání stránky.
+     * Zpracuje přidání stránky
      *
      * @throws NonUniqueResultException
      * @throws ORMException
@@ -177,7 +177,7 @@ class PagesGridControl extends Control
     }
 
     /**
-     * Zpracuje upravení stránky.
+     * Zpracuje upravení stránky
      *
      * @throws NonUniqueResultException
      * @throws ORMException
@@ -200,7 +200,7 @@ class PagesGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění stránky.
+     * Zpracuje odstranění stránky
      *
      * @throws AbortException
      * @throws PageException
@@ -216,7 +216,7 @@ class PagesGridControl extends Control
     }
 
     /**
-     * Přesune stránku s $item_id mezi $prev_id a $next_id.
+     * Přesune stránku s $item_id mezi $prev_id a $next_id
      *
      * @throws AbortException
      * @throws ORMException
@@ -238,7 +238,7 @@ class PagesGridControl extends Control
     }
 
     /**
-     * Změní viditelnost stránky.
+     * Změní viditelnost stránky
      *
      * @throws AbortException
      * @throws NonUniqueResultException

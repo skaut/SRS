@@ -7,12 +7,12 @@ namespace App\Model\Enums;
 class Sex
 {
     /**
-     * Muž.
+     * Muž
      */
     public const MALE = 'male';
 
     /**
-     * Žena.
+     * Žena
      */
     public const FEMALE = 'female';
 
@@ -23,7 +23,7 @@ class Sex
     ];
 
     /**
-     * Vrací možnosti pohlaví pro select.
+     * Vrací možnosti pohlaví pro select
      *
      * @return string[]
      */

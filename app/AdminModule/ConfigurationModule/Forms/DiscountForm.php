@@ -15,31 +15,31 @@ use Nette\Application\UI\Form;
 use stdClass;
 
 /**
- * Komponenta s formulářem pro úpravu slevy.
+ * Komponenta s formulářem pro úpravu slevy
  */
 class DiscountForm extends UI\Control
 {
     /**
-     * Upravovaná sleva.
+     * Upravovaná sleva
      */
     private ?Discount $discount;
 
     /**
-     * Událost při uložení formuláře.
+     * Událost při uložení formuláře
      *
      * @var callable[]
      */
     public array $onSave = [];
 
     /**
-     * Událost při chybě podmínky.
+     * Událost při chybě podmínky
      *
      * @var callable[]
      */
     public array $onConditionError = [];
 
     /**
-     * @param int $id Id upravované slevy.
+     * @param int $id Id upravované slevy
      */
     public function __construct(
         public int $id,
@@ -52,7 +52,7 @@ class DiscountForm extends UI\Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -70,7 +70,7 @@ class DiscountForm extends UI\Control
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      */
     public function createComponentForm(): Form
     {
@@ -108,7 +108,7 @@ class DiscountForm extends UI\Control
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws ORMException
      */

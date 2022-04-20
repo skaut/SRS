@@ -27,14 +27,14 @@ use function array_key_exists;
 use function in_array;
 
 /**
- * Formulář pro úpravu role.
+ * Formulář pro úpravu role
  */
 class EditRoleFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Upravovaná role.
+     * Upravovaná role
      */
     private ?Role $role = null;
 
@@ -49,7 +49,7 @@ class EditRoleFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      *
      * @throws NoResultException
      * @throws NonUniqueResultException
@@ -177,7 +177,7 @@ class EditRoleFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws Throwable
      */
@@ -214,7 +214,7 @@ class EditRoleFormFactory
     }
 
     /**
-     * Vrátí možná oprávnění jako možnosti pro select.
+     * Vrátí možná oprávnění jako možnosti pro select
      *
      * @return string[]
      *
@@ -243,7 +243,7 @@ class EditRoleFormFactory
     }
 
     /**
-     * Připraví oprávnění jako možnost pro select.
+     * Připraví oprávnění jako možnost pro select
      *
      * @param string[] $options
      *
@@ -257,7 +257,7 @@ class EditRoleFormFactory
     }
 
     /**
-     * Ověří kolize mezi vyžadovanými a nekompatibilními rolemi.
+     * Ověří kolize mezi vyžadovanými a nekompatibilními rolemi
      *
      * @param int[][] $args
      *
@@ -294,7 +294,7 @@ class EditRoleFormFactory
     }
 
     /**
-     * Ověří, zda stránka, kam mají být uživatelé přesměrování po přihlášení, je pro ně viditelná.
+     * Ověří, zda stránka, kam mají být uživatelé přesměrování po přihlášení, je pro ně viditelná
      *
      * @param string[][] $args
      */

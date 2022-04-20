@@ -32,7 +32,7 @@ use function str_replace;
 use function strval;
 
 /**
- * Služba pro rozesílání e-mailů.
+ * Služba pro rozesílání e-mailů
  */
 class MailService implements IMailService
 {
@@ -51,7 +51,7 @@ class MailService implements IMailService
     }
 
     /**
-     * Rozešle e-mail.
+     * Rozešle e-mail
      *
      * @param Collection<int, Role>|null     $recipientsRoles
      * @param Collection<int, Subevent>|null $recipientsSubevents
@@ -129,7 +129,7 @@ class MailService implements IMailService
     }
 
     /**
-     * Rozešle e-mail podle šablony.
+     * Rozešle e-mail podle šablony
      *
      * @param Collection<int, User>|null   $recipientsUsers
      * @param Collection<int, string>|null $recipientsEmails

@@ -25,7 +25,7 @@ use Tracy\ILogger;
 use function assert;
 
 /**
- * Formulár pro nastavení párování plateb.
+ * Formulár pro nastavení párování plateb
  */
 class BankFormFactory
 {
@@ -36,7 +36,7 @@ class BankFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      *
      * @throws Throwable
      */
@@ -68,7 +68,7 @@ class BankFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -90,7 +90,7 @@ class BankFormFactory
     }
 
     /**
-     * Ověří, že datum počátku stahování transakcí je v minulosti.
+     * Ověří, že datum počátku stahování transakcí je v minulosti
      */
     public function validateBankDownloadFromDate(DateControl $field): bool
     {

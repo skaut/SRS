@@ -30,7 +30,7 @@ class CategoryUpdatedEventListener implements MessageHandlerInterface
     }
 
     /**
-     * Pokud se změnily registrovatelné role u kategorie, je třeba přihlásit/odhlásit programy účastníků.
+     * Pokud se změnily registrovatelné role u kategorie, je třeba přihlásit/odhlásit programy účastníků
      */
     public function __invoke(CategoryUpdatedEvent $event): void
     {

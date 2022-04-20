@@ -10,14 +10,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita dokumentu.
+ * Entita dokumentu
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'document')]
 class Document
 {
     /**
-     * Adresář pro ukládání dokumentů.
+     * Adresář pro ukládání dokumentů
      */
     public const PATH = 'documents';
 
@@ -27,7 +27,7 @@ class Document
     private ?int $id = null;
 
     /**
-     * Tagy dokumentu.
+     * Tagy dokumentu
      *
      * @var Collection<int, Tag>
      */
@@ -35,25 +35,25 @@ class Document
     protected Collection $tags;
 
     /**
-     * Název dokumentu.
+     * Název dokumentu
      */
     #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
-     * Adresa souboru.
+     * Adresa souboru
      */
     #[ORM\Column(type: 'string')]
     protected string $file;
 
     /**
-     * Popis.
+     * Popis
      */
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
     /**
-     * Datum změny souboru.
+     * Datum změny souboru
      */
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $timestamp;

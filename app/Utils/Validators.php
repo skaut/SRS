@@ -23,7 +23,7 @@ use function explode;
 use function trim;
 
 /**
- * Třída s vlastními validátory.
+ * Třída s vlastními validátory
  */
 class Validators
 {
@@ -35,7 +35,7 @@ class Validators
     }
 
     /**
-     * Ověří, že není vybrána role "Neregistrovaný".
+     * Ověří, že není vybrána role "Neregistrovaný"
      *
      * @param Collection<int, Role> $selectedRoles
      */
@@ -51,7 +51,7 @@ class Validators
     }
 
     /**
-     * Ověří kapacitu rolí.
+     * Ověří kapacitu rolí
      *
      * @param Collection<int, Role> $selectedRoles
      */
@@ -67,7 +67,7 @@ class Validators
     }
 
     /**
-     * Ověří kompatibilitu rolí.
+     * Ověří kompatibilitu rolí
      *
      * @param Collection<int, Role> $selectedRoles
      */
@@ -87,7 +87,7 @@ class Validators
     }
 
     /**
-     * Ověří výběr vyžadovaných rolí.
+     * Ověří výběr vyžadovaných rolí
      *
      * @param Collection<int, Role> $selectedRoles
      */
@@ -107,7 +107,7 @@ class Validators
     }
 
     /**
-     * Ověří registrovatelnost rolí.
+     * Ověří registrovatelnost rolí
      *
      * @param Collection<int, Role> $selectedRoles
      */
@@ -123,7 +123,7 @@ class Validators
     }
 
     /**
-     * Ověří požadovaný minimální věk.
+     * Ověří požadovaný minimální věk
      *
      * @param Collection<int, Role> $selectedRoles
      *
@@ -144,7 +144,7 @@ class Validators
     }
 
     /**
-     * Ověří kapacitu podakcí.
+     * Ověří kapacitu podakcí
      *
      * @param Collection<int, Subevent> $selectedSubevents
      */
@@ -160,7 +160,7 @@ class Validators
     }
 
     /**
-     * Ověří kompatibilitu podakcí.
+     * Ověří kompatibilitu podakcí
      *
      * @param Collection<int, Subevent> $selectedSubevents
      */
@@ -180,7 +180,7 @@ class Validators
     }
 
     /**
-     * Ověří výběr vyžadovaných podakcí.
+     * Ověří výběr vyžadovaných podakcí
      *
      * @param Collection<int, Subevent> $selectedSubevents
      */
@@ -200,7 +200,7 @@ class Validators
     }
 
     /**
-     * Ověří, zda uživatel podakci již nemá.
+     * Ověří, zda uživatel podakci již nemá
      *
      * @param Collection<int, Subevent> $selectedSubevents
      */
@@ -221,7 +221,7 @@ class Validators
     }
 
     /**
-     * Ověří, zda může být program automaticky přihlašovaný.
+     * Ověří, zda může být program automaticky přihlašovaný
      */
     public function validateBlockAutoRegistered(Block $block, ?int $capacity): bool
     {
@@ -241,7 +241,7 @@ class Validators
     }
 
     /**
-     * Ověří seznam e-mailů oddělených ','.
+     * Ověří seznam e-mailů oddělených ','
      */
     public function validateEmails(string $emails): bool
     {

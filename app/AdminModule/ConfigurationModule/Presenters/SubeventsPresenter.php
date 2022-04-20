@@ -16,7 +16,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující správu podakcí.
+ * Presenter obsluhující správu podakcí
  */
 class SubeventsPresenter extends ConfigurationBasePresenter
 {

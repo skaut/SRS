@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Model\Cms\Dto;
 
 /**
- * DTO obsahu se seznamem uživatelů.
+ * DTO obsahu se seznamem uživatelů
  */
 class UsersContentDto extends ContentDto
 {
     /**
-     * @param int[] $roles Role, jejichž uživatelé budou vypsáni.
+     * @param int[] $roles Role, jejichž uživatelé budou vypsáni
      */
     public function __construct(string $type, string $heading, protected array $roles)
     {

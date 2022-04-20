@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita místnost.
+ * Entita místnost
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'room')]
@@ -21,19 +21,19 @@ class Room
     private ?int $id = null;
 
     /**
-     * Název místnosti.
+     * Název místnosti
      */
     #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 
     /**
-     * Kapacita.
+     * Kapacita
      */
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $capacity;
 
     /**
-     * Programy v místnosti.
+     * Programy v místnosti
      *
      * @var Collection<int, Program>
      */

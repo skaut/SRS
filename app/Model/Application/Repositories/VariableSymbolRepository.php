@@ -9,7 +9,7 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující variabilní symboly.
+ * Třída spravující variabilní symboly
  */
 class VariableSymbolRepository extends AbstractRepository
 {
@@ -19,7 +19,7 @@ class VariableSymbolRepository extends AbstractRepository
     }
 
     /**
-     * Uloží variabilní symbol.
+     * Uloží variabilní symbol
      */
     public function save(VariableSymbol $variableSymbol): void
     {

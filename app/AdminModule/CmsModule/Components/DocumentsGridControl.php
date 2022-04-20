@@ -27,7 +27,7 @@ use function basename;
 use const UPLOAD_ERR_OK;
 
 /**
- * Komponenta pro správu dokumentů.
+ * Komponenta pro správu dokumentů
  */
 class DocumentsGridControl extends Control
 {
@@ -40,7 +40,7 @@ class DocumentsGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -49,7 +49,7 @@ class DocumentsGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      *
      * @throws DataGridException
      */
@@ -136,7 +136,7 @@ class DocumentsGridControl extends Control
     }
 
     /**
-     * Zpracuje přidání dokumentu.
+     * Zpracuje přidání dokumentu
      */
     public function add(stdClass $values): void
     {
@@ -158,7 +158,7 @@ class DocumentsGridControl extends Control
     }
 
     /**
-     * Zpracuje úpravu dokumentu.
+     * Zpracuje úpravu dokumentu
      */
     public function edit(string $id, stdClass $values): void
     {
@@ -184,7 +184,7 @@ class DocumentsGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění dokumentu.
+     * Zpracuje odstranění dokumentu
      *
      * @throws AbortException
      */

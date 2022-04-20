@@ -7,7 +7,7 @@ namespace App\Model\Cms\Exceptions;
 use Exception;
 
 /**
- * Výjimka chyba stránky.
+ * Výjimka chyba stránky
  */
 class PageException extends Exception
 {

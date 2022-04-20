@@ -16,7 +16,7 @@ use function array_keys;
 use function implode;
 
 /**
- * Entita platba.
+ * Entita platba
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'payment')]
@@ -28,49 +28,49 @@ class Payment
     private ?int $id = null;
 
     /**
-     * Id platby v systému banky.
+     * Id platby v systému banky
      */
     #[ORM\Column(type: 'string', unique: true, nullable: true)]
     protected ?string $transactionId = null;
 
     /**
-     * Datum platby.
+     * Datum platby
      */
     #[ORM\Column(type: 'date_immutable')]
     protected DateTimeImmutable $date;
 
     /**
-     * Částka.
+     * Částka
      */
     #[ORM\Column(type: 'float')]
     protected float $amount;
 
     /**
-     * Číslo protiúčtu.
+     * Číslo protiúčtu
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $accountNumber = null;
 
     /**
-     * Majitel protiúčtu.
+     * Majitel protiúčtu
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $accountName = null;
 
     /**
-     * Variabilní symbol platby.
+     * Variabilní symbol platby
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $variableSymbol = null;
 
     /**
-     * Zpráva pro příjemce.
+     * Zpráva pro příjemce
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $message = null;
 
     /**
-     * Spárované přihlášky.
+     * Spárované přihlášky
      *
      * @var Collection<int, Application>
      */
@@ -78,7 +78,7 @@ class Payment
     protected Collection $pairedApplications;
 
     /**
-     * Stav platby.
+     * Stav platby
      */
     #[ORM\Column(type: 'string')]
     protected string $state;

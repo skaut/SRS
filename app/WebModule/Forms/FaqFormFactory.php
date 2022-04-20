@@ -15,14 +15,14 @@ use Nette\Application\UI\Form;
 use stdClass;
 
 /**
- * Formulář pro položení otázky.
+ * Formulář pro položení otázky
  */
 class FaqFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Přihlášený uživatel.
+     * Přihlášený uživatel
      */
     private ?User $user = null;
 
@@ -34,7 +34,7 @@ class FaqFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      */
     public function create(int $id): Form
     {
@@ -53,7 +53,7 @@ class FaqFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws NonUniqueResultException
      * @throws ORMException

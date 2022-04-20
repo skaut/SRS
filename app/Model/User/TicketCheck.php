@@ -9,7 +9,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita kontrola vstupenky.
+ * Entita kontrola vstupenky
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'ticket_check')]

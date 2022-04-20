@@ -21,7 +21,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující nastavení propojení se skautIS akcí.
+ * Presenter obsluhující nastavení propojení se skautIS akcí
  */
 class SkautIsPresenter extends ConfigurationBasePresenter
 {
@@ -53,7 +53,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * Zruší propojení s akcí ve skautIS.
+     * Zruší propojení s akcí ve skautIS
      *
      * @throws AbortException
      * @throws Throwable

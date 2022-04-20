@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
- * Presenter obsluhující nastavení systému.
+ * Presenter obsluhující nastavení systému
  */
 class SystemPresenter extends ConfigurationBasePresenter
 {
@@ -23,7 +23,7 @@ class SystemPresenter extends ConfigurationBasePresenter
     public Application $consoleApplication;
 
     /**
-     * Promaže cache.
+     * Promaže cache
      *
      * @throws Exception
      */

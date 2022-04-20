@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\AdminModule\CmsModule\Components;
 
 /**
- * Factory komponenty pro správu dokumentů.
+ * Factory komponenty pro správu dokumentů
  */
 interface IDocumentsGridControlFactory
 {
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      */
     public function create(): DocumentsGridControl;
 }

@@ -14,7 +14,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující nastavení webové prezentace.
+ * Presenter obsluhující nastavení webové prezentace
  */
 class WebPresenter extends ConfigurationBasePresenter
 {

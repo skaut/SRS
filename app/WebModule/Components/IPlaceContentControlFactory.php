@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 /**
- * Factory komponenty s místem.
+ * Factory komponenty s místem
  */
 interface IPlaceContentControlFactory
 {

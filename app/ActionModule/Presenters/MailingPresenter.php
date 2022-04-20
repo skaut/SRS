@@ -16,7 +16,7 @@ use Nette\DI\Attributes\Inject;
 use Throwable;
 
 /**
- * Presenter obsluhující potvrzení změny e-mailu.
+ * Presenter obsluhující potvrzení změny e-mailu
  */
 class MailingPresenter extends ActionBasePresenter
 {
@@ -27,7 +27,7 @@ class MailingPresenter extends ActionBasePresenter
     public QueryBus $queryBus;
 
     /**
-     * Ověří e-mail semináře.
+     * Ověří e-mail semináře
      *
      * @throws AbortException
      * @throws Throwable

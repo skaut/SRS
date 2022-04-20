@@ -58,7 +58,7 @@ use function in_array;
 use const DATE_ISO8601;
 
 /**
- * Služba pro zpracování požadavků z API pro správu harmonogramu a zapisování programů.
+ * Služba pro zpracování požadavků z API pro správu harmonogramu a zapisování programů
  */
 class ScheduleService
 {
@@ -83,7 +83,7 @@ class ScheduleService
     }
 
     /**
-     * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
+     * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu
      *
      * @return ProgramDetailDto[]
      *
@@ -101,7 +101,7 @@ class ScheduleService
     }
 
     /**
-     * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
+     * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů
      *
      * @return ProgramDetailDto[]
      *
@@ -148,7 +148,7 @@ class ScheduleService
     }
 
     /**
-     * Vrací podrobnosti o programových blocích.
+     * Vrací podrobnosti o programových blocích
      *
      * @return BlockDetailDto[]
      */
@@ -164,7 +164,7 @@ class ScheduleService
     }
 
     /**
-     * Vrací podrobnosti o místnostech.
+     * Vrací podrobnosti o místnostech
      *
      * @return RoomDetailDto[]
      */
@@ -180,7 +180,7 @@ class ScheduleService
     }
 
     /**
-     * Vrací nastavení pro FullCalendar.
+     * Vrací nastavení pro FullCalendar
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -230,7 +230,7 @@ class ScheduleService
     }
 
     /**
-     * Uloží nebo vytvoří program.
+     * Uloží nebo vytvoří program
      *
      * @throws ApiException
      * @throws Throwable
@@ -292,7 +292,7 @@ class ScheduleService
     }
 
     /**
-     * Smaže program.
+     * Smaže program
      *
      * @throws ApiException
      * @throws Throwable
@@ -323,7 +323,7 @@ class ScheduleService
     }
 
     /**
-     * Přihlásí program uživateli.
+     * Přihlásí program uživateli
      *
      * @throws ApiException
      * @throws Throwable
@@ -385,7 +385,7 @@ class ScheduleService
     }
 
     /**
-     * Odhlásí program uživateli.
+     * Odhlásí program uživateli
      *
      * @throws ApiException
      * @throws Throwable
@@ -431,7 +431,7 @@ class ScheduleService
     }
 
     /**
-     * Převede Program na ProgramDetailDto.
+     * Převede Program na ProgramDetailDto
      *
      * @throws Exception
      */
@@ -449,7 +449,7 @@ class ScheduleService
     }
 
     /**
-     * Převede Block na BlockDetailDto.
+     * Převede Block na BlockDetailDto
      */
     private function convertBlockToBlockDetailDto(Block $block): BlockDetailDto
     {
@@ -488,7 +488,7 @@ class ScheduleService
     }
 
     /**
-     * Převede User na LectorDetailDto.
+     * Převede User na LectorDetailDto
      */
     private function convertUserToLectorDetailDto(User $lector): LectorDetailDto
     {
@@ -503,7 +503,7 @@ class ScheduleService
     }
 
     /**
-     * Převede Room na RoomDetailDto.
+     * Převede Room na RoomDetailDto
      */
     private function convertRoomToRoomDetailDto(Room $room): RoomDetailDto
     {

@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 use Nette;
 
 /**
- * Objekt pro přenos konfigurace do FullCalendar.
+ * Objekt pro přenos konfigurace do FullCalendar
  */
 class CalendarConfigDto
 {

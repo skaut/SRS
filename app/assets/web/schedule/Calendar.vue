@@ -92,7 +92,7 @@
         </div>
 
         <div class="alert alert-warning alert-forever" v-show="notRegisteredMandatoryPrograms > 0">
-            Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je.
+            Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je
         </div>
 
         <div class="row mb-2">
@@ -257,7 +257,7 @@
             ...mapActions(['loadData', 'attendProgram', 'unattendProgram']),
 
             /**
-             * Vykreslí název místnosti v timeGridSeminar zobrazení.
+             * Vykreslí název místnosti v timeGridSeminar zobrazení
              */
             eventDidMount(info) {
                 if (info.view.type === 'timeGridSeminar') {
@@ -290,7 +290,7 @@
             },
 
             /**
-             * Zpracuje přepnutí view a uloží zvolené.
+             * Zpracuje přepnutí view a uloží zvolené
              */
             handleChangeView(view, save=true) {
                 this.initialView = view;
@@ -301,21 +301,21 @@
             },
 
             /**
-             * Zpracuje přechod na přechozí den.
+             * Zpracuje přechod na přechozí den
              */
             handlePrev(view) {
                 this.$refs.fullCalendar.getApi().prev();
             },
 
             /**
-             * Zpracuje přechod na následující den.
+             * Zpracuje přechod na následující den
              */
             handleNext(view) {
                 this.$refs.fullCalendar.getApi().next();
             },
 
             /**
-             * Překreslí tlačítka pro volbu dne.
+             * Překreslí tlačítka pro volbu dne
              */
             datesSet(info) {
                 $('#btnPrev').prop('disabled', info.view.currentStart.toISOString().split('T')[0] <= this.validRange.start);
@@ -324,7 +324,7 @@
             },
 
             /**
-             * Zpracuje kliknutí na událost (otevře modal okno).
+             * Zpracuje kliknutí na událost (otevře modal okno)
              */
             handleEventClick(info) {
                 this.selectedEventInfo = {
@@ -335,7 +335,7 @@
             },
 
             /**
-             * Zpracuje přihlášení na program.
+             * Zpracuje přihlášení na program
              */
             handleAttendEvent() {
                 $('#program-modal').modal('hide');
@@ -344,7 +344,7 @@
             },
 
             /**
-             * Zpracuje odhlášení z programu.
+             * Zpracuje odhlášení z programu
              */
             handleUnattendEvent() {
                 $('#program-modal').modal('hide');

@@ -16,7 +16,7 @@ use Nette\Utils\ArrayHash;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
- * Komponenta pro výpis historie e-mailů.
+ * Komponenta pro výpis historie e-mailů
  */
 class MailHistoryGridControl extends Control
 {
@@ -29,7 +29,7 @@ class MailHistoryGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -38,7 +38,7 @@ class MailHistoryGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      */
     public function createComponentMailHistoryGrid(string $name): void
     {

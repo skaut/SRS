@@ -13,7 +13,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 /**
- * Třída spravující oprávnění.
+ * Třída spravující oprávnění
  */
 class PermissionRepository extends AbstractRepository
 {
@@ -23,7 +23,7 @@ class PermissionRepository extends AbstractRepository
     }
 
     /**
-     * Vrací oprávnění podle id.
+     * Vrací oprávnění podle id
      *
      * @param int[] $ids
      *
@@ -39,7 +39,7 @@ class PermissionRepository extends AbstractRepository
     }
 
     /**
-     * Vrací id oprávnění.
+     * Vrací id oprávnění
      *
      * @param Collection<int, Permission> $permissions
      *
@@ -51,7 +51,7 @@ class PermissionRepository extends AbstractRepository
     }
 
     /**
-     * Vrací oprávnění podle názvu oprávnění a prostředku.
+     * Vrací oprávnění podle názvu oprávnění a prostředku
      *
      * @throws NoResultException
      * @throws NonUniqueResultException

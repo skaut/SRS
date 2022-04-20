@@ -21,7 +21,7 @@ use function array_map;
 use const PHP_INT_MAX;
 
 /**
- * Třída spravující stránky.
+ * Třída spravující stránky
  */
 class PageRepository extends AbstractRepository
 {
@@ -31,7 +31,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Vrací stránku podle id.
+     * Vrací stránku podle id
      */
     public function findById(?int $id): ?Page
     {
@@ -39,7 +39,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Vrací viditelné stránky se zadaným slugem.
+     * Vrací viditelné stránky se zadaným slugem
      *
      * @throws Throwable
      */
@@ -49,7 +49,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Vrací viditelné stránky, seřazené podle pozice.
+     * Vrací viditelné stránky, seřazené podle pozice
      *
      * @return Page[]
      */
@@ -59,7 +59,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Vrací poslední pozici stránky.
+     * Vrací poslední pozici stránky
      *
      * @throws NonUniqueResultException
      * @throws NoResultException
@@ -73,7 +73,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Vrací všechny cesty.
+     * Vrací všechny cesty
      *
      * @return string[]
      */
@@ -88,7 +88,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Vrací všechny cesty, kromě cesty stránky s id.
+     * Vrací všechny cesty, kromě cesty stránky s id
      *
      * @return string[]
      */
@@ -105,7 +105,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Vrací id podle stránek.
+     * Vrací id podle stránek
      *
      * @param Collection<int, Page> $pages
      *
@@ -117,7 +117,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Vrací stránky podle cest.
+     * Vrací stránky podle cest
      *
      * @param string[] $slugs
      *
@@ -133,7 +133,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Vrací cesty podle stránek.
+     * Vrací cesty podle stránek
      *
      * @param Collection<int, Page> $pages
      *
@@ -145,7 +145,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Vrací stránky jako možnosti pro select.
+     * Vrací stránky jako možnosti pro select
      *
      * @return string[]
      */
@@ -166,7 +166,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Uloží stránku.
+     * Uloží stránku
      *
      * @throws NonUniqueResultException
      * @throws ORMException
@@ -182,7 +182,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní stránku.
+     * Odstraní stránku
      *
      * @throws PageException
      */
@@ -197,7 +197,7 @@ class PageRepository extends AbstractRepository
     }
 
     /**
-     * Přesune stránku mezi stránky s id prevId a nextId.
+     * Přesune stránku mezi stránky s id prevId a nextId
      *
      * @throws ORMException
      * @throws OptimisticLockException

@@ -7,7 +7,7 @@ namespace App\Model\Cms;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita obsahu s přihláškou.
+ * Entita obsahu s přihláškou
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'application_content')]

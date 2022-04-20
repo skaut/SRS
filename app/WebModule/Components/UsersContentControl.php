@@ -8,7 +8,7 @@ use App\Model\Cms\Dto\UsersContentDto;
 use App\Model\User\Repositories\UserRepository;
 
 /**
- * Komponenta s přehledem uživatelů.
+ * Komponenta s přehledem uživatelů
  */
 class UsersContentControl extends BaseContentControl
 {

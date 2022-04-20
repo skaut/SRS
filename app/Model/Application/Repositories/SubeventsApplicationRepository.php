@@ -9,7 +9,7 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující přihlášky podakcí.
+ * Třída spravující přihlášky podakcí
  */
 class SubeventsApplicationRepository extends AbstractRepository
 {

@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use function array_map;
 
 /**
- * Třída spravující tagy dokumentů.
+ * Třída spravující tagy dokumentů
  */
 class TagRepository extends AbstractRepository
 {
@@ -23,7 +23,7 @@ class TagRepository extends AbstractRepository
     }
 
     /**
-     * Vrátí tag podle id.
+     * Vrátí tag podle id
      */
     public function findById(?int $id): ?Tag
     {
@@ -31,7 +31,7 @@ class TagRepository extends AbstractRepository
     }
 
     /**
-     * Vrátí tagy podle id.
+     * Vrátí tagy podle id
      *
      * @param int[] $ids
      *
@@ -47,7 +47,7 @@ class TagRepository extends AbstractRepository
     }
 
     /**
-     * Vrátí id tagů.
+     * Vrátí id tagů
      *
      * @param Collection<int, Tag> $tags
      *
@@ -59,7 +59,7 @@ class TagRepository extends AbstractRepository
     }
 
     /**
-     * Vrátí všechny názvy tagů.
+     * Vrátí všechny názvy tagů
      *
      * @return string[]
      */
@@ -74,7 +74,7 @@ class TagRepository extends AbstractRepository
     }
 
     /**
-     * Vrátí názvy tagů, kromě tagu s id.
+     * Vrátí názvy tagů, kromě tagu s id
      *
      * @return string[]
      */
@@ -91,7 +91,7 @@ class TagRepository extends AbstractRepository
     }
 
     /**
-     * Uloží tag.
+     * Uloží tag
      */
     public function save(Tag $tag): void
     {
@@ -100,7 +100,7 @@ class TagRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní tag.
+     * Odstraní tag
      */
     public function remove(Tag $tag): void
     {
@@ -109,7 +109,7 @@ class TagRepository extends AbstractRepository
     }
 
     /**
-     * Vrátí seznam tagů jako možnosti pro select.
+     * Vrátí seznam tagů jako možnosti pro select
      *
      * @return string[]
      */

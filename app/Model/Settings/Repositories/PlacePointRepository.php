@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující mapové body.
+ * Třída spravující mapové body
  */
 class PlacePointRepository extends AbstractRepository
 {

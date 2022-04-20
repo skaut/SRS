@@ -14,7 +14,7 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
- * Komponenta pro správu podakcí.
+ * Komponenta pro správu podakcí
  */
 class SubeventsGridControl extends Control
 {
@@ -23,7 +23,7 @@ class SubeventsGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu.
+     * Vykreslí komponentu
      */
     public function render(): void
     {
@@ -32,7 +32,7 @@ class SubeventsGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu.
+     * Vytvoří komponentu
      *
      * @throws DataGridException
      */
@@ -81,7 +81,7 @@ class SubeventsGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění podakce.
+     * Zpracuje odstranění podakce
      *
      * @throws AbortException
      */

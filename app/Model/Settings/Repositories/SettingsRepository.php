@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use function assert;
 
 /**
- * Třída spravující nastavení.
+ * Třída spravující nastavení
  */
 class SettingsRepository extends AbstractRepository
 {
@@ -22,7 +22,7 @@ class SettingsRepository extends AbstractRepository
     }
 
     /**
-     * Vrací položku nastavení podle názvu.
+     * Vrací položku nastavení podle názvu
      */
     public function findByItem(string $item): Settings
     {

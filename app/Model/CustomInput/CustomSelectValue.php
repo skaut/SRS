@@ -9,14 +9,14 @@ use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
 /**
- * Entita hodnota vlastního výběrového pole přihlášky.
+ * Entita hodnota vlastního výběrového pole přihlášky
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'custom_select_value')]
 class CustomSelectValue extends CustomInputValue
 {
     /**
-     * Vybraná položka výběrového pole přihlášky.
+     * Vybraná položka výběrového pole přihlášky
      */
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $value = null;
@@ -32,7 +32,7 @@ class CustomSelectValue extends CustomInputValue
     }
 
     /**
-     * Vrátí název vybrané možnosti.
+     * Vrátí název vybrané možnosti
      */
     public function getValueText(): string
     {

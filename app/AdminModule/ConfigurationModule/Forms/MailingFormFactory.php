@@ -38,7 +38,7 @@ use function trim;
 use function uniqid;
 
 /**
- * Formulář pro nastavení mailingu.
+ * Formulář pro nastavení mailingu
  */
 class MailingFormFactory
 {
@@ -55,7 +55,7 @@ class MailingFormFactory
     }
 
     /**
-     * Vytvoří formulář.
+     * Vytvoří formulář
      *
      * @throws Throwable
      */
@@ -92,7 +92,7 @@ class MailingFormFactory
     }
 
     /**
-     * Zpracuje formulář.
+     * Zpracuje formulář
      *
      * @throws Nette\Application\UI\InvalidLinkException
      * @throws Throwable
@@ -128,7 +128,7 @@ class MailingFormFactory
     }
 
     /**
-     * Ověří seznam e-mailů oddělených ','.
+     * Ověří seznam e-mailů oddělených ','
      */
     public function validateEmails(TextInput $field): bool
     {

@@ -7,17 +7,17 @@ namespace App\Model\Enums;
 class ProgramMandatoryType
 {
     /**
-     * Volitelný blok.
+     * Volitelný blok
      */
     public const VOLUNTARY = 'voluntary';
 
     /**
-     * Povinný blok.
+     * Povinný blok
      */
     public const MANDATORY = 'mandatory';
 
     /**
-     * Automaticky registrovaný povinný blok.
+     * Automaticky registrovaný povinný blok
      */
     public const AUTO_REGISTERED = 'auto_registered';
 

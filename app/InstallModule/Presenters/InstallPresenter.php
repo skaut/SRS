@@ -30,7 +30,7 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Obsluhuje instalačního průvodce.
+ * Obsluhuje instalačního průvodce
  */
 class InstallPresenter extends InstallBasePresenter
 {
@@ -62,7 +62,7 @@ class InstallPresenter extends InstallBasePresenter
     public Skautis $skautIs;
 
     /**
-     * Zobrazení první stránky průvodce.
+     * Zobrazení první stránky průvodce
      *
      * @throws AbortException
      * @throws Throwable
@@ -86,7 +86,7 @@ class InstallPresenter extends InstallBasePresenter
     }
 
     /**
-     * Vytvoření schéma databáze a počátečních dat.
+     * Vytvoření schéma databáze a počátečních dat
      *
      * @throws Exception
      */
@@ -110,7 +110,7 @@ class InstallPresenter extends InstallBasePresenter
     }
 
     /**
-     * Zobrazení stránky pro vytvoření administrátora.
+     * Zobrazení stránky pro vytvoření administrátora
      *
      * @throws AbortException
      * @throws Throwable
@@ -154,7 +154,7 @@ class InstallPresenter extends InstallBasePresenter
     }
 
     /**
-     * Otestování připojení ke skautIS, přesměrování na přihlašovací stránku.
+     * Otestování připojení ke skautIS, přesměrování na přihlašovací stránku
      *
      * @throws AbortException
      */
@@ -168,7 +168,7 @@ class InstallPresenter extends InstallBasePresenter
     }
 
     /**
-     * Zobrazení stránky po úspěšné instalaci.
+     * Zobrazení stránky po úspěšné instalaci
      *
      * @throws AbortException
      * @throws Throwable
@@ -185,7 +185,7 @@ class InstallPresenter extends InstallBasePresenter
     }
 
     /**
-     * Zobrazení stránky pokud byla instalace dokončena dříve.
+     * Zobrazení stránky pokud byla instalace dokončena dříve
      *
      * @throws AbortException
      * @throws Throwable
@@ -202,7 +202,7 @@ class InstallPresenter extends InstallBasePresenter
     }
 
     /**
-     * Vyzkouší připojení ke skautIS pomocí anonymní funkce.
+     * Vyzkouší připojení ke skautIS pomocí anonymní funkce
      */
     private function checkSkautISConnection(): bool
     {

@@ -18,7 +18,7 @@ use Nette\Application\AbortException;
 use Nette\DI\Attributes\Inject;
 
 /**
- * Presenter pro generování kalendáře ve formátu ICS.
+ * Presenter pro generování kalendáře ve formátu ICS
  */
 class SchedulePresenter extends ExportBasePresenter
 {

@@ -16,7 +16,7 @@ use function print_r;
 use function sprintf;
 
 /**
- * Služba pro správu obecné skautIS akce.
+ * Služba pro správu obecné skautIS akce
  */
 class SkautIsEventGeneralService extends SkautIsEventService
 {
@@ -26,7 +26,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
     }
 
     /**
-     * Vloží účastníky do skautIS.
+     * Vloží účastníky do skautIS
      *
      * @param Collection<int, User> $users
      */
@@ -77,7 +77,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
     }
 
     /**
-     * Vrací účastníky akce.
+     * Vrací účastníky akce
      *
      * @return stdClass[]
      */
@@ -98,7 +98,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
     }
 
     /**
-     * Přidá účastníka akce.
+     * Přidá účastníka akce
      */
     private function insertParticipant(int $eventId, int $personId): void
     {
