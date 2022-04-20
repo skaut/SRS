@@ -14,52 +14,50 @@ class BlockDetailDto
 {
     use Nette\SmartObject;
 
-    /** @JMS\Type("int") */
+    #[JMS\Type(values: 'int')]
     private int $id;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $name;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $category;
 
-    /**
-     * @JMS\Type("array<App\ApiModule\Dto\Schedule\LectorDetailDto>")
-     * @var LectorDetailDto[]
-     */
+    /** @var LectorDetailDto[] */
+    #[JMS\Type(values: 'array<App\ApiModule\Dto\Schedule\LectorDetailDto>')]
     private array $lectors;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $lectorsNames;
 
-    /** @JMS\Type("int") */
+    #[JMS\Type(values: 'int')]
     private int $duration;
 
-    /** @JMS\Type("int") */
+    #[JMS\Type(values: 'int')]
     private ?int $capacity = null;
 
-    /** @JMS\Type("boolean") */
+    #[JMS\Type(values: 'boolean')]
     private bool $alternatesAllowed;
 
-    /** @JMS\Type("boolean") */
+    #[JMS\Type(values: 'boolean')]
     private bool $mandatory;
 
-    /** @JMS\Type("boolean") */
+    #[JMS\Type(values: 'boolean')]
     private bool $autoRegistered;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $perex;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $description;
 
-    /** @JMS\Type("int") */
+    #[JMS\Type(values: 'int')]
     private int $programsCount;
 
-    /** @JMS\Type("boolean") */
+    #[JMS\Type(values: 'boolean')]
     private bool $userAllowed;
 
-    /** @JMS\Type("boolean") */
+    #[JMS\Type(values: 'boolean')]
     private bool $userAttends;
 
     public function getId(): int

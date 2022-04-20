@@ -14,16 +14,16 @@ class LectorDetailDto
 {
     use Nette\SmartObject;
 
-    /** @JMS\Type("int") */
+    #[JMS\Type(values: 'int')]
     private int $id;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $name;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private ?string $about = null;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private ?string $photo = null;
 
     public function getId(): int

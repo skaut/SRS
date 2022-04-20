@@ -14,13 +14,13 @@ class RoomDetailDto
 {
     use Nette\SmartObject;
 
-    /** @JMS\Type("int") */
+    #[JMS\Type(values: 'int')]
     private int $id;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $name;
 
-    /** @JMS\Type("integer") */
+    #[JMS\Type(values: 'int')]
     private ?int $capacity = null;
 
     public function getId(): int

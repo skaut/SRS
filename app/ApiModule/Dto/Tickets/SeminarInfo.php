@@ -14,13 +14,11 @@ class SeminarInfo
 {
     use Nette\SmartObject;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $name;
 
-    /**
-     * @JMS\Type("array<App\ApiModule\Dto\Tickets\SubeventInfo>")
-     * @var SubeventInfo[]
-     */
+    /** @var SubeventInfo[] */
+    #[JMS\Type(values: 'array<App\ApiModule\Dto\Tickets\SubeventInfo>')]
     private array $subevents;
 
     public function setName(string $name): void
