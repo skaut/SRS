@@ -17,8 +17,7 @@ use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 
 use function md5;
-use function mt_getrandmax;
-use function random_int;
+use function mt_rand;
 use function uniqid;
 
 /**

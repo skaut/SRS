@@ -84,9 +84,7 @@ class Role
     #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id           = null;
 
-    /**
-     * @var string Název role
-     */
+    /** @var string Název role */
     #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 

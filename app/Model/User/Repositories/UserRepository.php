@@ -18,7 +18,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 
 use function count;
-use function is_countable;
 
 /**
  * Třída spravující uživatele.
