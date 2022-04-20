@@ -57,6 +57,7 @@
         "mpdf/qrcode": "^1.2",
         "swejzi/qr-platba": "^1.0",
         "eluceo/ical": "^2.5",
+        "endroid/qr-code": "^4.0",
 
         "skautis/skautis": "^2.2",
         "skautis/nette": "^2.2",
