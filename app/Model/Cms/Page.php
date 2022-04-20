@@ -28,6 +28,9 @@ class Page
     #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
+    /**
+     * Název stránky
+     */
     #[ORM\Column(type: 'string')]
     protected string $name;
 
