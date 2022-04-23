@@ -36,7 +36,7 @@
                                     </select>
                                     <span v-if="(getResourceById(selectedEventInfo.resourceId).extendedProps.capacity || Number.MAX_VALUE) < (selectedEventInfo.event.extendedProps.block.capacity || 0)" class="text-warning">
                                         <span class="fa fa-triangle-exclamation"></span>
-                                        Kapacita místnosti je menší než kapacita bloku
+                                        Kapacita místnosti je menší než kapacita bloku.
                                     </span>
                                 </div>
                             </div>
@@ -273,7 +273,7 @@
             },
 
             /**
-             * Zpracuje kliknutí na událost (otevře modal okno)
+             * Zpracuje kliknutí na událost (otevře modal okno).
              */
             handleEventClick(info) {
                 this.selectedEventInfo = {

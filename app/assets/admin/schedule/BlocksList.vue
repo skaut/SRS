@@ -83,7 +83,7 @@
         },
         methods: {
             /**
-             * Vyfiltruje bloky podle podmínky (název, nepřiřazené)
+             * Vyfiltruje bloky podle podmínky (název, nepřiřazené).
              */
             filterBlocks() {
                 const search = this.search.toLowerCase();

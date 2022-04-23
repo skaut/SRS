@@ -83,7 +83,7 @@ class ApplicationService
     }
 
     /**
-     * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci)
+     * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci).
      *
      * @param Collection<int, Role>     $roles
      * @param Collection<int, Subevent> $subevents
@@ -591,7 +591,7 @@ class ApplicationService
     }
 
     /**
-     * Vytvoří platbu a označí spárované přihlášky jako zaplacené (bez údajů z banky)
+     * Vytvoří platbu a označí spárované přihlášky jako zaplacené (bez údajů z banky).
      *
      * @throws Throwable
      */

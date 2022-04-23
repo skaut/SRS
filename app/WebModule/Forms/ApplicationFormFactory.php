@@ -600,7 +600,7 @@ class ApplicationFormFactory
 
     /**
      * Přepíná zobrazení vlastních polí podle kombinace rolí.
-     * Je nutná, na výsledku nezáleží (používá se javascript funkce)
+     * Je nutná, na výsledku nezáleží (používá se javascript funkce).
      *
      * @param int[] $customInputRoles
      */

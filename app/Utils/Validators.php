@@ -35,7 +35,7 @@ class Validators
     }
 
     /**
-     * Ověří, že není vybrána role "Neregistrovaný"
+     * Ověří, že není vybrána role "Neregistrovaný".
      *
      * @param Collection<int, Role> $selectedRoles
      */
@@ -241,7 +241,7 @@ class Validators
     }
 
     /**
-     * Ověří seznam e-mailů oddělených ','
+     * Ověří seznam e-mailů oddělených ','.
      */
     public function validateEmails(string $emails): bool
     {

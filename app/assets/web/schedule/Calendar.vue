@@ -92,7 +92,7 @@
         </div>
 
         <div class="alert alert-warning alert-forever" v-show="notRegisteredMandatoryPrograms > 0">
-            Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je
+            Máte nepřihlášené povinné programy (v kalendáři červeně). Prosíme, zapište si je.
         </div>
 
         <div class="row mb-2">
@@ -324,7 +324,7 @@
             },
 
             /**
-             * Zpracuje kliknutí na událost (otevře modal okno)
+             * Zpracuje kliknutí na událost (otevře modal okno).
              */
             handleEventClick(info) {
                 this.selectedEventInfo = {
