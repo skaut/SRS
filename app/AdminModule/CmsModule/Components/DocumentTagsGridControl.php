@@ -60,7 +60,10 @@ class DocumentTagsGridControl extends Control
         $grid->addColumnText('name', 'admin.cms.documents.tags.column.name');
 
         $grid->addColumnText('roles', 'admin.cms.documents.tags.column.roles', 'rolesText')
-            ->setRendererOnCondition(fn () => $this->translator->translate('admin.cms.documents.tags.column.roles_all'), fn (Tag $tag) => count($this->roleRepository->findAll()) === $tag->getRoles()->count());
+            ->setRendererOnCondition(
+                fn () => $this->translator->translate('admin.cms.documents.tags.column.roles_all'),
+                fn (Tag $tag) => count($this->roleRepository->findAll()) === $tag->getRoles()->count()
+            );
 
         $rolesOptions = $this->aclService->getRolesWithoutRolesOptions([]);
 
