@@ -28,7 +28,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující správu uživatelů
+ * Presenter obsluhující správu uživatelů.
  */
 class UsersPresenter extends AdminBasePresenter
 {
@@ -94,7 +94,7 @@ class UsersPresenter extends AdminBasePresenter
     }
 
     /**
-     * Zpracuje fulltext vyhledávání v displayName uživatelů
+     * Zpracuje fulltext vyhledávání v displayName uživatelů.
      */
     public function handleSearch(?string $text): void
     {
@@ -103,7 +103,7 @@ class UsersPresenter extends AdminBasePresenter
     }
 
     /**
-     * Zobrazí formulář pro editaci osobních údajů uživatele
+     * Zobrazí formulář pro editaci osobních údajů uživatele.
      *
      * @throws AbortException
      */
@@ -119,7 +119,7 @@ class UsersPresenter extends AdminBasePresenter
     }
 
     /**
-     * Zobrazí formulář pro editaci údajů o účasti uživatele na semináři
+     * Zobrazí formulář pro editaci údajů o účasti uživatele na semináři.
      *
      * @throws AbortException
      */
@@ -135,7 +135,7 @@ class UsersPresenter extends AdminBasePresenter
     }
 
     /**
-     * Zobrazí formulář pro editaci údajů o platbě uživatele
+     * Zobrazí formulář pro editaci údajů o platbě uživatele.
      *
      * @throws AbortException
      */

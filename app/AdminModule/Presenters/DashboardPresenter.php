@@ -11,7 +11,7 @@ use Nette\DI\Attributes\Inject;
 use Throwable;
 
 /**
- * Presenter obsluhující úvodní stránku
+ * Presenter obsluhující úvodní stránku.
  */
 class DashboardPresenter extends AdminBasePresenter
 {

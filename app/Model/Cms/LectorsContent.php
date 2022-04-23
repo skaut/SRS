@@ -7,7 +7,7 @@ namespace App\Model\Cms;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita obsahu se seznamem lektorů
+ * Entita obsahu se seznamem lektorů.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'lectors_content')]

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Cms\Dto;
 
 /**
- * DTO obsahu s dokumenty
+ * DTO obsahu s dokumenty.
  */
 class DocumentContentDto extends ContentDto
 {

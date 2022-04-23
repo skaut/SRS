@@ -25,7 +25,7 @@ use Nette\Http\Session;
 use Throwable;
 
 /**
- * Presenter obsluhující správu programových bloků
+ * Presenter obsluhující správu programových bloků.
  */
 class BlocksPresenter extends ProgramBasePresenter
 {
@@ -89,7 +89,7 @@ class BlocksPresenter extends ProgramBasePresenter
     }
 
     /**
-     * Zobrazí přehled účastníků u vybraného programu
+     * Zobrazí přehled účastníků u vybraného programu.
      *
      * @throws AbortException
      */
@@ -107,7 +107,7 @@ class BlocksPresenter extends ProgramBasePresenter
     }
 
     /**
-     * Odstraní vybraný program
+     * Odstraní vybraný program.
      *
      * @throws AbortException
      * @throws Throwable

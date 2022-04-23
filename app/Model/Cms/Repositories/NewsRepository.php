@@ -11,7 +11,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 /**
- * Třída spravující aktuality
+ * Třída spravující aktuality.
  */
 class NewsRepository extends AbstractRepository
 {
@@ -21,7 +21,7 @@ class NewsRepository extends AbstractRepository
     }
 
     /**
-     * Vrací aktualitu podle id
+     * Vrací aktualitu podle id.
      */
     public function findById(?int $id): ?News
     {
@@ -29,7 +29,7 @@ class NewsRepository extends AbstractRepository
     }
 
     /**
-     * Vrací id poslední aktuality
+     * Vrací id poslední aktuality.
      *
      * @throws NoResultException
      * @throws NonUniqueResultException
@@ -43,7 +43,7 @@ class NewsRepository extends AbstractRepository
     }
 
     /**
-     * Vrací posledních $maxCount publikovaných aktualit
+     * Vrací posledních $maxCount publikovaných aktualit.
      *
      * @return News[]
      */
@@ -59,7 +59,7 @@ class NewsRepository extends AbstractRepository
     }
 
     /**
-     * Uloží aktualitu
+     * Uloží aktualitu.
      */
     public function save(News $news): void
     {
@@ -68,7 +68,7 @@ class NewsRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní aktualitu
+     * Odstraní aktualitu.
      */
     public function remove(News $document): void
     {

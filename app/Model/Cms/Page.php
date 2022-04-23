@@ -17,7 +17,7 @@ use function implode;
 use function in_array;
 
 /**
- * Entita stránky
+ * Entita stránky.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'page')]
@@ -29,31 +29,31 @@ class Page
     private ?int $id = null;
 
     /**
-     * Název stránky
+     * Název stránky.
      */
     #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
-     * Cesta stránky
+     * Cesta stránky.
      */
     #[ORM\Column(type: 'string', unique: true)]
     protected string $slug;
 
     /**
-     * Pořadí v menu
+     * Pořadí v menu.
      */
     #[ORM\Column(type: 'integer')]
     protected int $position = 0;
 
     /**
-     * Viditelná
+     * Viditelná.
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $public = false;
 
     /**
-     * Role, které mají na stránku přístup
+     * Role, které mají na stránku přístup.
      *
      * @var Collection<int, Role>
      */
@@ -61,7 +61,7 @@ class Page
     protected Collection $roles;
 
     /**
-     * Obsahy na stránce
+     * Obsahy na stránce.
      *
      * @var Collection<int, Content>
      */
@@ -166,7 +166,7 @@ class Page
     }
 
     /**
-     * Vrací obsahy v oblasti
+     * Vrací obsahy v oblasti.
      *
      * @return Collection<int, Content>
      *

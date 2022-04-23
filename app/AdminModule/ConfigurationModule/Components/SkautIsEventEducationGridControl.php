@@ -15,7 +15,7 @@ use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
- * Komponenta pro nastavení propojení se vzdělávací akcí
+ * Komponenta pro nastavení propojení se vzdělávací akcí.
  */
 class SkautIsEventEducationGridControl extends Control
 {
@@ -27,7 +27,7 @@ class SkautIsEventEducationGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu
+     * Vykreslí komponentu.
      */
     public function render(): void
     {
@@ -36,7 +36,7 @@ class SkautIsEventEducationGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu
+     * Vytvoří komponentu.
      */
     public function createComponentSkautIsEventEducationGrid(string $name): void
     {
@@ -67,7 +67,7 @@ class SkautIsEventEducationGridControl extends Control
     }
 
     /**
-     * Zpracuje úpravu propojení podakce s kurzy
+     * Zpracuje úpravu propojení podakce s kurzy.
      *
      * @throws Throwable
      */

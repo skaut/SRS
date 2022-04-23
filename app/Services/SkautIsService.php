@@ -13,7 +13,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Služba pro komunikaci se skautIS
+ * Služba pro komunikaci se skautIS.
  */
 class SkautIsService
 {
@@ -27,7 +27,7 @@ class SkautIsService
     }
 
     /**
-     * Vratí url přihlašovací stránky skautIS
+     * Vratí url přihlašovací stránky skautIS.
      */
     public function getLoginUrl(string $backlink): string
     {
@@ -35,7 +35,7 @@ class SkautIsService
     }
 
     /**
-     * Vrátí url odhlašovací stránky skautIS
+     * Vrátí url odhlašovací stránky skautIS.
      */
     public function getLogoutUrl(): string
     {
@@ -43,7 +43,7 @@ class SkautIsService
     }
 
     /**
-     * Vrátí stav přihlášení uživatele, každých 5 minut obnoví přihlášení
+     * Vrátí stav přihlášení uživatele, každých 5 minut obnoví přihlášení.
      */
     public function isLoggedIn(): bool
     {
@@ -54,7 +54,7 @@ class SkautIsService
     }
 
     /**
-     * Nastaví údaje vrácené skautIS po úspěšném přihlášení
+     * Nastaví údaje vrácené skautIS po úspěšném přihlášení.
      *
      * @param string[] $data
      */
@@ -64,7 +64,7 @@ class SkautIsService
     }
 
     /**
-     * Vrátí skautIS role uživatele
+     * Vrátí skautIS role uživatele.
      *
      * @return stdClass[]
      *
@@ -86,7 +86,7 @@ class SkautIsService
     }
 
     /**
-     * Vrátí id aktuální skautIS role uživatele
+     * Vrátí id aktuální skautIS role uživatele.
      */
     public function getUserRoleId(): ?int
     {
@@ -94,7 +94,7 @@ class SkautIsService
     }
 
     /**
-     * Změní skautIS roli uživatele
+     * Změní skautIS roli uživatele.
      */
     public function updateUserRole(int $roleId): void
     {
@@ -108,7 +108,7 @@ class SkautIsService
     }
 
     /**
-     * Vrátí údaje o uživateli
+     * Vrátí údaje o uživateli.
      */
     public function getUserDetail(): stdClass
     {
@@ -118,7 +118,7 @@ class SkautIsService
     }
 
     /**
-     * Vrátí údaje o osobě
+     * Vrátí údaje o osobě.
      */
     public function getPersonDetail(int $personId): stdClass
     {
@@ -138,7 +138,7 @@ class SkautIsService
     }
 
     /**
-     * Aktualizuje údaje o osobě
+     * Aktualizuje údaje o osobě.
      */
     public function updatePersonBasic(int $personId, string $sex, DateTimeImmutable $birthday, string $firstName, string $lastName, string $nickName): void
     {
@@ -154,7 +154,7 @@ class SkautIsService
     }
 
     /**
-     * Aktualizuje adresu osoby
+     * Aktualizuje adresu osoby.
      */
     public function updatePersonAddress(int $personId, string $street, string $city, string $postcode, string $state): void
     {
@@ -176,7 +176,7 @@ class SkautIsService
     }
 
     /**
-     * Vrací id jednotky podle aktuální role uživatele
+     * Vrací id jednotky podle aktuální role uživatele.
      */
     public function getUnitId(): ?int
     {
@@ -184,7 +184,7 @@ class SkautIsService
     }
 
     /**
-     * Vrací platné členství typu "řádné" nebo "čestné", pokud osoba žádné nemá vrací null
+     * Vrací platné členství typu "řádné" nebo "čestné", pokud osoba žádné nemá vrací null.
      */
     public function getValidMembership(int $personId): ?stdClass
     {
@@ -212,7 +212,7 @@ class SkautIsService
     }
 
     /**
-     * Vrací údaje o jednotce
+     * Vrací údaje o jednotce.
      */
     public function getUnitDetail(int $unitId): stdClass
     {

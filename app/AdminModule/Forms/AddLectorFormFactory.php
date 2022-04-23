@@ -23,7 +23,7 @@ use function image_type_to_extension;
 use const UPLOAD_ERR_OK;
 
 /**
- * Formulář pro vytvoření externího lektora
+ * Formulář pro vytvoření externího lektora.
  */
 class AddLectorFormFactory
 {
@@ -38,7 +38,7 @@ class AddLectorFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      */
     public function create(): Form
     {
@@ -95,7 +95,7 @@ class AddLectorFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      *
      * @throws Nette\Utils\UnknownImageFileException
      * @throws Exception

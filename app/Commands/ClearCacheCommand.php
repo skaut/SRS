@@ -20,7 +20,7 @@ use function scandir;
 use function unlink;
 
 /**
- * Příkaz pro vymazání cache
+ * Příkaz pro vymazání cache.
  */
 class ClearCacheCommand extends Command
 {
@@ -30,7 +30,7 @@ class ClearCacheCommand extends Command
     }
 
     /**
-     * Nastavuje příkaz
+     * Nastavuje příkaz.
      */
     protected function configure(): void
     {
@@ -39,7 +39,7 @@ class ClearCacheCommand extends Command
     }
 
     /**
-     * Spouští příkaz
+     * Spouští příkaz.
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -65,7 +65,7 @@ class ClearCacheCommand extends Command
     }
 
     /**
-     * Maže složku
+     * Maže složku.
      */
     private function deleteDir(string $path): bool
     {

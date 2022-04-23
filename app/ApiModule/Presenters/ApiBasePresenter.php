@@ -7,7 +7,7 @@ namespace App\ApiModule\Presenters;
 use App\Presenters\BasePresenter;
 
 /**
- * BasePresenter pro ApiModule
+ * BasePresenter pro ApiModule.
  */
 abstract class ApiBasePresenter extends BasePresenter
 {

@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 use Nette;
 
 /**
- * Objekt pro přenos údajů o semináři pro propojení s mobilní aplikací
+ * Objekt pro přenos údajů o semináři pro propojení s mobilní aplikací.
  */
 class SeminarInfo
 {

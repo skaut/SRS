@@ -26,7 +26,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
 /**
- * BasePresenter pro WebModule
+ * BasePresenter pro WebModule.
  */
 abstract class WebBasePresenter extends BasePresenter
 {
@@ -98,7 +98,7 @@ abstract class WebBasePresenter extends BasePresenter
     }
 
     /**
-     * Ukončí testování role
+     * Ukončí testování role.
      *
      * @throws AbortException
      */
@@ -109,7 +109,7 @@ abstract class WebBasePresenter extends BasePresenter
     }
 
     /**
-     * Zkontroluje stav instalace
+     * Zkontroluje stav instalace.
      *
      * @throws AbortException
      * @throws Throwable

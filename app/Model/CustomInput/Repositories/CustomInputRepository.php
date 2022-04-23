@@ -17,7 +17,7 @@ use Doctrine\ORM\ORMException;
 use const PHP_INT_MAX;
 
 /**
- * Třída spravující vlastní pole přihlášky
+ * Třída spravující vlastní pole přihlášky.
  */
 class CustomInputRepository extends AbstractRepository
 {
@@ -37,7 +37,7 @@ class CustomInputRepository extends AbstractRepository
     }
 
     /**
-     * Vrací pole podle id
+     * Vrací pole podle id.
      */
     public function findById(?int $id): ?CustomInput
     {
@@ -45,7 +45,7 @@ class CustomInputRepository extends AbstractRepository
     }
 
     /**
-     * Vrací všechna pole seřazená podle pozice
+     * Vrací všechna pole seřazená podle pozice.
      *
      * @return CustomInput[]
      */
@@ -58,7 +58,7 @@ class CustomInputRepository extends AbstractRepository
     }
 
     /**
-     * Vrací pole podle rolí uživatele, seřazené podle pozice
+     * Vrací pole podle rolí uživatele, seřazené podle pozice.
      *
      * @param Collection<int, Role> $roles
      *
@@ -75,7 +75,7 @@ class CustomInputRepository extends AbstractRepository
     }
 
     /**
-     * Vrátí pozici posledního pole
+     * Vrátí pozici posledního pole.
      *
      * @throws NoResultException
      * @throws NonUniqueResultException
@@ -89,7 +89,7 @@ class CustomInputRepository extends AbstractRepository
     }
 
     /**
-     * Uloží pole
+     * Uloží pole.
      *
      * @throws NonUniqueResultException
      * @throws ORMException
@@ -105,7 +105,7 @@ class CustomInputRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní pole
+     * Odstraní pole.
      */
     public function remove(CustomInput $input): void
     {
@@ -118,7 +118,7 @@ class CustomInputRepository extends AbstractRepository
     }
 
     /**
-     * Přesune pole mezi pole s id prevId a nextId
+     * Přesune pole mezi pole s id prevId a nextId.
      *
      * @throws ORMException
      */

@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
 /**
- * Příkaz pro zálohování databáze
+ * Příkaz pro zálohování databáze.
  */
 class BackupDatabaseCommand extends Command
 {
@@ -24,7 +24,7 @@ class BackupDatabaseCommand extends Command
     }
 
     /**
-     * Nastavuje příkaz
+     * Nastavuje příkaz.
      */
     protected function configure(): void
     {
@@ -33,7 +33,7 @@ class BackupDatabaseCommand extends Command
     }
 
     /**
-     * Spouští příkaz
+     * Spouští příkaz.
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

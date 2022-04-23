@@ -11,7 +11,7 @@ use Nette\Application\AbortException;
 use Nette\DI\Attributes\Inject;
 
 /**
- * Presenter obsluhující správu kategorií
+ * Presenter obsluhující správu kategorií.
  */
 class CategoriesPresenter extends ProgramBasePresenter
 {

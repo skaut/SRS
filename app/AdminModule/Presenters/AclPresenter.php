@@ -20,7 +20,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující správu rolí
+ * Presenter obsluhující správu rolí.
  */
 class AclPresenter extends AdminBasePresenter
 {
@@ -56,7 +56,7 @@ class AclPresenter extends AdminBasePresenter
     }
 
     /**
-     * Zapne testování role
+     * Zapne testování role.
      *
      * @throws AbortException
      */

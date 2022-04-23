@@ -51,14 +51,14 @@ use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
- * Formulář pro zadání doplňujících informací
+ * Formulář pro zadání doplňujících informací.
  */
 class AdditionalInformationFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Přihlášený uživatel
+     * Přihlášený uživatel.
      */
     private ?User $user = null;
 
@@ -76,7 +76,7 @@ class AdditionalInformationFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -204,7 +204,7 @@ class AdditionalInformationFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      *
      * @throws Throwable
      */

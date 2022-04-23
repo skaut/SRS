@@ -24,7 +24,7 @@ use Throwable;
 use function assert;
 
 /**
- * Formulář pro nastavení semináře
+ * Formulář pro nastavení semináře.
  */
 class SeminarFormFactory
 {
@@ -39,7 +39,7 @@ class SeminarFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      *
      * @throws Throwable
      */
@@ -86,7 +86,7 @@ class SeminarFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      *
      * @throws Throwable
      */
@@ -103,7 +103,7 @@ class SeminarFormFactory
     }
 
     /**
-     * Ověří, že datum začátku semináře je dříve než konce
+     * Ověří, že datum začátku semináře je dříve než konce.
      *
      * @param DateTime[] $args
      */
@@ -113,7 +113,7 @@ class SeminarFormFactory
     }
 
     /**
-     * Ověří, že datum konce semináře je později než začátku
+     * Ověří, že datum konce semináře je později než začátku.
      *
      * @param DateTime[] $args
      */
@@ -123,7 +123,7 @@ class SeminarFormFactory
     }
 
     /**
-     * Ověří, že datum uzavření registrace je dříve než začátek semináře
+     * Ověří, že datum uzavření registrace je dříve než začátek semináře.
      *
      * @param DateTime[] $args
      */

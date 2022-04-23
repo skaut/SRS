@@ -19,7 +19,7 @@ class SetSettingArrayValue
     }
 
     /**
-     * @return mixed[]|null
+     * @return mixed[]|null.
      */
     public function getValue(): ?array
     {

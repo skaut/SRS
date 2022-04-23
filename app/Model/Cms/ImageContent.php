@@ -23,7 +23,7 @@ use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
- * Entita obsahu s obrázkem
+ * Entita obsahu s obrázkem.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'image_content')]
@@ -32,17 +32,17 @@ class ImageContent extends Content implements IContent
     protected string $type = Content::IMAGE;
 
     /**
-     * Zarovnání vlevo
+     * Zarovnání vlevo.
      */
     public const LEFT = 'left';
 
     /**
-     * Zarovnání vpravo
+     * Zarovnání vpravo.
      */
     public const RIGHT = 'right';
 
     /**
-     * Zarovnání na střed, bez obtékání
+     * Zarovnání na střed, bez obtékání.
      */
     public const CENTER = 'center';
 
@@ -54,25 +54,25 @@ class ImageContent extends Content implements IContent
     ];
 
     /**
-     * Adresa obrázku
+     * Adresa obrázku.
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $image = null;
 
     /**
-     * Zarovnání obrázku v textu
+     * Zarovnání obrázku v textu.
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $align = null;
 
     /**
-     * Šířka obrázku
+     * Šířka obrázku.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $width = null;
 
     /**
-     * Výška obrázku
+     * Výška obrázku.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $height = null;
@@ -141,7 +141,7 @@ class ImageContent extends Content implements IContent
     }
 
     /**
-     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu
+     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
     public function addContentForm(Form $form): Form
     {
@@ -184,7 +184,7 @@ class ImageContent extends Content implements IContent
     }
 
     /**
-     * Zpracuje při uložení stránky část formuláře týkající se obsahu
+     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      *
      * @throws UnknownImageFileException
      * @throws ImageException
@@ -238,7 +238,7 @@ class ImageContent extends Content implements IContent
     }
 
     /**
-     * Vrátí možnosti zarovnání obrázku pro select
+     * Vrátí možnosti zarovnání obrázku pro select.
      *
      * @return string[]
      */

@@ -23,7 +23,7 @@ use function assert;
 use function count;
 
 /**
- * Komponenta pro správu štítků dokumentů
+ * Komponenta pro správu štítků dokumentů.
  */
 class DocumentTagsGridControl extends Control
 {
@@ -36,7 +36,7 @@ class DocumentTagsGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu
+     * Vykreslí komponentu.
      */
     public function render(): void
     {
@@ -45,7 +45,7 @@ class DocumentTagsGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu
+     * Vytvoří komponentu.
      *
      * @throws DataGridException
      */
@@ -103,7 +103,7 @@ class DocumentTagsGridControl extends Control
     }
 
     /**
-     * Zpracuje přidání štítku dokumentu
+     * Zpracuje přidání štítku dokumentu.
      */
     public function add(stdClass $values): void
     {
@@ -119,7 +119,7 @@ class DocumentTagsGridControl extends Control
     }
 
     /**
-     * Zpracuje úpravu štítku dokumentu
+     * Zpracuje úpravu štítku dokumentu.
      */
     public function edit(string $id, stdClass $values): void
     {
@@ -135,7 +135,7 @@ class DocumentTagsGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění štítku dokumentu
+     * Zpracuje odstranění štítku dokumentu.
      *
      * @throws AbortException
      */

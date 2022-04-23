@@ -7,7 +7,7 @@ namespace App\ActionModule\Presenters;
 use App\Presenters\BasePresenter;
 
 /**
- * BasePresenter pro ActionModule
+ * BasePresenter pro ActionModule.
  */
 abstract class ActionBasePresenter extends BasePresenter
 {

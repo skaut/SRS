@@ -22,7 +22,7 @@ use function bin2hex;
 use function random_bytes;
 
 /**
- * Presenter pro generování vstupenek
+ * Presenter pro generování vstupenek.
  */
 class TicketPresenter extends ExportBasePresenter
 {
@@ -39,7 +39,7 @@ class TicketPresenter extends ExportBasePresenter
     public QueryBus $queryBus;
 
     /**
-     * Vygeneruje vstupenku v PDF
+     * Vygeneruje vstupenku v PDF.
      *
      * @throws AbortException
      * @throws Throwable

@@ -18,7 +18,7 @@ use Nette;
 use Nette\Localization\Translator;
 
 /**
- * Služba pro správu uživatelů
+ * Služba pro správu uživatelů.
  */
 class UserService
 {
@@ -35,7 +35,7 @@ class UserService
     }
 
     /**
-     * Vrací informaci o členství jako text
+     * Vrací informaci o členství jako text.
      */
     public function getMembershipText(User $user): string
     {
@@ -55,7 +55,7 @@ class UserService
     }
 
     /**
-     * Vrací platební metodu uživatele
+     * Vrací platební metodu uživatele.
      */
     public function getPaymentMethod(User $user): ?string
     {
@@ -80,7 +80,7 @@ class UserService
     }
 
     /**
-     * Nastaví registraci uživatele jako schválenou nebo nechválenou
+     * Nastaví registraci uživatele jako schválenou nebo nechválenou.
      */
     public function setApproved(User $user, bool $approved): void
     {

@@ -35,7 +35,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 /**
- * Komponenta pro správu vlastních přihlášek
+ * Komponenta pro správu vlastních přihlášek.
  */
 class ApplicationsGridControl extends BaseContentControl
 {
@@ -56,7 +56,7 @@ class ApplicationsGridControl extends BaseContentControl
     }
 
     /**
-     * Vykreslí komponentu
+     * Vykreslí komponentu.
      */
     public function render(): void
     {
@@ -65,7 +65,7 @@ class ApplicationsGridControl extends BaseContentControl
     }
 
     /**
-     * Vytvoří komponentu
+     * Vytvoří komponentu.
      *
      * @throws SettingsItemNotFoundException
      * @throws NonUniqueResultException
@@ -184,7 +184,7 @@ class ApplicationsGridControl extends BaseContentControl
     }
 
     /**
-     * Zpracuje přidání podakcí
+     * Zpracuje přidání podakcí.
      *
      * @throws AbortException
      * @throws Throwable
@@ -239,7 +239,7 @@ class ApplicationsGridControl extends BaseContentControl
     }
 
     /**
-     * Zpracuje úpravu přihlášky
+     * Zpracuje úpravu přihlášky.
      *
      * @throws SettingsItemNotFoundException
      * @throws AbortException
@@ -304,7 +304,7 @@ class ApplicationsGridControl extends BaseContentControl
     }
 
     /**
-     * Vygeneruje potvrzení o přijetí platby
+     * Vygeneruje potvrzení o přijetí platby.
      *
      * @throws AbortException
      */
@@ -314,7 +314,7 @@ class ApplicationsGridControl extends BaseContentControl
     }
 
     /**
-     * Zruší přihlášku
+     * Zruší přihlášku.
      *
      * @throws SettingsItemNotFoundException
      * @throws AbortException

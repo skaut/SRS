@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Cms\Dto;
 
 /**
- * DTO obsahu s aktualitami
+ * DTO obsahu s aktualitami.
  */
 class NewsContentDto extends ContentDto
 {

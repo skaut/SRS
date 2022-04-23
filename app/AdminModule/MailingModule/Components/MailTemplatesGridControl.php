@@ -14,7 +14,7 @@ use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
- * Komponenta pro správu automatických e-mailů
+ * Komponenta pro správu automatických e-mailů.
  */
 class MailTemplatesGridControl extends Control
 {
@@ -23,7 +23,7 @@ class MailTemplatesGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu
+     * Vykreslí komponentu.
      */
     public function render(): void
     {
@@ -32,7 +32,7 @@ class MailTemplatesGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu
+     * Vytvoří komponentu.
      *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
@@ -64,7 +64,7 @@ class MailTemplatesGridControl extends Control
     }
 
     /**
-     * Aktivuje/deaktivuje automatický e-mail
+     * Aktivuje/deaktivuje automatický e-mail.
      *
      * @throws ORMException
      * @throws AbortException

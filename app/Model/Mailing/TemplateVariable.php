@@ -7,84 +7,84 @@ namespace App\Model\Mailing;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita proměnná v automatickém e-mailu
+ * Entita proměnná v automatickém e-mailu.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'mail_template_variable')]
 class TemplateVariable
 {
     /**
-     * Název semináře
+     * Název semináře.
      */
     public const SEMINAR_NAME = 'seminar_name';
 
     /**
-     * Role uživatele
+     * Role uživatele.
      */
     public const USERS_ROLES = 'users_roles';
 
     /**
-     * Podakce uživatele
+     * Podakce uživatele.
      */
     public const USERS_SUBEVENTS = 'users_subevents';
 
     /**
-     * Název programu
+     * Název programu.
      */
     public const PROGRAM_NAME = 'program_name';
 
     /**
-     * Podakce přihlášky
+     * Podakce přihlášky.
      */
     public const APPLICATION_SUBEVENTS = 'application_subevents';
 
     /**
-     * Splatnost přihlášky
+     * Splatnost přihlášky.
      */
     public const APPLICATION_MATURITY = 'application_maturity';
 
     /**
-     * Poplatek přihlášky
+     * Poplatek přihlášky.
      */
     public const APPLICATION_FEE = 'application_fee';
 
     /**
-     * Variabilní symbol přihlášky
+     * Variabilní symbol přihlášky.
      */
     public const APPLICATION_VARIABLE_SYMBOL = 'application_variable_symbol';
 
     /**
-     * Odhlášení ze semináře a změna rolí povolena do
+     * Odhlášení ze semináře a změna rolí povolena do.
      */
     public const EDIT_REGISTRATION_TO = 'edit_registration_to';
 
     /**
-     * Bankovní účet pro platbu
+     * Bankovní účet pro platbu.
      */
     public const BANK_ACCOUNT = 'bank_account';
 
     /**
-     * Odkaz pro potvrzení změny e-mailu
+     * Odkaz pro potvrzení změny e-mailu.
      */
     public const EMAIL_VERIFICATION_LINK = 'email_verification_link';
 
     /**
-     * Jméno uživatele
+     * Jméno uživatele.
      */
     public const USER = 'user';
 
     /**
-     * Jméno odesilatele
+     * Jméno odesilatele.
      */
     public const SENDER_NAME = 'sender_name';
 
     /**
-     * E-mail odesilatele
+     * E-mail odesilatele.
      */
     public const SENDER_EMAIL = 'sender_email';
 
     /**
-     * Zpráva
+     * Zpráva.
      */
     public const MESSAGE = 'message';
 
@@ -94,7 +94,7 @@ class TemplateVariable
     private ?int $id = null;
 
     /**
-     * Název proměnné
+     * Název proměnné.
      */
     #[ORM\Column(type: 'string')]
     protected string $name;

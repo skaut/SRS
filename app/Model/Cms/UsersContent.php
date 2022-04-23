@@ -21,7 +21,7 @@ use stdClass;
 use function assert;
 
 /**
- * Entita obsahu se seznamem uživatelů
+ * Entita obsahu se seznamem uživatelů.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'users_content')]
@@ -30,7 +30,7 @@ class UsersContent extends Content implements IContent
     protected string $type = Content::USERS;
 
     /**
-     * Role, jejichž uživatelé budou vypsáni
+     * Role, jejichž uživatelé budou vypsáni.
      *
      * @var Collection<int, Role>
      */
@@ -80,7 +80,7 @@ class UsersContent extends Content implements IContent
     }
 
     /**
-     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu
+     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
     public function addContentForm(Form $form): Form
     {
@@ -99,7 +99,7 @@ class UsersContent extends Content implements IContent
     }
 
     /**
-     * Zpracuje při uložení stránky část formuláře týkající se obsahu
+     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {

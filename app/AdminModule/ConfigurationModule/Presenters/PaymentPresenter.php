@@ -20,7 +20,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující nastavení platby a dokladů
+ * Presenter obsluhující nastavení platby a dokladů.
  */
 class PaymentPresenter extends ConfigurationBasePresenter
 {
@@ -53,7 +53,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
     }
 
     /**
-     * Zruší propojení s API banky
+     * Zruší propojení s API banky.
      *
      * @throws Throwable
      */

@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita aktuality
+ * Entita aktuality.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'news')]
@@ -20,19 +20,19 @@ class News
     private ?int $id = null;
 
     /**
-     * Text aktuality
+     * Text aktuality.
      */
     #[ORM\Column(type: 'text')]
     protected string $text;
 
     /**
-     * Datum publikování aktuality
+     * Datum publikování aktuality.
      */
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $published;
 
     /**
-     * Připíchnutá nahoru
+     * Připíchnutá nahoru.
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $pinned = false;

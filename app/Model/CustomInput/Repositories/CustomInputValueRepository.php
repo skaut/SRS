@@ -9,7 +9,7 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující hodnoty vlastních polí přihlášky
+ * Třída spravující hodnoty vlastních polí přihlášky.
  */
 class CustomInputValueRepository extends AbstractRepository
 {
@@ -19,7 +19,7 @@ class CustomInputValueRepository extends AbstractRepository
     }
 
     /**
-     * Vrací hodnotu vlastního pole přihlášky podle id
+     * Vrací hodnotu vlastního pole přihlášky podle id.
      */
     public function findById(?int $id): ?CustomInputValue
     {
@@ -27,7 +27,7 @@ class CustomInputValueRepository extends AbstractRepository
     }
 
     /**
-     * Uloží hodnotu vlastního pole přihlášky
+     * Uloží hodnotu vlastního pole přihlášky.
      */
     public function save(CustomInputValue $value): void
     {
@@ -36,7 +36,7 @@ class CustomInputValueRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní hodnotu vlastního pole přihlášky
+     * Odstraní hodnotu vlastního pole přihlášky.
      */
     public function remove(CustomInputValue $value): void
     {

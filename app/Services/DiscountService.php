@@ -16,26 +16,26 @@ use function in_array;
 use function is_numeric;
 
 /**
- * Služba pro správu slev
+ * Služba pro správu slev.
  */
 class DiscountService
 {
     use Nette\SmartObject;
 
     /**
-     * Tokeny podmínky
+     * Tokeny podmínky.
      *
      * @var string[][]
      */
     private array $symbols;
 
     /**
-     * Aktuálně zpracovávaný token
+     * Aktuálně zpracovávaný token.
      */
     private int $currentSymbol;
 
     /**
-     * Id zvolených podakcí
+     * Id zvolených podakcí.
      *
      * @var int[]
      */
@@ -49,7 +49,7 @@ class DiscountService
     }
 
     /**
-     * Vypočítá slevu pro kombinaci podakcí
+     * Vypočítá slevu pro kombinaci podakcí.
      *
      * @param int[] $selectedSubeventsIds
      */
@@ -77,7 +77,7 @@ class DiscountService
     }
 
     /**
-     * Ověří formát podmínky pro slevu
+     * Ověří formát podmínky pro slevu.
      */
     public function validateCondition(string $condition): bool
     {
@@ -95,7 +95,7 @@ class DiscountService
     }
 
     /**
-     * Převede podmínku na text
+     * Převede podmínku na text.
      */
     public function convertConditionToText(string $condition): string
     {

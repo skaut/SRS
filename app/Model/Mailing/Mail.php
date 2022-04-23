@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use function implode;
 
 /**
- * Entita e-mail
+ * Entita e-mail.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'mail')]
@@ -27,7 +27,7 @@ class Mail
     private ?int $id = null;
 
     /**
-     * Role, kterým byl e-mail odeslán
+     * Role, kterým byl e-mail odeslán.
      *
      * @var Collection<int, Role>
      */
@@ -35,7 +35,7 @@ class Mail
     protected Collection $recipientRoles;
 
     /**
-     * Podakce, jejichž účastníkům byl e-mail odeslán
+     * Podakce, jejichž účastníkům byl e-mail odeslán.
      *
      * @var Collection<int, Subevent>
      */
@@ -43,7 +43,7 @@ class Mail
     protected Collection $recipientSubevents;
 
     /**
-     * Uživatelé, kterém byl e-mail odeslán
+     * Uživatelé, kterém byl e-mail odeslán.
      *
      * @var Collection<int, User>
      */
@@ -51,25 +51,25 @@ class Mail
     protected Collection $recipientUsers;
 
     /**
-     * Předmět e-mailu
+     * Předmět e-mailu.
      */
     #[ORM\Column(type: 'string')]
     protected string $subject;
 
     /**
-     * Text e-mailu
+     * Text e-mailu.
      */
     #[ORM\Column(type: 'text')]
     protected string $text;
 
     /**
-     * Datum a čas odeslání
+     * Datum a čas odeslání.
      */
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $datetime;
 
     /**
-     * Automatický e-mail
+     * Automatický e-mail.
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $automatic = false;
@@ -106,7 +106,7 @@ class Mail
     }
 
     /**
-     * Vrací příjemce (role) oddělené čárkou
+     * Vrací příjemce (role) oddělené čárkou.
      */
     public function getRecipientRolesText(): string
     {
@@ -133,7 +133,7 @@ class Mail
     }
 
     /**
-     * Vrací příjemce (podakce) oddělené čárkou
+     * Vrací příjemce (podakce) oddělené čárkou.
      */
     public function getRecipientSubeventsText(): string
     {
@@ -160,7 +160,7 @@ class Mail
     }
 
     /**
-     * Vrací příjemce (uživatele) oddělené čárkou
+     * Vrací příjemce (uživatele) oddělené čárkou.
      */
     public function getRecipientUsersText(): string
     {

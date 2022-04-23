@@ -95,7 +95,7 @@
             },
 
             /**
-             * Nastaví barvu bloku
+             * Nastaví barvu bloku.
              */
             blockClass(block) {
                 return block.mandatory ? (block.autoRegistered ? 'bg-warning' : 'bg-danger') : 'bg-primary';

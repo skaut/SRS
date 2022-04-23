@@ -21,7 +21,7 @@ use function assert;
 use function file_get_contents;
 
 /**
- * API pro správu harmonogramu a zapisování programů
+ * API pro správu harmonogramu a zapisování programů.
  */
 class SchedulePresenter extends ApiBasePresenter
 {
@@ -53,7 +53,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu
+     * Vrací podrobnosti o všech programech pro použití v administraci harmonogramu.
      *
      * @throws Exception
      * @throws AbortException
@@ -68,7 +68,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů
+     * Vrací podrobnosti o programech, ke kterým má uživatel přístup, pro použití v kalendáři pro výběr programů.
      *
      * @throws SettingsItemNotFoundException
      * @throws AbortException
@@ -84,7 +84,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     * Vrací podrobnosti o programových blocích
+     * Vrací podrobnosti o programových blocích.
      *
      * @throws AbortException
      */
@@ -98,7 +98,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     * Vrací podrobnosti o místnostech
+     * Vrací podrobnosti o místnostech.
      *
      * @throws AbortException
      */
@@ -112,7 +112,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     * Vrací nastavení pro FullCalendar
+     * Vrací nastavení pro FullCalendar.
      *
      * @throws SettingsItemNotFoundException
      * @throws AbortException
@@ -128,7 +128,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     * Uloží nebo vytvoří program
+     * Uloží nebo vytvoří program.
      *
      * @throws AbortException
      * @throws Throwable
@@ -153,7 +153,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     * Smaže program
+     * Smaže program.
      *
      * @throws AbortException
      * @throws Throwable
@@ -175,7 +175,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     * Přihlásí program uživateli
+     * Přihlásí program uživateli.
      *
      * @throws AbortException
      * @throws Throwable
@@ -197,7 +197,7 @@ class SchedulePresenter extends ApiBasePresenter
     }
 
     /**
-     * Odhlásí program uživateli
+     * Odhlásí program uživateli.
      *
      * @throws AbortException
      * @throws Throwable

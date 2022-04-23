@@ -19,7 +19,7 @@ use Throwable;
 use function assert;
 
 /**
- * Formulář pro nastavení dokladů
+ * Formulář pro nastavení dokladů.
  */
 class PaymentProofFormFactory
 {
@@ -30,7 +30,7 @@ class PaymentProofFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      *
      * @throws Throwable
      */
@@ -67,7 +67,7 @@ class PaymentProofFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      *
      * @throws Throwable
      */

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Cms\Dto;
 
 /**
- * DTO obsahu s přehledem kapacit rolí
+ * DTO obsahu s přehledem kapacit rolí.
  */
 class CapacitiesContentDto extends ContentDto
 {

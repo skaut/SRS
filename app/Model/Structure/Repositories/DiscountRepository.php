@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující slevy
+ * Třída spravující slevy.
  */
 class DiscountRepository extends AbstractRepository
 {
@@ -31,7 +31,7 @@ class DiscountRepository extends AbstractRepository
     }
 
     /**
-     * Vrací slevu podle id
+     * Vrací slevu podle id.
      */
     public function findById(?int $id): ?Discount
     {
@@ -39,7 +39,7 @@ class DiscountRepository extends AbstractRepository
     }
 
     /**
-     * Uloží slevu
+     * Uloží slevu.
      */
     public function save(Discount $discount): void
     {
@@ -48,7 +48,7 @@ class DiscountRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní slevu
+     * Odstraní slevu.
      */
     public function remove(Discount $discount): void
     {

@@ -7,13 +7,13 @@ namespace App\Model\Mailing;
 use App\Model\User\User;
 
 /**
- * Objekt příjemce e-mailu
+ * Objekt příjemce e-mailu.
  */
 class Recipient
 {
     /**
-     * @param string  $email E-mail příjemce
-     * @param ?string $name  Jméno příjemce
+     * @param string  $email E-mail příjemce.
+     * @param ?string $name  Jméno příjemce.
      */
     public function __construct(
         private string $email,
@@ -32,7 +32,7 @@ class Recipient
     }
 
     /**
-     * Vytvoří objekt na základě údajů uživatele
+     * Vytvoří objekt na základě údajů uživatele.
      */
     public static function createFromUser(User $user): Recipient
     {

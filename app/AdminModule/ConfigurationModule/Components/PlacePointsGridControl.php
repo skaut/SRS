@@ -16,7 +16,7 @@ use function abs;
 use function number_format;
 
 /**
- * Komponenta pro správu mapových bodů
+ * Komponenta pro správu mapových bodů.
  */
 class PlacePointsGridControl extends Control
 {
@@ -25,7 +25,7 @@ class PlacePointsGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu
+     * Vykreslí komponentu.
      */
     public function render(): void
     {
@@ -34,7 +34,7 @@ class PlacePointsGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu
+     * Vytvoří komponentu.
      *
      * @throws DataGridException
      */
@@ -74,7 +74,7 @@ class PlacePointsGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění mapového bodu
+     * Zpracuje odstranění mapového bodu.
      *
      * @throws AbortException
      */

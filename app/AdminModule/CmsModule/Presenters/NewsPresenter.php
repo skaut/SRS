@@ -13,7 +13,7 @@ use Nette\DI\Attributes\Inject;
 use stdClass;
 
 /**
- * Presenter starající se o správu aktualit
+ * Presenter starající se o správu aktualit.
  */
 class NewsPresenter extends CmsBasePresenter
 {

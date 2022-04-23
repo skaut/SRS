@@ -20,7 +20,7 @@ use Throwable;
 use function array_map;
 
 /**
- * Služba pro správu rolí
+ * Služba pro správu rolí.
  */
 class AclService
 {
@@ -45,7 +45,7 @@ class AclService
     }
 
     /**
-     * Vrací názvy všech rolí
+     * Vrací názvy všech rolí.
      *
      * @return string[]
      *
@@ -67,7 +67,7 @@ class AclService
     }
 
     /**
-     * Uloží roli
+     * Uloží roli.
      */
     public function saveRole(Role $role): void
     {
@@ -77,7 +77,7 @@ class AclService
     }
 
     /**
-     * Odstraní roli
+     * Odstraní roli.
      */
     public function removeRole(Role $role): void
     {
@@ -86,7 +86,7 @@ class AclService
     }
 
     /**
-     * Vrací seznam rolí jako možnosti pro select, role specifikovaná parametrem je vynechána
+     * Vrací seznam rolí jako možnosti pro select, role specifikovaná parametrem je vynechána.
      *
      * @return string[]
      */
@@ -108,7 +108,7 @@ class AclService
     }
 
     /**
-     * Vrací role bez vybraných rolí jako možnosti pro select
+     * Vrací role bez vybraných rolí jako možnosti pro select.
      *
      * @param string[] $withoutRoles
      *
@@ -141,7 +141,7 @@ class AclService
     }
 
     /**
-     * Vrací seznam rolí bez vybraných rolí, s informací o obsazenosti, jako možnosti pro select
+     * Vrací seznam rolí bez vybraných rolí, s informací o obsazenosti, jako možnosti pro select.
      *
      * @param string[] $withoutRoles
      *
@@ -180,7 +180,7 @@ class AclService
     }
 
     /**
-     * Vrací seznam rolí bez vybraných rolí, s informací o počtu uživatelů, jako možnosti pro select
+     * Vrací seznam rolí bez vybraných rolí, s informací o počtu uživatelů, jako možnosti pro select.
      *
      * @param string[] $withoutRoles
      *
@@ -217,7 +217,7 @@ class AclService
     }
 
     /**
-     * Vrací seznam rolí splňujících podmínku, s informací o obsazenosti, jako možnosti pro select
+     * Vrací seznam rolí splňujících podmínku, s informací o obsazenosti, jako možnosti pro select.
      *
      * @return string[]
      */
@@ -242,7 +242,7 @@ class AclService
     }
 
     /**
-     * Vrací názvy všech oprávnění
+     * Vrací názvy všech oprávnění.
      *
      * @return Collection<int, string[]>
      *
@@ -265,7 +265,7 @@ class AclService
     }
 
     /**
-     * Vrací názvy všech prostředků
+     * Vrací názvy všech prostředků.
      *
      * @return string[]
      *

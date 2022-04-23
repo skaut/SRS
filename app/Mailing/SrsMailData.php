@@ -8,15 +8,15 @@ use App\Model\Mailing\Recipient;
 use Ublaboo\Mailing\IMessageData;
 
 /**
- * Třída pro parametry hromadného e-mailu
+ * Třída pro parametry hromadného e-mailu.
  */
 class SrsMailData implements IMessageData
 {
     /**
-     * @param Recipient   $from       Odesilatel mailu
-     * @param Recipient[] $recipients Příjemci mailu
-     * @param string      $subject    Předmět mailu
-     * @param string      $text       Text mailu
+     * @param Recipient   $from       Odesilatel mailu.
+     * @param Recipient[] $recipients Příjemci mailu.
+     * @param string      $subject    Předmět mailu.
+     * @param string      $text       Text mailu.
      */
     public function __construct(
         private Recipient $from,

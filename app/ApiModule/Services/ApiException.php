@@ -7,7 +7,7 @@ namespace App\ApiModule\Services;
 use Exception;
 
 /**
- * Výjimka chyba v API
+ * Výjimka chyba v API.
  */
 class ApiException extends Exception
 {

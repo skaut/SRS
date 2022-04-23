@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use function implode;
 
 /**
- * Abstraktní entita vlastní pole přihlášky
+ * Abstraktní entita vlastní pole přihlášky.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'custom_input')]
@@ -30,37 +30,37 @@ use function implode;
 abstract class CustomInput
 {
     /**
-     * Textové pole
+     * Textové pole.
      */
     public const TEXT = 'text';
 
     /**
-     * Zaškrtávací pole
+     * Zaškrtávací pole.
      */
     public const CHECKBOX = 'checkbox';
 
     /**
-     * Výběrové pole
+     * Výběrové pole.
      */
     public const SELECT = 'select';
 
     /**
-     * Výběrové pole s více možnostmi
+     * Výběrové pole s více možnostmi.
      */
     public const MULTISELECT = 'multiselect';
 
     /**
-     * Soubor
+     * Soubor.
      */
     public const FILE = 'file';
 
     /**
-     * Datum
+     * Datum.
      */
     public const DATE = 'date';
 
     /**
-     * Datum čas
+     * Datum čas.
      */
     public const DATETIME = 'datetime';
 
@@ -76,7 +76,7 @@ abstract class CustomInput
     ];
 
     /**
-     * Typ vlastního pole
+     * Typ vlastního pole.
      */
     protected string $type;
 
@@ -86,25 +86,25 @@ abstract class CustomInput
     private ?int $id = null;
 
     /**
-     * Název vlastního pole
+     * Název vlastního pole.
      */
     #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
-     * Povinné pole
+     * Povinné pole.
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $mandatory = false;
 
     /**
-     * Pořadí pole na přihlášce
+     * Pořadí pole na přihlášce.
      */
     #[ORM\Column(type: 'integer')]
     protected int $position = 0;
 
     /**
-     * Hodnoty pole pro jednotlivé uživatele
+     * Hodnoty pole pro jednotlivé uživatele.
      *
      * @var Collection<int, CustomInputValue>
      */
@@ -112,7 +112,7 @@ abstract class CustomInput
     protected Collection $customInputValues;
 
     /**
-     * Role, pro které se pole zobrazuje
+     * Role, pro které se pole zobrazuje.
      *
      * @var Collection<int, Role>
      */

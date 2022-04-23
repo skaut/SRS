@@ -25,14 +25,14 @@ use stdClass;
 use Throwable;
 
 /**
- * Formulář pro změnu rolí
+ * Formulář pro změnu rolí.
  */
 class RolesFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Přihlášený uživatel
+     * Přihlášený uživatel.
      */
     private ?User $user = null;
 
@@ -49,7 +49,7 @@ class RolesFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -150,7 +150,7 @@ class RolesFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      *
      * @throws Throwable
      */
@@ -165,7 +165,7 @@ class RolesFormFactory
     }
 
     /**
-     * Ověří kapacitu rolí
+     * Ověří kapacitu rolí.
      */
     public function validateRolesCapacities(MultiSelectBox $field): bool
     {
@@ -175,7 +175,7 @@ class RolesFormFactory
     }
 
     /**
-     * Ověří kompatibilitu rolí
+     * Ověří kompatibilitu rolí.
      *
      * @param Role[] $args
      */
@@ -188,7 +188,7 @@ class RolesFormFactory
     }
 
     /**
-     * Ověří výběr vyžadovaných rolí
+     * Ověří výběr vyžadovaných rolí.
      *
      * @param Role[] $args
      */
@@ -201,7 +201,7 @@ class RolesFormFactory
     }
 
     /**
-     * Ověří registrovatelnost rolí
+     * Ověří registrovatelnost rolí.
      */
     public function validateRolesRegisterable(MultiSelectBox $field): bool
     {
@@ -211,7 +211,7 @@ class RolesFormFactory
     }
 
     /**
-     * Ověří požadovaný minimální věk
+     * Ověří požadovaný minimální věk.
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable

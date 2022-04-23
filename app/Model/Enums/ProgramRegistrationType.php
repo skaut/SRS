@@ -7,17 +7,17 @@ namespace App\Model\Enums;
 class ProgramRegistrationType
 {
     /**
-     * Zapisování programů povoleno
+     * Zapisování programů povoleno.
      */
     public const ALLOWED = 'allowed';
 
     /**
-     * Zapisování programů nepovoleno
+     * Zapisování programů nepovoleno.
      */
     public const NOT_ALLOWED = 'not_allowed';
 
     /**
-     * Zapisování programů povoleno od do
+     * Zapisování programů povoleno od do.
      */
     public const ALLOWED_FROM_TO = 'allowed_from_to';
 

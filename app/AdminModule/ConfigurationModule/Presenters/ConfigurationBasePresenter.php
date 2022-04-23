@@ -15,7 +15,7 @@ use Nette\DI\Attributes\Inject;
 use Throwable;
 
 /**
- * Basepresenter pro ConfigurationModule
+ * Basepresenter pro ConfigurationModule.
  */
 abstract class ConfigurationBasePresenter extends AdminBasePresenter
 {

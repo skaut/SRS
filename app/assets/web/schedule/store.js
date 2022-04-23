@@ -99,7 +99,7 @@ export default new Vuex.Store({
     },
     actions: {
         /**
-         * Načte nastavení kalendáře, bloky, místnosti a programy
+         * Načte nastavení kalendáře, bloky, místnosti a programy.
          */
         loadData({commit}) {
             commit('incrementLoading');
@@ -209,7 +209,7 @@ export default new Vuex.Store({
         },
 
         /**
-         * Zpracuje přihlášení na program
+         * Zpracuje přihlášení na program.
          */
         attendProgram({commit, state}, info) {
             commit('incrementLoading');
@@ -256,7 +256,7 @@ export default new Vuex.Store({
         },
 
         /**
-         * Zpracuje odhlášení z programu
+         * Zpracuje odhlášení z programu.
          */
         unattendProgram({commit, state}, info) {
             commit('incrementLoading');

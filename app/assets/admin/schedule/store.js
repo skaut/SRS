@@ -90,7 +90,7 @@ export default new Vuex.Store({
     },
     actions: {
         /**
-         * Načte nastavení kalendáře, bloky, místnosti a programy
+         * Načte nastavení kalendáře, bloky, místnosti a programy.
          */
         loadData({commit}) {
             commit('incrementLoading');
@@ -192,7 +192,7 @@ export default new Vuex.Store({
         },
 
         /**
-         * Zpracuje přidání programu
+         * Zpracuje přidání programu.
          */
         addProgram({commit}, info) {
             commit('incrementLoading');
@@ -217,7 +217,7 @@ export default new Vuex.Store({
         },
 
         /**
-         * Zpracuje přesunutí programu
+         * Zpracuje přesunutí programu.
          */
         updateProgram({commit}, info) {
             commit('incrementLoading');
@@ -243,7 +243,7 @@ export default new Vuex.Store({
         },
 
         /**
-         * Zpracuje změnu místnosti z modal okna
+         * Zpracuje změnu místnosti z modal okna.
          */
         updateProgramRoom({commit}, info) {
             commit('incrementLoading');
@@ -267,7 +267,7 @@ export default new Vuex.Store({
         },
 
         /**
-         * Zpracuje odstranění programu z modal okna
+         * Zpracuje odstranění programu z modal okna.
          */
         removeProgram({commit, state}, info) {
             commit('incrementLoading');

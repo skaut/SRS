@@ -8,7 +8,7 @@ use App\Model\User\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita FAQ
+ * Entita FAQ.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'faq')]
@@ -20,31 +20,31 @@ class Faq
     private ?int $id = null;
 
     /**
-     * Otázka
+     * Otázka.
      */
     #[ORM\Column(type: 'text')]
     protected string $question;
 
     /**
-     * Autor otázky
+     * Autor otázky.
      */
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     protected User $author;
 
     /**
-     * Odpověď
+     * Odpověď.
      */
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $answer = null;
 
     /**
-     * Otázka zveřejněna všem
+     * Otázka zveřejněna všem.
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $public = false;
 
     /**
-     * Pozice otázky
+     * Pozice otázky.
      */
     #[ORM\Column(type: 'integer')]
     protected int $position = 0;

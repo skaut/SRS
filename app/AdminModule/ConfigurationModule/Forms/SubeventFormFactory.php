@@ -21,14 +21,14 @@ use function mt_rand;
 use function uniqid;
 
 /**
- * Formulář pro úpravu podakce
+ * Formulář pro úpravu podakce.
  */
 class SubeventFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Upravovaná podakce
+     * Upravovaná podakce.
      */
     private ?Subevent $subevent = null;
 
@@ -41,7 +41,7 @@ class SubeventFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      */
     public function create(int $id): Form
     {
@@ -140,7 +140,7 @@ class SubeventFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      */
     public function processForm(Form $form, stdClass $values): void
     {
@@ -166,7 +166,7 @@ class SubeventFormFactory
     }
 
     /**
-     * Ověří kolize mezi vyžadovanými a nekompatibilními podakcemi
+     * Ověří kolize mezi vyžadovanými a nekompatibilními podakcemi.
      *
      * @param int[][] $args
      *

@@ -7,11 +7,11 @@ namespace App\Model\Cms\Dto;
 class PageDto
 {
     /**
-     * @param string       $name            Název stránky
-     * @param string       $slug            Cesta stránky
-     * @param string[]     $allowedRoles    Role, které mají na stránku přístup
-     * @param ContentDto[] $mainContents    Obsahy v hlavní části stránky
-     * @param ContentDto[] $sidebarContents Obsahy v postranní části stránky
+     * @param string       $name            Název stránky.
+     * @param string       $slug            Cesta stránky.
+     * @param string[]     $allowedRoles    Role, které mají na stránku přístup.
+     * @param ContentDto[] $mainContents    Obsahy v hlavní části stránky.
+     * @param ContentDto[] $sidebarContents Obsahy v postranní části stránky.
      * @param bool         $hasSidebar      Má stránka sidebar?
      */
     public function __construct(

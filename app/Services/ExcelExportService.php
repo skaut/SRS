@@ -32,7 +32,7 @@ use function implode;
 use function preg_replace;
 
 /**
- * Služba pro export do formátu XLSX
+ * Služba pro export do formátu XLSX.
  */
 class ExcelExportService
 {
@@ -53,7 +53,7 @@ class ExcelExportService
     }
 
     /**
-     * Vyexportuje matici uživatelů a rolí
+     * Vyexportuje matici uživatelů a rolí.
      *
      * @param Collection<int, User> $users
      * @param Collection<int, Role> $roles
@@ -96,7 +96,7 @@ class ExcelExportService
     }
 
     /**
-     * Vyexportuje harmonogram uživatele
+     * Vyexportuje harmonogram uživatele.
      *
      * @throws Exception
      */
@@ -106,7 +106,7 @@ class ExcelExportService
     }
 
     /**
-     * Vyexportuje harmonogramy uživatelů, každý uživatel na zvlástním listu
+     * Vyexportuje harmonogramy uživatelů, každý uživatel na zvlástním listu.
      *
      * @param Collection<int, User> $users
      *
@@ -168,7 +168,7 @@ class ExcelExportService
     }
 
     /**
-     * Vyexportuje harmonogram místnosti
+     * Vyexportuje harmonogram místnosti.
      *
      * @throws Exception
      */
@@ -178,7 +178,7 @@ class ExcelExportService
     }
 
     /**
-     * Vyexportuje harmonogramy místností
+     * Vyexportuje harmonogramy místností.
      *
      * @param Collection<int, Room> $rooms
      *
@@ -561,8 +561,8 @@ class ExcelExportService
     }
 
     /**
-     * Odstraní z názvu listu zakázané znaky a zkrátí jej
-     * Excel podporuje 31 znaků, při duplicitních názvech doplní na poslední pozici číslo
+     * Odstraní z názvu listu zakázané znaky a zkrátí jej.
+     * Excel podporuje 31 znaků, při duplicitních názvech doplní na poslední pozici číslo.
      */
     private static function cleanSheetName(string $name): string
     {

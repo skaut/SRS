@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 use Nette;
 
 /**
- * Objekt pro přenos údajů o podakci
+ * Objekt pro přenos údajů o podakci.
  */
 class SubeventInfo
 {

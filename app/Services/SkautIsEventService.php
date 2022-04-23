@@ -14,7 +14,7 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Služba pro správu skautIS akce
+ * Služba pro správu skautIS akce.
  */
 abstract class SkautIsEventService
 {
@@ -25,12 +25,12 @@ abstract class SkautIsEventService
     }
 
     /**
-     * Vrací true, pokud je akce neuzavřená
+     * Vrací true, pokud je akce neuzavřená.
      */
     abstract public function isEventDraft(int $eventId): bool;
 
     /**
-     * Vloží účastníky do skautIS
+     * Vloží účastníky do skautIS.
      *
      * @param Collection<int, User> $users
      * @param bool                  $accept Přijetí účastníků (pouze u vzdělávacích akcí)
@@ -38,19 +38,19 @@ abstract class SkautIsEventService
     abstract public function insertParticipants(int $eventId, Collection $users, bool $accept = false): bool;
 
     /**
-     * Vrací údaje o akci
+     * Vrací údaje o akci.
      */
     abstract protected function getEventDetail(int $eventId): stdClass;
 
     /**
-     * Vrací seznam neuzavřených akcí
+     * Vrací seznam neuzavřených akcí.
      *
      * @return stdClass[]
      */
     abstract protected function getDraftEvents(): array;
 
     /**
-     * Vrací název akce
+     * Vrací název akce.
      */
     public function getEventDisplayName(int $eventId): string
     {
@@ -58,7 +58,7 @@ abstract class SkautIsEventService
     }
 
     /**
-     * Vrací seznam neuzavřených akcí pro select
+     * Vrací seznam neuzavřených akcí pro select.
      *
      * @return string[]
      */

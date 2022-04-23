@@ -7,7 +7,7 @@ namespace App\Model\Cms;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita obsahu s přehledem bloků
+ * Entita obsahu s přehledem bloků.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'blocks_content')]

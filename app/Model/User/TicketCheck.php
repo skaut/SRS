@@ -9,7 +9,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita kontrola vstupenky
+ * Entita kontrola vstupenky.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'ticket_check')]
@@ -21,19 +21,19 @@ class TicketCheck
     private ?int $id = null;
 
     /**
-     * Uživatel
+     * Uživatel.
      */
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     protected User $user;
 
     /**
-     * Podakce
+     * Podakce.
      */
     #[ORM\ManyToOne(targetEntity: Subevent::class, cascade: ['persist'])]
     protected Subevent $subevent;
 
     /**
-     * Datum a čas kontroly
+     * Datum a čas kontroly.
      */
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $datetime;

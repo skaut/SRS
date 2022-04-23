@@ -8,7 +8,7 @@ use Nette\Application\AbortException;
 use Throwable;
 
 /**
- * Presenter obshluhující stránku s informacemi o propojení skautIS účtu
+ * Presenter obshluhující stránku s informacemi o propojení skautIS účtu.
  */
 class MemberPresenter extends WebBasePresenter
 {

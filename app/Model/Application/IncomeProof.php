@@ -9,7 +9,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita příjmového dokladu
+ * Entita příjmového dokladu.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'income_proof')]
@@ -21,7 +21,7 @@ class IncomeProof
     private ?int $id = null;
 
     /**
-     * Datum vystavení příjmového dokladu
+     * Datum vystavení příjmového dokladu.
      */
     #[ORM\Column(type: 'date_immutable')]
     protected DateTimeImmutable $date;
@@ -42,7 +42,7 @@ class IncomeProof
     }
 
     /**
-     * Vrací datum vytištění dokladu jako text
+     * Vrací datum vytištění dokladu jako text.
      */
     public function getDateText(): string
     {

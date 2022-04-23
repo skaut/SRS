@@ -195,7 +195,7 @@
             ...mapActions(['loadData', 'addProgram', 'updateProgram', 'updateProgramRoom', 'removeProgram']),
 
             /**
-             * Vykreslí název místnosti v timeGridSeminar zobrazení
+             * Vykreslí název místnosti v timeGridSeminar zobrazení.
              */
             eventDidMount(info) {
                 if (info.view.type === 'timeGridSeminar') {
@@ -211,7 +211,7 @@
             },
 
             /**
-             * Nedovolí kolize v místnosti a u automaticky přihlašovaných programů
+             * Nedovolí kolize v místnosti a u automaticky přihlašovaných programů.
              */
             eventOverlap(stillEvent, movingEvent) {
                 return (!stillEvent.extendedProps.block.autoRegistered && !movingEvent.extendedProps.block.autoRegistered)
@@ -219,15 +219,15 @@
             },
 
             /**
-             * Zabrání přidání nového programu při zablokované editaci
-             * Workaround - droppable=false by mělo stačit
+             * Zabrání přidání nového programu při zablokované editaci.
+             * Workaround - droppable=false by mělo stačit.
              */
             eventAllow(info, draggedEvent) {
                 return this.config.allowed_modify_schedule;
             },
 
             /**
-             * Zpracuje přepnutí view a uloží zvolené
+             * Zpracuje přepnutí view a uloží zvolené.
              */
             handleChangeView(view) {
                 this.initialView = view;
@@ -236,21 +236,21 @@
             },
 
             /**
-             * Zpracuje přechod na přechozí den
+             * Zpracuje přechod na přechozí den.
              */
             handlePrev(view) {
                  this.$refs.fullCalendar.getApi().prev();
             },
 
             /**
-             * Zpracuje přechod na následující den
+             * Zpracuje přechod na následující den.
              */
             handleNext(view) {
                 this.$refs.fullCalendar.getApi().next();
             },
 
             /**
-             * Překreslí tlačítka pro volbu dne
+             * Překreslí tlačítka pro volbu dne.
              */
             datesSet(info) {
                 $('#btnPrev').prop('disabled', info.view.currentStart.toISOString().split('T')[0] <= this.validRange.start);
@@ -259,14 +259,14 @@
             },
 
             /**
-             * Zpracuje přidání programu
+             * Zpracuje přidání programu.
              */
             handleEventReceive(info) {
                 this.addProgram(info);
             },
 
             /**
-             * Zpracuje přesunutí programu
+             * Zpracuje přesunutí programu.
              */
             handleEventDrop(info) {
                 this.updateProgram(info);
@@ -284,7 +284,7 @@
             },
 
             /**
-             * Zpracuje změnu místnosti z modal okna
+             * Zpracuje změnu místnosti z modal okna.
              */
             handleEventUpdateRoom() {
                 $('#program-modal').modal('hide');
@@ -292,7 +292,7 @@
             },
 
             /**
-             * Zpracuje odstranění programu z modal okna
+             * Zpracuje odstranění programu z modal okna.
              */
             handleEventRemove() {
                 $('#program-modal').modal('hide');

@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use function array_map;
 
 /**
- * Třída spravující kategorie programových bloků
+ * Třída spravující kategorie programových bloků.
  */
 class CategoryRepository extends AbstractRepository
 {
@@ -33,7 +33,7 @@ class CategoryRepository extends AbstractRepository
     }
 
     /**
-     * Vrací kategorii podle id
+     * Vrací kategorii podle id.
      */
     public function findById(?int $id): ?Category
     {
@@ -41,7 +41,7 @@ class CategoryRepository extends AbstractRepository
     }
 
     /**
-     * Vrací kategorie seřazené podle názvu
+     * Vrací kategorie seřazené podle názvu.
      *
      * @return Category[]
      */
@@ -54,7 +54,7 @@ class CategoryRepository extends AbstractRepository
     }
 
     /**
-     * Vrací názvy všech kategorií
+     * Vrací názvy všech kategorií.
      *
      * @return string[]
      */
@@ -69,7 +69,7 @@ class CategoryRepository extends AbstractRepository
     }
 
     /**
-     * Vrací názvy kategorií, kromě kategorie s id
+     * Vrací názvy kategorií, kromě kategorie s id.
      *
      * @return string[]
      */
@@ -86,7 +86,7 @@ class CategoryRepository extends AbstractRepository
     }
 
     /**
-     * Vrací kategorie jako možnosti pro select
+     * Vrací kategorie jako možnosti pro select.
      *
      * @return string[]
      */
@@ -107,7 +107,7 @@ class CategoryRepository extends AbstractRepository
     }
 
     /**
-     * Uloží kategorii
+     * Uloží kategorii.
      */
     public function save(Category $category): void
     {
@@ -116,7 +116,7 @@ class CategoryRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní kategorii
+     * Odstraní kategorii.
      */
     public function remove(Category $category): void
     {

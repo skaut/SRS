@@ -18,7 +18,7 @@ use Doctrine\ORM\NoResultException;
 use function array_map;
 
 /**
- * Třída spravující role
+ * Třída spravující role.
  */
 class RoleRepository extends AbstractRepository
 {
@@ -38,7 +38,7 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * Vrací roli podle id
+     * Vrací roli podle id.
      */
     public function findById(?int $id): ?Role
     {
@@ -46,7 +46,7 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * Vrací systémovou roli podle systémového názvu
+     * Vrací systémovou roli podle systémového názvu.
      */
     public function findBySystemName(string $name): Role
     {
@@ -54,7 +54,7 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * Vrací id naposledy přidané role
+     * Vrací id naposledy přidané role.
      *
      * @throws NonUniqueResultException
      * @throws NoResultException
@@ -68,7 +68,7 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * Vrací názvy rolí, kromě role se zadaným id
+     * Vrací názvy rolí, kromě role se zadaným id.
      *
      * @return string[]
      */
@@ -85,7 +85,7 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * Vrací role podle id
+     * Vrací role podle id.
      *
      * @param int[] $ids
      *
@@ -101,7 +101,7 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * Vrací role s počty uživatelů
+     * Vrací role s počty uživatelů.
      *
      * @param int[] $rolesIds
      *
@@ -120,7 +120,7 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * Vrací id rolí
+     * Vrací id rolí.
      *
      * @param Collection<int, Role> $roles
      *
@@ -132,7 +132,7 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * Vrací role splňující podmínku seřazené podle názvu
+     * Vrací role splňující podmínku seřazené podle názvu.
      *
      * @return Collection<int, Role>
      */
@@ -222,7 +222,7 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * Uloží roli
+     * Uloží roli.
      */
     public function save(Role $role): void
     {
@@ -231,7 +231,7 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní roli
+     * Odstraní roli.
      */
     public function remove(Role $role): void
     {

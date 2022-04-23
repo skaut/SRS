@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující kontroly vstupenek
+ * Třída spravující kontroly vstupenek.
  */
 class TicketCheckRepository extends AbstractRepository
 {

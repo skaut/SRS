@@ -28,7 +28,7 @@ use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
- * Formulář pro nastavení webové prezentace
+ * Formulář pro nastavení webové prezentace.
  */
 class WebFormFactory
 {
@@ -44,7 +44,7 @@ class WebFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      *
      * @throws Throwable
      */
@@ -90,7 +90,7 @@ class WebFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      *
      * @throws Nette\Utils\UnknownImageFileException
      * @throws Throwable

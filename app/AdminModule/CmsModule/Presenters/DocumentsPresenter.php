@@ -11,7 +11,7 @@ use App\AdminModule\CmsModule\Components\IDocumentTagsGridControlFactory;
 use Nette\DI\Attributes\Inject;
 
 /**
- * Presenter starající se o správu dokumentů
+ * Presenter starající se o správu dokumentů.
  */
 class DocumentsPresenter extends CmsBasePresenter
 {

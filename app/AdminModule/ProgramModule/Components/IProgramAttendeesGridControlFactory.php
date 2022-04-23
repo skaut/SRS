@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\AdminModule\ProgramModule\Components;
 
 /**
- * Factory komponenty pro správu účastníků programu
+ * Factory komponenty pro správu účastníků programu.
  */
 interface IProgramAttendeesGridControlFactory
 {
     /**
-     * Vytvoří komponentu
+     * Vytvoří komponentu.
      */
     public function create(): ProgramAttendeesGridControl;
 }

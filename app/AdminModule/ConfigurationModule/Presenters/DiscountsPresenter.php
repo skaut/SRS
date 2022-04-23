@@ -11,7 +11,7 @@ use App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory;
 use Nette\DI\Attributes\Inject;
 
 /**
- * Presenter obsluhující správu slev
+ * Presenter obsluhující správu slev.
  */
 class DiscountsPresenter extends ConfigurationBasePresenter
 {

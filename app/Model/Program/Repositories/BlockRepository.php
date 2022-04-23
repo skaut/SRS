@@ -21,7 +21,7 @@ use function array_map;
 use function assert;
 
 /**
- * Třída spravující programové bloky
+ * Třída spravující programové bloky.
  */
 class BlockRepository extends AbstractRepository
 {
@@ -41,7 +41,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * Vrací blok podle id
+     * Vrací blok podle id.
      */
     public function findById(?int $id): ?Block
     {
@@ -49,7 +49,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * Vrací názvy všech bloků
+     * Vrací názvy všech bloků.
      *
      * @return string[]
      */
@@ -64,7 +64,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * Vrací všechny bloky seřazené podle názvu
+     * Vrací všechny bloky seřazené podle názvu.
      *
      * @return Block[]
      */
@@ -77,7 +77,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * Vrací všechny bloky nezařazené v kategorii, seřazené podle názvu
+     * Vrací všechny bloky nezařazené v kategorii, seřazené podle názvu.
      *
      * @return Block[]
      */
@@ -91,7 +91,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * Vrací názvy ostatních bloků, kromě bloku se zadaným id
+     * Vrací názvy ostatních bloků, kromě bloku se zadaným id.
      *
      * @return string[]
      */
@@ -108,7 +108,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * Vrací bloky podle id
+     * Vrací bloky podle id.
      *
      * @param int[] $ids
      *
@@ -138,7 +138,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * Vrací bloky povolené pro uživatele
+     * Vrací bloky povolené pro uživatele.
      *
      * @return Collection<int, Block>
      */
@@ -184,7 +184,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * Uloží blok
+     * Uloží blok.
      */
     public function save(Block $block): void
     {
@@ -205,7 +205,7 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní blok
+     * Odstraní blok.
      */
     public function remove(Block $block): void
     {

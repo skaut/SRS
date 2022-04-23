@@ -19,7 +19,7 @@ use function print_r;
 use function sprintf;
 
 /**
- * Služba pro správu vzdělávací skautIS akce
+ * Služba pro správu vzdělávací skautIS akce.
  */
 class SkautIsEventEducationService extends SkautIsEventService
 {
@@ -110,7 +110,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     }
 
     /**
-     * Vrací kurzy vzdělávací akce
+     * Vrací kurzy vzdělávací akce.
      *
      * @return stdClass[]
      */
@@ -139,7 +139,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     }
 
     /**
-     * Vrací přihlášené účastníky kurzu
+     * Vrací přihlášené účastníky kurzu.
      *
      * @return stdClass[]
      */
@@ -166,7 +166,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     }
 
     /**
-     * Přidá účastníka kurzu
+     * Přidá účastníka kurzu.
      */
     private function insertParticipant(int $eventId, int $courseId, int $personId): int
     {
@@ -190,7 +190,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     }
 
     /**
-     * Aktualizuje přijetí účastníka
+     * Aktualizuje přijetí účastníka.
      */
     private function updateParticipant(int $participantId, bool $accept): void
     {

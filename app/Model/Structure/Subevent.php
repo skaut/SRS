@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use function implode;
 
 /**
- * Entita podakce
+ * Entita podakce.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'subevent')]
@@ -29,19 +29,19 @@ class Subevent
     private ?int $id = null;
 
     /**
-     * Název podakce
+     * Název podakce.
      */
     #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 
     /**
-     * Implicitní podakce. Vytvořena automaticky
+     * Implicitní podakce. Vytvořena automaticky.
      */
     #[ORM\Column(type: 'boolean')]
     protected bool $implicit = false;
 
     /**
-     * Přihlášky
+     * Přihlášky.
      *
      * @var Collection<int, SubeventsApplication>
      */
@@ -49,7 +49,7 @@ class Subevent
     protected Collection $applications;
 
     /**
-     * Bloky v podakci
+     * Bloky v podakci.
      *
      * @var Collection<int, Block>
      */
@@ -58,26 +58,26 @@ class Subevent
     protected Collection $blocks;
 
     /**
-     * Poplatek
+     * Poplatek.
      */
     #[ORM\Column(type: 'integer')]
     protected int $fee = 0;
 
     /**
-     * Kapacita
+     * Kapacita.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $capacity = null;
 
     /**
-     * Obsazenost
-     * Bude se používat pro kontrolu kapacity
+     * Obsazenost.
+     * Bude se používat pro kontrolu kapacity.
      */
     #[ORM\Column(type: 'integer')]
     protected int $occupancy = 0;
 
     /**
-     * Podakce neregistrovatelné současně s touto podakcí
+     * Podakce neregistrovatelné současně s touto podakcí.
      *
      * @var Collection<int, Subevent>
      */
@@ -88,7 +88,7 @@ class Subevent
     protected Collection $incompatibleSubevents;
 
     /**
-     * Podakce vyžadující tuto podakci
+     * Podakce vyžadující tuto podakci.
      *
      * @var Collection<int, Subevent>
      */
@@ -96,7 +96,7 @@ class Subevent
     protected Collection $requiredBySubevent;
 
     /**
-     * Podakce vyžadované touto podakcí
+     * Podakce vyžadované touto podakcí.
      *
      * @var Collection<int, Subevent>
      */
@@ -107,7 +107,7 @@ class Subevent
     protected Collection $requiredSubevents;
 
     /**
-     * Propojené skautIS kurzy
+     * Propojené skautIS kurzy.
      *
      * @var Collection<int, SkautIsCourse>
      */
@@ -115,13 +115,13 @@ class Subevent
     protected Collection $skautIsCourses;
 
     /**
-     * Registrovatelná od
+     * Registrovatelná od.
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $registerableFrom = null;
 
     /**
-     * Registrovatelná do
+     * Registrovatelná do.
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $registerableTo = null;
@@ -252,7 +252,7 @@ class Subevent
     }
 
     /**
-     * Vrací názvy všech nekompatibilních podakcí
+     * Vrací názvy všech nekompatibilních podakcí.
      */
     public function getIncompatibleSubeventsText(): string
     {
@@ -289,7 +289,7 @@ class Subevent
     }
 
     /**
-     * Vrací všechny (tranzitivně) podakce, kterými je tato podakce vyžadována
+     * Vrací všechny (tranzitivně) podakce, kterými je tato podakce vyžadována.
      *
      * @return Collection<int, Subevent>
      */
@@ -356,7 +356,7 @@ class Subevent
     }
 
     /**
-     * Vrací všechny (tranzitivně) vyžadované podakce
+     * Vrací všechny (tranzitivně) vyžadované podakce.
      *
      * @return Collection<int, Subevent>
      */
@@ -385,7 +385,7 @@ class Subevent
     }
 
     /**
-     * Vrací názvy všech vyžadovaných podakcí
+     * Vrací názvy všech vyžadovaných podakcí.
      */
     public function getRequiredSubeventsTransitiveText(): string
     {

@@ -18,12 +18,12 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
- * Komponenta pro zobrazení harmonogramu místnosti
+ * Komponenta pro zobrazení harmonogramu místnosti.
  */
 class RoomScheduleGridControl extends Control
 {
     /**
-     * Aktulní místnost
+     * Aktulní místnost.
      */
     private ?Room $room = null;
 
@@ -32,7 +32,7 @@ class RoomScheduleGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu
+     * Vykreslí komponentu.
      */
     public function render(): void
     {
@@ -41,7 +41,7 @@ class RoomScheduleGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu
+     * Vytvoří komponentu.
      *
      * @throws DataGridException
      */

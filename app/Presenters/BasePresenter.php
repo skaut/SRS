@@ -10,7 +10,7 @@ use Nette\Localization\Translator;
 use stdClass;
 
 /**
- * BasePresenter
+ * BasePresenter.
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
@@ -18,7 +18,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     public Translator $translator;
 
     /**
-     * Zobrazí přeloženou zprávu
+     * Zobrazí přeloženou zprávu.
      *
      * @param string   $message
      * @param string[] $parameters

@@ -14,7 +14,7 @@ use Doctrine\ORM\ORMException;
 use const PHP_INT_MAX;
 
 /**
- * Třída spravující FAQ
+ * Třída spravující FAQ.
  */
 class FaqRepository extends AbstractRepository
 {
@@ -24,7 +24,7 @@ class FaqRepository extends AbstractRepository
     }
 
     /**
-     * Vrací otázku podle id
+     * Vrací otázku podle id.
      */
     public function findById(?int $id): ?Faq
     {
@@ -32,7 +32,7 @@ class FaqRepository extends AbstractRepository
     }
 
     /**
-     * Vrací id poslední otázky
+     * Vrací id poslední otázky.
      *
      * @throws NoResultException
      * @throws NonUniqueResultException
@@ -46,7 +46,7 @@ class FaqRepository extends AbstractRepository
     }
 
     /**
-     * Vrací poslední pozici
+     * Vrací poslední pozici.
      *
      * @throws NoResultException
      * @throws NonUniqueResultException
@@ -60,7 +60,7 @@ class FaqRepository extends AbstractRepository
     }
 
     /**
-     * Vrací publikované otázky seřazené podle pozice
+     * Vrací publikované otázky seřazené podle pozice.
      *
      * @return Faq[]
      */
@@ -70,7 +70,7 @@ class FaqRepository extends AbstractRepository
     }
 
     /**
-     * Uloží otázku
+     * Uloží otázku.
      *
      * @throws NonUniqueResultException
      * @throws ORMException
@@ -86,7 +86,7 @@ class FaqRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní otázku
+     * Odstraní otázku.
      */
     public function remove(Faq $faq): void
     {
@@ -95,7 +95,7 @@ class FaqRepository extends AbstractRepository
     }
 
     /**
-     * Přesune otázku mezi otázky s id prevId a nextId
+     * Přesune otázku mezi otázky s id prevId a nextId.
      *
      * @throws ORMException
      */

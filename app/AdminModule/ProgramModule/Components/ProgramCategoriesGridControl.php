@@ -26,7 +26,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use function assert;
 
 /**
- * Komponenta pro správu kategorií
+ * Komponenta pro správu kategorií.
  */
 class ProgramCategoriesGridControl extends Control
 {
@@ -35,7 +35,7 @@ class ProgramCategoriesGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu
+     * Vykreslí komponentu.
      */
     public function render(): void
     {
@@ -44,7 +44,7 @@ class ProgramCategoriesGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu
+     * Vytvoří komponentu.
      *
      * @throws DataGridException
      */
@@ -102,7 +102,7 @@ class ProgramCategoriesGridControl extends Control
     }
 
     /**
-     * Zpracuje přidání kategorie
+     * Zpracuje přidání kategorie.
      */
     public function add(stdClass $values): void
     {
@@ -117,7 +117,7 @@ class ProgramCategoriesGridControl extends Control
     }
 
     /**
-     * Zpracuje úpravu kategorie
+     * Zpracuje úpravu kategorie.
      *
      * @throws Throwable
      */
@@ -136,7 +136,7 @@ class ProgramCategoriesGridControl extends Control
     }
 
     /**
-     * Odstraní kategorii
+     * Odstraní kategorii.
      *
      * @throws AbortException
      * @throws Throwable

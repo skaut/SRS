@@ -7,7 +7,7 @@ namespace App\Model\Structure;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita sleva
+ * Entita sleva.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'discount')]
@@ -26,13 +26,13 @@ class Discount
     private ?int $id = null;
 
     /**
-     * Podmínka
+     * Podmínka.
      */
     #[ORM\Column(type: 'string')]
     protected string $discountCondition;
 
     /**
-     * Sleva
+     * Sleva.
      */
     #[ORM\Column(type: 'integer')]
     protected int $discount;

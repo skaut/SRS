@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use function array_map;
 
 /**
- * Třída spravující skautIS kurzy
+ * Třída spravující skautIS kurzy.
  */
 class SkautIsCourseRepository extends AbstractRepository
 {
@@ -34,7 +34,7 @@ class SkautIsCourseRepository extends AbstractRepository
     }
 
     /**
-     * Vrací skautIS kurz podle id
+     * Vrací skautIS kurz podle id.
      */
     public function findById(?int $id): ?SkautIsCourse
     {
@@ -42,7 +42,7 @@ class SkautIsCourseRepository extends AbstractRepository
     }
 
     /**
-     * Uloží skautIS kurz
+     * Uloží skautIS kurz.
      */
     public function save(SkautIsCourse $skautIsCourse): void
     {
@@ -51,7 +51,7 @@ class SkautIsCourseRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní skautIS kurz
+     * Odstraní skautIS kurz.
      */
     public function remove(SkautIsCourse $skautIsCourse): void
     {
@@ -60,7 +60,7 @@ class SkautIsCourseRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní všechny skautIS kurzy
+     * Odstraní všechny skautIS kurzy.
      */
     public function removeAll(): void
     {
@@ -72,7 +72,7 @@ class SkautIsCourseRepository extends AbstractRepository
     }
 
     /**
-     * Vrací id skautIS kurzů
+     * Vrací id skautIS kurzů.
      *
      * @param Collection<int, SkautIsCourse> $skautIsCourses
      *
@@ -84,7 +84,7 @@ class SkautIsCourseRepository extends AbstractRepository
     }
 
     /**
-     * Vrací skautIS kurzy podle id
+     * Vrací skautIS kurzy podle id.
      *
      * @param int[] $ids
      *
@@ -100,7 +100,7 @@ class SkautIsCourseRepository extends AbstractRepository
     }
 
     /**
-     * Vrací seznam skautIS kurzů jako možnosti pro select
+     * Vrací seznam skautIS kurzů jako možnosti pro select.
      *
      * @return string[]
      */

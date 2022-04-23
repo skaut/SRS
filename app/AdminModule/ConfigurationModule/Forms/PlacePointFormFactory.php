@@ -14,7 +14,7 @@ use VojtechDobes\NetteForms\GpsPicker;
 use VojtechDobes\NetteForms\GpsPositionPicker;
 
 /**
- * Formulář pro úpravu mapového bodu
+ * Formulář pro úpravu mapového bodu.
  */
 class PlacePointFormFactory
 {
@@ -27,7 +27,7 @@ class PlacePointFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      */
     public function create(int $id): Form
     {
@@ -66,7 +66,7 @@ class PlacePointFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      */
     public function processForm(Form $form, stdClass $values): void
     {

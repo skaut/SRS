@@ -7,14 +7,14 @@ namespace App\Model\CustomInput;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita vlastní příloha přihlášky
+ * Entita vlastní příloha přihlášky.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'custom_file_value')]
 class CustomFileValue extends CustomInputValue
 {
     /**
-     * Název souboru
+     * Název souboru.
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $value = null;

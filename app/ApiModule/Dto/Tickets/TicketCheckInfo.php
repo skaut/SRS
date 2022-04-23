@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation as JMS;
 use Nette;
 
 /**
- * Objekt pro přenos údajů o kontrole vstupenky
+ * Objekt pro přenos údajů o kontrole vstupenky.
  */
 class TicketCheckInfo
 {

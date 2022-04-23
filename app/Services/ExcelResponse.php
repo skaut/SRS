@@ -11,7 +11,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Exception;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /**
- * ExcelResponse
+ * ExcelResponse.
  */
 class ExcelResponse implements Response
 {

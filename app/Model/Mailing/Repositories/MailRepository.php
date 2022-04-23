@@ -9,7 +9,7 @@ use App\Model\Mailing\Mail;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující historii e-mailů
+ * Třída spravující historii e-mailů.
  */
 class MailRepository extends AbstractRepository
 {
@@ -19,7 +19,7 @@ class MailRepository extends AbstractRepository
     }
 
     /**
-     * Uloží e-mail
+     * Uloží e-mail.
      */
     public function save(Mail $mail): void
     {

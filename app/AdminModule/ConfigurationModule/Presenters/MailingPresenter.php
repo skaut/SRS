@@ -14,7 +14,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující nastavení mailingu
+ * Presenter obsluhující nastavení mailingu.
  */
 class MailingPresenter extends ConfigurationBasePresenter
 {

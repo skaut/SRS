@@ -22,7 +22,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use function count;
 
 /**
- * Komponenta pro správu vlastních polí přihlášky
+ * Komponenta pro správu vlastních polí přihlášky.
  */
 class CustomInputsGridControl extends Control
 {
@@ -31,7 +31,7 @@ class CustomInputsGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu
+     * Vykreslí komponentu.
      */
     public function render(): void
     {
@@ -40,7 +40,7 @@ class CustomInputsGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu
+     * Vytvoří komponentu.
      *
      * @throws DataGridColumnStatusException
      * @throws DataGridException
@@ -94,7 +94,7 @@ class CustomInputsGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění vlastního pole
+     * Zpracuje odstranění vlastního pole.
      *
      * @throws AbortException
      */
@@ -109,7 +109,7 @@ class CustomInputsGridControl extends Control
     }
 
     /**
-     * Přesune vlastní pole s id $item_id mezi $prev_id a $next_id
+     * Přesune vlastní pole s id $item_id mezi $prev_id a $next_id.
      *
      * @throws ORMException
      * @throws AbortException
@@ -130,7 +130,7 @@ class CustomInputsGridControl extends Control
     }
 
     /**
-     * Změní povinnost pole
+     * Změní povinnost pole.
      *
      * @throws NonUniqueResultException
      * @throws ORMException

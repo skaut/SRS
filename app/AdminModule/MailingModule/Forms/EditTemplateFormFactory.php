@@ -12,14 +12,14 @@ use Nette\Application\UI\Form;
 use stdClass;
 
 /**
- * Formulář pro nastavení šablony automatického e-mailu
+ * Formulář pro nastavení šablony automatického e-mailu.
  */
 class EditTemplateFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Upravovaná šablona
+     * Upravovaná šablona.
      */
     private ?Template $template = null;
 
@@ -28,7 +28,7 @@ class EditTemplateFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      */
     public function create(int $id): Form
     {
@@ -67,7 +67,7 @@ class EditTemplateFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      */
     public function processForm(Form $form, stdClass $values): void
     {

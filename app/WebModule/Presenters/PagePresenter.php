@@ -41,7 +41,7 @@ use Nette\DI\Attributes\Inject;
 use Throwable;
 
 /**
- * Presenter obshlující dynamicky vytvářené stránky pomocí administrace
+ * Presenter obshlující dynamicky vytvářené stránky pomocí administrace.
  */
 class PagePresenter extends WebBasePresenter
 {

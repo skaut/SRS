@@ -38,24 +38,24 @@ use Throwable;
 use function assert;
 
 /**
- * Formulář pro úpravu programového bloku
+ * Formulář pro úpravu programového bloku.
  */
 class BlockFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Přihlášený uživatel
+     * Přihlášený uživatel.
      */
     private ?User $user = null;
 
     /**
-     * Upravovaný programový blok
+     * Upravovaný programový blok.
      */
     private ?Block $block = null;
 
     /**
-     * Jsou vytvořené podakce
+     * Jsou vytvořené podakce.
      */
     private bool $subeventsExists;
 
@@ -73,7 +73,7 @@ class BlockFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      *
      * @throws NonUniqueResultException
      * @throws NoResultException
@@ -209,7 +209,7 @@ class BlockFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      *
      * @throws Throwable
      */
@@ -291,7 +291,7 @@ class BlockFormFactory
     }
 
     /**
-     * Ověří, zda může být program automaticky přihlašovaný
+     * Ověří, zda může být program automaticky přihlašovaný.
      *
      * @param string[]|int[] $args
      */

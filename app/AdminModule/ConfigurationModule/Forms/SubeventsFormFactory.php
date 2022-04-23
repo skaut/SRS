@@ -16,7 +16,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Formulář pro nastavení podakcí
+ * Formulář pro nastavení podakcí.
  */
 class SubeventsFormFactory
 {
@@ -30,7 +30,7 @@ class SubeventsFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      *
      * @throws Throwable
      */
@@ -52,7 +52,7 @@ class SubeventsFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      *
      * @throws Throwable
      */

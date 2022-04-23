@@ -21,7 +21,7 @@ use stdClass;
 use function assert;
 
 /**
- * Služba starající se o autentizaci uživatelů
+ * Služba starající se o autentizaci uživatelů.
  */
 class Authenticator implements Nette\Security\Authenticator
 {
@@ -40,7 +40,7 @@ class Authenticator implements Nette\Security\Authenticator
     }
 
     /**
-     * Autentizuje uživatele a případně vytvoří nového
+     * Autentizuje uživatele a případně vytvoří nového.
      *
      * @throws ORMException
      * @throws Exception
@@ -81,7 +81,7 @@ class Authenticator implements Nette\Security\Authenticator
     }
 
     /**
-     * Aktualizuje údaje uživatele ze skautIS
+     * Aktualizuje údaje uživatele ze skautIS.
      *
      * @throws Exception
      */
@@ -129,7 +129,7 @@ class Authenticator implements Nette\Security\Authenticator
     }
 
     /**
-     * Aktualizuje role přihlášeného uživatele
+     * Aktualizuje role přihlášeného uživatele.
      */
     public function updateRoles(NS\User $user, ?Role $testedRole = null): void
     {

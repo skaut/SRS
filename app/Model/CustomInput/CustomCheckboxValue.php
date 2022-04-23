@@ -7,14 +7,14 @@ namespace App\Model\CustomInput;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita hodnota vlastního zaškrtávacího pole přihlášky
+ * Entita hodnota vlastního zaškrtávacího pole přihlášky.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'custom_checkbox_value')]
 class CustomCheckboxValue extends CustomInputValue
 {
     /**
-     * Hodnota zaškrtávacího pole přihlášky
+     * Hodnota zaškrtávacího pole přihlášky.
      */
     #[ORM\Column(type: 'boolean')]
     protected ?bool $value = null;

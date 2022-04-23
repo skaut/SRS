@@ -29,7 +29,7 @@ use function assert;
 use function count;
 
 /**
- * Formulár pro nastavení propojení se skautIS akcí
+ * Formulár pro nastavení propojení se skautIS akcí.
  */
 class SkautIsEventFormFactory
 {
@@ -47,7 +47,7 @@ class SkautIsEventFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      *
      * @throws Throwable
      */
@@ -96,7 +96,7 @@ class SkautIsEventFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      *
      * @throws NonUniqueResultException
      * @throws ORMException

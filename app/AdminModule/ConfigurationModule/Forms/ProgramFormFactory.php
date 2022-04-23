@@ -27,7 +27,7 @@ use Throwable;
 use function assert;
 
 /**
- * Formulář pro nastavení programu
+ * Formulář pro nastavení programu.
  */
 class ProgramFormFactory
 {
@@ -38,7 +38,7 @@ class ProgramFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      *
      * @throws Throwable
      */
@@ -103,7 +103,7 @@ class ProgramFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      *
      * @throws Throwable
      */
@@ -119,7 +119,7 @@ class ProgramFormFactory
     }
 
     /**
-     * Ověří, že otevření zapisování programů je dříve než uzavření
+     * Ověří, že otevření zapisování programů je dříve než uzavření.
      *
      * @param DateTime[]|null[] $args
      */
@@ -133,7 +133,7 @@ class ProgramFormFactory
     }
 
     /**
-     * Ověří, že uzavření zapisování programů je později než otevření
+     * Ověří, že uzavření zapisování programů je později než otevření.
      *
      * @param DateTime[]|null[] $args
      */
@@ -147,7 +147,7 @@ class ProgramFormFactory
     }
 
     /**
-     * Vrátí stavy registrace programů
+     * Vrátí stavy registrace programů.
      *
      * @return string[]
      */

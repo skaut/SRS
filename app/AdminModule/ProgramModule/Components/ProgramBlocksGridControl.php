@@ -39,7 +39,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use function assert;
 
 /**
- * Komponenta pro správu programových bloků
+ * Komponenta pro správu programových bloků.
  */
 class ProgramBlocksGridControl extends Control
 {
@@ -61,7 +61,7 @@ class ProgramBlocksGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu
+     * Vykreslí komponentu.
      */
     public function render(): void
     {
@@ -70,7 +70,7 @@ class ProgramBlocksGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu
+     * Vytvoří komponentu.
      *
      * @throws Throwable
      * @throws DataGridColumnStatusException
@@ -184,7 +184,7 @@ class ProgramBlocksGridControl extends Control
     }
 
     /**
-     * Odstraní programový blok
+     * Odstraní programový blok.
      *
      * @throws AbortException
      * @throws Throwable
@@ -207,7 +207,7 @@ class ProgramBlocksGridControl extends Control
     }
 
     /**
-     * Změní povinnost bloku
+     * Změní povinnost bloku.
      *
      * @throws AbortException
      */
@@ -242,7 +242,7 @@ class ProgramBlocksGridControl extends Control
     }
 
     /**
-     * Hromadně vyexportuje seznam uživatelů, kteří mají blok zapsaný
+     * Hromadně vyexportuje seznam uživatelů, kteří mají blok zapsaný.
      *
      * @param int[] $ids
      *
@@ -255,7 +255,7 @@ class ProgramBlocksGridControl extends Control
     }
 
     /**
-     * Zpracuje export seznamu uživatelů, kteří mají blok zapsaný
+     * Zpracuje export seznamu uživatelů, kteří mají blok zapsaný.
      *
      * @throws AbortException
      * @throws Exception
@@ -272,7 +272,7 @@ class ProgramBlocksGridControl extends Control
     }
 
     /**
-     * Vrací true, pokud je uživatel oprávněn upravovat programový blok
+     * Vrací true, pokud je uživatel oprávněn upravovat programový blok.
      */
     public function isAllowedModifyBlock(Block $block): bool
     {

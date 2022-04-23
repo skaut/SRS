@@ -15,7 +15,7 @@ use function str_replace;
 use function ucwords;
 
 /**
- * Abstraktní entita obsahu
+ * Abstraktní entita obsahu.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'content')]
@@ -42,92 +42,92 @@ use function ucwords;
 abstract class Content implements IContent
 {
     /**
-     * TextContent
+     * TextContent.
      */
     public const TEXT = 'text';
 
     /**
-     * ImageContent
+     * ImageContent.
      */
     public const IMAGE = 'image';
 
     /**
-     * DocumentContent
+     * DocumentContent.
      */
     public const DOCUMENT = 'document';
 
     /**
-     * ApplicationContent
+     * ApplicationContent.
      */
     public const APPLICATION = 'application';
 
     /**
-     * HtmlContent
+     * HtmlContent.
      */
     public const HTML = 'html';
 
     /**
-     * FaqContent
+     * FaqContent.
      */
     public const FAQ = 'faq';
 
     /**
-     * NewsContent
+     * NewsContent.
      */
     public const NEWS = 'news';
 
     /**
-     * PlaceContent
+     * PlaceContent.
      */
     public const PLACE = 'place';
 
     /**
-     * ProgramsContent
+     * ProgramsContent.
      */
     public const PROGRAMS = 'programs';
 
     /**
-     * UsersContent
+     * UsersContent.
      */
     public const USERS = 'users';
 
     /**
-     * LectorsContent
+     * LectorsContent.
      */
     public const LECTORS = 'lectors';
 
     /**
-     * BlocksContent
+     * BlocksContent.
      */
     public const BLOCKS = 'blocks';
 
     /**
-     * CapacitiesContent
+     * CapacitiesContent.
      */
     public const CAPACITIES = 'capacities';
 
     /**
-     * OrganizerContent
+     * OrganizerContent.
      */
     public const ORGANIZER = 'organizer';
 
     /**
-     * ContactFormContent
+     * ContactFormContent.
      */
     public const CONTACT_FORM = 'contact_form';
 
     /**
-     * SlideshowContent
+     * SlideshowContent.
      */
     public const SLIDESHOW = 'slideshow';
 
     /**
-     * Hlavní oblast stránky
+     * Hlavní oblast stránky.
      */
     public const MAIN = 'main';
 
     /**
-     * Postranní panel stránky
+     * Postranní panel stránky.
      */
     public const SIDEBAR = 'sidebar';
 
@@ -158,7 +158,7 @@ abstract class Content implements IContent
     ];
 
     /**
-     * Typ obsahu
+     * Typ obsahu.
      */
     protected string $type;
 
@@ -168,25 +168,25 @@ abstract class Content implements IContent
     private ?int $id = null;
 
     /**
-     * Nadpis obsahu
+     * Nadpis obsahu.
      */
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $heading = null;
 
     /**
-     * Stránka, na které je obsah umístěn
+     * Stránka, na které je obsah umístěn.
      */
     #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'contents', cascade: ['persist'])]
     protected Page $page;
 
     /**
-     * Oblast stránky, ve které se obsah nachází
+     * Oblast stránky, ve které se obsah nachází.
      */
     #[ORM\Column(type: 'string')]
     protected string $area;
 
     /**
-     * Pořadí obsahu na stránce
+     * Pořadí obsahu na stránce.
      */
     #[ORM\Column(type: 'integer')]
     protected int $position = 0;
@@ -250,7 +250,7 @@ abstract class Content implements IContent
     }
 
     /**
-     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu
+     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
     public function addContentForm(Form $form): Form
     {
@@ -284,7 +284,7 @@ abstract class Content implements IContent
     }
 
     /**
-     * Zpracuje při uložení stránky část formuláře týkající se obsahu
+     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {

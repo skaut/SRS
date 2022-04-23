@@ -13,7 +13,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující správu plateb
+ * Presenter obsluhující správu plateb.
  */
 class PaymentsPresenter extends PaymentsBasePresenter
 {

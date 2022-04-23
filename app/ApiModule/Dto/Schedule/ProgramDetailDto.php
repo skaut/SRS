@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 use Nette;
 
 /**
- * Objekt pro přenos údajů o programu do FullCalendar
+ * Objekt pro přenos údajů o programu do FullCalendar.
  */
 class ProgramDetailDto
 {
@@ -146,7 +146,7 @@ class ProgramDetailDto
     }
 
     /**
-     * @return int[]|null
+     * @return int[]|null.
      */
     public function getSameBlockPrograms(): ?array
     {
@@ -162,7 +162,7 @@ class ProgramDetailDto
     }
 
     /**
-     * @return int[]|null
+     * @return int[]|null.
      */
     public function getOverlappingPrograms(): ?array
     {

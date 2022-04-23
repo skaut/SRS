@@ -16,7 +16,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující nastavení přihlášky
+ * Presenter obsluhující nastavení přihlášky.
  */
 class ApplicationPresenter extends ConfigurationBasePresenter
 {

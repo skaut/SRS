@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Cms\Dto;
 
 /**
- * DTO obsahu se slideshow
+ * DTO obsahu se slideshow.
  */
 class SlideshowContentDto extends ContentDto
 {

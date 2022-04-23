@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Exception;
 
 /**
- * Entita program
+ * Entita program.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'program')]
@@ -25,13 +25,13 @@ class Program
     private ?int $id = null;
 
     /**
-     * Programový blok
+     * Programový blok.
      */
     #[ORM\ManyToOne(targetEntity: Block::class, inversedBy: 'programs', cascade: ['persist'])]
     protected Block $block;
 
     /**
-     * Přihlášky na program
+     * Přihlášky na program.
      *
      * @var Collection<int, ProgramApplication>
      */
@@ -39,19 +39,19 @@ class Program
     protected Collection $programApplications;
 
     /**
-     * Počet účastníků
+     * Počet účastníků.
      */
     #[ORM\Column(type: 'integer')]
     protected int $attendeesCount = 0;
 
     /**
-     * Místnost
+     * Místnost.
      */
     #[ORM\ManyToOne(targetEntity: Room::class, inversedBy: 'programs', cascade: ['persist'])]
     protected ?Room $room = null;
 
     /**
-     * Začátek programu
+     * Začátek programu.
      */
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $start;
@@ -126,7 +126,7 @@ class Program
     }
 
     /**
-     * Vrací kapacitu programového bloku
+     * Vrací kapacitu programového bloku.
      */
     public function getBlockCapacity(): ?int
     {
@@ -134,7 +134,7 @@ class Program
     }
 
     /**
-     * Vrací konec programu vypočtený podle délky bloku
+     * Vrací konec programu vypočtený podle délky bloku.
      *
      * @throws Exception
      */

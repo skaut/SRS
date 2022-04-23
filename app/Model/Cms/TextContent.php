@@ -14,7 +14,7 @@ use stdClass;
 use function assert;
 
 /**
- * Entita obsahu s textem
+ * Entita obsahu s textem.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'text_content')]
@@ -23,7 +23,7 @@ class TextContent extends Content implements IContent
     protected string $type = Content::TEXT;
 
     /**
-     * Text
+     * Text.
      */
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $text = null;
@@ -39,7 +39,7 @@ class TextContent extends Content implements IContent
     }
 
     /**
-     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu
+     * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      */
     public function addContentForm(Form $form): Form
     {
@@ -55,7 +55,7 @@ class TextContent extends Content implements IContent
     }
 
     /**
-     * Zpracuje při uložení stránky část formuláře týkající se obsahu
+     * Zpracuje při uložení stránky část formuláře týkající se obsahu.
      */
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {

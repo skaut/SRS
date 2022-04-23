@@ -9,7 +9,7 @@ use App\Model\Payment\Payment;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující platby
+ * Třída spravující platby.
  */
 class PaymentRepository extends AbstractRepository
 {
@@ -19,7 +19,7 @@ class PaymentRepository extends AbstractRepository
     }
 
     /**
-     * Vrací platbu podle id
+     * Vrací platbu podle id.
      */
     public function findById(?int $id): ?Payment
     {
@@ -27,7 +27,7 @@ class PaymentRepository extends AbstractRepository
     }
 
     /**
-     * Vrací platbu podle id transakce
+     * Vrací platbu podle id transakce.
      */
     public function findByTransactionId(string $transactionId): ?Payment
     {
@@ -35,7 +35,7 @@ class PaymentRepository extends AbstractRepository
     }
 
     /**
-     * Uloží platbu
+     * Uloží platbu.
      */
     public function save(Payment $payment): void
     {
@@ -44,7 +44,7 @@ class PaymentRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní platbu
+     * Odstraní platbu.
      */
     public function remove(Payment $payment): void
     {

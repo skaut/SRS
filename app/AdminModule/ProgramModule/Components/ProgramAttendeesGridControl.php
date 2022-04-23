@@ -38,12 +38,12 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
- * Komponenta pro správu účastníků programu
+ * Komponenta pro správu účastníků programu.
  */
 class ProgramAttendeesGridControl extends Control
 {
     /**
-     * Aktuální program
+     * Aktuální program.
      */
     private Program $program;
 
@@ -62,7 +62,7 @@ class ProgramAttendeesGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu
+     * Vykreslí komponentu.
      */
     public function render(): void
     {
@@ -71,7 +71,7 @@ class ProgramAttendeesGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu
+     * Vytvoří komponentu.
      *
      * @throws DataGridException
      */
@@ -183,7 +183,7 @@ class ProgramAttendeesGridControl extends Control
     }
 
     /**
-     * Přihlásí uživatele na program
+     * Přihlásí uživatele na program.
      *
      * @throws AbortException
      * @throws Throwable
@@ -234,7 +234,7 @@ class ProgramAttendeesGridControl extends Control
     }
 
     /**
-     * Odhlásí uživatele z programu
+     * Odhlásí uživatele z programu.
      *
      * @throws AbortException
      * @throws Throwable
@@ -269,7 +269,7 @@ class ProgramAttendeesGridControl extends Control
     }
 
     /**
-     * Hromadně přihlásí program uživatelům
+     * Hromadně přihlásí program uživatelům.
      *
      * @param int[] $ids
      *
@@ -305,7 +305,7 @@ class ProgramAttendeesGridControl extends Control
     }
 
     /**
-     * Hromadně odhlásí program uživatelům
+     * Hromadně odhlásí program uživatelům.
      *
      * @param int[] $ids
      *

@@ -10,7 +10,7 @@ use Nette;
 use Nette\Localization\Translator;
 
 /**
- * Služba pro správu podakcí
+ * Služba pro správu podakcí.
  */
 class SubeventService
 {
@@ -21,7 +21,7 @@ class SubeventService
     }
 
     /**
-     * Vrací seznam podakcí jako možnosti pro select
+     * Vrací seznam podakcí jako možnosti pro select.
      *
      * @return string[]
      */
@@ -42,7 +42,7 @@ class SubeventService
     }
 
     /**
-     * Vrací seznam podakcí jako možnosti pro select, podakce specifikovaná parametrem je vynechána
+     * Vrací seznam podakcí jako možnosti pro select, podakce specifikovaná parametrem je vynechána.
      *
      * @return string[]
      */
@@ -64,7 +64,7 @@ class SubeventService
     }
 
     /**
-     * Vrací seznam podakcí splňujících podmínku, s informací o obsazenosti, jako možnosti pro select
+     * Vrací seznam podakcí splňujících podmínku, s informací o obsazenosti, jako možnosti pro select.
      *
      * @return string[]
      */
@@ -89,7 +89,7 @@ class SubeventService
     }
 
     /**
-     * Vrací seznam podakcí, s informací o počtu uživatelů, jako možnosti pro select
+     * Vrací seznam podakcí, s informací o počtu uživatelů, jako možnosti pro select.
      *
      * @return string[]
      */

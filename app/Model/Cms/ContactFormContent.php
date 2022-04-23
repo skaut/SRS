@@ -7,7 +7,7 @@ namespace App\Model\Cms;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita obsahu s kontaktním formulářem
+ * Entita obsahu s kontaktním formulářem.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'contact_form_content')]

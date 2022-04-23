@@ -17,7 +17,7 @@ use Doctrine\ORM\NoResultException;
 use function array_map;
 
 /**
- * Třída spravující podakce
+ * Třída spravující podakce.
  */
 class SubeventRepository extends AbstractRepository
 {
@@ -37,7 +37,7 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * Vrací podakci podle id
+     * Vrací podakci podle id.
      */
     public function findById(?int $id): ?Subevent
     {
@@ -45,7 +45,7 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * Vrací implicitní podakci
+     * Vrací implicitní podakci.
      */
     public function findImplicit(): Subevent
     {
@@ -53,7 +53,7 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * Vrací názvy všech podakcí
+     * Vrací názvy všech podakcí.
      *
      * @return string[]
      */
@@ -68,7 +68,7 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * Vrací podakce splňující podmínku seřazené podle názvu
+     * Vrací podakce splňující podmínku seřazené podle názvu.
      *
      * @return Collection<int, Subevent>
      */
@@ -113,7 +113,7 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * Vrací názvy podakcí, kromě podakce se zadaným id
+     * Vrací názvy podakcí, kromě podakce se zadaným id.
      *
      * @return string[]
      */
@@ -130,7 +130,7 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * Vrací podakce podle id
+     * Vrací podakce podle id.
      *
      * @param int[] $ids
      *
@@ -146,7 +146,7 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * Vrací id podakcí
+     * Vrací id podakcí.
      *
      * @param Collection<int, Subevent> $subevents
      *
@@ -158,7 +158,7 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * Vrací, zda jsou vytvořeny podakce
+     * Vrací, zda jsou vytvořeny podakce.
      *
      * @throws NonUniqueResultException
      * @throws NoResultException
@@ -175,7 +175,7 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * Uloží podakci
+     * Uloží podakci.
      */
     public function save(Subevent $subevent): void
     {
@@ -184,7 +184,7 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní podakci
+     * Odstraní podakci.
      */
     public function remove(Subevent $subevent): void
     {

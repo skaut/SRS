@@ -9,7 +9,7 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující prostředky
+ * Třída spravující prostředky.
  */
 class SrsResourceRepository extends AbstractRepository
 {

@@ -10,7 +10,7 @@ use Nette;
 use Throwable;
 
 /**
- * Služba nastavující role a oprávnění
+ * Služba nastavující role a oprávnění.
  */
 class Authorizator extends Nette\Security\Permission
 {

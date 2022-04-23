@@ -7,7 +7,7 @@ namespace App\Model\Settings\Exceptions;
 use Exception;
 
 /**
- * Výjimka nenalezena položka nastavení
+ * Výjimka nenalezena položka nastavení.
  */
 class SettingsItemNotFoundException extends Exception
 {

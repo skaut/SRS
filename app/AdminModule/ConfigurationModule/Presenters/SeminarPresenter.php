@@ -12,7 +12,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující nastavení semináře
+ * Presenter obsluhující nastavení semináře.
  */
 class SeminarPresenter extends ConfigurationBasePresenter
 {

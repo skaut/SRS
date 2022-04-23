@@ -10,14 +10,14 @@ use function assert;
 use function implode;
 
 /**
- * Entita hodnota vlastního výběrového pole s více možnostmi přihlášky
+ * Entita hodnota vlastního výběrového pole s více možnostmi přihlášky.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'custom_multiselect_value')]
 class CustomMultiSelectValue extends CustomInputValue
 {
     /**
-     * Vybrané položky výběrového pole s více možnostmi přihlášky
+     * Vybrané položky výběrového pole s více možnostmi přihlášky.
      *
      * @var string[]
      */
@@ -41,7 +41,7 @@ class CustomMultiSelectValue extends CustomInputValue
     }
 
     /**
-     * Vrátí název vybrané možnosti
+     * Vrátí název vybrané možnosti.
      */
     public function getValueText(): string
     {

@@ -25,7 +25,7 @@ use function array_filter;
 use function array_keys;
 
 /**
- * BasePresenter pro AdminModule
+ * BasePresenter pro AdminModule.
  */
 abstract class AdminBasePresenter extends BasePresenter
 {
@@ -47,7 +47,7 @@ abstract class AdminBasePresenter extends BasePresenter
     public SkautIsService $skautIsService;
 
     /**
-     * Přihlášený uživatel
+     * Přihlášený uživatel.
      */
     public ?User $dbuser = null;
 
@@ -118,7 +118,7 @@ abstract class AdminBasePresenter extends BasePresenter
     }
 
     /**
-     * Kontroluje oprávnění uživatele a případně jej přesměruje
+     * Kontroluje oprávnění uživatele a případně jej přesměruje.
      *
      * @throws AbortException
      */

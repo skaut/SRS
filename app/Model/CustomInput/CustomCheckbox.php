@@ -7,7 +7,7 @@ namespace App\Model\CustomInput;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita vlastní zaškrtávací pole přihlášky
+ * Entita vlastní zaškrtávací pole přihlášky.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'custom_checkbox')]

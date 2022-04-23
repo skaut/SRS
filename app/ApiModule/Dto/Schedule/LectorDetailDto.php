@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 use Nette;
 
 /**
- * Objekt pro přenos údajů o lektorovi do FullCalendar
+ * Objekt pro přenos údajů o lektorovi do FullCalendar.
  */
 class LectorDetailDto
 {

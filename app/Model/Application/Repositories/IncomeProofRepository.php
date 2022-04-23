@@ -9,7 +9,7 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Třída spravující příjmové doklady
+ * Třída spravující příjmové doklady.
  */
 class IncomeProofRepository extends AbstractRepository
 {
@@ -19,7 +19,7 @@ class IncomeProofRepository extends AbstractRepository
     }
 
     /**
-     * Uloží příjmový doklad
+     * Uloží příjmový doklad.
      */
     public function save(IncomeProof $incomeProof): void
     {

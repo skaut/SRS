@@ -9,7 +9,7 @@ use App\Model\Settings\Settings;
 use Throwable;
 
 /**
- * Presenter obsluhující správu harmonogramu
+ * Presenter obsluhující správu harmonogramu.
  */
 class SchedulePresenter extends ProgramBasePresenter
 {

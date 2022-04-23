@@ -12,7 +12,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující nastavení programu
+ * Presenter obsluhující nastavení programu.
  */
 class ProgramPresenter extends ConfigurationBasePresenter
 {

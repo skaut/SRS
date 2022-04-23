@@ -10,7 +10,7 @@ use Nette\Localization\Translator;
 use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
 
 /**
- * BaseFormFactory pro WebModule
+ * BaseFormFactory pro WebModule.
  */
 class BaseFormFactory
 {
@@ -21,7 +21,7 @@ class BaseFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      */
     public function create(): Form
     {

@@ -20,7 +20,7 @@ use Doctrine\ORM\QueryBuilder;
 use function count;
 
 /**
- * Třída spravující uživatele
+ * Třída spravující uživatele.
  */
 class UserRepository extends AbstractRepository
 {
@@ -40,7 +40,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací uživatele podle id
+     * Vrací uživatele podle id.
      */
     public function findById(?int $id): ?User
     {
@@ -48,7 +48,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací uživatele podle skautISUserId
+     * Vrací uživatele podle skautISUserId.
      */
     public function findBySkautISUserId(int $skautISUserId): ?User
     {
@@ -56,7 +56,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací uživatele podle id
+     * Vrací uživatele podle id.
      *
      * @param int[] $ids
      *
@@ -71,7 +71,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací jména uživatelů obsahující zadaný text, seřazená podle zobrazovaného jména
+     * Vrací jména uživatelů obsahující zadaný text, seřazená podle zobrazovaného jména.
      *
      * @return string[]
      */
@@ -86,7 +86,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací schválené uživatele v roli
+     * Vrací schválené uživatele v roli.
      *
      * @return User[]
      */
@@ -101,7 +101,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací schválené uživatele v rolích
+     * Vrací schválené uživatele v rolích.
      *
      * @param int[] $rolesIds
      *
@@ -119,7 +119,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací uživatele přihlášené na podakce
+     * Vrací uživatele přihlášené na podakce.
      *
      * @param int[] $subeventsIds
      *
@@ -142,7 +142,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací uživatele s přihláškou čekající na zaplacení
+     * Vrací uživatele s přihláškou čekající na zaplacení.
      *
      * @return Collection<int, User>
      */
@@ -160,7 +160,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací uživatele, kteří se mohou na program přihlásit
+     * Vrací uživatele, kteří se mohou na program přihlásit.
      *
      * @return Collection<int, User>
      */
@@ -217,7 +217,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací uživatele jako možnosti pro select
+     * Vrací uživatele jako možnosti pro select.
      *
      * @return string[]
      */
@@ -238,7 +238,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Vrací lektory jako možnosti pro select
+     * Vrací lektory jako možnosti pro select.
      *
      * @return string[]
      */
@@ -282,7 +282,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Uloží uživatele
+     * Uloží uživatele.
      */
     public function save(User $user): void
     {
@@ -291,7 +291,7 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní externího uživatele
+     * Odstraní externího uživatele.
      */
     public function remove(User $user): void
     {

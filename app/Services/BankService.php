@@ -18,7 +18,7 @@ use Nette;
 use Throwable;
 
 /**
- * Služba pro správu plateb
+ * Služba pro správu plateb.
  */
 class BankService
 {

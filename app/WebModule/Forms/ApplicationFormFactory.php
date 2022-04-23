@@ -65,14 +65,14 @@ use function property_exists;
 use const UPLOAD_ERR_OK;
 
 /**
- * Formulář přihlášky
+ * Formulář přihlášky.
  */
 class ApplicationFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Přihlášený uživatel
+     * Přihlášený uživatel.
      */
     private ?User $user = null;
 
@@ -99,7 +99,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      *
      * @throws NonUniqueResultException
      * @throws Throwable
@@ -183,7 +183,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      *
      * @throws Throwable
      */
@@ -301,7 +301,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Přidá vlastní pole přihlášky
+     * Přidá vlastní pole přihlášky.
      */
     private function addCustomInputs(Form $form): void
     {
@@ -357,7 +357,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Přidá select pro výběr podakcí
+     * Přidá select pro výběr podakcí.
      *
      * @throws NonUniqueResultException
      * @throws NoResultException
@@ -416,7 +416,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Přidá select pro výběr rolí
+     * Přidá select pro výběr rolí.
      */
     private function addRolesSelect(Form $form): void
     {
@@ -472,7 +472,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Ověří kapacity podakcí
+     * Ověří kapacity podakcí.
      */
     public function validateSubeventsCapacities(MultiSelectBox $field): bool
     {
@@ -482,7 +482,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Ověří kapacity rolí
+     * Ověří kapacity rolí.
      */
     public function validateRolesCapacities(MultiSelectBox $field): bool
     {
@@ -492,7 +492,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Ověří kompatibilitu podakcí
+     * Ověří kompatibilitu podakcí.
      *
      * @param Subevent[] $args
      */
@@ -505,7 +505,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Ověří výběr požadovaných podakcí
+     * Ověří výběr požadovaných podakcí.
      *
      * @param Subevent[] $args
      */
@@ -518,7 +518,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Ověří kompatibilitu rolí
+     * Ověří kompatibilitu rolí.
      *
      * @param Role[] $args
      */
@@ -531,7 +531,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Ověří výběr požadovaných rolí
+     * Ověří výběr požadovaných rolí.
      *
      * @param Role[] $args
      */
@@ -544,7 +544,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Ověří registrovatelnost rolí
+     * Ověří registrovatelnost rolí.
      */
     public function validateRolesRegisterable(MultiSelectBox $field): bool
     {
@@ -554,7 +554,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Ověří požadovaný minimální věk
+     * Ověří požadovaný minimální věk.
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
@@ -567,7 +567,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Přepíná povinnost podakcí podle kombinace rolí
+     * Přepíná povinnost podakcí podle kombinace rolí.
 
      * @param int[] $rolesWithSubevents
      */
@@ -583,7 +583,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Přepíná povinnost vlastních polí podle kombinace rolí
+     * Přepíná povinnost vlastních polí podle kombinace rolí.
      *
      * @param array<string,int[]> $customInput
      */
@@ -599,7 +599,7 @@ class ApplicationFormFactory
     }
 
     /**
-     * Přepíná zobrazení vlastních polí podle kombinace rolí
+     * Přepíná zobrazení vlastních polí podle kombinace rolí.
      * Je nutná, na výsledku nezáleží (používá se javascript funkce)
      *
      * @param int[] $customInputRoles

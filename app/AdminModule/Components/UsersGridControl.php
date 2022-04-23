@@ -54,7 +54,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use function basename;
 
 /**
- * Komponenta pro správu rolí
+ * Komponenta pro správu rolí.
  */
 class UsersGridControl extends Control
 {
@@ -80,7 +80,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Vykreslí komponentu
+     * Vykreslí komponentu.
      */
     public function render(): void
     {
@@ -89,7 +89,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Vytvoří komponentu
+     * Vytvoří komponentu.
      *
      * @throws Throwable
      * @throws DataGridColumnStatusException
@@ -412,7 +412,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění externího uživatele
+     * Zpracuje odstranění externího uživatele.
      *
      * @throws AbortException
      */
@@ -428,7 +428,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Změní stav uživatele
+     * Změní stav uživatele.
      *
      * @throws ORMException
      * @throws AbortException
@@ -451,7 +451,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Změní účast uživatele na semináři
+     * Změní účast uživatele na semináři.
      *
      * @throws ORMException
      * @throws AbortException
@@ -474,7 +474,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Hromadně schválí uživatele
+     * Hromadně schválí uživatele.
      *
      * @param int[] $ids
      *
@@ -497,7 +497,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Hromadně nastaví role
+     * Hromadně nastaví role.
      *
      * @param int[] $ids
      * @param int[] $value
@@ -560,7 +560,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Hromadně označí uživatele jako zúčastněné
+     * Hromadně označí uživatele jako zúčastněné.
      *
      * @param int[] $ids
      *
@@ -583,7 +583,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Hromadně označí uživatele jako zaplacené dnes
+     * Hromadně označí uživatele jako zaplacené dnes.
      *
      * @param int[] $ids
      *
@@ -616,7 +616,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Hromadně vloží uživatele jako účastníky do skautIS
+     * Hromadně vloží uživatele jako účastníky do skautIS.
      *
      * @param int[] $ids
      *
@@ -674,7 +674,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Hromadně vygeneruje potvrzení o zaplacení
+     * Hromadně vygeneruje potvrzení o zaplacení.
      *
      * @param int[] $ids
      *
@@ -687,7 +687,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Hromadně vyexportuje seznam uživatelů
+     * Hromadně vyexportuje seznam uživatelů.
      *
      * @param int[] $ids
      *
@@ -700,7 +700,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Zpracuje export seznamu uživatelů
+     * Zpracuje export seznamu uživatelů.
      *
      * @throws AbortException
      * @throws Exception
@@ -717,7 +717,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Hromadně vyexportuje seznam uživatelů s rolemi
+     * Hromadně vyexportuje seznam uživatelů s rolemi.
      *
      * @param int[] $ids
      *
@@ -730,7 +730,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Zpracuje export seznamu uživatelů s rolemi
+     * Zpracuje export seznamu uživatelů s rolemi.
      *
      * @throws AbortException
      * @throws Exception
@@ -748,7 +748,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Hromadně vyexportuje seznam uživatelů s podakcemi a programy podle kategorií
+     * Hromadně vyexportuje seznam uživatelů s podakcemi a programy podle kategorií.
      *
      * @param int[] $ids
      *
@@ -761,7 +761,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Zpracuje export seznamu uživatelů s podakcemi a programy podle kategorií
+     * Zpracuje export seznamu uživatelů s podakcemi a programy podle kategorií.
      *
      * @throws AbortException
      * @throws Exception
@@ -778,7 +778,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Hromadně vyexportuje harmonogramy uživatelů
+     * Hromadně vyexportuje harmonogramy uživatelů.
      *
      * @param int[] $ids
      *
@@ -791,7 +791,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Zpracuje export harmonogramů uživatelů
+     * Zpracuje export harmonogramů uživatelů.
      *
      * @throws AbortException
      * @throws Exception
@@ -808,7 +808,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Vrátí platební metody jako možnosti pro select. Bez prázdné možnosti
+     * Vrátí platební metody jako možnosti pro select. Bez prázdné možnosti.
      *
      * @return string[]
      */
@@ -823,7 +823,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Vrátí platební metody jako možnosti pro select. Včetně smíšené
+     * Vrátí platební metody jako možnosti pro select. Včetně smíšené.
      *
      * @return string[]
      */
@@ -840,7 +840,7 @@ class UsersGridControl extends Control
     }
 
     /**
-     * Vrátí možnosti vložení účastníků do vzdělávací akce skautIS
+     * Vrátí možnosti vložení účastníků do vzdělávací akce skautIS.
      *
      * @return string[]
      */

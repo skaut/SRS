@@ -19,7 +19,7 @@ use function fwrite;
 use function unlink;
 
 /**
- * Služba pro správu nahraných souborů
+ * Služba pro správu nahraných souborů.
  */
 class FilesService
 {
@@ -30,7 +30,7 @@ class FilesService
     }
 
     /**
-     * Uloží soubor z formuláře
+     * Uloží soubor z formuláře.
      */
     public function save(FileUpload $file, string $directory, bool $randomSubDir, string $fileName): string
     {
@@ -43,7 +43,7 @@ class FilesService
     }
 
     /**
-     * Odstraní soubor
+     * Odstraní soubor.
      */
     public function delete(string $path): void
     {
@@ -54,7 +54,7 @@ class FilesService
     }
 
     /**
-     * Zapíše obsah do souboru
+     * Zapíše obsah do souboru.
      */
     public function create(string $content, string $directory, bool $randomSubDir, string $fileName): string
     {
@@ -69,7 +69,7 @@ class FilesService
     }
 
     /**
-     * Načte obrázek ze souboru
+     * Načte obrázek ze souboru.
      *
      * @throws UnknownImageFileException
      */
@@ -85,7 +85,7 @@ class FilesService
     }
 
     /**
-     * Změní velikost obrázku
+     * Změní velikost obrázku.
      *
      * @throws ImageException
      * @throws UnknownImageFileException
@@ -101,7 +101,7 @@ class FilesService
     }
 
     /**
-     * Změní velikost a ořízne obrázek
+     * Změní velikost a ořízne obrázek.
      *
      * @throws UnknownImageFileException
      * @throws ImageException
@@ -124,7 +124,7 @@ class FilesService
     }
 
     /**
-     * Vrací celou cestu k souboru
+     * Vrací celou cestu k souboru.
      */
     private function getAbsolutePath(string $path): string
     {
@@ -132,7 +132,7 @@ class FilesService
     }
 
     /**
-     * Vygeneruje relativní cestu
+     * Vygeneruje relativní cestu.
      */
     private function generatePath(string $directory, bool $randomSubDir, string $fileName): string
     {

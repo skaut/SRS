@@ -30,14 +30,14 @@ use function explode;
 use function trim;
 
 /**
- * Formulář pro úpravu vlastních polí přihlášky
+ * Formulář pro úpravu vlastních polí přihlášky.
  */
 class CustomInputFormFactory
 {
     use Nette\SmartObject;
 
     /**
-     * Upravované pole
+     * Upravované pole.
      */
     private ?CustomInput $customInput = null;
 
@@ -46,7 +46,7 @@ class CustomInputFormFactory
     }
 
     /**
-     * Vytvoří formulář
+     * Vytvoří formulář.
      */
     public function create(int $id): Form
     {
@@ -104,7 +104,7 @@ class CustomInputFormFactory
     }
 
     /**
-     * Zpracuje formulář
+     * Zpracuje formulář.
      *
      * @throws NonUniqueResultException
      * @throws ORMException
@@ -165,7 +165,7 @@ class CustomInputFormFactory
     }
 
     /**
-     * Vrátí typy vlastních polí jako možnosti pro select
+     * Vrátí typy vlastních polí jako možnosti pro select.
      *
      * @return string[]
      */

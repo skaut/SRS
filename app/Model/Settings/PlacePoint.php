@@ -7,7 +7,7 @@ namespace App\Model\Settings;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entita mapového bodu
+ * Entita mapového bodu.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'place_point')]
@@ -19,19 +19,19 @@ class PlacePoint
     private ?int $id = null;
 
     /**
-     * Název bodu
+     * Název bodu.
      */
     #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
-     * Zeměpisná šířka
+     * Zeměpisná šířka.
      */
     #[ORM\Column(type: 'float')]
     protected float $gpsLat;
 
     /**
-     * Zeměpisná délka
+     * Zeměpisná délka.
      */
     #[ORM\Column(type: 'float')]
     protected float $gpsLon;

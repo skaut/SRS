@@ -16,7 +16,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Presenter obsluhující nastavení místa semináře
+ * Presenter obsluhující nastavení místa semináře.
  */
 class PlacePresenter extends ConfigurationBasePresenter
 {

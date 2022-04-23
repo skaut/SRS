@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Model\Cms\Dto;
 
 /**
- * DTO obsahu s obrázkem
+ * DTO obsahu s obrázkem.
  */
 class ImageContentDto extends ContentDto
 {
     /**
-     * @param string|null $image Adresa obrázku
-     * @param string|null $align Zarovnání obrázku v textu
+     * @param string|null $image Adresa obrázku.
+     * @param string|null $align Zarovnání obrázku v textu.
      */
     public function __construct(
         string $type,
