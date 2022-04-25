@@ -128,7 +128,7 @@ class MailingFormFactory
     }
 
     /**
-     * Ověří seznam e-mailů oddělených ','
+     * Ověří seznam e-mailů oddělených ','.
      */
     public function validateEmails(TextInput $field): bool
     {

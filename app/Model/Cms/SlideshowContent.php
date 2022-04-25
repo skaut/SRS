@@ -46,7 +46,7 @@ class SlideshowContent extends Content implements IContent
     }
 
     /**
-     * @return string[]|null.
+     * @return string[]|null
      */
     public function getImages(): ?array
     {

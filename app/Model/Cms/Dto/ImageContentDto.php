@@ -10,8 +10,8 @@ namespace App\Model\Cms\Dto;
 class ImageContentDto extends ContentDto
 {
     /**
-     * @param string|null $image Adresa obrázku.
-     * @param string|null $align Zarovnání obrázku v textu.
+     * @param ?string $image Adresa obrázku.
+     * @param ?string $align Zarovnání obrázku v textu.
      */
     public function __construct(
         string $type,

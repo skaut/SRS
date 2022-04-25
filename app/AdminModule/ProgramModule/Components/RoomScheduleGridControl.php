@@ -23,7 +23,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 class RoomScheduleGridControl extends Control
 {
     /**
-     * Aktulní místnost.
+     * Aktulní místnost
      */
     private ?Room $room = null;
 

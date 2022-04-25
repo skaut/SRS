@@ -91,7 +91,7 @@ class User
     protected ?string $degreePost = null;
 
     /**
-     * Zobrazované jméno - Příjmení Jméno (Přezdívka)
+     * Zobrazované jméno - Příjmení Jméno (Přezdívka).
      */
     #[ORM\Column(type: 'string')]
     protected string $displayName;

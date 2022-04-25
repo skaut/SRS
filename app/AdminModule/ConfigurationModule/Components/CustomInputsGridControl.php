@@ -26,8 +26,11 @@ use function count;
  */
 class CustomInputsGridControl extends Control
 {
-    public function __construct(private Translator $translator, private CustomInputRepository $customInputRepository, private AclService $aclService)
-    {
+    public function __construct(
+        private Translator $translator,
+        private CustomInputRepository $customInputRepository,
+        private AclService $aclService
+    ) {
     }
 
     /**
@@ -57,7 +60,10 @@ class CustomInputsGridControl extends Control
         $grid->addColumnText('name', 'admin.configuration.custom_inputs_name');
 
         $grid->addColumnText('roles', 'admin.configuration.custom_inputs_roles', 'rolesText')
-            ->setRendererOnCondition(fn () => $this->translator->translate('admin.configuration.custom_inputs_roles_all'), fn (CustomInput $input) => count($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])) === $input->getRoles()->count());
+            ->setRendererOnCondition(
+                fn () => $this->translator->translate('admin.configuration.custom_inputs_roles_all'),
+                fn (CustomInput $input) => count($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])) === $input->getRoles()->count()
+            );
 
         $grid->addColumnText('type', 'admin.configuration.custom_inputs_type')
             ->setRenderer(fn (CustomInput $input) => $this->translator->translate('admin.common.custom_' . $input->getType()));

@@ -146,7 +146,7 @@ class ProgramDetailDto
     }
 
     /**
-     * @return int[]|null.
+     * @return int[]|null
      */
     public function getSameBlockPrograms(): ?array
     {
@@ -162,7 +162,7 @@ class ProgramDetailDto
     }
 
     /**
-     * @return int[]|null.
+     * @return int[]|null
      */
     public function getOverlappingPrograms(): ?array
     {
