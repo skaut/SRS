@@ -9,10 +9,6 @@ parameters:
             path: app/Model/*/Repositories/*Repository.php
             count: 24
         -
-            message: '#Method App\\Model\\Infrastructure\\Repositories\\AbstractRepository::getRepository\(\) return type with generic class Doctrine\\ORM\\EntityRepository does not specify its types: TEntityClass#'
-            path: app/Model/Infrastructure/Repositories/AbstractRepository.php
-            count: 1
-        -
             message: '#Method App\\Model\\User\\User::[a-zA-Z]+\(\) should return Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\[a-zA-Z]+Application> but returns Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\Application>\.#'
             path: app/Model/User/User.php
             count: 4
