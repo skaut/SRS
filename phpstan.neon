@@ -7,15 +7,13 @@ parameters:
         -
             message: '#Method [a-zA-Z0-9\\_:()]+ should return [a-zA-Z0-9\\_:,<>& ]+ but returns [a-zA-Z0-9\\_:,]+<(int|\(int\|string\)), object>\.#'
             path: app/Model/*/Repositories/*Repository.php
-            count: 24
+        -
+            message: "#^Property App\\\\ApiModule\\\\Dto\\\\[a-zA-Z]+\\\\[a-zA-Z]+\\:\\:\\$[a-zA-Z]+ is never read, only written\\.$#"
+            path: app/ApiModule/Dto/*/*.php
         -
             message: '#Method App\\Model\\User\\User::[a-zA-Z]+\(\) should return Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\[a-zA-Z]+Application> but returns Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\Application>\.#'
             path: app/Model/User/User.php
             count: 4
-        -
-            message: "#^Property App\\\\ApiModule\\\\Dto\\\\[a-zA-Z]+\\\\[a-zA-Z]+\\:\\:\\$[a-zA-Z]+ is never read, only written\\.$#"
-            path: app/ApiModule/Dto/*/*.php
-            count: 9
 
 services:
 	- class: CodeQuality\ObjectIdentityComparisonRule
