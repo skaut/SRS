@@ -129,36 +129,36 @@ class UsersGridControl extends Control
                 default => throw new InvalidArgumentException(),
             };
 
-            $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
-                ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
+        $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
+            ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
 
-            $grid->addGroupAction('admin.users.users_group_action_export_users')
-                ->onSelect[] = [$this, 'groupExportUsers'];
+        $grid->addGroupAction('admin.users.users_group_action_export_users')
+            ->onSelect[] = [$this, 'groupExportUsers'];
 
-            $grid->addGroupAction('admin.users.users_group_action_export_subevents_and_categories')
-                ->onSelect[] = [$this, 'groupExportSubeventsAndCategories'];
+        $grid->addGroupAction('admin.users.users_group_action_export_subevents_and_categories')
+            ->onSelect[] = [$this, 'groupExportSubeventsAndCategories'];
 
-            $grid->addGroupAction('admin.users.users_group_action_export_roles')
-                ->onSelect[] = [$this, 'groupExportRoles'];
+        $grid->addGroupAction('admin.users.users_group_action_export_roles')
+            ->onSelect[] = [$this, 'groupExportRoles'];
 
-            $grid->addGroupAction('admin.users.users_group_action_export_schedules')
-                ->onSelect[] = [$this, 'groupExportSchedules'];
+        $grid->addGroupAction('admin.users.users_group_action_export_schedules')
+            ->onSelect[] = [$this, 'groupExportSchedules'];
 
-            $grid->addColumnText('displayName', 'admin.users.users_name')
-                ->setSortable()
-                ->setFilterText();
+        $grid->addColumnText('displayName', 'admin.users.users_name')
+            ->setSortable()
+            ->setFilterText();
 
-            $grid->addColumnText('username', 'admin.users.users_username')
-                ->setSortable()
-                ->setFilterText();
+        $grid->addColumnText('username', 'admin.users.users_username')
+            ->setSortable()
+            ->setFilterText();
 
-            $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
-                ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
-                ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
-                    $qb->join('u.roles', 'uR')
-                        ->andWhere('uR.id IN (:rids)')
-                        ->setParameter('rids', (array) $values);
-                });
+        $grid->addColumnText('roles', 'admin.users.users_roles', 'rolesText')
+            ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
+            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
+                $qb->join('u.roles', 'uR')
+                    ->andWhere('uR.id IN (:rids)')
+                    ->setParameter('rids', (array) $values);
+            });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
             ->setFilterMultiSelect($this->subeventService->getSubeventsOptions())
