@@ -2,6 +2,7 @@ parameters:
     scanDirectories:
         - %rootDir%/../../../app
         - %rootDir%/../../../code-quality
+        - %rootDir%/../../../tests
 
     ignoreErrors: # todo: odstranit
         -
