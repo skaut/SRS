@@ -24,7 +24,7 @@ class BlockDetailDto
     private string $category;
 
     /** @var LectorDetailDto[] */
-    #[JMS\Type(values: 'array<LectorDetailDto>')]
+    #[JMS\Type(values: 'array<App\ApiModule\Dto\Schedule\LectorDetailDto>')]
     private array $lectors;
 
     #[JMS\Type(values: 'string')]

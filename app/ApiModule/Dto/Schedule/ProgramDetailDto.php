@@ -42,11 +42,11 @@ class ProgramDetailDto
     private ?bool $userAlternates = null;
 
     /** @var int[] */
-    #[JMS\Type(values: 'array')]
+    #[JMS\Type(values: 'array<int>')]
     private ?array $sameBlockPrograms = null;
 
     /** @var int[] */
-    #[JMS\Type(values: 'array')]
+    #[JMS\Type(values: 'array<int>')]
     private ?array $overlappingPrograms = null;
 
     #[JMS\Type(values: 'boolean')]
