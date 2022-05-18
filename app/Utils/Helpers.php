@@ -43,7 +43,7 @@ class Helpers
     /**
      * Vrátí id prvků v kolekci.
      *
-     * @param Collection<int, object> $collection
+     * @param Collection<int, mixed> $collection
      *
      * @return int[]
      */
@@ -55,8 +55,8 @@ class Helpers
     /**
      * Porovnává kolekce entit podle id.
      *
-     * @param Collection<int, object> $collection1
-     * @param Collection<int, object> $collection2
+     * @param Collection<int, mixed> $collection1
+     * @param Collection<int, mixed> $collection2
      */
     public static function collectionsEquals(Collection $collection1, Collection $collection2): bool
     {

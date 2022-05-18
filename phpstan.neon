@@ -9,10 +9,6 @@ parameters:
             path: app/Model/*/Repositories/*Repository.php
             count: 24
         -
-            message: '#Parameter [a-zA-Z0-9\\_:() \$\#]+ expects [a-zA-Z0-9\\_:,]+<int, object>, [a-zA-Z0-9\\_:,<> ]+ given\.#'
-            path: app/*
-            count: 18
-        -
             message: '#Method App\\Model\\Infrastructure\\Repositories\\AbstractRepository::getRepository\(\) return type with generic class Doctrine\\ORM\\EntityRepository does not specify its types: TEntityClass#'
             path: app/Model/Infrastructure/Repositories/AbstractRepository.php
             count: 1
