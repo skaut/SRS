@@ -120,14 +120,20 @@ class UsersGridControl extends Control
         $grid->addGroupAction('admin.users.users_group_action_mark_paid_today', $this->preparePaymentMethodOptionsWithoutEmpty())
             ->onSelect[] = [$this, 'groupMarkPaidToday'];
 
-        $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is')
-            ->onSelect[] = match (
-                $this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE))
-            ) {
-                SkautIsEventType::GENERAL => [$this, 'groupInsertIntoSkautIs'],
-                SkautIsEventType::EDUCATION => [$this, 'groupInsertIntoSkautIs'],
-                default => throw new InvalidArgumentException(),
-            };
+        switch ($this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_TYPE))) {
+            case SkautIsEventType::GENERAL:
+                $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is')
+                    ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
+                break;
+
+            case SkautIsEventType::EDUCATION:
+                $grid->addGroupAction('admin.users.users_group_action_insert_into_skaut_is', $this->prepareInsertIntoSkautIsOptions())
+                    ->onSelect[] = [$this, 'groupInsertIntoSkautIs'];
+                break;
+
+            default:
+                throw new InvalidArgumentException();
+        }
 
         $grid->addGroupAction('admin.users.users_group_action_generate_payment_proofs')
             ->onSelect[] = [$this, 'groupGeneratePaymentProofs'];
@@ -191,9 +197,11 @@ class UsersGridControl extends Control
             ->setTranslateOptions();
 
         $grid->addColumnText('unit', 'admin.users.users_membership')
-            ->setRendererOnCondition(fn (User $row) => Html::el('span')
-                ->class('text-danger')
-                ->setText($this->userService->getMembershipText($row)), static fn (User $row) => $row->getUnit() === null)
+            ->setRendererOnCondition(
+                fn (User $row) => Html::el('span')
+                    ->class('text-danger')
+                    ->setText($this->userService->getMembershipText($row)),
+                static fn (User $row) => $row->getUnit() === null)
             ->setSortable()
             ->setSortableCallback(static function (QueryBuilder $qb, array $sort): void {
                 $sortOrig = $sort['unit'];
@@ -238,7 +246,9 @@ class UsersGridControl extends Control
             });
 
         $grid->addColumnText('paymentMethod', 'admin.users.users_payment_method')
-            ->setRenderer(fn (User $user) => $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '')
+            ->setRenderer(fn (User $user) => $user->getPaymentMethod()
+                ? $this->translator->translate('common.payment.' . $user->getPaymentMethod())
+                : '')
             ->setFilterMultiSelect($this->preparePaymentMethodOptionsWithMixed())
             ->setTranslateOptions();
 
