@@ -11,7 +11,7 @@ use App\Services\QueryBus;
 use Eluceo\iCal\Domain\Entity\Calendar;
 use Eluceo\iCal\Domain\Entity\Event;
 use Eluceo\iCal\Domain\ValueObject\DateTime;
-use Eluceo\iCal\Domain\ValueObject\Organizer;
+use Eluceo\iCal\Domain\ValueObject\Location;
 use Eluceo\iCal\Domain\ValueObject\TimeSpan;
 use Exception;
 use Nette\Application\AbortException;
@@ -41,21 +41,21 @@ class SchedulePresenter extends ExportBasePresenter
         $userPrograms = $this->queryBus->handle(new UserAttendsProgramsQuery($user));
 
         foreach ($userPrograms as $program) {
-            $start      = new DateTime($program->getStart(), false);
-            $end        = new DateTime($program->getEnd(), false);
-            $occurrence = new TimeSpan($start, $end);
+            $start = new DateTime($program->getStart(), false);
+            $end   = new DateTime($program->getEnd(), false);
 
             $event = new Event();
             $event->setSummary($program->getBlock()->getName())
                 ->setDescription($program->getBlock()->getDescription())
-                ->setOccurrence($occurrence);
+                ->setOccurrence(new TimeSpan($start, $end));
 
-            if (! $program->getBlock()->getLectors()->isEmpty()) {
-                $event->setOrganizer(new Organizer($program->getBlock()->getLectorsText()));
-            }
+            // organizátor může být jen e-mail
+            // if (! $program->getBlock()->getLectors()->isEmpty()) {
+            //   $event->setOrganizer(new Organizer(new EmailAddress($program->getBlock()->getLectorsText())));
+            // }
 
             if ($program->getRoom() !== null) {
-                $event->setLocation($program->getRoom()->getName());
+                $event->setLocation(new Location($program->getRoom()->getName()));
             }
 
             $calendar->addEvent($event);

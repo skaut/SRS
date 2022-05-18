@@ -198,7 +198,7 @@ class ScheduleService
             && $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE));
 
         $programs = $this->programRepository->findAll();
-        if ($programs->count() == 0) {
+        if ($programs->isEmpty()) {
             $minTime = 0;
             $maxTime = 24;
         } else {
