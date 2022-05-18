@@ -30,7 +30,7 @@ class TicketCheckInfo
     private bool $hasSubevent;
 
     /** @var DateTimeImmutable[] */
-    #[JMS\Type(values: 'array')]
+    #[JMS\Type(values: 'array<DateTimeImmutable>')]
     private array $subeventChecks;
 
     public function setAttendeeName(string $attendeeName): void

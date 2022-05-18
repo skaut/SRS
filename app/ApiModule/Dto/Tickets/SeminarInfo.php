@@ -18,7 +18,7 @@ class SeminarInfo
     private string $name;
 
     /** @var SubeventInfo[] */
-    #[JMS\Type(values: 'array<SubeventInfo>')]
+    #[JMS\Type(values: 'array<App\ApiModule\Dto\Tickets\SubeventInfo>')]
     private array $subevents;
 
     public function setName(string $name): void
