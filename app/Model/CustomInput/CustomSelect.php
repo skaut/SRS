@@ -11,10 +11,9 @@ use function implode;
 
 /**
  * Entita vlastní výběrové pole přihlášky.
- *
- * @ORM\Entity
- * @ORM\Table(name="custom_select")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'custom_select')]
 class CustomSelect extends CustomInput
 {
     protected string $type = CustomInput::SELECT;
@@ -22,10 +21,9 @@ class CustomSelect extends CustomInput
     /**
      * Možnosti výběrového pole oddělené čárkou.
      *
-     * @ORM\Column(type="simple_array")
-     *
      * @var string[]
      */
+    #[ORM\Column(type: 'simple_array')]
     protected array $options = [];
 
     /**

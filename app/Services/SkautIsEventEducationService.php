@@ -23,19 +23,12 @@ use function sprintf;
  */
 class SkautIsEventEducationService extends SkautIsEventService
 {
-    private SkautIsCourseRepository $skautIsCourseRepository;
-
-    private SubeventRepository $subeventRepository;
-
     public function __construct(
         Skautis $skautIs,
-        SkautIsCourseRepository $skautIsCourseRepository,
-        SubeventRepository $subeventRepository
+        private SkautIsCourseRepository $skautIsCourseRepository,
+        private SubeventRepository $subeventRepository
     ) {
         parent::__construct($skautIs);
-
-        $this->skautIsCourseRepository = $skautIsCourseRepository;
-        $this->subeventRepository      = $subeventRepository;
     }
 
     public function isEventDraft(int $eventId): bool

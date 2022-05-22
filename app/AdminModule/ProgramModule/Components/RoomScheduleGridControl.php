@@ -27,24 +27,8 @@ class RoomScheduleGridControl extends Control
      */
     private ?Room $room = null;
 
-    private Translator $translator;
-
-    private RoomRepository $roomRepository;
-
-    private ProgramRepository $programRepository;
-
-    private ExcelExportService $excelExportService;
-
-    public function __construct(
-        Translator $translator,
-        RoomRepository $roomRepository,
-        ProgramRepository $programRepository,
-        ExcelExportService $excelExportService
-    ) {
-        $this->translator         = $translator;
-        $this->roomRepository     = $roomRepository;
-        $this->programRepository  = $programRepository;
-        $this->excelExportService = $excelExportService;
+    public function __construct(private Translator $translator, private RoomRepository $roomRepository, private ProgramRepository $programRepository, private ExcelExportService $excelExportService)
+    {
     }
 
     /**

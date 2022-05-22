@@ -22,10 +22,9 @@ use function assert;
 
 /**
  * Entita obsahu se seznamem uživatelů.
- *
- * @ORM\Entity
- * @ORM\Table(name="users_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'users_content')]
 class UsersContent extends Content implements IContent
 {
     protected string $type = Content::USERS;
@@ -33,10 +32,9 @@ class UsersContent extends Content implements IContent
     /**
      * Role, jejichž uživatelé budou vypsáni.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: Role::class)]
     protected Collection $roles;
 
     private RoleRepository $roleRepository;

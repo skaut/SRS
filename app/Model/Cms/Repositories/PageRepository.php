@@ -113,9 +113,7 @@ class PageRepository extends AbstractRepository
      */
     public function findPagesIds(Collection $pages): array
     {
-        return array_map(static function (Page $o) {
-            return $o->getId();
-        }, $pages->toArray());
+        return array_map(static fn (Page $o) => $o->getId(), $pages->toArray());
     }
 
     /**
@@ -143,9 +141,7 @@ class PageRepository extends AbstractRepository
      */
     public function findPagesSlugs(Collection $pages): array
     {
-        return array_map(static function (Page $o) {
-            return $o->getSlug();
-        }, $pages->toArray());
+        return array_map(static fn (Page $o) => $o->getSlug(), $pages->toArray());
     }
 
     /**

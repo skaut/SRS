@@ -10,11 +10,8 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SaveRoomHandler implements MessageHandlerInterface
 {
-    private RoomRepository $roomRepository;
-
-    public function __construct(RoomRepository $roomRepository)
+    public function __construct(private RoomRepository $roomRepository)
     {
-        $this->roomRepository = $roomRepository;
     }
 
     public function __invoke(SaveRoom $command): void

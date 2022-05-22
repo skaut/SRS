@@ -15,6 +15,7 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -23,19 +24,19 @@ use Throwable;
  */
 class PaymentPresenter extends ConfigurationBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public CommandBus $commandBus;
 
-    /** @inject */
+    #[Inject]
     public IPaymentFormFactory $paymentFormFactory;
 
-    /** @inject */
+    #[Inject]
     public PaymentProofFormFactory $paymentProofFormFactory;
 
-    /** @inject */
+    #[Inject]
     public BankFormFactory $bankFormFactory;
 
-    /** @inject */
+    #[Inject]
     public TicketsFormFactory $ticketsFormFactory;
 
     /**

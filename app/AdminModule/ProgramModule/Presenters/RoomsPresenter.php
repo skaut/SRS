@@ -11,19 +11,20 @@ use App\AdminModule\ProgramModule\Components\RoomsGridControl;
 use App\Model\Acl\Permission;
 use App\Model\Program\Repositories\RoomRepository;
 use Nette\Application\AbortException;
+use Nette\DI\Attributes\Inject;
 
 /**
  * Presenter obsluhující správu místností.
  */
 class RoomsPresenter extends ProgramBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public RoomRepository $roomRepository;
 
-    /** @inject */
+    #[Inject]
     public IRoomsGridControlFactory $roomsGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IRoomScheduleGridControlFactory $roomScheduleGridControlFactory;
 
     /**

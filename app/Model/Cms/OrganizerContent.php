@@ -15,19 +15,17 @@ use function assert;
 
 /**
  * Entita obsahu s informací o pořadateli.
- *
- * @ORM\Entity
- * @ORM\Table(name="organizer_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'organizer_content')]
 class OrganizerContent extends Content implements IContent
 {
     protected string $type = Content::ORGANIZER;
 
     /**
      * Pořadatel.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $organizer = null;
 
     public function getOrganizer(): ?string

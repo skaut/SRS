@@ -41,24 +41,8 @@ class CustomInputFormFactory
      */
     private ?CustomInput $customInput = null;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private CustomInputRepository $customInputRepository;
-
-    private AclService $aclService;
-
-    private RoleRepository $roleRepository;
-
-    public function __construct(
-        BaseFormFactory $baseFormFactory,
-        CustomInputRepository $customInputRepository,
-        AclService $aclService,
-        RoleRepository $roleRepository
-    ) {
-        $this->baseFormFactory       = $baseFormFactory;
-        $this->customInputRepository = $customInputRepository;
-        $this->aclService            = $aclService;
-        $this->roleRepository        = $roleRepository;
+    public function __construct(private BaseFormFactory $baseFormFactory, private CustomInputRepository $customInputRepository, private AclService $aclService, private RoleRepository $roleRepository)
+    {
     }
 
     /**
@@ -144,9 +128,7 @@ class CustomInputFormFactory
                 case CustomInput::SELECT:
                     $this->customInput = new CustomSelect();
                     $options           = array_map(
-                        static function (string $o) {
-                            return trim($o);
-                        },
+                        static fn (string $o) => trim($o),
                         explode(',', $values->options)
                     );
                     $this->customInput->setOptions($options);
@@ -155,9 +137,7 @@ class CustomInputFormFactory
                 case CustomInput::MULTISELECT:
                     $this->customInput = new CustomMultiSelect();
                     $options           = array_map(
-                        static function (string $o) {
-                            return trim($o);
-                        },
+                        static fn (string $o) => trim($o),
                         explode(',', $values->options)
                     );
                     $this->customInput->setOptions($options);

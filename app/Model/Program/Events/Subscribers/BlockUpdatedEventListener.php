@@ -25,24 +25,12 @@ use function assert;
 
 class BlockUpdatedEventListener implements MessageHandlerInterface
 {
-    private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
-
-    private EntityManagerInterface $em;
-
-    private UserRepository $userRepository;
-
     public function __construct(
-        CommandBus $commandBus,
-        QueryBus $queryBus,
-        EntityManagerInterface $em,
-        UserRepository $userRepository
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository
     ) {
-        $this->commandBus     = $commandBus;
-        $this->queryBus       = $queryBus;
-        $this->em             = $em;
-        $this->userRepository = $userRepository;
     }
 
     public function __invoke(BlockUpdatedEvent $event): void

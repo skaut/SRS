@@ -34,36 +34,15 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class PaymentsGridControl extends Control
 {
-    private QueryBus $queryBus;
-
-    private Translator $translator;
-
-    private PaymentRepository $paymentRepository;
-
-    private UserRepository $userRepository;
-
-    private ApplicationService $applicationService;
-
-    private BankService $bankService;
-
-    private Session $session;
-
     public function __construct(
-        QueryBus $queryBus,
-        Translator $translator,
-        PaymentRepository $paymentRepository,
-        UserRepository $userRepository,
-        ApplicationService $applicationService,
-        BankService $bankService,
-        Session $session
+        private QueryBus $queryBus,
+        private Translator $translator,
+        private PaymentRepository $paymentRepository,
+        private UserRepository $userRepository,
+        private ApplicationService $applicationService,
+        private BankService $bankService,
+        private Session $session
     ) {
-        $this->queryBus           = $queryBus;
-        $this->translator         = $translator;
-        $this->paymentRepository  = $paymentRepository;
-        $this->userRepository     = $userRepository;
-        $this->applicationService = $applicationService;
-        $this->bankService        = $bankService;
-        $this->session            = $session;
     }
 
     /**
@@ -113,9 +92,7 @@ class PaymentsGridControl extends Control
         $grid->addColumnText('pairedApplications', 'admin.payments.payments.paired_applications', 'pairedValidApplicationsText');
 
         $grid->addColumnText('state', 'admin.payments.payments.state')
-            ->setRenderer(function (Payment $payment) {
-                return $this->translator->translate('common.payment_state.' . $payment->getState());
-            })
+            ->setRenderer(fn (Payment $payment) => $this->translator->translate('common.payment_state.' . $payment->getState()))
             ->setFilterMultiSelect($this->preparePaymentStatesOptions())
             ->setTranslateOptions();
 
@@ -140,9 +117,7 @@ class PaymentsGridControl extends Control
         }
 
         $grid->addAction('generatePaymentProofBank', 'admin.payments.payments.download_payment_proof_bank');
-        $grid->allowRowsAction('generatePaymentProofBank', static function (Payment $payment) {
-            return $payment->getState() === PaymentState::PAIRED_AUTO || $payment->getState() === PaymentState::PAIRED_MANUAL;
-        });
+        $grid->allowRowsAction('generatePaymentProofBank', static fn (Payment $payment) => $payment->getState() === PaymentState::PAIRED_AUTO || $payment->getState() === PaymentState::PAIRED_MANUAL);
 
         $grid->addAction('edit', 'admin.common.edit', 'Payments:edit');
 
@@ -154,9 +129,7 @@ class PaymentsGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.payments.payments.delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', static function (Payment $payment) {
-            return $payment->getTransactionId() === null;
-        });
+        $grid->allowRowsAction('delete', static fn (Payment $payment) => $payment->getTransactionId() === null);
     }
 
     /**

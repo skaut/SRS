@@ -12,11 +12,8 @@ use App\Model\Cms\Dto\CapacitiesContentDto;
  */
 class CapacitiesContentControl extends BaseContentControl
 {
-    private RoleRepository $roleRepository;
-
-    public function __construct(RoleRepository $roleRepository)
+    public function __construct(private RoleRepository $roleRepository)
     {
-        $this->roleRepository = $roleRepository;
     }
 
     public function render(CapacitiesContentDto $content): void

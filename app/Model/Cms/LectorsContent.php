@@ -8,10 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita obsahu se seznamem lektorů.
- *
- * @ORM\Entity
- * @ORM\Table(name="lectors_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'lectors_content')]
 class LectorsContent extends Content implements IContent
 {
     protected string $type = Content::LECTORS;

@@ -20,11 +20,6 @@ use stdClass;
 class DiscountForm extends UI\Control
 {
     /**
-     * Id upravované slevy.
-     */
-    public int $id;
-
-    /**
      * Upravovaná sleva.
      */
     private ?Discount $discount;
@@ -43,27 +38,16 @@ class DiscountForm extends UI\Control
      */
     public array $onConditionError = [];
 
-    private BaseFormFactory $baseFormFactory;
-
-    private DiscountRepository $discountRepository;
-
-    private SubeventRepository $subeventRepository;
-
-    private DiscountService $discountService;
-
+    /**
+     * @param int $id Id upravované slevy.
+     */
     public function __construct(
-        int $id,
-        BaseFormFactory $baseFormFactory,
-        DiscountRepository $discountRepository,
-        SubeventRepository $subeventRepository,
-        DiscountService $discountService
+        public int $id,
+        private BaseFormFactory $baseFormFactory,
+        private DiscountRepository $discountRepository,
+        private SubeventRepository $subeventRepository,
+        private DiscountService $discountService
     ) {
-        $this->baseFormFactory    = $baseFormFactory;
-        $this->discountRepository = $discountRepository;
-        $this->subeventRepository = $subeventRepository;
-        $this->discountService    = $discountService;
-
-        $this->id       = $id;
         $this->discount = $this->discountRepository->findById($id);
     }
 

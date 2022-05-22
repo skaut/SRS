@@ -9,14 +9,10 @@ use App\Model\User\User;
 
 class CheckTicket
 {
-    private User $user;
-
-    private ?Subevent $subevent;
-
-    public function __construct(User $user, ?Subevent $subevent)
-    {
-        $this->user     = $user;
-        $this->subevent = $subevent;
+    public function __construct(
+        private User $user,
+        private ?Subevent $subevent
+    ) {
     }
 
     public function getUser(): User

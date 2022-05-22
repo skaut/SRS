@@ -8,11 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita nastavení.
- *
- * @ORM\Entity
- * @ORM\Table(name="settings")
- * @ORM\Cache(usage="NONSTRICT_READ_WRITE")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'settings')]
+#[ORM\Cache(usage: 'NONSTRICT_READ_WRITE')]
 class Settings
 {
     /**
@@ -235,20 +234,17 @@ class Settings
      */
     public const CONTACT_FORM_GUESTS_ALLOWED = 'contact_form_guests_allowed';
 
-
     /**
      * Název položky nastavení.
-     *
-     * @ORM\Column(type="string", unique=true)
-     * @ORM\Id
      */
+    #[ORM\Column(type: 'string', unique: true)]
+    #[ORM\Id]
     protected string $item;
 
     /**
      * Hodnota položky nastavení.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $value = null;
 
     public function __construct(string $item, ?string $value)

@@ -6,11 +6,8 @@ namespace App\Model\Structure\Queries;
 
 class SubeventByIdQuery
 {
-    private int $id;
-
-    public function __construct(int $id)
+    public function __construct(private int $id)
     {
-        $this->id = $id;
     }
 
     public function getId(): int

@@ -19,6 +19,7 @@ use function getimagesizefromstring;
 use function image_type_to_extension;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
@@ -33,17 +34,11 @@ class EditUserPersonalDetailsFormFactory
      */
     private ?User $user = null;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private UserRepository $userRepository;
-
-    private FilesService $filesService;
-
-    public function __construct(BaseFormFactory $baseFormFactory, UserRepository $userRepository, FilesService $filesService)
-    {
-        $this->baseFormFactory = $baseFormFactory;
-        $this->userRepository  = $userRepository;
-        $this->filesService    = $filesService;
+    public function __construct(
+        private BaseFormFactory $baseFormFactory,
+        private UserRepository $userRepository,
+        private FilesService $filesService
+    ) {
     }
 
     /**
@@ -65,7 +60,7 @@ class EditUserPersonalDetailsFormFactory
 
         if ($this->user->getPhoto() !== null) {
             $photoUpload->setHtmlAttribute('data-delete-url', '?do=removePhoto')
-                ->setHtmlAttribute('data-initial-preview', json_encode([$this->user->getPhoto()]))
+                ->setHtmlAttribute('data-initial-preview', json_encode([$this->user->getPhoto()], JSON_THROW_ON_ERROR))
                 ->setHtmlAttribute('data-initial-preview-show-delete', 'true')
                 ->setHtmlAttribute('data-initial-preview-config', json_encode([['caption' => basename($this->user->getPhoto())]]));
         }

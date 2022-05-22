@@ -8,38 +8,32 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita mapového bodu.
- *
- * @ORM\Entity
- * @ORM\Table(name="place_point")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'place_point')]
 class PlacePoint
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Název bodu.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
      * Zeměpisná šířka.
-     *
-     * @ORM\Column(type="float")
      */
+    #[ORM\Column(type: 'float')]
     protected float $gpsLat;
 
     /**
      * Zeměpisná délka.
-     *
-     * @ORM\Column(type="float")
      */
+    #[ORM\Column(type: 'float')]
     protected float $gpsLon;
 
     public function getId(): ?int

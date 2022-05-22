@@ -8,17 +8,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita hodnota vlastního textového pole přihlášky.
- *
- * @ORM\Entity
- * @ORM\Table(name="custom_text_value")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'custom_text_value')]
 class CustomTextValue extends CustomInputValue
 {
     /**
      * Hodnota textového pole přihlášky.
-     *
-     * @ORM\Column(type="text")
      */
+    #[ORM\Column(type: 'text')]
     protected ?string $value = null;
 
     public function getValue(): ?string

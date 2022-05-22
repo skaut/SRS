@@ -15,6 +15,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -25,16 +26,16 @@ class AclPresenter extends AdminBasePresenter
 {
     protected string $resource = SrsResource::ACL;
 
-    /** @inject */
+    #[Inject]
     public AddRoleFormFactory $addRoleFormFactory;
 
-    /** @inject */
+    #[Inject]
     public EditRoleFormFactory $editRoleFormFactory;
 
-    /** @inject */
+    #[Inject]
     public IRolesGridControlFactory $rolesGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public Authenticator $authenticator;
 
     /**

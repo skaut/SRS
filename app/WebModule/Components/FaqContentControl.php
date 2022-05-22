@@ -9,7 +9,6 @@ use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Cms\Repositories\FaqRepository;
 use App\WebModule\Forms\FaqFormFactory;
-use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
 use stdClass;
 
@@ -18,18 +17,11 @@ use stdClass;
  */
 class FaqContentControl extends BaseContentControl
 {
-    /** @ORM\Column(type="string") */
-    private FaqFormFactory $faqFormFactory;
-
-    private FaqRepository $faqRepository;
-
-    private RoleRepository $roleRepository;
-
-    public function __construct(FaqFormFactory $faqFormFactory, FaqRepository $faqRepository, RoleRepository $roleRepository)
-    {
-        $this->faqFormFactory = $faqFormFactory;
-        $this->faqRepository  = $faqRepository;
-        $this->roleRepository = $roleRepository;
+    public function __construct(
+        private FaqFormFactory $faqFormFactory,
+        private FaqRepository $faqRepository,
+        private RoleRepository $roleRepository
+    ) {
     }
 
     public function render(ContentDto $content): void

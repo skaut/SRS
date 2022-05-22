@@ -23,6 +23,7 @@ use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -33,28 +34,28 @@ class UsersPresenter extends AdminBasePresenter
 {
     protected string $resource = SrsResource::USERS;
 
-    /** @inject */
+    #[Inject]
     public IUsersGridControlFactory $usersGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public AddLectorFormFactory $addLectorFormFactory;
 
-    /** @inject */
+    #[Inject]
     public EditUserPersonalDetailsFormFactory $editUserPersonalDetailsFormFactory;
 
-    /** @inject */
+    #[Inject]
     public EditUserSeminarFormFactory $editUserSeminarFormFactory;
 
-    /** @inject */
+    #[Inject]
     public IApplicationsGridControlFactory $applicationsGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public ExcelExportService $excelExportService;
 
-    /** @inject */
+    #[Inject]
     public CustomInputRepository $customInputRepository;
 
-    /** @inject */
+    #[Inject]
     public ApplicationService $applicationService;
 
     /**

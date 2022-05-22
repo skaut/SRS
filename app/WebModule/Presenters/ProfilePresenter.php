@@ -22,6 +22,7 @@ use App\WebModule\Forms\RolesFormFactory;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -30,31 +31,31 @@ use Throwable;
  */
 class ProfilePresenter extends WebBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public PersonalDetailsFormFactory $personalDetailsFormFactory;
 
-    /** @inject */
+    #[Inject]
     public AdditionalInformationFormFactory $additionalInformationFormFactory;
 
-    /** @inject */
+    #[Inject]
     public RolesFormFactory $rolesFormFactory;
 
-    /** @inject */
+    #[Inject]
     public IApplicationsGridControlFactory $applicationsGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public ExcelExportService $excelExportService;
 
-    /** @inject */
+    #[Inject]
     public SubeventRepository $subeventRepository;
 
-    /** @inject */
+    #[Inject]
     public IMailService $mailService;
 
-    /** @inject */
+    #[Inject]
     public ApplicationService $applicationService;
 
-    /** @inject */
+    #[Inject]
     public Authenticator $authenticator;
 
     /**

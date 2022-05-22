@@ -10,10 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita prostředek.
- *
- * @ORM\Entity
- * @ORM\Table(name="resource")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'resource')]
 class SrsResource
 {
     /**
@@ -68,29 +67,28 @@ class SrsResource
         self::PAYMENTS,
     ];
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Název prostředku.
-     *
-     * @ORM\Column(type="string", unique=true)
      */
+    #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 
     /**
      * Oprávnění s tímto prostředkem.
      *
-     * @ORM\OneToMany(targetEntity="Permission", mappedBy="resource", cascade={"persist"})
-     *
      * @var Collection<int, Permission>
      */
+    #[ORM\OneToMany(targetEntity: Permission::class, mappedBy: 'resource', cascade: ['persist'])]
     protected Collection $permissions;
 
+    /**
+     * @param string $name Název prostředku.
+     */
     public function __construct(string $name)
     {
         $this->name        = $name;

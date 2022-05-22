@@ -12,11 +12,8 @@ use App\Model\User\Repositories\UserRepository;
  */
 class UsersContentControl extends BaseContentControl
 {
-    private UserRepository $userRepository;
-
-    public function __construct(UserRepository $userRepository)
+    public function __construct(private UserRepository $userRepository)
     {
-        $this->userRepository = $userRepository;
     }
 
     public function render(UsersContentDto $content): void

@@ -12,19 +12,13 @@ use App\Model\User\User;
 class Recipient
 {
     /**
-     * E-mail příjemce.
+     * @param string  $email E-mail příjemce.
+     * @param ?string $name  Jméno příjemce.
      */
-    private string $email;
-
-    /**
-     * Jméno příjemce.
-     */
-    private ?string $name;
-
-    public function __construct(string $email, ?string $name = null)
-    {
-        $this->email = $email;
-        $this->name  = $name;
+    public function __construct(
+        private string $email,
+        private ?string $name = null
+    ) {
     }
 
     public function getEmail(): string

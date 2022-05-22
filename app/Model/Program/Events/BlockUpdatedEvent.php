@@ -10,32 +10,14 @@ use App\Model\Structure\Subevent;
 
 class BlockUpdatedEvent
 {
-    private Block $block;
-
-    private ?Category $categoryOld;
-
-    private Subevent $subeventOld;
-
-    private string $mandatoryOld;
-
-    private ?int $capacityOld;
-
-    private bool $alternatesAllowedOld;
-
     public function __construct(
-        Block $block,
-        ?Category $categoryOld,
-        Subevent $subeventOld,
-        string $mandatoryOld,
-        ?int $capacityOld,
-        bool $alternatesAllowedOld
+        private Block $block,
+        private ?Category $categoryOld,
+        private Subevent $subeventOld,
+        private string $mandatoryOld,
+        private ?int $capacityOld,
+        private bool $alternatesAllowedOld
     ) {
-        $this->block                = $block;
-        $this->categoryOld          = $categoryOld;
-        $this->subeventOld          = $subeventOld;
-        $this->mandatoryOld         = $mandatoryOld;
-        $this->capacityOld          = $capacityOld;
-        $this->alternatesAllowedOld = $alternatesAllowedOld;
     }
 
     public function getBlock(): Block

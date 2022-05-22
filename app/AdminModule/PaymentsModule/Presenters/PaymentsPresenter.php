@@ -8,6 +8,7 @@ use App\AdminModule\PaymentsModule\Components\IPaymentsGridControlFactory;
 use App\AdminModule\PaymentsModule\Components\PaymentsGridControl;
 use App\AdminModule\PaymentsModule\Forms\EditPaymentFormFactory;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -16,10 +17,10 @@ use Throwable;
  */
 class PaymentsPresenter extends PaymentsBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public IPaymentsGridControlFactory $paymentsGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public EditPaymentFormFactory $editPaymentFormFactory;
 
     public function renderEdit(int $id): void

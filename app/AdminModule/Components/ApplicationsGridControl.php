@@ -37,42 +37,18 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class ApplicationsGridControl extends Control
 {
-    private Translator $translator;
-
-    private EntityManagerInterface $em;
-
-    private ApplicationRepository $applicationRepository;
-
-    private UserRepository $userRepository;
-
-    private SubeventRepository $subeventRepository;
-
-    private ApplicationService $applicationService;
-
     private ?User $user = null;
 
-    private SubeventService $subeventService;
-
-    private Validators $validators;
-
     public function __construct(
-        Translator $translator,
-        EntityManagerInterface $em,
-        ApplicationRepository $applicationRepository,
-        UserRepository $userRepository,
-        SubeventRepository $subeventRepository,
-        ApplicationService $applicationService,
-        SubeventService $subeventService,
-        Validators $validators
+        private Translator $translator,
+        private EntityManagerInterface $em,
+        private ApplicationRepository $applicationRepository,
+        private UserRepository $userRepository,
+        private SubeventRepository $subeventRepository,
+        private ApplicationService $applicationService,
+        private SubeventService $subeventService,
+        private Validators $validators
     ) {
-        $this->translator            = $translator;
-        $this->em                    = $em;
-        $this->applicationRepository = $applicationRepository;
-        $this->userRepository        = $userRepository;
-        $this->subeventRepository    = $subeventRepository;
-        $this->applicationService    = $applicationService;
-        $this->subeventService       = $subeventService;
-        $this->validators            = $validators;
     }
 
     /**
@@ -138,9 +114,7 @@ class ApplicationsGridControl extends Control
         $grid->addColumnDateTime('paymentDate', 'admin.users.users_applications_payment_date');
 
         $grid->addColumnText('state', 'admin.users.users_applications_state')
-            ->setRenderer(function (Application $row) {
-                return $this->translator->translate('common.application_state.' . $row->getState());
-            });
+            ->setRenderer(fn (Application $row) => $this->translator->translate('common.application_state.' . $row->getState()));
 
         if ($explicitSubeventsExists) {
             $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container): void {
@@ -148,9 +122,8 @@ class ApplicationsGridControl extends Control
                     'subevents',
                     '',
                     $this->subeventService->getSubeventsOptionsWithCapacity(false, false, true, false, $this->user)
-                )
-                    ->setHtmlAttribute('class', 'datagrid-multiselect')
-                    ->addRule(Form::FILLED, 'admin.users.users_applications_subevents_empty');
+                )->setHtmlAttribute('class', 'datagrid-multiselect')
+                ->addRule(Form::FILLED, 'admin.users.users_applications_subevents_empty');
             };
             $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
         }
@@ -160,8 +133,7 @@ class ApplicationsGridControl extends Control
                 'subevents',
                 '',
                 $this->subeventService->getSubeventsOptionsWithCapacity(false, false, false, false)
-            )
-                ->setHtmlAttribute('class', 'datagrid-multiselect');
+            )->setHtmlAttribute('class', 'datagrid-multiselect');
 
             $paymentMethodSelect = $container->addSelect(
                 'paymentMethod',
@@ -188,23 +160,23 @@ class ApplicationsGridControl extends Control
             ]);
         };
         $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
-        $grid->allowRowsInlineEdit(static function (Application $item) {
-            return ! $item->isCanceled();
-        });
+        $grid->allowRowsInlineEdit(static fn (Application $item) => ! $item->isCanceled());
 
         $grid->addAction('generatePaymentProofCash', 'admin.users.users_applications_download_payment_proof_cash');
-        $grid->allowRowsAction('generatePaymentProofCash', static function (Application $item) {
-            return $item->getState() === ApplicationState::PAID
+        $grid->allowRowsAction(
+            'generatePaymentProofCash',
+            static fn (Application $item) => $item->getState() === ApplicationState::PAID
                 && $item->getPaymentMethod() === PaymentType::CASH
-                && $item->getPaymentDate();
-        });
+                && $item->getPaymentDate()
+        );
 
         $grid->addAction('generatePaymentProofBank', 'admin.users.users_applications_download_payment_proof_bank');
-        $grid->allowRowsAction('generatePaymentProofBank', static function (Application $item) {
-            return $item->getState() === ApplicationState::PAID
+        $grid->allowRowsAction(
+            'generatePaymentProofBank',
+            static fn (Application $item) => $item->getState() === ApplicationState::PAID
                 && $item->getPaymentMethod() === PaymentType::BANK
-                && $item->getPaymentDate();
-        });
+                && $item->getPaymentDate()
+        );
 
         if ($this->user->getNotCanceledSubeventsApplications()->count() > 1) {
             $grid->addAction('cancelApplication', 'admin.users.users_applications_cancel_application')
@@ -212,14 +184,14 @@ class ApplicationsGridControl extends Control
                     'data-toggle' => 'confirmation',
                     'data-content' => $this->translator->translate('admin.users.users_applications_cancel_application_confirm'),
                 ])->setClass('btn btn-xs btn-danger');
-            $grid->allowRowsAction('cancelApplication', static function (Application $application) {
-                return $application instanceof SubeventsApplication && ! $application->isCanceled();
-            });
+            $grid->allowRowsAction(
+                'cancelApplication',
+                static fn (Application $application) => $application instanceof SubeventsApplication &&
+                    ! $application->isCanceled()
+            );
         }
 
-        $grid->setColumnsSummary(['fee'], static function (Application $item, $column) {
-            return $item->isCanceled() ? 0 : $item->getFee();
-        });
+        $grid->setColumnsSummary(['fee'], static fn (Application $item, $column) => $item->isCanceled() ? 0 : $item->getFee());
 
         $grid->setRowCallback(static function (Application $application, Html $tr): void {
             if ($application->isCanceled()) {

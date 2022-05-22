@@ -13,17 +13,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SaveCategoryHandler implements MessageHandlerInterface
 {
-    private EventBus $eventBus;
-
-    private EntityManagerInterface $em;
-
-    private CategoryRepository $categoryRepository;
-
-    public function __construct(EventBus $eventBus, EntityManagerInterface $em, CategoryRepository $categoryRepository)
-    {
-        $this->eventBus           = $eventBus;
-        $this->em                 = $em;
-        $this->categoryRepository = $categoryRepository;
+    public function __construct(
+        private EventBus $eventBus,
+        private EntityManagerInterface $em,
+        private CategoryRepository $categoryRepository
+    ) {
     }
 
     public function __invoke(SaveCategory $command): void

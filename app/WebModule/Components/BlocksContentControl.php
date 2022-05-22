@@ -13,14 +13,8 @@ use App\Model\Program\Repositories\CategoryRepository;
  */
 class BlocksContentControl extends BaseContentControl
 {
-    private BlockRepository $blockRepository;
-
-    private CategoryRepository $categoryRepository;
-
-    public function __construct(BlockRepository $blockRepository, CategoryRepository $categoryRepository)
+    public function __construct(private BlockRepository $blockRepository, private CategoryRepository $categoryRepository)
     {
-        $this->blockRepository    = $blockRepository;
-        $this->categoryRepository = $categoryRepository;
     }
 
     public function render(ContentDto $content): void

@@ -27,20 +27,11 @@ use function trim;
  */
 class Validators
 {
-    private QueryBus $queryBus;
-
-    private RoleRepository $roleRepository;
-
-    private ProgramRepository $programRepository;
-
     public function __construct(
-        QueryBus $queryBus,
-        RoleRepository $roleRepository,
-        ProgramRepository $programRepository
+        private QueryBus $queryBus,
+        private RoleRepository $roleRepository,
+        private ProgramRepository $programRepository
     ) {
-        $this->queryBus          = $queryBus;
-        $this->roleRepository    = $roleRepository;
-        $this->programRepository = $programRepository;
     }
 
     /**
@@ -255,9 +246,7 @@ class Validators
     public function validateEmails(string $emails): bool
     {
         $emails = array_map(
-            static function (string $o) {
-                return trim($o);
-            },
+            static fn (string $o) => trim($o),
             explode(',', $emails)
         );
 

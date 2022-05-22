@@ -22,17 +22,11 @@ class SubeventsFormFactory
 {
     use Nette\SmartObject;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
-
-    public function __construct(BaseFormFactory $baseForm, CommandBus $commandBus, QueryBus $queryBus)
-    {
-        $this->baseFormFactory = $baseForm;
-        $this->commandBus      = $commandBus;
-        $this->queryBus        = $queryBus;
+    public function __construct(
+        private BaseFormFactory $baseFormFactory,
+        private CommandBus $commandBus,
+        private QueryBus $queryBus
+    ) {
     }
 
     /**

@@ -20,6 +20,7 @@ use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use Nette\Http\Session;
 use Throwable;
 
@@ -28,25 +29,25 @@ use Throwable;
  */
 class BlocksPresenter extends ProgramBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public CommandBus $commandBus;
 
-    /** @inject */
+    #[Inject]
     public BlockRepository $blockRepository;
 
-    /** @inject */
+    #[Inject]
     public ProgramRepository $programRepository;
 
-    /** @inject */
+    #[Inject]
     public IProgramBlocksGridControlFactory $programBlocksGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IProgramAttendeesGridControlFactory $programAttendeesGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public BlockFormFactory $blockFormFactory;
 
-    /** @inject */
+    #[Inject]
     public Session $session;
 
     public function renderDefault(): void

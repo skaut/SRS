@@ -11,6 +11,7 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Structure\Repositories\SubeventRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\AbortException;
+use Nette\DI\Attributes\Inject;
 use Throwable;
 
 /**
@@ -20,7 +21,7 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
 {
     protected string $resource = SrsResource::CONFIGURATION;
 
-    /** @inject */
+    #[Inject]
     public SubeventRepository $subeventRepository;
 
     /**

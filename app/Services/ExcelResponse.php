@@ -17,14 +17,8 @@ class ExcelResponse implements Response
 {
     use Nette\SmartObject;
 
-    private Spreadsheet $spreadsheet;
-
-    private string $filename;
-
-    public function __construct(Spreadsheet $spreadsheet, string $filename)
+    public function __construct(private Spreadsheet $spreadsheet, private string $filename)
     {
-        $this->spreadsheet = $spreadsheet;
-        $this->filename    = $filename;
     }
 
     /**

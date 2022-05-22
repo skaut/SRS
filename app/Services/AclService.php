@@ -26,14 +26,6 @@ class AclService
 {
     use Nette\SmartObject;
 
-    private RoleRepository $roleRepository;
-
-    private PermissionRepository $permissionRepository;
-
-    private SrsResourceRepository $resourceRepository;
-
-    private Translator $translator;
-
     private Cache $roleNamesCache;
 
     private Cache $permissionNamesCache;
@@ -41,16 +33,12 @@ class AclService
     private Cache $resourceNamesCache;
 
     public function __construct(
-        RoleRepository $roleRepository,
-        PermissionRepository $permissionRepository,
-        SrsResourceRepository $resourceRepository,
-        Translator $translator,
+        private RoleRepository $roleRepository,
+        private PermissionRepository $permissionRepository,
+        private SrsResourceRepository $resourceRepository,
+        private Translator $translator,
         Storage $storage
     ) {
-        $this->roleRepository       = $roleRepository;
-        $this->permissionRepository = $permissionRepository;
-        $this->resourceRepository   = $resourceRepository;
-        $this->translator           = $translator;
         $this->roleNamesCache       = new Cache($storage, 'RoleNames');
         $this->permissionNamesCache = new Cache($storage, 'PermissionNames');
         $this->resourceNamesCache   = new Cache($storage, 'ResourceNames');

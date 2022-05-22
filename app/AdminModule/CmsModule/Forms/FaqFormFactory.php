@@ -32,17 +32,11 @@ class FaqFormFactory
      */
     private ?User $user = null;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private FaqRepository $faqRepository;
-
-    private UserRepository $userRepository;
-
-    public function __construct(BaseFormFactory $baseFormFactory, FaqRepository $faqRepository, UserRepository $userRepository)
-    {
-        $this->baseFormFactory = $baseFormFactory;
-        $this->faqRepository   = $faqRepository;
-        $this->userRepository  = $userRepository;
+    public function __construct(
+        private BaseFormFactory $baseFormFactory,
+        private FaqRepository $faqRepository,
+        private UserRepository $userRepository
+    ) {
     }
 
     /**

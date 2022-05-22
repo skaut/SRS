@@ -33,28 +33,13 @@ use function count;
  */
 class PagesGridControl extends Control
 {
-    private Translator $translator;
-
-    private CmsService $cmsService;
-
-    private PageRepository $pageRepository;
-
-    private RoleRepository $roleRepository;
-
-    private AclService $aclService;
-
     public function __construct(
-        Translator $translator,
-        CmsService $cmsService,
-        PageRepository $pageRepository,
-        RoleRepository $roleRepository,
-        AclService $aclService
+        private Translator $translator,
+        private CmsService $cmsService,
+        private PageRepository $pageRepository,
+        private RoleRepository $roleRepository,
+        private AclService $aclService
     ) {
-        $this->translator     = $translator;
-        $this->cmsService     = $cmsService;
-        $this->pageRepository = $pageRepository;
-        $this->roleRepository = $roleRepository;
-        $this->aclService     = $aclService;
     }
 
     /**
@@ -95,11 +80,10 @@ class PagesGridControl extends Control
             ->onChange[] = [$this, 'changeStatus'];
 
         $grid->addColumnText('roles', 'admin.cms.pages.column.roles', 'rolesText')
-            ->setRendererOnCondition(function () {
-                return $this->translator->translate('admin.cms.pages.column.roles_all');
-            }, function (Page $page) {
-                return count($this->roleRepository->findAll()) === $page->getRoles()->count();
-            });
+            ->setRendererOnCondition(
+                fn () => $this->translator->translate('admin.cms.pages.column.roles_all'),
+                fn (Page $page) => count($this->roleRepository->findAll()) === $page->getRoles()->count()
+            );
 
         $rolesOptions  = $this->aclService->getRolesWithoutRolesOptions([]);
         $publicOptions = [
@@ -163,9 +147,10 @@ class PagesGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.cms.pages.action.delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', static function (Page $item) {
-            return $item->getSlug() !== '/';
-        });
+        $grid->allowRowsAction(
+            'delete',
+            static fn (Page $item) => $item->getSlug() !== '/'
+        );
 
         return $grid;
     }

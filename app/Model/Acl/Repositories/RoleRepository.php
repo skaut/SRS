@@ -128,9 +128,7 @@ class RoleRepository extends AbstractRepository
      */
     public function findRolesIds(Collection $roles): array
     {
-        return array_map(static function (Role $o) {
-            return $o->getId();
-        }, $roles->toArray());
+        return array_map(static fn (Role $o) => $o->getId(), $roles->toArray());
     }
 
     /**

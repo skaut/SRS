@@ -11,17 +11,11 @@ use function assert;
 
 final class QueryBus
 {
-    private MessageBusInterface $bus;
-
-    public function __construct(MessageBusInterface $bus)
+    public function __construct(private MessageBusInterface $bus)
     {
-        $this->bus = $bus;
     }
 
-    /**
-     * @return mixed
-     */
-    public function handle(object $query)
+    public function handle(object $query): mixed
     {
         $stamp = $this->bus->dispatch($query)->last(HandledStamp::class);
         assert($stamp instanceof HandledStamp);

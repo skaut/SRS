@@ -16,72 +16,62 @@ use function implode;
 
 /**
  * Entita e-mail.
- *
- * @ORM\Entity
- * @ORM\Table(name="mail")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'mail')]
 class Mail
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Role, kterým byl e-mail odeslán.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: Role::class)]
     protected Collection $recipientRoles;
 
     /**
      * Podakce, jejichž účastníkům byl e-mail odeslán.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent")
-     *
      * @var Collection<int, Subevent>
      */
+    #[ORM\ManyToMany(targetEntity: Subevent::class)]
     protected Collection $recipientSubevents;
 
     /**
      * Uživatelé, kterém byl e-mail odeslán.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\User")
-     *
      * @var Collection<int, User>
      */
+    #[ORM\ManyToMany(targetEntity: User::class)]
     protected Collection $recipientUsers;
 
     /**
      * Předmět e-mailu.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $subject;
 
     /**
      * Text e-mailu.
-     *
-     * @ORM\Column(type="text")
      */
+    #[ORM\Column(type: 'text')]
     protected string $text;
 
     /**
      * Datum a čas odeslání.
-     *
-     * @ORM\Column(type="datetime_immutable")
      */
+    #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $datetime;
 
     /**
      * Automatický e-mail.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $automatic = false;
 
     public function __construct()
@@ -120,9 +110,7 @@ class Mail
      */
     public function getRecipientRolesText(): string
     {
-        return implode(', ', $this->recipientRoles->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->recipientRoles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
     /**
@@ -149,9 +137,7 @@ class Mail
      */
     public function getRecipientSubeventsText(): string
     {
-        return implode(', ', $this->recipientSubevents->map(static function (Subevent $subevent) {
-            return $subevent->getName();
-        })->toArray());
+        return implode(', ', $this->recipientSubevents->map(static fn (Subevent $subevent) => $subevent->getName())->toArray());
     }
 
     /**
@@ -178,9 +164,7 @@ class Mail
      */
     public function getRecipientUsersText(): string
     {
-        return implode(', ', $this->recipientUsers->map(static function (User $user) {
-            return $user->getDisplayName();
-        })->toArray());
+        return implode(', ', $this->recipientUsers->map(static fn (User $user) => $user->getDisplayName())->toArray());
     }
 
     public function getSubject(): string

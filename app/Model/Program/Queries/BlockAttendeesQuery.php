@@ -8,11 +8,8 @@ use App\Model\Program\Block;
 
 class BlockAttendeesQuery
 {
-    private Block $block;
-
-    public function __construct(Block $block)
+    public function __construct(private Block $block)
     {
-        $this->block = $block;
     }
 
     public function getBlock(): Block

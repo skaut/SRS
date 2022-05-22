@@ -20,11 +20,8 @@ abstract class SkautIsEventService
 {
     use Nette\SmartObject;
 
-    protected Skautis $skautIs;
-
-    public function __construct(Skautis $skautIs)
+    public function __construct(protected Skautis $skautIs)
     {
-        $this->skautIs = $skautIs;
     }
 
     /**

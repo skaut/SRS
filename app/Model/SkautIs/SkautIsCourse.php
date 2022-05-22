@@ -8,31 +8,26 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita skautIS kurz.
- *
- * @ORM\Entity
- * @ORM\Table(name="skaut_is_course")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'skaut_is_course')]
 class SkautIsCourse
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * SkautIS id kurzu.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $skautIsCourseId;
 
     /**
      * Název kurzu.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $name;
 
     public function getId(): ?int
