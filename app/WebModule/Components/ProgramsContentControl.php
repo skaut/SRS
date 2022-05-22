@@ -22,20 +22,11 @@ use Throwable;
  */
 class ProgramsContentControl extends BaseContentControl
 {
-    private QueryBus $queryBus;
-
-    private UserRepository $userRepository;
-
-    private RoleRepository $roleRepository;
-
     public function __construct(
-        QueryBus $queryBus,
-        UserRepository $userRepository,
-        RoleRepository $roleRepository
+        private QueryBus $queryBus,
+        private UserRepository $userRepository,
+        private RoleRepository $roleRepository
     ) {
-        $this->queryBus       = $queryBus;
-        $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
     }
 
     /**

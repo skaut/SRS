@@ -12,16 +12,14 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 use function implode;
 
 /**
  * Entita role.
- *
- * @ORM\Entity
- * @ORM\Table(name="role")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'role')]
 class Role
 {
     /**
@@ -80,178 +78,158 @@ class Role
         self::ORGANIZER,
         self::ADMIN,
     ];
-    use Id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id           = null;
 
     /**
      * Název role.
-     *
-     * @ORM\Column(type="string", unique=true)
      */
+    #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 
     /**
      * Systémový název systémové role.
-     *
-     * @ORM\Column(type="string", unique=true, nullable=true)
      */
+    #[ORM\Column(type: 'string', unique: true, nullable: true)]
     protected ?string $systemName = null;
 
     /**
      * Uživatelé v roli.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\User\User", mappedBy="roles", cascade={"persist"})
-     *
      * @var Collection<int, User>
      */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', cascade: ['persist'])]
     protected Collection $users;
 
     /**
      * Oprávnění role.
      *
-     * @ORM\ManyToMany(targetEntity="Permission", inversedBy="roles", cascade={"persist"})
-     *
      * @var Collection<int, Permission>
      */
+    #[ORM\ManyToMany(targetEntity: Permission::class, inversedBy: 'roles', cascade: ['persist'])]
     protected Collection $permissions;
 
     /**
      * Stránky, ke kterým má role přístup.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Cms\Page", mappedBy="roles", cascade={"persist"})
-     *
      * @var Collection<int, Page>
      */
+    #[ORM\ManyToMany(targetEntity: Page::class, mappedBy: 'roles', cascade: ['persist'])]
     protected Collection $pages;
 
     /**
      * Systémová role. Systémovou roli nelze odstranit.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $systemRole = true;
 
     /**
      * Registrovatelná role. Lze vybrat v přihlášce.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $registerable = true;
 
     /**
      * Automaticky schválit. Role nevyžaduje schválení registrace organizátory.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $approvedAfterRegistration = false;
 
     /**
      * Registrovatelná od.
-     *
-     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $registerableFrom = null;
 
     /**
      * Registrovatelná do.
-     *
-     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $registerableTo = null;
 
     /**
      * Kapacita.
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $capacity = null;
 
     /**
      * Obsazenost.
      * Bude se používat pro kontrolu kapacity.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $occupancy = 0;
 
     /**
      * Poplatek.
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $fee = 0;
 
     /**
      * Minimální věk.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $minimumAge = 0;
 
     /**
      * Synchronizovat účastníky v roli se skautIS.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $syncedWithSkautIS = true;
 
     /**
      * Role neregistrovatelné současně s touto rolí.
      *
-     * @ORM\ManyToMany(targetEntity="Role")
-     * @ORM\JoinTable(name="role_role_incompatible",
-     *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_role_id", referencedColumnName="id")}
-     *      )
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: self::class)]
+    #[ORM\JoinTable(name: 'role_role_incompatible')]
+    #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'incompatible_role_id', referencedColumnName: 'id')]
     protected Collection $incompatibleRoles;
 
     /**
      * Role vyžadující tuto roli.
      *
-     * @ORM\ManyToMany(targetEntity="Role", mappedBy="requiredRoles", cascade={"persist"})
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'requiredRoles', cascade: ['persist'])]
     protected Collection $requiredByRole;
 
     /**
      * Role vyžadované touto rolí.
      *
-     * @ORM\ManyToMany(targetEntity="Role", inversedBy="requiredByRole")
-     * @ORM\JoinTable(name="role_role_required",
-     *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="required_role_id", referencedColumnName="id")}
-     *      )
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'requiredByRole')]
+    #[ORM\JoinTable(name: 'role_role_required')]
+    #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'required_role_id', referencedColumnName: 'id')]
     protected Collection $requiredRoles;
 
     /**
      * Kategorie programů, na které se mohou účastníci v roli přihlásit.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Program\Category", mappedBy="registerableRoles", cascade={"persist"})
-     *
      * @var Collection<int, Category>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\Program\Category', mappedBy: 'registerableRoles', cascade: ['persist'])]
     protected Collection $registerableCategories;
 
     /**
      * Adresa, na kterou budou uživatelé v roli přesměrováni po přihlášení.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $redirectAfterLogin = null;
 
     /**
      * Kategorie dokumentů, ke kterým má role přístup.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Cms\Tag", mappedBy="roles", cascade={"persist"})
-     *
      * @var Collection<int, Tag>
      */
+    #[ORM\ManyToMany(targetEntity: '\App\Model\Cms\Tag', mappedBy: 'roles', cascade: ['persist'])]
     protected Collection $tags;
 
     public function __construct(string $name)
@@ -267,7 +245,7 @@ class Role
         $this->tags                   = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -526,9 +504,7 @@ class Role
      */
     public function getIncompatibleRolesText(): string
     {
-        return implode(', ', $this->incompatibleRoles->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->incompatibleRoles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
     public function addIncompatibleRole(Role $role): void
@@ -672,9 +648,7 @@ class Role
      */
     public function getRequiredRolesTransitiveText(): string
     {
-        return implode(', ', $this->getRequiredRolesTransitive()->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->getRequiredRolesTransitive()->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
     /**

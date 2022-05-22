@@ -8,57 +8,54 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita dokumentu.
- *
- * @ORM\Entity
- * @ORM\Table(name="document")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'document')]
 class Document
 {
     /**
      * Adresář pro ukládání dokumentů.
      */
     public const PATH = 'documents';
-    use Id;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Tagy dokumentu.
      *
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="documents", cascade={"persist"})
-     *
      * @var Collection<int, Tag>
      */
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'documents', cascade: ['persist'])]
     protected Collection $tags;
 
     /**
      * Název dokumentu.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
      * Adresa souboru.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $file;
 
     /**
      * Popis.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
     /**
      * Datum změny souboru.
-     *
-     * @ORM\Column(type="datetime_immutable");
      */
+    #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $timestamp;
 
     public function __construct()
@@ -66,7 +63,7 @@ class Document
         $this->tags = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

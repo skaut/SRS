@@ -15,28 +15,22 @@ class TicketCheckInfo
 {
     use Nette\SmartObject;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $attendeeName;
 
-    /**
-     * @JMS\Type("array")
-     * @var string[]
-     */
+    /** @var string[] */
+    #[JMS\Type(values: 'array')]
     private array $roles;
 
-    /**
-     * @JMS\Type("array<App\ApiModule\Dto\Tickets\SubeventInfo>")
-     * @var SubeventInfo[]
-     */
+    /** @var SubeventInfo[] */
+    #[JMS\Type(values: 'array<App\ApiModule\Dto\Tickets\SubeventInfo>')]
     private array $subevents;
 
-    /** @JMS\Type("boolean") */
+    #[JMS\Type(values: 'boolean')]
     private bool $hasSubevent;
 
-    /**
-     * @JMS\Type("array")
-     * @var DateTimeImmutable[]
-     */
+    /** @var DateTimeImmutable[] */
+    #[JMS\Type(values: 'array<DateTimeImmutable>')]
     private array $subeventChecks;
 
     public function setAttendeeName(string $attendeeName): void

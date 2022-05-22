@@ -13,17 +13,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SaveBlockHandler implements MessageHandlerInterface
 {
-    private EventBus $eventBus;
-
-    private EntityManagerInterface $em;
-
-    private BlockRepository $blockRepository;
-
-    public function __construct(EventBus $eventBus, EntityManagerInterface $em, BlockRepository $blockRepository)
-    {
-        $this->eventBus        = $eventBus;
-        $this->em              = $em;
-        $this->blockRepository = $blockRepository;
+    public function __construct(
+        private EventBus $eventBus,
+        private EntityManagerInterface $em,
+        private BlockRepository $blockRepository
+    ) {
     }
 
     public function __invoke(SaveBlock $command): void
@@ -34,7 +28,7 @@ class SaveBlockHandler implements MessageHandlerInterface
         if ($block->getId() === null) {
             $this->blockRepository->save($block);
         } else {
-            $this->em->transactional(function () use ($block, $blockOld): void {
+            $this->em->wrapInTransaction(function () use ($block, $blockOld): void {
                 $categoryOld          = $blockOld->getCategory();
                 $subeventOld          = $blockOld->getSubevent();
                 $mandatoryOld         = $blockOld->getMandatory();

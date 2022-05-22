@@ -37,6 +37,7 @@ use App\WebModule\Components\SlideshowContentControl;
 use App\WebModule\Components\TextContentControl;
 use App\WebModule\Components\UsersContentControl;
 use Nette\Application\BadRequestException;
+use Nette\DI\Attributes\Inject;
 use Throwable;
 
 /**
@@ -44,52 +45,52 @@ use Throwable;
  */
 class PagePresenter extends WebBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public IApplicationContentControlFactory $applicationContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IBlocksContentControlFactory $blocksContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public ICapacitiesContentControlFactory $capacitiesContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IDocumentContentControlFactory $documentContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IFaqContentControlFactory $faqContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IHtmlContentControlFactory $htmlContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IImageContentControlFactory $imageContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public INewsContentControlFactory $newsContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IPlaceContentControlFactory $placeContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IProgramsContentControlFactory $programsContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public ITextContentControlFactory $textContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IUsersContentControlFactory $usersContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public ILectorsContentControlFactory $lectorsContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IOrganizerContentControlFactory $organizerContentControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IContactFormContentControlFactory $contactFormContentFactory;
 
-    /** @inject */
+    #[Inject]
     public ISlideshowContentControlFactory $slideshowContentFactory;
 
     /**

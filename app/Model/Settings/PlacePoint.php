@@ -5,38 +5,41 @@ declare(strict_types=1);
 namespace App\Model\Settings;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita mapového bodu.
- *
- * @ORM\Entity
- * @ORM\Table(name="place_point")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'place_point')]
 class PlacePoint
 {
-    use Id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Název bodu.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
      * Zeměpisná šířka.
-     *
-     * @ORM\Column(type="float")
      */
+    #[ORM\Column(type: 'float')]
     protected float $gpsLat;
 
     /**
      * Zeměpisná délka.
-     *
-     * @ORM\Column(type="float")
      */
+    #[ORM\Column(type: 'float')]
     protected float $gpsLon;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public function getName(): string
     {

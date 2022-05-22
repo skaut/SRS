@@ -13,22 +13,16 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class RemoveBlockHandler implements MessageHandlerInterface
 {
-    private CommandBus $commandBus;
-
-    private EntityManagerInterface $em;
-
-    private BlockRepository $blockRepository;
-
-    public function __construct(CommandBus $commandBus, EntityManagerInterface $em, BlockRepository $blockRepository)
-    {
-        $this->commandBus      = $commandBus;
-        $this->em              = $em;
-        $this->blockRepository = $blockRepository;
+    public function __construct(
+        private CommandBus $commandBus,
+        private EntityManagerInterface $em,
+        private BlockRepository $blockRepository
+    ) {
     }
 
     public function __invoke(RemoveBlock $command): void
     {
-        $this->em->transactional(function () use ($command): void {
+        $this->em->wrapInTransaction(function () use ($command): void {
             $block = $command->getBlock();
 
             foreach ($block->getPrograms() as $program) {

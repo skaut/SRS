@@ -5,26 +5,26 @@ declare(strict_types=1);
 namespace App\Model\Application;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita variabilní symbol.
- *
- * @ORM\Entity
- * @ORM\Table(name="variable_symbol")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'variable_symbol')]
 class VariableSymbol
 {
-    use Id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Variabilní symbol.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $variableSymbol = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

@@ -6,14 +6,8 @@ namespace App\Model\Settings\Commands;
 
 class SetSettingIntValue
 {
-    private string $item;
-
-    private ?int $value;
-
-    public function __construct(string $item, ?int $value)
+    public function __construct(private string $item, private ?int $value)
     {
-        $this->item  = $item;
-        $this->value = $value;
     }
 
     public function getItem(): string

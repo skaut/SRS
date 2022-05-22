@@ -18,16 +18,9 @@ use Throwable;
  */
 class BackupDatabaseCommand extends Command
 {
-    private string $dir;
-
-    private EntityManagerInterface $em;
-
-    public function __construct(string $dir, EntityManagerInterface $em)
+    public function __construct(private string $dir, private EntityManagerInterface $em)
     {
         parent::__construct();
-
-        $this->dir = $dir;
-        $this->em  = $em;
     }
 
     /**
@@ -57,7 +50,7 @@ class BackupDatabaseCommand extends Command
             $output->writeln('Database dump created successfully.');
 
             return 0;
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             $output->writeln('Database dump creation failed.');
 
             return 1;

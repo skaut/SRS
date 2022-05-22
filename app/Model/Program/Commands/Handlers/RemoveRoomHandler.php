@@ -14,22 +14,16 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class RemoveRoomHandler implements MessageHandlerInterface
 {
-    private CommandBus $commandBus;
-
-    private EntityManagerInterface $em;
-
-    private RoomRepository $roomRepository;
-
-    public function __construct(CommandBus $commandBus, EntityManagerInterface $em, RoomRepository $roomRepository)
-    {
-        $this->commandBus     = $commandBus;
-        $this->em             = $em;
-        $this->roomRepository = $roomRepository;
+    public function __construct(
+        private CommandBus $commandBus,
+        private EntityManagerInterface $em,
+        private RoomRepository $roomRepository
+    ) {
     }
 
     public function __invoke(RemoveRoom $command): void
     {
-        $this->em->transactional(function (EntityManager $em) use ($command): void {
+        $this->em->wrapInTransaction(function (EntityManager $em) use ($command): void {
             $room = $command->getRoom();
 
             foreach ($room->getPrograms() as $program) {

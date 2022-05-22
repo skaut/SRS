@@ -19,14 +19,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class FaqGridControl extends Control
 {
-    private Translator $translator;
-
-    private FaqRepository $faqRepository;
-
-    public function __construct(Translator $translator, FaqRepository $faqRepository)
+    public function __construct(private Translator $translator, private FaqRepository $faqRepository)
     {
-        $this->translator    = $translator;
-        $this->faqRepository = $faqRepository;
     }
 
     /**

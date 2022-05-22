@@ -4,13 +4,16 @@ on:
   push:
     branches: [master]
 
+concurrency:
+  group: environment-staging
+
 jobs:
   deploy:
     name: "Deploy to srs.skauting.cz"
     environment: srs.skauting.cz
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     container:
-      image: fmasa/lebeda:8.0
+      image: skaut/lebeda:8.0
     env:
       CONFIG_DATABASE_HOST: ${{ secrets.CONFIG_DATABASE_HOST }}
       CONFIG_DATABASE_NAME: ${{ secrets.CONFIG_DATABASE_NAME }}

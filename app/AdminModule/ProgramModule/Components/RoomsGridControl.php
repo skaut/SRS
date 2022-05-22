@@ -30,31 +30,15 @@ use function assert;
  */
 class RoomsGridControl extends Control
 {
-    private CommandBus $commandBus;
-
-    private Translator $translator;
-
-    private RoomRepository $roomRepository;
-
-    private ExcelExportService $excelExportService;
-
-    private Session $session;
-
     private SessionSection $sessionSection;
 
     public function __construct(
-        CommandBus $commandBus,
-        Translator $translator,
-        RoomRepository $roomRepository,
-        ExcelExportService $excelExportService,
-        Session $session
+        private CommandBus $commandBus,
+        private Translator $translator,
+        private RoomRepository $roomRepository,
+        private ExcelExportService $excelExportService,
+        private Session $session
     ) {
-        $this->commandBus         = $commandBus;
-        $this->translator         = $translator;
-        $this->roomRepository     = $roomRepository;
-        $this->excelExportService = $excelExportService;
-
-        $this->session        = $session;
         $this->sessionSection = $session->getSection('srs');
     }
 
@@ -86,11 +70,7 @@ class RoomsGridControl extends Control
         $grid->addColumnText('name', 'admin.program.rooms.column.name');
 
         $grid->addColumnText('capacity', 'admin.program.rooms.column.capacity')
-            ->setRendererOnCondition(function (Room $row) {
-                return $this->translator->translate('admin.program.blocks.column.capacity_unlimited');
-            }, static function (Room $row) {
-                return $row->getCapacity() === null;
-            });
+            ->setRendererOnCondition(fn (Room $row) => $this->translator->translate('admin.program.blocks.column.capacity_unlimited'), static fn (Room $row) => $row->getCapacity() === null);
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container): void {
             $container->addText('name', '')

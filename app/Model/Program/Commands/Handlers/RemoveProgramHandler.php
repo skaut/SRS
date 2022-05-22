@@ -16,29 +16,17 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class RemoveProgramHandler implements MessageHandlerInterface
 {
-    private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
-
-    private EntityManagerInterface $em;
-
-    private ProgramRepository $programRepository;
-
     public function __construct(
-        CommandBus $commandBus,
-        QueryBus $queryBus,
-        EntityManagerInterface $em,
-        ProgramRepository $programRepository
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em,
+        private ProgramRepository $programRepository
     ) {
-        $this->commandBus        = $commandBus;
-        $this->queryBus          = $queryBus;
-        $this->em                = $em;
-        $this->programRepository = $programRepository;
     }
 
     public function __invoke(RemoveProgram $command): void
     {
-        $this->em->transactional(function () use ($command): void {
+        $this->em->wrapInTransaction(function () use ($command): void {
             $program = $command->getProgram();
 
             $alternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));

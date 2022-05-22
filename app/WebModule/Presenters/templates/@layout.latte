@@ -68,17 +68,6 @@
     {block scripts}
         <script src="{$basePath}/dist/web/bundle.js"></script>
     {/block}
-
-    {if $gaId}
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-9757753-1"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){ dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', {$gaId});
-        </script>
-    {/if}
 </body>
 </html>
 

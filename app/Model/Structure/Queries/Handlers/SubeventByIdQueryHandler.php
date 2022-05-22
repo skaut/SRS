@@ -11,11 +11,8 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SubeventByIdQueryHandler implements MessageHandlerInterface
 {
-    private SubeventRepository $subeventRepository;
-
-    public function __construct(SubeventRepository $subeventRepository)
+    public function __construct(private SubeventRepository $subeventRepository)
     {
-        $this->subeventRepository = $subeventRepository;
     }
 
     public function __invoke(SubeventByIdQuery $query): ?Subevent

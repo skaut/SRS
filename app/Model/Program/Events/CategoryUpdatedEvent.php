@@ -10,18 +10,11 @@ use Doctrine\Common\Collections\Collection;
 
 class CategoryUpdatedEvent
 {
-    private Category $category;
-
-    /** @var Collection<int, Role> */
-    private Collection $registerableRolesOld;
-
     /**
      * @param Collection<int, Role> $registerableRolesOld
      */
-    public function __construct(Category $category, Collection $registerableRolesOld)
+    public function __construct(private Category $category, private Collection $registerableRolesOld)
     {
-        $this->category             = $category;
-        $this->registerableRolesOld = $registerableRolesOld;
     }
 
     public function getCategory(): Category

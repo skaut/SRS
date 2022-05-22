@@ -8,10 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita obsahu s přehledem bloků.
- *
- * @ORM\Entity
- * @ORM\Table(name="blocks_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'blocks_content')]
 class BlocksContent extends Content implements IContent
 {
     protected string $type = Content::BLOCKS;

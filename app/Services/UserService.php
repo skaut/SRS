@@ -24,32 +24,14 @@ class UserService
 {
     use Nette\SmartObject;
 
-    private QueryBus $queryBus;
-
-    private EventBus $eventBus;
-
-    private Translator $translator;
-
-    private UserRepository $userRepository;
-
-    private MailService $mailService;
-
-    private EntityManagerInterface $em;
-
     public function __construct(
-        QueryBus $queryBus,
-        EventBus $eventBus,
-        Translator $translator,
-        UserRepository $userRepository,
-        MailService $mailService,
-        EntityManagerInterface $em
+        private QueryBus $queryBus,
+        private EventBus $eventBus,
+        private Translator $translator,
+        private UserRepository $userRepository,
+        private MailService $mailService,
+        private EntityManagerInterface $em
     ) {
-        $this->queryBus       = $queryBus;
-        $this->eventBus       = $eventBus;
-        $this->translator     = $translator;
-        $this->userRepository = $userRepository;
-        $this->mailService    = $mailService;
-        $this->em             = $em;
     }
 
     /**
@@ -102,7 +84,7 @@ class UserService
      */
     public function setApproved(User $user, bool $approved): void
     {
-        $this->em->transactional(function () use ($user, $approved): void {
+        $this->em->wrapInTransaction(function () use ($user, $approved): void {
             $approvedOld = $user->isApproved();
             $user->setApproved($approved);
             $this->userRepository->save($user);

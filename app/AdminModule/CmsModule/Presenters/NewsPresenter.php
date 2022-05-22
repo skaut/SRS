@@ -9,6 +9,7 @@ use App\AdminModule\CmsModule\Components\NewsGridControl;
 use App\AdminModule\CmsModule\Forms\NewsFormFactory;
 use App\Model\Cms\Repositories\NewsRepository;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 
 /**
@@ -16,13 +17,13 @@ use stdClass;
  */
 class NewsPresenter extends CmsBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public INewsGridControlFactory $newsGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public NewsFormFactory $newsFormFactory;
 
-    /** @inject */
+    #[Inject]
     public NewsRepository $newsRepository;
 
     public function renderEdit(int $id): void

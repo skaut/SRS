@@ -18,14 +18,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class SubeventsGridControl extends Control
 {
-    private Translator $translator;
-
-    private SubeventRepository $subeventRepository;
-
-    public function __construct(Translator $translator, SubeventRepository $subeventRepository)
+    public function __construct(private Translator $translator, private SubeventRepository $subeventRepository)
     {
-        $this->translator         = $translator;
-        $this->subeventRepository = $subeventRepository;
     }
 
     /**
@@ -73,9 +67,7 @@ class SubeventsGridControl extends Control
             ->setTitle('admin.common.add');
 
         $grid->addAction('edit', 'admin.common.edit', 'Subevents:edit');
-        $grid->allowRowsAction('edit', static function (Subevent $item) {
-            return ! $item->isImplicit();
-        });
+        $grid->allowRowsAction('edit', static fn (Subevent $item) => ! $item->isImplicit());
 
         $grid->addAction('delete', '', 'delete!')
             ->setIcon('trash')
@@ -85,9 +77,7 @@ class SubeventsGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.configuration.subevents_delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', static function (Subevent $item) {
-            return ! $item->isImplicit();
-        });
+        $grid->allowRowsAction('delete', static fn (Subevent $item) => ! $item->isImplicit());
     }
 
     /**

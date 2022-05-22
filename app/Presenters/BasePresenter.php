@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Presenters;
 
 use Nette;
+use Nette\DI\Attributes\Inject;
 use Nette\Localization\Translator;
 use stdClass;
 
@@ -13,7 +14,7 @@ use stdClass;
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
-    /** @inject */
+    #[Inject]
     public Translator $translator;
 
     /**

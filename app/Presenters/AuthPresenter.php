@@ -16,29 +16,30 @@ use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Application\AbortException;
+use Nette\DI\Attributes\Inject;
 use Nette\Security\AuthenticationException;
 use Nette\Security\SimpleIdentity;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 use function assert;
-use function strpos;
+use function str_contains;
 
 /**
  * Presenter obsluhující přihlašování a odhlašování pomocí skautIS.
  */
 class AuthPresenter extends BasePresenter
 {
-    /** @inject */
+    #[Inject]
     public QueryBus $queryBus;
 
-    /** @inject */
+    #[Inject]
     public SkautIsService $skautIsService;
 
-    /** @inject */
+    #[Inject]
     public UserRepository $userRepository;
 
-    /** @inject */
+    #[Inject]
     public IMailService $mailService;
 
     /**
@@ -58,7 +59,7 @@ class AuthPresenter extends BasePresenter
         }
 
         $this->skautIsService->setLoginData($_POST);
-        $this->user->login('');
+        $this->user->login('', '');
         $this->user->setExpiration('+30 minutes');
 
         $userIdentity = $this->user->identity;
@@ -100,7 +101,7 @@ class AuthPresenter extends BasePresenter
     private function redirectAfterLogin(?string $returnUrl): void
     {
         if ($returnUrl) {
-            if (strpos($returnUrl, ':') !== false) {
+            if (str_contains($returnUrl, ':')) {
                 $this->redirect($returnUrl);
             } else {
                 $this->redirectUrl($returnUrl);

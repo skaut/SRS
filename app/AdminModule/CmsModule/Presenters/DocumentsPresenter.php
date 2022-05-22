@@ -8,16 +8,17 @@ use App\AdminModule\CmsModule\Components\DocumentsGridControl;
 use App\AdminModule\CmsModule\Components\DocumentTagsGridControl;
 use App\AdminModule\CmsModule\Components\IDocumentsGridControlFactory;
 use App\AdminModule\CmsModule\Components\IDocumentTagsGridControlFactory;
+use Nette\DI\Attributes\Inject;
 
 /**
  * Presenter starající se o správu dokumentů.
  */
 class DocumentsPresenter extends CmsBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public IDocumentsGridControlFactory $documentsGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IDocumentTagsGridControlFactory $documentTagsGridControlFactory;
 
     protected function createComponentDocumentsGrid(): DocumentsGridControl

@@ -16,11 +16,8 @@ class BaseFormFactory
 {
     use Nette\SmartObject;
 
-    private Translator $translator;
-
-    public function __construct(Translator $translator)
+    public function __construct(private Translator $translator)
     {
-        $this->translator = $translator;
     }
 
     /**

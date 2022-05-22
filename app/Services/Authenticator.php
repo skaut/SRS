@@ -15,7 +15,6 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Security as NS;
-use Nette\Security\IAuthenticator;
 use Nette\Security\SimpleIdentity;
 use stdClass;
 
@@ -24,44 +23,29 @@ use function assert;
 /**
  * Služba starající se o autentizaci uživatelů.
  */
-class Authenticator implements IAuthenticator
+class Authenticator implements Nette\Security\Authenticator
 {
     use Nette\SmartObject;
 
     private Cache $userRolesCache;
 
-    protected SkautIsService $skautIsService;
-
-    private UserRepository $userRepository;
-
-    private RoleRepository $roleRepository;
-
-    private FilesService $filesService;
-
     public function __construct(
-        UserRepository $userRepository,
-        RoleRepository $roleRepository,
-        SkautIsService $skautIsService,
-        FilesService $filesService,
+        private UserRepository $userRepository,
+        private RoleRepository $roleRepository,
+        protected SkautIsService $skautIsService,
+        private FilesService $filesService,
         Storage $storage
     ) {
-        $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
-        $this->skautIsService = $skautIsService;
-        $this->filesService   = $filesService;
-
         $this->userRolesCache = new Cache($storage, 'UserRoles');
     }
 
     /**
      * Autentizuje uživatele a případně vytvoří nového.
      *
-     * @param string[] $credentials
-     *
      * @throws ORMException
      * @throws Exception
      */
-    public function authenticate(array $credentials): SimpleIdentity
+    public function authenticate(string $user, string $password): SimpleIdentity
     {
         $skautISUser = $this->skautIsService->getUserDetail();
 

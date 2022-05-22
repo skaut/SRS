@@ -8,7 +8,6 @@ use App\Model\Cms\Dto\ContentDto;
 use App\Model\Cms\Exceptions\PageException;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Application\UI\Form;
-use Nettrine\ORM\Entity\Attributes\Id as Identifier;
 use stdClass;
 
 use function lcfirst;
@@ -17,30 +16,29 @@ use function ucwords;
 
 /**
  * Abstraktní entita obsahu.
- *
- * @ORM\Entity
- * @ORM\Table(name="content")
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *     "text_content" = "TextContent",
- *     "document_content" = "DocumentContent",
- *     "application_content" = "ApplicationContent",
- *     "html_content" = "HtmlContent",
- *     "faq_content" = "FaqContent",
- *     "news_content" = "NewsContent",
- *     "place_content" = "PlaceContent",
- *     "programs_content" = "ProgramsContent",
- *     "image_content" = "ImageContent",
- *     "users_content" = "UsersContent",
- *     "lectors_content" = "LectorsContent",
- *     "blocks_content" = "BlocksContent",
- *     "capacities_content" = "CapacitiesContent",
- *     "organizer_content" = "OrganizerContent",
- *     "contact_form_content" = "ContactFormContent",
- *     "slideshow_content" = "SlideshowContent"
- * })
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'content')]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap([
+    'text_content' => TextContent::class,
+    'document_content' => DocumentContent::class,
+    'application_content' => ApplicationContent::class,
+    'html_content' => HtmlContent::class,
+    'faq_content' => FaqContent::class,
+    'news_content' => NewsContent::class,
+    'place_content' => PlaceContent::class,
+    'programs_content' => ProgramsContent::class,
+    'image_content' => ImageContent::class,
+    'users_content' => UsersContent::class,
+    'lectors_content' => LectorsContent::class,
+    'blocks_content' => BlocksContent::class,
+    'capacities_content' => CapacitiesContent::class,
+    'organizer_content' => OrganizerContent::class,
+    'contact_form_content' => ContactFormContent::class,
+    'slideshow_content' => SlideshowContent::class,
+])]
 abstract class Content implements IContent
 {
     /**
@@ -109,17 +107,17 @@ abstract class Content implements IContent
     public const CAPACITIES = 'capacities';
 
     /**
-     * OrganizerContent
+     * OrganizerContent.
      */
     public const ORGANIZER = 'organizer';
 
     /**
-     * ContactFormContent
+     * ContactFormContent.
      */
     public const CONTACT_FORM = 'contact_form';
 
     /**
-     * SlideshowContent
+     * SlideshowContent.
      */
     public const SLIDESHOW = 'slideshow';
 
@@ -132,7 +130,6 @@ abstract class Content implements IContent
      * Postranní panel stránky.
      */
     public const SIDEBAR = 'sidebar';
-
 
     /** @var string[] */
     public static array $types = [
@@ -164,34 +161,34 @@ abstract class Content implements IContent
      * Typ obsahu.
      */
     protected string $type;
-    use Identifier;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Nadpis obsahu.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $heading = null;
 
     /**
      * Stránka, na které je obsah umístěn.
-     *
-     * @ORM\ManyToOne(targetEntity="Page", inversedBy="contents", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'contents', cascade: ['persist'])]
     protected Page $page;
 
     /**
      * Oblast stránky, ve které se obsah nachází.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $area;
 
     /**
      * Pořadí obsahu na stránce.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $position = 0;
 
     /**
@@ -217,7 +214,7 @@ abstract class Content implements IContent
         return lcfirst(str_replace('_', '', ucwords($this->type, '_'))) . 'Content';
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

@@ -12,11 +12,8 @@ use Nette\Application\Routers\RouteList;
 
 final class RouterFactory
 {
-    private CmsService $cmsService;
-
-    public function __construct(CmsService $cmsService)
+    public function __construct(private CmsService $cmsService)
     {
-        $this->cmsService = $cmsService;
     }
 
     public function createRouter(): RouteList
@@ -104,16 +101,12 @@ final class RouterFactory
                 'module' => 'Web',
                 'presenter' => 'Page',
                 'page' => [
-                    Route::FILTER_IN => function (string $slug) {
-                        return $this->cmsService->findPublishedBySlugDto($slug);
-                    },
-                    Route::FILTER_OUT => static function (PageDto $page) {
-                        return $page->getSlug();
-                    },
+                    Route::FILTER_IN => fn (string $slug) => $this->cmsService->findPublishedBySlugDto($slug),
+                    Route::FILTER_OUT => static fn (PageDto $page) => $page->getSlug(),
                 ],
                 'action' => 'default',
             ]);
-        } catch (TableNotFoundException $ex) {
+        } catch (TableNotFoundException) {
         }
 
         $router->addRoute('<presenter>/<action>[/<id>]', [

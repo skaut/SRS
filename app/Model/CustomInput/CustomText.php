@@ -8,10 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita vlastní textové pole přihlášky.
- *
- * @ORM\Entity
- * @ORM\Table(name="custom_text")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'custom_text')]
 class CustomText extends CustomInput
 {
     protected string $type = CustomInput::TEXT;

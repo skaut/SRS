@@ -15,19 +15,17 @@ use function assert;
 
 /**
  * Entita obsahu s aktualitami.
- *
- * @ORM\Entity
- * @ORM\Table(name="news_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'news_content')]
 class NewsContent extends Content implements IContent
 {
     protected string $type = Content::NEWS;
 
     /**
      * Počet posledních novinek k zobrazení.
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $count = null;
 
     public function getCount(): ?int

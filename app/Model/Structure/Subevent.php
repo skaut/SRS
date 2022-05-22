@@ -13,131 +13,117 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 use function implode;
 
 /**
  * Entita podakce.
- *
- * @ORM\Entity
- * @ORM\Table(name="subevent")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'subevent')]
 class Subevent
 {
-    use Id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Název podakce.
-     *
-     * @ORM\Column(type="string", unique=true)
      */
+    #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 
     /**
      * Implicitní podakce. Vytvořena automaticky.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $implicit = false;
 
     /**
      * Přihlášky.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Application\SubeventsApplication", mappedBy="subevents", cascade={"persist"})
-     *
      * @var Collection<int, SubeventsApplication>
      */
+    #[ORM\ManyToMany(targetEntity: SubeventsApplication::class, mappedBy: 'subevents', cascade: ['persist'])]
     protected Collection $applications;
 
     /**
      * Bloky v podakci.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\Program\Block", mappedBy="subevent", cascade={"persist"})
-     * @ORM\OrderBy({"name" = "ASC"})
-     *
      * @var Collection<int, Block>
      */
+    #[ORM\OneToMany(targetEntity: Block::class, mappedBy: 'subevent', cascade: ['persist'])]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     protected Collection $blocks;
 
     /**
      * Poplatek.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $fee = 0;
 
     /**
      * Kapacita.
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $capacity = null;
 
     /**
      * Obsazenost.
      * Bude se používat pro kontrolu kapacity.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $occupancy = 0;
 
     /**
      * Podakce neregistrovatelné současně s touto podakcí.
      *
-     * @ORM\ManyToMany(targetEntity="Subevent")
-     * @ORM\JoinTable(name="subevent_subevent_incompatible",
-     *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="incompatible_subevent_id", referencedColumnName="id")}
-     *      )
-     *
      * @var Collection<int, Subevent>
      */
+    #[ORM\ManyToMany(targetEntity: self::class)]
+    #[ORM\JoinTable(name: 'subevent_subevent_incompatible')]
+    #[ORM\JoinColumn(name: 'subevent_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'incompatible_subevent_id', referencedColumnName: 'id')]
     protected Collection $incompatibleSubevents;
 
     /**
      * Podakce vyžadující tuto podakci.
      *
-     * @ORM\ManyToMany(targetEntity="Subevent", mappedBy="requiredSubevents", cascade={"persist"})
-     *
      * @var Collection<int, Subevent>
      */
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'requiredSubevents', cascade: ['persist'])]
     protected Collection $requiredBySubevent;
 
     /**
      * Podakce vyžadované touto podakcí.
      *
-     * @ORM\ManyToMany(targetEntity="Subevent", inversedBy="requiredBySubevent")
-     * @ORM\JoinTable(name="subevent_subevent_required",
-     *      joinColumns={@ORM\JoinColumn(name="subevent_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="required_subevent_id", referencedColumnName="id")}
-     *      )
-     *
      * @var Collection<int, Subevent>
      */
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'requiredBySubevent')]
+    #[ORM\JoinTable(name: 'subevent_subevent_required')]
+    #[ORM\JoinColumn(name: 'subevent_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'required_subevent_id', referencedColumnName: 'id')]
     protected Collection $requiredSubevents;
 
     /**
      * Propojené skautIS kurzy.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\SkautIs\SkautIsCourse")
-     *
      * @var Collection<int, SkautIsCourse>
      */
+    #[ORM\ManyToMany(targetEntity: SkautIsCourse::class)]
     protected Collection $skautIsCourses;
 
     /**
      * Registrovatelná od.
-     *
-     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $registerableFrom = null;
 
     /**
      * Registrovatelná do.
-     *
-     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $registerableTo = null;
 
     public function __construct()
@@ -150,7 +136,7 @@ class Subevent
         $this->skautIsCourses        = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -421,9 +407,7 @@ class Subevent
 
     public function getSkautIsCoursesText(): string
     {
-        return implode(', ', $this->skautIsCourses->map(static function (SkautIsCourse $skautIsCourse) {
-            return $skautIsCourse->getName();
-        })->toArray());
+        return implode(', ', $this->skautIsCourses->map(static fn (SkautIsCourse $skautIsCourse) => $skautIsCourse->getName())->toArray());
     }
 
     /**
@@ -465,12 +449,10 @@ class Subevent
 //
 //        return $this->applications->matching($criteria)->count();
 
-        return $this->applications->filter(static function (Application $application) {
-            return $application->getValidTo() === null && (
-                $application->getState() === ApplicationState::WAITING_FOR_PAYMENT ||
-                $application->getState() === ApplicationState::PAID_FREE ||
-                $application->getState() === ApplicationState::PAID);
-        })->count();
+        return $this->applications->filter(static fn (Application $application) => $application->getValidTo() === null && (
+            $application->getState() === ApplicationState::WAITING_FOR_PAYMENT ||
+            $application->getState() === ApplicationState::PAID_FREE ||
+            $application->getState() === ApplicationState::PAID))->count();
     }
 
     public function countUnoccupied(): ?int

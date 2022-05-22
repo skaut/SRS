@@ -10,7 +10,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 use function array_key_exists;
 use function array_keys;
@@ -18,77 +17,70 @@ use function implode;
 
 /**
  * Entita platba.
- *
- * @ORM\Entity
- * @ORM\Table(name="payment")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'payment')]
 class Payment
 {
-    use Id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Id platby v systému banky.
-     *
-     * @ORM\Column(type="string", unique=true, nullable=true)
      */
+    #[ORM\Column(type: 'string', unique: true, nullable: true)]
     protected ?string $transactionId = null;
 
     /**
      * Datum platby.
-     *
-     * @ORM\Column(type="date_immutable")
      */
+    #[ORM\Column(type: 'date_immutable')]
     protected DateTimeImmutable $date;
 
     /**
      * Částka.
-     *
-     * @ORM\Column(type="float")
      */
+    #[ORM\Column(type: 'float')]
     protected float $amount;
 
     /**
      * Číslo protiúčtu.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $accountNumber = null;
 
     /**
      * Majitel protiúčtu.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $accountName = null;
 
     /**
      * Variabilní symbol platby.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $variableSymbol = null;
 
     /**
      * Zpráva pro příjemce.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $message = null;
 
     /**
      * Spárované přihlášky.
      *
-     * @ORM\OneToMany(targetEntity="\App\Model\Application\Application", mappedBy="payment", cascade={"persist"})
-     *
      * @var Collection<int, Application>
      */
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'payment', cascade: ['persist'])]
     protected Collection $pairedApplications;
 
     /**
      * Stav platby.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $state;
 
     public function __construct()
@@ -96,7 +88,7 @@ class Payment
         $this->pairedApplications = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

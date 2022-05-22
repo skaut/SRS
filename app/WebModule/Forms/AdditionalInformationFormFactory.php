@@ -47,6 +47,7 @@ use function assert;
 use function basename;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
@@ -61,44 +62,17 @@ class AdditionalInformationFormFactory
      */
     private ?User $user = null;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private QueryBus $queryBus;
-
-    private EntityManagerInterface $em;
-
-    private UserRepository $userRepository;
-
-    private CustomInputRepository $customInputRepository;
-
-    private ApplicationService $applicationService;
-
-    private CustomInputValueRepository $customInputValueRepository;
-
-    private FilesService $filesService;
-
-    private IMailService $mailService;
-
     public function __construct(
-        BaseFormFactory $baseFormFactory,
-        QueryBus $queryBus,
-        EntityManagerInterface $em,
-        UserRepository $userRepository,
-        CustomInputRepository $customInputRepository,
-        ApplicationService $applicationService,
-        CustomInputValueRepository $customInputValueRepository,
-        FilesService $filesService,
-        IMailService $mailService
+        private BaseFormFactory $baseFormFactory,
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository,
+        private CustomInputRepository $customInputRepository,
+        private ApplicationService $applicationService,
+        private CustomInputValueRepository $customInputValueRepository,
+        private FilesService $filesService,
+        private IMailService $mailService
     ) {
-        $this->baseFormFactory            = $baseFormFactory;
-        $this->queryBus                   = $queryBus;
-        $this->em                         = $em;
-        $this->userRepository             = $userRepository;
-        $this->customInputRepository      = $customInputRepository;
-        $this->applicationService         = $applicationService;
-        $this->customInputValueRepository = $customInputValueRepository;
-        $this->filesService               = $filesService;
-        $this->mailService                = $mailService;
     }
 
     /**
@@ -170,7 +144,7 @@ class AdditionalInformationFormFactory
                         assert($customInputValue instanceof CustomFileValue);
                         if ($customInputValue->getValue() !== null) {
                             $file = $customInputValue->getValue();
-                            $custom->setHtmlAttribute('data-initial-preview', json_encode([$file]))
+                            $custom->setHtmlAttribute('data-initial-preview', json_encode([$file], JSON_THROW_ON_ERROR))
                                 ->setHtmlAttribute('data-initial-preview-file-type', 'other')
                                 ->setHtmlAttribute('data-initial-preview-config', json_encode([
                                     [
@@ -236,7 +210,7 @@ class AdditionalInformationFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->em->transactional(function () use ($values): void {
+        $this->em->wrapInTransaction(function () use ($values): void {
             $customInputValueChanged = false;
 
             if ($this->applicationService->isAllowedEditCustomInputs()) {

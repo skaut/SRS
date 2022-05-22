@@ -14,11 +14,8 @@ use function array_keys;
  */
 class DocumentContentControl extends BaseContentControl
 {
-    private DocumentRepository $documentRepository;
-
-    public function __construct(DocumentRepository $documentRepository)
+    public function __construct(private DocumentRepository $documentRepository)
     {
-        $this->documentRepository = $documentRepository;
     }
 
     public function render(DocumentContentDto $content): void

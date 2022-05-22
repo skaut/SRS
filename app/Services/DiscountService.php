@@ -41,20 +41,11 @@ class DiscountService
      */
     private array $selectedSubeventsIds;
 
-    private DiscountRepository $discountRepository;
-
-    private SubeventRepository $subeventRepository;
-
-    private Translator $translator;
-
     public function __construct(
-        DiscountRepository $discountRepository,
-        SubeventRepository $subeventRepository,
-        Translator $translator
+        private DiscountRepository $discountRepository,
+        private SubeventRepository $subeventRepository,
+        private Translator $translator
     ) {
-        $this->discountRepository = $discountRepository;
-        $this->subeventRepository = $subeventRepository;
-        $this->translator         = $translator;
     }
 
     /**
@@ -73,7 +64,7 @@ class DiscountService
 
             try {
                 $this->parseExpression($result);
-            } catch (InvalidArgumentException $ex) {
+            } catch (InvalidArgumentException) {
                 continue;
             }
 
@@ -96,7 +87,7 @@ class DiscountService
 
         try {
             $this->parseExpression($result);
-        } catch (InvalidArgumentException $ex) {
+        } catch (InvalidArgumentException) {
             return false;
         }
 

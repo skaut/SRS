@@ -53,6 +53,7 @@ use function assert;
 use function basename;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
@@ -67,60 +68,21 @@ class EditUserSeminarFormFactory
      */
     private ?User $user = null;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private QueryBus $queryBus;
-
-    private EntityManagerInterface $em;
-
-    private UserRepository $userRepository;
-
-    private CustomInputRepository $customInputRepository;
-
-    private CustomInputValueRepository $customInputValueRepository;
-
-    private RoleRepository $roleRepository;
-
-    private ApplicationService $applicationService;
-
-    private Validators $validators;
-
-    private FilesService $filesService;
-
-    private IMailService $mailService;
-
-    private AclService $aclService;
-
-    private UserService $userService;
-
     public function __construct(
-        BaseFormFactory $baseFormFactory,
-        QueryBus $queryBus,
-        EntityManagerInterface $em,
-        UserRepository $userRepository,
-        CustomInputRepository $customInputRepository,
-        CustomInputValueRepository $customInputValueRepository,
-        RoleRepository $roleRepository,
-        ApplicationService $applicationService,
-        Validators $validators,
-        FilesService $filesService,
-        IMailService $mailService,
-        AclService $aclService,
-        UserService $userService
+        private BaseFormFactory $baseFormFactory,
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository,
+        private CustomInputRepository $customInputRepository,
+        private CustomInputValueRepository $customInputValueRepository,
+        private RoleRepository $roleRepository,
+        private ApplicationService $applicationService,
+        private Validators $validators,
+        private FilesService $filesService,
+        private IMailService $mailService,
+        private AclService $aclService,
+        private UserService $userService
     ) {
-        $this->baseFormFactory            = $baseFormFactory;
-        $this->queryBus                   = $queryBus;
-        $this->em                         = $em;
-        $this->userRepository             = $userRepository;
-        $this->customInputRepository      = $customInputRepository;
-        $this->customInputValueRepository = $customInputValueRepository;
-        $this->roleRepository             = $roleRepository;
-        $this->applicationService         = $applicationService;
-        $this->validators                 = $validators;
-        $this->filesService               = $filesService;
-        $this->mailService                = $mailService;
-        $this->aclService                 = $aclService;
-        $this->userService                = $userService;
     }
 
     /**
@@ -205,7 +167,7 @@ class EditUserSeminarFormFactory
                             assert($customInputValue instanceof CustomFileValue);
                             if ($customInputValue->getValue() !== null) {
                                 $file = $customInputValue->getValue();
-                                $custom->setHtmlAttribute('data-initial-preview', json_encode([$file]))
+                                $custom->setHtmlAttribute('data-initial-preview', json_encode([$file], JSON_THROW_ON_ERROR))
                                     ->setHtmlAttribute('data-initial-preview-file-type', 'other')
                                     ->setHtmlAttribute('data-initial-preview-config', json_encode([
                                         [
@@ -294,7 +256,7 @@ class EditUserSeminarFormFactory
 
         $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
-        $this->em->transactional(function () use ($values, $loggedUser): void {
+        $this->em->wrapInTransaction(function () use ($values, $loggedUser): void {
             $customInputValueChanged = false;
 
             if (! $this->user->isExternalLector()) {

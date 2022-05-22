@@ -25,11 +25,8 @@ class FilesService
 {
     use Nette\SmartObject;
 
-    private string $dir;
-
-    public function __construct(string $dir)
+    public function __construct(private string $dir)
     {
-        $this->dir = $dir;
     }
 
     /**

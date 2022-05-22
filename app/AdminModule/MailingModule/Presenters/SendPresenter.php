@@ -6,6 +6,7 @@ namespace App\AdminModule\MailingModule\Presenters;
 
 use App\AdminModule\MailingModule\Forms\SendFormFactory;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 
 /**
@@ -13,7 +14,7 @@ use stdClass;
  */
 class SendPresenter extends MailingBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public SendFormFactory $sendFormFactory;
 
     protected function createComponentSendForm(): Form

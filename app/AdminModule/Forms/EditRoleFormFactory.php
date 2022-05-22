@@ -38,32 +38,14 @@ class EditRoleFormFactory
      */
     private ?Role $role = null;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private EntityManagerInterface $em;
-
-    private AclService $aclService;
-
-    private RoleRepository $roleRepository;
-
-    private PageRepository $pageRepository;
-
-    private PermissionRepository $permissionRepository;
-
     public function __construct(
-        BaseFormFactory $baseFormFactory,
-        EntityManagerInterface $em,
-        AclService $aclService,
-        RoleRepository $roleRepository,
-        PageRepository $pageRepository,
-        PermissionRepository $permissionRepository
+        private BaseFormFactory $baseFormFactory,
+        private EntityManagerInterface $em,
+        private AclService $aclService,
+        private RoleRepository $roleRepository,
+        private PageRepository $pageRepository,
+        private PermissionRepository $permissionRepository
     ) {
-        $this->baseFormFactory      = $baseFormFactory;
-        $this->em                   = $em;
-        $this->aclService           = $aclService;
-        $this->roleRepository       = $roleRepository;
-        $this->pageRepository       = $pageRepository;
-        $this->permissionRepository = $permissionRepository;
     }
 
     /**
@@ -111,15 +93,13 @@ class EditRoleFormFactory
 
         $form->addCheckbox('approvedAfterRegistration', 'admin.acl.roles_approved_after_registration');
 
-        // $form->addCheckbox('syncedWithSkautIs', 'admin.acl.roles_synced_with_skaut_is');
-
         $form->addCheckbox('feeFromSubevents', 'admin.acl.roles_fee_from_subevents_checkbox')
             ->addCondition(Form::EQUAL, false)
             ->toggle('fee');
 
         $form->addText('fee', 'admin.acl.roles_fee')
             ->setOption('id', 'fee')
-            ->addCondition(Form::FILLED)
+            ->addRule(Form::FILLED, 'admin.acl.roles_fee_empty')
             ->addRule(Form::INTEGER, 'admin.acl.roles_fee_format');
 
         $form->addText('minimumAge', 'admin.acl.roles.minimum_age.label')
@@ -181,9 +161,8 @@ class EditRoleFormFactory
             'registerableTo' => $this->role->getRegisterableTo(),
             'capacity' => $this->role->getCapacity(),
             'approvedAfterRegistration' => $this->role->isApprovedAfterRegistration(),
-            // 'syncedWithSkautIs' => $this->role->isSyncedWithSkautIS(),
             'feeFromSubevents' => $this->role->getFee() === null,
-            'fee' => $this->role->getFee(),
+            'fee' => $this->role->getFee() ?? 0,
             'minimumAge' => $this->role->getMinimumAge(),
             'permissions' => $this->permissionRepository->findPermissionsIds($this->role->getPermissions()),
             'pages' => $this->pageRepository->findPagesSlugs($this->role->getPages()),
@@ -208,7 +187,7 @@ class EditRoleFormFactory
             return;
         }
 
-        $this->em->transactional(function () use ($values): void {
+        $this->em->wrapInTransaction(function () use ($values): void {
             $capacity = $values->capacity !== '' ? $values->capacity : null;
 
             $this->role->setName($values->name);
@@ -217,7 +196,6 @@ class EditRoleFormFactory
             $this->role->setRegisterableTo($values->registerableTo);
             $this->role->setCapacity($capacity);
             $this->role->setApprovedAfterRegistration($values->approvedAfterRegistration);
-            // $this->role->setSyncedWithSkautIS($values->syncedWithSkautIs);
             $this->role->setMinimumAge($values->minimumAge);
             $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values->permissions));
             $this->role->setPages($this->pageRepository->findPagesBySlugs($values->pages));

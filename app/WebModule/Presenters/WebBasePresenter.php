@@ -21,6 +21,7 @@ use App\Services\CmsService;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Nette\Application\AbortException;
+use Nette\DI\Attributes\Inject;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
@@ -29,25 +30,25 @@ use Throwable;
  */
 abstract class WebBasePresenter extends BasePresenter
 {
-    /** @inject */
+    #[Inject]
     public QueryBus $queryBus;
 
-    /** @inject */
+    #[Inject]
     public Authorizator $authorizator;
 
-    /** @inject */
+    #[Inject]
     public Authenticator $authenticator;
 
-    /** @inject */
+    #[Inject]
     public RoleRepository $roleRepository;
 
-    /** @inject */
+    #[Inject]
     public CmsService $cmsService;
 
-    /** @inject */
+    #[Inject]
     public UserRepository $userRepository;
 
-    /** @inject */
+    #[Inject]
     public SkautIsService $skautIsService;
 
     protected ?User $dbuser = null;
@@ -86,7 +87,6 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->logo        = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
         $this->template->footer      = $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER));
         $this->template->seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
-        $this->template->gaId        = $this->queryBus->handle(new SettingStringValueQuery(Settings::GA_ID));
 
         $this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
         $this->template->unapprovedRole    = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
@@ -120,7 +120,7 @@ abstract class WebBasePresenter extends BasePresenter
             if (! $this->queryBus->handle(new SettingBoolValueQuery(Settings::ADMIN_CREATED))) {
                 $this->redirect(':Install:Install:default');
             }
-        } catch (HandlerFailedException $ex) {
+        } catch (HandlerFailedException) {
             $this->redirect(':Install:Install:default');
         }
     }

@@ -10,6 +10,7 @@ use App\Model\Settings\Settings;
 use App\Services\BankService;
 use App\Services\QueryBus;
 use Nette\Application\Responses\TextResponse;
+use Nette\DI\Attributes\Inject;
 use Throwable;
 
 /**
@@ -17,10 +18,10 @@ use Throwable;
  */
 class BankPresenter extends ActionBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public QueryBus $queryBus;
 
-    /** @inject */
+    #[Inject]
     public BankService $bankService;
 
     /**

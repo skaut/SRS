@@ -4,17 +4,20 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment to deploy"
+        description: "Environment"
         type: environment
         required: true
+
+concurrency:
+  group: environment-${{ github.event.inputs.environment }}
 
 jobs:
   deploy:
     name: "Manual deployment"
     environment: ${{ github.event.inputs.environment }}
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     container:
-      image: fmasa/lebeda:8.0
+      image: skaut/lebeda:8.0
     env:
       CONFIG_DATABASE_HOST: ${{ secrets.CONFIG_DATABASE_HOST }}
       CONFIG_DATABASE_NAME: ${{ secrets.CONFIG_DATABASE_NAME }}

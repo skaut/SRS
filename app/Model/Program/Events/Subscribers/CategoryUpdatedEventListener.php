@@ -21,24 +21,12 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class CategoryUpdatedEventListener implements MessageHandlerInterface
 {
-    private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
-
-    private EntityManagerInterface $em;
-
-    private UserRepository $userRepository;
-
     public function __construct(
-        CommandBus $commandBus,
-        QueryBus $queryBus,
-        EntityManagerInterface $em,
-        UserRepository $userRepository
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository
     ) {
-        $this->commandBus     = $commandBus;
-        $this->queryBus       = $queryBus;
-        $this->em             = $em;
-        $this->userRepository = $userRepository;
     }
 
     /**
@@ -46,7 +34,7 @@ class CategoryUpdatedEventListener implements MessageHandlerInterface
      */
     public function __invoke(CategoryUpdatedEvent $event): void
     {
-        $this->em->transactional(function () use ($event): void {
+        $this->em->wrapInTransaction(function () use ($event): void {
             $registerableRoles    = $event->getCategory()->getRegisterableRoles();
             $registerableRolesOld = $event->getRegisterableRolesOld();
 

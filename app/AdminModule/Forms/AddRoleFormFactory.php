@@ -19,17 +19,8 @@ class AddRoleFormFactory
 {
     use Nette\SmartObject;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private AclService $aclService;
-
-    private RoleRepository $roleRepository;
-
-    public function __construct(BaseFormFactory $baseFormFactory, AclService $aclService, RoleRepository $roleRepository)
+    public function __construct(private BaseFormFactory $baseFormFactory, private AclService $aclService, private RoleRepository $roleRepository)
     {
-        $this->baseFormFactory = $baseFormFactory;
-        $this->aclService      = $aclService;
-        $this->roleRepository  = $roleRepository;
     }
 
     /**

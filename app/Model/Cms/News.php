@@ -6,40 +6,38 @@ namespace App\Model\Cms;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita aktuality.
- *
- * @ORM\Entity
- * @ORM\Table(name="news")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'news')]
 class News
 {
-    use Id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Text aktuality.
-     *
-     * @ORM\Column(type="text")
      */
+    #[ORM\Column(type: 'text')]
     protected string $text;
 
     /**
      * Datum publikování aktuality.
-     *
-     * @ORM\Column(type="datetime_immutable")
      */
+    #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $published;
 
     /**
      * Připíchnutá nahoru.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $pinned = false;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

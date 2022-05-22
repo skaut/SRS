@@ -11,28 +11,26 @@ use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use DateTimeImmutable;
-use Defr\QRPlatba\QRPlatba;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 use Numbers_Words;
+use Swejzi\QRPlatba\QRPlatba;
 
 use function implode;
 use function str_replace;
 
 /**
  * Abstraktní entita přihláška.
- *
- * @ORM\Entity
- * @ORM\Table(name="application")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *     "roles_application" = "RolesApplication",
- *     "subevents_application" = "SubeventsApplication"
- * })
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'application')]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap([
+    'roles_application' => RolesApplication::class,
+    'subevents_application' => SubeventsApplication::class,
+])]
 abstract class Application
 {
     /**
@@ -49,122 +47,110 @@ abstract class Application
      * Typ přihlášky.
      */
     protected string $type;
-    use Id;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Id přihlášky.
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $applicationId = null;
 
     /**
      * Uživatel.
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", inversedBy="applications", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'applications', cascade: ['persist'])]
     protected User $user;
 
     /**
      * Role.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: Role::class)]
     protected Collection $roles;
 
     /**
      * Podakce.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Structure\Subevent", inversedBy="applications", cascade={"persist"})
-     *
      * @var Collection<int, Subevent>
      */
+    #[ORM\ManyToMany(targetEntity: Subevent::class, inversedBy: 'applications', cascade: ['persist'])]
     protected Collection $subevents;
 
     /**
      * Poplatek.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $fee;
 
     /**
      * Variabilní symbol.
-     *
-     * @ORM\ManyToOne(targetEntity="VariableSymbol", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: VariableSymbol::class, cascade: ['persist'])]
     protected VariableSymbol $variableSymbol;
 
     /**
      * Datum podání přihlášky.
-     *
-     * @ORM\Column(type="datetime_immutable")
      */
+    #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $applicationDate;
 
     /**
      * Datum splatnosti.
-     *
-     * @ORM\Column(type="date_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?DateTimeImmutable $maturityDate = null;
 
     /**
      * Platební metoda.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $paymentMethod = null;
 
     /**
      * Datum zaplacení.
-     *
-     * @ORM\Column(type="date_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?DateTimeImmutable $paymentDate = null;
 
     /**
      * Spárovaná platba.
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Model\Payment\Payment", inversedBy="pairedApplications", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: Payment::class, inversedBy: 'pairedApplications', cascade: ['persist'])]
     protected ?Payment $payment = null;
 
     /**
      * Příjmový doklad. Používá se pro generování id.
-     *
-     * @ORM\ManyToOne(targetEntity="IncomeProof", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: IncomeProof::class, cascade: ['persist'])]
     protected ?IncomeProof $incomeProof = null;
 
     /**
      * Stav přihlášky.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected ?string $state = null;
 
     /**
      * Uživatel, který vytvořil přihlášku.
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Model\User\User", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     protected ?User $createdBy = null;
 
     /**
      * Platnost záznamu od.
-     *
-     * @ORM\Column(type="datetime_immutable")
      */
+    #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $validFrom;
 
     /**
      * Platnost záznamu do.
-     *
-     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $validTo = null;
 
     public function __construct(User $user)
@@ -182,7 +168,7 @@ abstract class Application
         }
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -215,9 +201,7 @@ abstract class Application
      */
     public function getRolesText(): string
     {
-        return implode(', ', $this->roles->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->roles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
     /**
@@ -233,9 +217,7 @@ abstract class Application
      */
     public function getSubeventsText(): string
     {
-        return implode(', ', $this->subevents->map(static function (Subevent $subevent) {
-            return $subevent->getName();
-        })->toArray());
+        return implode(', ', $this->subevents->map(static fn (Subevent $subevent) => $subevent->getName())->toArray());
     }
 
     public function getFee(): int

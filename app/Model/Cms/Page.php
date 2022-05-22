@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 use function array_map;
 use function implode;
@@ -19,59 +18,55 @@ use function in_array;
 
 /**
  * Entita stránky.
- *
- * @ORM\Entity
- * @ORM\Table(name="page")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'page')]
 class Page
 {
-    use Id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Název stránky.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
      * Cesta stránky.
-     *
-     * @ORM\Column(type="string", unique=true)
      */
+    #[ORM\Column(type: 'string', unique: true)]
     protected string $slug;
 
     /**
      * Pořadí v menu.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $position = 0;
 
     /**
      * Viditelná.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $public = false;
 
     /**
      * Role, které mají na stránku přístup.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="pages", cascade={"persist"})
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'pages', cascade: ['persist'])]
     protected Collection $roles;
 
     /**
      * Obsahy na stránce.
      *
-     * @ORM\OneToMany(targetEntity="Content", mappedBy="page", cascade={"persist"})
-     * @ORM\OrderBy({"position" = "ASC"})
-     *
      * @var Collection<int, Content>
      */
+    #[ORM\OneToMany(targetEntity: Content::class, mappedBy: 'page', cascade: ['persist'])]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     protected Collection $contents;
 
     public function __construct(string $name, string $slug)
@@ -82,7 +77,7 @@ class Page
         $this->contents = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -137,9 +132,7 @@ class Page
 
     public function getRolesText(): string
     {
-        return implode(', ', $this->roles->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->roles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
     /**
@@ -208,9 +201,7 @@ class Page
      */
     public function convertToDto(): PageDto
     {
-        $allowedRoles = array_map(static function (Role $role) {
-            return $role->getName();
-        }, $this->roles->toArray());
+        $allowedRoles = array_map(static fn (Role $role) => $role->getName(), $this->roles->toArray());
 
         $mainContents = [];
         foreach ($this->getContents(Content::MAIN)->toArray() as $content) {

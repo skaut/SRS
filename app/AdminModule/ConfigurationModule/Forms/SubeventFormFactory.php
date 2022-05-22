@@ -32,24 +32,12 @@ class SubeventFormFactory
      */
     private ?Subevent $subevent = null;
 
-    private EntityManagerInterface $em;
-
-    private BaseFormFactory $baseFormFactory;
-
-    private SubeventRepository $subeventRepository;
-
-    private SubeventService $subeventService;
-
     public function __construct(
-        EntityManagerInterface $em,
-        BaseFormFactory $baseFormFactory,
-        SubeventRepository $subeventRepository,
-        SubeventService $subeventService
+        private EntityManagerInterface $em,
+        private BaseFormFactory $baseFormFactory,
+        private SubeventRepository $subeventRepository,
+        private SubeventService $subeventService
     ) {
-        $this->em                 = $em;
-        $this->baseFormFactory    = $baseFormFactory;
-        $this->subeventRepository = $subeventRepository;
-        $this->subeventService    = $subeventService;
     }
 
     /**

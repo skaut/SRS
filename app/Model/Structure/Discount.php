@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Model\Structure;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita sleva.
- *
- * @ORM\Entity
- * @ORM\Table(name="discount")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'discount')]
 class Discount
 {
     public const SUBEVENT_ID       = 'subevent_id';
@@ -21,23 +19,25 @@ class Discount
     public const LEFT_PARENTHESIS  = '(';
     public const RIGHT_PARENTHESIS = ')';
     public const END               = '';
-    use Id;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Podmínka.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $discountCondition;
 
     /**
      * Sleva.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $discount;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

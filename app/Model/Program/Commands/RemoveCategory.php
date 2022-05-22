@@ -8,11 +8,8 @@ use App\Model\Program\Category;
 
 class RemoveCategory
 {
-    private Category $category;
-
-    public function __construct(Category $category)
+    public function __construct(private Category $category)
     {
-        $this->category = $category;
     }
 
     public function getCategory(): Category

@@ -31,24 +31,12 @@ use const UPLOAD_ERR_OK;
  */
 class DocumentsGridControl extends Control
 {
-    private Translator $translator;
-
-    private DocumentRepository $documentRepository;
-
-    private FilesService $filesService;
-
-    private TagRepository $tagRepository;
-
     public function __construct(
-        Translator $translator,
-        DocumentRepository $documentRepository,
-        TagRepository $tagRepository,
-        FilesService $filesService
+        private Translator $translator,
+        private DocumentRepository $documentRepository,
+        private TagRepository $tagRepository,
+        private FilesService $filesService
     ) {
-        $this->translator         = $translator;
-        $this->documentRepository = $documentRepository;
-        $this->tagRepository      = $tagRepository;
-        $this->filesService       = $filesService;
     }
 
     /**
@@ -89,14 +77,12 @@ class DocumentsGridControl extends Control
             });
 
         $grid->addColumnText('file', 'admin.cms.documents.column.file')
-            ->setRenderer(static function (Document $document) {
-                return Html::el('a')
-                    ->setAttribute('href', $document->getFile())
-                    ->setAttribute('target', '_blank')
-                    ->setAttribute('class', 'btn btn-xs btn-secondary')
-                    ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-file-arrow-down'))
-                    ->addText(' ' . basename($document->getFile()));
-            });
+            ->setRenderer(static fn (Document $document) => Html::el('a')
+                ->setAttribute('href', $document->getFile())
+                ->setAttribute('target', '_blank')
+                ->setAttribute('class', 'btn btn-xs btn-secondary')
+                ->addHtml(Html::el('span')->setAttribute('class', 'fa fa-file-arrow-down'))
+                ->addText(' ' . basename($document->getFile())));
 
         $grid->addColumnText('description', 'admin.cms.documents.column.description');
 

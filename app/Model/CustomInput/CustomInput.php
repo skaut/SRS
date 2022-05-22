@@ -8,27 +8,25 @@ use App\Model\Acl\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 use function implode;
 
 /**
  * Abstraktní entita vlastní pole přihlášky.
- *
- * @ORM\Entity
- * @ORM\Table(name="custom_input")
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *     "custom_checkbox" = "CustomCheckbox",
- *     "custom_text" = "CustomText",
- *     "custom_select" = "CustomSelect",
- *     "custom_multiselect" = "CustomMultiSelect",
- *     "custom_file" = "CustomFile",
- *     "custom_date" = "CustomDate",
- *     "custom_datetime" = "CustomDateTime"
- * })
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'custom_input')]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap([
+    'custom_checkbox' => CustomCheckbox::class,
+    'custom_text' => CustomText::class,
+    'custom_select' => CustomSelect::class,
+    'custom_multiselect' => CustomMultiSelect::class,
+    'custom_file' => CustomFile::class,
+    'custom_date' => CustomDate::class,
+    'custom_datetime' => CustomDateTime::class,
+])]
 abstract class CustomInput
 {
     /**
@@ -66,7 +64,6 @@ abstract class CustomInput
      */
     public const DATETIME = 'datetime';
 
-
     /** @var string[] */
     public static array $types = [
         self::TEXT,
@@ -82,45 +79,44 @@ abstract class CustomInput
      * Typ vlastního pole.
      */
     protected string $type;
-    use Id;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Název vlastního pole.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
      * Povinné pole.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $mandatory = false;
 
     /**
      * Pořadí pole na přihlášce.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $position = 0;
 
     /**
      * Hodnoty pole pro jednotlivé uživatele.
      *
-     * @ORM\OneToMany(targetEntity="CustomInputValue", mappedBy="input", cascade={"persist"})
-     *
      * @var Collection<int, CustomInputValue>
      */
+    #[ORM\OneToMany(targetEntity: CustomInputValue::class, mappedBy: 'input', cascade: ['persist'])]
     protected Collection $customInputValues;
 
     /**
      * Role, pro které se pole zobrazuje.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role")
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: Role::class)]
     protected Collection $roles;
 
     public function __construct()
@@ -128,7 +124,7 @@ abstract class CustomInput
         $this->customInputValues = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -201,8 +197,6 @@ abstract class CustomInput
 
     public function getRolesText(): string
     {
-        return implode(', ', $this->roles->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->roles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 }

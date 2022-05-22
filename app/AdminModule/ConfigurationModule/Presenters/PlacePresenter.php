@@ -11,6 +11,7 @@ use App\AdminModule\ConfigurationModule\Forms\PlacePointFormFactory;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Repositories\PlacePointRepository;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -19,16 +20,16 @@ use Throwable;
  */
 class PlacePresenter extends ConfigurationBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public PlacePointRepository $placePointRepository;
 
-    /** @inject */
+    #[Inject]
     public PlaceDescriptionFormFactory $placeDescriptionFormFactory;
 
-    /** @inject */
+    #[Inject]
     public PlacePointFormFactory $placePointFormFactory;
 
-    /** @inject */
+    #[Inject]
     public IPlacePointsGridControlFactory $placePointsGridControlFactory;
 
     public function renderEdit(int $id): void

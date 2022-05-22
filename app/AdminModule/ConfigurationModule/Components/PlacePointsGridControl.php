@@ -20,14 +20,8 @@ use function number_format;
  */
 class PlacePointsGridControl extends Control
 {
-    private Translator $translator;
-
-    private PlacePointRepository $placePointRepository;
-
-    public function __construct(Translator $translator, PlacePointRepository $placePointRepository)
+    public function __construct(private Translator $translator, private PlacePointRepository $placePointRepository)
     {
-        $this->translator           = $translator;
-        $this->placePointRepository = $placePointRepository;
     }
 
     /**

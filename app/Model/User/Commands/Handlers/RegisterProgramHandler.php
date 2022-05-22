@@ -19,24 +19,12 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class RegisterProgramHandler implements MessageHandlerInterface
 {
-    private QueryBus $queryBus;
-
-    private EventBus $eventBus;
-
-    private EntityManagerInterface $em;
-
-    private ProgramApplicationRepository $programApplicationRepository;
-
     public function __construct(
-        QueryBus $queryBus,
-        EventBus $eventBus,
-        EntityManagerInterface $em,
-        ProgramApplicationRepository $programApplicationRepository
+        private QueryBus $queryBus,
+        private EventBus $eventBus,
+        private EntityManagerInterface $em,
+        private ProgramApplicationRepository $programApplicationRepository
     ) {
-        $this->queryBus                     = $queryBus;
-        $this->eventBus                     = $eventBus;
-        $this->em                           = $em;
-        $this->programApplicationRepository = $programApplicationRepository;
     }
 
     /**
@@ -49,7 +37,7 @@ class RegisterProgramHandler implements MessageHandlerInterface
             throw new UserNotAllowedProgramException();
         }
 
-        $this->em->transactional(function () use ($command): void {
+        $this->em->wrapInTransaction(function () use ($command): void {
             $programApplication = new ProgramApplication($command->getUser(), $command->getProgram());
             $this->programApplicationRepository->save($programApplication);
             $this->eventBus->handle(new ProgramRegisteredEvent($command->getUser(), $command->getProgram(), $programApplication->isAlternate(), $command->isNotifyUser()));

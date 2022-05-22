@@ -8,17 +8,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita vlastní příloha přihlášky.
- *
- * @ORM\Entity
- * @ORM\Table(name="custom_file_value")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'custom_file_value')]
 class CustomFileValue extends CustomInputValue
 {
     /**
      * Název souboru.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $value = null;
 
     public function getValue(): ?string

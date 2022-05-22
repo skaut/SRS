@@ -18,14 +18,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class MailTemplatesGridControl extends Control
 {
-    private Translator $translator;
-
-    private TemplateRepository $templateRepository;
-
-    public function __construct(Translator $translator, TemplateRepository $templateRepository)
+    public function __construct(private Translator $translator, private TemplateRepository $templateRepository)
     {
-        $this->translator         = $translator;
-        $this->templateRepository = $templateRepository;
     }
 
     /**
@@ -53,9 +47,7 @@ class MailTemplatesGridControl extends Control
         $grid->setPagination(false);
 
         $grid->addColumnText('type', 'admin.mailing.templates.type')
-            ->setRenderer(function ($row) {
-                return $this->translator->translate('common.mailing.template_type.' . $row->getType());
-            });
+            ->setRenderer(fn ($row) => $this->translator->translate('common.mailing.template_type.' . $row->getType()));
 
         $grid->addColumnStatus('active', 'admin.mailing.templates.active')
             ->addOption(false, 'admin.mailing.templates.active_inactive')

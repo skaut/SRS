@@ -8,10 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita obsahu s přihláškou.
- *
- * @ORM\Entity
- * @ORM\Table(name="application_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'application_content')]
 class ApplicationContent extends Content implements IContent
 {
     protected string $type = Content::APPLICATION;

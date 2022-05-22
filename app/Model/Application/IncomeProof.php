@@ -7,23 +7,23 @@ namespace App\Model\Application;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita příjmového dokladu.
- *
- * @ORM\Entity
- * @ORM\Table(name="income_proof")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'income_proof')]
 class IncomeProof
 {
-    use Id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Datum vystavení příjmového dokladu.
-     *
-     * @ORM\Column(type="date_immutable")
      */
+    #[ORM\Column(type: 'date_immutable')]
     protected DateTimeImmutable $date;
 
     public function __construct()
@@ -31,7 +31,7 @@ class IncomeProof
         $this->date = new DateTimeImmutable();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

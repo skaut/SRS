@@ -7,14 +7,12 @@ namespace App\Model\Acl;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita oprávnění.
- *
- * @ORM\Entity
- * @ORM\Table(name="permission")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'permission')]
 class Permission
 {
     /**
@@ -60,29 +58,30 @@ class Permission
         self::MANAGE_ALL_PROGRAMS,
         self::MANAGE_SCHEDULE,
     ];
-    use Id;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Název oprávnění.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
      * Role s tímto oprávněním.
      *
-     * @ORM\ManyToMany(targetEntity="Role", mappedBy="permissions", cascade={"persist"})
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'permissions', cascade: ['persist'])]
     protected Collection $roles;
 
     /**
      * Prostředek oprávnění.
-     *
-     * @ORM\ManyToOne(targetEntity="SrsResource", inversedBy="permissions", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: SrsResource::class, inversedBy: 'permissions', cascade: ['persist'])]
     protected SrsResource $resource;
 
     public function __construct(string $name, SrsResource $resource)
@@ -92,7 +91,7 @@ class Permission
         $this->roles    = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

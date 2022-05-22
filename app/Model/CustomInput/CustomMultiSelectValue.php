@@ -11,19 +11,17 @@ use function implode;
 
 /**
  * Entita hodnota vlastního výběrového pole s více možnostmi přihlášky.
- *
- * @ORM\Entity
- * @ORM\Table(name="custom_multiselect_value")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'custom_multiselect_value')]
 class CustomMultiSelectValue extends CustomInputValue
 {
     /**
      * Vybrané položky výběrového pole s více možnostmi přihlášky.
      *
-     * @ORM\Column(type="simple_array", nullable=true)
-     *
      * @var string[]
      */
+    #[ORM\Column(type: 'simple_array', nullable: true)]
     protected array $value = [];
 
     /**

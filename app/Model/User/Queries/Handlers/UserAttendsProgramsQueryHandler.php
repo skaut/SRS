@@ -12,11 +12,8 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UserAttendsProgramsQueryHandler implements MessageHandlerInterface
 {
-    private ProgramRepository $programRepository;
-
-    public function __construct(ProgramRepository $programRepository)
+    public function __construct(private ProgramRepository $programRepository)
     {
-        $this->programRepository = $programRepository;
     }
 
     /**

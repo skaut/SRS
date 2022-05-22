@@ -28,28 +28,13 @@ class EditPaymentFormFactory
      */
     private ?Payment $payment = null;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private PaymentRepository $paymentRepository;
-
-    private ApplicationRepository $applicationRepository;
-
-    private UserRepository $userRepository;
-
-    private ApplicationService $applicationService;
-
     public function __construct(
-        BaseFormFactory $baseFormFactory,
-        PaymentRepository $paymentRepository,
-        ApplicationRepository $applicationRepository,
-        UserRepository $userRepository,
-        ApplicationService $applicationService
+        private BaseFormFactory $baseFormFactory,
+        private PaymentRepository $paymentRepository,
+        private ApplicationRepository $applicationRepository,
+        private UserRepository $userRepository,
+        private ApplicationService $applicationService
     ) {
-        $this->baseFormFactory       = $baseFormFactory;
-        $this->paymentRepository     = $paymentRepository;
-        $this->applicationRepository = $applicationRepository;
-        $this->userRepository        = $userRepository;
-        $this->applicationService    = $applicationService;
     }
 
     /**

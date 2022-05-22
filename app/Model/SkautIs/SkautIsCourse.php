@@ -5,33 +5,32 @@ declare(strict_types=1);
 namespace App\Model\SkautIs;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita skautIS kurz.
- *
- * @ORM\Entity
- * @ORM\Table(name="skaut_is_course")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'skaut_is_course')]
 class SkautIsCourse
 {
-    use Id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * SkautIS id kurzu.
-     *
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     protected int $skautIsCourseId;
 
     /**
      * Název kurzu.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $name;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

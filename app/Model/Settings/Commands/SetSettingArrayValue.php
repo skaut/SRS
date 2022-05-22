@@ -6,18 +6,11 @@ namespace App\Model\Settings\Commands;
 
 class SetSettingArrayValue
 {
-    private string $item;
-
-    /** @var mixed[] */
-    private ?array $value;
-
     /**
      * @param mixed[] $value
      */
-    public function __construct(string $item, ?array $value)
+    public function __construct(private string $item, private ?array $value)
     {
-        $this->item  = $item;
-        $this->value = $value;
     }
 
     public function getItem(): string
@@ -26,7 +19,7 @@ class SetSettingArrayValue
     }
 
     /**
-     * @return mixed[]
+     * @return mixed[]|null
      */
     public function getValue(): ?array
     {

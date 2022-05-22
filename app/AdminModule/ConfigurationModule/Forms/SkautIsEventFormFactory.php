@@ -35,36 +35,15 @@ class SkautIsEventFormFactory
 {
     use Nette\SmartObject;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
-
-    private SkautIsCourseRepository $skautIsCourseRepository;
-
-    private SkautIsEventGeneralService $skautIsEventGeneralService;
-
-    private SkautIsEventEducationService $skautIsEventEducationService;
-
-    private SubeventRepository $subeventRepository;
-
     public function __construct(
-        BaseFormFactory $baseForm,
-        CommandBus $commandBus,
-        QueryBus $queryBus,
-        SkautIsCourseRepository $skautIsCourseRepository,
-        SkautIsEventGeneralService $skautIsEventGeneralService,
-        SkautIsEventEducationService $skautIsEventEducationService,
-        SubeventRepository $subeventRepository
+        private BaseFormFactory $baseFormFactory,
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private SkautIsCourseRepository $skautIsCourseRepository,
+        private SkautIsEventGeneralService $skautIsEventGeneralService,
+        private SkautIsEventEducationService $skautIsEventEducationService,
+        private SubeventRepository $subeventRepository
     ) {
-        $this->baseFormFactory              = $baseForm;
-        $this->commandBus                   = $commandBus;
-        $this->queryBus                     = $queryBus;
-        $this->skautIsCourseRepository      = $skautIsCourseRepository;
-        $this->skautIsEventGeneralService   = $skautIsEventGeneralService;
-        $this->skautIsEventEducationService = $skautIsEventEducationService;
-        $this->subeventRepository           = $subeventRepository;
     }
 
     /**

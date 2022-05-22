@@ -7,37 +7,35 @@ namespace App\Model\User;
 use App\Model\Structure\Subevent;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Nettrine\ORM\Entity\Attributes\Id;
 
 /**
  * Entita kontrola vstupenky.
- *
- * @ORM\Entity
- * @ORM\Table(name="ticket_check")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'ticket_check')]
 class TicketCheck
 {
-    use Id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $id = null;
 
     /**
      * Uživatel.
-     *
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     protected User $user;
 
     /**
      * Podakce.
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Model\Structure\Subevent", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: Subevent::class, cascade: ['persist'])]
     protected Subevent $subevent;
 
     /**
      * Datum a čas kontroly.
-     *
-     * @ORM\Column(type="datetime_immutable")
      */
+    #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $datetime;
 
     public function __construct(User $user, Subevent $subevent)
@@ -47,7 +45,7 @@ class TicketCheck
         $this->datetime = new DateTimeImmutable();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

@@ -10,19 +10,11 @@ namespace App\Model\Cms\Dto;
 class ContentDto
 {
     /**
-     * Název komponenty.
+     * @param string $componentName Název komponenty.
+     * @param string $heading       Nadpis obsahu.
      */
-    protected string $componentName;
-
-    /**
-     * Nadpis obsahu.
-     */
-    protected string $heading;
-
-    public function __construct(string $componentName, string $heading)
+    public function __construct(protected string $componentName, protected string $heading)
     {
-        $this->componentName = $componentName;
-        $this->heading       = $heading;
     }
 
     public function getComponentName(): string
