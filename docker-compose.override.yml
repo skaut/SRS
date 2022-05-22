@@ -4,12 +4,13 @@ services:
   app:
     ports:
       - 80:80
+    volumes:
+      - /var/www/html/temp
+      - /var/www/html/tests/_temp
 
   mysql:
     ports:
       - 3306:3306
-    volumes:
-      - .docker/database/data:/var/lib/mysql
 
   adminer:
     container_name: srs.adminer
@@ -20,3 +21,8 @@ services:
       main:
         aliases:
           - mysql
+
+volumes:
+  mysql:
+    name: srs_mysql
+    external: true
