@@ -8,14 +8,8 @@ use App\Model\User\User;
 
 class UserAllowedBlocksQuery
 {
-    private User $user;
-
-    private bool $paidOnly;
-
-    public function __construct(User $user, bool $paidOnly)
+    public function __construct(private User $user, private bool $paidOnly)
     {
-        $this->user     = $user;
-        $this->paidOnly = $paidOnly;
     }
 
     public function getUser(): User

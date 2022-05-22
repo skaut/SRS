@@ -14,6 +14,7 @@ use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 use Nette\Application\AbortException;
 use Nette\Application\Responses\JsonResponse;
+use Nette\DI\Attributes\Inject;
 use Throwable;
 
 use function assert;
@@ -24,7 +25,7 @@ use function file_get_contents;
  */
 class SchedulePresenter extends ApiBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public ScheduleService $scheduleService;
 
     private SerializerInterface $serializer;

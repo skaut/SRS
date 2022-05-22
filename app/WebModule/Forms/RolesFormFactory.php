@@ -36,40 +36,16 @@ class RolesFormFactory
      */
     private ?User $user = null;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private QueryBus $queryBus;
-
-    private UserRepository $userRepository;
-
-    private RoleRepository $roleRepository;
-
-    private ApplicationService $applicationService;
-
-    private Translator $translator;
-
-    private Validators $validators;
-
-    private AclService $aclService;
-
     public function __construct(
-        BaseFormFactory $baseFormFactory,
-        QueryBus $queryBus,
-        UserRepository $userRepository,
-        RoleRepository $roleRepository,
-        ApplicationService $applicationService,
-        Translator $translator,
-        Validators $validators,
-        AclService $aclService
+        private BaseFormFactory $baseFormFactory,
+        private QueryBus $queryBus,
+        private UserRepository $userRepository,
+        private RoleRepository $roleRepository,
+        private ApplicationService $applicationService,
+        private Translator $translator,
+        private Validators $validators,
+        private AclService $aclService
     ) {
-        $this->baseFormFactory    = $baseFormFactory;
-        $this->queryBus           = $queryBus;
-        $this->userRepository     = $userRepository;
-        $this->roleRepository     = $roleRepository;
-        $this->applicationService = $applicationService;
-        $this->translator         = $translator;
-        $this->validators         = $validators;
-        $this->aclService         = $aclService;
     }
 
     /**

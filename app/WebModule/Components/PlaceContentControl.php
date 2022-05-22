@@ -16,14 +16,8 @@ use Throwable;
  */
 class PlaceContentControl extends BaseContentControl
 {
-    private QueryBus $queryBus;
-
-    private PlacePointRepository $placePointRepository;
-
-    public function __construct(QueryBus $queryBus, PlacePointRepository $placePointRepository)
+    public function __construct(private QueryBus $queryBus, private PlacePointRepository $placePointRepository)
     {
-        $this->queryBus             = $queryBus;
-        $this->placePointRepository = $placePointRepository;
     }
 
     /**

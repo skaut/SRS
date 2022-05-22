@@ -43,22 +43,20 @@ class Helpers
     /**
      * Vrátí id prvků v kolekci.
      *
-     * @param Collection<int, object> $collection
+     * @param Collection<int, mixed> $collection
      *
      * @return int[]
      */
     public static function getIds(Collection $collection): array
     {
-        return array_map(static function ($o) {
-            return $o->getId();
-        }, $collection->toArray());
+        return array_map(static fn ($o) => $o->getId(), $collection->toArray());
     }
 
     /**
      * Porovnává kolekce entit podle id.
      *
-     * @param Collection<int, object> $collection1
-     * @param Collection<int, object> $collection2
+     * @param Collection<int, mixed> $collection1
+     * @param Collection<int, mixed> $collection2
      */
     public static function collectionsEquals(Collection $collection1, Collection $collection2): bool
     {

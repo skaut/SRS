@@ -12,11 +12,8 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SubeventsQueryHandler implements MessageHandlerInterface
 {
-    private SubeventRepository $subeventRepository;
-
-    public function __construct(SubeventRepository $subeventRepository)
+    public function __construct(private SubeventRepository $subeventRepository)
     {
-        $this->subeventRepository = $subeventRepository;
     }
 
     /**

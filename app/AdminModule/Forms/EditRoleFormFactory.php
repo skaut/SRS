@@ -38,32 +38,14 @@ class EditRoleFormFactory
      */
     private ?Role $role = null;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private EntityManagerInterface $em;
-
-    private AclService $aclService;
-
-    private RoleRepository $roleRepository;
-
-    private PageRepository $pageRepository;
-
-    private PermissionRepository $permissionRepository;
-
     public function __construct(
-        BaseFormFactory $baseFormFactory,
-        EntityManagerInterface $em,
-        AclService $aclService,
-        RoleRepository $roleRepository,
-        PageRepository $pageRepository,
-        PermissionRepository $permissionRepository
+        private BaseFormFactory $baseFormFactory,
+        private EntityManagerInterface $em,
+        private AclService $aclService,
+        private RoleRepository $roleRepository,
+        private PageRepository $pageRepository,
+        private PermissionRepository $permissionRepository
     ) {
-        $this->baseFormFactory      = $baseFormFactory;
-        $this->em                   = $em;
-        $this->aclService           = $aclService;
-        $this->roleRepository       = $roleRepository;
-        $this->pageRepository       = $pageRepository;
-        $this->permissionRepository = $permissionRepository;
     }
 
     /**

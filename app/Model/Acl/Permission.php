@@ -10,10 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita oprávnění.
- *
- * @ORM\Entity
- * @ORM\Table(name="permission")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'permission')]
 class Permission
 {
     /**
@@ -60,34 +59,29 @@ class Permission
         self::MANAGE_SCHEDULE,
     ];
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Název oprávnění.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $name;
 
     /**
      * Role s tímto oprávněním.
      *
-     * @ORM\ManyToMany(targetEntity="Role", mappedBy="permissions", cascade={"persist"})
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'permissions', cascade: ['persist'])]
     protected Collection $roles;
 
     /**
      * Prostředek oprávnění.
-     *
-     * @ORM\ManyToOne(targetEntity="SrsResource", inversedBy="permissions", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: SrsResource::class, inversedBy: 'permissions', cascade: ['persist'])]
     protected SrsResource $resource;
 
     public function __construct(string $name, SrsResource $resource)

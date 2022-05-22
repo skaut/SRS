@@ -19,20 +19,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UpdateUserProgramsHandler implements MessageHandlerInterface
 {
-    private QueryBus $queryBus;
-
-    private CommandBus $commandBus;
-
-    private EntityManagerInterface $em;
-
     public function __construct(
-        QueryBus $queryBus,
-        CommandBus $commandBus,
-        EntityManagerInterface $em
+        private QueryBus $queryBus,
+        private CommandBus $commandBus,
+        private EntityManagerInterface $em
     ) {
-        $this->queryBus   = $queryBus;
-        $this->commandBus = $commandBus;
-        $this->em         = $em;
     }
 
     public function __invoke(UpdateUserPrograms $command): void

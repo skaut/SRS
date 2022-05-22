@@ -30,28 +30,8 @@ use function assert;
  */
 class ProgramCategoriesGridControl extends Control
 {
-    private CommandBus $commandBus;
-
-    private Translator $translator;
-
-    private CategoryRepository $categoryRepository;
-
-    private RoleRepository $roleRepository;
-
-    private AclService $aclService;
-
-    public function __construct(
-        CommandBus $commandBus,
-        Translator $translator,
-        CategoryRepository $categoryRepository,
-        RoleRepository $roleRepository,
-        AclService $aclService
-    ) {
-        $this->commandBus         = $commandBus;
-        $this->translator         = $translator;
-        $this->categoryRepository = $categoryRepository;
-        $this->roleRepository     = $roleRepository;
-        $this->aclService         = $aclService;
+    public function __construct(private CommandBus $commandBus, private Translator $translator, private CategoryRepository $categoryRepository, private RoleRepository $roleRepository, private AclService $aclService)
+    {
     }
 
     /**

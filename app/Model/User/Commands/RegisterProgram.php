@@ -9,17 +9,11 @@ use App\Model\User\User;
 
 class RegisterProgram
 {
-    private User $user;
-
-    private Program $program;
-
-    private bool $notifyUser;
-
-    public function __construct(User $user, Program $program, bool $notifyUser = true)
-    {
-        $this->user       = $user;
-        $this->program    = $program;
-        $this->notifyUser = $notifyUser;
+    public function __construct(
+        private User $user,
+        private Program $program,
+        private bool $notifyUser = true
+    ) {
     }
 
     public function getUser(): User

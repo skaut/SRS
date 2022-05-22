@@ -38,40 +38,16 @@ class MailService implements IMailService
 {
     use Nette\SmartObject;
 
-    private QueryBus $queryBus;
-
-    private MailFactory $mailFactory;
-
-    private MailRepository $mailRepository;
-
-    private UserRepository $userRepository;
-
-    private RoleRepository $roleRepository;
-
-    private SubeventRepository $subeventRepository;
-
-    private TemplateRepository $templateRepository;
-
-    private Translator $translator;
-
     public function __construct(
-        QueryBus $queryBus,
-        MailFactory $mailFactory,
-        MailRepository $mailRepository,
-        UserRepository $userRepository,
-        RoleRepository $roleRepository,
-        SubeventRepository $subeventRepository,
-        TemplateRepository $templateRepository,
-        Translator $translator
+        private QueryBus $queryBus,
+        private MailFactory $mailFactory,
+        private MailRepository $mailRepository,
+        private UserRepository $userRepository,
+        private RoleRepository $roleRepository,
+        private SubeventRepository $subeventRepository,
+        private TemplateRepository $templateRepository,
+        private Translator $translator
     ) {
-        $this->queryBus           = $queryBus;
-        $this->mailFactory        = $mailFactory;
-        $this->mailRepository     = $mailRepository;
-        $this->userRepository     = $userRepository;
-        $this->roleRepository     = $roleRepository;
-        $this->subeventRepository = $subeventRepository;
-        $this->templateRepository = $templateRepository;
-        $this->translator         = $translator;
     }
 
     /**

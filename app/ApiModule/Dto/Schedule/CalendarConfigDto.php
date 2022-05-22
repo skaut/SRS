@@ -14,22 +14,22 @@ class CalendarConfigDto
 {
     use Nette\SmartObject;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $seminarFromDate;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $seminarToDate;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $minTime;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $maxTime;
 
-    /** @JMS\Type("boolean") */
+    #[JMS\Type(values: 'boolean')]
     private bool $allowedModifySchedule;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private string $initialView;
 
     public function getSeminarFromDate(): string

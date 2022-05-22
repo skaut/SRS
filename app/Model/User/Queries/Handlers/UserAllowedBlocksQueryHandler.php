@@ -12,11 +12,8 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UserAllowedBlocksQueryHandler implements MessageHandlerInterface
 {
-    private BlockRepository $blockRepository;
-
-    public function __construct(BlockRepository $blockRepository)
+    public function __construct(private BlockRepository $blockRepository)
     {
-        $this->blockRepository = $blockRepository;
     }
 
     /**

@@ -14,14 +14,8 @@ use App\Model\User\Repositories\UserRepository;
  */
 class LectorsContentControl extends BaseContentControl
 {
-    private UserRepository $userRepository;
-
-    private RoleRepository $roleRepository;
-
-    public function __construct(UserRepository $userRepository, RoleRepository $roleRepository)
+    public function __construct(private UserRepository $userRepository, private RoleRepository $roleRepository)
     {
-        $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
     }
 
     public function render(ContentDto $content): void

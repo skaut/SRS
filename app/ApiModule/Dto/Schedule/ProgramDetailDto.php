@@ -14,49 +14,45 @@ class ProgramDetailDto
 {
     use Nette\SmartObject;
 
-    /** @JMS\Type("int") */
+    #[JMS\Type(values: 'int')]
     private int $id;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private ?string $start = null;
 
-    /** @JMS\Type("string") */
+    #[JMS\Type(values: 'string')]
     private ?string $end = null;
 
-    /** @JMS\Type("int") */
+    #[JMS\Type(values: 'int')]
     private ?int $blockId = null;
 
-    /** @JMS\Type("int") */
+    #[JMS\Type(values: 'int')]
     private ?int $roomId = null;
 
-    /** @JMS\Type("int") */
+    #[JMS\Type(values: 'int')]
     private ?int $attendeesCount = null;
 
-    /** @JMS\Type("int") */
+    #[JMS\Type(values: 'int')]
     private ?int $alternatesCount = null;
 
-    /** @JMS\Type("boolean") */
+    #[JMS\Type(values: 'boolean')]
     private ?bool $userAttends = null;
 
-    /** @JMS\Type("boolean") */
+    #[JMS\Type(values: 'boolean')]
     private ?bool $userAlternates = null;
 
-    /**
-     * @JMS\Type("array")
-     * @var int[]
-     */
+    /** @var int[] */
+    #[JMS\Type(values: 'array<int>')]
     private ?array $sameBlockPrograms = null;
 
-    /**
-     * @JMS\Type("array")
-     * @var int[]
-     */
+    /** @var int[] */
+    #[JMS\Type(values: 'array<int>')]
     private ?array $overlappingPrograms = null;
 
-    /** @JMS\Type("boolean") */
+    #[JMS\Type(values: 'boolean')]
     private ?bool $blocked = null;
 
-    /** @JMS\Type("boolean") */
+    #[JMS\Type(values: 'boolean')]
     private ?bool $paid = null;
 
     public function getId(): int

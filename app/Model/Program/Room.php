@@ -10,48 +10,41 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita místnost.
- *
- * @ORM\Entity
- * @ORM\Table(name="room")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'room')]
 class Room
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Název místnosti.
-     *
-     * @ORM\Column(type="string", unique=true)
      */
+    #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 
     /**
      * Kapacita.
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
-    protected ?int $capacity = null;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $capacity;
 
     /**
      * Programy v místnosti.
      *
-     * @ORM\OneToMany(targetEntity="Program", mappedBy="room", cascade={"persist"})
-     * @ORM\OrderBy({"start" = "ASC"})
-     *
      * @var Collection<int, Program>
      */
+    #[ORM\OneToMany(targetEntity: Program::class, mappedBy: 'room', cascade: ['persist'])]
+    #[ORM\OrderBy(['start' => 'ASC'])]
     protected Collection $programs;
 
     public function __construct(string $name, ?int $capacity)
     {
         $this->name     = $name;
         $this->capacity = $capacity;
-
         $this->programs = new ArrayCollection();
     }
 

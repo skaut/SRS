@@ -27,24 +27,12 @@ use function count;
  */
 class DocumentTagsGridControl extends Control
 {
-    private Translator $translator;
-
-    private RoleRepository $roleRepository;
-
-    private AclService $aclService;
-
-    private TagRepository $tagRepository;
-
     public function __construct(
-        Translator $translator,
-        RoleRepository $roleRepository,
-        AclService $aclService,
-        TagRepository $tagRepository
+        private Translator $translator,
+        private RoleRepository $roleRepository,
+        private AclService $aclService,
+        private TagRepository $tagRepository
     ) {
-        $this->translator     = $translator;
-        $this->roleRepository = $roleRepository;
-        $this->aclService     = $aclService;
-        $this->tagRepository  = $tagRepository;
     }
 
     /**
@@ -72,11 +60,10 @@ class DocumentTagsGridControl extends Control
         $grid->addColumnText('name', 'admin.cms.documents.tags.column.name');
 
         $grid->addColumnText('roles', 'admin.cms.documents.tags.column.roles', 'rolesText')
-            ->setRendererOnCondition(function () {
-                return $this->translator->translate('admin.cms.documents.tags.column.roles_all');
-            }, function (Tag $tag) {
-                return count($this->roleRepository->findAll()) === $tag->getRoles()->count();
-            });
+            ->setRendererOnCondition(
+                fn () => $this->translator->translate('admin.cms.documents.tags.column.roles_all'),
+                fn (Tag $tag) => count($this->roleRepository->findAll()) === $tag->getRoles()->count()
+            );
 
         $rolesOptions = $this->aclService->getRolesWithoutRolesOptions([]);
 

@@ -10,19 +10,20 @@ use App\AdminModule\CmsModule\Forms\IPageFormFactory;
 use App\AdminModule\CmsModule\Forms\PageForm;
 use App\Model\Cms\Content;
 use App\Model\Cms\Repositories\PageRepository;
+use Nette\DI\Attributes\Inject;
 
 /**
  * Presenter starající se o správu stránek.
  */
 class PagesPresenter extends CmsBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public IPagesGridControlFactory $pagesGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public IPageFormFactory $pageFormFactory;
 
-    /** @inject */
+    #[Inject]
     public PageRepository $pagesRepository;
 
     public function renderContent(int $id, string $area): void

@@ -40,38 +40,16 @@ class ExcelExportService
 
     private Spreadsheet $spreadsheet;
 
-    private Translator $translator;
-
-    private CustomInputRepository $customInputRepository;
-
-    private UserService $userService;
-
-    private SubeventRepository $subeventRepository;
-
-    private CategoryRepository $categoryRepository;
-
-    private ProgramRepository $programRepository;
-
-    private QueryBus $queryBus;
-
     public function __construct(
-        Translator $translator,
-        CustomInputRepository $customInputRepository,
-        UserService $userService,
-        SubeventRepository $subeventRepository,
-        CategoryRepository $categoryRepository,
-        ProgramRepository $programRepository,
-        QueryBus $queryBus
+        private Translator $translator,
+        private CustomInputRepository $customInputRepository,
+        private UserService $userService,
+        private SubeventRepository $subeventRepository,
+        private CategoryRepository $categoryRepository,
+        private ProgramRepository $programRepository,
+        private QueryBus $queryBus
     ) {
         $this->spreadsheet = new Spreadsheet();
-
-        $this->translator            = $translator;
-        $this->customInputRepository = $customInputRepository;
-        $this->userService           = $userService;
-        $this->subeventRepository    = $subeventRepository;
-        $this->categoryRepository    = $categoryRepository;
-        $this->programRepository     = $programRepository;
-        $this->queryBus              = $queryBus;
     }
 
     /**

@@ -8,14 +8,8 @@ use App\Model\Program\Category;
 
 class SaveCategory
 {
-    private Category $category;
-
-    private ?Category $categoryOld;
-
-    public function __construct(Category $category, ?Category $categoryOld)
+    public function __construct(private Category $category, private ?Category $categoryOld)
     {
-        $this->category    = $category;
-        $this->categoryOld = $categoryOld;
     }
 
     public function getCategory(): Category

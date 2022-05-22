@@ -55,9 +55,7 @@ class TagRepository extends AbstractRepository
      */
     public function findTagsIds(Collection $tags): array
     {
-        return array_map(static function (Tag $o) {
-            return $o->getId();
-        }, $tags->toArray());
+        return array_map(static fn (Tag $o) => $o->getId(), $tags->toArray());
     }
 
     /**

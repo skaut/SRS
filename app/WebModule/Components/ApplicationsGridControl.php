@@ -39,50 +39,20 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  */
 class ApplicationsGridControl extends BaseContentControl
 {
-    private QueryBus $queryBus;
-
-    private Translator $translator;
-
-    private ApplicationRepository $applicationRepository;
-
-    private UserRepository $userRepository;
-
-    private SubeventRepository $subeventRepository;
-
-    private ApplicationService $applicationService;
-
     private ?User $user = null;
 
-    private Validators $validators;
-
-    private RolesApplicationRepository $rolesApplicationRepository;
-
-    private SubeventsApplicationRepository $subeventsApplicationRepository;
-
-    private SubeventService $subeventService;
-
     public function __construct(
-        QueryBus $queryBus,
-        Translator $translator,
-        ApplicationRepository $applicationRepository,
-        UserRepository $userRepository,
-        SubeventRepository $subeventRepository,
-        ApplicationService $applicationService,
-        Validators $validators,
-        RolesApplicationRepository $rolesApplicationRepository,
-        SubeventsApplicationRepository $subeventsApplicationRepository,
-        SubeventService $subeventService
+        private QueryBus $queryBus,
+        private Translator $translator,
+        private ApplicationRepository $applicationRepository,
+        private UserRepository $userRepository,
+        private SubeventRepository $subeventRepository,
+        private ApplicationService $applicationService,
+        private Validators $validators,
+        private RolesApplicationRepository $rolesApplicationRepository,
+        private SubeventsApplicationRepository $subeventsApplicationRepository,
+        private SubeventService $subeventService
     ) {
-        $this->queryBus                       = $queryBus;
-        $this->translator                     = $translator;
-        $this->applicationRepository          = $applicationRepository;
-        $this->userRepository                 = $userRepository;
-        $this->subeventRepository             = $subeventRepository;
-        $this->applicationService             = $applicationService;
-        $this->validators                     = $validators;
-        $this->rolesApplicationRepository     = $rolesApplicationRepository;
-        $this->subeventsApplicationRepository = $subeventsApplicationRepository;
-        $this->subeventService                = $subeventService;
     }
 
     /**
@@ -149,9 +119,7 @@ class ApplicationsGridControl extends BaseContentControl
             ->setFormat(Helpers::DATE_FORMAT);
 
         $grid->addColumnText('state', 'web.profile.applications_state')
-            ->setRenderer(function (Application $row) {
-                return $this->applicationService->getStateText($row);
-            });
+            ->setRenderer(fn (Application $row) => $this->applicationService->getStateText($row));
 
         if ($explicitSubeventsExists) {
             if ($this->applicationService->isAllowedAddApplication($this->user)) {
@@ -178,17 +146,13 @@ class ApplicationsGridControl extends BaseContentControl
                 ]);
             };
             $grid->getInlineEdit()->onSubmit[]      = [$this, 'edit'];
-            $grid->allowRowsInlineEdit(function (Application $item) {
-                return $this->applicationService->isAllowedEditApplication($item);
-            });
+            $grid->allowRowsInlineEdit(fn (Application $item) => $this->applicationService->isAllowedEditApplication($item));
         }
 
         $grid->addAction('generatePaymentProofBank', 'web.profile.applications_download_payment_proof');
-        $grid->allowRowsAction('generatePaymentProofBank', static function (Application $item) {
-            return $item->getState() === ApplicationState::PAID
-                && $item->getPaymentMethod() === PaymentType::BANK
-                && $item->getPaymentDate();
-        });
+        $grid->allowRowsAction('generatePaymentProofBank', static fn (Application $item) => $item->getState() === ApplicationState::PAID
+            && $item->getPaymentMethod() === PaymentType::BANK
+            && $item->getPaymentDate());
 
         if ($this->user->getNotCanceledSubeventsApplications()->count() > 1) {
             $grid->addAction('cancelApplication', 'web.profile.applications_cancel_application')
@@ -196,15 +160,11 @@ class ApplicationsGridControl extends BaseContentControl
                     'data-toggle' => 'confirmation',
                     'data-content' => $this->translator->translate('web.profile.applications_cancel_application_confirm'),
                 ])->setClass('btn btn-xs btn-danger');
-            $grid->allowRowsAction('cancelApplication', function (Application $item) {
-                return $this->applicationService->isAllowedEditApplication($item);
-            });
+            $grid->allowRowsAction('cancelApplication', fn (Application $item) => $this->applicationService->isAllowedEditApplication($item));
         }
 
         $grid->setItemsDetail()
-            ->setRenderCondition(static function (Application $item) {
-                return $item->isWaitingForPayment();
-            })
+            ->setRenderCondition(static fn (Application $item) => $item->isWaitingForPayment())
             ->setText($this->translator->translate('web.profile.applications_pay'))
             ->setIcon('money')
             ->setClass('btn btn-xs btn-primary ajax')
@@ -214,9 +174,7 @@ class ApplicationsGridControl extends BaseContentControl
             ]);
         $grid->setTemplateFile(__DIR__ . '/templates/applications_grid_detail.latte');
 
-        $grid->setColumnsSummary(['fee'], static function (Application $item, $column) {
-            return $item->isCanceled() ? 0 : $item->getFee();
-        });
+        $grid->setColumnsSummary(['fee'], static fn (Application $item, $column) => $item->isCanceled() ? 0 : $item->getFee());
 
         $grid->setRowCallback(static function (Application $application, Html $tr): void {
             if ($application->isCanceled()) {

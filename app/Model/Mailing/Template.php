@@ -10,10 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita šablona automatického e-mailu.
- *
- * @ORM\Entity
- * @ORM\Table(name="mail_template")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'mail_template')]
 class Template
 {
     /**
@@ -86,55 +85,47 @@ class Template
      */
     public const CONTACT_FORM = 'contact_form';
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Typ e-mailu.
-     *
-     * @ORM\Column(type="string", unique=true)
      */
+    #[ORM\Column(type: 'string', unique: true)]
     protected string $type;
 
     /**
      * Předmět e-mailu.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $subject;
 
     /**
      * Text e-mailu.
-     *
-     * @ORM\Column(type="text")
      */
+    #[ORM\Column(type: 'text')]
     protected string $text;
 
     /**
      * Aktivní.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $active;
 
     /**
      * Proměnné použitelné v šabloně.
      *
-     * @ORM\ManyToMany(targetEntity="TemplateVariable")
-     *
      * @var Collection<int, TemplateVariable>
      */
+    #[ORM\ManyToMany(targetEntity: TemplateVariable::class)]
     protected Collection $variables;
 
     /**
      * Systémový e-mail. Nezobrazuje se v přehledu a nelze jej editovat.
-     *
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected bool $systemTemplate;
 
     public function __construct()

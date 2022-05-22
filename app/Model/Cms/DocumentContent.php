@@ -20,10 +20,9 @@ use function assert;
 
 /**
  * Entita obsahu s dokumenty.
- *
- * @ORM\Entity
- * @ORM\Table(name="document_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'document_content')]
 class DocumentContent extends Content implements IContent
 {
     protected string $type = Content::DOCUMENT;
@@ -31,10 +30,9 @@ class DocumentContent extends Content implements IContent
     /**
      * Tagy dokumentů, které se zobrazí.
      *
-     * @ORM\ManyToMany(targetEntity="Tag")
-     *
      * @var Collection<int, Tag>
      */
+    #[ORM\ManyToMany(targetEntity: Tag::class)]
     protected Collection $tags;
 
     private TagRepository $tagRepository;

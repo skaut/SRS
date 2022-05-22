@@ -66,36 +66,15 @@ class ScheduleService
 
     private ?User $user = null;
 
-    private Translator $translator;
-
-    private UserRepository $userRepository;
-
-    private ProgramRepository $programRepository;
-
-    private BlockRepository $blockRepository;
-
-    private RoomRepository $roomRepository;
-
-    private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
-
     public function __construct(
-        Translator $translator,
-        UserRepository $userRepository,
-        ProgramRepository $programRepository,
-        BlockRepository $blockRepository,
-        RoomRepository $roomRepository,
-        CommandBus $commandBus,
-        QueryBus $queryBus
+        private Translator $translator,
+        private UserRepository $userRepository,
+        private ProgramRepository $programRepository,
+        private BlockRepository $blockRepository,
+        private RoomRepository $roomRepository,
+        private CommandBus $commandBus,
+        private QueryBus $queryBus
     ) {
-        $this->translator        = $translator;
-        $this->userRepository    = $userRepository;
-        $this->programRepository = $programRepository;
-        $this->blockRepository   = $blockRepository;
-        $this->roomRepository    = $roomRepository;
-        $this->commandBus        = $commandBus;
-        $this->queryBus          = $queryBus;
     }
 
     public function setUser(int $userId): void
@@ -219,7 +198,7 @@ class ScheduleService
             && $this->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_SCHEDULE));
 
         $programs = $this->programRepository->findAll();
-        if (empty($programs)) {
+        if ($programs->isEmpty()) {
             $minTime = 0;
             $maxTime = 24;
         } else {
@@ -483,15 +462,22 @@ class ScheduleService
         $blockDetailDto->setId($block->getId());
         $blockDetailDto->setName($block->getName());
         $blockDetailDto->setCategory($block->getCategory() ? $block->getCategory()->getName() : '');
-        $blockDetailDto->setLectors($block->getLectors()->map(function (User $lector) {
-            return $this->convertUserToLectorDetailDto($lector);
-        })->toArray());
+        $blockDetailDto->setLectors(
+            $block->getLectors()
+                ->map(fn (User $lector) => $this->convertUserToLectorDetailDto($lector))
+                ->toArray()
+        );
         $blockDetailDto->setLectorsNames($block->getLectorsText());
         $blockDetailDto->setDuration($block->getDuration());
         $blockDetailDto->setCapacity($block->getCapacity());
         $blockDetailDto->setAlternatesAllowed($block->isAlternatesAllowed());
-        $blockDetailDto->setMandatory($block->getMandatory() === ProgramMandatoryType::MANDATORY || $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED);
-        $blockDetailDto->setAutoRegistered($block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED);
+        $blockDetailDto->setMandatory(
+            $block->getMandatory() === ProgramMandatoryType::MANDATORY ||
+            $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED
+        );
+        $blockDetailDto->setAutoRegistered(
+            $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED
+        );
         $blockDetailDto->setPerex($block->getPerex());
         $blockDetailDto->setDescription($block->getDescription());
         $blockDetailDto->setProgramsCount($block->getProgramsCount());

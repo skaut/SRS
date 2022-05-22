@@ -11,11 +11,8 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UserUpdatedEventListener implements MessageHandlerInterface
 {
-    private CommandBus $commandBus;
-
-    public function __construct(CommandBus $commandBus)
+    public function __construct(private CommandBus $commandBus)
     {
-        $this->commandBus = $commandBus;
     }
 
     public function __invoke(UserUpdatedEvent $event): void

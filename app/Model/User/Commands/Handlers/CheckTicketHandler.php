@@ -12,14 +12,8 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class CheckTicketHandler implements MessageHandlerInterface
 {
-    private TicketCheckRepository $ticketCheckRepository;
-
-    private UserRepository $userRepository;
-
-    public function __construct(TicketCheckRepository $ticketCheckRepository, UserRepository $userRepository)
+    public function __construct(private TicketCheckRepository $ticketCheckRepository, private UserRepository $userRepository)
     {
-        $this->ticketCheckRepository = $ticketCheckRepository;
-        $this->userRepository        = $userRepository;
     }
 
     public function __invoke(CheckTicket $command): void

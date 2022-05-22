@@ -10,10 +10,9 @@ use function implode;
 
 /**
  * Entita vlastní výběrové pole s více možnostmi přihlášky.
- *
- * @ORM\Entity
- * @ORM\Table(name="custom_multiselect")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'custom_multiselect')]
 class CustomMultiSelect extends CustomInput
 {
     protected string $type = CustomInput::MULTISELECT;
@@ -21,10 +20,9 @@ class CustomMultiSelect extends CustomInput
     /**
      * Možnosti výběrového pole oddělené čárkou.
      *
-     * @ORM\Column(type="simple_array")
-     *
      * @var string[]
      */
+    #[ORM\Column(type: 'simple_array')]
     protected array $options = [];
 
     /**

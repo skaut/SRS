@@ -47,36 +47,17 @@ class ProgramAttendeesGridControl extends Control
      */
     private Program $program;
 
-    private Translator $translator;
-
-    private ProgramRepository $programRepository;
-
-    private UserRepository $userRepository;
-
     private SessionSection $sessionSection;
 
-    private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
-
-    private EntityManagerInterface $em;
-
     public function __construct(
-        Translator $translator,
-        ProgramRepository $programRepository,
-        UserRepository $userRepository,
+        private Translator $translator,
+        private ProgramRepository $programRepository,
+        private UserRepository $userRepository,
         Session $session,
-        CommandBus $commandBus,
-        QueryBus $queryBus,
-        EntityManagerInterface $em
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em
     ) {
-        $this->translator        = $translator;
-        $this->programRepository = $programRepository;
-        $this->userRepository    = $userRepository;
-        $this->commandBus        = $commandBus;
-        $this->queryBus          = $queryBus;
-        $this->em                = $em;
-
         $this->sessionSection = $session->getSection('srs');
     }
 
@@ -127,11 +108,9 @@ class ProgramAttendeesGridControl extends Control
                 ->setFilterText();
 
             $grid->addColumnText('attends', 'admin.program.blocks.attendees.column.attends')
-                ->setRenderer(function (User $user) {
-                    return $user->isAttendee($this->program)
-                        ? $this->translator->translate('admin.common.yes')
-                        : $this->translator->translate('admin.common.no');
-                })
+                ->setRenderer(fn (User $user) => $user->isAttendee($this->program)
+                    ? $this->translator->translate('admin.common.yes')
+                    : $this->translator->translate('admin.common.no'))
                 ->setFilterSelect(['' => 'admin.common.all', 'yes' => 'admin.common.yes', 'no' => 'admin.common.no'])
                 ->setCondition(static function (QueryBuilder $qb, string $value): void {
                     if ($value === '') {
@@ -145,11 +124,9 @@ class ProgramAttendeesGridControl extends Control
                 ->setTranslateOptions();
 
             $grid->addColumnText('alternates', 'admin.program.blocks.attendees.column.alternates')
-                ->setRenderer(function (User $user) {
-                    return $user->isAlternate($this->program)
-                        ? $this->translator->translate('admin.common.yes')
-                        : $this->translator->translate('admin.common.no');
-                })
+                ->setRenderer(fn (User $user) => $user->isAlternate($this->program)
+                    ? $this->translator->translate('admin.common.yes')
+                    : $this->translator->translate('admin.common.no'))
                 ->setFilterSelect(['' => 'admin.common.all', 'yes' => 'admin.common.yes', 'no' => 'admin.common.no'])
                 ->setCondition(static function (QueryBuilder $qb, string $value): void {
                     if ($value === '') {
@@ -197,9 +174,7 @@ class ProgramAttendeesGridControl extends Control
 
                 $grid->addAction('unregister', 'admin.program.blocks.attendees.action.unregister', 'unregister!')
                     ->setClass('btn btn-xs btn-danger ajax');
-                $grid->allowRowsAction('unregister', function (User $user) {
-                    return $user->isAttendee($this->program) || $user->isAlternate($this->program);
-                });
+                $grid->allowRowsAction('unregister', fn (User $user) => $user->isAttendee($this->program) || $user->isAlternate($this->program));
 
                 $grid->addGroupAction('admin.program.blocks.attendees.action.register')->onSelect[]   = [$this, 'groupRegister'];
                 $grid->addGroupAction('admin.program.blocks.attendees.action.unregister')->onSelect[] = [$this, 'groupUnregister'];
@@ -316,7 +291,7 @@ class ProgramAttendeesGridControl extends Control
                     }
                 });
                 $p->flashMessage('admin.program.blocks.attendees.message.group_register_success', 'success');
-            } catch (HandlerFailedException $e) {
+            } catch (HandlerFailedException) {
                 $p->flashMessage('admin.program.blocks.attendees.message.group_register_failed', 'danger');
             }
         }
@@ -352,7 +327,7 @@ class ProgramAttendeesGridControl extends Control
                     }
                 });
                 $p->flashMessage('admin.program.blocks.attendees.message.group_unregister_success', 'success');
-            } catch (HandlerFailedException $e) {
+            } catch (HandlerFailedException) {
                 $p->flashMessage('admin.program.blocks.attendees.message.group_unregister_failed', 'danger');
             }
         }

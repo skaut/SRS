@@ -13,42 +13,36 @@ use function implode;
 
 /**
  * Entita tagu pro dokumenty.
- *
- * @ORM\Entity
- * @ORM\Table(name="tag")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'tag')]
 class Tag
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Dokumenty s tagem.
      *
-     * @ORM\ManyToMany(targetEntity="Document", mappedBy="tags", cascade={"persist"})
-     *
      * @var Collection<int, Document>
      */
+    #[ORM\ManyToMany(targetEntity: Document::class, mappedBy: 'tags', cascade: ['persist'])]
     protected Collection $documents;
 
     /**
      * Název tagu.
-     *
-     * @ORM\Column(type="string", unique=true)
      */
+    #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 
     /**
      * Role oprávněné zobrazit dokumenty v této kategorií.
      *
-     * @ORM\ManyToMany(targetEntity="\App\Model\Acl\Role", inversedBy="tags", cascade={"persist"})
-     *
      * @var Collection<int, Role>
      */
+    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'tags', cascade: ['persist'])]
     protected Collection $roles;
 
     public function __construct()
@@ -106,9 +100,7 @@ class Tag
 
     public function getRolesText(): string
     {
-        return implode(', ', $this->roles->map(static function (Role $role) {
-            return $role->getName();
-        })->toArray());
+        return implode(', ', $this->roles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
     /**

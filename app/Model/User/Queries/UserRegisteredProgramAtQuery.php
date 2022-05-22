@@ -9,14 +9,8 @@ use App\Model\User\User;
 
 class UserRegisteredProgramAtQuery
 {
-    private User $user;
-
-    private Program $program;
-
-    public function __construct(User $user, Program $program)
+    public function __construct(private User $user, private Program $program)
     {
-        $this->user    = $user;
-        $this->program = $program;
     }
 
     public function getUser(): User

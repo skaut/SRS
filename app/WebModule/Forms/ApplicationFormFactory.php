@@ -79,68 +79,23 @@ class ApplicationFormFactory
     /** @var callable[] */
     public array $onSkautIsError = [];
 
-    private BaseFormFactory $baseFormFactory;
-
-    private QueryBus $queryBus;
-
-    private EntityManagerInterface $em;
-
-    private UserRepository $userRepository;
-
-    private RoleRepository $roleRepository;
-
-    private CustomInputRepository $customInputRepository;
-
-    private CustomInputValueRepository $customInputValueRepository;
-
-    private SkautIsService $skautIsService;
-
-    private SubeventRepository $subeventRepository;
-
-    private AclService $aclService;
-
-    private ApplicationService $applicationService;
-
-    private Validators $validators;
-
-    private FilesService $filesService;
-
-    private SubeventService $subeventService;
-
-    private Translator $translator;
-
     public function __construct(
-        BaseFormFactory $baseFormFactory,
-        QueryBus $queryBus,
-        EntityManagerInterface $em,
-        UserRepository $userRepository,
-        RoleRepository $roleRepository,
-        CustomInputRepository $customInputRepository,
-        CustomInputValueRepository $customInputValueRepository,
-        SkautIsService $skautIsService,
-        SubeventRepository $subeventRepository,
-        AclService $aclService,
-        ApplicationService $applicationService,
-        Validators $validators,
-        FilesService $filesService,
-        SubeventService $subeventService,
-        Translator $translator
+        private BaseFormFactory $baseFormFactory,
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository,
+        private RoleRepository $roleRepository,
+        private CustomInputRepository $customInputRepository,
+        private CustomInputValueRepository $customInputValueRepository,
+        private SkautIsService $skautIsService,
+        private SubeventRepository $subeventRepository,
+        private AclService $aclService,
+        private ApplicationService $applicationService,
+        private Validators $validators,
+        private FilesService $filesService,
+        private SubeventService $subeventService,
+        private Translator $translator
     ) {
-        $this->baseFormFactory            = $baseFormFactory;
-        $this->queryBus                   = $queryBus;
-        $this->em                         = $em;
-        $this->userRepository             = $userRepository;
-        $this->roleRepository             = $roleRepository;
-        $this->customInputRepository      = $customInputRepository;
-        $this->customInputValueRepository = $customInputValueRepository;
-        $this->skautIsService             = $skautIsService;
-        $this->subeventRepository         = $subeventRepository;
-        $this->aclService                 = $aclService;
-        $this->applicationService         = $applicationService;
-        $this->validators                 = $validators;
-        $this->filesService               = $filesService;
-        $this->subeventService            = $subeventService;
-        $this->translator                 = $translator;
     }
 
     /**

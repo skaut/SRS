@@ -9,6 +9,7 @@ use App\AdminModule\CmsModule\Components\IFaqGridControlFactory;
 use App\AdminModule\CmsModule\Forms\FaqFormFactory;
 use App\Model\Cms\Repositories\FaqRepository;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 
 /**
@@ -16,13 +17,13 @@ use stdClass;
  */
 class FaqPresenter extends CmsBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public IFaqGridControlFactory $faqGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public FaqFormFactory $faqFormFactory;
 
-    /** @inject */
+    #[Inject]
     public FaqRepository $faqRepository;
 
     public function renderEdit(int $id): void

@@ -21,6 +21,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Nette\Application\Responses\TextResponse;
+use Nette\DI\Attributes\Inject;
 use Throwable;
 
 /**
@@ -28,22 +29,22 @@ use Throwable;
  */
 class MaturityPresenter extends ActionBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public QueryBus $queryBus;
 
-    /** @inject */
+    #[Inject]
     public EntityManagerInterface $em;
 
-    /** @inject */
+    #[Inject]
     public UserRepository $userRepository;
 
-    /** @inject */
+    #[Inject]
     public RoleRepository $roleRepository;
 
-    /** @inject */
+    #[Inject]
     public IMailService $mailService;
 
-    /** @inject */
+    #[Inject]
     public ApplicationService $applicationService;
 
     /**
@@ -86,9 +87,7 @@ class MaturityPresenter extends ActionBasePresenter
 
                 // pokud účastníkovi nezbyde žádná podakce, je třeba odebrat i roli s cenou podle podakcí, případně jej odhlásit
                 if ($subeventsApplicationCanceled && $user->getSubevents()->isEmpty()) {
-                    $newRoles = $user->getRoles()->filter(static function (Role $role) {
-                        return $role->getFee() !== null;
-                    });
+                    $newRoles = $user->getRoles()->filter(static fn (Role $role) => $role->getFee() !== null);
                     if ($newRoles->isEmpty()) {
                         $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED_NOT_PAID, null);
                     } else {

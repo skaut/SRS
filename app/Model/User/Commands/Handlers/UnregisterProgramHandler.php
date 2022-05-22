@@ -14,20 +14,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UnregisterProgramHandler implements MessageHandlerInterface
 {
-    private EventBus $eventBus;
-
-    private EntityManagerInterface $em;
-
-    private ProgramApplicationRepository $programApplicationRepository;
-
     public function __construct(
-        EventBus $eventBus,
-        EntityManagerInterface $em,
-        ProgramApplicationRepository $programApplicationRepository
+        private EventBus $eventBus,
+        private EntityManagerInterface $em,
+        private ProgramApplicationRepository $programApplicationRepository
     ) {
-        $this->eventBus                     = $eventBus;
-        $this->em                           = $em;
-        $this->programApplicationRepository = $programApplicationRepository;
     }
 
     public function __invoke(UnregisterProgram $command): void

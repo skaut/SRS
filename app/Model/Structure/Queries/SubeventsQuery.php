@@ -8,28 +8,13 @@ use App\Model\User\User;
 
 class SubeventsQuery
 {
-    private bool $explicitOnly;
-
-    private bool $registerableNowOnly;
-
-    private ?User $user;
-
-    private bool $userNotRegisteredOnly;
-
-    private bool $includeUserRegistered;
-
     public function __construct(
-        bool $explicitOnly = false,
-        bool $registerableNowOnly = false,
-        ?User $user = null,
-        bool $userNotRegisteredOnly = false,
-        bool $includeUserRegistered = false
+        private bool $explicitOnly = false,
+        private bool $registerableNowOnly = false,
+        private ?User $user = null,
+        private bool $userNotRegisteredOnly = false,
+        private bool $includeUserRegistered = false
     ) {
-        $this->explicitOnly          = $explicitOnly;
-        $this->registerableNowOnly   = $registerableNowOnly;
-        $this->user                  = $user;
-        $this->userNotRegisteredOnly = $userNotRegisteredOnly;
-        $this->includeUserRegistered = $includeUserRegistered;
     }
 
     public function isExplicitOnly(): bool

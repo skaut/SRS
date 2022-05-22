@@ -23,17 +23,11 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class RolesGridControl extends Control
 {
-    private Translator $translator;
-
-    private AclService $aclService;
-
-    private RoleRepository $roleRepository;
-
-    public function __construct(Translator $translator, AclService $aclService, RoleRepository $roleRepository)
-    {
-        $this->translator     = $translator;
-        $this->aclService     = $aclService;
-        $this->roleRepository = $roleRepository;
+    public function __construct(
+        private Translator $translator,
+        private AclService $aclService,
+        private RoleRepository $roleRepository
+    ) {
     }
 
     /**
@@ -85,11 +79,7 @@ class RolesGridControl extends Control
         $grid->addColumnText('occupancy', 'admin.acl.roles_occupancy', 'occupancy_text');
 
         $grid->addColumnText('fee', 'admin.acl.roles_fee')
-            ->setRendererOnCondition(function (Role $row) {
-                return $this->translator->translate('admin.acl.roles_fee_from_subevents');
-            }, static function (Role $row) {
-                return $row->getFee() === null;
-            });
+            ->setRendererOnCondition(fn (Role $row) => $this->translator->translate('admin.acl.roles_fee_from_subevents'), static fn (Role $row) => $row->getFee() === null);
 
         $grid->addToolbarButton('Acl:add')
             ->setIcon('plus')
@@ -108,9 +98,7 @@ class RolesGridControl extends Control
                 'data-toggle' => 'confirmation',
                 'data-content' => $this->translator->translate('admin.acl.roles_delete_confirm'),
             ]);
-        $grid->allowRowsAction('delete', static function (Role $item) {
-            return ! $item->isSystemRole();
-        });
+        $grid->allowRowsAction('delete', static fn (Role $item) => ! $item->isSystemRole());
 
         return $grid;
     }

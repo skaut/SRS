@@ -9,14 +9,8 @@ use App\Model\User\User;
 
 class TicketChecksByUserAndSubeventQuery
 {
-    private User $user;
-
-    private Subevent $subevent;
-
-    public function __construct(User $user, Subevent $subevent)
+    public function __construct(private User $user, private Subevent $subevent)
     {
-        $this->user     = $user;
-        $this->subevent = $subevent;
     }
 
     public function getUser(): User

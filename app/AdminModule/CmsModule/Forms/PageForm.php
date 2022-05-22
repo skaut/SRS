@@ -25,7 +25,6 @@ use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
 
-use function get_class;
 use function str_replace;
 use function ucwords;
 
@@ -35,19 +34,9 @@ use function ucwords;
 class PageForm extends UI\Control
 {
     /**
-     * Id upravované stránky.
-     */
-    public int $id;
-
-    /**
      * Upravovaná stránka.
      */
     private ?Page $page;
-
-    /**
-     * Upravovaná oblast.
-     */
-    public string $area;
 
     /**
      * Událost při uložení formuláře.
@@ -63,42 +52,21 @@ class PageForm extends UI\Control
      */
     public array $onPageSaveError = [];
 
-    private BaseFormFactory $baseFormFactory;
-
-    private PageRepository $pageRepository;
-
-    private AclService $aclService;
-
-    private CmsService $cmsService;
-
-    private RoleRepository $roleRepository;
-
-    private TagRepository $tagRepository;
-
-    private FilesService $filesService;
-
+    /**
+     * @param int    $id   Id upravované stránky.
+     * @param string $area Upravovaná oblast.
+     */
     public function __construct(
-        int $id,
-        string $area,
-        BaseFormFactory $baseFormFactory,
-        PageRepository $pageRepository,
-        AclService $aclService,
-        CmsService $cmsService,
-        RoleRepository $roleRepository,
-        TagRepository $tagRepository,
-        FilesService $filesService
+        public int $id,
+        public string $area,
+        private BaseFormFactory $baseFormFactory,
+        private PageRepository $pageRepository,
+        private AclService $aclService,
+        private CmsService $cmsService,
+        private RoleRepository $roleRepository,
+        private TagRepository $tagRepository,
+        private FilesService $filesService
     ) {
-        $this->id   = $id;
-        $this->area = $area;
-
-        $this->baseFormFactory = $baseFormFactory;
-        $this->pageRepository  = $pageRepository;
-        $this->aclService      = $aclService;
-        $this->cmsService      = $cmsService;
-        $this->roleRepository  = $roleRepository;
-        $this->tagRepository   = $tagRepository;
-        $this->filesService    = $filesService;
-
         $this->page = $this->pageRepository->findById($id);
     }
 
@@ -140,7 +108,7 @@ class PageForm extends UI\Control
         $form->addSelect('type', 'admin.cms.pages.content.form.type', $this->prepareContentTypesOptions());
 
         foreach ($this->page->getContents($this->area) as $content) {
-            switch (get_class($content)) {
+            switch ($content::class) {
                 case CapacitiesContent::class:
                     $content->injectRoleRepository($this->roleRepository);
                     $content->injectAclService($this->aclService);

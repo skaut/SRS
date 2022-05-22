@@ -22,14 +22,8 @@ class PlacePointFormFactory
 
     private ?PlacePoint $placePoint = null;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private PlacePointRepository $placePointRepository;
-
-    public function __construct(BaseFormFactory $baseForm, PlacePointRepository $placePointRepository)
+    public function __construct(private BaseFormFactory $baseFormFactory, private PlacePointRepository $placePointRepository)
     {
-        $this->baseFormFactory      = $baseForm;
-        $this->placePointRepository = $placePointRepository;
     }
 
     /**

@@ -10,17 +10,15 @@ use function assert;
 
 /**
  * Entita hodnota vlastního výběrového pole přihlášky.
- *
- * @ORM\Entity
- * @ORM\Table(name="custom_select_value")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'custom_select_value')]
 class CustomSelectValue extends CustomInputValue
 {
     /**
      * Vybraná položka výběrového pole přihlášky.
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $value = null;
 
     public function getValue(): ?int

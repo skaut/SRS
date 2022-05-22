@@ -22,6 +22,7 @@ use App\Services\CommandBus;
 use App\Services\QueryBus;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
+use Nette\DI\Attributes\Inject;
 use Nette\Http\IResponse;
 
 use function array_key_exists;
@@ -31,10 +32,10 @@ use function array_key_exists;
  */
 class TicketsPresenter extends ApiBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public CommandBus $commandBus;
 
-    /** @inject */
+    #[Inject]
     public QueryBus $queryBus;
 
     private Serializer $serializer;

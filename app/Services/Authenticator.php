@@ -29,26 +29,13 @@ class Authenticator implements Nette\Security\Authenticator
 
     private Cache $userRolesCache;
 
-    protected SkautIsService $skautIsService;
-
-    private UserRepository $userRepository;
-
-    private RoleRepository $roleRepository;
-
-    private FilesService $filesService;
-
     public function __construct(
-        UserRepository $userRepository,
-        RoleRepository $roleRepository,
-        SkautIsService $skautIsService,
-        FilesService $filesService,
+        private UserRepository $userRepository,
+        private RoleRepository $roleRepository,
+        protected SkautIsService $skautIsService,
+        private FilesService $filesService,
         Storage $storage
     ) {
-        $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
-        $this->skautIsService = $skautIsService;
-        $this->filesService   = $filesService;
-
         $this->userRolesCache = new Cache($storage, 'UserRoles');
     }
 

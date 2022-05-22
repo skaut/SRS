@@ -15,15 +15,9 @@ use function assert;
  */
 class AbstractRepository
 {
-    protected EntityManagerInterface $em;
-
-    /** @var class-string */
-    private string $className;
-
-    public function __construct(EntityManagerInterface $em, string $className)
+    /** @param class-string $className */
+    public function __construct(protected EntityManagerInterface $em, private string $className)
     {
-        $this->em        = $em;
-        $this->className = $className;
     }
 
     public function createQueryBuilder(string $alias): QueryBuilder
@@ -31,6 +25,7 @@ class AbstractRepository
         return $this->getRepository()->createQueryBuilder($alias);
     }
 
+    /** @return EntityRepository<object> */
     public function getRepository(): EntityRepository
     {
         $repository = $this->em->getRepository($this->className);

@@ -7,6 +7,7 @@ namespace App\AdminModule\Presenters;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Structure\Repositories\SubeventRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Nette\DI\Attributes\Inject;
 use Throwable;
 
 /**
@@ -14,7 +15,7 @@ use Throwable;
  */
 class DashboardPresenter extends AdminBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public SubeventRepository $subeventRepository;
 
     /**

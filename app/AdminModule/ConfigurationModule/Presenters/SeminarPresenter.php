@@ -7,6 +7,7 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 use App\AdminModule\ConfigurationModule\Forms\SeminarFormFactory;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -15,7 +16,7 @@ use Throwable;
  */
 class SeminarPresenter extends ConfigurationBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public SeminarFormFactory $seminarFormFactory;
 
     /**

@@ -23,14 +23,8 @@ class EditTemplateFormFactory
      */
     private ?Template $template = null;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private TemplateRepository $templateRepository;
-
-    public function __construct(BaseFormFactory $baseFormFactory, TemplateRepository $templateRepository)
+    public function __construct(private BaseFormFactory $baseFormFactory, private TemplateRepository $templateRepository)
     {
-        $this->baseFormFactory    = $baseFormFactory;
-        $this->templateRepository = $templateRepository;
     }
 
     /**

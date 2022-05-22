@@ -11,6 +11,7 @@ use App\AdminModule\ConfigurationModule\Forms\CustomInputFormFactory;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -19,16 +20,16 @@ use Throwable;
  */
 class ApplicationPresenter extends ConfigurationBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public CustomInputRepository $customInputRepository;
 
-    /** @inject */
+    #[Inject]
     public ICustomInputsGridControlFactory $customInputsGridControlFactory;
 
-    /** @inject */
+    #[Inject]
     public ApplicationFormFactory $applicationFormFactory;
 
-    /** @inject */
+    #[Inject]
     public CustomInputFormFactory $customInputFormFactory;
 
     public function renderEdit(int $id): void

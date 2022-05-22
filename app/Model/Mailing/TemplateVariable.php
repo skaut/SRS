@@ -8,10 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita proměnná v automatickém e-mailu.
- *
- * @ORM\Entity
- * @ORM\Table(name="mail_template_variable")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'mail_template_variable')]
 class TemplateVariable
 {
     /**
@@ -89,18 +88,15 @@ class TemplateVariable
      */
     public const MESSAGE = 'message';
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Název proměnné.
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $name;
 
     public function getId(): ?int

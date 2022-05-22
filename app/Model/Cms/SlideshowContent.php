@@ -18,14 +18,14 @@ use function assert;
 use function basename;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
  * Entita obsahu se slideshow.
- *
- * @ORM\Entity
- * @ORM\Table(name="slideshow_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'slideshow_content')]
 class SlideshowContent extends Content implements IContent
 {
     protected string $type = Content::SLIDESHOW;
@@ -33,11 +33,10 @@ class SlideshowContent extends Content implements IContent
     /**
      * Adresy obrázků.
      *
-     * @ORM\Column(type="simple_array", nullable=true)
-     *
-     * @var string[]|null
+     * @var string[]|null.
      */
-    protected ?array $images;
+    #[ORM\Column(type: 'simple_array', nullable: true)]
+    protected ?array $images = null;
 
     private FilesService $filesService;
 
@@ -75,10 +74,8 @@ class SlideshowContent extends Content implements IContent
         $formContainer->addMultiUpload('images', 'admin.cms.pages.content.form.slideshow_images')
             ->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
-            ->setHtmlAttribute('data-initial-preview', json_encode($this->images))
-            ->setHtmlAttribute('data-initial-preview-config', json_encode(array_map(static function (string $image) {
-                return ['caption' => basename($image)];
-            }, $this->images)))
+            ->setHtmlAttribute('data-initial-preview', json_encode($this->images, JSON_THROW_ON_ERROR))
+            ->setHtmlAttribute('data-initial-preview-config', json_encode(array_map(static fn (string $image) => ['caption' => basename($image)], $this->images), JSON_THROW_ON_ERROR))
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.cms.pages.content.form.slideshow_images_format');
 

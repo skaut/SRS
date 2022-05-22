@@ -10,8 +10,11 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
+use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 use stdClass;
 use Throwable;
 
@@ -19,15 +22,17 @@ use function bin2hex;
 use function json_encode;
 use function random_bytes;
 
+use const JSON_THROW_ON_ERROR;
+
 /**
  * Presenter obsluhující nastavení vstupenek.
  */
 class TicketsPresenter extends ConfigurationBasePresenter
 {
-    /** @inject */
+    #[Inject]
     public CommandBus $commandBus;
 
-    /** @inject */
+    #[Inject]
     public TicketsFormFactory $ticketsFormFactory;
 
     /**
@@ -41,7 +46,7 @@ class TicketsPresenter extends ConfigurationBasePresenter
         $connectionInfo             = [];
         $connectionInfo['apiUrl']   = $this->getHttpRequest()->getUrl()->getBaseUrl() . 'api/';
         $connectionInfo['apiToken'] = $apiToken;
-        $this->template->qr         = $this->generateQr(json_encode($connectionInfo));
+        $this->template->qr         = $this->generateQr(json_encode($connectionInfo, JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -87,13 +92,16 @@ class TicketsPresenter extends ConfigurationBasePresenter
 
     private function generateQr(string $text): string
     {
-        $qrCode = new QrCode();
+        $qrCode = QrCode::create($text);
         $qrCode
-            ->setText($text)
             ->setSize(200)
-            ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
-            ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+            ->setForegroundColor(new Color(0, 0, 0))
+            ->setBackgroundColor(new Color(255, 255, 255));
 
-        return $qrCode->get();
+        $writer = new PngWriter();
+
+        $result = $writer->write($qrCode);
+
+        return $result->getString();
     }
 }

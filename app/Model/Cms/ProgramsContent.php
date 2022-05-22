@@ -8,10 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita obsahu s výběrem programů.
- *
- * @ORM\Entity
- * @ORM\Table(name="programs_content")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'programs_content')]
 class ProgramsContent extends Content implements IContent
 {
     protected string $type = Content::PROGRAMS;

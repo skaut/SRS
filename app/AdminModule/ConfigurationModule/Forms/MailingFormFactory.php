@@ -44,32 +44,14 @@ class MailingFormFactory
 {
     use Nette\SmartObject;
 
-    private BaseFormFactory $baseFormFactory;
-
-    private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
-
-    private IMailService $mailService;
-
-    private LinkGenerator $linkGenerator;
-
-    private Validators $validators;
-
     public function __construct(
-        BaseFormFactory $baseForm,
-        CommandBus $commandBus,
-        QueryBus $queryBus,
-        IMailService $mailService,
-        LinkGenerator $linkGenerator,
-        Validators $validators
+        private BaseFormFactory $baseFormFactory,
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private IMailService $mailService,
+        private LinkGenerator $linkGenerator,
+        private Validators $validators
     ) {
-        $this->baseFormFactory = $baseForm;
-        $this->commandBus      = $commandBus;
-        $this->queryBus        = $queryBus;
-        $this->mailService     = $mailService;
-        $this->linkGenerator   = $linkGenerator;
-        $this->validators      = $validators;
     }
 
     /**
@@ -137,9 +119,7 @@ class MailingFormFactory
         }
 
         $contactFormRecipients = array_map(
-            static function (string $o) {
-                return trim($o);
-            },
+            static fn (string $o) => trim($o),
             explode(',', $values->contactFormRecipients)
         );
         $this->commandBus->handle(new SetSettingArrayValue(Settings::CONTACT_FORM_RECIPIENTS, $contactFormRecipients));

@@ -43,28 +43,13 @@ class ContactForm extends UI\Control
      */
     public array $onSave = [];
 
-    private BaseFormFactory $baseFormFactory;
-
-    private QueryBus $queryBus;
-
-    private UserRepository $userRepository;
-
-    private ReCaptchaProvider $recaptchaProvider;
-
-    private IMailService $mailService;
-
     public function __construct(
-        BaseFormFactory $baseFormFactory,
-        QueryBus $queryBus,
-        UserRepository $userRepository,
-        ReCaptchaProvider $recaptchaProvider,
-        IMailService $mailService
+        private BaseFormFactory $baseFormFactory,
+        private QueryBus $queryBus,
+        private UserRepository $userRepository,
+        private ReCaptchaProvider $recaptchaProvider,
+        private IMailService $mailService
     ) {
-        $this->baseFormFactory   = $baseFormFactory;
-        $this->queryBus          = $queryBus;
-        $this->userRepository    = $userRepository;
-        $this->recaptchaProvider = $recaptchaProvider;
-        $this->mailService       = $mailService;
     }
 
     /**

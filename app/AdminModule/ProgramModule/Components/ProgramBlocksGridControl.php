@@ -43,51 +43,20 @@ use function assert;
  */
 class ProgramBlocksGridControl extends Control
 {
-    private CommandBus $commandBus;
-
-    private QueryBus $queryBus;
-
-    private Translator $translator;
-
-    private BlockRepository $blockRepository;
-
-    private UserRepository $userRepository;
-
-    private CategoryRepository $categoryRepository;
-
-    private ExcelExportService $excelExportService;
-
-    private Validators $validators;
-
-    private Session $session;
-
     private SessionSection $sessionSection;
 
-    private SubeventService $subeventService;
-
     public function __construct(
-        CommandBus $commandBus,
-        QueryBus $queryBus,
-        Translator $translator,
-        BlockRepository $blockRepository,
-        UserRepository $userRepository,
-        CategoryRepository $categoryRepository,
-        ExcelExportService $excelExportService,
-        Validators $validators,
-        SubeventService $subeventService,
-        Session $session
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private Translator $translator,
+        private BlockRepository $blockRepository,
+        private UserRepository $userRepository,
+        private CategoryRepository $categoryRepository,
+        private ExcelExportService $excelExportService,
+        private Validators $validators,
+        private SubeventService $subeventService,
+        private Session $session
     ) {
-        $this->commandBus         = $commandBus;
-        $this->queryBus           = $queryBus;
-        $this->translator         = $translator;
-        $this->blockRepository    = $blockRepository;
-        $this->userRepository     = $userRepository;
-        $this->categoryRepository = $categoryRepository;
-        $this->excelExportService = $excelExportService;
-        $this->validators         = $validators;
-        $this->subeventService    = $subeventService;
-
-        $this->session        = $session;
         $this->sessionSection = $session->getSection('srs');
     }
 
@@ -144,11 +113,7 @@ class ProgramBlocksGridControl extends Control
             ->setFilterText();
 
         $grid->addColumnText('capacity', 'admin.program.blocks.common.capacity')
-            ->setRendererOnCondition(function ($row) {
-                return $this->translator->translate('admin.program.blocks.common.capacity_unlimited');
-            }, static function (Block $row) {
-                return $row->getCapacity() === null;
-            })
+            ->setRendererOnCondition(fn ($row) => $this->translator->translate('admin.program.blocks.common.capacity_unlimited'), static fn (Block $row) => $row->getCapacity() === null)
             ->setSortable();
 
         $grid->addColumnText('alternatesAllowed', 'admin.program.blocks.column.alternates_allowed')
@@ -184,9 +149,7 @@ class ProgramBlocksGridControl extends Control
             ->setTranslateOptions();
 
         $grid->addColumnNumber('programsCount', 'admin.program.blocks.column.programs_count')
-            ->setRenderer(static function (Block $row) {
-                return $row->getProgramsCount();
-            });
+            ->setRenderer(static fn (Block $row) => $row->getProgramsCount());
 
         if (
             ($this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||

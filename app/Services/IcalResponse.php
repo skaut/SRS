@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Eluceo\iCal\Component\Calendar;
+use Eluceo\iCal\Domain\Entity\Calendar;
+use Eluceo\iCal\Presentation\Factory\CalendarFactory;
 use Nette;
 use Nette\Application\Response;
 
@@ -15,21 +16,17 @@ class IcalResponse implements Response
 {
     use Nette\SmartObject;
 
-    private Calendar $calendar;
-
-    private string $filename;
-
-    public function __construct(Calendar $calendar, string $filename)
+    public function __construct(private Calendar $calendar, private string $filename)
     {
-        $this->calendar = $calendar;
-        $this->filename = $filename;
     }
 
     public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse): void
     {
+        $componentFactory  = new CalendarFactory();
+        $calendarComponent = $componentFactory->createCalendar($this->calendar);
         $httpResponse->setContentType('text/calendar', 'utf-8');
         $httpResponse->setHeader('Content-Disposition', 'attachment;filename=' . $this->filename);
 
-        echo $this->calendar->render();
+        echo $calendarComponent;
     }
 }

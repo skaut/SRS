@@ -47,9 +47,7 @@ class PermissionRepository extends AbstractRepository
      */
     public function findPermissionsIds(Collection $permissions): array
     {
-        return $permissions->map(static function (Permission $permission) {
-            return $permission->getId();
-        })->toArray();
+        return $permissions->map(static fn (Permission $permission) => $permission->getId())->toArray();
     }
 
     /**

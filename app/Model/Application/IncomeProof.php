@@ -10,24 +10,20 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entita příjmového dokladu.
- *
- * @ORM\Entity
- * @ORM\Table(name="income_proof")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'income_proof')]
 class IncomeProof
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $id = null;
 
     /**
      * Datum vystavení příjmového dokladu.
-     *
-     * @ORM\Column(type="date_immutable")
      */
+    #[ORM\Column(type: 'date_immutable')]
     protected DateTimeImmutable $date;
 
     public function __construct()
