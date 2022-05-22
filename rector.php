@@ -10,21 +10,15 @@ use Rector\Set\ValueObject\SetList;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
-    // get parameters
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PATHS, [
-        __DIR__ . '/src'
-    ]);
-
-    // Define what rule sets will be applied
     $containerConfigurator->import(LevelSetList::UP_TO_PHP_80);
     $containerConfigurator->import(SetList::PHP_80);
     $containerConfigurator->import(DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES);
     $containerConfigurator->import(NetteSetList::ANNOTATIONS_TO_ATTRIBUTES,);
 
-    // get services (needed for register a single rule)
-    // $services = $containerConfigurator->services();
+    $parameters = $containerConfigurator->parameters();
+    $parameters->set(Option::PATHS, [
+        __DIR__ . '/src'
+    ]);
 
-    // register a single rule
-    // $services->set(TypedPropertyRector::class);
+    // $services = $containerConfigurator->services();
 };
