@@ -54,7 +54,7 @@ tinymce.init({
 import slugify from 'slugify';
 naja.addEventListener('complete', () => {
     $('#frm-pagesGrid-pagesGrid-filter-inline_add-name').keyup(function() {
-        $('#frm-pagesGrid-pagesGrid-filter-inline_add-slug').val(slugify($(this).val()));
+        $('#frm-pagesGrid-pagesGrid-filter-inline_add-slug').val(slugify($(this).val(), {lower: true}));
     });
 });
 
