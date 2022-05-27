@@ -765,6 +765,9 @@ configuration:
 
         scanner:
             heading: "Propojení se čtečkou"
+            application_info_begin: "Aplikaci na čtení vstupenek pro operační systém Android je možné stáhnout na "
+            application_info_link: "Google Play"
+            application_info_end: "."
             generate_token: "Vygenerovat token"
             generate_token_success: "Token úspěšně vygenerován. Nyní můžete SRS propojit s aplikací."
             generate_new_token: "Vygenerovat nový token"
