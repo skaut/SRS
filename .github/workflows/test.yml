@@ -162,5 +162,7 @@ jobs:
         run: php www/console.php migrations:status
       - name: Run migrations:diff
         run: php www/console.php migrations:diff
+      - name: Run migrations:migrate
+        run: php www/console.php migrations:migrate --no-interaction
       - name: Run orm:validate
         run: php www/console.php orm:validate
