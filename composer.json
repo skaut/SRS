@@ -48,7 +48,7 @@
         "vojtys/nette-forms-gpspicker": "dev-master",
         "contributte/recaptcha": "^3.4",
 
-        "ublaboo/datagrid": "6.9.2",
+        "ublaboo/datagrid": "^6.9",
         "ublaboo/mailing": "^1.2",
 
         "jms/serializer": "^3.17",

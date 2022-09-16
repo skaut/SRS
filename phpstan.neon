@@ -6,13 +6,16 @@ parameters:
 
     ignoreErrors: # todo: odstranit
         -
-            message: '#Method [a-zA-Z0-9\\_:()]+ should return [a-zA-Z0-9\\_:,<>& ]+ but returns [a-zA-Z0-9\\_:,]+<(int|\(int\|string\)), object>\.#'
+            message: '#^Method [a-zA-Z0-9\\_:()]+ should return [a-zA-Z0-9\\_:,<>& ]+ but returns [a-zA-Z0-9\\_:,]+<(int|\(int\|string\)), object>\.$#'
             path: app/Model/*/Repositories/*Repository.php
         -
             message: "#^Property App\\\\ApiModule\\\\Dto\\\\[a-zA-Z]+\\\\[a-zA-Z]+\\:\\:\\$[a-zA-Z]+ is never read, only written\\.$#"
             path: app/ApiModule/Dto/*/*.php
         -
-            message: '#Method App\\Model\\User\\User::[a-zA-Z]+\(\) should return Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\[a-zA-Z]+Application> but returns Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\Application>\.#'
+            message: '#^Parameter \#1 \$translator of method Ublaboo\\DataGrid\\DataGrid::setTranslator\(\) expects Nette\\Localization\\ITranslator, Nette\\Localization\\Translator given.$#'
+            path: app/*/*GridControl.php
+        -
+            message: '#^Method App\\Model\\User\\User::[a-zA-Z]+\(\) should return Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\[a-zA-Z]+Application> but returns Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\Application>\.$#'
             path: app/Model/User/User.php
             count: 4
 

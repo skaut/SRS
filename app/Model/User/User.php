@@ -45,7 +45,7 @@ class User
     /**
      * Uživatelské jméno skautIS.
      */
-    #[ORM\Column(type: 'string', unique: true, nullable: true, options: ['collation' => 'utf8_bin'])]
+    #[ORM\Column(type: 'string', unique: true, nullable: true, options: ['collation' => 'utf8mb4_bin'])]
     protected ?string $username = null;
 
     /**
