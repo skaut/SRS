@@ -12,7 +12,7 @@ parameters:
             message: "#^Property App\\\\ApiModule\\\\Dto\\\\[a-zA-Z]+\\\\[a-zA-Z]+\\:\\:\\$[a-zA-Z]+ is never read, only written\\.$#"
             path: app/ApiModule/Dto/*/*.php
         -
-            message: '#^Parameter \#1 $translator of method Ublaboo\\DataGrid\\DataGrid::setTranslator() expects Nette\\Localization\\ITranslator, Nette\\Localization\\Translator given.$#'
+            message: '#^Parameter \#1 $translator of method Ublaboo\\DataGrid\\DataGrid::setTranslator\(\) expects Nette\\Localization\\ITranslator, Nette\\Localization\\Translator given.$#'
             path: app/*/*GridControl.php
         -
             message: '#^Method App\\Model\\User\\User::[a-zA-Z]+\(\) should return Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\[a-zA-Z]+Application> but returns Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\Application>\.$#'
