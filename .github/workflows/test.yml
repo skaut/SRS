@@ -156,5 +156,11 @@ jobs:
         run: mv app/config/ci.local.neon app/config/local.neon
       - name: Run migrations:migrate
         run: php www/console.php migrations:migrate --no-interaction
+      - name: Run orm:info
+        run: php www/console.php orm:info
+      - name: Run migrations:status
+        run: php www/console.php migrations:status
+      - name: Run migrations:diff
+        run: php www/console.php migrations:diff
       - name: Run orm:validate
         run: php www/console.php orm:validate
