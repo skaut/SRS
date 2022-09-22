@@ -9,7 +9,7 @@
     ],
 
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.1",
         "ext-bcmath": "*",
         "ext-fileinfo": "*",
         "ext-iconv": "*",
@@ -59,8 +59,8 @@
         "eluceo/ical": "^2.5",
         "endroid/qr-code": "^4.0",
 
-        "skautis/skautis": "^2.2",
-        "skautis/nette": "^2.2",
+        "skautis/skautis": "3.0.0-alpha.5",
+        "skautis/nette": "3.0.0-alpha.3",
 
         "pear/numbers_words": "^0.18",
         "azuyalabs/yasumi": "^2.5",

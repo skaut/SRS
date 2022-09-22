@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
-use Skautis\Wsdl\WsdlException;
+use Skaut\Skautis\Wsdl\WsdlException;
 use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
