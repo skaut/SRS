@@ -12,7 +12,7 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\FormComponents\Controls\DateControl;
-use Skautis\Wsdl\WsdlException;
+use Skaut\Skautis\Wsdl\WsdlException;
 use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;

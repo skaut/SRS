@@ -50,7 +50,7 @@ use Nette\Http\FileUpload;
 use Nette\Localization\Translator;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
-use Skautis\Wsdl\WsdlException;
+use Skaut\Skautis\Wsdl\WsdlException;
 use stdClass;
 use Throwable;
 use Tracy\Debugger;
