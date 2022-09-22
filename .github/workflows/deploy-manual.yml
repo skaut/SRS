@@ -17,7 +17,7 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
     runs-on: ubuntu-20.04
     container:
-      image: skaut/lebeda:8.0
+      image: skaut/lebeda:8.1
     env:
       CONFIG_DATABASE_HOST: ${{ secrets.CONFIG_DATABASE_HOST }}
       CONFIG_DATABASE_NAME: ${{ secrets.CONFIG_DATABASE_NAME }}
