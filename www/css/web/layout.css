@@ -61,7 +61,7 @@
 
 body {
     font-family: themix, sans-serif;
-    font-size: 14px;
+    font-size: 1rem;
 }
 
 h1 {
@@ -69,9 +69,20 @@ h1 {
     font-weight: normal;
 }
 
+h2 {
+    font-family: skautbold, sans-serif;
+    font-weight: normal;
+}
+
 p {
     font-weight: 400;
     font-style: normal;
+    line-height: 1.8rem;
+}
+
+.nav-item {
+    font-family: skautbold, sans-serif;
+    font-weight: normal;
 }
 
 #flashes .alert {
