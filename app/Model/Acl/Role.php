@@ -175,6 +175,24 @@ class Role
     protected int $minimumAge = 0;
 
     /**
+     * Varování při příliš nízkém věku.
+     */
+    #[ORM\Column(type: 'string')]
+    protected ?string $minimumAgeWarning;
+
+    /**
+     * Maximální věk.
+     */
+    #[ORM\Column(type: 'integer')]
+    protected int $maximumAge = 150;
+
+    /**
+     * Varování při příliš vysokém věku.
+     */
+    #[ORM\Column(type: 'string')]
+    protected ?string $maximumAgeWarning;
+
+    /**
      * Synchronizovat účastníky v roli se skautIS.
      */
     #[ORM\Column(type: 'boolean')]
