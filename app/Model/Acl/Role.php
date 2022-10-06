@@ -126,6 +126,12 @@ class Role
     protected bool $systemRole = true;
 
     /**
+     * Typ role - individuální/družinová/skupinová.
+     */
+    #[ORM\Column(type: 'string')]
+    protected ?string $type = null;
+
+    /**
      * Registrovatelná role. Lze vybrat v přihlášce.
      */
     #[ORM\Column(type: 'boolean')]
@@ -393,6 +399,16 @@ class Role
         $this->systemRole = $systemRole;
     }
 
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): void
+    {
+        $this->type = $type;
+    }
+
     public function isRegisterable(): bool
     {
         return $this->registerable;
@@ -483,6 +499,36 @@ class Role
     public function setMinimumAge(int $age): void
     {
         $this->minimumAge = $age;
+    }
+
+    public function getMinimumAgeWarning(): ?string
+    {
+        return $this->minimumAgeWarning;
+    }
+
+    public function setMinimumAgeWarning(?string $minimumAgeWarning): void
+    {
+        $this->minimumAgeWarning = $minimumAgeWarning;
+    }
+
+    public function getMaximumAge(): int
+    {
+        return $this->maximumAge;
+    }
+
+    public function setMaximumAge(int $maximumAge): void
+    {
+        $this->maximumAge = $maximumAge;
+    }
+
+    public function getMaximumAgeWarning(): ?string
+    {
+        return $this->maximumAgeWarning;
+    }
+
+    public function setMaximumAgeWarning(?string $maximumAgeWarning): void
+    {
+        $this->maximumAgeWarning = $maximumAgeWarning;
     }
 
     public function isSyncedWithSkautIS(): bool

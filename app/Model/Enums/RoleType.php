@@ -6,24 +6,24 @@ namespace App\Model\Enums;
 class RoleType
 {
     /**
-     * Zapisování programů povoleno.
+     * Individuální role.
      */
     public const INDIVIDUAL = 'individual';
 
     /**
-     * Zapisování programů nepovoleno.
+     * Družinová role.
      */
-    public const NOT_ALLOWED = 'not_allowed';
+    public const PATROL = 'patrol';
 
     /**
-     * Zapisování programů povoleno od do.
+     * Oddílová role.
      */
-    public const ALLOWED_FROM_TO = 'allowed_from_to';
+    public const TROOP = 'troop';
 
     /** @var string[] */
     public static array $types = [
-        self::ALLOWED,
-        self::NOT_ALLOWED,
-        self::ALLOWED_FROM_TO,
+        self::INDIVIDUAL,
+        self::PATROL,
+        self::TROOP,
     ];
 }
