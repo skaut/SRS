@@ -6,6 +6,7 @@ namespace App\Model\Acl;
 
 use App\Model\Cms\Page;
 use App\Model\Cms\Tag;
+use App\Model\Enums\RoleType;
 use App\Model\Program\Category;
 use App\Model\User\User;
 use DateTimeImmutable;
@@ -129,7 +130,7 @@ class Role
      * Typ role - individuální/družinová/skupinová.
      */
     #[ORM\Column(type: 'string')]
-    protected ?string $type = null;
+    protected string $type = RoleType::INDIVIDUAL;
 
     /**
      * Registrovatelná role. Lze vybrat v přihlášce.
@@ -399,12 +400,12 @@ class Role
         $this->systemRole = $systemRole;
     }
 
-    public function getType(): ?string
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function setType(?string $type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
