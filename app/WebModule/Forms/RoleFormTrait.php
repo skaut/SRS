@@ -27,6 +27,27 @@ use Throwable;
 trait RoleFormTrait
 {
     /**
+     * Přidá do formuláře samotného případné chybové hlášky věkových omezení rolí.
+     *
+     * @throws Throwable
+     */
+    public function validateRolesAgeLimits(Form $form, stdClass $values): void
+    {
+        $selectedRoles = $this->roleRepository->findRolesByIds($values->roles);
+        $minWarnings= []; 
+        $this->validators->validateRolesMinimumAge($selectedRoles, $this->user, $minWarnings);
+        foreach($minWarnings as $error) {
+            $form->addError($error);
+        }
+        // Max a Min se  kontroluje zvlášť, protože rozdíl může být jednou vůči FROM_DATE a pak TO_DATE
+        $maxWarnings= [];
+        $this->validators->validateRolesMaximumAge($selectedRoles, $this->user, $maxWarnings);
+        foreach($maxWarnings as $error) {
+            $form->addError($error);
+        }
+    }
+
+    /**
      * Ověří požadovaný minimální věk.
      *
      * @throws SettingsItemNotFoundException

@@ -147,7 +147,7 @@ class RolesFormFactory
             'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
         ]);
         $form->onSuccess[] = [$this, 'processForm'];
-
+        $form->onValidate[] = [$this, 'validateRolesAgeLimits'];
         return $form;
     }
 
