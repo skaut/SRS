@@ -69,6 +69,7 @@ class RolesFormFactory
             ->addRule([$this, 'validateRolesCapacities'], 'web.profile.roles_capacity_occupied')
             ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.roles_not_registerable')
             ->addRule([$this, 'validateRolesMinimumAge'], 'web.application_content.roles_require_minimum_age')
+            ->addRule([$this, 'validateRolesMaximumAge'], 'web.application_content.roles_require_maximum_age')
             ->setDisabled(! $this->applicationService->isAllowedEditRegistration($this->user));
 
         foreach ($this->roleRepository->findFilteredRoles(true, false, true, $this->user) as $role) {
@@ -221,5 +222,18 @@ class RolesFormFactory
         $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
 
         return $this->validators->validateRolesMinimumAge($selectedRoles, $this->user);
+    }
+
+    /**
+     * Ověří požadovaný maximální věk.
+     *
+     * @throws SettingsItemNotFoundException
+     * @throws Throwable
+     */
+    public function validateRolesMaximumAge(MultiSelectBox $field): bool
+    {
+        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
+
+        return $this->validators->validateRolesMaximumAge($selectedRoles, $this->user);
     }
 }
