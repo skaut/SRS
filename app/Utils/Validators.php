@@ -50,6 +50,19 @@ class Validators
         return true;
     }
 
+    public function validateRolesMaximumAge(Collection $selectedRoles, User $user): bool
+    {
+        $age = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_TO_DATE))->diff($user->getBirthdate())->y;
+        foreach ($selectedRoles as $role) {
+            $max = $role->getMaximumAge();
+            if ($max > 0 && $max < $age) { // Hodnota 0 je bez omezení
+                return false;
+               }
+        }
+
+        return true;
+    }
+
     /**
      * Ověří kapacitu rolí.
      *
