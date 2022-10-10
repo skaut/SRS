@@ -50,6 +50,14 @@ class Validators
         return true;
     }
 
+    /**
+     * Ověří požadovaný maximální věk.
+     *
+     * @param Collection<int, Role> $selectedRoles
+     *
+     * @throws SettingsItemNotFoundException
+     * @throws Throwable
+     */
     public function validateRolesMaximumAge(Collection $selectedRoles, User $user): bool
     {
         $age = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_TO_DATE))->diff($user->getBirthdate())->y;
