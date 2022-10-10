@@ -91,6 +91,7 @@ class AddRoleFormFactory
             $role->setFee($parent->getFee());
             $role->setCapacity($parent->getCapacity());
             $role->setMinimumAge($parent->getMinimumAge());
+            $role->setMaximumAge($parent->getMaximumAge());
             $role->setApprovedAfterRegistration($parent->isApprovedAfterRegistration());
             $role->setSyncedWithSkautIS($parent->isSyncedWithSkautIS());
             $role->setRegisterable($parent->isRegisterable());
