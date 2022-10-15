@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\User;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -39,6 +40,11 @@ class Patrol
     #[ORM\OneToMany(mappedBy: 'patrol', targetEntity: UserGroupRole::class, cascade: ['persist'])]
     protected Collection $usersRoles;
 
+    public function __construct()
+    {
+        $this->usersRoles = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -64,6 +70,9 @@ class Patrol
         $this->troop = $troop;
     }
 
+    /**
+     * @return Collection<int, UserGroupRole>
+     */
     public function getUsersRoles(): Collection
     {
         return $this->usersRoles;

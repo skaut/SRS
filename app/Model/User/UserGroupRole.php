@@ -28,13 +28,13 @@ class UserGroupRole
     /**
      * Oddíl.
      */
-    #[ORM\ManyToOne(targetEntity: Troop::class, cascade: ['persist'], inversedBy: 'users')]
+    #[ORM\ManyToOne(targetEntity: Troop::class, cascade: ['persist'], inversedBy: 'usersRoles')]
     protected ?Troop $troop;
 
     /**
      * Družina.
      */
-    #[ORM\ManyToOne(targetEntity: Patrol::class, cascade: ['persist'], inversedBy: 'users')]
+    #[ORM\ManyToOne(targetEntity: Patrol::class, cascade: ['persist'], inversedBy: 'usersRoles')]
     protected ?Patrol $patrol;
 
     /**

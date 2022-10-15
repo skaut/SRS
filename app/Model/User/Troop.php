@@ -8,6 +8,7 @@ use App\Model\Application\IncomeProof;
 use App\Model\Application\VariableSymbol;
 use App\Model\Payment\Payment;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -98,6 +99,12 @@ class Troop
      */
     #[ORM\Column(type: 'string')]
     protected ?string $state = null;
+
+    public function __construct()
+    {
+        $this->patrols    = new ArrayCollection();
+        $this->usersRoles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
