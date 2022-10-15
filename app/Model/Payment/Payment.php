@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Payment;
 
 use App\Model\Application\Application;
+use App\Model\User\Troop;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -78,6 +79,14 @@ class Payment
     protected Collection $pairedApplications;
 
     /**
+     * Spárované oddíly.
+     *
+     * @var Collection<int, Troop>
+     */
+    #[ORM\OneToMany(targetEntity: Troop::class, mappedBy: 'payment', cascade: ['persist'])]
+    protected Collection $pairedTroops;
+
+    /**
      * Stav platby.
      */
     #[ORM\Column(type: 'string')]
@@ -86,6 +95,7 @@ class Payment
     public function __construct()
     {
         $this->pairedApplications = new ArrayCollection();
+        $this->pairedTroops       = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -219,6 +229,14 @@ class Payment
         }
 
         return implode(', ', $usersTexts);
+    }
+
+    /**
+     * @return Collection<int, Troop>
+     */
+    public function getPairedTroops(): Collection
+    {
+        return $this->pairedTroops;
     }
 
     public function getState(): string
