@@ -6,6 +6,7 @@ namespace App\Model\Acl;
 
 use App\Model\Cms\Page;
 use App\Model\Cms\Tag;
+use App\Model\Enums\RoleType;
 use App\Model\Program\Category;
 use App\Model\User\User;
 use DateTimeImmutable;
@@ -126,6 +127,12 @@ class Role
     protected bool $systemRole = true;
 
     /**
+     * Typ role - individuální/družinová/skupinová.
+     */
+    #[ORM\Column(type: 'string')]
+    protected string $type = RoleType::INDIVIDUAL;
+
+    /**
      * Registrovatelná role. Lze vybrat v přihlášce.
      */
     #[ORM\Column(type: 'boolean')]
@@ -173,6 +180,24 @@ class Role
      */
     #[ORM\Column(type: 'integer')]
     protected int $minimumAge = 0;
+
+    /**
+     * Varování při příliš nízkém věku.
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $minimumAgeWarning;
+
+    /**
+     * Maximální věk.
+     */
+    #[ORM\Column(type: 'integer')]
+    protected int $maximumAge = 150;
+
+    /**
+     * Varování při příliš vysokém věku.
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $maximumAgeWarning;
 
     /**
      * Synchronizovat účastníky v roli se skautIS.
@@ -375,6 +400,16 @@ class Role
         $this->systemRole = $systemRole;
     }
 
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): void
+    {
+        $this->type = $type;
+    }
+
     public function isRegisterable(): bool
     {
         return $this->registerable;
@@ -465,6 +500,36 @@ class Role
     public function setMinimumAge(int $age): void
     {
         $this->minimumAge = $age;
+    }
+
+    public function getMinimumAgeWarning(): ?string
+    {
+        return $this->minimumAgeWarning;
+    }
+
+    public function setMinimumAgeWarning(?string $minimumAgeWarning): void
+    {
+        $this->minimumAgeWarning = $minimumAgeWarning;
+    }
+
+    public function getMaximumAge(): int
+    {
+        return $this->maximumAge;
+    }
+
+    public function setMaximumAge(int $maximumAge): void
+    {
+        $this->maximumAge = $maximumAge;
+    }
+
+    public function getMaximumAgeWarning(): ?string
+    {
+        return $this->maximumAgeWarning;
+    }
+
+    public function setMaximumAgeWarning(?string $maximumAgeWarning): void
+    {
+        $this->maximumAgeWarning = $maximumAgeWarning;
     }
 
     public function isSyncedWithSkautIS(): bool
