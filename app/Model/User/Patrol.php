@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\User;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,6 +25,20 @@ class Patrol
     #[ORM\Column(type: 'string')]
     protected string $name;
 
+    /**
+     * Oddíl družiny.
+     */
+    #[ORM\ManyToOne(targetEntity: Troop::class, inversedBy: 'patrols', cascade: ['persist'])]
+    protected Troop $troop;
+
+    /**
+     * Uživatelé.
+     *
+     * @var Collection<int, UserGroupRole>
+     */
+    #[ORM\OneToMany(mappedBy: 'patrol', targetEntity: UserGroupRole::class, cascade: ['persist'])]
+    protected Collection $usersRoles;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -37,5 +52,20 @@ class Patrol
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function getTroop(): Troop
+    {
+        return $this->troop;
+    }
+
+    public function setTroop(Troop $troop): void
+    {
+        $this->troop = $troop;
+    }
+
+    public function getUsersRoles(): Collection
+    {
+        return $this->usersRoles;
     }
 }
