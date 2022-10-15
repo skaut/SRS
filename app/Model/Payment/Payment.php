@@ -81,7 +81,7 @@ class Payment
     /**
      * Spárované oddíly.
      *
-     * @var Collection<int, Application>
+     * @var Collection<int, Troop>
      */
     #[ORM\OneToMany(targetEntity: Troop::class, mappedBy: 'payment', cascade: ['persist'])]
     protected Collection $pairedTroops;
