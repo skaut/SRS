@@ -184,7 +184,7 @@ class Role
     /**
      * Varování při příliš nízkém věku.
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $minimumAgeWarning;
 
     /**
@@ -196,7 +196,7 @@ class Role
     /**
      * Varování při příliš vysokém věku.
      */
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $maximumAgeWarning;
 
     /**

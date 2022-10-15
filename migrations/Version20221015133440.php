@@ -29,7 +29,7 @@ final class Version20221015133440 extends AbstractMigration
         $this->addSql('ALTER TABLE user_group_role ADD CONSTRAINT FK_D95417F6263060AC FOREIGN KEY (troop_id) REFERENCES troop (id)');
         $this->addSql('ALTER TABLE user_group_role ADD CONSTRAINT FK_D95417F6A7B49BA9 FOREIGN KEY (patrol_id) REFERENCES patrol (id)');
         $this->addSql('ALTER TABLE user_group_role ADD CONSTRAINT FK_D95417F6D60322AC FOREIGN KEY (role_id) REFERENCES role (id)');
-        $this->addSql('ALTER TABLE role ADD type VARCHAR(255) NOT NULL, ADD minimum_age_warning VARCHAR(255) NOT NULL, ADD maximum_age INT NOT NULL, ADD maximum_age_warning VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE role ADD type VARCHAR(255) NOT NULL, ADD minimum_age_warning VARCHAR(255) DEFAULT NULL, ADD maximum_age INT NOT NULL, ADD maximum_age_warning VARCHAR(255) DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
