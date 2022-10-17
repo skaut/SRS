@@ -1,0 +1,33 @@
+<div class="clearfix"></div>
+
+<div class="application-content">
+    <div class="row">
+        <div class="col">
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    {if $guestRole}
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-warning alert-forever">
+                    {_web.application_content.login_required_begin}
+                    <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.application_content.login_required_link}</a>{_web.application_content.login_required_end}
+                </div>
+            </div>
+        </div>
+    {else}
+        <div class="btn-group">
+            <button class="btn btn-light dropdown-toggle" data-toggle="dropdown">
+                {if $skautIsRoleSelected}
+                    {$skautIsRoleSelected->DisplayName}
+                {/if}
+            </button>
+        </div>
+        <div class="dropdown-menu">
+            <a href="{plink changeRole!, $r->ID}" n:foreach="$skautIsRoles as $r" n:class="dropdown-item, $r->ID === $skautIsRoleSelected->ID ? active">
+                {$r->DisplayName}
+            </a>
+        </div>
+    {/if}
+</div>
