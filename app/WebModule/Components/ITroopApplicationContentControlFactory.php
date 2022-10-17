@@ -9,5 +9,5 @@ namespace App\WebModule\Components;
  */
 interface ITroopApplicationContentControlFactory
 {
-    public function create(): ApplicationContentControl;
+    public function create(): TroopApplicationContentControl;
 }

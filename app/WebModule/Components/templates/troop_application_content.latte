@@ -17,17 +17,24 @@
             </div>
         </div>
     {else}
-        <div class="btn-group">
-            <button class="btn btn-light dropdown-toggle" data-toggle="dropdown">
-                {if $skautIsRoleSelected}
-                    {$skautIsRoleSelected->DisplayName}
-                {/if}
-            </button>
-        </div>
-        <div class="dropdown-menu">
-            <a href="{plink changeRole!, $r->ID}" n:foreach="$skautIsRoles as $r" n:class="dropdown-item, $r->ID === $skautIsRoleSelected->ID ? active">
-                {$r->DisplayName}
-            </a>
+        <div class="form-group row">
+            <div class="col-3 col-form-label">
+                Role
+            </div>
+            <div class="col-9">
+                <div class="btn-group w-100">
+                    <button class="btn btn-light dropdown-toggle" data-toggle="dropdown">
+                        {if $skautIsRoleSelected}
+                            {$skautIsRoleSelected->DisplayName}
+                        {/if}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="{link changeRole!, $r->ID}" n:foreach="$skautIsRoles as $r" n:class="dropdown-item, $r->ID === $skautIsRoleSelected->ID ? active">
+                            {$r->DisplayName}
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     {/if}
 </div>
