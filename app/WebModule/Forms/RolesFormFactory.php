@@ -29,7 +29,7 @@ use Throwable;
 class RolesFormFactory
 {
     use Nette\SmartObject;
-    use RoleFormFunctions;
+    use RolesFormFunctions;
 
     /**
      * Přihlášený uživatel.

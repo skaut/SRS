@@ -11,7 +11,7 @@ use Nette\Forms\Controls\MultiSelectBox;
 use stdClass;
 use Throwable;
 
-trait RoleFormFunctions
+trait RolesFormFunctions
 {
     /**
      * Přidá do formuláře samotného případné chybové hlášky věkových omezení rolí.

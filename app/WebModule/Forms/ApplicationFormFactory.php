@@ -68,7 +68,7 @@ use const UPLOAD_ERR_OK;
 class ApplicationFormFactory
 {
     use Nette\SmartObject;
-    use RoleFormFunctions;
+    use RolesFormFunctions;
 
     /**
      * Přihlášený uživatel.
