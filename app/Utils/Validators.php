@@ -20,6 +20,7 @@ use Throwable;
 
 use function array_map;
 use function explode;
+use function sprintf;
 use function trim;
 
 /**
@@ -54,19 +55,20 @@ class Validators
      * Ověří požadovaný minimální věk.
      *
      * @param Collection<int, Role> $selectedRoles
+     * @param string[]              $warnings
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function validateRolesMinimumAge(Collection $selectedRoles, User $user, array &$warnings = []): bool
     {
-        $age = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_FROM_DATE))->diff($user->getBirthdate())->y;
+        $age    = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_FROM_DATE))->diff($user->getBirthdate())->y;
         $canary = true;
         foreach ($selectedRoles as $role) {
             $min = $role->getMinimumAge();
             if ($min > $age) {
                 $warnings[] = sprintf($role->getMinimumAgeWarning(), $min, $age);
-                $canary = false;
+                $canary     = false;
             }
         }
 
@@ -77,20 +79,21 @@ class Validators
      * Ověří požadovaný maximální věk.
      *
      * @param Collection<int, Role> $selectedRoles
+     * @param string[]              $warnings
      *
      * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
     public function validateRolesMaximumAge(Collection $selectedRoles, User $user, array &$warnings = []): bool
     {
-        $age = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_TO_DATE))->diff($user->getBirthdate())->y;
+        $age    = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_TO_DATE))->diff($user->getBirthdate())->y;
         $canary = true;
         foreach ($selectedRoles as $role) {
             $max = $role->getMaximumAge();
             if ($max > 0 && $max < $age) { // Hodnota 0 je bez omezení
                 $warnings[] = sprintf($role->getMaximumAgeWarning(), $max, $age);
-                $canary = false;
-               }
+                $canary     = false;
+            }
         }
 
         return $canary;

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\WebModule\Forms;
 
 use App\Model\Acl\Repositories\RoleRepository;
-use App\Model\Acl\Role;
 use App\Model\CustomInput\CustomCheckbox;
 use App\Model\CustomInput\CustomCheckboxValue;
 use App\Model\CustomInput\CustomDate;
@@ -23,7 +22,6 @@ use App\Model\CustomInput\CustomTextValue;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\CustomInput\Repositories\CustomInputValueRepository;
 use App\Model\Enums\Sex;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -70,7 +68,7 @@ use const UPLOAD_ERR_OK;
 class ApplicationFormFactory
 {
     use Nette\SmartObject;
-    use RoleFormTrait;
+    use RoleFormFunctions;
 
     /**
      * Přihlášený uživatel.
@@ -178,7 +176,7 @@ class ApplicationFormFactory
             'state' => $this->user->getState(),
         ]);
 
-        $form->onSuccess[] = [$this, 'processForm'];
+        $form->onSuccess[]  = [$this, 'processForm'];
         $form->onValidate[] = [$this, 'validateRolesAgeLimits'];
 
         return $form;

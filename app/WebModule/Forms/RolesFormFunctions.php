@@ -4,27 +4,14 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
-use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\Enums\ApplicationState;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
-use App\Model\Settings\Queries\SettingDateTimeValueQuery;
-use App\Model\Settings\Settings;
-use App\Model\User\Repositories\UserRepository;
-use App\Model\User\User;
-use App\Services\AclService;
-use App\Services\ApplicationService;
-use App\Services\QueryBus;
-use App\Utils\Validators;
-use DateTimeImmutable;
-use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
-use Nette\Localization\Translator;
 use stdClass;
 use Throwable;
 
-trait RoleFormTrait
+trait RoleFormFunctions
 {
     /**
      * Přidá do formuláře samotného případné chybové hlášky věkových omezení rolí.
@@ -34,15 +21,16 @@ trait RoleFormTrait
     public function validateRolesAgeLimits(Form $form, stdClass $values): void
     {
         $selectedRoles = $this->roleRepository->findRolesByIds($values->roles);
-        $minWarnings= []; 
+        $minWarnings   = [];
         $this->validators->validateRolesMinimumAge($selectedRoles, $this->user, $minWarnings);
-        foreach($minWarnings as $error) {
+        foreach ($minWarnings as $error) {
             $form->addError($error);
         }
+
         // Max a Min se  kontroluje zvlášť, protože rozdíl může být jednou vůči FROM_DATE a pak TO_DATE
-        $maxWarnings= [];
+        $maxWarnings = [];
         $this->validators->validateRolesMaximumAge($selectedRoles, $this->user, $maxWarnings);
-        foreach($maxWarnings as $error) {
+        foreach ($maxWarnings as $error) {
             $form->addError($error);
         }
     }
@@ -118,5 +106,4 @@ trait RoleFormTrait
 
         return $this->validators->validateRolesRequired($selectedRoles, $testRole);
     }
-
 }

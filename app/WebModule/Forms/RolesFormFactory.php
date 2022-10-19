@@ -19,7 +19,6 @@ use App\Utils\Validators;
 use DateTimeImmutable;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Localization\Translator;
 use stdClass;
 use Throwable;
@@ -30,7 +29,7 @@ use Throwable;
 class RolesFormFactory
 {
     use Nette\SmartObject;
-    use RoleFormTrait;
+    use RoleFormFunctions;
 
     /**
      * Přihlášený uživatel.
@@ -146,8 +145,9 @@ class RolesFormFactory
             'id' => $id,
             'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
         ]);
-        $form->onSuccess[] = [$this, 'processForm'];
+        $form->onSuccess[]  = [$this, 'processForm'];
         $form->onValidate[] = [$this, 'validateRolesAgeLimits'];
+
         return $form;
     }
 
