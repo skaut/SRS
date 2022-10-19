@@ -70,6 +70,9 @@ class TroopApplicationContentControl extends BaseContentControl
             } else {
                 $this->template->skautIsRoleSelected = $skautIsRoleSelected[array_keys($skautIsRoleSelected)[0]];
             }
+
+            $skautIsPersonAll = $this->skautIsService->getPersonAll();
+
         }
 
         $template->render();

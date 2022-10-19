@@ -221,4 +221,13 @@ class SkautIsService
             'ID' => $unitId,
         ]);
     }
+
+    public function getPersonAll(): array
+    {
+        return $this->skautIs->org->PersonAll([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID_Unit' => $this->skautIs->getUser()->getUnitId(),
+            'OnlyDirectMember' => false,
+        ], 'personAllInput');
+    }
 }
