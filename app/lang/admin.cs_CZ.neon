@@ -580,6 +580,15 @@ acl:
             note: "Účastník musí minimálního věku dosáhnout první den akce."
             error_format: "Zadejte číslo."
             error_low: "Minimální věk nesmí být menší než 0."
+            custom_msg_label: "Vlastní chybová hláška k [↑]"
+            custom_msg_note: "Vlastní text chyby, která se zobrazí při nedosažení věku pro tuto roli. Možné použít %d"
+        maximum_age:
+            label: "Maximální věk"
+            note: "Účastník nesmí maximální věk překročit první den akce."
+            error_format: "Zadejte číslo."
+            error_low: "Maximální věk nesmí být menší než 0."
+            custom_msg_label: "Vlastní chybová hláška k [↑]"
+            custom_msg_note: "Vlastní text chyby, která se zobrazí při překročení věku pro tuto roli. Možné použít %d"
 
 mailing:
     menu:
