@@ -109,6 +109,23 @@ class EditRoleFormFactory
             ->addRule(Form::INTEGER, 'admin.acl.roles.minimum_age.error_format')
             ->addRule(Form::MIN, 'admin.acl.roles.minimum_age.error_low', 0);
 
+        $form->addText('minimumAgeMsg', 'admin.acl.roles.minimum_age.custom_msg_label')
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.acl.roles.minimum_age.custom_msg_note'));
+
+        $form->addText('maximumAge', 'admin.acl.roles.maximum_age.label')
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.acl.roles.maximum_age.note'))
+            ->addRule(Form::INTEGER, 'admin.acl.roles.maximum_age.error_format')
+            ->addRule(Form::MIN, 'admin.acl.roles.maximum_age.error_low', 0);
+
+        $form->addText('maximumAgeMsg', 'admin.acl.roles.maximum_age.custom_msg_label')
+            ->setHtmlAttribute('data-toggle', 'tooltip')
+            ->setHtmlAttribute('data-placement', 'bottom')
+            ->setHtmlAttribute('title', $form->getTranslator()->translate('admin.acl.roles.maximum_age.custom_msg_note'));
+
         $form->addMultiSelect('permissions', 'admin.acl.roles_permissions', $this->preparePermissionsOptions());
 
         $pagesOptions = $this->pageRepository->getPagesOptions();
@@ -164,6 +181,9 @@ class EditRoleFormFactory
             'feeFromSubevents' => $this->role->getFee() === null,
             'fee' => $this->role->getFee() ?? 0,
             'minimumAge' => $this->role->getMinimumAge(),
+            'maximumAge' => $this->role->getMaximumAge(),
+            'minimumAgeMsg' => $this->role->getMinimumAgeWarning(),
+            'maximumAgeMsg' => $this->role->getMaximumAgeWarning(),
             'permissions' => $this->permissionRepository->findPermissionsIds($this->role->getPermissions()),
             'pages' => $this->pageRepository->findPagesSlugs($this->role->getPages()),
             'redirectAfterLogin' => array_key_exists($redirectAfterLoginValue, $pagesOptions) ? $redirectAfterLoginValue : null,
@@ -197,6 +217,9 @@ class EditRoleFormFactory
             $this->role->setCapacity($capacity);
             $this->role->setApprovedAfterRegistration($values->approvedAfterRegistration);
             $this->role->setMinimumAge($values->minimumAge);
+            $this->role->setMaximumAge($values->maximumAge);
+            $this->role->setMinimumAgeWarning($values->minimumAgeMsg);
+            $this->role->setMaximumAgeWarning($values->maximumAgeMsg);
             $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values->permissions));
             $this->role->setPages($this->pageRepository->findPagesBySlugs($values->pages));
             $this->role->setRedirectAfterLogin($values->redirectAfterLogin);
