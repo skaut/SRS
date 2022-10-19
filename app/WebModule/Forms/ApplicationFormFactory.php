@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\WebModule\Forms;
 
 use App\Model\Acl\Repositories\RoleRepository;
-use App\Model\Acl\Role;
 use App\Model\CustomInput\CustomCheckbox;
 use App\Model\CustomInput\CustomCheckboxValue;
 use App\Model\CustomInput\CustomDate;
@@ -23,7 +22,6 @@ use App\Model\CustomInput\CustomTextValue;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\CustomInput\Repositories\CustomInputValueRepository;
 use App\Model\Enums\Sex;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -70,6 +68,7 @@ use const UPLOAD_ERR_OK;
 class ApplicationFormFactory
 {
     use Nette\SmartObject;
+    use RolesFormFunctions;
 
     /**
      * Přihlášený uživatel.
@@ -177,7 +176,8 @@ class ApplicationFormFactory
             'state' => $this->user->getState(),
         ]);
 
-        $form->onSuccess[] = [$this, 'processForm'];
+        $form->onSuccess[]  = [$this, 'processForm'];
+        $form->onValidate[] = [$this, 'validateRolesAgeLimits'];
 
         return $form;
     }
@@ -435,7 +435,8 @@ class ApplicationFormFactory
         $rolesSelect->addRule(Form::FILLED, 'web.application_content.roles_empty')
             ->addRule([$this, 'validateRolesCapacities'], 'web.application_content.roles_capacity_occupied')
             ->addRule([$this, 'validateRolesRegisterable'], 'web.application_content.roles_not_registerable')
-            ->addRule([$this, 'validateRolesMinimumAge'], 'web.application_content.roles_require_minimum_age');
+            ->addRule([$this, 'validateRolesMinimumAge'], 'web.application_content.roles_require_minimum_age')
+            ->addRule([$this, 'validateRolesMaximumAge'], 'web.application_content.roles_require_maximum_age');
 
         // generovani chybovych hlasek pro vsechny kombinace roli
         foreach ($this->roleRepository->findFilteredRoles(true, false, true, $this->user) as $role) {
@@ -482,16 +483,6 @@ class ApplicationFormFactory
     }
 
     /**
-     * Ověří kapacity rolí.
-     */
-    public function validateRolesCapacities(MultiSelectBox $field): bool
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-
-        return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
-    }
-
-    /**
      * Ověří kompatibilitu podakcí.
      *
      * @param Subevent[] $args
@@ -515,55 +506,6 @@ class ApplicationFormFactory
         $testSubevent      = $args[0];
 
         return $this->validators->validateSubeventsRequired($selectedSubevents, $testSubevent);
-    }
-
-    /**
-     * Ověří kompatibilitu rolí.
-     *
-     * @param Role[] $args
-     */
-    public function validateRolesIncompatible(MultiSelectBox $field, array $args): bool
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-        $testRole      = $args[0];
-
-        return $this->validators->validateRolesIncompatible($selectedRoles, $testRole);
-    }
-
-    /**
-     * Ověří výběr požadovaných rolí.
-     *
-     * @param Role[] $args
-     */
-    public function validateRolesRequired(MultiSelectBox $field, array $args): bool
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-        $testRole      = $args[0];
-
-        return $this->validators->validateRolesRequired($selectedRoles, $testRole);
-    }
-
-    /**
-     * Ověří registrovatelnost rolí.
-     */
-    public function validateRolesRegisterable(MultiSelectBox $field): bool
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-
-        return $this->validators->validateRolesRegisterable($selectedRoles, $this->user);
-    }
-
-    /**
-     * Ověří požadovaný minimální věk.
-     *
-     * @throws SettingsItemNotFoundException
-     * @throws Throwable
-     */
-    public function validateRolesMinimumAge(MultiSelectBox $field): bool
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-
-        return $this->validators->validateRolesMinimumAge($selectedRoles, $this->user);
     }
 
     /**
