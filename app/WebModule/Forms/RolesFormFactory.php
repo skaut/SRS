@@ -19,7 +19,6 @@ use App\Utils\Validators;
 use DateTimeImmutable;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Localization\Translator;
 use stdClass;
 use Throwable;
@@ -30,6 +29,7 @@ use Throwable;
 class RolesFormFactory
 {
     use Nette\SmartObject;
+    use RolesFormFunctions;
 
     /**
      * Přihlášený uživatel.
@@ -69,6 +69,7 @@ class RolesFormFactory
             ->addRule([$this, 'validateRolesCapacities'], 'web.profile.roles_capacity_occupied')
             ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.roles_not_registerable')
             ->addRule([$this, 'validateRolesMinimumAge'], 'web.application_content.roles_require_minimum_age')
+            ->addRule([$this, 'validateRolesMaximumAge'], 'web.application_content.roles_require_maximum_age')
             ->setDisabled(! $this->applicationService->isAllowedEditRegistration($this->user));
 
         foreach ($this->roleRepository->findFilteredRoles(true, false, true, $this->user) as $role) {
@@ -144,7 +145,8 @@ class RolesFormFactory
             'id' => $id,
             'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
         ]);
-        $form->onSuccess[] = [$this, 'processForm'];
+        $form->onSuccess[]  = [$this, 'processForm'];
+        $form->onValidate[] = [$this, 'validateRolesAgeLimits'];
 
         return $form;
     }
@@ -162,64 +164,5 @@ class RolesFormFactory
         } elseif ($form->isSubmitted() === $form['cancelRegistration']) {
             $this->applicationService->cancelRegistration($this->user, ApplicationState::CANCELED, $this->user);
         }
-    }
-
-    /**
-     * Ověří kapacitu rolí.
-     */
-    public function validateRolesCapacities(MultiSelectBox $field): bool
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-
-        return $this->validators->validateRolesCapacities($selectedRoles, $this->user);
-    }
-
-    /**
-     * Ověří kompatibilitu rolí.
-     *
-     * @param Role[] $args
-     */
-    public function validateRolesIncompatible(MultiSelectBox $field, array $args): bool
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-        $testRole      = $args[0];
-
-        return $this->validators->validateRolesIncompatible($selectedRoles, $testRole);
-    }
-
-    /**
-     * Ověří výběr vyžadovaných rolí.
-     *
-     * @param Role[] $args
-     */
-    public function validateRolesRequired(MultiSelectBox $field, array $args): bool
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-        $testRole      = $args[0];
-
-        return $this->validators->validateRolesRequired($selectedRoles, $testRole);
-    }
-
-    /**
-     * Ověří registrovatelnost rolí.
-     */
-    public function validateRolesRegisterable(MultiSelectBox $field): bool
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-
-        return $this->validators->validateRolesRegisterable($selectedRoles, $this->user);
-    }
-
-    /**
-     * Ověří požadovaný minimální věk.
-     *
-     * @throws SettingsItemNotFoundException
-     * @throws Throwable
-     */
-    public function validateRolesMinimumAge(MultiSelectBox $field): bool
-    {
-        $selectedRoles = $this->roleRepository->findRolesByIds($field->getValue());
-
-        return $this->validators->validateRolesMinimumAge($selectedRoles, $this->user);
     }
 }
