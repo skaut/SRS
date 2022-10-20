@@ -27,6 +27,8 @@ use Throwable;
  */
 class TroopApplicationContentControl extends BaseContentControl
 {
+    private static array $ALLOWED_ROLE_TYPES = ['vedouciStredisko', 'vedouciOddil', 'cinovnikStredisko', 'cinovnikOddil'];
+
     public function __construct(
         private QueryBus $queryBus,
         private Authenticator $authenticator,
@@ -61,7 +63,7 @@ class TroopApplicationContentControl extends BaseContentControl
             $template->dbuser              = $dbuser;
 
             $skautIsUserId                = $dbuser->getSkautISUserId();
-            $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId);
+            $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId, self::$ALLOWED_ROLE_TYPES);
             $skautIsRoleSelectedId        = $this->skautIsService->getUserRoleId();
             $skautIsRoleSelected          = array_filter($skautIsRoles, static fn (stdClass $r) => $r->ID === $skautIsRoleSelectedId);
             $this->template->skautIsRoles = $skautIsRoles;
@@ -71,7 +73,8 @@ class TroopApplicationContentControl extends BaseContentControl
                 $this->template->skautIsRoleSelected = $skautIsRoleSelected[array_keys($skautIsRoleSelected)[0]];
             }
 
-            $skautIsPersonAll = $this->skautIsService->getPersonAll();
+            $skautIsUnitAllUnit = $this->skautIsService->getUnitAllUnit();
+            $skautIsMemebershipAll = $this->skautIsService->getMembershipAll($this->skautIsService->getUnitId());
 
         }
 

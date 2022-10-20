@@ -66,11 +66,12 @@ class SkautIsService
     /**
      * Vrátí skautIS role uživatele.
      *
+     * @param ?string[] $allowedRoleTypes
      * @return stdClass[]
      *
      * @throws Throwable
      */
-    public function getUserRoles(int $userId): array
+    public function getUserRoles(int $userId, ?array $allowedRoleTypes = null): array
     {
         $roles = $this->userRolesCache->load($userId);
 
@@ -82,7 +83,13 @@ class SkautIsService
             $this->userRolesCache->save($userId, $roles);
         }
 
-        return $roles instanceof stdClass ? [] : $roles;
+        $rolesArray = $roles instanceof stdClass ? [] : $roles;
+
+        if ($allowedRoleTypes !== null) {
+            return array_filter($rolesArray, static fn (stdClass $r) => isset($r->Key) && in_array($r->Key, $allowedRoleTypes));
+        }
+
+        return $rolesArray;
     }
 
     /**
@@ -222,12 +229,32 @@ class SkautIsService
         ]);
     }
 
-    public function getPersonAll(): array
+    public function getUnitAllUnit(?array $allowedUnitTypes = null): array
     {
-        return $this->skautIs->org->PersonAll([
+        $units = $this->skautIs->org->UnitAllUnit([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_Unit' => $this->skautIs->getUser()->getUnitId(),
+        ], 'unitAllUnitInput');
+
+        $unitsArray = $units instanceof stdClass ? [] : $units;
+
+        if ($allowedUnitTypes !== null) {
+            return array_filter($unitsArray, static fn (stdClass $r) => in_array($r->ID_UnitType, $allowedUnitTypes));
+        }
+
+        return $unitsArray;
+    }
+
+    public function getMembershipAll(int $unitId): array
+    {
+        $memberships = $this->skautIs->org->MembershipAll([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID_Unit' => $unitId,
             'OnlyDirectMember' => false,
-        ], 'personAllInput');
+        ], 'membershipAllInput');
+
+        $membershipsArray = $memberships instanceof stdClass ? [] : $memberships;
+
+        return $membershipsArray;
     }
 }
