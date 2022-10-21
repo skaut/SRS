@@ -12,6 +12,9 @@ use Skaut\Skautis\Skautis;
 use stdClass;
 use Throwable;
 
+use function array_filter;
+use function in_array;
+
 /**
  * Služba pro komunikaci se skautIS.
  */
@@ -67,6 +70,7 @@ class SkautIsService
      * Vrátí skautIS role uživatele.
      *
      * @param ?string[] $allowedRoleTypes
+     *
      * @return stdClass[]
      *
      * @throws Throwable
@@ -253,8 +257,6 @@ class SkautIsService
             'OnlyDirectMember' => false,
         ], 'membershipAllInput');
 
-        $membershipsArray = $memberships instanceof stdClass ? [] : $memberships;
-
-        return $membershipsArray;
+        return $memberships instanceof stdClass ? [] : $memberships;
     }
 }

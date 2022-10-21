@@ -98,7 +98,25 @@ class Troop
      * Stav přihlášky.
      */
     #[ORM\Column(type: 'string')]
-    protected ?string $state = null;
+    protected string $state;
+
+    /**
+     * Vedoucí oddílu.
+     */
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'troop', cascade: ['persist'])]
+    protected User $leader;
+
+    /**
+     * Kód pro párování oddílů.
+     */
+    #[ORM\Column(type: 'string')]
+    protected string $pairingCode;
+
+    /**
+     * Spárovaný oddíl.
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $pairedTroopCode = null;
 
     public function __construct()
     {
@@ -217,13 +235,43 @@ class Troop
         $this->incomeProof = $incomeProof;
     }
 
-    public function getState(): ?string
+    public function getState(): string
     {
         return $this->state;
     }
 
-    public function setState(?string $state): void
+    public function setState(string $state): void
     {
         $this->state = $state;
+    }
+
+    public function getLeader(): User
+    {
+        return $this->leader;
+    }
+
+    public function setLeader(User $leader): void
+    {
+        $this->leader = $leader;
+    }
+
+    public function getPairingCode(): string
+    {
+        return $this->pairingCode;
+    }
+
+    public function setPairingCode(string $pairingCode): void
+    {
+        $this->pairingCode = $pairingCode;
+    }
+
+    public function getPairedTroopCode(): ?string
+    {
+        return $this->pairedTroopCode;
+    }
+
+    public function setPairedTroopCode(?string $pairedTroopCode): void
+    {
+        $this->pairedTroopCode = $pairedTroopCode;
     }
 }

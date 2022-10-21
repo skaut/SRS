@@ -9,18 +9,16 @@ use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
-use App\Model\Settings\Queries\SettingStringValueQuery;
-use App\Model\Settings\Settings;
-use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\Authenticator;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
-use App\WebModule\Forms\ApplicationFormFactory;
 use Doctrine\ORM\NonUniqueResultException;
-use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
+
+use function array_filter;
+use function array_keys;
 
 /**
  * Komponenta s přihláškou oddílu.
@@ -59,8 +57,8 @@ class TroopApplicationContentControl extends BaseContentControl
         $template->testRole  = Role::TEST;
 
         if ($user->isLoggedIn()) {
-            $dbuser              = $this->userRepository->findById($user->id);
-            $template->dbuser              = $dbuser;
+            $dbuser           = $this->userRepository->findById($user->id);
+            $template->dbuser = $dbuser;
 
             $skautIsUserId                = $dbuser->getSkautISUserId();
             $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId, self::$ALLOWED_ROLE_TYPES);
@@ -73,9 +71,8 @@ class TroopApplicationContentControl extends BaseContentControl
                 $this->template->skautIsRoleSelected = $skautIsRoleSelected[array_keys($skautIsRoleSelected)[0]];
             }
 
-            $skautIsUnitAllUnit = $this->skautIsService->getUnitAllUnit();
+            $skautIsUnitAllUnit    = $this->skautIsService->getUnitAllUnit();
             $skautIsMemebershipAll = $this->skautIsService->getMembershipAll($this->skautIsService->getUnitId());
-
         }
 
         $template->render();
