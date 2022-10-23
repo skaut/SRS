@@ -43,6 +43,14 @@ class UserGroupRole
     #[ORM\ManyToOne(targetEntity: Role::class, cascade: ['persist'])]
     protected Role $role;
 
+    public function __construct(User $user, Role $role, ?Patrol $patrol = null, ?Troop $troop = null)
+    {
+        $this->user   = $user;
+        $this->role   = $role;
+        $this->patrol = $patrol;
+        $this->troop  = $troop;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

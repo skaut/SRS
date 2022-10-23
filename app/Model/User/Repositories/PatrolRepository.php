@@ -18,6 +18,16 @@ class PatrolRepository extends AbstractRepository
         parent::__construct($em, Patrol::class);
     }
 
+    public function findById(int $id): Patrol
+    {
+        return $this->getRepository()->findOneBy(['id' => $id]);
+    }
+
+    public function findByTroopAndNotConfirmed(int $troopId): ?Patrol
+    {
+        return $this->getRepository()->findOneBy(['troop' => $troopId, 'confirmed' => false]);
+    }
+
     public function save(Patrol $patrol): void
     {
         $this->em->persist($patrol);

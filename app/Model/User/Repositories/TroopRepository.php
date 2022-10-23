@@ -18,6 +18,11 @@ class TroopRepository extends AbstractRepository
         parent::__construct($em, Troop::class);
     }
 
+    public function findById(int $id): Troop
+    {
+        return $this->getRepository()->findOneBy(['id' => $id]);
+    }
+
     public function findByLeaderId(int $leaderId): ?Troop
     {
         return $this->getRepository()

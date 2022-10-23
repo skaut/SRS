@@ -46,9 +46,12 @@ class Patrol
     #[ORM\Column(type: 'boolean')]
     protected bool $confirmed = false;
 
-    public function __construct()
+    public function __construct(Troop $troop, string $name)
     {
         $this->usersRoles = new ArrayCollection();
+
+        $this->troop = $troop;
+        $this->name  = $name;
     }
 
     public function getId(): ?int
@@ -61,19 +64,9 @@ class Patrol
         return $this->name;
     }
 
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
     public function getTroop(): Troop
     {
         return $this->troop;
-    }
-
-    public function setTroop(Troop $troop): void
-    {
-        $this->troop = $troop;
     }
 
     /**
@@ -82,5 +75,15 @@ class Patrol
     public function getUsersRoles(): Collection
     {
         return $this->usersRoles;
+    }
+
+    public function isConfirmed(): bool
+    {
+        return $this->confirmed;
+    }
+
+    public function setConfirmed(bool $confirmed): void
+    {
+        $this->confirmed = $confirmed;
     }
 }

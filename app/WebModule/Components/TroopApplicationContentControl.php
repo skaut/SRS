@@ -7,7 +7,6 @@ namespace App\WebModule\Components;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
-use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\User\Commands\RegisterTroop;
 use App\Model\User\Queries\TroopByLeaderQuery;
 use App\Model\User\Repositories\UserRepository;
@@ -108,38 +107,18 @@ class TroopApplicationContentControl extends BaseContentControl
     {
         $type     = $this->getPresenter()->getParameter('type');
         $patrolId = $this->getPresenter()->getParameter('patrol_id');
+        if ($patrolId !== null) {
+            $patrolId = (int) $patrolId;
+        }
 
-        return $this->groupMembersFormFactory->create($type, $patrolId);
+        $form = $this->groupMembersFormFactory->create($type, $patrolId);
+
+        $form->onSave[] = function () use ($type, $patrolId): void {
+            $this->getPresenter()->redirect('this', ['step' => 'additional_info', 'type' => $type, 'patrol_id' => $patrolId]);
+        };
+
+        return $form;
     }
-
-    /**
-     * @throws SettingsItemNotFoundException
-     * @throws NonUniqueResultException
-     * @throws Throwable
-     */
-//    protected function createComponentApplicationForm(): Form
-//    {
-//        $form = $this->applicationFormFactory->create($this->getPresenter()->user->id);
-
-//        $form->onSuccess[] = function (Form $form, stdClass $values): void {
-//            $this->getPresenter()->flashMessage('web.application_content.register_successful', 'success');
-//
-//            $this->authenticator->updateRoles($this->getPresenter()->user);
-//
-//            $this->getPresenter()->redirect('this');
-//        };
-
-//        $this->applicationFormFactory->onSkautIsError[] = function (): void {
-//            $this->getPresenter()->flashMessage('web.application_content.register_synchronization_failed', 'danger');
-//        };
-//
-//        return $form;
-//    }
-
-//    protected function createComponentApplicationsGrid(): ApplicationsGridControl
-//    {
-//        return $this->applicationsGridControlFactory->create();
-//    }
 
     public function handleChangeRole(int $roleId): void
     {

@@ -261,14 +261,13 @@ class SkautIsService
         return $memberships instanceof stdClass ? [] : $memberships;
     }
 
-    public function getPersonAll(int $unitId): array
+    public function getPersonContactAllParent(int $personId): array
     {
-        $persons = $this->skautIs->org->PersonAll([
+        $contacts = $this->skautIs->org->PersonContactAllParent([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-            'ID_Unit' => $unitId,
-            'OnlyDirectMember' => false,
-        ], 'personAllInput');
+            'ID_Person' => $personId,
+        ], 'personContactAllParentInput');
 
-        return $persons instanceof stdClass ? [] : $persons;
+        return $contacts instanceof stdClass ? [] : $contacts;
     }
 }

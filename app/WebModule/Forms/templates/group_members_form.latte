@@ -1,6 +1,6 @@
 {form form class => form-horizontal}
     <script>
-        function showDiv(element)
+        function switchUnit(element)
         {
             $('.unit-tables').hide();
             $('#unit-table-' + element.value).show();
@@ -18,7 +18,7 @@
             Oddíl
         </div>
         <div class="col">
-            <select onchange="showDiv(this)">
+            <select onchange="switchUnit(this)">
                 {foreach $units as $unit}
                     <option value="{$unit->ID}">{$unit->DisplayName}</option>
                 {/foreach}
@@ -52,6 +52,7 @@
 
     <div class="row">
         <div class="col">
+            <a href="{plink this}" class="btn btn-secondary">Zpět</a>
             {input submit class => 'btn-primary button'}
         </div>
     </div>
