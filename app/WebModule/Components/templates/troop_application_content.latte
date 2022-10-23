@@ -16,6 +16,14 @@
                 </div>
             </div>
         </div>
+    {elseif empty($skautIsRoles)}
+        Nemáš správnou roli
+    {elseif $step === 'members'}
+        {control groupMembersForm}
+    {elseif $step === 'additional_info'}
+        additionalinfo
+    {elseif $step === 'confirm'}
+        confirm
     {else}
         <div class="form-group row">
             <div class="col-3 col-form-label">
@@ -26,10 +34,12 @@
                     <button class="btn btn-light dropdown-toggle" data-toggle="dropdown">
                         {if $skautIsRoleSelected}
                             {$skautIsRoleSelected->DisplayName}
+                        {else}
+                            Vyberte roli
                         {/if}
                     </button>
                     <div class="dropdown-menu">
-                        <a href="{link changeRole!, $r->ID}" n:foreach="$skautIsRoles as $r" n:class="dropdown-item, $r->ID === $skautIsRoleSelected->ID ? active">
+                        <a href="{link changeRole!, $r->ID}" n:foreach="$skautIsRoles as $r" n:class="dropdown-item, ($skautIsRoleSelected && $r->ID === $skautIsRoleSelected->ID) ? active">
                             {$r->DisplayName}
                         </a>
                     </div>
@@ -43,91 +53,134 @@
         </div>
 
         <h4>Skupina</h4>
-        <div class="form-group row">
-            <div class="col-3 col-form-label">
+        <div class="row form-group">
+            <div class="col-3">
                 Jméno
             </div>
             <div class="col-9">
-                S-311...
+                {$troop->getName()}
             </div>
         </div>
 
-        <div class="form-group row">
-            <div class="col-3 col-form-label">
+        <div class="row form-group">
+            <div class="col-3">
                 Zodpovědný vedoucí
             </div>
             <div class="col-9">
-                David Urban - ńuf
+                {$troop->getLeader()->getDisplayName()}
+                <br>
+                <span class="help-block text-info">
+                    <i class="fa fa-circle-info" aria-hidden="true"></i>
+                    Registrující je vždy zodpovědnou osobou.
+                </span>
             </div>
         </div>
 
-        <div class="form-group row">
-            <div class="col-3 col-form-label">
+        <div class="row form-group">
+            <div class="col-3">
                 Kód pro spojení do Jamooddílu
             </div>
             <div class="col-9">
-                ghjkhkj
+                {$troop->getPairingCode()}
+                <br>
+                <span class="help-block text-info">
+                    <i class="fa fa-circle-info" aria-hidden="true"></i>
+                    Kód můžeš nasdílet kamarádům z jiných skupin a my se budeme snažit vás spojit do jamoddílu. Pozor, abyste dohromady nepřekročili maximální počet lidí v jamoddílu (42).
+                </span>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row mt-3">
             <div class="col">
                 <h4>Družiny</h4>
             </div>
             <div class="col-auto">
-                <a href="#" class="btn btn-secondary btn-sm">Přidat družinu</a>
+                <a href="{plink this, step: members, type: patrol}" class="btn btn-secondary btn-sm">Přidat družinu</a>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col">
-                <h5>S-311.04-01-D01</h5>
+        {foreach [] as $patrol}
+            <div class="row">
+                <div class="col">
+                    <h5>S-311.04-01-D01</h5>
+                </div>
+                <div class="col-auto">
+                    <a href="{plink this, step: members, type: patrol, patrol_id: 1}" class="btn btn-secondary btn-sm">Upravit družinu</a>
+                </div>
             </div>
-            <div class="col-auto">
-                <a href="#" class="btn btn-secondary btn-sm">Upravit družinu</a>
+            <div class="row">
+                <div class="col">
+                    <table class="table table-sm table-bordered table-striped">
+                        <tr>
+                            <th>Jméno</th>
+                            <th>Role</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+
+                    <p>
+                        <i>Družina má 4/12 účastníků (z toho 1/1 rádců) a 1/1 vedoucích.</i>
+                    </p>
+                </div>
             </div>
-        </div>
+        {else}
+            <div class="row">
+                <div class="col">
+                    <span class="help-block text-info">
+                        <i class="fa fa-circle-info" aria-hidden="true"></i>
+                        Začni tím, že přidáš družinu.
+                    </span>
+                </div>
+            </div>
+        {/foreach}
 
-        <table class="table table-sm table-bordered table-striped">
-            <tr>
-                <th>Jméno</th>
-                <th>Role</th>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
-
-        <p>
-            <i>Družina má 4/12 účastníků (z toho 1/1 rádců) a 1/1 vedoucích.</i>
-        </p>
-
-        <div class="row">
+        <div class="row mt-3">
             <div class="col">
                 <h4>Dospělí průvodci</h4>
             </div>
             <div class="col-auto">
-                <a href="#" class="btn btn-secondary btn-sm">Upravit</a>
+                <a href="{plink this, step: members, type: troop}" n:class="btn, btn-secondary, btn-sm, empty([]) ? disabled">Upravit</a>
             </div>
         </div>
 
-        <table class="table table-sm table-bordered table-striped">
-            <tr>
-                <th>Jméno</th>
-                <th>Role</th>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
+        {if !empty([])}
+            <div class="row">
+                <div class="col">
+                    <table class="table table-sm table-bordered table-striped">
+                        <tr>
+                            <th>Jméno</th>
+                            <th>Role</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
 
-        <p>
-            <i>Doprovod má 2/2 členů. Můžeš mít 2×počet družin dospělých (tedy 4, z toho máš 2 vedoucí a 2 doprovody).</i>
-        </p>
+                    <p>
+                        <i>Doprovod má 2/2 členů. Můžeš mít 2×počet družin dospělých (tedy 4, z toho máš 2 vedoucí a 2 doprovody).</i>
+                    </p>
+                </div>
+            </div>
+        {else}
+            <div class="row">
+                <div class="col">
+                    <span class="help-block text-info">
+                        <i class="fa fa-circle-info" aria-hidden="true"></i>
+                        Zatím nemáš družinu, bez ní to nepůjde.
+                    </span>
+                </div>
+            </div>
+        {/if}
 
-        <h4>Shrnutí</h4>
-        TODO form
+        <div class="row mt-3">
+            <div class="col">
+                <h4>Shrnutí</h4>
+                TODO form
+            </div>
+        </div>
     {/if}
 </div>

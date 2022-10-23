@@ -40,6 +40,12 @@ class Patrol
     #[ORM\OneToMany(mappedBy: 'patrol', targetEntity: UserGroupRole::class, cascade: ['persist'])]
     protected Collection $usersRoles;
 
+    /**
+     * Stav přihlášky - nepotvrzená přihláška slouží pro předávání údajů mezi kroky formuláře.
+     */
+    #[ORM\Column(type: 'boolean')]
+    protected bool $confirmed = false;
+
     public function __construct()
     {
         $this->usersRoles = new ArrayCollection();

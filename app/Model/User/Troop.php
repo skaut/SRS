@@ -6,11 +6,17 @@ namespace App\Model\User;
 
 use App\Model\Application\IncomeProof;
 use App\Model\Application\VariableSymbol;
+use App\Model\Enums\TroopApplicationState;
 use App\Model\Payment\Payment;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
+use function md5;
+use function mt_rand;
+use function substr;
+use function uniqid;
 
 /**
  * Entita oddíl.
@@ -118,10 +124,19 @@ class Troop
     #[ORM\Column(type: 'string', nullable: true)]
     protected ?string $pairedTroopCode = null;
 
-    public function __construct()
+    public function __construct(User $leader, VariableSymbol $variableSymbol)
     {
         $this->patrols    = new ArrayCollection();
         $this->usersRoles = new ArrayCollection();
+
+        $this->leader         = $leader;
+        $this->variableSymbol = $variableSymbol;
+
+        $this->name            = 'S-' . $variableSymbol->getVariableSymbol();
+        $this->pairingCode     = substr(md5(uniqid((string) mt_rand(), true)), 0, 20);
+        $this->applicationDate = new DateTimeImmutable();
+        $this->state           = TroopApplicationState::DRAFT;
+        $this->fee             = 0;
     }
 
     public function getId(): ?int
@@ -170,19 +185,9 @@ class Troop
         return $this->variableSymbol;
     }
 
-    public function setVariableSymbol(VariableSymbol $variableSymbol): void
-    {
-        $this->variableSymbol = $variableSymbol;
-    }
-
     public function getApplicationDate(): DateTimeImmutable
     {
         return $this->applicationDate;
-    }
-
-    public function setApplicationDate(DateTimeImmutable $applicationDate): void
-    {
-        $this->applicationDate = $applicationDate;
     }
 
     public function getMaturityDate(): ?DateTimeImmutable
@@ -250,19 +255,9 @@ class Troop
         return $this->leader;
     }
 
-    public function setLeader(User $leader): void
-    {
-        $this->leader = $leader;
-    }
-
     public function getPairingCode(): string
     {
         return $this->pairingCode;
-    }
-
-    public function setPairingCode(string $pairingCode): void
-    {
-        $this->pairingCode = $pairingCode;
     }
 
     public function getPairedTroopCode(): ?string

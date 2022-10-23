@@ -54,6 +54,14 @@ class RoleRepository extends AbstractRepository
     }
 
     /**
+     * Vrací role podle typu.
+     */
+    public function findByType(string $type): array
+    {
+        return $this->getRepository()->findBy(['type' => $type]);
+    }
+
+    /**
      * Vrací id naposledy přidané role.
      *
      * @throws NonUniqueResultException

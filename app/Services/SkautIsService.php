@@ -254,9 +254,21 @@ class SkautIsService
         $memberships = $this->skautIs->org->MembershipAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_Unit' => $unitId,
+            'ID_MembershipType' => 'radne',
             'OnlyDirectMember' => false,
         ], 'membershipAllInput');
 
         return $memberships instanceof stdClass ? [] : $memberships;
+    }
+
+    public function getPersonAll(int $unitId): array
+    {
+        $persons = $this->skautIs->org->PersonAll([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID_Unit' => $unitId,
+            'OnlyDirectMember' => false,
+        ], 'personAllInput');
+
+        return $persons instanceof stdClass ? [] : $persons;
     }
 }

@@ -7,12 +7,16 @@ namespace App\WebModule\Components;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
-use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\User\Commands\RegisterTroop;
+use App\Model\User\Queries\TroopByLeaderQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\Authenticator;
+use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
+use App\WebModule\Forms\GroupMembersForm;
+use App\WebModule\Forms\IGroupMembersFormFactory;
 use Doctrine\ORM\NonUniqueResultException;
 use stdClass;
 use Throwable;
@@ -29,11 +33,12 @@ class TroopApplicationContentControl extends BaseContentControl
 
     public function __construct(
         private QueryBus $queryBus,
+        private CommandBus $commandBus,
         private Authenticator $authenticator,
         private UserRepository $userRepository,
         private RoleRepository $roleRepository,
         private SkautIsService $skautIsService,
-        public CustomInputRepository $customInputRepository
+        private IGroupMembersFormFactory $groupMembersFormFactory
     ) {
     }
 
@@ -56,23 +61,40 @@ class TroopApplicationContentControl extends BaseContentControl
         $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
         $template->testRole  = Role::TEST;
 
+        $step           = $this->getPresenter()->getParameter('step');
+        $template->step = $step;
+
         if ($user->isLoggedIn()) {
             $dbuser           = $this->userRepository->findById($user->id);
             $template->dbuser = $dbuser;
 
-            $skautIsUserId                = $dbuser->getSkautISUserId();
-            $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId, self::$ALLOWED_ROLE_TYPES);
-            $skautIsRoleSelectedId        = $this->skautIsService->getUserRoleId();
-            $skautIsRoleSelected          = array_filter($skautIsRoles, static fn (stdClass $r) => $r->ID === $skautIsRoleSelectedId);
-            $this->template->skautIsRoles = $skautIsRoles;
-            if (empty($skautIsRoleSelected)) {
-                $this->template->skautIsRoleSelected = null;
-            } else {
-                $this->template->skautIsRoleSelected = $skautIsRoleSelected[array_keys($skautIsRoleSelected)[0]];
+            $skautIsUserId          = $dbuser->getSkautISUserId();
+            $skautIsRoles           = $this->skautIsService->getUserRoles($skautIsUserId, self::$ALLOWED_ROLE_TYPES);
+            $template->skautIsRoles = $skautIsRoles;
+
+            $troop = $this->queryBus->handle(new TroopByLeaderQuery($dbuser->getId()));
+            if ($troop == null) {
+                $this->commandBus->handle(new RegisterTroop($dbuser));
+                $troop = $this->queryBus->handle(new TroopByLeaderQuery($dbuser->getId()));
             }
 
-            $skautIsUnitAllUnit    = $this->skautIsService->getUnitAllUnit();
-            $skautIsMemebershipAll = $this->skautIsService->getMembershipAll($this->skautIsService->getUnitId());
+            $template->troop = $troop;
+
+            if ($step === 'members') {
+                // nacist existujici draft pro patrol nebo troop nebo podle patrolId
+            } elseif ($step === 'additional_info') {
+                // nacist existujici draft pro patrol nebo troop nebo podle patrolId
+            } elseif ($step === 'confirm') {
+                // nacist existujici draft pro patrol nebo troop nebo podle patrolId
+            } else {
+                $skautIsRoleSelectedId = $this->skautIsService->getUserRoleId();
+                $skautIsRoleSelected   = array_filter($skautIsRoles, static fn (stdClass $r) => $r->ID === $skautIsRoleSelectedId);
+                if (empty($skautIsRoleSelected)) {
+                    $template->skautIsRoleSelected = null;
+                } else {
+                    $template->skautIsRoleSelected = $skautIsRoleSelected[array_keys($skautIsRoleSelected)[0]];
+                }
+            }
         }
 
         $template->render();
@@ -80,9 +102,14 @@ class TroopApplicationContentControl extends BaseContentControl
 
     public function renderScripts(): void
     {
-        $template = $this->template;
-        $template->setFile(__DIR__ . '/templates/application_content_scripts.latte');
-        $template->render();
+    }
+
+    protected function createComponentGroupMembersForm(): GroupMembersForm
+    {
+        $type     = $this->getPresenter()->getParameter('type');
+        $patrolId = $this->getPresenter()->getParameter('patrol_id');
+
+        return $this->groupMembersFormFactory->create($type, $patrolId);
     }
 
     /**
