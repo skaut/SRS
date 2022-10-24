@@ -12,5 +12,5 @@ interface IGroupConfirmFormFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create(): GroupConfirmForm;
+    public function create(string $type, ?int $patrolId = null): GroupConfirmForm;
 }

@@ -60,6 +60,8 @@ class GroupMembersForm extends UI\Control
             usort($unitMembers, static fn ($a, $b) => $collator->compare($a->Person, $b->Person));
             $this->members[$unit->ID] = $unitMembers;
         }
+
+        // todo: filtrovat podle veku a povolenych roli
     }
 
     /**
@@ -130,6 +132,8 @@ class GroupMembersForm extends UI\Control
                 if ($role != null) {
                     $roleSelect->setDefaultValue($role->getId());
                 }
+
+                // todo: validace veku
             }
         }
 

@@ -21,9 +21,9 @@
     {elseif $step === 'members'}
         {control groupMembersForm}
     {elseif $step === 'additional_info'}
-        additionalinfo
+        {control groupAdditionalInfoForm}
     {elseif $step === 'confirm'}
-        confirm
+        {control groupConfirmForm}
     {else}
         <div class="form-group row">
             <div class="col-3 col-form-label">

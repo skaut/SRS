@@ -4,37 +4,31 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
-use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
-use App\Model\Settings\Queries\SettingArrayValueQuery;
-use App\Model\Settings\Queries\SettingStringValueQuery;
-use App\Model\Settings\Settings;
+use App\Model\User\Queries\PatrolByTroopAndNotConfirmedQuery;
+use App\Model\User\Queries\TroopByLeaderQuery;
+use App\Model\User\Queries\UserByIdQuery;
+use App\Model\User\Queries\UsersRolesByPatrolQuery;
+use App\Model\User\Queries\UsersRolesByTroopQuery;
 use App\Model\User\Repositories\UserRepository;
-use App\Model\User\User;
-use App\Services\IMailService;
+use App\Model\User\UserGroupRole;
 use App\Services\QueryBus;
-use Contributte\ReCaptcha\Forms\ReCaptchaField;
-use Contributte\ReCaptcha\ReCaptchaProvider;
-use Doctrine\Common\Collections\ArrayCollection;
+use Collator;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
-use function nl2br;
-use function str_replace;
+use function usort;
 
 /**
  * Komponenta s formulářem pro vyplnění doplňujících údajů o členech družiny.
  */
 class GroupAdditionalInfoForm extends UI\Control
 {
-    /**
-     * Přihlášený uživatel.
-     */
-    private ?User $user = null;
+    /** @var UserGroupRole[] */
+    private array $usersRoles;
 
     /**
      * Událost při úspěšném odeslání formuláře.
@@ -44,11 +38,11 @@ class GroupAdditionalInfoForm extends UI\Control
     public array $onSave = [];
 
     public function __construct(
+        private string $type,
+        private ?int $patrolId,
         private BaseFormFactory $baseFormFactory,
         private QueryBus $queryBus,
         private UserRepository $userRepository,
-        private ReCaptchaProvider $recaptchaProvider,
-        private IMailService $mailService
     ) {
     }
 
@@ -58,6 +52,13 @@ class GroupAdditionalInfoForm extends UI\Control
     public function render(): void
     {
         $this->template->setFile(__DIR__ . '/templates/group_additional_info_form.latte');
+
+        $this->resolveUsersRoles();
+
+        $this->template->type       = $this->type;
+        $this->template->patrolId   = $this->patrolId;
+        $this->template->usersRoles = $this->usersRoles;
+
         $this->template->render();
     }
 
@@ -66,39 +67,18 @@ class GroupAdditionalInfoForm extends UI\Control
      */
     public function createComponentForm(): Form
     {
-        $this->user = $this->userRepository->findById($this->presenter->user->getId());
+        $this->resolveUsersRoles();
 
         $form = $this->baseFormFactory->create();
 
-        $nameText = $form->addText('name', 'web.contact_form_content.name')
-            ->addRule(Form::FILLED, 'web.contact_form_content.name_empty');
-
-        $emailText = $form->addText('email', 'web.contact_form_content.email')
-            ->addRule(Form::FILLED, 'web.contact_form_content.email_empty')
-            ->addRule(Form::EMAIL, 'web.contact_form_content.email_format');
-
-        $form->addTextArea('message', 'web.contact_form_content.message')
-            ->addRule(Form::FILLED, 'web.contact_form_content.message_empty');
-
-        $form->addCheckbox('sendCopy', 'web.contact_form_content.send_copy');
-
-        if ($this->user === null) {
-            $field = new ReCaptchaField($this->recaptchaProvider);
-            $field->addRule(Form::FILLED, 'web.contact_form_content.recaptcha_empty');
-            $form->addComponent($field, 'recaptcha');
+        foreach ($this->usersRoles as $userRole) {
+            $form->addTextArea('health_info_' . $userRole->getUser()->getId(), null, null, 3)
+                ->setDefaultValue($userRole->getUser()->getHealthInfo());
         }
 
-        $form->addSubmit('submit', 'web.contact_form_content.send_message');
+        $form->addSubmit('submit', 'Pokračovat');
 
-        if ($this->user !== null) {
-            $nameText->setDisabled();
-            $emailText->setDisabled();
-
-            $form->setDefaults([
-                'name' => $this->user->getDisplayName(),
-                'email' => $this->user->getEmail(),
-            ]);
-        }
+        $form->setAction($this->getPresenter()->link('this', ['step' => 'additional_info', 'type' => $this->type, 'patrol_id' => $this->patrolId]));
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -114,40 +94,34 @@ class GroupAdditionalInfoForm extends UI\Control
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $recipientsUsers  = new ArrayCollection();
-        $recipientsEmails = new ArrayCollection();
-
-        if ($this->user) {
-            $senderName  = $this->user->getDisplayName();
-            $senderEmail = $this->user->getEmail();
-            if ($values->sendCopy) {
-                $recipientsUsers->add($this->user);
-            }
-        } else {
-            $senderName  = $values->name;
-            $senderEmail = $values->email;
-            if ($values->sendCopy) {
-                $recipientsEmails->add($senderEmail);
-            }
+        foreach ($this->usersRoles as $userRole) {
+            $user                = $userRole->getUser();
+            $healthInfoInputName = 'health_info_' . $user->getId();
+            $user->setHealthInfo($values->$healthInfoInputName);
+            $this->userRepository->save($user);
         }
-
-        $recipients = $this->queryBus->handle(new SettingArrayValueQuery(Settings::CONTACT_FORM_RECIPIENTS));
-        foreach ($recipients as $recipient) {
-            $recipientsEmails->add($recipient);
-        }
-
-        $this->mailService->sendMailFromTemplate(
-            $recipientsUsers,
-            $recipientsEmails,
-            Template::CONTACT_FORM,
-            [
-                TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
-                TemplateVariable::SENDER_NAME => $senderName,
-                TemplateVariable::SENDER_EMAIL => $senderEmail,
-                TemplateVariable::MESSAGE => str_replace(["\n", "\r"], '', nl2br($values->message, false)),
-            ]
-        );
 
         $this->onSave();
+    }
+
+    private function resolveUsersRoles(): void
+    {
+        $user  = $this->queryBus->handle(new UserByIdQuery($this->presenter->user->getId()));
+        $troop = $this->queryBus->handle(new TroopByLeaderQuery($user->getId()));
+
+        if ($this->type == 'patrol') {
+            if ($this->patrolId !== null) {
+                $this->usersRoles = $this->queryBus->handle(new UsersRolesByPatrolQuery($this->patrolId))->toArray();
+            } else {
+                $patrol           = $this->queryBus->handle(new PatrolByTroopAndNotConfirmedQuery($troop->getId()));
+                $this->patrolId   = $patrol->getId();
+                $this->usersRoles = $this->queryBus->handle(new UsersRolesByPatrolQuery($patrol->getId()))->toArray();
+            }
+        } elseif ($this->type === 'troop') {
+            $this->usersRoles = $this->queryBus->handle(new UsersRolesByTroopQuery($troop->getId()))->toArray();
+        }
+
+        $collator = new Collator('cs_CZ');
+        usort($this->usersRoles, static fn ($a, $b) => $collator->compare($a->getUser()->getDisplayName(), $b->getUser()->getDisplayName()));
     }
 }

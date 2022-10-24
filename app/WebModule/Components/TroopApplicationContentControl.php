@@ -14,7 +14,11 @@ use App\Services\Authenticator;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
+use App\WebModule\Forms\GroupAdditionalInfoForm;
+use App\WebModule\Forms\GroupConfirmForm;
 use App\WebModule\Forms\GroupMembersForm;
+use App\WebModule\Forms\IGroupAdditionalInfoFormFactory;
+use App\WebModule\Forms\IGroupConfirmFormFactory;
 use App\WebModule\Forms\IGroupMembersFormFactory;
 use Doctrine\ORM\NonUniqueResultException;
 use stdClass;
@@ -37,7 +41,9 @@ class TroopApplicationContentControl extends BaseContentControl
         private UserRepository $userRepository,
         private RoleRepository $roleRepository,
         private SkautIsService $skautIsService,
-        private IGroupMembersFormFactory $groupMembersFormFactory
+        private IGroupMembersFormFactory $groupMembersFormFactory,
+        private IGroupAdditionalInfoFormFactory $groupAdditionalInfoFormFactory,
+        private IGroupConfirmFormFactory $groupConfirmFormFactory,
     ) {
     }
 
@@ -115,6 +121,40 @@ class TroopApplicationContentControl extends BaseContentControl
 
         $form->onSave[] = function () use ($type, $patrolId): void {
             $this->getPresenter()->redirect('this', ['step' => 'additional_info', 'type' => $type, 'patrol_id' => $patrolId]);
+        };
+
+        return $form;
+    }
+
+    protected function createComponentGroupAdditionalInfoForm(): GroupAdditionalInfoForm
+    {
+        $type     = $this->getPresenter()->getParameter('type');
+        $patrolId = $this->getPresenter()->getParameter('patrol_id');
+        if ($patrolId !== null) {
+            $patrolId = (int) $patrolId;
+        }
+
+        $form = $this->groupAdditionalInfoFormFactory->create($type, $patrolId);
+
+        $form->onSave[] = function () use ($type, $patrolId): void {
+            $this->getPresenter()->redirect('this', ['step' => 'confirm', 'type' => $type, 'patrol_id' => $patrolId]);
+        };
+
+        return $form;
+    }
+
+    protected function createComponentGroupConfirmForm(): GroupConfirmForm
+    {
+        $type     = $this->getPresenter()->getParameter('type');
+        $patrolId = $this->getPresenter()->getParameter('patrol_id');
+        if ($patrolId !== null) {
+            $patrolId = (int) $patrolId;
+        }
+
+        $form = $this->groupConfirmFormFactory->create($type, $patrolId);
+
+        $form->onSave[] = function (): void {
+            $this->getPresenter()->redirect('this');
         };
 
         return $form;

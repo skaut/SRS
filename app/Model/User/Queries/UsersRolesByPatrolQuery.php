@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User\Commands;
+namespace App\Model\User\Queries;
 
-class ConfirmPatrol
+class UsersRolesByPatrolQuery
 {
-    public function __construct(
-        private int $patrolId
-    ) {
+    public function __construct(private int $patrolId)
+    {
     }
 
     public function getPatrolId(): int

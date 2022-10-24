@@ -1,69 +1,46 @@
 {form form class => form-horizontal}
-    <div class="form-group row">
-        {var $nameInput = $form->getComponent('name')}
-        <div class="col-md-3 col-form-label">
-            <label for="{$nameInput->htmlId}" n:class="$nameInput->required ? required">
-                {_$nameInput->caption}
-            </label>
-        </div>
-        <div class="col-md-9">
-            {input $nameInput}
+    <div class="row">
+        <div class="col">
+            <h4>2. Doplň údaje</h4>
         </div>
     </div>
 
-    <div class="form-group row">
-        {var $emailInput = $form->getComponent('email')}
-        <div class="col-md-3 col-form-label">
-            <label for="{$emailInput->htmlId}" n:class="$emailInput->required ? required">
-                {_$emailInput->caption}
-            </label>
-        </div>
-        <div class="col-md-9">
-            {input $emailInput}
-        </div>
-    </div>
-
-    <div class="form-group row">
-        {var $messageInput = $form->getComponent('message')}
-        <div class="col-md-3 col-form-label">
-            <label for="{$messageInput->htmlId}" n:class="$messageInput->required ? required">
-                {_$messageInput->caption}
-            </label>
-        </div>
-        <div class="col-md-9">
-            {input $messageInput}
-        </div>
-    </div>
-
-    <div class="form-group row">
-        {var $sendCopyInput = $form->getComponent('sendCopy')}
-        <div class="col-md-9 offset-3">
-            <div class="form-check">
-                <label class="form-check-label" for="{$sendCopyInput->htmlId}">
-                    <input type="checkbox" n:name="$sendCopyInput->name" class="form-check-input">
-                    {_$sendCopyInput->caption}
-                </label>
+    {foreach $usersRoles as $userRole}
+        {var $user = $userRole->getUser()}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{$user->getDisplayName()}</h5>
+                <h6 class="card-subtitle mb-2">{$userRole->getRole()->getName()}</h6>
+                <div class="row">
+                    <div class="col-4">
+                        {$user->getStreet()},<br>
+                        {$user->getPostcode()} {$user->getCity()}<br>
+                        <br>
+                        <strong>Telefon:</strong> {$user->getPhone()}<br>
+                        <strong>E-mail:</strong> {$user->getEmail()}<br>
+                        <strong>Datum narození:</strong> {$user->getBirthdate()|date:'j. n. Y'}<br>
+                        {if $user->getMotherPhone() !== null}
+                            <br>
+                            <strong>Telefon matky:</strong> {$user->getMotherPhone()} ({$user->getMotherName()})
+                        {/if}
+                        {if $user->getFatherPhone() !== null}
+                            <br>
+                            <strong>Telefon otce:</strong> {$user->getFatherPhone()} ({$user->getFatherName()})
+                        {/if}
+                    </div>
+                    <div class="col-8">
+                        <strong>Zdravotní omezení, alergie, pravidelně užívané léky</strong><br>
+                        {input 'health_info_' . $user->getId()}
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    {/foreach}
 
-    {var $recaptcha = $form->getComponent('recaptcha', false)}
-    <div n:if="$recaptcha" class="form-group row">
-        <div class="col-9 offset-3">
-            <div n:name="$recaptcha->name"></div>
-            <span class="help-block text-danger" n:if="$recaptcha->error">
-                <i class="fa fa-circle-exclamation"></i>
-                {$recaptcha->error}
-            </span>
+    <div class="row">
+        <div class="col">
+            <a href="{plink this, step: members, type: $type, patrol_id: $patrolId}" class="btn btn-secondary">Zpět</a>
+            {input submit class => 'btn-primary button'}
         </div>
     </div>
-
-    <div class="form-group row">
-        <div class="col-9 offset-3">
-            {var $submit = $form->getComponent('submit')}
-            {input $submit class => 'btn btn-primary button'}
-        </div>
-    </div>
-
-    <script src='https://www.google.com/recaptcha/api.js'></script>
- {/form}
+{/form}

@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 use function property_exists;
+use function sprintf;
 
 class UpdateGroupMembersHandler implements MessageHandlerInterface
 {
@@ -44,7 +45,8 @@ class UpdateGroupMembersHandler implements MessageHandlerInterface
                 if ($command->getPatrolId() !== null) {
                     $patrol = $this->queryBus->handle(new PatrolByIdQuery($command->getPatrolId()));
                 } else {
-                    $patrol = new Patrol($troop, $troop->getName() . '-01'); // todo
+                    $patrolNumber = $troop->getPatrols()->count() + 1;
+                    $patrol       = new Patrol($troop, $troop->getName() . '-' . sprintf('%02d', $patrolNumber));
                     $this->patrolRepository->save($patrol);
                 }
             }
@@ -53,8 +55,7 @@ class UpdateGroupMembersHandler implements MessageHandlerInterface
                 $personId = $person['personId'];
                 $roleId   = $person['roleId'];
 
-                $personDetail   = $this->skautIsService->getPersonDetail($personId);
-                $personContacts = $this->skautIsService->getPersonContactAllParent($personId);
+                $personDetail = $this->skautIsService->getPersonDetail($personId);
 
                 $user = $this->userRepository->findBySkautISPersonId($personId);
                 if ($user == null) {
@@ -68,7 +69,8 @@ class UpdateGroupMembersHandler implements MessageHandlerInterface
 
                 $user->setMember($personDetail->HasMembership);
 
-                $user->setBirthdate(new DateTimeImmutable($personDetail->Birthday));
+                $birthdate = new DateTimeImmutable($personDetail->Birthday);
+                $user->setBirthdate($birthdate);
                 $user->setSex($personDetail->ID_Sex);
 
                 if (property_exists($personDetail, 'Phone')) {
@@ -84,28 +86,34 @@ class UpdateGroupMembersHandler implements MessageHandlerInterface
                 $user->setPostcode($personDetail->Postcode);
                 $user->setState($personDetail->State);
 
-                $this->userRepository->save($user);
+                if ((new DateTimeImmutable())->diff($birthdate)->y < 18) {
+                    $personContacts = $this->skautIsService->getPersonContactAllParent($personId);
 
-                foreach ($personContacts as $contact) {
-                    if ($contact->ID_ContactType === 'telefon_hlavni') {
-                        switch ($contact->ID_ParentType) {
-                            case 'mother':
-                                $user->setMotherName($contact->PersonPersonParent);
-                                $user->setMotherPhone($contact->Value);
-                                break;
-                            case 'father':
-                                $user->setFatherName($contact->PersonPersonParent);
-                                $user->setFatherPhone($contact->Value);
-                                break;
+                    foreach ($personContacts as $contact) {
+                        if ($contact->ID_ContactType === 'telefon_hlavni') {
+                            switch ($contact->ID_ParentType) {
+                                case 'mother':
+                                    $user->setMotherName($contact->PersonPersonParent);
+                                    $user->setMotherPhone($contact->Value);
+                                    break;
+                                case 'father':
+                                    $user->setFatherName($contact->PersonPersonParent);
+                                    $user->setFatherPhone($contact->Value);
+                                    break;
+                            }
                         }
                     }
                 }
 
+                $this->userRepository->save($user);
+
                 $role = $this->roleRepository->findById($roleId);
 
+                // todo odstranit nezvolene
+
                 if ($command->getType() === 'patrol') {
-                    $userGroupRoles = $this->userGroupRoleRepository->findByUserAndPatrol($user, $patrol);
-                    if (empty($userGroupRoles)) {
+                    $userGroupRoles = $this->userGroupRoleRepository->findByUserAndPatrol($user->getId(), $patrol->getId());
+                    if ($userGroupRoles->isEmpty()) {
                         $userGroupRole = new UserGroupRole($user, $role, $patrol);
                     } else {
                         $userGroupRole = $userGroupRoles[0];
@@ -114,8 +122,8 @@ class UpdateGroupMembersHandler implements MessageHandlerInterface
 
                     $this->userGroupRoleRepository->save($userGroupRole);
                 } elseif ($command->getType() === 'troop') {
-                    $userGroupRoles = $this->userGroupRoleRepository->findByUserAndTroop($user, $troop);
-                    if (empty($userGroupRoles)) {
+                    $userGroupRoles = $this->userGroupRoleRepository->findByUserAndTroop($user->getId(), $troop->getId());
+                    if ($userGroupRoles->isEmpty()) {
                         $userGroupRole = new UserGroupRole($user, $role, null, $troop);
                     } else {
                         $userGroupRole = $userGroupRoles[0];

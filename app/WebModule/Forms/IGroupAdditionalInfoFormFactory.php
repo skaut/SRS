@@ -12,5 +12,5 @@ interface IGroupAdditionalInfoFormFactory
     /**
      * Vytvoří komponentu.
      */
-    public function create(): GroupAdditionalInfoForm;
+    public function create(string $type, ?int $patrolId = null): GroupAdditionalInfoForm;
 }
