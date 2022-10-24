@@ -36,7 +36,7 @@ class GroupMembersForm extends UI\Control
     /** @var stdClass[] */
     private array $units;
 
-    /** @var string[][] */
+    /** @var stdClass[][] */
     private array $members;
 
     /**

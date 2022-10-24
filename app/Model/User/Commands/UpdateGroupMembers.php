@@ -7,7 +7,7 @@ namespace App\Model\User\Commands;
 class UpdateGroupMembers
 {
     /**
-     * @param string[][] $persons
+     * @param int[][] $persons
      */
     public function __construct(
         private string $type,
@@ -33,7 +33,7 @@ class UpdateGroupMembers
     }
 
     /**
-     * @return string[][]
+     * @return int[][]
      */
     public function getPersons(): array
     {

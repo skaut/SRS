@@ -84,13 +84,7 @@ class TroopApplicationContentControl extends BaseContentControl
 
             $template->troop = $troop;
 
-            if ($step === 'members') {
-                // nacist existujici draft pro patrol nebo troop nebo podle patrolId
-            } elseif ($step === 'additional_info') {
-                // nacist existujici draft pro patrol nebo troop nebo podle patrolId
-            } elseif ($step === 'confirm') {
-                // nacist existujici draft pro patrol nebo troop nebo podle patrolId
-            } else {
+            if ($step === null) {
                 $skautIsRoleSelectedId = $this->skautIsService->getUserRoleId();
                 $skautIsRoleSelected   = array_filter($skautIsRoles, static fn (stdClass $r) => $r->ID === $skautIsRoleSelectedId);
                 if (empty($skautIsRoleSelected)) {
