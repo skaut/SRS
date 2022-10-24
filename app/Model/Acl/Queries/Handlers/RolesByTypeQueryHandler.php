@@ -6,6 +6,7 @@ namespace App\Model\Acl\Queries\Handlers;
 
 use App\Model\Acl\Queries\RolesByTypeQuery;
 use App\Model\Acl\Repositories\RoleRepository;
+use App\Model\Acl\Role;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class RolesByTypeQueryHandler implements MessageHandlerInterface
@@ -14,6 +15,9 @@ class RolesByTypeQueryHandler implements MessageHandlerInterface
     {
     }
 
+    /**
+     * @return Role[]
+     */
     public function __invoke(RolesByTypeQuery $query): array
     {
         return $this->roleRepository->findByType($query->getType());

@@ -20,6 +20,9 @@ class UserGroupRoleRepository extends AbstractRepository
         parent::__construct($em, UserGroupRole::class);
     }
 
+    /**
+     * @return Collection<int, UserGroupRole>
+     */
     public function findByUserAndPatrol(int $user_id, int $patrol_id): Collection
     {
         $result = $this->getRepository()->findBy(['user' => $user_id, 'patrol' => $patrol_id]);
@@ -27,21 +30,30 @@ class UserGroupRoleRepository extends AbstractRepository
         return new ArrayCollection($result);
     }
 
-    public function findByUserAndTroop(int $user_id, int $troop_id)
+    /**
+     * @return Collection<int, UserGroupRole>
+     */
+    public function findByUserAndTroop(int $user_id, int $troop_id): Collection
     {
         $result = $this->getRepository()->findBy(['user' => $user_id, 'troop' => $troop_id]);
 
         return new ArrayCollection($result);
     }
 
-    public function findByPatrol(int $patrol_id)
+    /**
+     * @return Collection<int, UserGroupRole>
+     */
+    public function findByPatrol(int $patrol_id): Collection
     {
         $result = $this->getRepository()->findBy(['patrol' => $patrol_id]);
 
         return new ArrayCollection($result);
     }
 
-    public function findByTroop(int $troop_id)
+    /**
+     * @return Collection<int, UserGroupRole>
+     */
+    public function findByTroop(int $troop_id): Collection
     {
         $result = $this->getRepository()->findBy(['troop' => $troop_id]);
 

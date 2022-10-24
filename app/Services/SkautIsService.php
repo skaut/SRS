@@ -233,6 +233,11 @@ class SkautIsService
         ]);
     }
 
+    /**
+     * @param ?string[] $allowedUnitTypes
+     *
+     * @return stdClass[]
+     */
     public function getUnitAllUnit(?array $allowedUnitTypes = null): array
     {
         $units = $this->skautIs->org->UnitAllUnit([
@@ -249,6 +254,9 @@ class SkautIsService
         return $unitsArray;
     }
 
+    /**
+     * @return stdClass[]
+     */
     public function getMembershipAll(int $unitId): array
     {
         $memberships = $this->skautIs->org->MembershipAll([
@@ -261,6 +269,9 @@ class SkautIsService
         return $memberships instanceof stdClass ? [] : $memberships;
     }
 
+    /**
+     * @return stdClass[]
+     */
     public function getPersonContactAllParent(int $personId): array
     {
         $contacts = $this->skautIs->org->PersonContactAllParent([

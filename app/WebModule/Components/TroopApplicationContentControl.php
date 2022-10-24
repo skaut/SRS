@@ -10,7 +10,6 @@ use App\Model\Cms\Dto\ContentDto;
 use App\Model\User\Commands\RegisterTroop;
 use App\Model\User\Queries\TroopByLeaderQuery;
 use App\Model\User\Repositories\UserRepository;
-use App\Services\Authenticator;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
@@ -32,12 +31,12 @@ use function array_keys;
  */
 class TroopApplicationContentControl extends BaseContentControl
 {
+    /** @var string[] */
     private static array $ALLOWED_ROLE_TYPES = ['vedouciStredisko', 'vedouciOddil', 'cinovnikStredisko', 'cinovnikOddil'];
 
     public function __construct(
         private QueryBus $queryBus,
         private CommandBus $commandBus,
-        private Authenticator $authenticator,
         private UserRepository $userRepository,
         private RoleRepository $roleRepository,
         private SkautIsService $skautIsService,

@@ -28,12 +28,15 @@ use function usort;
  */
 class GroupMembersForm extends UI\Control
 {
+    /** @var string[] */
     private static array $ALLOWED_UNIT_TYPES = ['oddil'];
 
     private ?int $troopId = null;
 
+    /** @var stdClass[] */
     private array $units;
 
+    /** @var string[][] */
     private array $members;
 
     /**
@@ -173,6 +176,9 @@ class GroupMembersForm extends UI\Control
         $this->onSave();
     }
 
+    /**
+     * @return string[]
+     */
     private function getRoleSelectOptions(): array
     {
         $roles = $this->queryBus->handle(new RolesByTypeQuery($this->type));

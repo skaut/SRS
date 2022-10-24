@@ -49,6 +49,8 @@ class UpdateGroupMembersHandler implements MessageHandlerInterface
                     $patrol       = new Patrol($troop, $troop->getName() . '-' . sprintf('%02d', $patrolNumber));
                     $this->patrolRepository->save($patrol);
                 }
+            } else {
+                $patrol = null;
             }
 
             foreach ($command->getPersons() as $person) {

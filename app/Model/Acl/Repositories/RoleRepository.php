@@ -55,6 +55,8 @@ class RoleRepository extends AbstractRepository
 
     /**
      * Vrací role podle typu.
+     *
+     * @return Role[]
      */
     public function findByType(string $type): array
     {
