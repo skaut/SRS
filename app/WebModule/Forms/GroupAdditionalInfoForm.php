@@ -110,7 +110,8 @@ class GroupAdditionalInfoForm extends UI\Control
 
         if ($this->type == 'patrol') {
             if ($this->patrolId !== null) {
-                $this->usersRoles = $this->queryBus->handle(new PatrolByIdQuery($this->patrolId))->getUsersRoles()->toArray();
+                $patrol           = $this->queryBus->handle(new PatrolByIdQuery($this->patrolId));
+                $this->usersRoles = $patrol->getUsersRoles()->toArray();
             } else {
                 $patrol           = $this->queryBus->handle(new PatrolByTroopAndNotConfirmedQuery($troop->getId()));
                 $this->patrolId   = $patrol->getId();

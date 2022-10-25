@@ -1,7 +1,7 @@
 name: deploy-nsj-dev
 
 on:
-  pull_request:
+  push:
     branches: [nsj/master]
 
 concurrency:
