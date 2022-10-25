@@ -20,6 +20,7 @@ class ConfirmTroopHandler implements MessageHandlerInterface
         $troop = $this->troopRepository->findById($command->getTroopId());
         $troop->setState(TroopApplicationState::WAITING_FOR_PAYMENT);
         $troop->setPairedTroopCode($command->getPairedTroopCode());
+        $troop->setFee($troop->countFee());
         $this->troopRepository->save($troop);
     }
 }
