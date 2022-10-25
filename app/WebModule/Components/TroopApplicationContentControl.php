@@ -161,7 +161,9 @@ class TroopApplicationContentControl extends BaseContentControl
         $form = $this->troopConfirmFormFactory->create();
 
         $form->onSave[] = function (): void {
-            $this->getPresenter()->redirect('this');
+            $p = $this->getPresenter();
+            $p->flashMessage('Přihláška skupiny byla úspěšně odeslána.', 'success');
+            $p->redirect('this');
         };
 
         return $form;

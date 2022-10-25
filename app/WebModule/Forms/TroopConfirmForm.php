@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
+use App\Model\Enums\TroopApplicationState;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -64,12 +65,19 @@ class TroopConfirmForm extends UI\Control
 
         $form = $this->baseFormFactory->create();
 
-        $form->addText('pairedTroopCode');
+        $pairedTroopCodeText = $form->addText('pairedTroopCode')
+            ->setDefaultValue($this->troop->getPairedTroopCode());
 
-        $form->addSubmit('submit', 'Závazně registrovat');
-
-        $form->addCheckbox('agreement', 'Souhlasím s podmínkami akce.')
+        $agreementCheckbox = $form->addCheckbox('agreement', 'Souhlasím s podmínkami akce.')
             ->addRule(Form::FILLED, 'Musíš souhlasit s podmínkami akce.');
+
+        $submit = $form->addSubmit('submit', 'Závazně registrovat');
+
+        if ($this->troop->getState() !== TroopApplicationState::DRAFT) {
+            $pairedTroopCodeText->setHtmlAttribute('readonly');
+            $agreementCheckbox->setDisabled();
+            $submit->setDisabled();
+        }
 
         $form->setAction($this->getPresenter()->link('this'));
 
@@ -87,7 +95,7 @@ class TroopConfirmForm extends UI\Control
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->commandBus->handle(new ConfirmTroop($this->troop->getId()));
+        $this->commandBus->handle(new ConfirmTroop($this->troop->getId(), $values->pairedTroopCode));
 
         $this->onSave();
     }
