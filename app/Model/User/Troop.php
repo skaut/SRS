@@ -13,6 +13,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use function array_key_exists;
+use function count;
+use function in_array;
 use function md5;
 use function mt_rand;
 use function substr;
@@ -268,5 +271,82 @@ class Troop
     public function setPairedTroopCode(?string $pairedTroopCode): void
     {
         $this->pairedTroopCode = $pairedTroopCode;
+    }
+
+    public function getConfirmedPatrols()
+    {
+        return $this->patrols->filter(static fn ($p) => $p->isConfirmed());
+    }
+
+    public function getMaxEscortsCount()
+    {
+        return $this->getConfirmedPatrols()->count();
+    }
+
+    public function getMaxAdultsCount()
+    {
+        return $this->getConfirmedPatrols()->count() * 2;
+    }
+
+    public function countUsersInRoles(array $roles)
+    {
+        $users = [];
+
+        // uzivatele v oddile
+        foreach ($this->usersRoles as $userRole) {
+            if (in_array($userRole->getRole()->getSystemName(), $roles)) {
+                $users[$userRole->getUser()->getId()] = true;
+            }
+        }
+
+        // uzivatele v druzinach
+        foreach ($this->getConfirmedPatrols() as $patrol) {
+            foreach ($patrol->getUsersRoles() as $userRole) {
+                if (in_array($userRole->getRole()->getSystemName(), $roles)) {
+                    $users[$userRole->getUser()->getId()] = true;
+                }
+            }
+        }
+
+        return count($users);
+    }
+
+    public function countFee()
+    {
+        $rolesFees  = [];
+        $rolesUsers = [];
+
+        // uzivatele v oddile
+        foreach ($this->usersRoles as $userRole) {
+            $role = $userRole->getRole();
+            $user = $userRole->getUser();
+            if (! array_key_exists($role->getId(), $rolesFees)) {
+                $rolesFees[$role->getId()]  = $role->getFee();
+                $rolesUsers[$role->getId()] = [];
+            }
+
+            $rolesUsers[$role->getId()][$user->getId()] = true;
+        }
+
+        // uzivatele v druzinach
+        foreach ($this->getConfirmedPatrols() as $patrol) {
+            foreach ($patrol->getUsersRoles() as $userRole) {
+                $role = $userRole->getRole();
+                $user = $userRole->getUser();
+                if (! array_key_exists($role->getId(), $rolesFees)) {
+                    $rolesFees[$role->getId()]  = $role->getFee();
+                    $rolesUsers[$role->getId()] = [];
+                }
+
+                $rolesUsers[$role->getId()][$user->getId()] = true;
+            }
+        }
+
+        $totalFee = 0;
+        foreach ($rolesFees as $key => $value) {
+            $totalFee += $value * count($rolesUsers[$key]);
+        }
+
+        return $totalFee;
     }
 }

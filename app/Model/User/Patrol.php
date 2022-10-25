@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use function in_array;
+
 /**
  * Entita družina.
  */
@@ -85,5 +87,17 @@ class Patrol
     public function setConfirmed(bool $confirmed): void
     {
         $this->confirmed = $confirmed;
+    }
+
+    public function countUsersInRoles(array $roles)
+    {
+        $counter = 0;
+        foreach ($this->usersRoles as $userRole) {
+            if (in_array($userRole->getRole()->getSystemName(), $roles)) {
+                $counter++;
+            }
+        }
+
+        return $counter;
     }
 }

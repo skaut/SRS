@@ -19,6 +19,8 @@ use App\WebModule\Forms\GroupMembersForm;
 use App\WebModule\Forms\IGroupAdditionalInfoFormFactory;
 use App\WebModule\Forms\IGroupConfirmFormFactory;
 use App\WebModule\Forms\IGroupMembersFormFactory;
+use App\WebModule\Forms\ITroopConfirmFormFactory;
+use App\WebModule\Forms\TroopConfirmForm;
 use Doctrine\ORM\NonUniqueResultException;
 use stdClass;
 use Throwable;
@@ -43,6 +45,7 @@ class TroopApplicationContentControl extends BaseContentControl
         private IGroupMembersFormFactory $groupMembersFormFactory,
         private IGroupAdditionalInfoFormFactory $groupAdditionalInfoFormFactory,
         private IGroupConfirmFormFactory $groupConfirmFormFactory,
+        private ITroopConfirmFormFactory $troopConfirmFormFactory,
     ) {
     }
 
@@ -145,6 +148,17 @@ class TroopApplicationContentControl extends BaseContentControl
         }
 
         $form = $this->groupConfirmFormFactory->create($type, $patrolId);
+
+        $form->onSave[] = function (): void {
+            $this->getPresenter()->redirect('this');
+        };
+
+        return $form;
+    }
+
+    protected function createComponentTroopConfirmForm(): TroopConfirmForm
+    {
+        $form = $this->troopConfirmFormFactory->create();
 
         $form->onSave[] = function (): void {
             $this->getPresenter()->redirect('this');
