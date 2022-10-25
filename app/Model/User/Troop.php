@@ -273,7 +273,10 @@ class Troop
         $this->pairedTroopCode = $pairedTroopCode;
     }
 
-    public function getConfirmedPatrols()
+    /**
+     * @return Collection<int, Patrol>
+     */
+    public function getConfirmedPatrols(): Collection
     {
         return $this->patrols->filter(static fn ($p) => $p->isConfirmed());
     }
