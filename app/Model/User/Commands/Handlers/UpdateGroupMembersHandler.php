@@ -111,9 +111,11 @@ class UpdateGroupMembersHandler implements MessageHandlerInterface
 
                 $role = $this->roleRepository->findById($roleId);
 
-                // todo odstranit nezvolene
-
                 if ($command->getType() === 'patrol') {
+                    foreach ($patrol->getUsersRoles() as $usersRole) {
+                        $this->userGroupRoleRepository->remove($usersRole);
+                    }
+
                     $userGroupRoles = $this->userGroupRoleRepository->findByUserAndPatrol($user->getId(), $patrol->getId());
                     if ($userGroupRoles->isEmpty()) {
                         $userGroupRole = new UserGroupRole($user, $role, $patrol);
@@ -124,6 +126,10 @@ class UpdateGroupMembersHandler implements MessageHandlerInterface
 
                     $this->userGroupRoleRepository->save($userGroupRole);
                 } elseif ($command->getType() === 'troop') {
+                    foreach ($troop->getUsersRoles() as $usersRole) {
+                        $this->userGroupRoleRepository->remove($usersRole);
+                    }
+
                     $userGroupRoles = $this->userGroupRoleRepository->findByUserAndTroop($user->getId(), $troop->getId());
                     if ($userGroupRoles->isEmpty()) {
                         $userGroupRole = new UserGroupRole($user, $role, null, $troop);

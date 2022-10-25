@@ -40,29 +40,15 @@ class UserGroupRoleRepository extends AbstractRepository
         return new ArrayCollection($result);
     }
 
-    /**
-     * @return Collection<int, UserGroupRole>
-     */
-    public function findByPatrol(int $patrol_id): Collection
-    {
-        $result = $this->getRepository()->findBy(['patrol' => $patrol_id]);
-
-        return new ArrayCollection($result);
-    }
-
-    /**
-     * @return Collection<int, UserGroupRole>
-     */
-    public function findByTroop(int $troop_id): Collection
-    {
-        $result = $this->getRepository()->findBy(['troop' => $troop_id]);
-
-        return new ArrayCollection($result);
-    }
-
     public function save(UserGroupRole $userGroupRole): void
     {
         $this->em->persist($userGroupRole);
+        $this->em->flush();
+    }
+
+    public function remove(UserGroupRole $userGroupRole): void
+    {
+        $this->em->remove($userGroupRole);
         $this->em->flush();
     }
 }

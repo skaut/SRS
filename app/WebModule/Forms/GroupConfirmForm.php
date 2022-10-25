@@ -6,11 +6,10 @@ namespace App\WebModule\Forms;
 
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\User\Commands\ConfirmPatrol;
+use App\Model\User\Queries\PatrolByIdQuery;
 use App\Model\User\Queries\PatrolByTroopAndNotConfirmedQuery;
 use App\Model\User\Queries\TroopByLeaderQuery;
 use App\Model\User\Queries\UserByIdQuery;
-use App\Model\User\Queries\UsersRolesByPatrolQuery;
-use App\Model\User\Queries\UsersRolesByTroopQuery;
 use App\Model\User\UserGroupRole;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
@@ -104,14 +103,14 @@ class GroupConfirmForm extends UI\Control
 
         if ($this->type == 'patrol') {
             if ($this->patrolId !== null) {
-                $this->usersRoles = $this->queryBus->handle(new UsersRolesByPatrolQuery($this->patrolId))->toArray();
+                $this->usersRoles = $this->queryBus->handle(new PatrolByIdQuery($this->patrolId))->getUsersRoles()->toArray();
             } else {
                 $patrol           = $this->queryBus->handle(new PatrolByTroopAndNotConfirmedQuery($troop->getId()));
                 $this->patrolId   = $patrol->getId();
-                $this->usersRoles = $this->queryBus->handle(new UsersRolesByPatrolQuery($patrol->getId()))->toArray();
+                $this->usersRoles = $patrol->getUsersRoles()->toArray();
             }
         } elseif ($this->type === 'troop') {
-            $this->usersRoles = $this->queryBus->handle(new UsersRolesByTroopQuery($troop->getId()))->toArray();
+            $this->usersRoles = $troop->getUsersRoles()->toArray();
         }
 
         $collator = new Collator('cs_CZ');
