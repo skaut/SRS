@@ -4,30 +4,15 @@ declare(strict_types=1);
 
 namespace App\Model\User\Commands;
 
-use App\Model\Program\Program;
-use App\Model\User\User;
-
 class ConfirmTroop
 {
     public function __construct(
-        private User $user,
-        private Program $program,
-        private bool $notifyUser = true
+        private int $troop_id,
     ) {
     }
 
-    public function getUser(): User
+    public function getTroopId(): int
     {
-        return $this->user;
-    }
-
-    public function getProgram(): Program
-    {
-        return $this->program;
-    }
-
-    public function isNotifyUser(): bool
-    {
-        return $this->notifyUser;
+        return $this->troop_id;
     }
 }

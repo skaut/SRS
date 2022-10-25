@@ -278,23 +278,26 @@ class Troop
         return $this->patrols->filter(static fn ($p) => $p->isConfirmed());
     }
 
-    public function getMaxEscortsCount()
+    public function getMaxEscortsCount(): int
     {
         return $this->getConfirmedPatrols()->count();
     }
 
-    public function getMaxAdultsCount()
+    public function getMaxAdultsCount(): int
     {
         return $this->getConfirmedPatrols()->count() * 2;
     }
 
-    public function countUsersInRoles(array $roles)
+    /**
+     * @param string[] $roleNames
+     */
+    public function countUsersInRoles(array $roleNames): int
     {
         $users = [];
 
         // uzivatele v oddile
         foreach ($this->usersRoles as $userRole) {
-            if (in_array($userRole->getRole()->getSystemName(), $roles)) {
+            if (in_array($userRole->getRole()->getSystemName(), $roleNames)) {
                 $users[$userRole->getUser()->getId()] = true;
             }
         }
@@ -302,7 +305,7 @@ class Troop
         // uzivatele v druzinach
         foreach ($this->getConfirmedPatrols() as $patrol) {
             foreach ($patrol->getUsersRoles() as $userRole) {
-                if (in_array($userRole->getRole()->getSystemName(), $roles)) {
+                if (in_array($userRole->getRole()->getSystemName(), $roleNames)) {
                     $users[$userRole->getUser()->getId()] = true;
                 }
             }
@@ -311,7 +314,7 @@ class Troop
         return count($users);
     }
 
-    public function countFee()
+    public function countFee(): int
     {
         $rolesFees  = [];
         $rolesUsers = [];

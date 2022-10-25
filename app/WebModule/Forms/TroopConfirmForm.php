@@ -7,6 +7,7 @@ namespace App\WebModule\Forms;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
+use App\Model\User\Commands\ConfirmTroop;
 use App\Model\User\Queries\TroopByLeaderQuery;
 use App\Model\User\Queries\UserByIdQuery;
 use App\Model\User\Troop;
@@ -86,7 +87,7 @@ class TroopConfirmForm extends UI\Control
      */
     public function processForm(Form $form, stdClass $values): void
     {
-//        $this->commandBus->handle(new ConfirmTroop(null, null));
+        $this->commandBus->handle(new ConfirmTroop($this->troop->getId()));
 
         $this->onSave();
     }

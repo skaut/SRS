@@ -89,11 +89,14 @@ class Patrol
         $this->confirmed = $confirmed;
     }
 
-    public function countUsersInRoles(array $roles)
+    /**
+     * @param string[] $roleNames
+     */
+    public function countUsersInRoles(array $roleNames): int
     {
         $counter = 0;
         foreach ($this->usersRoles as $userRole) {
-            if (in_array($userRole->getRole()->getSystemName(), $roles)) {
+            if (in_array($userRole->getRole()->getSystemName(), $roleNames)) {
                 $counter++;
             }
         }
