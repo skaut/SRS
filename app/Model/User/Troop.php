@@ -135,11 +135,10 @@ class Troop
         $this->leader         = $leader;
         $this->variableSymbol = $variableSymbol;
 
-        $this->name            = 'S-' . $variableSymbol->getVariableSymbol();
-        $this->pairingCode     = substr(md5(uniqid((string) mt_rand(), true)), 0, 20);
-        $this->applicationDate = new DateTimeImmutable();
-        $this->state           = TroopApplicationState::DRAFT;
-        $this->fee             = 0;
+        $this->name        = 'S-' . $variableSymbol->getVariableSymbol();
+        $this->pairingCode = substr(md5(uniqid((string) mt_rand(), true)), 0, 20);
+        $this->state       = TroopApplicationState::DRAFT;
+        $this->fee         = 0;
     }
 
     public function getId(): ?int
@@ -191,6 +190,11 @@ class Troop
     public function getApplicationDate(): DateTimeImmutable
     {
         return $this->applicationDate;
+    }
+
+    public function setApplicationDate(DateTimeImmutable $applicationDate): void
+    {
+        $this->applicationDate = $applicationDate;
     }
 
     public function getMaturityDate(): ?DateTimeImmutable
