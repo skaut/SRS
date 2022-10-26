@@ -27,6 +27,7 @@ use stdClass;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
+use function count;
 use function usort;
 
 /**
@@ -105,9 +106,9 @@ class GroupMembersForm extends UI\Control
         $roles             = $this->queryBus->handle(new RolesByTypeQuery($this->type));
         $roleSelectOptions = $this->getRoleSelectOptions($roles);
 
-        $troop         = $this->queryBus->handle(new TroopByLeaderQuery($user->getId()));
+        $troop       = $this->queryBus->handle(new TroopByLeaderQuery($user->getId()));
         $this->troop = $troop;
-        $usersRoles    = null;
+        $usersRoles  = null;
         if ($this->type === 'patrol') {
             if ($this->patrolId !== null) {
                 $patrol = $this->queryBus->handle(new PatrolByIdQuery($this->patrolId));
@@ -205,7 +206,7 @@ class GroupMembersForm extends UI\Control
 
         if ($this->troop->getState() !== TroopApplicationState::DRAFT) {
             if ($this->type === 'patrol') {
-                $patrol = $this->queryBus->handle(new PatrolByIdQuery($this->patrolId));
+                $patrol     = $this->queryBus->handle(new PatrolByIdQuery($this->patrolId));
                 $usersCount = $patrol->getUsersRoles()->count();
             } else {
                 $usersCount = $this->troop->getUsersRoles()->count();
@@ -213,6 +214,7 @@ class GroupMembersForm extends UI\Control
 
             if ($usersCount !== count($selectedPersons)) {
                 $this->onError();
+
                 return;
             }
         }

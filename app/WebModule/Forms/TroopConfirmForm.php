@@ -57,7 +57,7 @@ class TroopConfirmForm extends UI\Control
         $this->template->troop     = $this->troop;
         $this->template->agreement = $this->queryBus->handle(new SettingStringValueQuery(Settings::APPLICATION_AGREEMENT));
 
-        $this->template->allCountError = $this->allCountError;
+        $this->template->allCountError      = $this->allCountError;
         $this->template->duplicitUsersError = $this->duplicitUsersError;
 
         $this->template->render();
@@ -113,14 +113,15 @@ class TroopConfirmForm extends UI\Control
         $user        = $this->queryBus->handle(new UserByIdQuery($this->presenter->user->getId()));
         $this->troop = $this->queryBus->handle(new TroopByLeaderQuery($user->getId()));
 
-        $allCount         = $this->troop->countUsersInRoles([Role::ATTENDEE, Role::PATROL_LEADER, Role::LEADER, Role::ESCORT]);
-        $this->allCountError    = $allCount > 42;
+        $allCount            = $this->troop->countUsersInRoles([Role::ATTENDEE, Role::PATROL_LEADER, Role::LEADER, Role::ESCORT]);
+        $this->allCountError = $allCount > 42;
 
         $countFromPatrols = 0;
         foreach ($this->troop->getConfirmedPatrols() as $patrol) {
             $countFromPatrols += $patrol->countUsersInRoles([Role::ATTENDEE, Role::PATROL_LEADER, Role::ESCORT]);
         }
-        $countFromTroops = $this->troop->countUsersInRoles([Role::ATTENDEE, Role::PATROL_LEADER, Role::ESCORT]);
+
+        $countFromTroops          = $this->troop->countUsersInRoles([Role::ATTENDEE, Role::PATROL_LEADER, Role::ESCORT]);
         $this->duplicitUsersError = $countFromPatrols !== $countFromTroops;
     }
 }
