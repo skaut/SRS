@@ -13,6 +13,7 @@ use App\Model\User\Commands\ConfirmTroop;
 use App\Model\User\Queries\TroopByLeaderQuery;
 use App\Model\User\Queries\UserByIdQuery;
 use App\Model\User\Troop;
+use App\Model\User\UserGroupRole;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
 use Nette\Application\UI;
@@ -30,6 +31,7 @@ class TroopConfirmForm extends UI\Control
 
     private bool $allCountError;
     private bool $duplicitUsersError;
+    private bool $userNotLeaderError;
 
     /**
      * Událost při úspěšném odeslání formuláře.
@@ -59,6 +61,7 @@ class TroopConfirmForm extends UI\Control
 
         $this->template->allCountError      = $this->allCountError;
         $this->template->duplicitUsersError = $this->duplicitUsersError;
+        $this->template->userNotLeaderError = $this->userNotLeaderError;
 
         $this->template->render();
     }
@@ -79,7 +82,7 @@ class TroopConfirmForm extends UI\Control
             ->addRule(Form::FILLED, 'Musíš souhlasit s podmínkami akce.');
 
         $submit = $form->addSubmit('submit', 'Závazně registrovat')
-            ->setDisabled($this->allCountError || $this->duplicitUsersError);
+            ->setDisabled($this->allCountError || $this->duplicitUsersError || $this->userNotLeaderError);
 
         if ($this->troop->getState() !== TroopApplicationState::DRAFT) {
             $pairedTroopCodeText->setHtmlAttribute('readonly');
@@ -118,10 +121,14 @@ class TroopConfirmForm extends UI\Control
 
         $countFromPatrols = 0;
         foreach ($this->troop->getConfirmedPatrols() as $patrol) {
-            $countFromPatrols += $patrol->countUsersInRoles([Role::ATTENDEE, Role::PATROL_LEADER, Role::ESCORT]);
+            $countFromPatrols += $patrol->countUsersInRoles([Role::ATTENDEE, Role::PATROL_LEADER]);
         }
 
-        $countFromTroops          = $this->troop->countUsersInRoles([Role::ATTENDEE, Role::PATROL_LEADER, Role::ESCORT]);
+        $countFromTroops          = $this->troop->countUsersInRoles([Role::ATTENDEE, Role::PATROL_LEADER]);
         $this->duplicitUsersError = $countFromPatrols !== $countFromTroops;
+
+        $this->userNotLeaderError = $user->getGroupRoles()
+                ->filter(static fn (UserGroupRole $groupRole) => $groupRole->getRole()->getSystemName() === Role::LEADER && $groupRole->getPatrol()->isConfirmed())
+                ->count() === 0;
     }
 }

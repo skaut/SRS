@@ -336,6 +336,10 @@ class User
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $healthInfo = null;
 
+    /** @var Collection<int, UserGroupRole> */
+    #[ORM\OneToMany(targetEntity: UserGroupRole::class, cascade: ['persist'], mappedBy: 'user')]
+    protected Collection $groupRoles;
+
     public function __construct()
     {
         $this->applications                 = new ArrayCollection();
@@ -344,6 +348,7 @@ class User
         $this->lecturersBlocks              = new ArrayCollection();
         $this->notRegisteredMandatoryBlocks = new ArrayCollection();
         $this->customInputValues            = new ArrayCollection();
+        $this->groupRoles                   = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1227,5 +1232,13 @@ class User
     public function setHealthInfo(?string $healthInfo): void
     {
         $this->healthInfo = $healthInfo;
+    }
+
+    /**
+     * @return Collection<int, UserGroupRole>
+     */
+    public function getGroupRoles(): Collection
+    {
+        return $this->groupRoles;
     }
 }

@@ -21,18 +21,27 @@
             ({$troop->countUsersInRoles(['attendee'])} účastníků,
             {$troop->countUsersInRoles(['patrol_leader'])} rádci,
             {$troop->countUsersInRoles(['leader']) + $troop->countUsersInRoles(['escort'])} vedoucí a dospělí)
-            <p n:if="$allCountError">
-            <span class="text-danger">
-                <i class="fa fa-circle-exclamation"></i>
-                Počet účastníků ve skupině musí být maximálně 42.
+            <span n:if="$allCountError">
+                <br>
+                <span class="text-danger">
+                    <i class="fa fa-circle-exclamation"></i>
+                    Počet účastníků ve skupině musí být maximálně 42.
+                </span>
             </span>
-            </p>
-            <p n:if="$duplicitUsersError">
-            <span class="text-danger">
-                <i class="fa fa-circle-exclamation"></i>
-                Účastníci a rádci nesmí být zároveň ve více družinách.
+            <span n:if="$duplicitUsersError">
+                <br>
+                <span class="text-danger">
+                    <i class="fa fa-circle-exclamation"></i>
+                    Účastníci a rádci nesmí být zároveň ve více družinách.
+                </span>
             </span>
-            </p>
+            <span n:if="$userNotLeaderError">
+                <br>
+                <span class="text-danger">
+                    <i class="fa fa-circle-exclamation"></i>
+                    Registrující uživatel musí být vedoucím některé družiny.
+                </span>
+            </span>
         </div>
     </div>
 

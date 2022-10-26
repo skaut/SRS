@@ -22,7 +22,7 @@ class UserGroupRole
     /**
      * Uživatel.
      */
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'groupRoles')]
     protected User $user;
 
     /**
