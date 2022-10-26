@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\WebModule\Forms;
 
 use App\Model\Acl\Queries\RolesByTypeQuery;
+use App\Model\Acl\Role;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Settings;
@@ -42,6 +43,8 @@ class GroupMembersForm extends UI\Control
     /** @var stdClass[][] */
     private array $members;
 
+    private DateTimeImmutable $seminarStart;
+
     /**
      * Událost při úspěšném odeslání formuláře.
      *
@@ -57,17 +60,17 @@ class GroupMembersForm extends UI\Control
         private CommandBus $commandBus,
         private SkautIsService $skautIsService
     ) {
+        $this->seminarStart = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_FROM_DATE));
+
         $this->units   = $this->skautIsService->getUnitAllUnit(self::$ALLOWED_UNIT_TYPES);
         $this->members = [];
 
         $collator = new Collator('cs_CZ');
         foreach ($this->units as $unit) {
-            $unitMembers = $this->skautIsService->getMembershipAll($unit->ID);
+            $unitMembers = $this->skautIsService->getMembershipAll($unit->ID, $this->type === 'troop' ? 18 : null, $this->seminarStart);
             usort($unitMembers, static fn ($a, $b) => $collator->compare($a->Person, $b->Person));
             $this->members[$unit->ID] = $unitMembers;
         }
-
-        // todo: filtrovat podle veku a povolenych roli
     }
 
     /**
@@ -88,8 +91,6 @@ class GroupMembersForm extends UI\Control
      */
     public function createComponentForm(): Form
     {
-        $seminarStart = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_FROM_DATE));
-
         $user = $this->queryBus->handle(new UserByIdQuery($this->presenter->user->getId()));
 
         $roles             = $this->queryBus->handle(new RolesByTypeQuery($this->type));
@@ -145,18 +146,18 @@ class GroupMembersForm extends UI\Control
                 }
 
                 $birthdate = new DateTimeImmutable($member->Birthday);
-                $age       = $this->countAgeAt($birthdate, $seminarStart);
+                $age       = $this->countAgeAt($birthdate, $this->seminarStart);
                 foreach ($roles as $r) {
-                    if ($age < $r->getMinimumAge() && $r->getMinimumAgeWarning()) {
+                    if ($age < $r->getMinimumAge()) {
                         $roleSelect
                             ->addConditionOn($registerCheckbox, Form::FILLED)
                             ->addCondition(Form::EQUAL, $r->getId())
-                            ->addRule(Form::NOT_EQUAL, $r->getMinimumAgeWarning(), $r->getId());
-                    } elseif ($age > $r->getMaximumAge() && $r->getMaximumAgeWarning()) {
+                            ->addRule(Form::NOT_EQUAL, $r->getMinimumAgeWarning() ? $r->getMinimumAgeWarning() : 'Příliš nízký věk.', $r->getId());
+                    } elseif ($age > $r->getMaximumAge()) {
                         $roleSelect
                             ->addConditionOn($registerCheckbox, Form::FILLED)
                             ->addCondition(Form::EQUAL, $r->getId())
-                            ->addRule(Form::NOT_EQUAL, $r->getMaximumAgeWarning(), $r->getId());
+                            ->addRule(Form::NOT_EQUAL, $r->getMinimumAgeWarning() ? $r->getMinimumAgeWarning() : 'Příliš vysoký věk.', $r->getId());
                     }
                 }
             }
@@ -199,6 +200,8 @@ class GroupMembersForm extends UI\Control
     }
 
     /**
+     * @param Role[] $roles
+     *
      * @return string[]
      */
     private function getRoleSelectOptions($roles): array

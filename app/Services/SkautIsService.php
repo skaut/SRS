@@ -257,7 +257,7 @@ class SkautIsService
     /**
      * @return stdClass[]
      */
-    public function getMembershipAll(int $unitId): array
+    public function getMembershipAll(int $unitId, ?int $minimalAge = null, ?DateTimeImmutable $date = null): array
     {
         $memberships = $this->skautIs->org->MembershipAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -265,6 +265,10 @@ class SkautIsService
             'ID_MembershipType' => 'radne',
             'OnlyDirectMember' => false,
         ], 'membershipAllInput');
+
+        if ($minimalAge !== null) {
+            return array_filter($memberships, static fn (stdClass $m) => $date->diff(new DateTimeImmutable($m->Birthday))->y >= $minimalAge);
+        }
 
         return $memberships instanceof stdClass ? [] : $memberships;
     }
