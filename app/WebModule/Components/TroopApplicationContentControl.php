@@ -119,6 +119,12 @@ class TroopApplicationContentControl extends BaseContentControl
             $this->getPresenter()->redirect('this', ['step' => 'additional_info', 'type' => $type, 'patrol_id' => $patrolId]);
         };
 
+        $form->onError[] = function () use ($type, $patrolId): void {
+            $p = $this->getPresenter();
+            $p->flashMessage('Po potvrzení přihlášky nelze měnit počet účastníků.', 'danger');
+            $p->redirect('this', ['step' => 'members', 'type' => $type, 'patrol_id' => $patrolId]);
+        };
+
         return $form;
     }
 

@@ -6,6 +6,7 @@ namespace App\WebModule\Forms;
 
 use App\Model\Acl\Queries\RolesByTypeQuery;
 use App\Model\Acl\Role;
+use App\Model\Enums\TroopApplicationState;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Settings;
@@ -14,6 +15,7 @@ use App\Model\User\Queries\PatrolByIdQuery;
 use App\Model\User\Queries\PatrolByTroopAndNotConfirmedQuery;
 use App\Model\User\Queries\TroopByLeaderQuery;
 use App\Model\User\Queries\UserByIdQuery;
+use App\Model\User\Troop;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
@@ -35,7 +37,7 @@ class GroupMembersForm extends UI\Control
     /** @var string[] */
     private static array $ALLOWED_UNIT_TYPES = ['oddil'];
 
-    private ?int $troopId = null;
+    private ?Troop $troop = null;
 
     /** @var stdClass[] */
     private array $units;
@@ -51,6 +53,13 @@ class GroupMembersForm extends UI\Control
      * @var callable[]
      */
     public array $onSave = [];
+
+    /**
+     * Událost při neúspěšném odeslání formuláře.
+     *
+     * @var callable[]
+     */
+    public array $onError = [];
 
     public function __construct(
         private string $type,
@@ -97,7 +106,7 @@ class GroupMembersForm extends UI\Control
         $roleSelectOptions = $this->getRoleSelectOptions($roles);
 
         $troop         = $this->queryBus->handle(new TroopByLeaderQuery($user->getId()));
-        $this->troopId = $troop->getId();
+        $this->troop = $troop;
         $usersRoles    = null;
         if ($this->type === 'patrol') {
             if ($this->patrolId !== null) {
@@ -194,7 +203,21 @@ class GroupMembersForm extends UI\Control
             }
         }
 
-        $this->commandBus->handle(new UpdateGroupMembers($this->type, $this->troopId, $this->patrolId, $selectedPersons));
+        if ($this->troop->getState() !== TroopApplicationState::DRAFT) {
+            if ($this->type === 'patrol') {
+                $patrol = $this->queryBus->handle(new PatrolByIdQuery($this->patrolId));
+                $usersCount = $patrol->getUsersRoles()->count();
+            } else {
+                $usersCount = $this->troop->getUsersRoles()->count();
+            }
+
+            if ($usersCount !== count($selectedPersons)) {
+                $this->onError();
+                return;
+            }
+        }
+
+        $this->commandBus->handle(new UpdateGroupMembers($this->type, $this->troop->getId(), $this->patrolId, $selectedPersons));
 
         $this->onSave();
     }

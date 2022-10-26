@@ -21,6 +21,18 @@
             ({$troop->countUsersInRoles(['attendee'])} účastníků,
             {$troop->countUsersInRoles(['patrol_leader'])} rádci,
             {$troop->countUsersInRoles(['leader']) + $troop->countUsersInRoles(['escort'])} vedoucí a dospělí)
+            <p n:if="$allCountError">
+            <span class="text-danger">
+                <i class="fa fa-circle-exclamation"></i>
+                Počet účastníků ve skupině musí být maximálně 42.
+            </span>
+            </p>
+            <p n:if="$duplicitUsersError">
+            <span class="text-danger">
+                <i class="fa fa-circle-exclamation"></i>
+                Účastníci a rádci nesmí být zároveň ve více družinách.
+            </span>
+            </p>
         </div>
     </div>
 
