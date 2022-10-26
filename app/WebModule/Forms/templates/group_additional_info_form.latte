@@ -5,6 +5,33 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-12 mb-1" n:if="$attendeesCountError">
+            <span class="text-danger">
+                <i class="fa fa-circle-exclamation"></i>
+                Počet účastníků musí být 4-12.
+            </span>
+        </div>
+        <div class="col-12 mb-1" n:if="$groupLeadersCountError">
+            <span class="text-danger">
+                <i class="fa fa-circle-exclamation"></i>
+                Počet rádců musí být 0-1.
+            </span>
+        </div>
+        <div class="col-12 mb-1" n:if="$leadersCountError">
+            <span class="text-danger">
+                <i class="fa fa-circle-exclamation"></i>
+                Vedoucí musí být právě 1.
+            </span>
+        </div>
+        <div class="col-12 mb-1" n:if="$escortsCountError">
+            <span class="text-danger">
+                <i class="fa fa-circle-exclamation"></i>
+                Počet doprovodů je příliš vysoký.
+            </span>
+        </div>
+    </div>
+
     {foreach $usersRoles as $userRole}
         {var $user = $userRole->getUser()}
         <div class="card mb-3">

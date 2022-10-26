@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
+use App\Model\Acl\Role;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\User\Queries\PatrolByIdQuery;
 use App\Model\User\Queries\PatrolByTroopAndNotConfirmedQuery;
@@ -28,6 +29,10 @@ class GroupAdditionalInfoForm extends UI\Control
 {
     /** @var UserGroupRole[] */
     private array $usersRoles;
+    private bool $attendeesCountError    = false;
+    private bool $groupLeadersCountError = false;
+    private bool $leadersCountError      = false;
+    private bool $escortsCountError      = false;
 
     /**
      * Událost při úspěšném odeslání formuláře.
@@ -58,6 +63,11 @@ class GroupAdditionalInfoForm extends UI\Control
         $this->template->patrolId   = $this->patrolId;
         $this->template->usersRoles = $this->usersRoles;
 
+        $this->template->attendeesCountError    = $this->attendeesCountError;
+        $this->template->groupLeadersCountError = $this->groupLeadersCountError;
+        $this->template->leadersCountError      = $this->leadersCountError;
+        $this->template->escortsCountError      = $this->escortsCountError;
+
         $this->template->render();
     }
 
@@ -75,7 +85,7 @@ class GroupAdditionalInfoForm extends UI\Control
                 ->setDefaultValue($userRole->getUser()->getHealthInfo());
         }
 
-        $form->addSubmit('submit', 'Pokračovat');
+        $form->addSubmit('submit', 'Pokračovat')->setDisabled($this->attendeesCountError || $this->groupLeadersCountError || $this->leadersCountError || $this->escortsCountError);
 
         $form->setAction($this->getPresenter()->link('this', ['step' => 'additional_info', 'type' => $this->type, 'patrol_id' => $this->patrolId]));
 
@@ -117,8 +127,14 @@ class GroupAdditionalInfoForm extends UI\Control
                 $this->patrolId   = $patrol->getId();
                 $this->usersRoles = $patrol->getUsersRoles()->toArray();
             }
+
+            $attendeesCount               = $patrol->countUsersInRoles([Role::ATTENDEE, Role::PATROL_LEADER]);
+            $this->attendeesCountError    = $attendeesCount < 4 || $attendeesCount > 12;
+            $this->groupLeadersCountError = $patrol->countUsersInRoles([Role::PATROL_LEADER]) > 1;
+            $this->leadersCountError      = $patrol->countUsersInRoles([Role::LEADER]) != 1;
         } elseif ($this->type === 'troop') {
-            $this->usersRoles = $troop->getUsersRoles()->toArray();
+            $this->usersRoles        = $troop->getUsersRoles()->toArray();
+            $this->escortsCountError = $troop->countUsersInRoles([Role::ESCORT]) > $troop->getMaxEscortsCount();
         }
 
         $collator = new Collator('cs_CZ');

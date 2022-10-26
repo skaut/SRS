@@ -287,7 +287,7 @@ class Troop
 
     public function getMaxEscortsCount(): int
     {
-        return $this->getConfirmedPatrols()->count();
+        return $this->getMaxAdultsCount() - $this->countUsersInRoles(['leader']);
     }
 
     public function getMaxAdultsCount(): int
