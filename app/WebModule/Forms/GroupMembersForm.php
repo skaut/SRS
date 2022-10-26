@@ -6,6 +6,8 @@ namespace App\WebModule\Forms;
 
 use App\Model\Acl\Queries\RolesByTypeQuery;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingDateValueQuery;
+use App\Model\Settings\Settings;
 use App\Model\User\Commands\UpdateGroupMembers;
 use App\Model\User\Queries\PatrolByIdQuery;
 use App\Model\User\Queries\PatrolByTroopAndNotConfirmedQuery;
@@ -15,6 +17,7 @@ use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Collator;
+use DateTimeImmutable;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -85,9 +88,12 @@ class GroupMembersForm extends UI\Control
      */
     public function createComponentForm(): Form
     {
+        $seminarStart = $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_FROM_DATE));
+
         $user = $this->queryBus->handle(new UserByIdQuery($this->presenter->user->getId()));
 
-        $roleSelectOptions = $this->getRoleSelectOptions();
+        $roles             = $this->queryBus->handle(new RolesByTypeQuery($this->type));
+        $roleSelectOptions = $this->getRoleSelectOptions($roles);
 
         $troop         = $this->queryBus->handle(new TroopByLeaderQuery($user->getId()));
         $this->troopId = $troop->getId();
@@ -124,11 +130,13 @@ class GroupMembersForm extends UI\Control
                     }
                 }
 
-                $memberId = $member->ID;
-                $form->addCheckbox('register_' . $memberId)
-                    ->setDefaultValue($register)
+                $memberId         = $member->ID;
+                $registerCheckbox = $form->addCheckbox('register_' . $memberId)
+                    ->setDefaultValue($register);
+                $registerCheckbox
                     ->addCondition(Form::EQUAL, true)
                     ->toggle('roleselect-' . $memberId);
+
                 $roleSelect = $form->addSelect('role_' . $memberId, null, $roleSelectOptions)
                     ->setHtmlId('roleselect-' . $memberId)
                     ->setHtmlAttribute('class', 'form-control-sm ignore-bs-select');
@@ -136,7 +144,21 @@ class GroupMembersForm extends UI\Control
                     $roleSelect->setDefaultValue($role->getId());
                 }
 
-                // todo: validace veku
+                $birthdate = new DateTimeImmutable($member->Birthday);
+                $age       = $this->countAgeAt($birthdate, $seminarStart);
+                foreach ($roles as $r) {
+                    if ($age < $r->getMinimumAge() && $r->getMinimumAgeWarning()) {
+                        $roleSelect
+                            ->addConditionOn($registerCheckbox, Form::FILLED)
+                            ->addCondition(Form::EQUAL, $r->getId())
+                            ->addRule(Form::NOT_EQUAL, $r->getMinimumAgeWarning(), $r->getId());
+                    } elseif ($age > $r->getMaximumAge() && $r->getMaximumAgeWarning()) {
+                        $roleSelect
+                            ->addConditionOn($registerCheckbox, Form::FILLED)
+                            ->addCondition(Form::EQUAL, $r->getId())
+                            ->addRule(Form::NOT_EQUAL, $r->getMaximumAgeWarning(), $r->getId());
+                    }
+                }
             }
         }
 
@@ -179,10 +201,8 @@ class GroupMembersForm extends UI\Control
     /**
      * @return string[]
      */
-    private function getRoleSelectOptions(): array
+    private function getRoleSelectOptions($roles): array
     {
-        $roles = $this->queryBus->handle(new RolesByTypeQuery($this->type));
-
         $options = [];
 
         foreach ($roles as $role) {
@@ -190,5 +210,10 @@ class GroupMembersForm extends UI\Control
         }
 
         return $options;
+    }
+
+    private function countAgeAt(DateTimeImmutable $birthdate, DateTimeImmutable $seminarStart): int
+    {
+        return $seminarStart->diff($birthdate)->y;
     }
 }

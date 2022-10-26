@@ -70,8 +70,8 @@ class Troop
     /**
      * Datum podání přihlášky.
      */
-    #[ORM\Column(type: 'datetime_immutable')]
-    protected DateTimeImmutable $applicationDate;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?DateTimeImmutable $applicationDate;
 
     /**
      * Datum splatnosti.
@@ -187,12 +187,12 @@ class Troop
         return $this->variableSymbol;
     }
 
-    public function getApplicationDate(): DateTimeImmutable
+    public function getApplicationDate(): ?DateTimeImmutable
     {
         return $this->applicationDate;
     }
 
-    public function setApplicationDate(DateTimeImmutable $applicationDate): void
+    public function setApplicationDate(?DateTimeImmutable $applicationDate): void
     {
         $this->applicationDate = $applicationDate;
     }
