@@ -98,6 +98,7 @@ function initSelects() {
         .not('.datagrid .row-group-actions select')
         .not('.datagrid .col-per-page select')
         .not('.modal-body select')
+        .not('.ignore-bs-select')
         .add('select[multiple]')
         .selectpicker({
             noneSelectedText: 'Nic není vybráno',

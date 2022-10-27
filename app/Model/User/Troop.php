@@ -6,11 +6,20 @@ namespace App\Model\User;
 
 use App\Model\Application\IncomeProof;
 use App\Model\Application\VariableSymbol;
+use App\Model\Enums\TroopApplicationState;
 use App\Model\Payment\Payment;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
+use function array_key_exists;
+use function count;
+use function in_array;
+use function md5;
+use function mt_rand;
+use function substr;
+use function uniqid;
 
 /**
  * Entita oddíl.
@@ -61,8 +70,8 @@ class Troop
     /**
      * Datum podání přihlášky.
      */
-    #[ORM\Column(type: 'datetime_immutable')]
-    protected DateTimeImmutable $applicationDate;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?DateTimeImmutable $applicationDate;
 
     /**
      * Datum splatnosti.
@@ -98,12 +107,38 @@ class Troop
      * Stav přihlášky.
      */
     #[ORM\Column(type: 'string')]
-    protected ?string $state = null;
+    protected string $state;
 
-    public function __construct()
+    /**
+     * Vedoucí oddílu.
+     */
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'troop', cascade: ['persist'])]
+    protected User $leader;
+
+    /**
+     * Kód pro párování oddílů.
+     */
+    #[ORM\Column(type: 'string')]
+    protected string $pairingCode;
+
+    /**
+     * Spárovaný oddíl.
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $pairedTroopCode = null;
+
+    public function __construct(User $leader, VariableSymbol $variableSymbol)
     {
         $this->patrols    = new ArrayCollection();
         $this->usersRoles = new ArrayCollection();
+
+        $this->leader         = $leader;
+        $this->variableSymbol = $variableSymbol;
+
+        $this->name        = 'S-' . $variableSymbol->getVariableSymbol();
+        $this->pairingCode = substr(md5(uniqid((string) mt_rand(), true)), 0, 20);
+        $this->state       = TroopApplicationState::DRAFT;
+        $this->fee         = 0;
     }
 
     public function getId(): ?int
@@ -152,17 +187,12 @@ class Troop
         return $this->variableSymbol;
     }
 
-    public function setVariableSymbol(VariableSymbol $variableSymbol): void
-    {
-        $this->variableSymbol = $variableSymbol;
-    }
-
-    public function getApplicationDate(): DateTimeImmutable
+    public function getApplicationDate(): ?DateTimeImmutable
     {
         return $this->applicationDate;
     }
 
-    public function setApplicationDate(DateTimeImmutable $applicationDate): void
+    public function setApplicationDate(?DateTimeImmutable $applicationDate): void
     {
         $this->applicationDate = $applicationDate;
     }
@@ -217,13 +247,116 @@ class Troop
         $this->incomeProof = $incomeProof;
     }
 
-    public function getState(): ?string
+    public function getState(): string
     {
         return $this->state;
     }
 
-    public function setState(?string $state): void
+    public function setState(string $state): void
     {
         $this->state = $state;
+    }
+
+    public function getLeader(): User
+    {
+        return $this->leader;
+    }
+
+    public function getPairingCode(): string
+    {
+        return $this->pairingCode;
+    }
+
+    public function getPairedTroopCode(): ?string
+    {
+        return $this->pairedTroopCode;
+    }
+
+    public function setPairedTroopCode(?string $pairedTroopCode): void
+    {
+        $this->pairedTroopCode = $pairedTroopCode;
+    }
+
+    /**
+     * @return Collection<int, Patrol>
+     */
+    public function getConfirmedPatrols(): Collection
+    {
+        return $this->patrols->filter(static fn ($p) => $p->isConfirmed());
+    }
+
+    public function getMaxEscortsCount(): int
+    {
+        return $this->getMaxAdultsCount() - $this->countUsersInRoles(['leader']);
+    }
+
+    public function getMaxAdultsCount(): int
+    {
+        return $this->getConfirmedPatrols()->count() * 2;
+    }
+
+    /**
+     * @param string[] $roleNames
+     */
+    public function countUsersInRoles(array $roleNames): int
+    {
+        $users = [];
+
+        // uzivatele v oddile
+        foreach ($this->usersRoles as $userRole) {
+            if (in_array($userRole->getRole()->getSystemName(), $roleNames)) {
+                $users[$userRole->getUser()->getId()] = true;
+            }
+        }
+
+        // uzivatele v druzinach
+        foreach ($this->getConfirmedPatrols() as $patrol) {
+            foreach ($patrol->getUsersRoles() as $userRole) {
+                if (in_array($userRole->getRole()->getSystemName(), $roleNames)) {
+                    $users[$userRole->getUser()->getId()] = true;
+                }
+            }
+        }
+
+        return count($users);
+    }
+
+    public function countFee(): int
+    {
+        $rolesFees  = [];
+        $rolesUsers = [];
+
+        // uzivatele v oddile
+        foreach ($this->usersRoles as $userRole) {
+            $role = $userRole->getRole();
+            $user = $userRole->getUser();
+            if (! array_key_exists($role->getId(), $rolesFees)) {
+                $rolesFees[$role->getId()]  = $role->getFee();
+                $rolesUsers[$role->getId()] = [];
+            }
+
+            $rolesUsers[$role->getId()][$user->getId()] = true;
+        }
+
+        // uzivatele v druzinach
+        foreach ($this->getConfirmedPatrols() as $patrol) {
+            foreach ($patrol->getUsersRoles() as $userRole) {
+                $role = $userRole->getRole();
+                $user = $userRole->getUser();
+                if (! array_key_exists($role->getId(), $rolesFees)) {
+                    $rolesFees[$role->getId()]  = $role->getFee();
+                    $rolesUsers[$role->getId()] = [];
+                }
+
+                $rolesUsers[$role->getId()][$user->getId()] = true;
+            }
+        }
+
+        $totalFee = 0;
+        foreach ($rolesFees as $key => $value) {
+            $totalFee += $value * count($rolesUsers[$key]);
+        }
+
+        return $totalFee;
     }
 }
