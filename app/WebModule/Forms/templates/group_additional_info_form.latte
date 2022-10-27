@@ -1,0 +1,73 @@
+{form form class => form-horizontal}
+    <div class="row">
+        <div class="col">
+            <h4>2. Doplň údaje</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-1" n:if="$attendeesCountError">
+            <span class="text-danger">
+                <i class="fa fa-circle-exclamation"></i>
+                Počet účastníků musí být 4-12.
+            </span>
+        </div>
+        <div class="col-12 mb-1" n:if="$groupLeadersCountError">
+            <span class="text-danger">
+                <i class="fa fa-circle-exclamation"></i>
+                Počet rádců musí být 0-1.
+            </span>
+        </div>
+        <div class="col-12 mb-1" n:if="$leadersCountError">
+            <span class="text-danger">
+                <i class="fa fa-circle-exclamation"></i>
+                Vedoucí musí být právě 1.
+            </span>
+        </div>
+        <div class="col-12 mb-1" n:if="$escortsCountError">
+            <span class="text-danger">
+                <i class="fa fa-circle-exclamation"></i>
+                Počet doprovodů je příliš vysoký.
+            </span>
+        </div>
+    </div>
+
+    {foreach $usersRoles as $userRole}
+        {var $user = $userRole->getUser()}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{$user->getDisplayName()}</h5>
+                <h6 class="card-subtitle mb-2">{$userRole->getRole()->getName()}</h6>
+                <div class="row">
+                    <div class="col-4">
+                        {$user->getStreet()},<br>
+                        {$user->getPostcode()} {$user->getCity()}<br>
+                        <br>
+                        <strong>Telefon:</strong> {$user->getPhone()}<br>
+                        <strong>E-mail:</strong> {$user->getEmail()}<br>
+                        <strong>Datum narození:</strong> {$user->getBirthdate()|date:'j. n. Y'}<br>
+                        {if $user->getMotherPhone() !== null}
+                            <br>
+                            <strong>Telefon matky:</strong> {$user->getMotherPhone()} ({$user->getMotherName()})
+                        {/if}
+                        {if $user->getFatherPhone() !== null}
+                            <br>
+                            <strong>Telefon otce:</strong> {$user->getFatherPhone()} ({$user->getFatherName()})
+                        {/if}
+                    </div>
+                    <div class="col-8">
+                        <strong>Zdravotní omezení, alergie, pravidelně užívané léky</strong><br>
+                        {input 'health_info_' . $user->getId()}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/foreach}
+
+    <div class="row">
+        <div class="col">
+            <a href="{plink this, step: members, type: $type, patrol_id: $patrolId}" class="btn btn-secondary">Zpět</a>
+            {input submit class => 'btn-primary button'}
+        </div>
+    </div>
+{/form}
