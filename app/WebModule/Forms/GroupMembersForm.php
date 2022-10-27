@@ -162,12 +162,12 @@ class GroupMembersForm extends UI\Control
                         $roleSelect
                             ->addConditionOn($registerCheckbox, Form::FILLED)
                             ->addCondition(Form::EQUAL, $r->getId())
-                            ->addRule(Form::NOT_EQUAL, $r->getMinimumAgeWarning() ? $r->getMinimumAgeWarning() : 'Příliš nízký věk.', $r->getId());
+                            ->addRule(Form::NOT_EQUAL, $r->getMinimumAgeWarning() ? $r->getMinimumAgeWarning() : 'Příliš nízký věk.', $r->getMinimumAge(), $age);
                     } elseif ($age > $r->getMaximumAge()) {
                         $roleSelect
                             ->addConditionOn($registerCheckbox, Form::FILLED)
                             ->addCondition(Form::EQUAL, $r->getId())
-                            ->addRule(Form::NOT_EQUAL, $r->getMinimumAgeWarning() ? $r->getMinimumAgeWarning() : 'Příliš vysoký věk.', $r->getId());
+                            ->addRule(Form::NOT_EQUAL, $r->getMinimumAgeWarning() ? $r->getMinimumAgeWarning() : 'Příliš vysoký věk.', $r->getMaximumAge(), $age);
                     }
                 }
             }
