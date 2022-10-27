@@ -1,0 +1,81 @@
+{form form class => form-horizontal}
+    <div class="form-group row">
+        <div class="col-md-3 col-form-label">
+            Kód pro spojení do jamooddílu
+        </div>
+        <div class="col-md-9">
+            {input pairedTroopCode}
+            <span class="help-block text-info">
+                <i class="fa fa-circle-info" aria-hidden="true"></i>
+                Můžeš vložit kód jiné skupiny, se kterou chceš být v jamoddílu společně.
+            </span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            Počet účastníků
+        </div>
+        <div class="col-md-9">
+            {$troop->countUsersInRoles(['attendee', 'patrol_leader', 'leader', 'escort'])}/42
+            ({$troop->countUsersInRoles(['attendee'])} účastníků,
+            {$troop->countUsersInRoles(['patrol_leader'])} rádci,
+            {$troop->countUsersInRoles(['leader']) + $troop->countUsersInRoles(['escort'])} vedoucí a dospělí)
+            <span n:if="$allCountError">
+                <br>
+                <span class="text-danger">
+                    <i class="fa fa-circle-exclamation"></i>
+                    Počet účastníků ve skupině musí být maximálně 42.
+                </span>
+            </span>
+            <span n:if="$duplicitUsersError">
+                <br>
+                <span class="text-danger">
+                    <i class="fa fa-circle-exclamation"></i>
+                    Účastníci a rádci nesmí být zároveň ve více družinách.
+                </span>
+            </span>
+            <span n:if="$userNotLeaderError">
+                <br>
+                <span class="text-danger">
+                    <i class="fa fa-circle-exclamation"></i>
+                    Registrující uživatel musí být vedoucím některé družiny.
+                </span>
+            </span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3 col-form-label">
+            Cena
+        </div>
+        <div class="col-md-9">
+            {$troop->countFee()} Kč
+            <br>
+            <span class="help-block text-info">
+                <i class="fa fa-circle-info" aria-hidden="true"></i>
+                Cena je splatná do 30 dnů od odeslání registrace.
+            </span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col">
+            <textarea class="form-control" rows="5" style="background-color: #ffffff" readonly>
+                {$agreement}
+            </textarea>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-9">
+            {input agreement}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            {input submit class => 'btn-primary button'}
+        </div>
+    </div>
+ {/form}

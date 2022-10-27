@@ -27,6 +27,7 @@ use App\WebModule\Components\IPlaceContentControlFactory;
 use App\WebModule\Components\IProgramsContentControlFactory;
 use App\WebModule\Components\ISlideshowContentControlFactory;
 use App\WebModule\Components\ITextContentControlFactory;
+use App\WebModule\Components\ITroopApplicationContentControlFactory;
 use App\WebModule\Components\IUsersContentControlFactory;
 use App\WebModule\Components\LectorsContentControl;
 use App\WebModule\Components\NewsContentControl;
@@ -35,6 +36,7 @@ use App\WebModule\Components\PlaceContentControl;
 use App\WebModule\Components\ProgramsContentControl;
 use App\WebModule\Components\SlideshowContentControl;
 use App\WebModule\Components\TextContentControl;
+use App\WebModule\Components\TroopApplicationContentControl;
 use App\WebModule\Components\UsersContentControl;
 use Nette\Application\BadRequestException;
 use Nette\DI\Attributes\Inject;
@@ -47,6 +49,9 @@ class PagePresenter extends WebBasePresenter
 {
     #[Inject]
     public IApplicationContentControlFactory $applicationContentControlFactory;
+
+    #[Inject]
+    public ITroopApplicationContentControlFactory $troopApplicationContentControlFactory;
 
     #[Inject]
     public IBlocksContentControlFactory $blocksContentControlFactory;
@@ -130,6 +135,11 @@ class PagePresenter extends WebBasePresenter
     protected function createComponentApplicationContent(): ApplicationContentControl
     {
         return $this->applicationContentControlFactory->create();
+    }
+
+    protected function createComponentTroopApplicationContent(): TroopApplicationContentControl
+    {
+        return $this->troopApplicationContentControlFactory->create();
     }
 
     protected function createComponentBlocksContent(): BlocksContentControl
