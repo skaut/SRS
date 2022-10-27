@@ -1,0 +1,47 @@
+{form form class => form-horizontal}
+    <div class="row">
+        <div class="col">
+            <h4>3. Potvrď</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        {foreach $usersRoles as $userRole}
+            {var $user = $userRole->getUser()}
+            <div class="col-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{$user->getDisplayName()}</h5>
+                        <h6 class="card-subtitle mb-2">{$userRole->getRole()->getName()}</h6>
+                        {$user->getStreet()},<br>
+                        {$user->getPostcode()} {$user->getCity()}<br>
+                        <br>
+                        <strong>Telefon:</strong> {$user->getPhone()}<br>
+                        <strong>E-mail:</strong> {$user->getEmail()}<br>
+                        <strong>Datum narození:</strong> {$user->getBirthdate()|date:'j. n. Y'}<br>
+                        {if $user->getMotherPhone() !== null}
+                            <br>
+                            <strong>Telefon matky:</strong> {$user->getMotherPhone()} ({$user->getMotherName()})<br>
+                        {/if}
+                        {if $user->getFatherPhone() !== null}
+                            <br>
+                            <strong>Telefon otce:</strong> {$user->getFatherPhone()} ({$user->getFatherName()})<br>
+                        {/if}
+                        {if $user->getHealthInfo()}
+                        <br>
+                        <strong>Zdravotní omezení, alergie, pravidelně užívané léky:</strong><br>
+                        <p class="mb-0">{$user->getHealthInfo()|breakLines}</p>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <a href="{plink this, step: additional_info, type: $type, patrol_id: $patrolId}" class="btn btn-secondary">Zpět</a>
+            {input submit class => 'btn-primary button'}
+        </div>
+    </div>
+ {/form}

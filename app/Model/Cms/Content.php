@@ -25,6 +25,7 @@ use function ucwords;
     'text_content' => TextContent::class,
     'document_content' => DocumentContent::class,
     'application_content' => ApplicationContent::class,
+    'troop_application_content' => TroopApplicationContent::class,
     'html_content' => HtmlContent::class,
     'faq_content' => FaqContent::class,
     'news_content' => NewsContent::class,
@@ -60,6 +61,11 @@ abstract class Content implements IContent
      * ApplicationContent.
      */
     public const APPLICATION = 'application';
+
+    /**
+     * TroopApplicationContent.
+     */
+    public const TROOP_APPLICATION = 'troop_application';
 
     /**
      * HtmlContent.
@@ -140,6 +146,7 @@ abstract class Content implements IContent
         self::NEWS,
         self::DOCUMENT,
         self::APPLICATION,
+        self::TROOP_APPLICATION,
         self::PROGRAMS,
         self::CONTACT_FORM,
         self::FAQ,
