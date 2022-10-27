@@ -300,6 +300,52 @@ class User
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $photoUpdate = null;
 
+    /**
+     * Přihláška oddílu.
+     */
+    #[ORM\OneToOne(targetEntity: Troop::class, mappedBy: 'leader', cascade: ['persist'])]
+    protected Troop $troop;
+
+    /**
+     * Telefon.
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $phone = null;
+
+    /**
+     * Jméno matky.
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $motherName = null;
+
+    /**
+     * Telefon matky.
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $motherPhone = null;
+
+    /**
+     * Jméno otce.
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $fatherName = null;
+
+    /**
+     * Telefon otce.
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $fatherPhone = null;
+
+    /**
+     * Informace o zdravotním stavu - omezení, alergie, léky.
+     */
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $healthInfo = null;
+
+    /** @var Collection<int, UserGroupRole> */
+    #[ORM\OneToMany(targetEntity: UserGroupRole::class, cascade: ['persist'], mappedBy: 'user')]
+    protected Collection $groupRoles;
+
     public function __construct()
     {
         $this->applications                 = new ArrayCollection();
@@ -308,6 +354,7 @@ class User
         $this->lecturersBlocks              = new ArrayCollection();
         $this->notRegisteredMandatoryBlocks = new ArrayCollection();
         $this->customInputValues            = new ArrayCollection();
+        $this->groupRoles                   = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1136,5 +1183,78 @@ class User
                 )
             )
         )->isEmpty();
+    }
+
+    public function getTroop(): Troop
+    {
+        return $this->troop;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): void
+    {
+        $this->phone = $phone;
+    }
+
+    public function getMotherName(): ?string
+    {
+        return $this->motherName;
+    }
+
+    public function setMotherName(?string $motherName): void
+    {
+        $this->motherName = $motherName;
+    }
+
+    public function getMotherPhone(): ?string
+    {
+        return $this->motherPhone;
+    }
+
+    public function setMotherPhone(?string $motherPhone): void
+    {
+        $this->motherPhone = $motherPhone;
+    }
+
+    public function getFatherName(): ?string
+    {
+        return $this->fatherName;
+    }
+
+    public function setFatherName(?string $fatherName): void
+    {
+        $this->fatherName = $fatherName;
+    }
+
+    public function getFatherPhone(): ?string
+    {
+        return $this->fatherPhone;
+    }
+
+    public function setFatherPhone(?string $fatherPhone): void
+    {
+        $this->fatherPhone = $fatherPhone;
+    }
+
+    public function getHealthInfo(): ?string
+    {
+        return $this->healthInfo;
+    }
+
+    public function setHealthInfo(?string $healthInfo): void
+    {
+        $this->healthInfo = $healthInfo;
+    }
+
+    /**
+     * @return Collection<int, UserGroupRole>
+     */
+    public function getGroupRoles(): Collection
+    {
+        return $this->groupRoles;
     }
 }
