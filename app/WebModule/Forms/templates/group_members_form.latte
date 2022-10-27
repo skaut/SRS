@@ -1,0 +1,59 @@
+{form form class => form-horizontal}
+    <script>
+        function switchUnit(element)
+        {
+            $('.unit-tables').hide();
+            $('#unit-table-' + element.value).show();
+        }
+    </script>
+
+    <div class="row">
+        <div class="col">
+            <h4>1. Vyber účastníky</h4>
+        </div>
+    </div>
+
+    <div class="row form-group mb-3">
+        <div class="col col-auto col-form-label">
+            Oddíl
+        </div>
+        <div class="col">
+            <select onchange="switchUnit(this)">
+                {foreach $units as $unit}
+                    <option value="{$unit->ID}">{$unit->DisplayName}</option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+
+    {foreach $units as $unit}
+        <table class="table table-sm table-bordered table-striped unit-tables" id="unit-table-{$unit->ID}"
+               style="{if !$iterator->first}display: none{/if}">
+            <tr>
+                <th class="text-center" style="width: 10%">Registrovat</th>
+                <th style="width: 20%">Družina</th>
+                <th style="width: 40%">Jméno</th>
+                <th style="width: 30%">Role</th>
+            </tr>
+            {foreach $members[$unit->ID] as $member}
+                <tr>
+                    <td class="pt-2 text-center">{input 'register_' . $member->ID}</td>
+                    <td class="align-middle">{if $unit->ID !== $member->ID_Unit}{$member->Unit}{/if}</td>
+                    <td class="align-middle">{$member->Person}</td>
+                    <td class="align-middle">{input 'role_' . $member->ID}</td>
+                </tr>
+            {else}
+                <tr>
+                    <td colspan="4">Oddíl nemá žádné členy, které je možné vybrat.</td>
+                </tr>
+            {/foreach}
+        </table>
+    {/foreach}
+
+    <div class="row">
+        <div class="col">
+            <a href="{plink this}" class="btn btn-secondary">Zpět</a>
+            {input submit class => 'btn-primary button'}
+        </div>
+    </div>
+ {/form}

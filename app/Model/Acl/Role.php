@@ -68,6 +68,12 @@ class Role
      */
     public const TEST = 'test';
 
+    public const PATROL_LEADER = 'patrol_leader';
+
+    public const LEADER = 'leader';
+
+    public const ESCORT = 'escort';
+
     /** @var string[] */
     public static array $roles = [
         self::GUEST,
@@ -78,6 +84,9 @@ class Role
         self::LECTOR,
         self::ORGANIZER,
         self::ADMIN,
+        self::PATROL_LEADER,
+        self::LEADER,
+        self::ESCORT,
     ];
     #[ORM\Id]
     #[ORM\GeneratedValue]

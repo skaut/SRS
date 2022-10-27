@@ -12,6 +12,9 @@ use Skaut\Skautis\Skautis;
 use stdClass;
 use Throwable;
 
+use function array_filter;
+use function in_array;
+
 /**
  * Služba pro komunikaci se skautIS.
  */
@@ -66,11 +69,13 @@ class SkautIsService
     /**
      * Vrátí skautIS role uživatele.
      *
+     * @param ?string[] $allowedRoleTypes
+     *
      * @return stdClass[]
      *
      * @throws Throwable
      */
-    public function getUserRoles(int $userId): array
+    public function getUserRoles(int $userId, ?array $allowedRoleTypes = null): array
     {
         $roles = $this->userRolesCache->load($userId);
 
@@ -82,7 +87,13 @@ class SkautIsService
             $this->userRolesCache->save($userId, $roles);
         }
 
-        return $roles instanceof stdClass ? [] : $roles;
+        $rolesArray = $roles instanceof stdClass ? [] : $roles;
+
+        if ($allowedRoleTypes !== null) {
+            return array_filter($rolesArray, static fn (stdClass $r) => isset($r->Key) && in_array($r->Key, $allowedRoleTypes));
+        }
+
+        return $rolesArray;
     }
 
     /**
@@ -220,5 +231,58 @@ class SkautIsService
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID' => $unitId,
         ]);
+    }
+
+    /**
+     * @param ?string[] $allowedUnitTypes
+     *
+     * @return stdClass[]
+     */
+    public function getUnitAllUnit(?array $allowedUnitTypes = null): array
+    {
+        $units = $this->skautIs->org->UnitAllUnit([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID_Unit' => $this->skautIs->getUser()->getUnitId(),
+        ], 'unitAllUnitInput');
+
+        $unitsArray = $units instanceof stdClass ? [] : $units;
+
+        if ($allowedUnitTypes !== null) {
+            return array_filter($unitsArray, static fn (stdClass $r) => in_array($r->ID_UnitType, $allowedUnitTypes));
+        }
+
+        return $unitsArray;
+    }
+
+    /**
+     * @return stdClass[]
+     */
+    public function getMembershipAll(int $unitId, ?int $minimalAge = null, ?DateTimeImmutable $date = null): array
+    {
+        $memberships = $this->skautIs->org->MembershipAll([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID_Unit' => $unitId,
+            'ID_MembershipType' => 'radne',
+            'OnlyDirectMember' => false,
+        ], 'membershipAllInput');
+
+        if ($minimalAge !== null) {
+            return array_filter($memberships, static fn (stdClass $m) => $date->diff(new DateTimeImmutable($m->Birthday))->y >= $minimalAge);
+        }
+
+        return $memberships instanceof stdClass ? [] : $memberships;
+    }
+
+    /**
+     * @return stdClass[]
+     */
+    public function getPersonContactAllParent(int $personId): array
+    {
+        $contacts = $this->skautIs->org->PersonContactAllParent([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID_Person' => $personId,
+        ], 'personContactAllParentInput');
+
+        return $contacts instanceof stdClass ? [] : $contacts;
     }
 }
