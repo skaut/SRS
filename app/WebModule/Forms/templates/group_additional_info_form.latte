@@ -1,6 +1,11 @@
 {form form class => form-horizontal}
     <div class="row">
         <div class="col">
+            {if $type === 'patrol'}
+                <h3>Úprava družiny {$patrolName}</h3>
+            {else}
+                <h3>Úprava doprovodů</h3>
+            {/if}
             <h4>2. Doplň údaje</h4>
         </div>
     </div>

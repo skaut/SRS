@@ -9,6 +9,11 @@
 
     <div class="row">
         <div class="col">
+            {if $type === 'patrol'}
+                <h3>Úprava družiny {$patrolName}</h3>
+            {else}
+                <h3>Úprava doprovodů</h3>
+            {/if}
             <h4>1. Vyber účastníky</h4>
         </div>
     </div>
