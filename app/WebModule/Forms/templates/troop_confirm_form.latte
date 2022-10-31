@@ -50,7 +50,7 @@
             Cena
         </div>
         <div class="col-md-9">
-            {$troop->countFee()} Kč
+            {$troop->getFee() == null ? $troop->countFee() : $troop->getFee()} Kč
             <br>
             <span class="help-block text-info">
                 <i class="fa fa-circle-info" aria-hidden="true"></i>
