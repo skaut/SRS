@@ -28,6 +28,7 @@ use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 use function count;
+use function sprintf;
 use function usort;
 
 /**
@@ -162,12 +163,12 @@ class GroupMembersForm extends UI\Control
                         $roleSelect
                             ->addConditionOn($registerCheckbox, Form::FILLED)
                             ->addCondition(Form::EQUAL, $r->getId())
-                            ->addRule(Form::NOT_EQUAL, $r->getMinimumAgeWarning() ? $r->getMinimumAgeWarning() : 'Příliš nízký věk.', $r->getId());
+                            ->addRule(Form::NOT_EQUAL, sprintf($r->getMinimumAgeWarning() ?: 'Osobě je %2$d, ale musí být min. %1$d let.', $r->getMinimumAge(), $age), $r->getId());
                     } elseif ($age > $r->getMaximumAge()) {
                         $roleSelect
                             ->addConditionOn($registerCheckbox, Form::FILLED)
                             ->addCondition(Form::EQUAL, $r->getId())
-                            ->addRule(Form::NOT_EQUAL, $r->getMinimumAgeWarning() ? $r->getMinimumAgeWarning() : 'Příliš vysoký věk.', $r->getId());
+                            ->addRule(Form::NOT_EQUAL, sprintf($r->getMaximumAgeWarning() ?: 'Osobě je %2$d, ale musí být max. %1$d let.', $r->getMaximumAge(), $age), $r->getId());
                     }
                 }
             }
