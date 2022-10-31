@@ -28,6 +28,7 @@ use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 use function count;
+use function sprintf;
 use function usort;
 
 /**
