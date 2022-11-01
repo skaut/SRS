@@ -8,7 +8,9 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\User\Patrol;
-use App\Model\User\Repositories\PatrolRepository;
+use App\Model\User\Troop;
+use App\Model\User\Repositories\TroopRepository;
+use App\Model\User\Repositories\UserGroupRoleRepository;
 use App\Services\AclService;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Services\ApplicationService;
@@ -37,7 +39,7 @@ use function count;
 /**
  * Komponenta pro zobrazení datagridu družin.
  */
-class PatrolsGridControl extends Control
+class GroupsGridControl extends Control
 {
     private SessionSection $sessionSection;
 
@@ -45,7 +47,7 @@ class PatrolsGridControl extends Control
         private QueryBus $queryBus,
         private Translator $translator,
         private EntityManagerInterface $em,
-        private PatrolRepository $repository,
+        private TroopRepository $repository,
         private CustomInputRepository $customInputRepository,
         private RoleRepository $roleRepository,
         private ExcelExportService $excelExportService,
@@ -65,7 +67,7 @@ class PatrolsGridControl extends Control
      */
     public function render(): void
     {
-        $this->template->setFile(__DIR__ . '/templates/patrols_grid.latte');
+        $this->template->setFile(__DIR__ . '/templates/groups_grid.latte');
         $this->template->render();
     }
 
@@ -86,7 +88,7 @@ class PatrolsGridControl extends Control
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
         $grid->setStrictSessionFilterValues(false);
 
-        $grid->addGroupAction('Export seznamu družin')
+        $grid->addGroupAction('Export seznamu skupin')
             ->onSelect[] = [$this, 'groupExportUsers'];
 
         $grid->addColumnText('id', 'ID')
@@ -96,28 +98,61 @@ class PatrolsGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('leader', 'Vedoucí')
-            ->setRenderer(static function (Patrol $p) {
-return $leader=$p->countUsersInRoles([Role::LEADER]);
+        $grid->addColumnText('variableSymbol', 'VS ')->setSortable() // je stejný jako název skupiny
+		->setRenderer(static fn ($t) => $t->getVariableSymbol()->getVariableSymbol())
+->setFilterText();
+
+
+           $grid->addColumnText('leader', 'Vedoucí')->setSortable()
+            ->setRenderer( function (Troop $t) {
+		$leader=$t->getLeader();
+			return Html::el("a")->setAttribute("href",$this->getPresenter()->link("detail",$leader->getId()))->setText($leader->getDisplayName());
+
 })
             ->setFilterText();
 
         $grid->addColumnDateTime('created', 'Datum založení')
-            ->setRenderer(static function (Patrol $p) {
-                $date = $p->getTroop()->getApplicationDate();
+            ->setRenderer(static function (Troop $p) {
+                $date = $p->getApplicationDate();
 
                 return $date ? $date->format(Helpers::DATETIME_FORMAT) : '';
             })
             ->setSortable();
 
-        $grid->addColumnText('troop', 'Oddíl - přidat link')
-            ->setRenderer( function (Patrol $p) { $troop = $p->getTroop();
-			return Html::el("a")->setAttribute("href",$this->link("troopDetail",$troop->getId()))->setText($troop->getName());
+        $grid->addColumnText('pairingCode', 'Kód Jamoddílu')->setFilterText();
 
-}); // link na oddíl
+        $grid->addColumnText('fee', 'Cena getFee')->setSortable()->setFilterText();
 
-        $grid->addColumnText('userRoles', 'Počet 1')
-            ->setRenderer(static fn (Patrol $p) => count($p->getUsersRoles())); // je to správné číslo?
+        $grid->addColumnText('fee2', 'Cena countFee')->setSortable()
+		->setRenderer (static fn (Troop $t) => $t->countFee());
+
+        $grid->addColumnDateTime('paidDate', 'Datum zaplacení')
+            ->setRenderer(static function (Troop $p) {
+                $date = $p->getPaymentDate();
+
+                return $date ? $date->format(Helpers::DATETIME_FORMAT) : '';
+            })
+            ->setSortable();
+
+        $grid->addColumnDateTime('mDate', 'Datum splatnosti')
+            ->setRenderer(static function (Troop $p) {
+                $date = $p->getmaturityDate();
+
+                return $date ? $date->format(Helpers::DATETIME_FORMAT) : '';
+            })
+            ->setSortable();
+
+
+
+
+//        $grid->addColumnText('troop', 'Oddíl - přidat link')
+//            ->setRenderer( function (Patrol $p) { $troop = $p->getTroop();
+//			return Html::el("a")->setAttribute("href",$this->link("troopDetail",$troop->getId()))->setText($troop->getName());
+
+//}); // link na oddíl
+
+        $grid->addColumnText('numPatrols', '# družin')
+            ->setRenderer(static fn (Troop $p) => count($p->getPatrols())); // je to správné číslo?
 
 //        $grid->addColumnText('notRegisteredMandatoryBlocksCount', 'admin.users.users_not_registered_mandatory_blocks')
 //            ->setRenderer(static function (User $user) {
@@ -129,7 +164,7 @@ return $leader=$p->countUsersInRoles([Role::LEADER]);
 //            ->setSortable();
 
 
-        $grid->addAction('detail', 'admin.common.detail', 'Users:detail') // destinace
+        $grid->addAction('detail', 'admin.common.detail', 'Users:groupDetail') // destinace
             ->setClass('btn btn-xs btn-primary');
 
         $grid->addAction('delete', '', 'delete!')
@@ -145,18 +180,18 @@ return $leader=$p->countUsersInRoles([Role::LEADER]);
     }
 
     /**
-     * Zpracuje odstranění externího uživatele.
+     * Zpracuje odstranění externí skupiny.
      *
      * @throws AbortException
      */
     public function handleDelete(int $id): void
     {
-        $patrol = $this->repository->findById($id);
+        $rec = $this->repository->findById($id);
 
-        $this->repository->remove($patrol);
+        $this->repository->remove($rec);
 
         $p = $this->getPresenter();
-        $p->flashMessage('Družina smazána', 'success');
+        $p->flashMessage('Skupina smazána.', 'success');
         $p->redirect('this');
     }
 

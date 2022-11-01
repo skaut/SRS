@@ -7,8 +7,10 @@ namespace App\AdminModule\Presenters;
 use App\AdminModule\Components\ApplicationsGridControl;
 use App\AdminModule\Components\IApplicationsGridControlFactory;
 use App\AdminModule\Components\IPatrolsGridControlFactory;
+use App\AdminModule\Components\IGroupsGridControlFactory;
 use App\AdminModule\Components\IUsersGridControlFactory;
 use App\AdminModule\Components\PatrolsGridControl;
+use App\AdminModule\Components\GroupsGridControl;
 use App\AdminModule\Components\UsersGridControl;
 use App\AdminModule\Forms\AddLectorFormFactory;
 use App\AdminModule\Forms\EditUserPersonalDetailsFormFactory;
@@ -41,6 +43,9 @@ class UsersPresenter extends AdminBasePresenter
 
     #[Inject]
     public IPatrolsGridControlFactory $patrolsGridControlFactory;
+
+    #[Inject]
+    public IGroupsGridControlFactory $GroupsGridControlFactory;
 
     #[Inject]
     public AddLectorFormFactory $addLectorFormFactory;
@@ -187,6 +192,11 @@ class UsersPresenter extends AdminBasePresenter
     protected function createComponentPatrolsGrid(): PatrolsGridControl
     {
         return $this->patrolsGridControlFactory->create();
+    }
+
+    protected function createComponentGroupsGrid(): GroupsGridControl
+    {
+        return $this->GroupsGridControlFactory->create();
     }
 
     protected function createComponentAddLectorForm(): Form
