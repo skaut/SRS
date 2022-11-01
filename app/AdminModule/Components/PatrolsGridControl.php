@@ -4,21 +4,11 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
-use App\Model\Acl\Repositories\RoleRepository;
-use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\User\Patrol;
 use App\Model\User\Repositories\PatrolRepository;
-use App\Services\AclService;
-use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
-use App\Services\QueryBus;
-use App\Services\SkautIsEventEducationService;
-use App\Services\SkautIsEventGeneralService;
-use App\Services\SubeventService;
-use App\Services\UserService;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -123,33 +113,33 @@ class PatrolsGridControl extends Control
         $grid->addAction('detail', 'admin.common.detail', 'Users:detail') // destinace
             ->setClass('btn btn-xs btn-primary');
 
-        $grid->addAction('delete', '', 'delete!')
-            ->setIcon('trash')
-            ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.users.users_delete_confirm'),
-            ]);
+//        $grid->addAction('delete', '', 'delete!')
+//            ->setIcon('trash')
+//            ->setTitle('admin.common.delete')
+//            ->setClass('btn btn-xs btn-danger')
+//            ->addAttributes([
+//                'data-toggle' => 'confirmation',
+//                'data-content' => $this->translator->translate('admin.users.users_delete_confirm'),
+//            ]);
 
         return $grid;
     }
 
-    /**
-     * Zpracuje odstranění externího uživatele.
-     *
-     * @throws AbortException
-     */
-    public function handleDelete(int $id): void
-    {
-        $patrol = $this->repository->findById($id);
-
-        $this->repository->remove($patrol);
-
-        $p = $this->getPresenter();
-        $p->flashMessage('Družina smazána', 'success');
-        $p->redirect('this');
-    }
+//    /**
+//     * Zpracuje odstranění externího uživatele.
+//     *
+//     * @throws AbortException
+//     */
+//    public function handleDelete(int $id): void
+//    {
+//        $patrol = $this->repository->findById($id);
+//
+//        $this->repository->remove($patrol);
+//
+//        $p = $this->getPresenter();
+//        $p->flashMessage('Družina smazána', 'success');
+//        $p->redirect('this');
+//    }
 
     /**
      * Hromadně vyexportuje seznam družin.

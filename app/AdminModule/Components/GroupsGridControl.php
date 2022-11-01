@@ -4,22 +4,12 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
-use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\User\Repositories\TroopRepository;
 use App\Model\User\Troop;
-use App\Services\AclService;
-use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
-use App\Services\QueryBus;
-use App\Services\SkautIsEventEducationService;
-use App\Services\SkautIsEventGeneralService;
-use App\Services\SubeventService;
-use App\Services\UserService;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -154,33 +144,33 @@ class GroupsGridControl extends Control
         $grid->addAction('detail', 'admin.common.detail', 'Users:groupDetail') // destinace ,todo group_detail.latte
             ->setClass('btn btn-xs btn-primary');
 
-        $grid->addAction('delete', '', 'delete!')
-            ->setIcon('trash')
-            ->setTitle('admin.common.delete')
-            ->setClass('btn btn-xs btn-danger')
-            ->addAttributes([
-                'data-toggle' => 'confirmation',
-                'data-content' => $this->translator->translate('admin.users.users_delete_confirm'),
-            ]);
+//        $grid->addAction('delete', '', 'delete!')
+//            ->setIcon('trash')
+//            ->setTitle('admin.common.delete')
+//            ->setClass('btn btn-xs btn-danger')
+//            ->addAttributes([
+//                'data-toggle' => 'confirmation',
+//                'data-content' => $this->translator->translate('admin.users.users_delete_confirm'),
+//            ]);
 
         return $grid;
     }
 
-    /**
-     * Zpracuje odstranění externí skupiny.
-     *
-     * @throws AbortException
-     */
-    public function handleDelete(int $id): void
-    {
-        $rec = $this->repository->findById($id);
-
-        $this->repository->remove($rec);
-
-        $p = $this->getPresenter();
-        $p->flashMessage('Skupina smazána.', 'success');
-        $p->redirect('this');
-    }
+//    /**
+//     * Zpracuje odstranění externí skupiny.
+//     *
+//     * @throws AbortException
+//     */
+//    public function handleDelete(int $id): void
+//    {
+//        $rec = $this->repository->findById($id);
+//
+//        $this->repository->remove($rec);
+//
+//        $p = $this->getPresenter();
+//        $p->flashMessage('Skupina smazána.', 'success');
+//        $p->redirect('this');
+//    }
 
     /**
      * Hromadně vyexportuje seznam družin.
