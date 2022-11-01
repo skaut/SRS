@@ -7,12 +7,9 @@ namespace App\AdminModule\Components;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
-use App\Model\User\Patrol;
-use App\Model\User\Troop;
 use App\Model\User\Repositories\TroopRepository;
-use App\Model\User\Repositories\UserGroupRoleRepository;
+use App\Model\User\Troop;
 use App\Services\AclService;
-use Doctrine\Common\Collections\ArrayCollection;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\QueryBus;
@@ -21,6 +18,7 @@ use App\Services\SkautIsEventGeneralService;
 use App\Services\SubeventService;
 use App\Services\UserService;
 use App\Utils\Helpers;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Nette\Application\AbortException;
@@ -28,8 +26,8 @@ use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
-use Throwable;
 use Nette\Utils\Html;
+use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -99,19 +97,18 @@ class GroupsGridControl extends Control
             ->setFilterText();
 
         $grid->addColumnText('variableSymbol', 'VS ')->setSortable() // je stejný jako název skupiny
-		->setRenderer(static fn ($t) => $t->getVariableSymbol()->getVariableSymbol())
-->setFilterText();
-
+        ->setRenderer(static fn ($t) => $t->getVariableSymbol()->getVariableSymbol())
+        ->setFilterText();
 
            $grid->addColumnText('leader', 'Vedoucí')->setSortable()
-            ->setRenderer( function (Troop $t) {
-		$leader=$t->getLeader();
-			return Html::el("a")->setAttribute("href",$this->getPresenter()->link("detail",$leader->getId()))->setText($leader->getDisplayName());
+            ->setRenderer(function (Troop $t) {
+                $leader = $t->getLeader();
 
-})
+                return Html::el('a')->setAttribute('href', $this->getPresenter()->link('detail', $leader->getId()))->setText($leader->getDisplayName());
+            })
             ->setFilterText();
 
-        $grid->addColumnDateTime('created', 'Datum založení')
+        $grid->addColumnDateTime('applicationDate', 'Datum založení')
             ->setRenderer(static function (Troop $p) {
                 $date = $p->getApplicationDate();
 
@@ -123,10 +120,10 @@ class GroupsGridControl extends Control
 
         $grid->addColumnText('fee', 'Cena getFee')->setSortable()->setFilterText();
 
-        $grid->addColumnText('fee2', 'Cena countFee')->setSortable()
-		->setRenderer (static fn (Troop $t) => $t->countFee());
+        $grid->addColumnText('fee2', 'Cena countFee')
+        ->setRenderer(static fn (Troop $t) => $t->countFee());
 
-        $grid->addColumnDateTime('paidDate', 'Datum zaplacení')
+        $grid->addColumnDateTime('paymentDate', 'Datum zaplacení')
             ->setRenderer(static function (Troop $p) {
                 $date = $p->getPaymentDate();
 
@@ -134,7 +131,7 @@ class GroupsGridControl extends Control
             })
             ->setSortable();
 
-        $grid->addColumnDateTime('mDate', 'Datum splatnosti')
+        $grid->addColumnDateTime('maturityDate', 'Datum splatnosti')
             ->setRenderer(static function (Troop $p) {
                 $date = $p->getmaturityDate();
 
@@ -142,29 +139,29 @@ class GroupsGridControl extends Control
             })
             ->setSortable();
 
-
-
-
 //        $grid->addColumnText('troop', 'Oddíl - přidat link')
 //            ->setRenderer( function (Patrol $p) { $troop = $p->getTroop();
-//			return Html::el("a")->setAttribute("href",$this->link("troopDetail",$troop->getId()))->setText($troop->getName());
+//          return Html::el("a")->setAttribute("href",$this->link("troopDetail",$troop->getId()))->setText($troop->getName());
 
 //}); // link na oddíl
 
+        $grid->addColumnText('numPersons', '# osob')
+//      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
+            ->setRenderer(static fn (Troop $p) => $p->countUsersInRoles([Role::PATROL_LEADER, Role::LEADER, Role::ESCORT, Role::ATTENDEE]));
+
+        $grid->addColumnText('numChilder', '# rádců')
+//      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
+            ->setRenderer(static fn (Troop $p) => $p->countUsersInRoles([Role::PATROL_LEADER]));
+
+        $grid->addColumnText('numAdults', '# dospělých')
+//      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
+            ->setRenderer(static fn (Troop $p) => $p->countUsersInRoles([Role::LEADER]));
+
         $grid->addColumnText('numPatrols', '# družin')
-            ->setRenderer(static fn (Troop $p) => count($p->getPatrols())); // je to správné číslo?
+//      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
+            ->setRenderer(static fn (Troop $p) => count($p->getPatrols()));
 
-//        $grid->addColumnText('notRegisteredMandatoryBlocksCount', 'admin.users.users_not_registered_mandatory_blocks')
-//            ->setRenderer(static function (User $user) {
-//                return Html::el('span')
-//                    ->setAttribute('data-toggle', 'tooltip')
-//                    ->setAttribute('title', $user->getNotRegisteredMandatoryBlocksText())
-//                    ->setText($user->getNotRegisteredMandatoryBlocksCount());
-//            })
-//            ->setSortable();
-
-
-        $grid->addAction('detail', 'admin.common.detail', 'Users:groupDetail') // destinace
+        $grid->addAction('detail', 'admin.common.detail', 'Users:groupDetail') // destinace ,todo group_detail.latte
             ->setClass('btn btn-xs btn-primary');
 
         $grid->addAction('delete', '', 'delete!')
@@ -221,7 +218,7 @@ class GroupsGridControl extends Control
         $res = $this->repository->createQueryBuilder('p')->where('p.id IN (:ids)') // stejne se v teto class querybuilder pouziva
         ->setParameter('ids', $ids)->getQuery()->getResult(); // otestovat , podivat se na vzor (export uzivatelu)
 
-	$users = new ArrayCollection($res);
+        $users    = new ArrayCollection($res);
         $response = $this->excelExportService->exportUsersList($users, 'seznam-uzivatelu.xlsx'); // nutna nova metoda
 
         $this->getPresenter()->sendResponse($response);

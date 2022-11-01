@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\AdminModule\Presenters;
 
 use App\AdminModule\Components\ApplicationsGridControl;
+use App\AdminModule\Components\GroupsGridControl;
 use App\AdminModule\Components\IApplicationsGridControlFactory;
-use App\AdminModule\Components\IPatrolsGridControlFactory;
 use App\AdminModule\Components\IGroupsGridControlFactory;
+use App\AdminModule\Components\IPatrolsGridControlFactory;
 use App\AdminModule\Components\IUsersGridControlFactory;
 use App\AdminModule\Components\PatrolsGridControl;
-use App\AdminModule\Components\GroupsGridControl;
 use App\AdminModule\Components\UsersGridControl;
 use App\AdminModule\Forms\AddLectorFormFactory;
 use App\AdminModule\Forms\EditUserPersonalDetailsFormFactory;

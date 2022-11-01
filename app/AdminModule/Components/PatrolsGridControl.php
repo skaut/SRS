@@ -10,7 +10,6 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\User\Patrol;
 use App\Model\User\Repositories\PatrolRepository;
 use App\Services\AclService;
-use Doctrine\Common\Collections\ArrayCollection;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use App\Services\QueryBus;
@@ -19,6 +18,7 @@ use App\Services\SkautIsEventGeneralService;
 use App\Services\SubeventService;
 use App\Services\UserService;
 use App\Utils\Helpers;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Nette\Application\AbortException;
@@ -26,8 +26,8 @@ use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
-use Throwable;
 use Nette\Utils\Html;
+use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -98,8 +98,8 @@ class PatrolsGridControl extends Control
 
         $grid->addColumnText('leader', 'Vedoucí')
             ->setRenderer(static function (Patrol $p) {
-return $leader=$p->countUsersInRoles([Role::LEADER]);
-})
+                return $leader = $p->countUsersInRoles([Role::LEADER]);
+            })
             ->setFilterText();
 
         $grid->addColumnDateTime('created', 'Datum založení')
@@ -111,10 +111,11 @@ return $leader=$p->countUsersInRoles([Role::LEADER]);
             ->setSortable();
 
         $grid->addColumnText('troop', 'Oddíl - přidat link')
-            ->setRenderer( function (Patrol $p) { $troop = $p->getTroop();
-			return Html::el("a")->setAttribute("href",$this->link("troopDetail",$troop->getId()))->setText($troop->getName());
+            ->setRenderer(function (Patrol $p) {
+                $troop = $p->getTroop();
 
-}); // link na oddíl
+                return Html::el('a')->setAttribute('href', $this->link('troopDetail', $troop->getId()))->setText($troop->getName());
+            }); // link na oddíl
 
         $grid->addColumnText('userRoles', 'Počet 1')
             ->setRenderer(static fn (Patrol $p) => count($p->getUsersRoles())); // je to správné číslo?
@@ -186,7 +187,7 @@ return $leader=$p->countUsersInRoles([Role::LEADER]);
         $res = $this->repository->createQueryBuilder('p')->where('p.id IN (:ids)') // stejne se v teto class querybuilder pouziva
         ->setParameter('ids', $ids)->getQuery()->getResult(); // otestovat , podivat se na vzor (export uzivatelu)
 
-	$users = new ArrayCollection($res);
+        $users    = new ArrayCollection($res);
         $response = $this->excelExportService->exportUsersList($users, 'seznam-uzivatelu.xlsx'); // nutna nova metoda
 
         $this->getPresenter()->sendResponse($response);
