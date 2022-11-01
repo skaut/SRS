@@ -26,6 +26,11 @@ class Template
     public const REGISTRATION = 'registration';
 
     /**
+     * Potvrzení registrace oddílu.
+     */
+    public const TROOP_REGISTRATION = 'troop_registration';
+
+    /**
      * Odhlášení ze semináře.
      */
     public const REGISTRATION_CANCELED = 'registration_canceled';

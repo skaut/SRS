@@ -187,6 +187,7 @@ mailing:
     template_type:
         sign_in: "Potvrzení přihlášení přes skautIS"
         registration: "Potvrzení registrace"
+        troop_registration: "Potvrzení přihlášení skupiny"
         registration_canceled: "Potvrzení zrušení registrace"
         registration_canceled_not_paid: "Potvrzení zrušení registrace (nezaplaceno)"
         registration_approved: "Potvrzení schválení registrace"
