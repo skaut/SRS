@@ -104,8 +104,8 @@ class GroupsGridControl extends Control
 
         $grid->addColumnText('fee', 'Cena getFee')->setSortable()->setFilterText();
 
-        $grid->addColumnText('fee2', 'Cena countFee')
-        ->setRenderer(static fn (Troop $t) => $t->countFee());
+//        $grid->addColumnText('fee2', 'Cena countFee')
+//        ->setRenderer(static fn (Troop $t) => $t->countFee());
 
         $grid->addColumnDateTime('paymentDate', 'Datum zaplacení')
             ->setRenderer(static function (Troop $p) {
