@@ -78,7 +78,7 @@ class TroopConfirmForm extends UI\Control
         $pairedTroopCodeText = $form->addText('pairedTroopCode')
             ->setDefaultValue($this->troop->getPairedTroopCode());
 
-        $agreementCheckbox = $form->addCheckbox('agreement', 'Souhlasím s podmínkami akce.')
+        $agreementCheckbox = $form->addCheckbox('agreement', 'Potvrzuji, že jsem si přečetl(a) a souhlasím s podmínkami akce Národní skautské jamboree 2023 a s tím, že v případě porušení těchto podmínek mohu být z akce vyloučen(a) bez náhrady.')
             ->addRule(Form::FILLED, 'Musíš souhlasit s podmínkami akce.');
 
         $submit = $form->addSubmit('submit', 'Závazně registrovat')
