@@ -213,11 +213,6 @@
         </phingcall>
 
         <phingcall target="deploy:app-command">
-            <property name="comment" value="Backing up database"/>
-            <property name="command" value="app:database:backup"/>
-        </phingcall>
-
-        <phingcall target="deploy:app-command">
             <property name="comment" value="Running database migrations"/>
             <property name="command" value="migrations:migrate --no-interaction"/>
         </phingcall>
@@ -232,7 +227,7 @@
 
     <target name="deploy:app-command">
         <phingcall target="deploy:ssh">
-            <property name="command" value="php81-cli &quot;${deploy.release}/www/console.php ${command}&quot;"/>
+            <property name="command" value="php81-cli ${deploy.release}/www/console.php ${command}"/>
         </phingcall>
     </target>
 
