@@ -72,6 +72,10 @@ class GroupsGridControl extends Control
         $grid->addColumnText('id', 'ID')
             ->setSortable();
 
+        $grid->addColumnText('state', 'Stav')->setSortable()
+        ->setRenderer(fn ($t) => $this->translator->translate('common.application_state.' . $t->getState()))
+        ->setFilterText();
+
         $grid->addColumnText('name', 'Název')
             ->setSortable()
             ->setFilterText();
