@@ -29,6 +29,7 @@ class GroupAdditionalInfoForm extends UI\Control
 {
     /** @var UserGroupRole[] */
     private array $usersRoles;
+    private string $patrolName           = '';
     private bool $attendeesCountError    = false;
     private bool $groupLeadersCountError = false;
     private bool $leadersCountError      = false;
@@ -61,6 +62,7 @@ class GroupAdditionalInfoForm extends UI\Control
 
         $this->template->type       = $this->type;
         $this->template->patrolId   = $this->patrolId;
+        $this->template->patrolName = $this->patrolName;
         $this->template->usersRoles = $this->usersRoles;
 
         $this->template->attendeesCountError    = $this->attendeesCountError;
@@ -132,6 +134,8 @@ class GroupAdditionalInfoForm extends UI\Control
             $this->attendeesCountError    = $attendeesCount < 4 || $attendeesCount > 12;
             $this->groupLeadersCountError = $patrol->countUsersInRoles([Role::PATROL_LEADER]) > 1;
             $this->leadersCountError      = $patrol->countUsersInRoles([Role::LEADER]) != 1;
+
+            $this->patrolName = $patrol->getName();
         } elseif ($this->type === 'troop') {
             $this->usersRoles        = $troop->getUsersRoles()->toArray();
             $this->escortsCountError = $troop->countUsersInRoles([Role::ESCORT]) > $troop->getMaxEscortsCount();

@@ -16,11 +16,14 @@ use App\Model\User\Queries\PatrolByTroopAndNotConfirmedQuery;
 use App\Model\User\Queries\TroopByLeaderQuery;
 use App\Model\User\Queries\UserByIdQuery;
 use App\Model\User\Troop;
+use App\Model\User\UserGroupRole;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Collator;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -28,6 +31,7 @@ use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
 use function count;
+use function sprintf;
 use function usort;
 
 /**
@@ -62,6 +66,11 @@ class GroupMembersForm extends UI\Control
      */
     public array $onError = [];
 
+    private string $patrolName = '';
+
+    /** @var Collection<int, UserGroupRole> */
+    private Collection $usersRoles;
+
     public function __construct(
         private string $type,
         private ?int $patrolId,
@@ -90,8 +99,12 @@ class GroupMembersForm extends UI\Control
     {
         $this->template->setFile(__DIR__ . '/templates/group_members_form.latte');
 
-        $this->template->units   = $this->units;
-        $this->template->members = $this->members;
+        $this->resolveUsersRoles();
+
+        $this->template->type       = $this->type;
+        $this->template->patrolName = $this->patrolName;
+        $this->template->units      = $this->units;
+        $this->template->members    = $this->members;
 
         $this->template->render();
     }
@@ -101,28 +114,10 @@ class GroupMembersForm extends UI\Control
      */
     public function createComponentForm(): Form
     {
-        $user = $this->queryBus->handle(new UserByIdQuery($this->presenter->user->getId()));
-
         $roles             = $this->queryBus->handle(new RolesByTypeQuery($this->type));
         $roleSelectOptions = $this->getRoleSelectOptions($roles);
 
-        $troop       = $this->queryBus->handle(new TroopByLeaderQuery($user->getId()));
-        $this->troop = $troop;
-        $usersRoles  = null;
-        if ($this->type === 'patrol') {
-            if ($this->patrolId !== null) {
-                $patrol = $this->queryBus->handle(new PatrolByIdQuery($this->patrolId));
-            } else {
-                $patrol = $this->queryBus->handle(new PatrolByTroopAndNotConfirmedQuery($troop->getId()));
-            }
-
-            if ($patrol != null) {
-                $usersRoles     = $patrol->getUsersRoles();
-                $this->patrolId = $patrol->getId();
-            }
-        } elseif ($this->type === 'troop') {
-            $usersRoles = $troop->getUsersRoles();
-        }
+        $this->resolveUsersRoles();
 
         $form = $this->baseFormFactory->create();
 
@@ -131,8 +126,8 @@ class GroupMembersForm extends UI\Control
                 $register = false;
                 $role     = null;
 
-                if ($usersRoles !== null) {
-                    foreach ($usersRoles as $usersRole) {
+                if ($this->usersRoles !== null) {
+                    foreach ($this->usersRoles as $usersRole) {
                         if ($usersRole->getUser()->getSkautISPersonId() === $member->ID_Person) {
                             $register = true;
                             $role     = $usersRole->getRole();
@@ -162,12 +157,12 @@ class GroupMembersForm extends UI\Control
                         $roleSelect
                             ->addConditionOn($registerCheckbox, Form::FILLED)
                             ->addCondition(Form::EQUAL, $r->getId())
-                            ->addRule(Form::NOT_EQUAL, $r->getMinimumAgeWarning() ? $r->getMinimumAgeWarning() : 'Příliš nízký věk.', $r->getId());
+                            ->addRule(Form::NOT_EQUAL, sprintf($r->getMinimumAgeWarning() ?: 'Osobě je %2$d, ale musí být min. %1$d let.', $r->getMinimumAge(), $age), $r->getId());
                     } elseif ($age > $r->getMaximumAge()) {
                         $roleSelect
                             ->addConditionOn($registerCheckbox, Form::FILLED)
                             ->addCondition(Form::EQUAL, $r->getId())
-                            ->addRule(Form::NOT_EQUAL, $r->getMinimumAgeWarning() ? $r->getMinimumAgeWarning() : 'Příliš vysoký věk.', $r->getId());
+                            ->addRule(Form::NOT_EQUAL, sprintf($r->getMaximumAgeWarning() ?: 'Osobě je %2$d, ale musí být max. %1$d let.', $r->getMaximumAge(), $age), $r->getId());
                     }
                 }
             }
@@ -243,5 +238,30 @@ class GroupMembersForm extends UI\Control
     private function countAgeAt(DateTimeImmutable $birthdate, DateTimeImmutable $seminarStart): int
     {
         return $seminarStart->diff($birthdate)->y;
+    }
+
+    private function resolveUsersRoles(): void
+    {
+        $user        = $this->queryBus->handle(new UserByIdQuery($this->presenter->user->getId()));
+        $troop       = $this->queryBus->handle(new TroopByLeaderQuery($user->getId()));
+        $this->troop = $troop;
+
+        if ($this->type === 'patrol') {
+            if ($this->patrolId !== null) {
+                $patrol = $this->queryBus->handle(new PatrolByIdQuery($this->patrolId));
+            } else {
+                $patrol = $this->queryBus->handle(new PatrolByTroopAndNotConfirmedQuery($troop->getId()));
+            }
+
+            if ($patrol != null) {
+                $this->usersRoles = $patrol->getUsersRoles();
+                $this->patrolId   = $patrol->getId();
+                $this->patrolName = $patrol->getName();
+            } else {
+                $this->usersRoles = new ArrayCollection();
+            }
+        } elseif ($this->type === 'troop') {
+            $this->usersRoles = $troop->getUsersRoles();
+        }
     }
 }

@@ -37,6 +37,8 @@ class GroupConfirmForm extends UI\Control
      */
     public array $onSave = [];
 
+    private string $patrolName = '';
+
     public function __construct(
         private string $type,
         private ?int $patrolId,
@@ -56,6 +58,7 @@ class GroupConfirmForm extends UI\Control
         $this->resolveUsersRoles();
 
         $this->template->type       = $this->type;
+        $this->template->patrolName = $this->patrolName;
         $this->template->patrolId   = $this->patrolId;
         $this->template->usersRoles = $this->usersRoles;
 
@@ -110,6 +113,8 @@ class GroupConfirmForm extends UI\Control
                 $this->patrolId   = $patrol->getId();
                 $this->usersRoles = $patrol->getUsersRoles()->toArray();
             }
+
+            $this->patrolName = $patrol->getName();
         } elseif ($this->type === 'troop') {
             $this->usersRoles = $troop->getUsersRoles()->toArray();
         }

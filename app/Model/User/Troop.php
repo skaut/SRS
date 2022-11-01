@@ -8,6 +8,7 @@ use App\Model\Application\IncomeProof;
 use App\Model\Application\VariableSymbol;
 use App\Model\Enums\TroopApplicationState;
 use App\Model\Payment\Payment;
+use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -200,6 +201,11 @@ class Troop
     public function getMaturityDate(): ?DateTimeImmutable
     {
         return $this->maturityDate;
+    }
+
+    public function getMaturityDateText(): ?string
+    {
+        return $this->maturityDate?->format(Helpers::DATE_FORMAT);
     }
 
     public function setMaturityDate(?DateTimeImmutable $maturityDate): void
