@@ -381,6 +381,12 @@ program:
                 export_schedule: "Stáhnout harmonogram"
 
 users:
+    menu:
+        persons: "Osoby"
+        groups: "Skupiny"
+        troops: "Oddíly"
+        patrols: "Družiny"
+
     users_heading: "Uživatelé"
     users_name: "Jméno"
     users_photo: "Fotka"
