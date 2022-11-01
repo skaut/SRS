@@ -42,20 +42,10 @@ class GroupsGridControl extends Control
     private SessionSection $sessionSection;
 
     public function __construct(
-        private QueryBus $queryBus,
         private Translator $translator,
-        private EntityManagerInterface $em,
         private TroopRepository $repository,
-        private CustomInputRepository $customInputRepository,
-        private RoleRepository $roleRepository,
         private ExcelExportService $excelExportService,
-        private Session $session,
-        private AclService $aclService,
-        private ApplicationService $applicationService,
-        private UserService $userService,
-        private SkautIsEventEducationService $skautIsEventEducationService,
-        private SkautIsEventGeneralService $skautIsEventGeneralService,
-        private SubeventService $subeventService
+        private Session $session
     ) {
         $this->sessionSection = $session->getSection('srs');
     }
