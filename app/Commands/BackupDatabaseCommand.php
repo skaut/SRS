@@ -50,8 +50,8 @@ class BackupDatabaseCommand extends Command
             $output->writeln('Database dump created successfully.');
 
             return 0;
-        } catch (Throwable) {
-            $output->writeln('Database dump creation failed.');
+        } catch (Throwable $e) {
+            $output->writeln('Database dump creation failed: ' . $e);
 
             return 1;
         }
