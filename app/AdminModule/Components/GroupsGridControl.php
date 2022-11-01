@@ -7,6 +7,7 @@ namespace App\AdminModule\Components;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
+use App\Model\Enums\ApplicationState;
 use App\Model\User\Repositories\TroopRepository;
 use App\Model\User\Troop;
 use App\Services\AclService;
@@ -69,6 +70,15 @@ class GroupsGridControl extends Control
         $this->template->render();
     }
 
+ /**
+ * @ return string []
+*/
+ private static function prepareStateTranslations()
+{ return array_map(ApplicationState::$types, static fn ($e)  => "common.application_state".$e  );
+}
+
+
+
     /**
      * Vytvoří komponentu.
      *
@@ -91,6 +101,10 @@ class GroupsGridControl extends Control
 
         $grid->addColumnText('id', 'ID')
             ->setSortable();
+
+	$grid->addColumnText("state","Stav")->setSortable()
+	->setRenderer(fn ($t) => $t->getState()?:$this->translator->translate( "common.application_state.draft")."2" )
+;
 
         $grid->addColumnText('name', 'Název')
             ->setSortable()
