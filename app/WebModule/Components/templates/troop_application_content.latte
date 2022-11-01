@@ -17,7 +17,8 @@
             </div>
         </div>
     {elseif empty($skautIsRoles)}
-        Nemáš správnou roli
+        Ve skautISu nemáš dostatečné oprávnění. Registrace vyžaduje přístup k informacím 
+        o členech (typicky admin oddílu/střediska). 
     {elseif $step === 'members'}
         {control groupMembersForm}
     {elseif $step === 'additional_info'}
