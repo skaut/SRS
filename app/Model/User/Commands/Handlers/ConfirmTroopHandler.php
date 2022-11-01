@@ -6,20 +6,24 @@ namespace App\Model\User\Commands\Handlers;
 
 use App\Model\Enums\MaturityType;
 use App\Model\Enums\TroopApplicationState;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\ConfirmTroop;
 use App\Model\User\Repositories\TroopRepository;
+use App\Services\MailService;
 use App\Services\QueryBus;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Yasumi\Yasumi;
 
 class ConfirmTroopHandler implements MessageHandlerInterface
 {
-    public function __construct(private QueryBus $queryBus, private TroopRepository $troopRepository)
+    public function __construct(private QueryBus $queryBus, private TroopRepository $troopRepository, private MailService $mailService)
     {
     }
 
@@ -32,6 +36,16 @@ class ConfirmTroopHandler implements MessageHandlerInterface
         $troop->setApplicationDate(new DateTimeImmutable());
         $troop->setMaturityDate($this->countMaturityDate());
         $this->troopRepository->save($troop);
+
+        $this->mailService->sendMailFromTemplate(new ArrayCollection([$troop->getLeader()]), null, Template::TROOP_REGISTRATION, [
+            TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
+            TemplateVariable::APPLICATION_FEE => $troop->getFee(),
+            TemplateVariable::APPLICATION_VARIABLE_SYMBOL => $troop->getVariableSymbol()->getVariableSymbol(),
+            TemplateVariable::APPLICATION_MATURITY => $troop->getMaturityDateText(),
+            TemplateVariable::BANK_ACCOUNT => $this->queryBus->handle(
+                new SettingStringValueQuery(Settings::ACCOUNT_NUMBER)
+            ),
+        ]);
     }
 
     /**
