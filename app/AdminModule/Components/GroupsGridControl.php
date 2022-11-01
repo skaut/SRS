@@ -159,7 +159,7 @@ class GroupsGridControl extends Control
 
         $grid->addColumnText('numPatrols', '# družin')
 //      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
-            ->setRenderer(static fn (Troop $p) => count($p->getPatrols()));
+            ->setRenderer(static fn (Troop $p) => count($p->getConfirmedPatrols()));
 
         $grid->addAction('detail', 'admin.common.detail', 'Users:groupDetail') // destinace ,todo group_detail.latte
             ->setClass('btn btn-xs btn-primary');

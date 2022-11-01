@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\AdminModule\Components;
 
 use App\Model\Acl\Repositories\RoleRepository;
-use App\Model\Acl\Role;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\User\Patrol;
 use App\Model\User\Repositories\PatrolRepository;
@@ -80,7 +79,7 @@ class PatrolsGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->repository->createQueryBuilder('p'));
+        $grid->setDataSource($this->repository->createQueryBuilder('p')->where('p.confirmed = true'));
         $grid->setDefaultSort(['displayName' => 'ASC']);
         $grid->setColumnsHideable();
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
@@ -96,11 +95,12 @@ class PatrolsGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('leader', 'Vedoucí')
-            ->setRenderer(static function (Patrol $p) {
-                return $leader = $p->countUsersInRoles([Role::LEADER]);
-            })
-            ->setFilterText();
+//        $grid->addColumnText('leader', 'Vedoucí')
+//            ->setRenderer(static function (Patrol $p) {
+//                return $leader = $p->countUsersInRoles([Role::LEADER]); {{ todo
+//
+//            })
+//            ->setFilterText();
 
         $grid->addColumnDateTime('created', 'Datum založení')
             ->setRenderer(static function (Patrol $p) {
