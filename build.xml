@@ -183,6 +183,11 @@
         </phingcall>
 
         <phingcall target="deploy:ssh">
+            <property name="comment" value="Copying old menu template"/>
+            <property name="command" value="cp -r ${deploy.workDir}/www/../app/WebModule/Presenters/templates/includes/main_menu.latte ${deploy.release}/app/WebModule/Presenters/templates/includes/ || true"/>
+        </phingcall>
+
+        <phingcall target="deploy:ssh">
             <property name="comment" value="Setting access rights for temp directory"/>
             <property name="command" value="chmod -R 777 ${deploy.release}/temp"/>
         </phingcall>
