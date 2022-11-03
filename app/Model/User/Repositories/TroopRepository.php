@@ -38,4 +38,10 @@ class TroopRepository extends AbstractRepository
         $this->em->persist($troop);
         $this->em->flush();
     }
+
+    public function remove(Troop $troop): void
+    {
+        $this->em->remove($troop);
+        $this->em->flush();
+    }
 }
