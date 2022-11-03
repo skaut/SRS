@@ -131,7 +131,7 @@ class PatrolsGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění externí družiny
+     * Zpracuje odstranění  družiny
      *
      * @throws AbortException
      */

@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\Components;
 
 use App\Model\Acl\Role;
-
 use App\Model\User\Repositories\TroopRepository;
-use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\User\Troop;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
@@ -59,7 +57,7 @@ class GroupsGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentPatrolsGrid(string $name): DataGrid
+    public function createComponentGroupsGrid(string $name): DataGrid
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
@@ -171,21 +169,21 @@ class GroupsGridControl extends Control
             ->setClass('btn btn-xs btn-danger')
             ->addAttributes([
                 'data-toggle' => 'confirmation',
-                'data-content' => "Smazat přihlášku skupiny?",
+                'data-content' => 'Smazat přihlášku skupiny?',
             ]);
 
         return $grid;
     }
 
     /**
-     * Zpracuje odstranění externí skupiny.
+     * Zpracuje odstranění  skupiny.
      *
      * @throws AbortException
      */
     public function handleDelete(int $id): void
     {
-	// RegisterHandler vytvari i Variable symbol, ale mozna  bych VS nemazal,
-	// aby uz neslo  pouzit omylem u jine
+    // RegisterHandler vytvari i Variable symbol, ale mozna  bych VS nemazal,
+    // aby uz neslo  pouzit omylem u jine
         $patrol = $this->repository->findById($id);
         $this->repository->remove($patrol);
 
