@@ -118,33 +118,32 @@ class PatrolsGridControl extends Control
         $grid->addAction('detail', 'admin.common.detail', 'Users:detail') // destinace
             ->setClass('btn btn-xs btn-primary');
 
-//        $grid->addAction('delete', '', 'delete!')
-//            ->setIcon('trash')
-//            ->setTitle('admin.common.delete')
-//            ->setClass('btn btn-xs btn-danger')
-//            ->addAttributes([
-//                'data-toggle' => 'confirmation',
-//                'data-content' => $this->translator->translate('admin.users.users_delete_confirm'),
-//            ]);
+        $grid->addAction('delete', '', 'delete!')
+            ->setIcon('trash')
+            ->setTitle('admin.common.delete')
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('Smazat družinu?'),
+            ]);
 
         return $grid;
     }
 
-//    /**
-//     * Zpracuje odstranění externího uživatele.
-//     *
-//     * @throws AbortException
-//     */
-//    public function handleDelete(int $id): void
-//    {
-//        $patrol = $this->repository->findById($id);
-//
-//        $this->repository->remove($patrol);
-//
-//        $p = $this->getPresenter();
-//        $p->flashMessage('Družina smazána', 'success');
-//        $p->redirect('this');
-//    }
+    /**
+     * Zpracuje odstranění externí družiny
+     *
+     * @throws AbortException
+     */
+    public function handleDelete(int $id): void
+    {
+        $patrol = $this->repository->findById($id);
+        $this->repository->remove($patrol);
+
+        $p = $this->getPresenter();
+        $p->flashMessage('Družina smazána', 'success');
+        $p->redirect('this');
+    }
 
     /**
      * Hromadně vyexportuje seznam družin.
