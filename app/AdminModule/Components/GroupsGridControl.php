@@ -7,7 +7,6 @@ namespace App\AdminModule\Components;
 use App\Model\Acl\Role;
 
 use App\Model\User\Repositories\TroopRepository;
-use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\User\Troop;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
@@ -163,7 +162,7 @@ class GroupsGridControl extends Control
     }
 
     /**
-     * Zpracuje odstranění externí skupiny.
+     * Zpracuje odstranění  skupiny.
      *
      * @throws AbortException
      */
