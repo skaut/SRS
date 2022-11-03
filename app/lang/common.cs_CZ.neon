@@ -119,6 +119,7 @@ application_state:
     canceled: "Zrušeno"
     paid: "Zaplaceno"
     paid_free: "Zaplaceno (zdarma)"
+    draft: "nepotvrzené (draft)"
 
 calendar_view:
     timeGridSeminar: "Na výšku"
