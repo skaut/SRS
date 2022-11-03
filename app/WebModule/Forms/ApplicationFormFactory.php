@@ -179,8 +179,7 @@ class ApplicationFormFactory
             'state' => $this->user->getState(),
         ]);
 
-        $form->onSuccess[]  = [$this, 'processForm'];
-        $form->onValidate[] = [$this, 'validateRolesAgeLimits'];
+        $form->onSuccess[] = [$this, 'processForm'];
 
         return $form;
     }
