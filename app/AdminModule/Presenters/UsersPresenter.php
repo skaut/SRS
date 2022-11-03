@@ -45,7 +45,7 @@ class UsersPresenter extends AdminBasePresenter
     public IPatrolsGridControlFactory $patrolsGridControlFactory;
 
     #[Inject]
-    public IGroupsGridControlFactory $GroupsGridControlFactory;
+    public IGroupsGridControlFactory $groupsGridControlFactory;
 
     #[Inject]
     public AddLectorFormFactory $addLectorFormFactory;
@@ -196,7 +196,7 @@ class UsersPresenter extends AdminBasePresenter
 
     protected function createComponentGroupsGrid(): GroupsGridControl
     {
-        return $this->GroupsGridControlFactory->create();
+        return $this->groupsGridControlFactory->create();
     }
 
     protected function createComponentAddLectorForm(): Form
