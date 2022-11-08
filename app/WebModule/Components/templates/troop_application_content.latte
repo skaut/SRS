@@ -29,7 +29,15 @@
         <div class="row" n:if="$troop->getState() !== 'draft'">
             <div class="col">
                 <div class="alert alert-info alert-forever">
-                    Přihláška tvé skupiny byla úspěšně odeslána. Nyní můžeš pouze měnit osobu za osobu.
+                    <p class="card-text">
+                        Přihláška tvé skupiny byla úspěšně odeslána. Nyní můžeš pouze měnit osobu za osobu.
+                    </p>
+                    <p class="card-text">
+                        Abychom s vámi mohli počítat je nutné nejpozději do 30 kalendářních dnů, nejpozději však do 15.
+                        února 2023 (pokud by nastalo dříve) uhradit <strong>{$troop->getFee()} Kč</strong> účastnického
+                        poplatku za celou skupinu na účet: <strong>{$accountNumber}</strong> s variabilním symbolem:
+                        <strong>{$troop->getVariableSymbol()->getVariableSymbol()}</strong>.
+                    </p>
                 </div>
             </div>
         </div>
@@ -104,8 +112,7 @@
                 <h4>Družiny</h4>
             </div>
             <div class="col-auto">
-                <a href="{plink this, step: members, type: patrol}"
-                        n:class="btn, btn-success, btn-sm, $troop->getState() !== 'draft' ? disabled">
+                <a href="{plink this, step: members, type: patrol}" n:class="btn, btn-success, btn-sm" n:if="$troop->getState() === 'draft'">
                     Přidat družinu
                 </a>
             </div>

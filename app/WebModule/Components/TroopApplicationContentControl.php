@@ -7,6 +7,8 @@ namespace App\WebModule\Components;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
+use App\Model\Settings\Queries\SettingStringValueQuery;
+use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterTroop;
 use App\Model\User\Queries\TroopByLeaderQuery;
 use App\Model\User\Repositories\UserRepository;
@@ -67,6 +69,8 @@ class TroopApplicationContentControl extends BaseContentControl
         $user                = $this->getPresenter()->user;
         $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
         $template->testRole  = Role::TEST;
+
+        $this->template->accountNumber = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
 
         $step           = $this->getPresenter()->getParameter('step');
         $template->step = $step;
