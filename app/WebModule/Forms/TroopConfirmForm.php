@@ -136,6 +136,6 @@ class TroopConfirmForm extends UI\Control
         $leadersCount                   = $this->troop->countUsersInRoles([Role::LEADER]);
         $escortsCount                   = $this->troop->countUsersInRoles([Role::ESCORT]);
         $leadersOrEscortsCount          = $this->troop->countUsersInRoles([Role::LEADER, Role::ESCORT]);
-        $this->userLeaderAndEscortError = ($leadersCount + $escortsCount) !== $leadersOrEscortsCount;
+        $this->userLeaderAndEscortError = $leadersCount + $escortsCount !== $leadersOrEscortsCount;
     }
 }
