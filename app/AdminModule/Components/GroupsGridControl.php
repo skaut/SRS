@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\AdminModule\Components;
 
 use App\Model\Acl\Role;
+use App\Model\User\Commands\DeleteTroop;
 use App\Model\User\Repositories\TroopRepository;
 use App\Model\User\Troop;
+use App\Services\CommandBus;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -35,6 +37,7 @@ class GroupsGridControl extends Control
     public function __construct(
         private Translator $translator,
         private TroopRepository $repository,
+        private CommandBus $commandBus,
         private ExcelExportService $excelExportService,
         private Session $session
     ) {
@@ -182,10 +185,7 @@ class GroupsGridControl extends Control
      */
     public function handleDelete(int $id): void
     {
-    // RegisterHandler vytvari i Variable symbol, ale mozna  bych VS nemazal,
-    // aby uz neslo  pouzit omylem u jine
-        $patrol = $this->repository->findById($id);
-        $this->repository->remove($patrol);
+        $this->commandBus->handle(new DeleteTroop($id));
 
         $p = $this->getPresenter();
         $p->flashMessage('Skupina smazána.', 'success');

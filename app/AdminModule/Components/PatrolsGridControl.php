@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
+use App\Model\User\Commands\DeletePatrol;
 use App\Model\User\Patrol;
 use App\Model\User\Repositories\PatrolRepository;
+use App\Services\CommandBus;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -33,6 +35,7 @@ class PatrolsGridControl extends Control
 
     public function __construct(
         private Translator $translator,
+        private CommandBus $commandBus,
         private PatrolRepository $repository,
         private ExcelExportService $excelExportService,
         private Session $session
@@ -137,9 +140,7 @@ class PatrolsGridControl extends Control
      */
     public function handleDelete(int $id): void
     {
-        $patrol = $this->repository->findById($id);
-        $this->repository->remove($patrol);
-
+        $this->commandBus->handle(new DeletePatrol($id));
         $p = $this->getPresenter();
         $p->flashMessage('Družina smazána', 'success');
         $p->redirect('this');
