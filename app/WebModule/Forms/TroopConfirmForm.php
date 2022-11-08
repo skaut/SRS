@@ -32,6 +32,7 @@ class TroopConfirmForm extends UI\Control
     private bool $allCountError;
     private bool $duplicitUsersError;
     private bool $userNotLeaderError;
+    private bool $userLeaderAndEscortError;
 
     /**
      * Událost při úspěšném odeslání formuláře.
@@ -59,9 +60,10 @@ class TroopConfirmForm extends UI\Control
         $this->template->troop     = $this->troop;
         $this->template->agreement = $this->queryBus->handle(new SettingStringValueQuery(Settings::APPLICATION_AGREEMENT));
 
-        $this->template->allCountError      = $this->allCountError;
-        $this->template->duplicitUsersError = $this->duplicitUsersError;
-        $this->template->userNotLeaderError = $this->userNotLeaderError;
+        $this->template->allCountError            = $this->allCountError;
+        $this->template->duplicitUsersError       = $this->duplicitUsersError;
+        $this->template->userNotLeaderError       = $this->userNotLeaderError;
+        $this->template->userLeaderAndEscortError = $this->userLeaderAndEscortError;
 
         $this->template->render();
     }
@@ -82,7 +84,7 @@ class TroopConfirmForm extends UI\Control
             ->addRule(Form::FILLED, 'Musíš souhlasit s podmínkami akce.');
 
         $submit = $form->addSubmit('submit', 'Závazně registrovat')
-            ->setDisabled($this->allCountError || $this->duplicitUsersError || $this->userNotLeaderError);
+            ->setDisabled($this->allCountError || $this->duplicitUsersError || $this->userNotLeaderError || $this->userLeaderAndEscortError);
 
         if ($this->troop->getState() !== TroopApplicationState::DRAFT) {
             $pairedTroopCodeText->setHtmlAttribute('readonly');
@@ -130,5 +132,10 @@ class TroopConfirmForm extends UI\Control
         $this->userNotLeaderError = $user->getGroupRoles()
                 ->filter(static fn (UserGroupRole $groupRole) => $groupRole->getRole()->getSystemName() === Role::LEADER && $groupRole->getPatrol()->isConfirmed())
                 ->count() === 0;
+
+        $leadersCount                   = $this->troop->countUsersInRoles([Role::LEADER]);
+        $escortsCount                   = $this->troop->countUsersInRoles([Role::ESCORT]);
+        $leadersOrEscortsCount          = $this->troop->countUsersInRoles([Role::LEADER, Role::ESCORT]);
+        $this->userLeaderAndEscortError = $leadersCount + $escortsCount !== $leadersOrEscortsCount;
     }
 }
