@@ -42,6 +42,13 @@
                     Registrující uživatel musí být vedoucím některé družiny.
                 </span>
             </span>
+            <span n:if="$userLeaderAndEscortError">
+                <br>
+                <span class="text-danger">
+                    <i class="fa fa-circle-exclamation"></i>
+                    Vedoucí družiny nesmí být zároveň doprovod.
+                </span>
+            </span>
         </div>
     </div>
 
