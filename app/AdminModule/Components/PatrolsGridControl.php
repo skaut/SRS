@@ -22,6 +22,7 @@ use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 use function count;
+use function date;
 
 /**
  * Komponenta pro zobrazení datagridu družin.
@@ -65,9 +66,9 @@ class PatrolsGridControl extends Control
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
         $grid->setStrictSessionFilterValues(false);
 
-        $stamp=date("Y-m-d H.m.s");
-        $grid->addExportCsv("Export všech", "NSJ2023 Druziny $stamp.csv");
-        $grid->addExportCsvFiltered("Export vyfiltrovaných", "NSJ2023 Druziny fi $stamp.csv");
+        $stamp = date('Y-m-d H.m.s');
+        $grid->addExportCsv('admin.common.export_all', 'NSJ2023 Druziny ' . $stamp . 'csv');
+        $grid->addExportCsvFiltered('admin.common.export_filter', 'NSJ2023 Druziny fi ' . $stamp . 'csv');
 
         $grid->addGroupAction('Export seznamu družin')
             ->onSelect[] = [$this, 'groupExportUsers'];
