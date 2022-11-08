@@ -65,6 +65,10 @@ class PatrolsGridControl extends Control
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
         $grid->setStrictSessionFilterValues(false);
 
+        $stamp=date("Y-m-d H.m.s");
+        $grid->addExportCsv("Export všech", "NSJ2023 Druziny $stamp.csv");
+        $grid->addExportCsvFiltered("Export vyfiltrovaných", "NSJ2023 Druziny fi $stamp.csv");
+
         $grid->addGroupAction('Export seznamu družin')
             ->onSelect[] = [$this, 'groupExportUsers'];
 
