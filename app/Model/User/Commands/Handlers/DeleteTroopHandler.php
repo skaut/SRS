@@ -9,6 +9,7 @@ use App\Model\User\Commands\DeleteTroop;
 use App\Model\User\Queries\TroopByIdQuery;
 use App\Model\User\Repositories\TroopRepository;
 use App\Model\User\Repositories\UserGroupRoleRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,7 +22,8 @@ class DeleteTroopHandler implements MessageHandlerInterface
         private CommandBus $commandBus,
         private EntityManagerInterface $em,
         private TroopRepository $troopRepository,
-        private UserGroupRoleRepository $userGroupRoleRepository
+        private UserGroupRoleRepository $userGroupRoleRepository,
+        private UserRepository $userRepository
     ) {
     }
 
@@ -35,6 +37,11 @@ class DeleteTroopHandler implements MessageHandlerInterface
 
             foreach ($troop->getUsersRoles() as $usersRole) {
                 $this->userGroupRoleRepository->remove($usersRole);
+                $u = $usersRole->getUser();
+
+                if ($u->getRolesText() == '') {
+                    $this->userRepository->remove($usersRole->getUser());
+                }
             }
 
             $this->troopRepository->remove($troop);
