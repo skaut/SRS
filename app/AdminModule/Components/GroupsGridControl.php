@@ -67,9 +67,9 @@ class GroupsGridControl extends Control
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
         $grid->setStrictSessionFilterValues(false);
 
-        $stamp = date(Helpers::DATETIME_FORMAT);
-        $grid->addExportCsv('admin.common.export_all', 'NSJ2023 Skupiny ' . $stamp . 'csv');
-        $grid->addExportCsvFiltered('admin.common.export_filter', 'NSJ2023 Skupiny fi ' . $stamp . 'csv');
+        $stamp = date(Helpers::DATE_FORMAT);
+        $grid->addExportCsv('admin.common.export_all', 'NSJ2023 Skupiny ' . $stamp . '.csv');
+        $grid->addExportCsvFiltered('admin.common.export_filter', 'NSJ2023 Skupiny fi ' . $stamp . '.csv');
 
         $grid->addGroupAction('Export seznamu skupin')
             ->onSelect[] = [$this, 'groupExportUsers'];
