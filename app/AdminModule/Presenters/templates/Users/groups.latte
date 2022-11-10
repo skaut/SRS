@@ -1,4 +1,8 @@
 {block main}
+
     <h2>Skupiny</h2>
+    <style>
+        .datagrid-exports::before { content: "{_admin.common.export_note}"}
+    </style>
     {control groupsGrid}
 {/block}

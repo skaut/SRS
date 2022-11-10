@@ -23,6 +23,7 @@ use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 use function count;
+use function date;
 
 /**
  * Komponenta pro zobrazení datagridu družin.
@@ -65,6 +66,10 @@ class GroupsGridControl extends Control
         $grid->setColumnsHideable();
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
         $grid->setStrictSessionFilterValues(false);
+
+        $stamp = date('Y-m-d H.m.s');
+        $grid->addExportCsv('admin.common.export_all', 'NSJ2023 Skupiny ' . $stamp . 'csv');
+        $grid->addExportCsvFiltered('admin.common.export_filter', 'NSJ2023 Skupiny fi ' . $stamp . 'csv');
 
         $grid->addGroupAction('Export seznamu skupin')
             ->onSelect[] = [$this, 'groupExportUsers'];
