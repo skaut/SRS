@@ -139,7 +139,7 @@ class GroupsGridControl extends Control
 
         $grid->addColumnText('numAdults', '# dospělých')
 //      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
-            ->setRenderer(static fn (Troop $p) => $p->countUsersInRoles([Role::LEADER]));
+            ->setRenderer(static fn (Troop $p) => $p->countUsersInRoles([Role::LEADER, Role::ESCORT]));
 
         $grid->addColumnText('numPatrols', '# družin')
 //      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
