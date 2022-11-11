@@ -127,6 +127,7 @@
         <property name="deploy.ssh.target" value="${deploy.ssh.username}@${deploy.ssh.host}"/>
         <property name="deploy.releaseHash" value="${DSTAMP}-${TSTAMP}-${build.hash}"/>
         <property name="deploy.release" value="${deploy.releasesDir}/${deploy.releaseHash}"/>
+        <property name="deploy.lebeda" refid="env.DEPLOY_LEBEDA"/>
 
         <!-- Build tarball -->
         <phingcall target="prepare-tarball">
@@ -231,8 +232,13 @@
     </target>
 
     <target name="deploy:app-command">
+        <condition property="phpCommand"
+                   value="php81-cli &quot;${deploy.release}/www/console.php ${command}&quot;"
+                   else="php8.1 ${deploy.release}/www/console.php ${command}">
+            <equals arg1="${deploy.lebeda}" arg2="true"/>
+        </condition>
         <phingcall target="deploy:ssh">
-            <property name="command" value="php81-cli &quot;${deploy.release}/www/console.php ${command}&quot;"/>
+            <property name="command" value="${phpCommand}"/>
         </phingcall>
     </target>
 
