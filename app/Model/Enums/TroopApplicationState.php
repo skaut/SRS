@@ -22,11 +22,6 @@ class TroopApplicationState
     public const CANCELED_NOT_PAID = 'canceled_not_paid';
 
     /**
-     * Zrušeno.
-     */
-    public const CANCELED = 'canceled';
-
-    /**
      * Zaplaceno.
      */
     public const PAID = 'paid';
