@@ -8,6 +8,7 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Payment\Payment;
 use App\Model\Payment\Repositories\PaymentRepository;
+use App\Model\User\Repositories\TroopRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use Nette;
@@ -33,7 +34,8 @@ class EditPaymentFormFactory
         private PaymentRepository $paymentRepository,
         private ApplicationRepository $applicationRepository,
         private UserRepository $userRepository,
-        private ApplicationService $applicationService
+        private TroopRepository $troopRepository,
+        private ApplicationService $applicationService1
     ) {
     }
 
@@ -56,6 +58,10 @@ class EditPaymentFormFactory
         $inputVariableSymbol = $form->addText('variableSymbol', 'admin.payments.payments.variable_symbol');
 
         $inputPairedApplication = $form->addMultiSelect('pairedApplications', 'admin.payments.payments.paired_applications', $this->applicationRepository->getApplicationsVariableSymbolsOptions())
+            ->setHtmlAttribute('class', 'datagrid-multiselect')
+            ->setHtmlAttribute('data-live-search', 'true');
+
+        $inputPairedTroops = $form->addMultiSelect('pairedTroops', 'admin.payments.payments.paired_troops', $this->troopRepository->getTroopsVariableSymbolsOptions())
             ->setHtmlAttribute('class', 'datagrid-multiselect')
             ->setHtmlAttribute('data-live-search', 'true');
 
@@ -87,12 +93,19 @@ class EditPaymentFormFactory
             $this->applicationRepository->getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions($pairedValidApplications)
         );
 
+        $pairedTroops = $this->payment->getPairedTroops();
+
+        $inputPairedTroops->setItems(
+            $this->troopRepository->getWaitingForPaymentOrPairedTroopsVariableSymbolsOptions($pairedTroops)
+        );
+
         $form->setDefaults([
             'id' => $id,
             'date' => $this->payment->getDate(),
             'amount' => $this->payment->getAmount(),
             'variableSymbol' => $this->payment->getVariableSymbol(),
             'pairedApplications' => $this->applicationRepository->findApplicationsIds($pairedValidApplications),
+            'pairedTroops' => $this->troopRepository->findTroopsIds($pairedTroops),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -111,8 +124,9 @@ class EditPaymentFormFactory
             $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
             $pairedApplications = $this->applicationRepository->findApplicationsByIds($values->pairedApplications);
+            $pairedTroops = $this->troopRepository->findTroopsByIds($values->pairedTroops);
 
-            $this->applicationService->updatePayment($this->payment, $values->date, $values->amount, $values->variableSymbol, $pairedApplications, $loggedUser);
+            $this->applicationService->updatePayment($this->payment, $values->date, $values->amount, $values->variableSymbol, $pairedApplications, $pairedTroops, $loggedUser);
         }
     }
 }

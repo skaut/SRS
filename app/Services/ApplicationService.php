@@ -690,9 +690,10 @@ class ApplicationService
         ?float $amount,
         ?string $variableSymbol,
         Collection $pairedApplications,
+        Collection $pairedTroops,
         User $createdBy
     ): void {
-        $this->em->wrapInTransaction(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy): void {
+        $this->em->wrapInTransaction(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $pairedTroops, $createdBy): void {
             if ($date !== null) {
                 $payment->setDate($date);
             }
@@ -726,6 +727,11 @@ class ApplicationService
                 }
             }
 
+            $oldPairedTroops = clone $payment->getPairedTroops();
+            $newPairedTroops = clone $pairedTroops;
+
+            // todo
+
             if ($pairedApplicationsModified) {
                 if ($pairedApplications->isEmpty()) {
                     $payment->setState(PaymentState::NOT_PAIRED);
@@ -748,6 +754,9 @@ class ApplicationService
         $this->em->wrapInTransaction(function () use ($payment, $createdBy): void {
             foreach ($payment->getPairedValidApplications() as $pairedApplication) {
                 $this->updateApplicationPayment($pairedApplication, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+            }
+            foreach ($payment->getPairedTroops() as $pairedTroop) {
+                $this->updateTroopApplicationPayment($pairedTroop, null, null, $pairedTroop->getMaturityDate());
             }
 
             $this->paymentRepository->remove($payment);
