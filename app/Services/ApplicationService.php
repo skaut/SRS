@@ -546,8 +546,8 @@ class ApplicationService
      * @throws Throwable
      */
     public function updateTroopApplicationPayment(
-        Troop              $troop,
-        ?string            $paymentMethod,
+        Troop $troop,
+        ?string $paymentMethod,
         ?DateTimeImmutable $paymentDate,
         ?DateTimeImmutable $maturityDate
     ): void {
@@ -755,6 +755,7 @@ class ApplicationService
             foreach ($payment->getPairedValidApplications() as $pairedApplication) {
                 $this->updateApplicationPayment($pairedApplication, null, null, $pairedApplication->getMaturityDate(), $createdBy);
             }
+
             foreach ($payment->getPairedTroops() as $pairedTroop) {
                 $this->updateTroopApplicationPayment($pairedTroop, null, null, $pairedTroop->getMaturityDate());
             }

@@ -195,6 +195,7 @@ mailing:
         roles_changed: "Potvrzení změny rolí"
         subevents_changed: "Potvrzení změny podakcí"
         payment_confirmed: "Potvrzení přijetí platby"
+        troop_payment_confirmed: "Potvrzení přijetí platby skupiny"
         maturity_reminder: "Připomínka splatnosti"
         program_registered: "Přihlášení na program"
         program_unregistered: "Odhlášení z programu"

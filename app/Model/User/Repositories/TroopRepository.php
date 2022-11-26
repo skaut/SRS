@@ -13,6 +13,8 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 
+use function array_map;
+
 /**
  * Třída spravující oddíly.
  */

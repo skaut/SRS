@@ -124,7 +124,7 @@ class EditPaymentFormFactory
             $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
             $pairedApplications = $this->applicationRepository->findApplicationsByIds($values->pairedApplications);
-            $pairedTroops = $this->troopRepository->findTroopsByIds($values->pairedTroops);
+            $pairedTroops       = $this->troopRepository->findTroopsByIds($values->pairedTroops);
 
             $this->applicationService->updatePayment($this->payment, $values->date, $values->amount, $values->variableSymbol, $pairedApplications, $pairedTroops, $loggedUser);
         }
