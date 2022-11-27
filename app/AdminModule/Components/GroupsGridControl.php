@@ -86,7 +86,7 @@ class GroupsGridControl extends Control
             ->setFilterText();
 
         $grid->addColumnText('variableSymbol', 'VS ')->setSortable() // je stejný jako název skupiny
-        ->setRenderer(static fn ($t) => $t->getVariableSymbol()->getVariableSymbol())
+        ->setRenderer(static fn ($t) => $t->getVariableSymbolText())
         ->setFilterText();
 
            $grid->addColumnText('leader', 'Vedoucí')->setSortable()
