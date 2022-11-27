@@ -8,6 +8,7 @@ use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Payment\Payment;
 use App\Model\Payment\Repositories\PaymentRepository;
+use App\Model\User\Repositories\TroopRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use Nette;
@@ -33,6 +34,7 @@ class EditPaymentFormFactory
         private PaymentRepository $paymentRepository,
         private ApplicationRepository $applicationRepository,
         private UserRepository $userRepository,
+        private TroopRepository $troopRepository,
         private ApplicationService $applicationService
     ) {
     }
@@ -43,6 +45,9 @@ class EditPaymentFormFactory
     public function create(int $id): Form
     {
         $this->payment = $this->paymentRepository->findById($id);
+
+        $pairedValidApplications = $this->payment->getPairedValidApplications();
+        $pairedTroops            = $this->payment->getPairedTroops();
 
         $form = $this->baseFormFactory->create();
 
@@ -55,7 +60,19 @@ class EditPaymentFormFactory
 
         $inputVariableSymbol = $form->addText('variableSymbol', 'admin.payments.payments.variable_symbol');
 
-        $inputPairedApplication = $form->addMultiSelect('pairedApplications', 'admin.payments.payments.paired_applications', $this->applicationRepository->getApplicationsVariableSymbolsOptions())
+        $form->addMultiSelect(
+            'pairedApplications',
+            'admin.payments.payments.paired_applications',
+            $this->applicationRepository->getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions($pairedValidApplications)
+        )
+            ->setHtmlAttribute('class', 'datagrid-multiselect')
+            ->setHtmlAttribute('data-live-search', 'true');
+
+        $form->addMultiSelect(
+            'pairedTroops',
+            'admin.payments.payments.paired_troops',
+            $this->troopRepository->getWaitingForPaymentOrPairedTroopsVariableSymbolsOptions($pairedTroops)
+        )
             ->setHtmlAttribute('class', 'datagrid-multiselect')
             ->setHtmlAttribute('data-live-search', 'true');
 
@@ -81,18 +98,13 @@ class EditPaymentFormFactory
             $inputVariableSymbol->setDisabled();
         }
 
-        $pairedValidApplications = $this->payment->getPairedValidApplications();
-
-        $inputPairedApplication->setItems(
-            $this->applicationRepository->getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions($pairedValidApplications)
-        );
-
         $form->setDefaults([
             'id' => $id,
             'date' => $this->payment->getDate(),
             'amount' => $this->payment->getAmount(),
             'variableSymbol' => $this->payment->getVariableSymbol(),
             'pairedApplications' => $this->applicationRepository->findApplicationsIds($pairedValidApplications),
+            'pairedTroops' => $this->troopRepository->findTroopsIds($pairedTroops),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -111,8 +123,9 @@ class EditPaymentFormFactory
             $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
             $pairedApplications = $this->applicationRepository->findApplicationsByIds($values->pairedApplications);
+            $pairedTroops       = $this->troopRepository->findTroopsByIds($values->pairedTroops);
 
-            $this->applicationService->updatePayment($this->payment, $values->date, $values->amount, $values->variableSymbol, $pairedApplications, $loggedUser);
+            $this->applicationService->updatePayment($this->payment, $values->date, $values->amount, $values->variableSymbol, $pairedApplications, $pairedTroops, $loggedUser);
         }
     }
 }

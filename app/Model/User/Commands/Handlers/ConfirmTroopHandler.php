@@ -40,7 +40,7 @@ class ConfirmTroopHandler implements MessageHandlerInterface
         $this->mailService->sendMailFromTemplate(new ArrayCollection([$troop->getLeader()]), null, Template::TROOP_REGISTRATION, [
             TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
             TemplateVariable::APPLICATION_FEE => (string) $troop->getFee(),
-            TemplateVariable::APPLICATION_VARIABLE_SYMBOL => $troop->getVariableSymbol()->getVariableSymbol(),
+            TemplateVariable::APPLICATION_VARIABLE_SYMBOL => $troop->getVariableSymbolText(),
             TemplateVariable::APPLICATION_MATURITY => $troop->getMaturityDateText(),
             TemplateVariable::BANK_ACCOUNT => $this->queryBus->handle(
                 new SettingStringValueQuery(Settings::ACCOUNT_NUMBER)
