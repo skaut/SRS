@@ -184,4 +184,12 @@ class TroopApplicationContentControl extends BaseContentControl
         $this->skautIsService->updateUserRole($roleId);
         $this->redirect('this');
     }
+
+    /**
+     * Vygeneruje potvrzení o přijetí platby.
+     */
+    public function handleGeneratePaymentProof(int $id): void
+    {
+        $this->getPresenter()->redirect(':Export:TroopIncomeProof:troop', ['id' => $id]);
+    }
 }

@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use Numbers_Words;
 use function array_key_exists;
 use function count;
 use function in_array;
@@ -176,6 +177,17 @@ class Troop
     public function getFee(): int
     {
         return $this->fee;
+    }
+
+    /**
+     * Vrací poplatek slovy.
+     */
+    public function getFeeWords(): string
+    {
+        $numbersWords = new Numbers_Words();
+        $feeWord      = $numbersWords->toWords($this->getFee(), 'cs');
+
+        return str_replace(' ', '', $feeWord);
     }
 
     public function setFee(int $fee): void
