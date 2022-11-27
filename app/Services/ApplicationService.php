@@ -612,52 +612,57 @@ class ApplicationService
             $payment->setAccountName($accountName);
             $payment->setMessage($message);
 
-            $pairedApplication = $this->applicationRepository->findValidByVariableSymbol($variableSymbol);
+            $this->pairPayment($payment, $createdBy);
+        });
+    }
 
-            if ($pairedApplication) {
+    public function pairPayment(Payment $payment, ?User $createdBy = null): void
+    {
+        $pairedApplication = $this->applicationRepository->findValidByVariableSymbol($payment->getVariableSymbol());
+
+        if ($pairedApplication) {
+            if (
+                $pairedApplication->getState() === ApplicationState::PAID ||
+                $pairedApplication->getState() === ApplicationState::PAID_FREE
+            ) {
+                $payment->setState(PaymentState::NOT_PAIRED_PAID);
+            } elseif (
+                $pairedApplication->getState() === ApplicationState::CANCELED ||
+                $pairedApplication->getState() === ApplicationState::CANCELED_NOT_PAID
+            ) {
+                $payment->setState(PaymentState::NOT_PAIRED_CANCELED);
+            } elseif (abs($pairedApplication->getFee() - $payment->getAmount()) >= 0.01) {
+                $payment->setState(PaymentState::NOT_PAIRED_FEE);
+            } else {
+                $payment->setState(PaymentState::PAIRED_AUTO);
+                $pairedApplication->setPayment($payment);
+                $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $payment->getDate(), $pairedApplication->getMaturityDate(), $createdBy);
+            }
+        } else {
+            $pairedTroopApplication = $this->troopRepository->findByVariableSymbol($payment->getVariableSymbol());
+
+            if ($pairedTroopApplication) {
                 if (
-                    $pairedApplication->getState() === ApplicationState::PAID ||
-                    $pairedApplication->getState() === ApplicationState::PAID_FREE
+                    $pairedTroopApplication->getState() === TroopApplicationState::PAID
                 ) {
                     $payment->setState(PaymentState::NOT_PAIRED_PAID);
                 } elseif (
-                    $pairedApplication->getState() === ApplicationState::CANCELED ||
-                    $pairedApplication->getState() === ApplicationState::CANCELED_NOT_PAID
+                    $pairedTroopApplication->getState() === TroopApplicationState::CANCELED_NOT_PAID
                 ) {
                     $payment->setState(PaymentState::NOT_PAIRED_CANCELED);
-                } elseif (abs($pairedApplication->getFee() - $amount) >= 0.01) {
+                } elseif (abs($pairedTroopApplication->getFee() - $payment->getAmount()) >= 0.01) {
                     $payment->setState(PaymentState::NOT_PAIRED_FEE);
                 } else {
                     $payment->setState(PaymentState::PAIRED_AUTO);
-                    $pairedApplication->setPayment($payment);
-                    $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $date, $pairedApplication->getMaturityDate(), $createdBy);
+                    $pairedTroopApplication->setPayment($payment);
+                    $this->updateTroopApplicationPayment($pairedTroopApplication, PaymentType::BANK, $payment->getDate(), $pairedTroopApplication->getMaturityDate());
                 }
             } else {
-                $pairedTroopApplication = $this->troopRepository->findByVariableSymbol($variableSymbol);
-
-                if ($pairedTroopApplication) {
-                    if (
-                        $pairedTroopApplication->getState() === TroopApplicationState::PAID
-                    ) {
-                        $payment->setState(PaymentState::NOT_PAIRED_PAID);
-                    } elseif (
-                        $pairedTroopApplication->getState() === TroopApplicationState::CANCELED_NOT_PAID
-                    ) {
-                        $payment->setState(PaymentState::NOT_PAIRED_CANCELED);
-                    } elseif (abs($pairedTroopApplication->getFee() - $amount) >= 0.01) {
-                        $payment->setState(PaymentState::NOT_PAIRED_FEE);
-                    } else {
-                        $payment->setState(PaymentState::PAIRED_AUTO);
-                        $pairedTroopApplication->setPayment($payment);
-                        $this->updateTroopApplicationPayment($pairedTroopApplication, PaymentType::BANK, $date, $pairedTroopApplication->getMaturityDate());
-                    }
-                } else {
-                    $payment->setState(PaymentState::NOT_PAIRED_VS);
-                }
+                $payment->setState(PaymentState::NOT_PAIRED_VS);
             }
+        }
 
-            $this->paymentRepository->save($payment);
-        });
+        $this->paymentRepository->save($payment);
     }
 
     /**
