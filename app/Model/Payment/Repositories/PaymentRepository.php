@@ -37,6 +37,9 @@ class PaymentRepository extends AbstractRepository
         return $this->getRepository()->findOneBy(['transactionId' => $transactionId]);
     }
 
+    /**
+     * @return Collection<int, Payment>
+     */
     public function findNotPairedVs(): Collection
     {
         return new ArrayCollection($this->getRepository()->findBy(['state' => PaymentState::NOT_PAIRED_VS]));
