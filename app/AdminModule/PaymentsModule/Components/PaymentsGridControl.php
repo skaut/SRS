@@ -91,6 +91,8 @@ class PaymentsGridControl extends Control
 
         $grid->addColumnText('pairedApplications', 'admin.payments.payments.paired_applications', 'pairedValidApplicationsText');
 
+        $grid->addColumnText('pairedTroops', 'admin.payments.payments.paired_troops', 'pairedTroopsText');
+
         $grid->addColumnText('state', 'admin.payments.payments.state')
             ->setRenderer(fn (Payment $payment) => $this->translator->translate('common.payment_state.' . $payment->getState()))
             ->setFilterMultiSelect($this->preparePaymentStatesOptions())
