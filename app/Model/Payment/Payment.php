@@ -239,6 +239,13 @@ class Payment
         return $this->pairedTroops;
     }
 
+    public function getPairedTroopsText(): string
+    {
+        $pairedNames = $this->getPairedTroops()->map(static fn (Troop $troop) => $troop->getName())->toArray();
+
+        return implode(', ', $pairedNames);
+    }
+
     public function getState(): string
     {
         return $this->state;
