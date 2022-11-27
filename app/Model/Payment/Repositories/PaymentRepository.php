@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Model\Payment\Repositories;
 
+use App\Model\Enums\PaymentState;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Payment\Payment;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -32,6 +35,14 @@ class PaymentRepository extends AbstractRepository
     public function findByTransactionId(string $transactionId): ?Payment
     {
         return $this->getRepository()->findOneBy(['transactionId' => $transactionId]);
+    }
+
+    /**
+     * @return Collection<int, Payment>
+     */
+    public function findNotPairedVs(): Collection
+    {
+        return new ArrayCollection($this->getRepository()->findBy(['state' => PaymentState::NOT_PAIRED_VS]));
     }
 
     /**
