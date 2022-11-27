@@ -769,6 +769,8 @@ class ApplicationService
 
             foreach ($payment->getPairedTroops() as $pairedTroop) {
                 $this->updateTroopApplicationPayment($pairedTroop, null, null, $pairedTroop->getMaturityDate());
+                $pairedTroop->setPayment(null);
+                $this->troopRepository->save($pairedTroop);
             }
 
             $this->paymentRepository->remove($payment);
