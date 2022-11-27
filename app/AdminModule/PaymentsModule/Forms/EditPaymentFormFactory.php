@@ -35,7 +35,7 @@ class EditPaymentFormFactory
         private ApplicationRepository $applicationRepository,
         private UserRepository $userRepository,
         private TroopRepository $troopRepository,
-        private ApplicationService $applicationService1
+        private ApplicationService $applicationService
     ) {
     }
 
@@ -45,6 +45,9 @@ class EditPaymentFormFactory
     public function create(int $id): Form
     {
         $this->payment = $this->paymentRepository->findById($id);
+
+        $pairedValidApplications = $this->payment->getPairedValidApplications();
+        $pairedTroops            = $this->payment->getPairedTroops();
 
         $form = $this->baseFormFactory->create();
 
@@ -57,11 +60,19 @@ class EditPaymentFormFactory
 
         $inputVariableSymbol = $form->addText('variableSymbol', 'admin.payments.payments.variable_symbol');
 
-        $inputPairedApplication = $form->addMultiSelect('pairedApplications', 'admin.payments.payments.paired_applications', $this->applicationRepository->getApplicationsVariableSymbolsOptions())
+        $form->addMultiSelect(
+            'pairedApplications',
+            'admin.payments.payments.paired_applications',
+            $this->applicationRepository->getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions($pairedValidApplications)
+        )
             ->setHtmlAttribute('class', 'datagrid-multiselect')
             ->setHtmlAttribute('data-live-search', 'true');
 
-        $inputPairedTroops = $form->addMultiSelect('pairedTroops', 'admin.payments.payments.paired_troops', $this->troopRepository->getTroopsVariableSymbolsOptions())
+        $form->addMultiSelect(
+            'pairedTroops',
+            'admin.payments.payments.paired_troops',
+            $this->troopRepository->getWaitingForPaymentOrPairedTroopsVariableSymbolsOptions($pairedTroops)
+        )
             ->setHtmlAttribute('class', 'datagrid-multiselect')
             ->setHtmlAttribute('data-live-search', 'true');
 
@@ -86,18 +97,6 @@ class EditPaymentFormFactory
             $inputAmount->setDisabled();
             $inputVariableSymbol->setDisabled();
         }
-
-        $pairedValidApplications = $this->payment->getPairedValidApplications();
-
-        $inputPairedApplication->setItems(
-            $this->applicationRepository->getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions($pairedValidApplications)
-        );
-
-        $pairedTroops = $this->payment->getPairedTroops();
-
-        $inputPairedTroops->setItems(
-            $this->troopRepository->getWaitingForPaymentOrPairedTroopsVariableSymbolsOptions($pairedTroops)
-        );
 
         $form->setDefaults([
             'id' => $id,

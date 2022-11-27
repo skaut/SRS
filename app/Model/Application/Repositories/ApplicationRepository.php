@@ -136,19 +136,6 @@ class ApplicationRepository extends AbstractRepository
     }
 
     /**
-     * @return string[]
-     */
-    public function getApplicationsVariableSymbolsOptions(): array
-    {
-        $options = [];
-        foreach ($this->findValid() as $application) {
-            $options[$application->getId()] = $application->getUser()->getLastName() . ' ' . $application->getUser()->getFirstName() . ' (' . $application->getVariableSymbolText() . ' - ' . $application->getFee() . ')';
-        }
-
-        return $options;
-    }
-
-    /**
      * @param Collection<int, Application> $pairedApplications
      *
      * @return string[]
@@ -157,7 +144,7 @@ class ApplicationRepository extends AbstractRepository
     {
         $options = [];
         foreach ($this->findWaitingForPaymentOrPairedApplications($pairedApplications) as $application) {
-            $options[$application->getId()] = $application->getUser()->getLastName() . ' ' . $application->getUser()->getFirstName() . ' (' . $application->getVariableSymbolText() . ' - ' . $application->getFee() . ')';
+            $options[$application->getId()] = $application->getUser()->getLastName() . ' ' . $application->getUser()->getFirstName() . ' (' . $application->getVariableSymbolText() . ' - ' . $application->getFee() . ' Kč)';
         }
 
         return $options;

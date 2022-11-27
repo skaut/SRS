@@ -113,19 +113,6 @@ class TroopRepository extends AbstractRepository
     }
 
     /**
-     * @return string[]
-     */
-    public function getTroopsVariableSymbolsOptions(): array
-    {
-        $options = [];
-        foreach ($this->findAll() as $troop) {
-            $options[$troop->getId()] = $troop->getName() . ' (' . $troop->getVariableSymbolText() . ' - ' . $troop->getFee() . ')';
-        }
-
-        return $options;
-    }
-
-    /**
      * @param Collection<int, Troop> $pairedTroops
      *
      * @return string[]
@@ -134,7 +121,7 @@ class TroopRepository extends AbstractRepository
     {
         $options = [];
         foreach ($this->findWaitingForPaymentOrPairedTroops($pairedTroops) as $troop) {
-            $options[$troop->getId()] = $troop->getName() . ' (' . $troop->getVariableSymbolText() . ' - ' . $troop->getFee() . ')';
+            $options[$troop->getId()] = $troop->getName() . ' (' . $troop->getVariableSymbolText() . ' - ' . $troop->getFee() . ' Kč)';
         }
 
         return $options;
