@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\ExportModule\Presenters;
 
-use App\Model\Application\Application;
 use App\Model\Application\Repositories\ApplicationRepository;
-use App\Model\Enums\ApplicationState;
-use App\Model\Enums\PaymentType;
 use App\Model\Enums\TroopApplicationState;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -94,14 +91,14 @@ class TroopIncomeProofPresenter extends ExportBasePresenter
         assert($template instanceof Template);
         $template->setFile(__DIR__ . '/templates/TroopIncomeProof/pdf.latte');
 
-        $template->troops            = $troops;
-        $template->logo              = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
-        $template->seminarName       = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
-        $template->company           = $this->queryBus->handle(new SettingStringValueQuery(Settings::COMPANY));
-        $template->ico               = $this->queryBus->handle(new SettingStringValueQuery(Settings::ICO));
-        $template->accountNumber     = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
-        $template->accountant        = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNTANT));
-        $template->date              = (new DateTimeImmutable())->format(Helpers::DATE_FORMAT);
+        $template->troops        = $troops;
+        $template->logo          = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
+        $template->seminarName   = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
+        $template->company       = $this->queryBus->handle(new SettingStringValueQuery(Settings::COMPANY));
+        $template->ico           = $this->queryBus->handle(new SettingStringValueQuery(Settings::ICO));
+        $template->accountNumber = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
+        $template->accountant    = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNTANT));
+        $template->date          = (new DateTimeImmutable())->format(Helpers::DATE_FORMAT);
 
         $this->pdfResponse->setTemplate($template);
 

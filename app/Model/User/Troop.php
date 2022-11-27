@@ -13,13 +13,14 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
 use Numbers_Words;
+
 use function array_key_exists;
 use function count;
 use function in_array;
 use function md5;
 use function mt_rand;
+use function str_replace;
 use function substr;
 use function uniqid;
 
