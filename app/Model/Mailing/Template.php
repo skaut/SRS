@@ -61,6 +61,11 @@ class Template
     public const PAYMENT_CONFIRMED = 'payment_confirmed';
 
     /**
+     * Potvrzení přijetí platby skupiny.
+     */
+    public const TROOP_PAYMENT_CONFIRMED = 'troop_payment_confirmed';
+
+    /**
      * Upozornění na splatnost.
      */
     public const MATURITY_REMINDER = 'maturity_reminder';

@@ -19,6 +19,7 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Enums\MaturityType;
 use App\Model\Enums\PaymentState;
 use App\Model\Enums\PaymentType;
+use App\Model\Enums\TroopApplicationState;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Payment\Payment;
@@ -32,7 +33,9 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
+use App\Model\User\Repositories\TroopRepository;
 use App\Model\User\Repositories\UserRepository;
+use App\Model\User\Troop;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use DateTimeImmutable;
@@ -78,7 +81,8 @@ class ApplicationService
         private Translator $translator,
         private PaymentRepository $paymentRepository,
         private IncomeProofRepository $incomeProofRepository,
-        private EventBus $eventBus
+        private EventBus $eventBus,
+        private TroopRepository $troopRepository,
     ) {
     }
 
@@ -537,6 +541,52 @@ class ApplicationService
     }
 
     /**
+     * Aktualizuje stav platby přihlášky oddílu.
+     *
+     * @throws Throwable
+     */
+    public function updateTroopApplicationPayment(
+        Troop $troop,
+        ?string $paymentMethod,
+        ?DateTimeImmutable $paymentDate,
+        ?DateTimeImmutable $maturityDate
+    ): void {
+        $oldPaymentMethod = $troop->getPaymentMethod();
+        $oldPaymentDate   = $troop->getPaymentDate();
+        $oldMaturityDate  = $troop->getMaturityDate();
+
+        // pokud neni zmena, nic se neprovede
+        if ($paymentMethod === $oldPaymentMethod && $paymentDate == $oldPaymentDate && $maturityDate == $oldMaturityDate) {
+            return;
+        }
+
+        $this->em->wrapInTransaction(function () use ($troop, $paymentMethod, $paymentDate, $maturityDate): void {
+            $troop->setPaymentMethod($paymentMethod);
+            $troop->setPaymentDate($paymentDate);
+            $troop->setMaturityDate($maturityDate);
+            $troop->setState($this->getTroopApplicationState($troop));
+            $this->troopRepository->save($troop);
+        });
+
+        if ($paymentDate !== null && $oldPaymentDate === null) {
+            $this->mailService->sendMailFromTemplate(
+                new ArrayCollection(
+                    [
+                        $troop->getLeader(),
+                    ]
+                ),
+                null,
+                Template::TROOP_PAYMENT_CONFIRMED,
+                [
+                    TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(
+                        new SettingStringValueQuery(Settings::SEMINAR_NAME)
+                    ),
+                ]
+            );
+        }
+    }
+
+    /**
      * Vytvoří platbu a označí spárované přihlášky jako zaplacené.
      *
      * @throws Throwable
@@ -583,7 +633,27 @@ class ApplicationService
                     $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $date, $pairedApplication->getMaturityDate(), $createdBy);
                 }
             } else {
-                $payment->setState(PaymentState::NOT_PAIRED_VS);
+                $pairedTroopApplication = $this->troopRepository->findByVariableSymbol($variableSymbol);
+
+                if ($pairedTroopApplication) {
+                    if (
+                        $pairedTroopApplication->getState() === TroopApplicationState::PAID
+                    ) {
+                        $payment->setState(PaymentState::NOT_PAIRED_PAID);
+                    } elseif (
+                        $pairedTroopApplication->getState() === TroopApplicationState::CANCELED_NOT_PAID
+                    ) {
+                        $payment->setState(PaymentState::NOT_PAIRED_CANCELED);
+                    } elseif (abs($pairedTroopApplication->getFee() - $amount) >= 0.01) {
+                        $payment->setState(PaymentState::NOT_PAIRED_FEE);
+                    } else {
+                        $payment->setState(PaymentState::PAIRED_AUTO);
+                        $pairedTroopApplication->setPayment($payment);
+                        $this->updateTroopApplicationPayment($pairedTroopApplication, PaymentType::BANK, $date, $pairedTroopApplication->getMaturityDate());
+                    }
+                } else {
+                    $payment->setState(PaymentState::NOT_PAIRED_VS);
+                }
             }
 
             $this->paymentRepository->save($payment);
@@ -608,6 +678,7 @@ class ApplicationService
      * Aktualizuje platbu a stav spárovaných přihlášek.
      *
      * @param Collection<int, Application> $pairedApplications
+     * @param Collection<int, Troop>       $pairedTroops
      *
      * @throws Throwable
      */
@@ -617,9 +688,10 @@ class ApplicationService
         ?float $amount,
         ?string $variableSymbol,
         Collection $pairedApplications,
+        Collection $pairedTroops,
         User $createdBy
     ): void {
-        $this->em->wrapInTransaction(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy): void {
+        $this->em->wrapInTransaction(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $pairedTroops, $createdBy): void {
             if ($date !== null) {
                 $payment->setDate($date);
             }
@@ -653,8 +725,27 @@ class ApplicationService
                 }
             }
 
+            $oldPairedTroops = clone $payment->getPairedTroops();
+            $newPairedTroops = clone $pairedTroops;
+
+            foreach ($oldPairedTroops as $pairedTroop) {
+                if (! $newPairedTroops->contains($pairedTroop)) {
+                    $pairedTroop->setPayment(null);
+                    $this->updateTroopApplicationPayment($pairedTroop, null, null, $pairedTroop->getMaturityDate());
+                    $pairedApplicationsModified = true;
+                }
+            }
+
+            foreach ($newPairedTroops as $pairedTroop) {
+                if (! $oldPairedTroops->contains($pairedTroop)) {
+                    $pairedTroop->setPayment($payment);
+                    $this->updateTroopApplicationPayment($pairedTroop, PaymentType::BANK, $payment->getDate(), $pairedTroop->getMaturityDate());
+                    $pairedApplicationsModified = true;
+                }
+            }
+
             if ($pairedApplicationsModified) {
-                if ($pairedApplications->isEmpty()) {
+                if ($pairedApplications->isEmpty() && $pairedTroops->isEmpty()) {
                     $payment->setState(PaymentState::NOT_PAIRED);
                 } else {
                     $payment->setState(PaymentState::PAIRED_MANUAL);
@@ -675,6 +766,12 @@ class ApplicationService
         $this->em->wrapInTransaction(function () use ($payment, $createdBy): void {
             foreach ($payment->getPairedValidApplications() as $pairedApplication) {
                 $this->updateApplicationPayment($pairedApplication, null, null, $pairedApplication->getMaturityDate(), $createdBy);
+            }
+
+            foreach ($payment->getPairedTroops() as $pairedTroop) {
+                $this->updateTroopApplicationPayment($pairedTroop, null, null, $pairedTroop->getMaturityDate());
+                $pairedTroop->setPayment(null);
+                $this->troopRepository->save($pairedTroop);
             }
 
             $this->paymentRepository->remove($payment);
@@ -997,6 +1094,26 @@ class ApplicationService
         }
 
         return ApplicationState::WAITING_FOR_PAYMENT;
+    }
+
+    /**
+     * Určí stav přihlášky skupiny.
+     */
+    private function getTroopApplicationState(Troop $troop): string
+    {
+        if ($troop->getState() === TroopApplicationState::DRAFT) {
+            return TroopApplicationState::DRAFT;
+        }
+
+        if ($troop->getState() === TroopApplicationState::CANCELED_NOT_PAID) {
+            return TroopApplicationState::CANCELED_NOT_PAID;
+        }
+
+        if ($troop->getPaymentDate()) {
+            return TroopApplicationState::PAID;
+        }
+
+        return TroopApplicationState::WAITING_FOR_PAYMENT;
     }
 
     /**

@@ -188,6 +188,14 @@ class Troop
         return $this->variableSymbol;
     }
 
+    /**
+     * Vrací text variabilního symbolu.
+     */
+    public function getVariableSymbolText(): string
+    {
+        return $this->variableSymbol->getVariableSymbol();
+    }
+
     public function getApplicationDate(): ?DateTimeImmutable
     {
         return $this->applicationDate;
