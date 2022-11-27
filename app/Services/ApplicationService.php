@@ -649,7 +649,7 @@ class ApplicationService
                     } else {
                         $payment->setState(PaymentState::PAIRED_AUTO);
                         $pairedTroopApplication->setPayment($payment);
-                        $this->updateTroopApplicationPayment($pairedTroopApplication, PaymentType::BANK, $date, $pairedTroopApplication->getMaturityDate(), $createdBy);
+                        $this->updateTroopApplicationPayment($pairedTroopApplication, PaymentType::BANK, $date, $pairedTroopApplication->getMaturityDate());
                     }
                 } else {
                     $payment->setState(PaymentState::NOT_PAIRED_VS);
@@ -678,6 +678,7 @@ class ApplicationService
      * Aktualizuje platbu a stav spárovaných přihlášek.
      *
      * @param Collection<int, Application> $pairedApplications
+     * @param Collection<int, Troop>       $pairedTroops
      *
      * @throws Throwable
      */
@@ -730,7 +731,7 @@ class ApplicationService
             foreach ($oldPairedTroops as $pairedTroop) {
                 if (! $newPairedTroops->contains($pairedTroop)) {
                     $pairedTroop->setPayment(null);
-                    $this->updateTroopApplicationPayment($pairedTroop, null, null, $pairedTroop->getMaturityDate(), $createdBy);
+                    $this->updateTroopApplicationPayment($pairedTroop, null, null, $pairedTroop->getMaturityDate());
                     $pairedApplicationsModified = true;
                 }
             }
@@ -738,7 +739,7 @@ class ApplicationService
             foreach ($newPairedTroops as $pairedTroop) {
                 if (! $oldPairedTroops->contains($pairedTroop)) {
                     $pairedTroop->setPayment($payment);
-                    $this->updateTroopApplicationPayment($pairedTroop, PaymentType::BANK, $payment->getDate(), $pairedTroop->getMaturityDate(), $createdBy);
+                    $this->updateTroopApplicationPayment($pairedTroop, PaymentType::BANK, $payment->getDate(), $pairedTroop->getMaturityDate());
                     $pairedApplicationsModified = true;
                 }
             }
