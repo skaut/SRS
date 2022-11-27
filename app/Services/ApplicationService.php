@@ -561,12 +561,10 @@ class ApplicationService
         }
 
         $this->em->wrapInTransaction(function () use ($troop, $paymentMethod, $paymentDate, $maturityDate): void {
-            $leader = $troop->getLeader();
-
             $troop->setPaymentMethod($paymentMethod);
             $troop->setPaymentDate($paymentDate);
             $troop->setMaturityDate($maturityDate);
-            $troop->setState(TroopApplicationState::PAID);
+            $troop->setState($this->getTroopApplicationState($troop));
             $this->troopRepository->save($troop);
         });
 
@@ -578,12 +576,11 @@ class ApplicationService
                     ]
                 ),
                 null,
-                Template::PAYMENT_CONFIRMED,
+                Template::TROOP_PAYMENT_CONFIRMED,
                 [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(
                         new SettingStringValueQuery(Settings::SEMINAR_NAME)
                     ),
-                    TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText(),
                 ]
             );
         }
@@ -730,10 +727,24 @@ class ApplicationService
             $oldPairedTroops = clone $payment->getPairedTroops();
             $newPairedTroops = clone $pairedTroops;
 
-            // todo
+            foreach ($oldPairedTroops as $pairedTroop) {
+                if (! $newPairedTroops->contains($pairedTroop)) {
+                    $pairedTroop->setPayment(null);
+                    $this->updateTroopApplicationPayment($pairedTroop, null, null, $pairedTroop->getMaturityDate(), $createdBy);
+                    $pairedApplicationsModified = true;
+                }
+            }
+
+            foreach ($newPairedTroops as $pairedTroop) {
+                if (! $oldPairedTroops->contains($pairedTroop)) {
+                    $pairedTroop->setPayment($payment);
+                    $this->updateTroopApplicationPayment($pairedTroop, PaymentType::BANK, $payment->getDate(), $pairedTroop->getMaturityDate(), $createdBy);
+                    $pairedApplicationsModified = true;
+                }
+            }
 
             if ($pairedApplicationsModified) {
-                if ($pairedApplications->isEmpty()) {
+                if ($pairedApplications->isEmpty() && $pairedTroops->isEmpty()) {
                     $payment->setState(PaymentState::NOT_PAIRED);
                 } else {
                     $payment->setState(PaymentState::PAIRED_MANUAL);
@@ -1080,6 +1091,26 @@ class ApplicationService
         }
 
         return ApplicationState::WAITING_FOR_PAYMENT;
+    }
+
+    /**
+     * Určí stav přihlášky skupiny.
+     */
+    private function getTroopApplicationState(Troop $troop): string
+    {
+        if ($troop->getState() === TroopApplicationState::DRAFT) {
+            return TroopApplicationState::DRAFT;
+        }
+
+        if ($troop->getState() === TroopApplicationState::CANCELED_NOT_PAID) {
+            return TroopApplicationState::CANCELED_NOT_PAID;
+        }
+
+        if ($troop->getPaymentDate()) {
+            return TroopApplicationState::PAID;
+        }
+
+        return TroopApplicationState::WAITING_FOR_PAYMENT;
     }
 
     /**
