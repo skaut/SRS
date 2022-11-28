@@ -177,11 +177,11 @@ class PaymentsGridControl extends Control
     {
         $payment = $this->paymentRepository->findById($id);
 
-        if (!$payment->getPairedApplications()->isEmpty()) {
+        if (! $payment->getPairedApplications()->isEmpty()) {
             $this->session->getSection('srs')->applicationIds = Helpers::getIds($payment->getPairedApplications());
             $this->presenter->redirect(':Export:IncomeProof:applications');
-        } elseif (!$payment->getPairedTroops()->isEmpty()) {
-            $this->presenter->redirect(':Export:TroopIncomeProof:applications', ['id' => $payment->getPairedTroops()->get(0)->getId()]);
+        } elseif (! $payment->getPairedTroops()->isEmpty()) {
+            $this->presenter->redirect(':Export:TroopIncomeProof:troop', ['id' => $payment->getPairedTroops()->get(0)->getId()]);
         }
     }
 

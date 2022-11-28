@@ -40,9 +40,9 @@
             </div>
         </div>
 
-        <div class="row mb-2">
+        <div class="row mb-2" n:if="$troop->getPayment()->getAccountNumber() && $troop->getPayment()->getVariableSymbol()">
             <div class="col-12">
-                Zaplaceno z účtu: {$troop->getPayment()->getAccountNumber()}, variabilní symbol: {$troop->getPayment()->getAccountNumber()}.
+                Zaplaceno z účtu: {$troop->getPayment()->getAccountNumber()}, variabilní symbol: {$troop->getPayment()->getVariableSymbol()}
             </div>
         </div>
 
