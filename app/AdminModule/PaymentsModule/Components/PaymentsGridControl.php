@@ -175,10 +175,14 @@ class PaymentsGridControl extends Control
      */
     public function handleGeneratePaymentProofBank(int $id): void
     {
-        $this->session->getSection('srs')->applicationIds = Helpers::getIds(
-            $this->paymentRepository->findById($id)->getPairedApplications()
-        );
-        $this->presenter->redirect(':Export:IncomeProof:applications');
+        $payment = $this->paymentRepository->findById($id);
+
+        if (!$payment->getPairedApplications()->isEmpty()) {
+            $this->session->getSection('srs')->applicationIds = Helpers::getIds($payment->getPairedApplications());
+            $this->presenter->redirect(':Export:IncomeProof:applications');
+        } elseif (!$payment->getPairedTroops()->isEmpty()) {
+            $this->presenter->redirect(':Export:TroopIncomeProof:applications', ['id' => $payment->getPairedTroops()->get(0)->getId()]);
+        }
     }
 
     /**
