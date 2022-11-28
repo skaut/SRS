@@ -150,7 +150,7 @@ class GroupsGridControl extends Control
 //      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
             ->setRenderer(static fn (Troop $p) => count($p->getConfirmedPatrols()));
 
-        $grid->addAction('generatePaymentProof', 'Doklad', 'generatePaymentProof');
+        $grid->addAction('generatePaymentProof', 'Stáhnout potvzrení o přijetí platby', 'generatePaymentProof');
         $grid->allowRowsAction('generatePaymentProof', static fn (Troop $troop) => $troop->getPaymentDate() !== null);
 
 //        $grid->addAction('detail', 'admin.common.detail', 'Users:groupDetail') // destinace ,todo group_detail.latte
