@@ -35,7 +35,14 @@
         <div class="row mb-2">
             <div class="col-12">
                 {_export.income_proof.bank.name} {$troop->getLeader()->getFirstName()} {$troop->getLeader()->getLastName()}
-                ({_export.income_proof.bank.address} {$troop->getLeader()->getStreet()}, {$troop->getLeader()->getPostcode()} {$troop->getLeader()->getCity()})
+                ({_export.income_proof.bank.address} {$troop->getLeader()->getStreet()}, {$troop->getLeader()->getPostcode()} {$troop->getLeader()->getCity()}),
+                skupina: {$troop->getName()}
+            </div>
+        </div>
+
+        <div class="row mb-2" n:if="$troop->getPayment()->getAccountNumber() && $troop->getPayment()->getVariableSymbol()">
+            <div class="col-12">
+                Zaplaceno z účtu: {$troop->getPayment()->getAccountNumber()}, variabilní symbol: {$troop->getPayment()->getVariableSymbol()}
             </div>
         </div>
 
