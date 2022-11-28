@@ -150,8 +150,11 @@ class GroupsGridControl extends Control
 //      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
             ->setRenderer(static fn (Troop $p) => count($p->getConfirmedPatrols()));
 
-        $grid->addAction('detail', 'admin.common.detail', 'Users:groupDetail') // destinace ,todo group_detail.latte
-            ->setClass('btn btn-xs btn-primary');
+        $grid->addAction('generatePaymentProof', 'Doklad', 'generatePaymentProof');
+        $grid->allowRowsAction('generatePaymentProof', static fn (Troop $troop) => $troop->getPaymentDate() !== null);
+
+//        $grid->addAction('detail', 'admin.common.detail', 'Users:groupDetail') // destinace ,todo group_detail.latte
+//            ->setClass('btn btn-xs btn-primary');
 
 //        $grid->addAction('delete', '', 'delete!')
 //            ->setIcon('trash')
@@ -180,6 +183,16 @@ class GroupsGridControl extends Control
 //        $p->flashMessage('Skupina smazána.', 'success');
 //        $p->redirect('this');
 //    }
+
+    /**
+     * Vygeneruje potvrzení o přijetí platby.
+     *
+     * @throws AbortException
+     */
+    public function handleGeneratePaymentProof(int $id): void
+    {
+        $this->presenter->redirect(':Export:TroopIncomeProof:troop', ['id' => $id]);
+    }
 
     /**
      * Hromadně vyexportuje seznam družin.
