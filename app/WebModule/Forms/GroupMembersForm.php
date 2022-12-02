@@ -172,7 +172,7 @@ class GroupMembersForm extends UI\Control
 
         $form->setAction($this->getPresenter()->link('this', ['step' => 'members', 'type' => $this->type, 'patrol_id' => $this->patrolId]));
 
-        $form->onSuccess[] = [$this, 'processForm'];
+        $form->onSubmit[] = [$this, 'processForm'];
 
         return $form;
     }
