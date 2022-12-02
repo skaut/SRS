@@ -118,7 +118,7 @@ class TroopConfirmForm extends UI\Control
         $user        = $this->queryBus->handle(new UserByIdQuery($this->presenter->user->getId()));
         $this->troop = $this->queryBus->handle(new TroopByLeaderQuery($user->getId()));
 
-        $allCount            = $this->troop->countUsersInRoles([Role::ATTENDEE, Role::PATROL_LEADER, Role::LEADER, Role::ESCORT]);
+        $allCount            = $this->troop->countUsersInRoles([Role::ATTENDEE, Role::PATROL_LEADER]);
         $this->allCountError = $allCount > 42;
 
         $countFromPatrols = 0;
