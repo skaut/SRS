@@ -267,7 +267,7 @@ class SkautIsService
         ], 'membershipAllInput');
 
         if ($minimalAge !== null) {
-            return array_filter($memberships, static fn (stdClass $m) => $date->diff(new DateTimeImmutable($m->Birthday))->y >= $minimalAge);
+            return array_filter($memberships, static fn (stdClass $m) => $m->Birthday !== null && $date->diff(new DateTimeImmutable($m->Birthday))->y >= $minimalAge);
         }
 
         return $memberships instanceof stdClass ? [] : $memberships;
