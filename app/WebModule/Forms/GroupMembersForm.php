@@ -66,6 +66,11 @@ class GroupMembersForm extends UI\Control
      */
     public array $onError = [];
 
+    /**
+     * Událost při odstranění všech členů.
+     *
+     * @var callable[]
+     */
     public array $onRemoveAll = [];
 
     private string $patrolName = '';
