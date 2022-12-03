@@ -66,6 +66,8 @@ class GroupMembersForm extends UI\Control
      */
     public array $onError = [];
 
+    public array $onRemoveAll = [];
+
     private string $patrolName = '';
 
     /** @var Collection<int, UserGroupRole> */
@@ -186,6 +188,8 @@ class GroupMembersForm extends UI\Control
      */
     public function processForm(Form $form, stdClass $values): void
     {
+        Debugger::barDump($values, 'values');
+
         $selectedPersons = [];
 
         foreach ($this->units as $unit) {
@@ -215,6 +219,10 @@ class GroupMembersForm extends UI\Control
         }
 
         $this->commandBus->handle(new UpdateGroupMembers($this->type, $this->troop->getId(), $this->patrolId, $selectedPersons));
+
+        if (empty($selectedPersons)) {
+            $this->onRemoveAll();
+        }
 
         $this->onSave();
     }

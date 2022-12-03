@@ -129,6 +129,11 @@ class TroopApplicationContentControl extends BaseContentControl
             $p->redirect('this', ['step' => 'members', 'type' => $type, 'patrol_id' => $patrolId]);
         };
 
+        $form->onRemoveAll[] = function () use ($type, $patrolId): void {
+            $p = $this->getPresenter();
+            $p->redirect('this');
+        };
+
         return $form;
     }
 
