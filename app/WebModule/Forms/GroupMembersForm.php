@@ -188,8 +188,6 @@ class GroupMembersForm extends UI\Control
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        Debugger::barDump($values, 'values');
-
         $selectedPersons = [];
 
         foreach ($this->units as $unit) {
