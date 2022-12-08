@@ -10,13 +10,13 @@ use App\Model\User\Troop;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
-use Nette\Utils\Html;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -85,10 +85,16 @@ class GroupsGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('variableSymbol', 'VS ',"variableSymbolText")->setSortable() // je stejný jako název skupiny
-        ->setFilterText();
+        $grid->addColumnText('variableSymbol', 'VS ', 'variableSymbolText')->setSortable() // je stejný jako název skupiny
+        ->setFilterText()
+        ->setCondition(static function (QueryBuilder $qb, string $value): void {
+//            $qb->join('p.applications', 'uAVS')
+            $qb->join('p.variableSymbol', 'VS')
+                ->andWhere('VS.variableSymbol LIKE :variableSymbol')
+                ->setParameter(':variableSymbol', '%' . $value . '%');
+        });
 
-           $grid->addColumnLink('leader', 'Vedoucí',  ":detail", "leader.displayName" ,["id"=>"leader.id"])->setSortable()
+           $grid->addColumnLink('leader', 'Vedoucí', ':detail', 'leader.displayName', ['id' => 'leader.id'])->setSortable()
 //                return Html::el('a')->setAttribute('href', $this->getPresenter()->link('detail', $leader->getId()))->setText($leader->getDisplayName());
             ->setFilterText();
 
