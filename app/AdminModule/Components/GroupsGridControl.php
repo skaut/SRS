@@ -85,7 +85,13 @@ class GroupsGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('variableSymbol', 'VS ', 'variableSymbolText')->setSortable() // je stejný jako název skupiny
+        $grid->addColumnText('variableSymbol', 'VS ', 'variableSymbolText')
+        ->setSortable()
+        ->setSortableCallback(static function (QueryBuilder $qb, array $sort): void {
+            $sortRev = $sort['variableSymbolText'] === 'DESC' ? 'ASC' : 'DESC';
+            $qb->join('p.variableSymbol', 'VS')
+                ->orderBy('VS.variableSymbol', $sortRev);
+        })
         ->setFilterText()
         ->setCondition(static function (QueryBuilder $qb, string $value): void {
 //            $qb->join('p.applications', 'uAVS')
