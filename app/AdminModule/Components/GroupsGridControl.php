@@ -88,12 +88,8 @@ class GroupsGridControl extends Control
         $grid->addColumnText('variableSymbol', 'VS ',"variableSymbolText")->setSortable() // je stejný jako název skupiny
         ->setFilterText();
 
-           $grid->addColumnText('leader', 'Vedoucí')->setSortable()
-            ->setRenderer(function (Troop $t) {
-                $leader = $t->getLeader();
-
-                return Html::el('a')->setAttribute('href', $this->getPresenter()->link('detail', $leader->getId()))->setText($leader->getDisplayName());
-            })
+           $grid->addColumnLink('leader', 'Vedoucí',  ":detail", "leader.displayName" ,["id"=>"leader.id"])->setSortable()
+//                return Html::el('a')->setAttribute('href', $this->getPresenter()->link('detail', $leader->getId()))->setText($leader->getDisplayName());
             ->setFilterText();
 
         $grid->addColumnDateTime('applicationDate', 'Datum založení')
