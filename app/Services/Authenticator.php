@@ -49,7 +49,7 @@ class Authenticator implements Nette\Security\Authenticator
     {
         $skautISUser = $this->skautIsService->getUserDetail();
 
-        $user = $this->userRepository->findBySkautISUserId($skautISUser->ID);
+        $user = $this->userRepository->findBySkautISUserId($skautISUser->ID) ?? $this->userRepository->findBySkautISPersonId($skautISUser->ID_Person);
 
         $firstLogin = false;
         if ($user === null) {
