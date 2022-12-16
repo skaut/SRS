@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\AdminModule\Presenters;
 
 use App\AdminModule\Components\ApplicationsGridControl;
-use App\AdminModule\Components\GroupsGridControl;
 use App\AdminModule\Components\IApplicationsGridControlFactory;
-use App\AdminModule\Components\IGroupsGridControlFactory;
 use App\AdminModule\Components\IPatrolsGridControlFactory;
+use App\AdminModule\Components\ITroopsGridControlFactory;
 use App\AdminModule\Components\IUsersGridControlFactory;
 use App\AdminModule\Components\PatrolsGridControl;
+use App\AdminModule\Components\TroopsGridControl;
 use App\AdminModule\Components\UsersGridControl;
 use App\AdminModule\Forms\AddLectorFormFactory;
 use App\AdminModule\Forms\EditUserPersonalDetailsFormFactory;
@@ -45,7 +45,7 @@ class UsersPresenter extends AdminBasePresenter
     public IPatrolsGridControlFactory $patrolsGridControlFactory;
 
     #[Inject]
-    public IGroupsGridControlFactory $groupsGridControlFactory;
+    public ITroopsGridControlFactory $troopsGridControlFactory;
 
     #[Inject]
     public AddLectorFormFactory $addLectorFormFactory;
@@ -194,9 +194,9 @@ class UsersPresenter extends AdminBasePresenter
         return $this->patrolsGridControlFactory->create();
     }
 
-    protected function createComponentGroupsGrid(): GroupsGridControl
+    protected function createComponentTroopsGrid(): TroopsGridControl
     {
-        return $this->groupsGridControlFactory->create();
+        return $this->troopsGridControlFactory->create();
     }
 
     protected function createComponentAddLectorForm(): Form

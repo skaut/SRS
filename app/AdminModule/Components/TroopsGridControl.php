@@ -30,7 +30,7 @@ use function date;
 /**
  * Komponenta pro zobrazení datagridu družin.
  */
-class GroupsGridControl extends Control
+class TroopsGridControl extends Control
 {
     private SessionSection $sessionSection;
 
@@ -49,7 +49,7 @@ class GroupsGridControl extends Control
      */
     public function render(): void
     {
-        $this->template->setFile(__DIR__ . '/templates/groups_grid.latte');
+        $this->template->setFile(__DIR__ . '/templates/troops_grid.latte');
         $this->template->render();
     }
 
@@ -60,7 +60,7 @@ class GroupsGridControl extends Control
      * @throws DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentGroupsGrid(string $name): DataGrid
+    public function createComponentTroopsGrid(string $name): DataGrid
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
