@@ -388,7 +388,7 @@ users:
     menu:
         persons: "Osoby"
         groups: "Skupiny"
-        troops: "Oddíly"
+        troops: "Skupiny"
         patrols: "Družiny"
 
     users_heading: "Uživatelé"
