@@ -23,8 +23,11 @@
                 <a class="nav-link" href="{plink :Admin:Program:Blocks:default}">{_admin.menu.program}</a>
             </li>
 
-            <li n:if="$user->isAllowed($resourceUsers, $permissionManage)" n:class="nav-item, $presenter->isLinkCurrent(':Admin:Users:*') ? active">
-                <a class="nav-link" href="{plink :Admin:Users:default}">{_admin.menu.users}</a>
+            <li n:if="$user->isAllowed($resourceUsers, $permissionManage)"
+                    n:class="nav-item, $presenter->isLinkCurrent(':Admin:Users:Users:*')
+                    || $presenter->isLinkCurrent(':Admin:Users:Troops:*')
+                    || $presenter->isLinkCurrent(':Admin:Users:Patrols:*') ? active">
+                <a class="nav-link" href="{plink :Admin:Users:Users:default}">{_admin.menu.users}</a>
             </li>
 
             <li n:if="$user->isAllowed($resourcePayments, $permissionManage)" n:class="nav-item, $presenter->isLinkCurrent(':Admin:Payments:Payments:*') ? active">
