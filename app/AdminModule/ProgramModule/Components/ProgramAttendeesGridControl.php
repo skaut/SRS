@@ -149,7 +149,7 @@ class ProgramAttendeesGridControl extends Control
             $grid->setDefaultFilter(['attends' => 'yes'], false);
 
             if ($user->isAllowed(SrsResource::USERS, Permission::MANAGE)) {
-                $grid->addAction('detail', 'admin.common.detail', ':Admin:Users:detail')
+                $grid->addAction('detail', 'admin.common.detail', ':Admin:Users:Users:detail')
                     ->setClass('btn btn-xs btn-primary')
                     ->addAttributes(['target' => '_blank']);
             }

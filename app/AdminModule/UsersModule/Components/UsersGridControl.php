@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\Components;
+namespace App\AdminModule\UsersModule\Components;
 
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;

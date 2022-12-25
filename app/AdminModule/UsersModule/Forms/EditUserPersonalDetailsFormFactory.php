@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\Forms;
+namespace App\AdminModule\UsersModule\Forms;
 
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\FilesService;
