@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\Presenters;
+namespace App\AdminModule\UsersModule\Presenters;
 
-use App\AdminModule\Components\ApplicationsGridControl;
-use App\AdminModule\Components\GroupsGridControl;
-use App\AdminModule\Components\IApplicationsGridControlFactory;
-use App\AdminModule\Components\IGroupsGridControlFactory;
-use App\AdminModule\Components\IPatrolsGridControlFactory;
-use App\AdminModule\Components\IUsersGridControlFactory;
-use App\AdminModule\Components\PatrolsGridControl;
-use App\AdminModule\Components\UsersGridControl;
-use App\AdminModule\Forms\AddLectorFormFactory;
-use App\AdminModule\Forms\EditUserPersonalDetailsFormFactory;
-use App\AdminModule\Forms\EditUserSeminarFormFactory;
-use App\Model\Acl\Permission;
+use App\AdminModule\UsersModule\Components\ApplicationsGridControl;
+use App\AdminModule\UsersModule\Components\IApplicationsGridControlFactory;
+use App\AdminModule\UsersModule\Components\IUsersGridControlFactory;
+use App\AdminModule\UsersModule\Components\UsersGridControl;
+use App\AdminModule\UsersModule\Forms\AddLectorFormFactory;
+use App\AdminModule\UsersModule\Forms\EditUserPersonalDetailsFormFactory;
+use App\AdminModule\UsersModule\Forms\EditUserSeminarFormFactory;
 use App\Model\Acl\Role;
 use App\Model\Acl\SrsResource;
 use App\Model\CustomInput\CustomInput;
@@ -24,7 +19,6 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Services\ApplicationService;
-use App\Services\ExcelExportService;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Attributes\Inject;
@@ -34,18 +28,12 @@ use Throwable;
 /**
  * Presenter obsluhující správu uživatelů.
  */
-class UsersPresenter extends AdminBasePresenter
+class UsersPresenter extends UsersBasePresenter
 {
     protected string $resource = SrsResource::USERS;
 
     #[Inject]
     public IUsersGridControlFactory $usersGridControlFactory;
-
-    #[Inject]
-    public IPatrolsGridControlFactory $patrolsGridControlFactory;
-
-    #[Inject]
-    public IGroupsGridControlFactory $GroupsGridControlFactory;
 
     #[Inject]
     public AddLectorFormFactory $addLectorFormFactory;
@@ -60,9 +48,6 @@ class UsersPresenter extends AdminBasePresenter
     public IApplicationsGridControlFactory $applicationsGridControlFactory;
 
     #[Inject]
-    public ExcelExportService $excelExportService;
-
-    #[Inject]
     public CustomInputRepository $customInputRepository;
 
     #[Inject]
@@ -74,8 +59,6 @@ class UsersPresenter extends AdminBasePresenter
     public function startup(): void
     {
         parent::startup();
-
-        $this->checkPermission(Permission::MANAGE);
 
         $this->template->results             = [];
         $this->template->editPersonalDetails = false;
@@ -187,16 +170,6 @@ class UsersPresenter extends AdminBasePresenter
     protected function createComponentUsersGrid(): UsersGridControl
     {
         return $this->usersGridControlFactory->create();
-    }
-
-    protected function createComponentPatrolsGrid(): PatrolsGridControl
-    {
-        return $this->patrolsGridControlFactory->create();
-    }
-
-    protected function createComponentGroupsGrid(): GroupsGridControl
-    {
-        return $this->GroupsGridControlFactory->create();
     }
 
     protected function createComponentAddLectorForm(): Form
