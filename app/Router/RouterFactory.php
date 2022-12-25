@@ -58,6 +58,13 @@ final class RouterFactory
             'id' => null,
         ]);
 
+        $router->addRoute('admin/users/<presenter>/<action>[/<id>]', [
+            'module' => 'Admin:Users',
+            'presenter' => 'Users',
+            'action' => 'default',
+            'id' => null,
+        ]);
+
         $router->addRoute('admin/payments/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Payments',
             'presenter' => 'Payments',
