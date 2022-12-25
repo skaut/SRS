@@ -141,6 +141,18 @@ class UpdateGroupMembersHandler implements MessageHandlerInterface
                     $this->userGroupRoleRepository->save($userGroupRole);
                 }
             }
+
+            if (empty($command->getPersons())) {
+                if ($command->getType() === 'patrol') {
+                    foreach ($patrol->getUsersRoles() as $usersRole) {
+                        $this->userGroupRoleRepository->remove($usersRole);
+                    }
+                } elseif ($command->getType() === 'troop') {
+                    foreach ($troop->getUsersRoles() as $usersRole) {
+                        $this->userGroupRoleRepository->remove($usersRole);
+                    }
+                }
+            }
         });
     }
 }

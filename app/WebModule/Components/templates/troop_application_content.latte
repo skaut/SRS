@@ -32,11 +32,15 @@
                     <p class="card-text">
                         Přihláška tvé skupiny byla úspěšně odeslána. Nyní můžeš pouze měnit osobu za osobu.
                     </p>
-                    <p class="card-text">
+                    <p class="card-text" n:if="$troop->getState() === 'waiting_for_payment'">
                         Abychom s vámi mohli počítat je nutné nejpozději do 30 kalendářních dnů, nejpozději však do 15.
                         února 2023 (pokud by nastalo dříve) uhradit <strong>{$troop->getFee()} Kč</strong> účastnického
                         poplatku za celou skupinu na účet: <strong>{$accountNumber}</strong> s variabilním symbolem:
                         <strong>{$troop->getVariableSymbolText()}</strong>.
+                    </p>
+                    <p class="card-text" n:if="$troop->getState() === 'paid'">
+                        Platba za vaši přihlášku byla přijata.
+                        <a n:href="generatePaymentProof $troop->getId()">Stáhnout potvrzení platby</a>.
                     </p>
                 </div>
             </div>

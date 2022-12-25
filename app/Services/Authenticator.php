@@ -53,7 +53,8 @@ class Authenticator implements Nette\Security\Authenticator
 
         $firstLogin = false;
         if ($user === null) {
-            $user              = new User();
+            // nacten ze skautIS pres skupinu
+            $user              = $this->userRepository->findBySkautISPersonId($skautISUser->ID_Person) ?? new User();
             $roleNonregistered = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
             $user->addRole($roleNonregistered);
             $firstLogin = true;

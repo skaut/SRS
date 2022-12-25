@@ -66,6 +66,13 @@ class GroupMembersForm extends UI\Control
      */
     public array $onError = [];
 
+    /**
+     * Událost při odstranění všech členů.
+     *
+     * @var callable[]
+     */
+    public array $onRemoveAll = [];
+
     private string $patrolName = '';
 
     /** @var Collection<int, UserGroupRole> */
@@ -215,6 +222,10 @@ class GroupMembersForm extends UI\Control
         }
 
         $this->commandBus->handle(new UpdateGroupMembers($this->type, $this->troop->getId(), $this->patrolId, $selectedPersons));
+
+        if (empty($selectedPersons)) {
+            $this->onRemoveAll();
+        }
 
         $this->onSave();
     }

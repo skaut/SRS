@@ -129,6 +129,11 @@ class TroopApplicationContentControl extends BaseContentControl
             $p->redirect('this', ['step' => 'members', 'type' => $type, 'patrol_id' => $patrolId]);
         };
 
+        $form->onRemoveAll[] = function (): void {
+            $p = $this->getPresenter();
+            $p->redirect('this');
+        };
+
         return $form;
     }
 
@@ -183,5 +188,13 @@ class TroopApplicationContentControl extends BaseContentControl
     {
         $this->skautIsService->updateUserRole($roleId);
         $this->redirect('this');
+    }
+
+    /**
+     * Vygeneruje potvrzení o přijetí platby.
+     */
+    public function handleGeneratePaymentProof(int $id): void
+    {
+        $this->getPresenter()->redirect(':Export:TroopIncomeProof:troop', ['id' => $id]);
     }
 }

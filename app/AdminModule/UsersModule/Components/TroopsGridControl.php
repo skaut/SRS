@@ -10,13 +10,14 @@ use App\Model\User\Troop;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
-use Nette\Utils\Html;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -83,17 +84,21 @@ class TroopsGridControl extends Control
             ->setRenderer(fn ($t) => $this->translator->translate('common.application_state.' . $t->getState()))
             ->setFilterText();
 
-        $grid->addColumnText('variableSymbol', 'Variabilní symbol ')
+        $grid->addColumnText('variableSymbol', 'Variabilní symbol', 'variableSymbolText')
             ->setSortable()
-            ->setRenderer(static fn ($t) => $t->getVariableSymbolText())
-            ->setFilterText();
-
-        $grid->addColumnText('leader', 'Vedoucí')->setSortable()
-            ->setRenderer(function (Troop $t) {
-                $leader = $t->getLeader();
-
-                return Html::el('a')->setAttribute('href', $this->getPresenter()->link('Users:detail', $leader->getId()))->setText($leader->getDisplayName());
+            ->setSortableCallback(static function (QueryBuilder $qb, array $sort): void {
+                $sortRev = $sort['variableSymbolText'] === 'DESC' ? 'ASC' : 'DESC';
+                $qb->join('p.variableSymbol', 'VS')
+                    ->orderBy('VS.variableSymbol', $sortRev);
             })
+            ->setFilterText()
+            ->setCondition(static function (QueryBuilder $qb, string $value): void {
+//            $qb->join('p.applications', 'uAVS')
+                $qb->join('p.variableSymbol', 'VS')
+                    ->andWhere('VS.variableSymbol LIKE :variableSymbol')
+                    ->setParameter(':variableSymbol', '%' . $value . '%');
+
+        $grid->addColumnText('leader', 'Vedoucí', ':detail', 'leader.displayName', ['id' => 'leader.id'])->setSortable()
             ->setFilterText();
 
         $grid->addColumnDateTime('applicationDate', 'Datum založení')
@@ -135,6 +140,12 @@ class TroopsGridControl extends Control
         $grid->addAction('detail', 'admin.common.detail', 'Troops:detail')
             ->setClass('btn btn-xs btn-primary');
 
+        $grid->addAction('generatePaymentProof', 'Stáhnout potvzrení o přijetí platby', 'generatePaymentProof');
+        $grid->allowRowsAction('generatePaymentProof', static fn (Troop $troop) => $troop->getPaymentDate() !== null);
+
+//        $grid->addAction('detail', 'admin.common.detail', 'Users:groupDetail') // destinace ,todo group_detail.latte
+//            ->setClass('btn btn-xs btn-primary');
+
 //        $grid->addAction('delete', '', 'delete!')
 //            ->setIcon('trash')
 //            ->setTitle('admin.common.delete')
@@ -162,6 +173,16 @@ class TroopsGridControl extends Control
 //        $p->flashMessage('Skupina smazána.', 'success');
 //        $p->redirect('this');
 //    }
+
+    /**
+     * Vygeneruje potvrzení o přijetí platby.
+     *
+     * @throws AbortException
+     */
+    public function handleGeneratePaymentProof(int $id): void
+    {
+        $this->presenter->redirect(':Export:TroopIncomeProof:troop', ['id' => $id]);
+    }
 
     /**
      * Hromadně vyexportuje seznam družin.
