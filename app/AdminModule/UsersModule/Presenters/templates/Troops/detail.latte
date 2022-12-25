@@ -1,0 +1,93 @@
+{block main}
+    <h2>Detail skupiny: {$troop->getName()}</h2>
+
+    <h3>Základní údaje</h3>
+    <div class="card card-body bg-light pb-1 mb-3">
+        <div class="form-group row">
+            <div class="col-3">Stav</div>
+            <div class="col-9">{_'common.application_state.' . $troop->getState()}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">Variabilní symbol</div>
+            <div class="col-9">{$troop->getVariableSymbolText()}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">Vedoucí</div>
+            <div class="col-9">
+                <a href="{plink Users:detail, id => $troop->getLeader()->getId()}">
+                    {$troop->getLeader()->getDisplayName()}
+                </a>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">Datum založení</div>
+            <div class="col-9">{$troop->getApplicationDate()|date:'j. n. Y H:i'}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">Cena</div>
+            <div class="col-9">{$troop->getFee()}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">Datum splatnosti</div>
+            <div class="col-9">{$troop->getMaturityDate()|date:'j. n. Y'}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">Datum platby</div>
+            <div class="col-9">{$troop->getPaymentDate()|date:'j. n. Y'}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">Kód jamooodílu</div>
+            <div class="col-9">{$troop->getPairingCode()}</div>
+        </div>
+    </div>
+
+    <h3>Seznam členů</h3>
+    <table class="table table-sm table-bordered table-striped">
+        <thead>
+        <tr>
+            <th style="width: 15%">Jméno</th>
+            <th style="width: 15%">Role</th>
+            <th class="text-right" style="width: 15%">Datum narození</th>
+            <th style="width: 55%">Zdravotní údaje</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr n:foreach="$troop->getUsersRoles() as $userRole">
+            <td>
+                <a href="{plink Users:detail, id => $userRole->getUser()->getId()}">
+                    {$userRole->getUser()->getDisplayName()}
+                </a>
+            </td>
+            <td>{$userRole->getRole()->getName()}</td>
+            <td class="text-right">{$userRole->getUser()->getBirthdate()|date:"j. n. Y"}</td>
+            <td>{$userRole->getUser()->getHealthInfo()}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div n:foreach="$troop->getConfirmedPatrols() as $patrol">
+        <h4>Družina: {$patrol->getName()}</h4>
+        <table class="table table-sm table-bordered table-striped">
+            <thead>
+            <tr>
+                <th style="width: 15%">Jméno</th>
+                <th style="width: 15%">Role</th>
+                <th class="text-right" style="width: 15%">Datum narození</th>
+                <th style="width: 55%">Zdravotní údaje</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr n:foreach="$patrol->getUsersRoles() as $userRole">
+                <td>
+                    <a href="{plink Users:detail, id => $userRole->getUser()->getId()}">
+                        {$userRole->getUser()->getDisplayName()}
+                    </a>
+                </td>
+                <td>{$userRole->getRole()->getName()}</td>
+                <td class="text-right">{$userRole->getUser()->getBirthdate()|date:"j. n. Y"}</td>
+                <td>{$userRole->getUser()->getHealthInfo()}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{/block}
