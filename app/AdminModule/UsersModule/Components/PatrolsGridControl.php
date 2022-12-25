@@ -10,6 +10,7 @@ use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
+use Nette\Utils\Html;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -72,19 +73,9 @@ class PatrolsGridControl extends Control
         $grid->addGroupAction('Export seznamu družin')
             ->onSelect[] = [$this, 'groupExportUsers'];
 
-        $grid->addColumnText('id', 'ID')
-            ->setSortable();
-
         $grid->addColumnText('name', 'Název')
             ->setSortable()
             ->setFilterText();
-
-//        $grid->addColumnText('leader', 'Vedoucí')
-//            ->setRenderer(static function (Patrol $p) {
-//                return $leader = $p->countUsersInRoles([Role::LEADER]); {{ todo
-//
-//            })
-//            ->setFilterText();
 
         $grid->addColumnDateTime('created', 'Datum založení')
             ->setRenderer(static function (Patrol $p) {
@@ -94,28 +85,18 @@ class PatrolsGridControl extends Control
             })
             ->setSortable();
 
-        $grid->addColumnText('troop', 'Oddíl - přidat link')
-            ->setRenderer(static function (Patrol $p): void {
+        $grid->addColumnText('troop', 'Skupina')
+            ->setRenderer(function (Patrol $p) {
                 $troop = $p->getTroop();
 
-//                return Html::el('a')->setAttribute('href', $this->link('troopDetail', $troop->getId()))->setText($troop->getName());
-            }); // link na oddíl
+                return Html::el('a')->setAttribute('href', $this->getPresenter()->link('Troops:detail', $troop->getId()))->setText($troop->getName());
+            });
 
-        $grid->addColumnText('userRoles', 'Počet 1')
+        $grid->addColumnText('userRoles', 'Počet osob')
             ->setRenderer(static fn (Patrol $p) => count($p->getUsersRoles())); // je to správné číslo?
 
-//        $grid->addColumnText('notRegisteredMandatoryBlocksCount', 'admin.users.users_not_registered_mandatory_blocks')
-//            ->setRenderer(static function (User $user) {
-//                return Html::el('span')
-//                    ->setAttribute('data-toggle', 'tooltip')
-//                    ->setAttribute('title', $user->getNotRegisteredMandatoryBlocksText())
-//                    ->setText($user->getNotRegisteredMandatoryBlocksCount());
-//            })
-//            ->setSortable();
-
-
-        $grid->addAction('detail', 'admin.common.detail', 'Users:detail') // destinace
-            ->setClass('btn btn-xs btn-primary');
+//        $grid->addAction('detail', 'admin.common.detail', 'Patrols:detail') // destinace
+//            ->setClass('btn btn-xs btn-primary');
 
 //        $grid->addAction('delete', '', 'delete!')
 //            ->setIcon('trash')
@@ -164,7 +145,7 @@ class PatrolsGridControl extends Control
      * @throws AbortException
      * @throws Exception
      */
-    public function handleExportUsers(): void
+    public function handleExportPatrols(): void
     {
         $ids = $this->session->getSection('srs')->patrolIds;
 

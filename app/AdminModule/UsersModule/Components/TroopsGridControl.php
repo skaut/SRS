@@ -74,22 +74,21 @@ class TroopsGridControl extends Control
         $grid->addGroupAction('Export seznamu skupin')
             ->onSelect[] = [$this, 'groupExportUsers'];
 
-        $grid->addColumnText('id', 'ID')
-            ->setSortable();
-
-        $grid->addColumnText('state', 'Stav')->setSortable()
-        ->setRenderer(fn ($t) => $this->translator->translate('common.application_state.' . $t->getState()))
-        ->setFilterText();
-
         $grid->addColumnText('name', 'Název')
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('variableSymbol', 'VS ')->setSortable() // je stejný jako název skupiny
-        ->setRenderer(static fn ($t) => $t->getVariableSymbolText())
-        ->setFilterText();
+        $grid->addColumnText('state', 'Stav')
+            ->setSortable()
+            ->setRenderer(fn ($t) => $this->translator->translate('common.application_state.' . $t->getState()))
+            ->setFilterText();
 
-           $grid->addColumnText('leader', 'Vedoucí')->setSortable()
+        $grid->addColumnText('variableSymbol', 'Variabilní symbol ')
+            ->setSortable()
+            ->setRenderer(static fn ($t) => $t->getVariableSymbolText())
+            ->setFilterText();
+
+        $grid->addColumnText('leader', 'Vedoucí')->setSortable()
             ->setRenderer(function (Troop $t) {
                 $leader = $t->getLeader();
 
@@ -105,52 +104,35 @@ class TroopsGridControl extends Control
             })
             ->setSortable();
 
-        $grid->addColumnText('pairingCode', 'Kód Jamoddílu')->setFilterText();
-
-        $grid->addColumnText('fee', 'Cena getFee')->setSortable()->setFilterText();
-
-//        $grid->addColumnText('fee2', 'Cena countFee')
-//        ->setRenderer(static fn (Troop $t) => $t->countFee());
-
-        $grid->addColumnDateTime('paymentDate', 'Datum zaplacení')
-            ->setRenderer(static function (Troop $p) {
-                $date = $p->getPaymentDate();
-
-                return $date ? $date->format(Helpers::DATETIME_FORMAT) : '';
-            })
-            ->setSortable();
+        $grid->addColumnNumber('fee', 'Cena')->setSortable()->setFilterText();
 
         $grid->addColumnDateTime('maturityDate', 'Datum splatnosti')
-            ->setRenderer(static function (Troop $p) {
-                $date = $p->getmaturityDate();
-
-                return $date ? $date->format(Helpers::DATETIME_FORMAT) : '';
-            })
+            ->setFormat(Helpers::DATE_FORMAT)
             ->setSortable();
 
-//        $grid->addColumnText('troop', 'Oddíl - přidat link')
-//            ->setRenderer( function (Patrol $p) { $troop = $p->getTroop();
-//          return Html::el("a")->setAttribute("href",$this->link("troopDetail",$troop->getId()))->setText($troop->getName());
+        $grid->addColumnDateTime('paymentDate', 'Datum platby')
+            ->setFormat(Helpers::DATE_FORMAT)
+            ->setSortable();
 
-//}); // link na oddíl
+        $grid->addColumnText('pairingCode', 'Kód jamoddílu')->setFilterText();
 
-        $grid->addColumnText('numPersons', '# osob')
+        $grid->addColumnNumber('numPersons', '# osob')
 //      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
             ->setRenderer(static fn (Troop $p) => $p->countUsersInRoles([Role::PATROL_LEADER, Role::LEADER, Role::ESCORT, Role::ATTENDEE]));
 
-        $grid->addColumnText('numChilder', '# rádců')
+        $grid->addColumnNumber('numChilder', '# rádců')
 //      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
             ->setRenderer(static fn (Troop $p) => $p->countUsersInRoles([Role::PATROL_LEADER]));
 
-        $grid->addColumnText('numAdults', '# dospělých')
+        $grid->addColumnNumber('numAdults', '# dospělých')
 //      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
             ->setRenderer(static fn (Troop $p) => $p->countUsersInRoles([Role::LEADER, Role::ESCORT]));
 
-        $grid->addColumnText('numPatrols', '# družin')
+        $grid->addColumnNumber('numPatrols', '# družin')
 //      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
             ->setRenderer(static fn (Troop $p) => count($p->getConfirmedPatrols()));
 
-        $grid->addAction('detail', 'admin.common.detail', 'Users:groupDetail') // destinace ,todo group_detail.latte
+        $grid->addAction('detail', 'admin.common.detail', 'Troops:detail')
             ->setClass('btn btn-xs btn-primary');
 
 //        $grid->addAction('delete', '', 'delete!')
@@ -200,7 +182,7 @@ class TroopsGridControl extends Control
      * @throws AbortException
      * @throws Exception
      */
-    public function handleExportUsers(): void
+    public function handleExportTroops(): void
     {
         $ids = $this->session->getSection('srs')->patrolIds;
 
