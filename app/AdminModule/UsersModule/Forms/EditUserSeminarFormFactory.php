@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\Forms;
+namespace App\AdminModule\UsersModule\Forms;
 
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\CustomInput\CustomCheckbox;
@@ -47,12 +48,10 @@ use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 use Throwable;
-
 use function array_key_exists;
 use function assert;
 use function basename;
 use function json_encode;
-
 use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 

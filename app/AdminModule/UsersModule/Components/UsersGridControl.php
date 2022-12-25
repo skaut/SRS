@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\Components;
+namespace App\AdminModule\UsersModule\Components;
 
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
@@ -50,7 +50,6 @@ use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
-
 use function basename;
 
 /**

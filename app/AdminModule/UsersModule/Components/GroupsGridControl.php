@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\Components;
+namespace App\AdminModule\UsersModule\Components;
 
 use App\Model\Acl\Role;
 use App\Model\User\Repositories\TroopRepository;
@@ -21,7 +21,6 @@ use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
-
 use function count;
 use function date;
 

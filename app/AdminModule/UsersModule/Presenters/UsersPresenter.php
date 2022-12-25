@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\Presenters;
+namespace App\AdminModule\UsersModule\Presenters;
 
-use App\AdminModule\Components\ApplicationsGridControl;
-use App\AdminModule\Components\GroupsGridControl;
-use App\AdminModule\Components\IApplicationsGridControlFactory;
-use App\AdminModule\Components\IGroupsGridControlFactory;
-use App\AdminModule\Components\IPatrolsGridControlFactory;
-use App\AdminModule\Components\IUsersGridControlFactory;
-use App\AdminModule\Components\PatrolsGridControl;
-use App\AdminModule\Components\UsersGridControl;
-use App\AdminModule\Forms\AddLectorFormFactory;
-use App\AdminModule\Forms\EditUserPersonalDetailsFormFactory;
-use App\AdminModule\Forms\EditUserSeminarFormFactory;
+use App\AdminModule\Presenters\AdminBasePresenter;
+use App\AdminModule\UsersModule\Components\ApplicationsGridControl;
+use App\AdminModule\UsersModule\Components\GroupsGridControl;
+use App\AdminModule\UsersModule\Components\IApplicationsGridControlFactory;
+use App\AdminModule\UsersModule\Components\IGroupsGridControlFactory;
+use App\AdminModule\UsersModule\Components\IPatrolsGridControlFactory;
+use App\AdminModule\UsersModule\Components\IUsersGridControlFactory;
+use App\AdminModule\UsersModule\Components\PatrolsGridControl;
+use App\AdminModule\UsersModule\Components\UsersGridControl;
+use App\AdminModule\UsersModule\Forms\AddLectorFormFactory;
+use App\AdminModule\UsersModule\Forms\EditUserPersonalDetailsFormFactory;
+use App\AdminModule\UsersModule\Forms\EditUserSeminarFormFactory;
 use App\Model\Acl\Permission;
 use App\Model\Acl\Role;
 use App\Model\Acl\SrsResource;

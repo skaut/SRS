@@ -2,37 +2,40 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\Forms;
+namespace App\AdminModule\UsersModule\Forms;
 
-use App\Model\Acl\Repositories\RoleRepository;
-use App\Model\Acl\Role;
+use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\FilesService;
-use Exception;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Http\FileUpload;
+use Nette\Utils\ImageException;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
-
-use function assert;
+use function basename;
 use function getimagesizefromstring;
 use function image_type_to_extension;
-
+use function json_encode;
+use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 /**
- * Formulář pro vytvoření externího lektora.
+ * Formulář pro úpravu osobních údajů externích lektorů.
  */
-class AddLectorFormFactory
+class EditUserPersonalDetailsFormFactory
 {
     use Nette\SmartObject;
+
+    /**
+     * Upravovaný uživatel.
+     */
+    private ?User $user = null;
 
     public function __construct(
         private BaseFormFactory $baseFormFactory,
         private UserRepository $userRepository,
-        private RoleRepository $roleRepository,
         private FilesService $filesService
     ) {
     }
@@ -40,15 +43,26 @@ class AddLectorFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(): Form
+    public function create(int $id): Form
     {
+        $this->user = $this->userRepository->findById($id);
+
         $form = $this->baseFormFactory->create();
 
-        $form->addUpload('photo', 'admin.users.users_photo')
-            ->setHtmlAttribute('accept', 'image/*')
+        $form->addHidden('id');
+
+        $photoUpload = $form->addUpload('photo', 'admin.users.users_photo');
+        $photoUpload->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.users.users_photo_format');
+
+        if ($this->user->getPhoto() !== null) {
+            $photoUpload->setHtmlAttribute('data-delete-url', '?do=removePhoto')
+                ->setHtmlAttribute('data-initial-preview', json_encode([$this->user->getPhoto()], JSON_THROW_ON_ERROR))
+                ->setHtmlAttribute('data-initial-preview-show-delete', 'true')
+                ->setHtmlAttribute('data-initial-preview-config', json_encode([['caption' => basename($this->user->getPhoto())]]));
+        }
 
         $form->addText('firstName', 'admin.users.users_firstname')
             ->addRule(Form::FILLED, 'admin.users.users_firstname_empty');
@@ -79,15 +93,25 @@ class AddLectorFormFactory
             ->addCondition(Form::FILLED)
             ->addRule(Form::PATTERN, 'web.application_content.postcode_format', '^\d{3} ?\d{2}$');
 
-        $form->addTextArea('about', 'admin.users.users_about_me');
-
-        $form->addTextArea('privateNote', 'admin.users.users_private_note');
-
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->addSubmit('cancel', 'admin.common.cancel')
             ->setValidationScope([])
             ->setHtmlAttribute('class', 'btn btn-warning');
+
+        $form->setDefaults([
+            'id' => $id,
+            'firstName' => $this->user->getFirstName(),
+            'lastName' => $this->user->getLastName(),
+            'nickName' => $this->user->getNickName(),
+            'degreePre' => $this->user->getDegreePre(),
+            'degreePost' => $this->user->getDegreePost(),
+            'email' => $this->user->getEmail(),
+            'birthdate' => $this->user->getBirthdate(),
+            'street' => $this->user->getStreet(),
+            'city' => $this->user->getCity(),
+            'postcode' => $this->user->getPostcode(),
+        ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
 
@@ -98,7 +122,8 @@ class AddLectorFormFactory
      * Zpracuje formulář.
      *
      * @throws Nette\Utils\UnknownImageFileException
-     * @throws Exception
+     * @throws ORMException
+     * @throws ImageException
      */
     public function processForm(Form $form, stdClass $values): void
     {
@@ -106,38 +131,28 @@ class AddLectorFormFactory
             return;
         }
 
-        $user = new User();
-
-        $user->setExternalLector(true);
-        $user->setFirstName($values->firstName);
-        $user->setLastName($values->lastName);
-        $user->setNickName($values->nickName);
-        $user->setDegreePre($values->degreePre);
-        $user->setDegreePost($values->degreePost);
-        $user->setEmail($values->email);
-        $user->setBirthdate($values->birthdate);
-        $user->setStreet($values->street);
-        $user->setCity($values->city);
-        $user->setPostcode($values->postcode);
-        $user->setAbout($values->about);
-        $user->setNote($values->privateNote);
-
-        $user->addRole($this->roleRepository->findBySystemName(Role::LECTOR));
-
-        $this->userRepository->save($user);
+        $this->user->setFirstName($values->firstName);
+        $this->user->setLastName($values->lastName);
+        $this->user->setNickName($values->nickName);
+        $this->user->setDegreePre($values->degreePre);
+        $this->user->setDegreePost($values->degreePost);
+        $this->user->setEmail($values->email);
+        $this->user->setBirthdate($values->birthdate);
+        $this->user->setStreet($values->street);
+        $this->user->setCity($values->city);
+        $this->user->setPostcode($values->postcode);
 
         $photo = $values->photo;
-        assert($photo instanceof FileUpload);
         if ($photo->getError() === UPLOAD_ERR_OK) {
             $photoExtension = image_type_to_extension(getimagesizefromstring($photo->getContents())[2]);
-            $photoName      = 'ext_' . $user->getId() . $photoExtension;
+            $photoName      = 'ext_' . $this->user->getId() . $photoExtension;
 
             $path = $this->filesService->save($photo, User::PHOTO_PATH, false, $photoName);
             $this->filesService->resizeAndCropImage($path, 135, 180);
 
-            $user->setPhoto($path);
+            $this->user->setPhoto($path);
         }
 
-        $this->userRepository->save($user);
+        $this->userRepository->save($this->user);
     }
 }
