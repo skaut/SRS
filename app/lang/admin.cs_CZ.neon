@@ -387,8 +387,7 @@ program:
 users:
     menu:
         persons: "Osoby"
-        groups: "Skupiny"
-        troops: "Oddíly"
+        troops: "Skupiny"
         patrols: "Družiny"
 
     users_heading: "Uživatelé"
@@ -514,6 +513,12 @@ users:
     users_detail_applications: "Role a platby"
     users_detail_schedule: "Harmonogram"
     users_detail_birthdate_age: "%birthdate% (%age% let)"
+
+    troops:
+        heading: Skupiny
+
+    patrols:
+        heading: Družiny
 
 payments:
     payments:

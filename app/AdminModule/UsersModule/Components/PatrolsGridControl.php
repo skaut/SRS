@@ -15,7 +15,6 @@ use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
-use Nette\Utils\Html;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -96,10 +95,10 @@ class PatrolsGridControl extends Control
             ->setSortable();
 
         $grid->addColumnText('troop', 'Oddíl - přidat link')
-            ->setRenderer(function (Patrol $p) {
+            ->setRenderer(static function (Patrol $p): void {
                 $troop = $p->getTroop();
 
-                return Html::el('a')->setAttribute('href', $this->link('troopDetail', $troop->getId()))->setText($troop->getName());
+//                return Html::el('a')->setAttribute('href', $this->link('troopDetail', $troop->getId()))->setText($troop->getName());
             }); // link na oddíl
 
         $grid->addColumnText('userRoles', 'Počet 1')

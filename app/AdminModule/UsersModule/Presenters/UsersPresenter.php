@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\UsersModule\Presenters;
 
-use App\AdminModule\Presenters\AdminBasePresenter;
 use App\AdminModule\UsersModule\Components\ApplicationsGridControl;
 use App\AdminModule\UsersModule\Components\IApplicationsGridControlFactory;
 use App\AdminModule\UsersModule\Components\IUsersGridControlFactory;
@@ -12,7 +11,6 @@ use App\AdminModule\UsersModule\Components\UsersGridControl;
 use App\AdminModule\UsersModule\Forms\AddLectorFormFactory;
 use App\AdminModule\UsersModule\Forms\EditUserPersonalDetailsFormFactory;
 use App\AdminModule\UsersModule\Forms\EditUserSeminarFormFactory;
-use App\Model\Acl\Permission;
 use App\Model\Acl\Role;
 use App\Model\Acl\SrsResource;
 use App\Model\CustomInput\CustomInput;
@@ -30,7 +28,7 @@ use Throwable;
 /**
  * Presenter obsluhující správu uživatelů.
  */
-class UsersPresenter extends AdminBasePresenter
+class UsersPresenter extends UsersBasePresenter
 {
     protected string $resource = SrsResource::USERS;
 
@@ -61,8 +59,6 @@ class UsersPresenter extends AdminBasePresenter
     public function startup(): void
     {
         parent::startup();
-
-        $this->checkPermission(Permission::MANAGE);
 
         $this->template->results             = [];
         $this->template->editPersonalDetails = false;

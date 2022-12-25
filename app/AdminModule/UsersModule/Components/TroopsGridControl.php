@@ -46,7 +46,7 @@ class TroopsGridControl extends Control
      */
     public function render(): void
     {
-        $this->template->setFile(__DIR__ . '/templates/groups_grid.latte');
+        $this->template->setFile(__DIR__ . '/templates/troops_grid.latte');
         $this->template->render();
     }
 
@@ -93,7 +93,7 @@ class TroopsGridControl extends Control
             ->setRenderer(function (Troop $t) {
                 $leader = $t->getLeader();
 
-                return Html::el('a')->setAttribute('href', $this->getPresenter()->link('detail', $leader->getId()))->setText($leader->getDisplayName());
+                return Html::el('a')->setAttribute('href', $this->getPresenter()->link('Users:detail', $leader->getId()))->setText($leader->getDisplayName());
             })
             ->setFilterText();
 
