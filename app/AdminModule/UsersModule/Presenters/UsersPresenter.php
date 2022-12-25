@@ -6,12 +6,8 @@ namespace App\AdminModule\UsersModule\Presenters;
 
 use App\AdminModule\Presenters\AdminBasePresenter;
 use App\AdminModule\UsersModule\Components\ApplicationsGridControl;
-use App\AdminModule\UsersModule\Components\GroupsGridControl;
 use App\AdminModule\UsersModule\Components\IApplicationsGridControlFactory;
-use App\AdminModule\UsersModule\Components\IGroupsGridControlFactory;
-use App\AdminModule\UsersModule\Components\IPatrolsGridControlFactory;
 use App\AdminModule\UsersModule\Components\IUsersGridControlFactory;
-use App\AdminModule\UsersModule\Components\PatrolsGridControl;
 use App\AdminModule\UsersModule\Components\UsersGridControl;
 use App\AdminModule\UsersModule\Forms\AddLectorFormFactory;
 use App\AdminModule\UsersModule\Forms\EditUserPersonalDetailsFormFactory;
@@ -25,7 +21,6 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Services\ApplicationService;
-use App\Services\ExcelExportService;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Attributes\Inject;
@@ -43,12 +38,6 @@ class UsersPresenter extends AdminBasePresenter
     public IUsersGridControlFactory $usersGridControlFactory;
 
     #[Inject]
-    public IPatrolsGridControlFactory $patrolsGridControlFactory;
-
-    #[Inject]
-    public IGroupsGridControlFactory $GroupsGridControlFactory;
-
-    #[Inject]
     public AddLectorFormFactory $addLectorFormFactory;
 
     #[Inject]
@@ -59,9 +48,6 @@ class UsersPresenter extends AdminBasePresenter
 
     #[Inject]
     public IApplicationsGridControlFactory $applicationsGridControlFactory;
-
-    #[Inject]
-    public ExcelExportService $excelExportService;
 
     #[Inject]
     public CustomInputRepository $customInputRepository;
@@ -188,16 +174,6 @@ class UsersPresenter extends AdminBasePresenter
     protected function createComponentUsersGrid(): UsersGridControl
     {
         return $this->usersGridControlFactory->create();
-    }
-
-    protected function createComponentPatrolsGrid(): PatrolsGridControl
-    {
-        return $this->patrolsGridControlFactory->create();
-    }
-
-    protected function createComponentGroupsGrid(): GroupsGridControl
-    {
-        return $this->GroupsGridControlFactory->create();
     }
 
     protected function createComponentAddLectorForm(): Form

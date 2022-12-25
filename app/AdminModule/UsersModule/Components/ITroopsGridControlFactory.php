@@ -7,10 +7,10 @@ namespace App\AdminModule\UsersModule\Components;
 /**
  * Factory komponenty pro správu skupin.
  */
-interface IGroupsGridControlFactory
+interface ITroopsGridControlFactory
 {
     /**
      * Vytvoří komponentu.
      */
-    public function create(): GroupsGridControl;
+    public function create(): TroopsGridControl;
 }
