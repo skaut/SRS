@@ -63,6 +63,13 @@ class PatrolsGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
+        $grid->addColumnText('troop', 'Skupina')
+            ->setRenderer(function (Patrol $p) {
+                $troop = $p->getTroop();
+
+                return Html::el('a')->setAttribute('href', $this->getPresenter()->link('Troops:detail', $troop->getId()))->setText($troop->getName());
+            });
+
         $grid->addColumnDateTime('created', 'Datum založení')
             ->setRenderer(static function (Patrol $p) {
                 $date = $p->getTroop()->getApplicationDate();
@@ -70,13 +77,6 @@ class PatrolsGridControl extends Control
                 return $date ? $date->format(Helpers::DATETIME_FORMAT) : '';
             })
             ->setSortable();
-
-        $grid->addColumnText('troop', 'Skupina')
-            ->setRenderer(function (Patrol $p) {
-                $troop = $p->getTroop();
-
-                return Html::el('a')->setAttribute('href', $this->getPresenter()->link('Troops:detail', $troop->getId()))->setText($troop->getName());
-            });
 
         $grid->addColumnText('userRoles', 'Počet osob')
             ->setRenderer(static fn (Patrol $p) => count($p->getUsersRoles())); // je to správné číslo?
