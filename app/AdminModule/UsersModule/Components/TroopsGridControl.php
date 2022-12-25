@@ -101,6 +101,7 @@ class TroopsGridControl extends Control
         $grid->addColumnText('leader', 'Vedoucí')
             ->setRenderer(function (Troop $t) {
                 $leader = $t->getLeader();
+
                 return Html::el('a')->setAttribute('href', $this->getPresenter()->link('Users:detail', $leader->getId()))->setText($leader->getDisplayName());
             });
 
