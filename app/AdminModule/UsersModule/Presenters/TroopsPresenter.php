@@ -30,7 +30,7 @@ class TroopsPresenter extends UsersBasePresenter
 
     public function renderDetail(int $id): void
     {
-        $troop = $this->troopRepository->findById($id);
+        $troop                 = $this->troopRepository->findById($id);
         $this->template->troop = $troop;
     }
 }
