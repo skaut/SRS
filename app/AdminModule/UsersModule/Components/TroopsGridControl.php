@@ -7,13 +7,10 @@ namespace App\AdminModule\UsersModule\Components;
 use App\Model\Acl\Role;
 use App\Model\User\Repositories\TroopRepository;
 use App\Model\User\Troop;
-use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
-use Nette\Http\Session;
-use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use Throwable;
@@ -29,15 +26,10 @@ use function date;
  */
 class TroopsGridControl extends Control
 {
-    private SessionSection $sessionSection;
-
     public function __construct(
         private Translator $translator,
-        private TroopRepository $repository,
-        private ExcelExportService $excelExportService,
-        private Session $session
+        private TroopRepository $repository
     ) {
-        $this->sessionSection = $session->getSection('srs');
     }
 
     /**
@@ -69,9 +61,6 @@ class TroopsGridControl extends Control
         $stamp = date(Helpers::DATE_FORMAT);
         $grid->addExportCsv('admin.common.export_all', 'NSJ2023 Skupiny ' . $stamp . '.csv');
         $grid->addExportCsvFiltered('admin.common.export_filter', 'NSJ2023 Skupiny fi ' . $stamp . '.csv');
-
-//        $grid->addGroupAction('Export seznamu skupin')
-//            ->onSelect[] = [$this, 'groupExportTroops'];
 
         $grid->addColumnText('name', 'Název')
             ->setSortable()
@@ -183,36 +172,4 @@ class TroopsGridControl extends Control
     {
         $this->presenter->redirect(':Export:TroopIncomeProof:troop', ['id' => $id]);
     }
-
-//    /**
-//     * Hromadně vyexportuje seznam družin.
-//     *
-//     * @param int[] $ids
-//     *
-//     * @throws AbortException
-//     */
-//    public function groupExportTroops(array $ids): void
-//    {
-//        $this->sessionSection->patrolIds = $ids;
-//        $this->redirect('exporttroops');
-//    }
-//
-//    /**
-//     * Zpracuje export seznamu družin.
-//     *
-//     * @throws AbortException
-//     * @throws Exception
-//     */
-//    public function handleExportTroops(): void
-//    {
-//        $ids = $this->session->getSection('srs')->patrolIds;
-//
-//        $res = $this->repository->createQueryBuilder('p')->where('p.id IN (:ids)') // stejne se v teto class querybuilder pouziva
-//        ->setParameter('ids', $ids)->getQuery()->getResult(); // otestovat , podivat se na vzor (export uzivatelu)
-//
-//        $users    = new ArrayCollection($res);
-//        $response = $this->excelExportService->exportUsersList($users, 'seznam-uzivatelu.xlsx'); // nutna nova metoda
-//
-//        $this->getPresenter()->sendResponse($response);
-//    }
 }

@@ -6,11 +6,8 @@ namespace App\AdminModule\UsersModule\Components;
 
 use App\Model\User\Patrol;
 use App\Model\User\Repositories\PatrolRepository;
-use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Nette\Application\UI\Control;
-use Nette\Http\Session;
-use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use Throwable;
@@ -26,15 +23,10 @@ use function date;
  */
 class PatrolsGridControl extends Control
 {
-    private SessionSection $sessionSection;
-
     public function __construct(
         private Translator $translator,
-        private PatrolRepository $repository,
-        private ExcelExportService $excelExportService,
-        private Session $session
+        private PatrolRepository $repository
     ) {
-        $this->sessionSection = $session->getSection('srs');
     }
 
     /**
@@ -66,9 +58,6 @@ class PatrolsGridControl extends Control
         $stamp = date(Helpers::DATE_FORMAT);
         $grid->addExportCsv('admin.common.export_all', 'NSJ2023 Druziny ' . $stamp . '.csv');
         $grid->addExportCsvFiltered('admin.common.export_filter', 'NSJ2023 Druziny fi ' . $stamp . '.csv');
-
-//        $grid->addGroupAction('Export seznamu družin')
-//            ->onSelect[] = [$this, 'groupExportPatrols'];
 
         $grid->addColumnText('name', 'Název')
             ->setSortable()
@@ -106,52 +95,4 @@ class PatrolsGridControl extends Control
 
         return $grid;
     }
-
-//    /**
-//     * Zpracuje odstranění externího uživatele.
-//     *
-//     * @throws AbortException
-//     */
-//    public function handleDelete(int $id): void
-//    {
-//        $patrol = $this->repository->findById($id);
-//
-//        $this->repository->remove($patrol);
-//
-//        $p = $this->getPresenter();
-//        $p->flashMessage('Družina smazána', 'success');
-//        $p->redirect('this');
-//    }
-
-//    /**
-//     * Hromadně vyexportuje seznam družin.
-//     *
-//     * @param int[] $ids
-//     *
-//     * @throws AbortException
-//     */
-//    public function groupExportPatrols(array $ids): void
-//    {
-//        $this->sessionSection->patrolIds = $ids;
-//        $this->redirect('exportpatrols');
-//    }
-//
-//    /**
-//     * Zpracuje export seznamu družin.
-//     *
-//     * @throws AbortException
-//     * @throws Exception
-//     */
-//    public function handleExportPatrols(): void
-//    {
-//        $ids = $this->session->getSection('srs')->patrolIds;
-//
-//        $res = $this->repository->createQueryBuilder('p')->where('p.id IN (:ids)') // stejne se v teto class querybuilder pouziva
-//        ->setParameter('ids', $ids)->getQuery()->getResult(); // otestovat , podivat se na vzor (export uzivatelu)
-//
-//        $users    = new ArrayCollection($res);
-//        $response = $this->excelExportService->exportUsersList($users, 'seznam-uzivatelu.xlsx'); // nutna nova metoda
-//
-//        $this->getPresenter()->sendResponse($response);
-//    }
 }
