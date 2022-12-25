@@ -11,13 +11,13 @@ use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
+use Nette\Utils\Html;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -87,19 +87,22 @@ class TroopsGridControl extends Control
         $grid->addColumnText('variableSymbol', 'Variabilní symbol', 'variableSymbolText')
             ->setSortable()
             ->setSortableCallback(static function (QueryBuilder $qb, array $sort): void {
-                $sortRev = $sort['variableSymbolText'] === 'DESC' ? 'ASC' : 'DESC';
-                $qb->join('p.variableSymbol', 'VS')
-                    ->orderBy('VS.variableSymbol', $sortRev);
+                $sortRev = $sort['variableSymbolText'] === 'DESC' ? 'DESC' : 'ASC';
+                $qb->join('p.variableSymbol', 'pVS')
+                    ->orderBy('pVS.variableSymbol', $sortRev);
             })
             ->setFilterText()
             ->setCondition(static function (QueryBuilder $qb, string $value): void {
-//            $qb->join('p.applications', 'uAVS')
-                $qb->join('p.variableSymbol', 'VS')
-                    ->andWhere('VS.variableSymbol LIKE :variableSymbol')
+                $qb->join('p.variableSymbol', 'pVS')
+                    ->andWhere('pVS.variableSymbol LIKE :variableSymbol')
                     ->setParameter(':variableSymbol', '%' . $value . '%');
+            });
 
-        $grid->addColumnText('leader', 'Vedoucí', ':detail', 'leader.displayName', ['id' => 'leader.id'])->setSortable()
-            ->setFilterText();
+        $grid->addColumnText('leader', 'Vedoucí')
+            ->setRenderer(function (Troop $t) {
+                $leader = $t->getLeader();
+                return Html::el('a')->setAttribute('href', $this->getPresenter()->link('Users:detail', $leader->getId()))->setText($leader->getDisplayName());
+            });
 
         $grid->addColumnDateTime('applicationDate', 'Datum založení')
             ->setRenderer(static function (Troop $p) {
@@ -119,7 +122,8 @@ class TroopsGridControl extends Control
             ->setFormat(Helpers::DATE_FORMAT)
             ->setSortable();
 
-        $grid->addColumnText('pairingCode', 'Kód jamoddílu')->setFilterText();
+        $grid->addColumnText('pairingCode', 'Kód jamoddílu')
+            ->setFilterText();
 
         $grid->addColumnNumber('numPersons', '# osob')
 //      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
@@ -137,14 +141,11 @@ class TroopsGridControl extends Control
 //      ->setSortableCallback(static fn($qb,$vals) =>sort($vals))
             ->setRenderer(static fn (Troop $p) => count($p->getConfirmedPatrols()));
 
-        $grid->addAction('detail', 'admin.common.detail', 'Troops:detail')
-            ->setClass('btn btn-xs btn-primary');
-
         $grid->addAction('generatePaymentProof', 'Stáhnout potvzrení o přijetí platby', 'generatePaymentProof');
         $grid->allowRowsAction('generatePaymentProof', static fn (Troop $troop) => $troop->getPaymentDate() !== null);
 
-//        $grid->addAction('detail', 'admin.common.detail', 'Users:groupDetail') // destinace ,todo group_detail.latte
-//            ->setClass('btn btn-xs btn-primary');
+        $grid->addAction('detail', 'admin.common.detail', 'Troops:detail')
+            ->setClass('btn btn-xs btn-primary');
 
 //        $grid->addAction('delete', '', 'delete!')
 //            ->setIcon('trash')
