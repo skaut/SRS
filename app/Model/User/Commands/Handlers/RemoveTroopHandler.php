@@ -15,8 +15,13 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class RemoveTroopHandler implements MessageHandlerInterface
 {
-    public function __construct(private CommandBus $commandBus, private EntityManagerInterface $em, private UserGroupRoleRepository $userGroupRoleRepository, private TroopRepository $troopRepository, private UserRepository $userRepository)
-    {
+    public function __construct(
+        private CommandBus $commandBus,
+        private EntityManagerInterface $em,
+        private UserGroupRoleRepository $userGroupRoleRepository,
+        private TroopRepository $troopRepository,
+        private UserRepository $userRepository
+    ) {
     }
 
     public function __invoke(RemoveTroop $command): void

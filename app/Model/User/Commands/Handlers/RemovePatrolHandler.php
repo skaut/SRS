@@ -13,8 +13,12 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class RemovePatrolHandler implements MessageHandlerInterface
 {
-    public function __construct(private EntityManagerInterface $em, private UserGroupRoleRepository $userGroupRoleRepository, private PatrolRepository $patrolRepository, private UserRepository $userRepository)
-    {
+    public function __construct(
+        private EntityManagerInterface $em,
+        private UserGroupRoleRepository $userGroupRoleRepository,
+        private PatrolRepository $patrolRepository,
+        private UserRepository $userRepository
+    ) {
     }
 
     public function __invoke(RemovePatrol $command): void
