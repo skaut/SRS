@@ -33,4 +33,10 @@ class PatrolRepository extends AbstractRepository
         $this->em->persist($patrol);
         $this->em->flush();
     }
+
+    public function remove(Patrol $patrol): void
+    {
+        $this->em->remove($patrol);
+        $this->em->flush();
+    }
 }
