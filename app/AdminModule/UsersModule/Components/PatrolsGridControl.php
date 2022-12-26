@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\AdminModule\UsersModule\Components;
 
+use App\Model\User\Commands\RemovePatrol;
 use App\Model\User\Patrol;
 use App\Model\User\Repositories\PatrolRepository;
+use App\Services\CommandBus;
 use App\Utils\Helpers;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;
 use Nette\Utils\Html;
@@ -24,8 +27,9 @@ use function date;
 class PatrolsGridControl extends Control
 {
     public function __construct(
+        private CommandBus $commandBus,
         private Translator $translator,
-        private PatrolRepository $repository
+        private PatrolRepository $patrolRepository
     ) {
     }
 
@@ -49,7 +53,7 @@ class PatrolsGridControl extends Control
     {
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
-        $grid->setDataSource($this->repository->createQueryBuilder('p')->where('p.confirmed = true'));
+        $grid->setDataSource($this->patrolRepository->createQueryBuilder('p')->where('p.confirmed = true'));
         $grid->setDefaultSort(['displayName' => 'ASC']);
         $grid->setColumnsHideable();
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
@@ -78,21 +82,35 @@ class PatrolsGridControl extends Control
             })
             ->setSortable();
 
-        $grid->addColumnText('userRoles', 'Počet osob')
+        $grid->addColumnNumber('userRoles', 'Počet osob')
             ->setRenderer(static fn (Patrol $p) => count($p->getUsersRoles())); // je to správné číslo?
 
 //        $grid->addAction('detail', 'admin.common.detail', 'Patrols:detail') // destinace
 //            ->setClass('btn btn-xs btn-primary');
 
-//        $grid->addAction('delete', '', 'delete!')
-//            ->setIcon('trash')
-//            ->setTitle('admin.common.delete')
-//            ->setClass('btn btn-xs btn-danger')
-//            ->addAttributes([
-//                'data-toggle' => 'confirmation',
-//                'data-content' => $this->translator->translate('admin.users.users_delete_confirm'),
-//            ]);
+        $grid->addAction('delete', '', 'delete!')
+            ->setIcon('trash')
+            ->setTitle('admin.common.delete')
+            ->setClass('btn btn-xs btn-danger')
+            ->addAttributes([
+                'data-toggle' => 'confirmation',
+                'data-content' => $this->translator->translate('Opravdu chcete družinu odstranit?'),
+            ]);
 
         return $grid;
+    }
+
+    /**
+     * Zpracuje odstranění družiny.
+     *
+     * @throws AbortException
+     */
+    public function handleDelete(int $id): void
+    {
+        $patrol = $this->patrolRepository->findById($id);
+        $this->commandBus->handle(new RemovePatrol($patrol));
+        $p = $this->getPresenter();
+        $p->flashMessage('Družina byla úspěšně odstraněna.', 'success');
+        $p->redirect('this');
     }
 }
