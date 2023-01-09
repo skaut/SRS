@@ -1241,4 +1241,17 @@ class User
     {
         return $this->groupRoles;
     }
+
+    /**
+     * Vrátí skupinové role uživatele oddělené čárkou.
+     */
+    public function getGroupRolesText(): string
+    {
+        $rolesNames = [];
+        foreach ($this->groupRoles as $role) {
+            $rolesNames[] = $role->getRole()->getName();
+        }
+
+        return implode(', ', $rolesNames);
+    }
 }

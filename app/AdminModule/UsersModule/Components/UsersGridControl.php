@@ -166,6 +166,8 @@ class UsersGridControl extends Control
                     ->setParameter('rids', (array) $values);
             });
 
+        $grid->addColumnText('groupRoles', 'Skupinové role', 'groupRolesText');
+
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
             ->setFilterMultiSelect($this->subeventService->getSubeventsOptions())
             ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
