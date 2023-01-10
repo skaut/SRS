@@ -13,6 +13,7 @@ use App\Model\Application\SubeventsApplication;
 use App\Model\CustomInput\CustomInput;
 use App\Model\CustomInput\CustomInputValue;
 use App\Model\Enums\ApplicationState;
+use App\Model\Enums\TroopApplicationState;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramApplication;
@@ -1240,5 +1241,21 @@ class User
     public function getGroupRoles(): Collection
     {
         return $this->groupRoles;
+    }
+
+    /**
+     * Vrátí skupinové role uživatele oddělené čárkou.
+     */
+    public function getGroupRolesText(): string
+    {
+        $rolesNames = [];
+        foreach ($this->groupRoles as $groupRole) {
+            $troop = $groupRole->getTroop() ?? $groupRole->getPatrol()->getTroop();
+            if ($troop->getState() !== TroopApplicationState::DRAFT) {
+                $rolesNames[] = $groupRole->getRole()->getName();
+            }
+        }
+
+        return implode(', ', $rolesNames);
     }
 }
