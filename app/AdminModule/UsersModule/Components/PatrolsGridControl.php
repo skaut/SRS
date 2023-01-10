@@ -79,8 +79,7 @@ class PatrolsGridControl extends Control
                 $date = $p->getTroop()->getApplicationDate();
 
                 return $date ? $date->format(Helpers::DATETIME_FORMAT) : '';
-            })
-            ->setSortable();
+            });
 
         $grid->addColumnNumber('userRoles', 'Počet osob')
             ->setRenderer(static fn (Patrol $p) => count($p->getUsersRoles())); // je to správné číslo?
