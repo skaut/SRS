@@ -1250,7 +1250,7 @@ class User
     {
         $rolesNames = [];
         foreach ($this->groupRoles as $groupRole) {
-            $troop = $groupRole->getTroop() !== null ? $groupRole->getTroop() : $groupRole->getPatrol()->getTroop();
+            $troop = $groupRole->getTroop() ?? $groupRole->getPatrol()->getTroop();
             if ($troop->getState() !== TroopApplicationState::DRAFT) {
                 $rolesNames[] = $groupRole->getRole()->getName();
             }
