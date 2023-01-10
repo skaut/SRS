@@ -263,7 +263,7 @@ class ExcelExportService
         $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
-        
+
         $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.subevents'));
         $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
