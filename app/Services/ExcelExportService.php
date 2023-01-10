@@ -244,83 +244,88 @@ class ExcelExportService
         $row    = 1;
         $column = 1;
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.display_name'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.display_name'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.username'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.username'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.roles'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.roles'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.subevents'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Skupinové role'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
+        
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.subevents'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.approved'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.approved'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.membership'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.membership'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.age'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.age'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.email'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.email'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.city'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.city'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.fee'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.fee'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.fee_remaining'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.fee_remaining'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.variable_symbol'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.variable_symbol'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(25);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.payment_method'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.payment_method'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.payment_date'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.payment_date'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.first_application_date'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.first_application_date'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.attended'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.attended'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
 
@@ -348,14 +353,14 @@ class ExcelExportService
                     throw new InvalidArgumentException();
             }
 
-            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate($customInput->getName()));
-            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+            $sheet->setCellValue([$column, $row], $this->translator->translate($customInput->getName()));
+            $sheet->getStyle([$column, $row])->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth($width);
         }
 
-        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.private_note'));
-        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->setCellValue([$column, $row], $this->translator->translate('common.export.user.private_note'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(60);
 
@@ -363,41 +368,41 @@ class ExcelExportService
             $row++;
             $column = 1;
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getDisplayName());
+            $sheet->setCellValue([$column++, $row], $user->getDisplayName());
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getUsername());
+            $sheet->setCellValue([$column++, $row], $user->getUsername());
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getRolesText());
+            $sheet->setCellValue([$column++, $row], $user->getRolesText());
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getSubeventsText());
+            $sheet->setCellValue([$column++, $row], $user->getGroupRolesText());
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->isApproved()
+            $sheet->setCellValue([$column++, $row], $user->getSubeventsText());
+
+            $sheet->setCellValue([$column++, $row], $user->isApproved()
                 ? $this->translator->translate('common.export.common.yes')
                 : $this->translator->translate('common.export.common.no'));
 
-            $sheet->getCellByColumnAndRow($column++, $row)
-                ->setValueExplicit($this->userService->getMembershipText($user), DataType::TYPE_STRING);
+            $sheet->getCell([$column++, $row])->setValueExplicit($this->userService->getMembershipText($user));
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getAge());
+            $sheet->setCellValue([$column++, $row], $user->getAge());
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getEmail());
+            $sheet->setCellValue([$column++, $row], $user->getEmail());
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getCity());
+            $sheet->setCellValue([$column++, $row], $user->getCity());
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFee());
+            $sheet->setCellValue([$column++, $row], $user->getFee());
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFeeRemaining());
+            $sheet->setCellValue([$column++, $row], $user->getFeeRemaining());
 
-            $sheet->getCellByColumnAndRow($column++, $row)
-                ->setValueExplicit($user->getVariableSymbolsText(), DataType::TYPE_STRING);
+            $sheet->getCell([$column++, $row])->setValueExplicit($user->getVariableSymbolsText());
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '');
+            $sheet->setCellValue([$column++, $row], $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '');
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getLastPaymentDate() !== null ? $user->getLastPaymentDate()->format(Helpers::DATE_FORMAT) : '');
+            $sheet->setCellValue([$column++, $row], $user->getLastPaymentDate() !== null ? $user->getLastPaymentDate()->format(Helpers::DATE_FORMAT) : '');
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getRolesApplicationDate() !== null ? $user->getRolesApplicationDate()->format(Helpers::DATE_FORMAT) : '');
+            $sheet->setCellValue([$column++, $row], $user->getRolesApplicationDate() !== null ? $user->getRolesApplicationDate()->format(Helpers::DATE_FORMAT) : '');
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->isAttended()
+            $sheet->setCellValue([$column++, $row], $user->isAttended()
                 ? $this->translator->translate('common.export.common.yes')
                 : $this->translator->translate('common.export.common.no'));
 
@@ -417,11 +422,11 @@ class ExcelExportService
                     $value = $customInputValue->getValueText();
                 }
 
-                $sheet->setCellValueByColumnAndRow($column++, $row, $value);
+                $sheet->setCellValue([$column++, $row], $value);
             }
 
-            $sheet->setCellValueByColumnAndRow($column, $row, $user->getNote());
-            $sheet->getStyleByColumnAndRow($column++, $row)->getAlignment()->setWrapText(true);
+            $sheet->setCellValue([$column, $row], $user->getNote());
+            $sheet->getStyle([$column++, $row])->getAlignment()->setWrapText(true);
         }
 
         return new ExcelResponse($this->spreadsheet, $filename);
