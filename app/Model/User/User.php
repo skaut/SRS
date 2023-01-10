@@ -299,7 +299,7 @@ class User
      * Přihláška oddílu.
      */
     #[ORM\OneToOne(targetEntity: Troop::class, mappedBy: 'leader', cascade: ['persist'])]
-    protected Troop $troop;
+    protected ?Troop $troop;
 
     /**
      * Telefon.
@@ -1170,9 +1170,14 @@ class User
         )->isEmpty();
     }
 
-    public function getTroop(): Troop
+    public function getTroop(): ?Troop
     {
         return $this->troop;
+    }
+
+    public function setTroop(?Troop $troop): void
+    {
+        $this->troop = $troop;
     }
 
     public function getPhone(): ?string
