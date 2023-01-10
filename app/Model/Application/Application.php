@@ -11,11 +11,11 @@ use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use DateTimeImmutable;
+use Defr\QRPlatba\QRPlatba;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Numbers_Words;
-use Swejzi\QRPlatba\QRPlatba;
 
 use function implode;
 use function str_replace;
