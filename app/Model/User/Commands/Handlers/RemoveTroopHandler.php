@@ -39,6 +39,8 @@ class RemoveTroopHandler implements MessageHandlerInterface
                 }
             }
 
+            $command->getTroop()->getLeader()->setTroop(null);
+
             $this->troopRepository->remove($command->getTroop());
         });
     }
