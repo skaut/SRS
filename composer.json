@@ -55,7 +55,7 @@
         "phpoffice/phpspreadsheet": "^1.21",
         "contributte/pdf": "^6.1",
         "mpdf/qrcode": "^1.2",
-        "swejzi/qr-platba": "^1.0",
+        "dfridrich/qr-platba": "^2.0",
         "eluceo/ical": "^2.5",
         "endroid/qr-code": "^4.0",
 

@@ -14,10 +14,6 @@ parameters:
         -
             message: '#^Parameter \#1 \$translator of method Ublaboo\\DataGrid\\DataGrid::setTranslator\(\) expects Nette\\Localization\\ITranslator, Nette\\Localization\\Translator given.$#'
             path: app/*/*GridControl.php
-        -
-            message: '#^Method App\\Model\\User\\User::[a-zA-Z]+\(\) should return Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\[a-zA-Z]+Application> but returns Doctrine\\Common\\Collections\\Collection<int, App\\Model\\Application\\Application>\.$#'
-            path: app/Model/User/User.php
-            count: 4
 
 services:
 	- class: CodeQuality\ObjectIdentityComparisonRule
