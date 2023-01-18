@@ -97,7 +97,9 @@ class TroopsGridControl extends Control
 
         $grid->addColumnText('leaderEmail', 'E-mail vedoucího')
             ->setRenderer(static function (Troop $t) {
-                return $t->getLeader()->getEmail();
+                $email = $t->getLeader()->getEmail();
+
+                return Html::el('a')->href('mailto:' . $email)->setText($email);
             });
 
         $grid->addColumnDateTime('applicationDate', 'Datum založení')
