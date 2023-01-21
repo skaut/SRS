@@ -47,6 +47,7 @@ use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
+use Skaut\Skautis\Wsdl\WsdlException;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -719,17 +720,31 @@ class UsersGridControl extends Control
         $this->redirect('exportusers');
     }
 
+    /**
+     * @param int[] $ids
+     */
     public function groupUpdateMembership(array $ids): void
     {
         $users = $this->userRepository->findUsersByIds($ids);
+        $errors = 0;
 
         foreach ($users as $user) {
-            $membership = $this->skautIsService->getValidMembership($user->getSkautISPersonId());
-            $user->setUnit($membership?->RegistrationNumber);
-            $this->userRepository->save($user);
+            try {
+                $membership = $this->skautIsService->getValidMembership($user->getSkautISPersonId());
+                $user->setUnit($membership?->RegistrationNumber);
+                $this->userRepository->save($user);
+            } catch (WsdlException $e) {
+                $errors++;
+            }
+
         }
 
-        $this->getPresenter()->flashMessage('Členství byla úspěšně načtena.', 'success');
+        if ($errors > 0) {
+            $this->getPresenter()->flashMessage('Členství některých účastníků se nepodařilo načíst (oprávnění).', 'warning');
+        } else {
+            $this->getPresenter()->flashMessage('Členství byla úspěšně načtena.', 'success');
+        }
+
         $this->reload();
     }
 
