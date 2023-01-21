@@ -725,7 +725,7 @@ class UsersGridControl extends Control
      */
     public function groupUpdateMembership(array $ids): void
     {
-        $users = $this->userRepository->findUsersByIds($ids);
+        $users  = $this->userRepository->findUsersByIds($ids);
         $errors = 0;
 
         foreach ($users as $user) {
@@ -736,7 +736,6 @@ class UsersGridControl extends Control
             } catch (WsdlException $e) {
                 $errors++;
             }
-
         }
 
         if ($errors > 0) {
