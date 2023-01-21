@@ -172,7 +172,14 @@ class UsersGridControl extends Control
                     ->setParameter('rids', (array) $values);
             });
 
-        $grid->addColumnText('groupRoles', 'Skupinové role', 'groupRolesText');
+        $grid->addColumnText('groupRoles', 'Skupinové role', 'groupRolesText')
+            ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
+            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
+                $qb->join('u.groupRoles', 'uGR')
+                    ->join('uGR.role', 'uGRR')
+                    ->andWhere('uGRR.id IN (:grids)')
+                    ->setParameter('grids', (array) $values);
+            });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
             ->setFilterMultiSelect($this->subeventService->getSubeventsOptions())
