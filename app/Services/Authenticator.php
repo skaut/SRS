@@ -108,11 +108,7 @@ class Authenticator implements Nette\Security\Authenticator
         $user->setMember($skautISUser->HasMembership);
 
         $validMembership = $this->skautIsService->getValidMembership($user->getSkautISPersonId());
-        if ($validMembership === null) {
-            $user->setUnit(null);
-        } else {
-            $user->setUnit($validMembership->RegistrationNumber);
-        }
+        $user->setUnit($validMembership?->RegistrationNumber);
 
         $photoUpdate = new DateTimeImmutable($skautISPerson->PhotoUpdate);
         if ($user->getPhotoUpdate() === null || $photoUpdate->diff($user->getPhotoUpdate())->s > 0) {
