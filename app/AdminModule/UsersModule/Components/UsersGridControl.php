@@ -19,6 +19,7 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
+use App\Model\Enums\TroopApplicationState;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -177,8 +178,13 @@ class UsersGridControl extends Control
             ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
                 $qb->join('u.groupRoles', 'uGR')
                     ->join('uGR.role', 'uGRR')
+                    ->leftJoin('uGR.troop', 'uGRT')
+                    ->leftJoin('uGR.patrol', 'uGRP')
+                    ->leftJoin('uGRP.troop', 'uGRPT')
                     ->andWhere('uGRR.id IN (:grids)')
-                    ->setParameter('grids', (array) $values);
+                    ->andWhere('uGRT.state != :tas AND uGRPT.state != :tas')
+                    ->setParameter('grids', (array) $values)
+                    ->setParameter('tas', TroopApplicationState::DRAFT);
             });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
