@@ -182,7 +182,7 @@ class UsersGridControl extends Control
                     ->leftJoin('uGR.patrol', 'uGRP')
                     ->leftJoin('uGRP.troop', 'uGRPT')
                     ->andWhere('uGRR.id IN (:grids)')
-                    ->andWhere('uGRT.state != :tas AND uGRPT.state != :tas')
+                    ->andWhere('(uGRT.state IS NULL OR uGRT.state != :tas) AND (uGRPT.state IS NULL OR uGRPT.state != :tas)')
                     ->setParameter('grids', (array) $values)
                     ->setParameter('tas', TroopApplicationState::DRAFT);
             });
