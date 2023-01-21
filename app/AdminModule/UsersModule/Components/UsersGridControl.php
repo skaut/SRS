@@ -19,6 +19,7 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
+use App\Model\Enums\TroopApplicationState;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -172,7 +173,19 @@ class UsersGridControl extends Control
                     ->setParameter('rids', (array) $values);
             });
 
-        $grid->addColumnText('groupRoles', 'Skupinové role', 'groupRolesText');
+        $grid->addColumnText('groupRoles', 'Skupinové role', 'groupRolesText')
+            ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
+            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
+                $qb->join('u.groupRoles', 'uGR')
+                    ->join('uGR.role', 'uGRR')
+                    ->leftJoin('uGR.troop', 'uGRT')
+                    ->leftJoin('uGR.patrol', 'uGRP')
+                    ->leftJoin('uGRP.troop', 'uGRPT')
+                    ->andWhere('uGRR.id IN (:grids)')
+                    ->andWhere('(uGRT.state IS NULL OR uGRT.state != :tas) AND (uGRPT.state IS NULL OR uGRPT.state != :tas)')
+                    ->setParameter('grids', (array) $values)
+                    ->setParameter('tas', TroopApplicationState::DRAFT);
+            });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
             ->setFilterMultiSelect($this->subeventService->getSubeventsOptions())
