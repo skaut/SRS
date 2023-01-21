@@ -30,6 +30,7 @@ use App\Services\ExcelExportService;
 use App\Services\QueryBus;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
+use App\Services\SkautIsService;
 use App\Services\SubeventService;
 use App\Services\UserService;
 use App\Utils\Helpers;
@@ -46,6 +47,7 @@ use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
+use Skaut\Skautis\Wsdl\WsdlException;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -72,6 +74,7 @@ class UsersGridControl extends Control
         private AclService $aclService,
         private ApplicationService $applicationService,
         private UserService $userService,
+        private SkautIsService $skautIsService,
         private SkautIsEventEducationService $skautIsEventEducationService,
         private SkautIsEventGeneralService $skautIsEventGeneralService,
         private SubeventService $subeventService
@@ -149,6 +152,9 @@ class UsersGridControl extends Control
 
         $grid->addGroupAction('admin.users.users_group_action_export_schedules')
             ->onSelect[] = [$this, 'groupExportSchedules'];
+
+        $grid->addGroupAction('Načíst členství ze skautIS (admin)')
+            ->onSelect[] = [$this, 'groupUpdateMembership'];
 
         $grid->addColumnText('displayName', 'admin.users.users_name')
             ->setSortable()
@@ -718,6 +724,33 @@ class UsersGridControl extends Control
     {
         $this->sessionSection->userIds = $ids;
         $this->redirect('exportusers');
+    }
+
+    /**
+     * @param int[] $ids
+     */
+    public function groupUpdateMembership(array $ids): void
+    {
+        $users  = $this->userRepository->findUsersByIds($ids);
+        $errors = 0;
+
+        foreach ($users as $user) {
+            try {
+                $membership = $this->skautIsService->getValidMembership($user->getSkautISPersonId());
+                $user->setUnit($membership?->RegistrationNumber);
+                $this->userRepository->save($user);
+            } catch (WsdlException $e) {
+                $errors++;
+            }
+        }
+
+        if ($errors > 0) {
+            $this->getPresenter()->flashMessage('Členství některých účastníků se nepodařilo načíst (oprávnění).', 'warning');
+        } else {
+            $this->getPresenter()->flashMessage('Členství byla úspěšně načtena.', 'success');
+        }
+
+        $this->reload();
     }
 
     /**
