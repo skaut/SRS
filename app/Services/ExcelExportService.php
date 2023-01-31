@@ -598,12 +598,12 @@ class ExcelExportService
         $sheet->setCellValue([$column, $row], $this->translator->translate('Vedoucí'));
         $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
 
         $sheet->setCellValue([$column, $row], $this->translator->translate('E-mail vedoucího'));
         $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
 
         $sheet->setCellValue([$column, $row], $this->translator->translate('Datum založení'));
         $sheet->getStyle([$column, $row])->getFont()->setBold(true);
@@ -628,27 +628,27 @@ class ExcelExportService
         $sheet->setCellValue([$column, $row], $this->translator->translate('Kód jamoddílu'));
         $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
 
         $sheet->setCellValue([$column, $row], $this->translator->translate('Počet osob'));
         $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-        $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
         $sheet->setCellValue([$column, $row], $this->translator->translate('Počet rádců'));
         $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-        $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
         $sheet->setCellValue([$column, $row], $this->translator->translate('Počet dospělých'));
         $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-        $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
         $sheet->setCellValue([$column, $row], $this->translator->translate('Počet družin'));
         $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-        $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
         foreach ($troops as $troop) {
             $row++;
