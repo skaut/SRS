@@ -12,6 +12,8 @@ use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Http\Session;
+use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use Throwable;
@@ -27,12 +29,16 @@ use function date;
  */
 class PatrolsGridControl extends Control
 {
+    private SessionSection $sessionSection;
+
     public function __construct(
         private CommandBus $commandBus,
         private Translator $translator,
         private PatrolRepository $patrolRepository,
-        private ExcelExportService $excelExportService
+        private ExcelExportService $excelExportService,
+        private Session $session
     ) {
+        $this->sessionSection = $session->getSection('srs');
     }
 
     /**
