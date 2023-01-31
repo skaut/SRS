@@ -25,7 +25,6 @@ use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 use function count;
-use function date;
 
 /**
  * Komponenta pro zobrazení datagridu družin.
