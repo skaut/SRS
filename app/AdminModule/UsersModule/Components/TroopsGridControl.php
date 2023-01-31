@@ -9,10 +9,14 @@ use App\Model\User\Commands\RemoveTroop;
 use App\Model\User\Repositories\TroopRepository;
 use App\Model\User\Troop;
 use App\Services\CommandBus;
+use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
+use Nette\Http\Session;
+use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use Throwable;
@@ -21,18 +25,22 @@ use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 use function count;
-use function date;
 
 /**
  * Komponenta pro zobrazení datagridu družin.
  */
 class TroopsGridControl extends Control
 {
+    private SessionSection $sessionSection;
+
     public function __construct(
         private CommandBus $commandBus,
         private Translator $translator,
-        private TroopRepository $troopRepository
+        private TroopRepository $troopRepository,
+        private ExcelExportService $excelExportService,
+        private Session $session
     ) {
+        $this->sessionSection = $session->getSection('srs');
     }
 
     /**
@@ -61,9 +69,8 @@ class TroopsGridControl extends Control
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
         $grid->setStrictSessionFilterValues(false);
 
-        $stamp = date(Helpers::DATE_FORMAT);
-        $grid->addExportCsv('admin.common.export_all', 'NSJ2023 Skupiny ' . $stamp . '.csv');
-        $grid->addExportCsvFiltered('admin.common.export_filter', 'NSJ2023 Skupiny fi ' . $stamp . '.csv');
+        $grid->addGroupAction('Export seznamu skupin')
+            ->onSelect[] = [$this, 'groupExportTroops'];
 
         $grid->addColumnText('name', 'Název')
             ->setSortable()
@@ -179,5 +186,35 @@ class TroopsGridControl extends Control
     public function handleGeneratePaymentProof(int $id): void
     {
         $this->presenter->redirect(':Export:TroopIncomeProof:troop', ['id' => $id]);
+    }
+
+    /**
+     * Hromadně vyexportuje seznam skupin.
+     *
+     * @param int[] $ids
+     *
+     * @throws AbortException
+     */
+    public function groupExportTroops(array $ids): void
+    {
+        $this->sessionSection->troopIds = $ids;
+        $this->redirect('exporttroops');
+    }
+
+    /**
+     * Zpracuje export seznamu skupin.
+     *
+     * @throws AbortException
+     * @throws Exception
+     */
+    public function handleExportTroops(): void
+    {
+        $ids = $this->session->getSection('srs')->troopIds;
+
+        $troops = $this->troopRepository->findTroopsByIds($ids);
+
+        $response = $this->excelExportService->exportTroopsList($troops, 'seznam-skupin.xlsx');
+
+        $this->getPresenter()->sendResponse($response);
     }
 }

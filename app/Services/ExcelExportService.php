@@ -14,7 +14,9 @@ use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Room;
 use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Patrol;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
+use App\Model\User\Troop;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -520,6 +522,172 @@ class ExcelExportService
                 $sheet->setCellValueByColumnAndRow($column++, $row, implode(', ', $blocks));
                 $sheet->setCellValueByColumnAndRow($column++, $row, implode(', ', $rooms));
             }
+        }
+
+        return new ExcelResponse($this->spreadsheet, $filename);
+    }
+
+    /**
+     * @param Collection<int, Patrol> $patrols
+     *
+     * @throws Exception
+     */
+    public function exportPatrolsList(Collection $patrols, string $filename): ExcelResponse
+    {
+        $sheet = $this->spreadsheet->getSheet(0);
+
+        $row    = 1;
+        $column = 1;
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Název'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Skupina'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Datum založení'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Počet osob'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        foreach ($patrols as $patrol) {
+            $row++;
+            $column = 1;
+
+            $sheet->setCellValue([$column++, $row], $patrol->getName());
+
+            $sheet->setCellValue([$column++, $row], $patrol->getTroop()->getName());
+
+            $sheet->setCellValue([$column++, $row], $patrol->getTroop()->getApplicationDate() !== null ? $patrol->getTroop()->getApplicationDate()->format(Helpers::DATETIME_FORMAT) : '');
+
+            $sheet->setCellValue([$column++, $row], $patrol->getUsersRoles()->count());
+        }
+
+        return new ExcelResponse($this->spreadsheet, $filename);
+    }
+
+    /**
+     * @param Collection<int, Troop> $troops
+     *
+     * @throws Exception
+     */
+    public function exportTroopsList(Collection $troops, string $filename): ExcelResponse
+    {
+        $sheet = $this->spreadsheet->getSheet(0);
+
+        $row    = 1;
+        $column = 1;
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Název'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Stav'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Variabilní symbol'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Vedoucí'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('E-mail vedoucího'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Datum založení'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Cena'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(10);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Datum splatnosti'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Datum platby'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Kód jamoddílu'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Počet osob'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Počet rádců'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Počet dospělých'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Počet družin'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        foreach ($troops as $troop) {
+            $row++;
+            $column = 1;
+
+            $sheet->setCellValue([$column++, $row], $troop->getName());
+
+            $sheet->setCellValue([$column++, $row], $this->translator->translate('common.application_state.' . $troop->getState()));
+
+            $sheet->setCellValue([$column++, $row], $troop->getVariableSymbolText());
+
+            $sheet->setCellValue([$column++, $row], $troop->getLeader()->getDisplayName());
+
+            $sheet->setCellValue([$column++, $row], $troop->getLeader()->getEmail());
+
+            $sheet->setCellValue([$column++, $row], $troop->getApplicationDate() !== null ? $troop->getApplicationDate()->format(Helpers::DATETIME_FORMAT) : '');
+
+            $sheet->setCellValue([$column++, $row], $troop->getFee());
+
+            $sheet->setCellValue([$column++, $row], $troop->getMaturityDate() !== null ? $troop->getMaturityDate()->format(Helpers::DATE_FORMAT) : '');
+
+            $sheet->setCellValue([$column++, $row], $troop->getPaymentDate() !== null ? $troop->getPaymentDate()->format(Helpers::DATE_FORMAT) : '');
+
+            $sheet->setCellValue([$column++, $row], $troop->getPairingCode());
+
+            $sheet->setCellValue([$column++, $row], $troop->countUsersInRoles([Role::PATROL_LEADER, Role::LEADER, Role::ESCORT, Role::ATTENDEE]));
+
+            $sheet->setCellValue([$column++, $row], $troop->countUsersInRoles([Role::PATROL_LEADER]));
+
+            $sheet->setCellValue([$column++, $row], $troop->countUsersInRoles([Role::LEADER, Role::ESCORT]));
+
+            $sheet->setCellValue([$column++, $row], $troop->getConfirmedPatrols()->count());
         }
 
         return new ExcelResponse($this->spreadsheet, $filename);
