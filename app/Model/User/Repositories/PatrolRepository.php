@@ -30,6 +30,11 @@ class PatrolRepository extends AbstractRepository
         return $this->getRepository()->findOneBy(['troop' => $troopId, 'confirmed' => false]);
     }
 
+    /**
+     * @param int[] $ids
+     *
+     * @return Collection<int, Patrol>
+     */
     public function findPatrolsByIds(array $ids): Collection
     {
         $criteria = Criteria::create()

@@ -12,6 +12,7 @@ use App\Services\CommandBus;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;

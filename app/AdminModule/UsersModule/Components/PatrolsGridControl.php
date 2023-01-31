@@ -10,6 +10,7 @@ use App\Model\User\Repositories\PatrolRepository;
 use App\Services\CommandBus;
 use App\Services\ExcelExportService;
 use App\Utils\Helpers;
+use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
