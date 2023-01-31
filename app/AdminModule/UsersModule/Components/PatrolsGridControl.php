@@ -8,6 +8,7 @@ use App\Model\User\Commands\RemovePatrol;
 use App\Model\User\Patrol;
 use App\Model\User\Repositories\PatrolRepository;
 use App\Services\CommandBus;
+use App\Services\ExcelExportService;
 use App\Utils\Helpers;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -29,7 +30,8 @@ class PatrolsGridControl extends Control
     public function __construct(
         private CommandBus $commandBus,
         private Translator $translator,
-        private PatrolRepository $patrolRepository
+        private PatrolRepository $patrolRepository,
+        private ExcelExportService $excelExportService
     ) {
     }
 
@@ -59,9 +61,8 @@ class PatrolsGridControl extends Control
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
         $grid->setStrictSessionFilterValues(false);
 
-        $stamp = date(Helpers::DATE_FORMAT);
-        $grid->addExportCsv('admin.common.export_all', 'NSJ2023 Druziny ' . $stamp . '.csv');
-        $grid->addExportCsvFiltered('admin.common.export_filter', 'NSJ2023 Druziny fi ' . $stamp . '.csv');
+        $grid->addGroupAction('Export seznamu družin')
+            ->onSelect[] = [$this, 'groupExportPatrols'];
 
         $grid->addColumnText('name', 'Název')
             ->setSortable()
@@ -111,5 +112,35 @@ class PatrolsGridControl extends Control
         $p = $this->getPresenter();
         $p->flashMessage('Družina byla úspěšně odstraněna.', 'success');
         $p->redirect('this');
+    }
+
+    /**
+     * Hromadně vyexportuje seznam družin.
+     *
+     * @param int[] $ids
+     *
+     * @throws AbortException
+     */
+    public function groupExportPatrols(array $ids): void
+    {
+        $this->sessionSection->patrolIds = $ids;
+        $this->redirect('exportpatrols');
+    }
+
+    /**
+     * Zpracuje export seznamu družin.
+     *
+     * @throws AbortException
+     * @throws Exception
+     */
+    public function handleExportPatrols(): void
+    {
+        $ids = $this->session->getSection('srs')->patrolIds;
+
+        $patrols = $this->patrolRepository->findPatrolsByIds($ids);
+
+        $response = $this->excelExportService->exportPatrolsList($patrols, 'seznam-druzin.xlsx');
+
+        $this->getPresenter()->sendResponse($response);
     }
 }
