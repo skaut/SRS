@@ -207,7 +207,7 @@ class TroopsGridControl extends Control
      * @throws AbortException
      * @throws Exception
      */
-    public function handleExportPatrols(): void
+    public function handleExportTroops(): void
     {
         $ids = $this->session->getSection('srs')->troopIds;
 
