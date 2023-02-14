@@ -1249,16 +1249,29 @@ class User
     }
 
     /**
+     * @return Collection<int, UserGroupRole>
+     */
+    public function getConfirmedGroupRoles(): Collection
+    {
+        $confirmedGroupRoles = new ArrayCollection();
+        foreach ($this->groupRoles as $groupRole) {
+            $troop = $groupRole->getTroop() ?? $groupRole->getPatrol()->getTroop();
+            if ($troop->getState() !== TroopApplicationState::DRAFT) {
+                $confirmedGroupRoles->add($groupRole);
+            }
+        }
+
+        return $confirmedGroupRoles;
+    }
+
+    /**
      * Vrátí skupinové role uživatele oddělené čárkou.
      */
     public function getGroupRolesText(): string
     {
         $rolesNames = [];
-        foreach ($this->groupRoles as $groupRole) {
-            $troop = $groupRole->getTroop() ?? $groupRole->getPatrol()->getTroop();
-            if ($troop->getState() !== TroopApplicationState::DRAFT) {
-                $rolesNames[] = $groupRole->getRole()->getName();
-            }
+        foreach ($this->getConfirmedGroupRoles() as $groupRole) {
+            $rolesNames[] = $groupRole->getRole()->getName();
         }
 
         return implode(', ', $rolesNames);

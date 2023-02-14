@@ -66,6 +66,11 @@ class Authenticator implements Nette\Security\Authenticator
 
         // nacteni schvalenych roli v SRS
         $netteRoles = [];
+
+        foreach ($user->getConfirmedGroupRoles() as $groupRole) {
+            $netteRoles[$groupRole->getRole()->getId()] = $groupRole->getRole()->getName();
+        }
+
         if ($user->isApproved()) {
             foreach ($user->getRoles() as $role) {
                 $netteRoles[$role->getId()] = $role->getName();
