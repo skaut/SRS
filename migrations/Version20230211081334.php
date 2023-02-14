@@ -9,12 +9,12 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20230211081334 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
@@ -22,7 +22,7 @@ final class Version20230211081334 extends AbstractMigration
         $this->addSql('INSERT INTO `settings` (`item`, `value`) VALUES (\'tracking_code\', NULL)');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
     }
 }

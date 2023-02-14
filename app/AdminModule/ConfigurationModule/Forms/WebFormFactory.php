@@ -74,7 +74,7 @@ class WebFormFactory
         $form->addSelect('redirectAfterLogin', 'admin.configuration.web_redirect_after_login', $redirectAfterLoginOptions)
             ->addRule(Form::FILLED, 'admin.configuration.web_redirect_after_login_empty');
 
-        $form->addTextArea('tracking_code', 'admin.configuration.web_tracking_code');
+        $form->addTextArea('tracking_code', 'admin.configuration.web_tracking_code', null, 10);
 
         $form->addSubmit('submit', 'admin.common.save');
 
