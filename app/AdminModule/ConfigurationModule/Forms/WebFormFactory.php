@@ -74,14 +74,14 @@ class WebFormFactory
         $form->addSelect('redirectAfterLogin', 'admin.configuration.web_redirect_after_login', $redirectAfterLoginOptions)
             ->addRule(Form::FILLED, 'admin.configuration.web_redirect_after_login_empty');
 
-//        $form->addText('ga_id', 'admin.configuration.web_ga_id');
+        $form->addTextArea('tracking_code', 'admin.configuration.web_tracking_code', null, 10);
 
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
             'footer' => $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER)),
             'redirectAfterLogin' => array_key_exists($redirectAfterLoginValue, $redirectAfterLoginOptions) ? $redirectAfterLoginValue : null,
-//            'ga_id' => $this->queryBus->handle(new SettingStringValueQuery(Settings::GA_ID)),
+            'tracking_code' => $this->queryBus->handle(new SettingStringValueQuery(Settings::TRACKING_CODE)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -108,6 +108,6 @@ class WebFormFactory
 
         $this->commandBus->handle(new SetSettingStringValue(Settings::FOOTER, $values->footer));
         $this->commandBus->handle(new SetSettingStringValue(Settings::REDIRECT_AFTER_LOGIN, $values->redirectAfterLogin));
-//        $this->commandBus->handle(new SetSettingStringValue(Settings::GA_ID, $values->ga_id));
+        $this->commandBus->handle(new SetSettingStringValue(Settings::TRACKING_CODE, $values->tracking_code));
     }
 }

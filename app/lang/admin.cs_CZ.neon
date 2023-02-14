@@ -846,7 +846,7 @@ configuration:
     web_logo: "Logo"
     web_logo_format: "Logo musí být ve formátu JPG, PNG nebo GIF."
     web_footer: "Text v patičce"
-    web_ga_id: "Google Analytics číslo pro měření"
+    web_tracking_code: "Kód pro sledování návštěvnosti"
     web_redirect_after_login: "Po přihlášení přesměrovat na"
     web_redirect_after_login_empty: "Vyberte stránku, na kterou budou uživatelé přesměrováni po přihlášení."
 
