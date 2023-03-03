@@ -46,6 +46,7 @@
             </div>
         </div>
 
+        {if $registrationAllowed || $troop->getState() !== 'draft'}
         <div class="form-group row">
             <div class="col-3 col-form-label">
                 Pracuješ v roli
@@ -220,5 +221,14 @@
                 {control troopConfirmForm}
             </div>
         </div>
+        {else}
+            <div class="row">
+                <div class="col">
+                    <div class="alert alert-info alert-forever">
+                        Registrace nové skupiny není v tuto chvíli povolena.
+                    </div>
+                </div>
+            </div>
+        {/if}
     {/if}
 </div>
