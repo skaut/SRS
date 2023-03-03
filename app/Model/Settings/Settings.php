@@ -235,6 +235,11 @@ class Settings
     public const CONTACT_FORM_GUESTS_ALLOWED = 'contact_form_guests_allowed';
 
     /**
+     * Povolit registraci skupiny.
+     */
+    public const GROUP_REGISTRATION_ALLOWED = 'group_registration_allowed';
+
+    /**
      * Název položky nastavení.
      */
     #[ORM\Column(type: 'string', unique: true)]

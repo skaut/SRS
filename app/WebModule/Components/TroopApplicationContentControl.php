@@ -7,6 +7,7 @@ namespace App\WebModule\Components;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterTroop;
@@ -79,10 +80,7 @@ class TroopApplicationContentControl extends BaseContentControl
             $dbuser           = $this->userRepository->findById($user->id);
             $template->dbuser = $dbuser;
 
-            $template->registrationAllowed = $this->roleRepository->findBySystemName(Role::ATTENDEE)->isRegisterableNow()
-                && $this->roleRepository->findBySystemName(Role::PATROL_LEADER)->isRegisterableNow()
-                && $this->roleRepository->findBySystemName(Role::LEADER)->isRegisterableNow()
-                && $this->roleRepository->findBySystemName(Role::ESCORT)->isRegisterableNow();
+            $template->registrationAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::GROUP_REGISTRATION_ALLOWED));
 
             $skautIsUserId          = $dbuser->getSkautISUserId();
             $skautIsRoles           = $this->skautIsService->getUserRoles($skautIsUserId, self::$ALLOWED_ROLE_TYPES);
