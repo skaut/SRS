@@ -79,6 +79,11 @@ class TroopApplicationContentControl extends BaseContentControl
             $dbuser           = $this->userRepository->findById($user->id);
             $template->dbuser = $dbuser;
 
+            $template->registrationAllowed = $this->roleRepository->findBySystemName(Role::ATTENDEE)->isRegisterableNow()
+                && $this->roleRepository->findBySystemName(Role::PATROL_LEADER)->isRegisterableNow()
+                && $this->roleRepository->findBySystemName(Role::LEADER)->isRegisterableNow()
+                && $this->roleRepository->findBySystemName(Role::ESCORT)->isRegisterableNow();
+
             $skautIsUserId          = $dbuser->getSkautISUserId();
             $skautIsRoles           = $this->skautIsService->getUserRoles($skautIsUserId, self::$ALLOWED_ROLE_TYPES);
             $template->skautIsRoles = $skautIsRoles;
