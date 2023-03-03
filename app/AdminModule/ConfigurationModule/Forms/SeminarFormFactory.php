@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Settings\Commands\SetSettingBoolValue;
 use App\Model\Settings\Commands\SetSettingDateValue;
 use App\Model\Settings\Commands\SetSettingStringValue;
+use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -71,6 +73,8 @@ class SeminarFormFactory
         $seminarToDate->addRule([$this, 'validateSeminarToDate'], 'admin.configuration.seminar_to_date_before_from', [$seminarToDate, $seminarFromDate]);
         $editRegistrationTo->addRule([$this, 'validateEditRegistrationTo'], 'admin.configuration.edit_registration_to_after_from', [$editRegistrationTo, $seminarFromDate]);
 
+        $form->addCheckbox('groupRegistrationAllowed', 'povolit registraci nových skupin');
+
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
@@ -78,6 +82,7 @@ class SeminarFormFactory
             'seminarFromDate' => $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_FROM_DATE)),
             'seminarToDate' => $this->queryBus->handle(new SettingDateValueQuery(Settings::SEMINAR_TO_DATE)),
             'editRegistrationTo' => $this->queryBus->handle(new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO)),
+            'groupRegistrationAllowed' => $this->queryBus->handle(new SettingBoolValueQuery(Settings::GROUP_REGISTRATION_ALLOWED)),
         ]);
 
         $form->onSuccess[] = [$this, 'processForm'];
@@ -100,6 +105,7 @@ class SeminarFormFactory
         $this->commandBus->handle(new SetSettingDateValue(Settings::SEMINAR_FROM_DATE, $values->seminarFromDate));
         $this->commandBus->handle(new SetSettingDateValue(Settings::SEMINAR_TO_DATE, $values->seminarToDate));
         $this->commandBus->handle(new SetSettingDateValue(Settings::EDIT_REGISTRATION_TO, $values->editRegistrationTo));
+        $this->commandBus->handle(new SetSettingBoolValue(Settings::GROUP_REGISTRATION_ALLOWED, $values->groupRegistrationAllowed));
     }
 
     /**
