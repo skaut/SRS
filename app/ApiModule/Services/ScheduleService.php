@@ -206,15 +206,22 @@ class ScheduleService
             $maxTime = 0;
             foreach ($programs as $program) {
                 $start = (int) $program->getStart()->format('H');
-                if ($start < $minTime) {
-                    $minTime = $start;
-                }
-
                 $end = (int) $program->getEnd()->format('H');
                 if ((int) $program->getEnd()->format('i') > 0) {
                     $end++;
                 }
+                if ($end === 0) {
+                    $end = 24;
+                }
 
+                if ($end < $start) {
+                    $minTime = 0;
+                    $maxTime = 24;
+                    break;
+                }
+                if ($start < $minTime) {
+                    $minTime = $start;
+                }
                 if ($end > $maxTime) {
                     $maxTime = $end;
                 }
