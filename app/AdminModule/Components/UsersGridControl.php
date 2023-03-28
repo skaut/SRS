@@ -227,6 +227,9 @@ class UsersGridControl extends Control
             ->setSortable()
             ->setFilterText();
 
+        $grid->addColumnText('phone', 'admin.users.users_phone')
+            ->setFilterText();
+
         $grid->addColumnText('city', 'admin.users.users_city')
             ->setSortable()
             ->setFilterText();

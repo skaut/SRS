@@ -103,6 +103,7 @@ class Authenticator implements Nette\Security\Authenticator
         $user->setCity($skautISPerson->City);
         $user->setPostcode($skautISPerson->Postcode);
         $user->setState($skautISPerson->State);
+        $user->setPhone($skautISPerson->Phone);
         $user->setLastLogin(new DateTimeImmutable());
         $user->setMember($skautISUser->HasMembership);
 
