@@ -228,6 +228,9 @@ class UsersGridControl extends Control
             ->setFilterText();
 
         $grid->addColumnText('phone', 'admin.users.users_phone')
+            ->setRenderer(static fn (User $row) => Html::el('a')
+                ->href('tel:' . $row->getPhone())
+                ->setText($row->getPhone()))
             ->setFilterText();
 
         $grid->addColumnText('city', 'admin.users.users_city')

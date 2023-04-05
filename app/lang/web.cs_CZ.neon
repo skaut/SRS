@@ -141,6 +141,7 @@ application_content:
     lastname_empty: "Zadejte příjmení."
     nickname: "Přezdívka"
     email: "E-mail"
+    phone: "Telefon"
     birthdate: "Datum narození"
     birthdate_empty: "Zadejte datum narození."
     street: "Ulice"

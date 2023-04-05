@@ -395,6 +395,7 @@ users:
     users_degree_post: "Titul za jménem"
     users_email: "E-mail"
     users_email_format: "Zadejte e-mail ve správném formátu."
+    users_phone: "Telefon"
     users_birthdate: "Datum narození"
     users_address: "Bydliště"
     users_about_me: "O mně"
