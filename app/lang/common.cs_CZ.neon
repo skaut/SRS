@@ -160,6 +160,7 @@ export:
         membership_not_connected: "nepropojený účet"
         membership_external: "externí lektor"
         email: "E-mail"
+        phone: "Telefon"
         age: "Věk"
         city: "Město"
         address: "Adresa"
