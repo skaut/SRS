@@ -1,0 +1,234 @@
+<div class="clearfix"></div>
+
+<div class="application-content">
+    <div class="row">
+        <div class="col">
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    {if $guestRole}
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-warning alert-forever">
+                    {_web.application_content.login_required_begin}
+                    <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.application_content.login_required_link}</a>{_web.application_content.login_required_end}
+                </div>
+            </div>
+        </div>
+    {elseif empty($skautIsRoles)}
+        Ve skautISu nemáš dostatečné oprávnění. Registrace vyžaduje přístup k informacím
+        o členech (typicky admin oddílu/střediska).
+    {elseif $step === 'members'}
+        {control groupMembersForm}
+    {elseif $step === 'additional_info'}
+        {control groupAdditionalInfoForm}
+    {elseif $step === 'confirm'}
+        {control groupConfirmForm}
+    {else}
+        <div class="row" n:if="$troop->getState() !== 'draft'">
+            <div class="col">
+                <div class="alert alert-info alert-forever">
+                    <p class="card-text">
+                        Přihláška tvé skupiny byla úspěšně odeslána. Nyní můžeš pouze měnit osobu za osobu.
+                    </p>
+                    <p class="card-text" n:if="$troop->getState() === 'waiting_for_payment'">
+                        Abychom s vámi mohli počítat je nutné nejpozději do 30 kalendářních dnů, nejpozději však do 15.
+                        února 2023 (pokud by nastalo dříve) uhradit <strong>{$troop->getFee()} Kč</strong> účastnického
+                        poplatku za celou skupinu na účet: <strong>{$accountNumber}</strong> s variabilním symbolem:
+                        <strong>{$troop->getVariableSymbolText()}</strong>.
+                    </p>
+                    <p class="card-text" n:if="$troop->getState() === 'paid'">
+                        Platba za vaši přihlášku byla přijata.
+                        <a n:href="generatePaymentProof $troop->getId()">Stáhnout potvrzení platby</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {if $registrationAllowed || $troop->getState() !== 'draft'}
+        <div class="form-group row">
+            <div class="col-3 col-form-label">
+                Pracuješ v roli
+            </div>
+            <div class="col-9">
+                <div class="btn-group">
+                    <button n:class="btn, btn-light, dropdown-toggle" data-toggle="dropdown">
+                        {if $skautIsRoleSelected}
+                            {$skautIsRoleSelected->DisplayName}
+                        {else}
+                            Vyberte roli
+                        {/if}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="{link changeRole!, $r->ID}" n:foreach="$skautIsRoles as $r" n:class="dropdown-item, ($skautIsRoleSelected && $r->ID === $skautIsRoleSelected->ID) ? active">
+                            {$r->DisplayName}
+                        </a>
+                    </div>
+                </div>
+                <br>
+                <span class="help-block text-info">
+                    <i class="fa fa-circle-info" aria-hidden="true"></i>
+                    Účastníci do registrace se ti načítají z členů tvé jednotky.
+                </span>
+            </div>
+        </div>
+
+        <h4>Skupina</h4>
+        <div class="row form-group">
+            <div class="col-3">
+                Jméno
+            </div>
+            <div class="col-9">
+                {$troop->getName()}
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                Zodpovědný vedoucí
+            </div>
+            <div class="col-9">
+                {$troop->getLeader()->getDisplayName()}
+                <br>
+                <span class="help-block text-info">
+                    <i class="fa fa-circle-info" aria-hidden="true"></i>
+                    Registrující je vždy zodpovědnou osobou.
+                </span>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                Kód pro spojení do Jamooddílu
+            </div>
+            <div class="col-9">
+                {$troop->getPairingCode()}
+                <br>
+                <span class="help-block text-info">
+                    <i class="fa fa-circle-info" aria-hidden="true"></i>
+                    Kód můžeš nasdílet kamarádům z jiných skupin a my se budeme snažit vás spojit do jamoddílu. Pozor, abyste dohromady nepřekročili maximální počet lidí v jamoddílu (42).
+                </span>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col">
+                <h4>Družiny</h4>
+            </div>
+            <div class="col-auto">
+                <a href="{plink this, step: members, type: patrol}" n:class="btn, btn-success, btn-sm" n:if="$troop->getState() === 'draft'">
+                    Přidat družinu
+                </a>
+            </div>
+        </div>
+
+        {foreach $troop->getConfirmedPatrols() as $patrol}
+            <div class="row">
+                <div class="col">
+                    <h5 style="line-height: 1.5">{$patrol->getName()}</h5>
+                </div>
+                <div class="col-auto">
+                    <a href="{plink this, step: members, type: patrol, patrol_id: $patrol->getId()}"
+                       class="btn btn-warning btn-sm">
+                        Upravit družinu
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table table-sm table-bordered table-striped">
+                        <tr>
+                            <th class="w-50">Jméno</th>
+                            <th class="w-50">Role</th>
+                        </tr>
+                        {foreach $patrol->getUsersRoles() as $userRole}
+                            <tr>
+                                <td>{$userRole->getUser()->getDisplayName()}</td>
+                                <td>{$userRole->getRole()->getName()}</td>
+                            </tr>
+                        {/foreach}
+                    </table>
+
+                    <p class="font-italic">
+                        Družina má {$patrol->countUsersInRoles(['attendee', 'patrol_leader'])}/12 účastníků
+                        (z toho {$patrol->countUsersInRoles(['patrol_leader'])}/1 rádců)
+                        a {$patrol->countUsersInRoles(['leader'])}/1 vedoucích.
+                    </p>
+                </div>
+            </div>
+        {else}
+            <div class="row">
+                <div class="col">
+                    <span class="help-block text-info">
+                        <i class="fa fa-circle-info" aria-hidden="true"></i>
+                        Začni tím, že přidáš družinu.
+                    </span>
+                </div>
+            </div>
+        {/foreach}
+
+        <div class="row mt-3">
+            <div class="col">
+                <h4>Dospělí průvodci</h4>
+            </div>
+            <div class="col-auto">
+                <a href="{plink this, step: members, type: troop}"
+                        n:class="btn, btn-warning, btn-sm, $troop->getConfirmedPatrols()->isEmpty() ? disabled">
+                    Upravit
+                </a>
+            </div>
+        </div>
+
+        {if !$troop->getConfirmedPatrols()->isEmpty()}
+            <div class="row">
+                <div class="col">
+                    <table class="table table-sm table-bordered table-striped">
+                        <tr>
+                            <th class="w-50">Jméno</th>
+                            <th class="w-50">Role</th>
+                        </tr>
+                        {foreach $troop->getUsersRoles() as $userRole}
+                            <tr>
+                                <td>{$userRole->getUser()->getDisplayName()}</td>
+                                <td>{$userRole->getRole()->getName()}</td>
+                            </tr>
+                        {/foreach}
+                    </table>
+
+                    <p class="font-italic">
+                        Doprovod má {$troop->countUsersInRoles(['escort'])}/{$troop->getMaxEscortsCount()} členů.
+                        Můžeš mít 2× počet družin dospělých (tedy {$troop->getMaxAdultsCount()},
+                        z toho máš {$troop->countUsersInRoles(['leader'])} vedoucí
+                        a {$troop->countUsersInRoles(['escort'])} doprovody).
+                    </p>
+                </div>
+            </div>
+        {else}
+            <div class="row">
+                <div class="col">
+                    <span class="help-block text-info">
+                        <i class="fa fa-circle-info" aria-hidden="true"></i>
+                        Zatím nemáš družinu, bez ní to nepůjde.
+                    </span>
+                </div>
+            </div>
+        {/if}
+
+        <div class="row mt-3">
+            <div class="col">
+                <h4>Shrnutí</h4>
+                {control troopConfirmForm}
+            </div>
+        </div>
+        {else}
+            <div class="row">
+                <div class="col">
+                    <div class="alert alert-info alert-forever">
+                        Registrace nové skupiny není v tuto chvíli povolena.
+                    </div>
+                </div>
+            </div>
+        {/if}
+    {/if}
+</div>

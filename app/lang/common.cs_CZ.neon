@@ -34,6 +34,7 @@ content:
         image: "Obrázek"
         document: "Dokumenty"
         application: "Přihlašovací formulář"
+        troop_application: "Přihlašovací formulář skupiny"
         html: "HTML box"
         faq: "FAQ"
         news: "Aktuality"
@@ -52,6 +53,7 @@ content:
         image: ""
         document: "Dokumenty"
         application: "Přihlašovací formulář"
+        troop_application: "Přihlašovací formulář skupiny"
         html: ""
         faq: "FAQ"
         news: "Aktuality"
@@ -117,6 +119,7 @@ application_state:
     canceled: "Zrušeno"
     paid: "Zaplaceno"
     paid_free: "Zaplaceno (zdarma)"
+    draft: "Nepotvrzeno"
 
 calendar_view:
     timeGridSeminar: "Na výšku"
@@ -186,12 +189,14 @@ mailing:
     template_type:
         sign_in: "Potvrzení přihlášení přes skautIS"
         registration: "Potvrzení registrace"
+        troop_registration: "Potvrzení přihlášení skupiny"
         registration_canceled: "Potvrzení zrušení registrace"
         registration_canceled_not_paid: "Potvrzení zrušení registrace (nezaplaceno)"
         registration_approved: "Potvrzení schválení registrace"
         roles_changed: "Potvrzení změny rolí"
         subevents_changed: "Potvrzení změny podakcí"
         payment_confirmed: "Potvrzení přijetí platby"
+        troop_payment_confirmed: "Potvrzení přijetí platby skupiny"
         maturity_reminder: "Připomínka splatnosti"
         program_registered: "Přihlášení na program"
         program_unregistered: "Odhlášení z programu"

@@ -32,6 +32,10 @@ common:
     role_option: "{0} %role% (%count% uživatelů)|{1} %role% (%count% uživatel)|[2,4] %role% (%count% uživatelé)|[5,Inf[ %role% (%count% uživatelů)"
     subevent_option: "{0} %subevent% (%count% uživatelů)|{1} %subevent% (%count% uživatel)|[2,4] %subevent% (%count% uživatelé)|[5,Inf[ %subevent% (%count% uživatelů)"
 
+    export_note: "Exportují se všechny řádky nebo ty právě zobrazené. Sloupce viz tlačítko vpravo."
+    export_all: "Export všech"
+    export_filter: "Export zobrazených"
+
 menu:
     dashboard: "Úvod"
     cms: "Web"
@@ -381,6 +385,11 @@ program:
                 export_schedule: "Stáhnout harmonogram"
 
 users:
+    menu:
+        persons: "Osoby"
+        troops: "Skupiny"
+        patrols: "Družiny"
+
     users_heading: "Uživatelé"
     users_name: "Jméno"
     users_photo: "Fotka"
@@ -507,6 +516,12 @@ users:
     users_detail_schedule: "Harmonogram"
     users_detail_birthdate_age: "%birthdate% (%age% let)"
 
+    troops:
+        heading: Skupiny
+
+    patrols:
+        heading: Družiny
+
 payments:
     payments:
         heading: "Platby"
@@ -520,7 +535,8 @@ payments:
         account_number: "Číslo protiúčtu"
         account_name: "Název protiúčtu"
         message: "Zpráva pro příjemce"
-        paired_applications: "Spárované přihlášky"
+        paired_applications: "Spárované osoby"
+        paired_troops: "Spárované skupiny"
         state: "Stav"
         saved: "Platba byla úspěšně uložena."
         delete_confirm: "Opravdu chcete platbu odstranit?"
@@ -582,6 +598,15 @@ acl:
             note: "Účastník musí minimálního věku dosáhnout první den akce."
             error_format: "Zadejte číslo."
             error_low: "Minimální věk nesmí být menší než 0."
+            custom_msg_label: "Vlastní chybová hláška k [↑]"
+            custom_msg_note: "Vlastní text chyby, která se zobrazí při nedosažení věku pro tuto roli. Možné použít %d"
+        maximum_age:
+            label: "Maximální věk"
+            note: "Účastník nesmí maximální věk překročit první den akce."
+            error_format: "Zadejte číslo."
+            error_low: "Maximální věk nesmí být menší než 0."
+            custom_msg_label: "Vlastní chybová hláška k [↑]"
+            custom_msg_note: "Vlastní text chyby, která se zobrazí při překročení věku pro tuto roli. Možné použít %d"
 
 mailing:
     menu:

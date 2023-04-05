@@ -91,6 +91,8 @@ class PaymentsGridControl extends Control
 
         $grid->addColumnText('pairedApplications', 'admin.payments.payments.paired_applications', 'pairedValidApplicationsText');
 
+        $grid->addColumnText('pairedTroops', 'admin.payments.payments.paired_troops', 'pairedTroopsText');
+
         $grid->addColumnText('state', 'admin.payments.payments.state')
             ->setRenderer(fn (Payment $payment) => $this->translator->translate('common.payment_state.' . $payment->getState()))
             ->setFilterMultiSelect($this->preparePaymentStatesOptions())
@@ -173,10 +175,14 @@ class PaymentsGridControl extends Control
      */
     public function handleGeneratePaymentProofBank(int $id): void
     {
-        $this->session->getSection('srs')->applicationIds = Helpers::getIds(
-            $this->paymentRepository->findById($id)->getPairedApplications()
-        );
-        $this->presenter->redirect(':Export:IncomeProof:applications');
+        $payment = $this->paymentRepository->findById($id);
+
+        if (! $payment->getPairedApplications()->isEmpty()) {
+            $this->session->getSection('srs')->applicationIds = Helpers::getIds($payment->getPairedApplications());
+            $this->presenter->redirect(':Export:IncomeProof:applications');
+        } elseif (! $payment->getPairedTroops()->isEmpty()) {
+            $this->presenter->redirect(':Export:TroopIncomeProof:troop', ['id' => $payment->getPairedTroops()->get(0)->getId()]);
+        }
     }
 
     /**

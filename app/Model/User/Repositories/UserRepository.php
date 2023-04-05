@@ -56,6 +56,14 @@ class UserRepository extends AbstractRepository
     }
 
     /**
+     * Vrací uživatele podle skautISPersonId.
+     */
+    public function findBySkautISPersonId(int $skautISUserId): ?User
+    {
+        return $this->getRepository()->findOneBy(['skautISPersonId' => $skautISUserId]);
+    }
+
+    /**
      * Vrací uživatele podle id.
      *
      * @param int[] $ids

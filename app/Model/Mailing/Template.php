@@ -26,6 +26,11 @@ class Template
     public const REGISTRATION = 'registration';
 
     /**
+     * Potvrzení registrace oddílu.
+     */
+    public const TROOP_REGISTRATION = 'troop_registration';
+
+    /**
      * Odhlášení ze semináře.
      */
     public const REGISTRATION_CANCELED = 'registration_canceled';
@@ -54,6 +59,11 @@ class Template
      * Potvrzení přijetí platby.
      */
     public const PAYMENT_CONFIRMED = 'payment_confirmed';
+
+    /**
+     * Potvrzení přijetí platby skupiny.
+     */
+    public const TROOP_PAYMENT_CONFIRMED = 'troop_payment_confirmed';
 
     /**
      * Upozornění na splatnost.

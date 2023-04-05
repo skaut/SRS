@@ -1,0 +1,56 @@
+{block content}
+    {foreach $troops as $troop}
+        <div class="row mb-3">
+            <div class="col-8">
+                <h1 style="padding-top: 24px">{_export.income_proof.bank.heading}</h1>
+            </div>
+            <div class="col-4 text-right">
+                <img src="{$basePath}{$logo}" style="max-height: 60px"/>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <div style="border: 1px solid #000; border-radius: 15px; padding: 10px">
+                    {$company|breakLines}
+                    <br>
+                    {_export.income_proof.ico} {$ico}
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-12">
+                {_export.income_proof.bank.purpose} {$seminarName}
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-12">
+                {_export.income_proof.bank.fee} {$troop->getFee()},00 {_export.income_proof.bank.fee_unit}
+                ({_export.income_proof.bank.fee_words} {$troop->getFeeWords()} {_export.income_proof.bank.fee_unit})
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-12">
+                {_export.income_proof.bank.name} {$troop->getLeader()->getFirstName()} {$troop->getLeader()->getLastName()}
+                ({_export.income_proof.bank.address} {$troop->getLeader()->getStreet()}, {$troop->getLeader()->getPostcode()} {$troop->getLeader()->getCity()}),
+                skupina: {$troop->getName()}
+            </div>
+        </div>
+
+        <div class="row mb-2" n:if="$troop->getPayment()->getAccountNumber() && $troop->getPayment()->getVariableSymbol()">
+            <div class="col-12">
+                Zaplaceno z účtu: {$troop->getPayment()->getAccountNumber()}, variabilní symbol: {$troop->getPayment()->getVariableSymbol()}
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12 text-right">
+                {_export.income_proof.bank.accountant} {$accountant} {_export.income_proof.bank.date} {$date}
+            </div>
+        </div>
+        {sep}<pagebreak>{/sep}
+    {/foreach}
+{/block}

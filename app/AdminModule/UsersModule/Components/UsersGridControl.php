@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\Components;
+namespace App\AdminModule\UsersModule\Components;
 
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
@@ -19,6 +19,7 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
+use App\Model\Enums\TroopApplicationState;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -30,6 +31,7 @@ use App\Services\ExcelExportService;
 use App\Services\QueryBus;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
+use App\Services\SkautIsService;
 use App\Services\SubeventService;
 use App\Services\UserService;
 use App\Utils\Helpers;
@@ -46,6 +48,7 @@ use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
+use Skaut\Skautis\Wsdl\WsdlException;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
@@ -72,6 +75,7 @@ class UsersGridControl extends Control
         private AclService $aclService,
         private ApplicationService $applicationService,
         private UserService $userService,
+        private SkautIsService $skautIsService,
         private SkautIsEventEducationService $skautIsEventEducationService,
         private SkautIsEventGeneralService $skautIsEventGeneralService,
         private SubeventService $subeventService
@@ -150,6 +154,9 @@ class UsersGridControl extends Control
         $grid->addGroupAction('admin.users.users_group_action_export_schedules')
             ->onSelect[] = [$this, 'groupExportSchedules'];
 
+        $grid->addGroupAction('Načíst členství ze skautIS (admin)')
+            ->onSelect[] = [$this, 'groupUpdateMembership'];
+
         $grid->addColumnText('displayName', 'admin.users.users_name')
             ->setSortable()
             ->setFilterText();
@@ -164,6 +171,20 @@ class UsersGridControl extends Control
                 $qb->join('u.roles', 'uR')
                     ->andWhere('uR.id IN (:rids)')
                     ->setParameter('rids', (array) $values);
+            });
+
+        $grid->addColumnText('groupRoles', 'Skupinové role', 'groupRolesText')
+            ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED]))
+            ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
+                $qb->join('u.groupRoles', 'uGR')
+                    ->join('uGR.role', 'uGRR')
+                    ->leftJoin('uGR.troop', 'uGRT')
+                    ->leftJoin('uGR.patrol', 'uGRP')
+                    ->leftJoin('uGRP.troop', 'uGRPT')
+                    ->andWhere('uGRR.id IN (:grids)')
+                    ->andWhere('(uGRT.state IS NULL OR uGRT.state != :tas) AND (uGRPT.state IS NULL OR uGRPT.state != :tas)')
+                    ->setParameter('grids', (array) $values)
+                    ->setParameter('tas', TroopApplicationState::DRAFT);
             });
 
         $grid->addColumnText('subevents', 'admin.users.users_subevents', 'subeventsText')
@@ -716,6 +737,33 @@ class UsersGridControl extends Control
     {
         $this->sessionSection->userIds = $ids;
         $this->redirect('exportusers');
+    }
+
+    /**
+     * @param int[] $ids
+     */
+    public function groupUpdateMembership(array $ids): void
+    {
+        $users  = $this->userRepository->findUsersByIds($ids);
+        $errors = 0;
+
+        foreach ($users as $user) {
+            try {
+                $membership = $this->skautIsService->getValidMembership($user->getSkautISPersonId());
+                $user->setUnit($membership?->RegistrationNumber);
+                $this->userRepository->save($user);
+            } catch (WsdlException $e) {
+                $errors++;
+            }
+        }
+
+        if ($errors > 0) {
+            $this->getPresenter()->flashMessage('Členství některých účastníků se nepodařilo načíst (oprávnění).', 'warning');
+        } else {
+            $this->getPresenter()->flashMessage('Členství byla úspěšně načtena.', 'success');
+        }
+
+        $this->reload();
     }
 
     /**

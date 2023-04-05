@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\Components;
+namespace App\AdminModule\UsersModule\Components;
 
 use App\Model\Application\Application;
 use App\Model\Application\Repositories\ApplicationRepository;
