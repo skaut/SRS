@@ -396,7 +396,7 @@ users:
     users_email: "E-mail"
     users_email_format: "Zadejte e-mail ve správném formátu."
     users_phone: "Telefon"
-    users_phone_format: "Zadejte telefon ve formátu 123456789."
+    users_phone_format: "Zadejte telefon ve formátu: 123456789."
     users_birthdate: "Datum narození"
     users_address: "Bydliště"
     users_about_me: "O mně"
