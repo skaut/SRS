@@ -287,7 +287,7 @@ class ExcelExportService
         $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.phone'));
         $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
         $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.city'));
         $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
@@ -550,7 +550,7 @@ class ExcelExportService
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.phone'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
-            $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+            $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.address'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
