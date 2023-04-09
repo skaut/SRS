@@ -13,7 +13,7 @@ concurrency:
 jobs:
   workdir:
     name: "Build"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: skaut/lebeda:8.1
     steps:
