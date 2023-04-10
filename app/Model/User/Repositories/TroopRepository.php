@@ -41,6 +41,14 @@ class TroopRepository extends AbstractRepository
     }
 
     /**
+     * @return Collection<int, Troop>
+     */
+    public function findByState(string $state): Collection
+    {
+        return $this->getRepository()->matching(Criteria::create()->where(Criteria::expr()->eq('state', $state)));
+    }
+
+    /**
      * @throws NonUniqueResultException
      */
     public function findByLeaderId(int $leaderId): ?Troop

@@ -23,6 +23,7 @@ use App\Model\Enums\TroopApplicationState;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
+use App\Model\User\Queries\TroopsByStateQuery;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\AclService;
@@ -156,6 +157,10 @@ class UsersGridControl extends Control
 
         $grid->addGroupAction('Načíst členství ze skautIS (admin)')
             ->onSelect[] = [$this, 'groupUpdateMembership'];
+
+        $grid->addToolbarButton('exportNsjAttendees', 'Export NSJ - účastníci');
+
+//        $grid->addToolbarButton('exportNsjOthers', 'Export NSJ - ostatní');
 
         $grid->addColumnText('displayName', 'admin.users.users_name')
             ->setSortable()
@@ -866,6 +871,24 @@ class UsersGridControl extends Control
         $response = $this->excelExportService->exportUsersSchedules($users, 'harmonogramy-uzivatelu.xlsx');
 
         $this->getPresenter()->sendResponse($response);
+    }
+
+    public function handleExportNsjAttendees(): void
+    {
+        $troops = $this->queryBus->handle(new TroopsByStateQuery(TroopApplicationState::PAID));
+
+        $response = $this->excelExportService->exportNsjAttendees($troops, 'nsj-ucastnici.xlsx');
+
+        $this->getPresenter()->sendResponse($response);
+    }
+
+    public function handleExportNsjOthers(): void
+    {
+//        $troops = $this->queryBus->handle();
+//
+//        $response = $this->excelExportService->exportNsjOthers($troops, 'nsj-ostatni.xlsx');
+//
+//        $this->getPresenter()->sendResponse($response);
     }
 
     /**
