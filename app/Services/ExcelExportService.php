@@ -693,7 +693,7 @@ class ExcelExportService
     /**
      * @param Troop[] $troops
      */
-    public function exportNsjAttendees($troops, $filename): ExcelResponse
+    public function exportNsjAttendees($troops, string $filename): ExcelResponse
     {
         $sheet = $this->spreadsheet->getSheet(0);
 
@@ -760,6 +760,11 @@ class ExcelExportService
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(50);
 
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Role'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
         $sheet->setCellValue([$column, $row], $this->translator->translate('Skupina'));
         $sheet->getStyle([$column, $row])->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
@@ -780,6 +785,10 @@ class ExcelExportService
                 $i = 0;
 
                 foreach ($patrol->getUsersRoles() as $usersRole) {
+                    if ($usersRole->getRole()->getSystemName() === Role::LEADER) {
+                        continue;
+                    }
+
                     $user = $usersRole->getUser();
                     $i++;
 
@@ -798,6 +807,7 @@ class ExcelExportService
                     $sheet->setCellValue([$column++, $row], $user->getAbout());
                     $sheet->setCellValue([$column++, $row], $user->getNote());
                     $sheet->setCellValue([$column++, $row], $user->getHealthInfo());
+                    $sheet->setCellValue([$column++, $row], $usersRole->getRole()->getName());
                     $sheet->setCellValue([$column++, $row], $troop->getName());
                     $sheet->setCellValue([$column++, $row], $patrol->getName());
 
@@ -815,7 +825,7 @@ class ExcelExportService
     /**
      * @param User[] $users
      */
-    public function exportNsjOthers($filename, $users): ExcelResponse
+    public function exportNsjOthers($users, string $filename): ExcelResponse
     {
         return new ExcelResponse($this->spreadsheet, $filename);
     }
