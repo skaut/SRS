@@ -781,14 +781,40 @@ class ExcelExportService
         $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
         foreach ($troops as $troop) {
+            $i = 0;
+
+            foreach ($troop->getUsersRoles() as $usersRole) {
+                $user = $usersRole->getUser();
+                $i++;
+
+                $row++;
+                $column = 1;
+
+                $sheet->setCellValue([$column++, $row], $user->getFirstName());
+                $sheet->setCellValue([$column++, $row], $user->getLastName());
+                $sheet->setCellValue([$column++, $row], $user->getNickName());
+                $sheet->setCellValue([$column++, $row], $user->getBirthdate()->format(Helpers::DATE_FORMAT));
+                $sheet->setCellValue([$column++, $row], $user->getAddress());
+                $sheet->setCellValue([$column++, $row], $user->getEmail());
+                $sheet->setCellValue([$column++, $row], $user->getPhone());
+                $sheet->setCellValue([$column++, $row], $user->getMotherPhone());
+                $sheet->setCellValue([$column++, $row], $user->getFatherPhone());
+                $sheet->setCellValue([$column++, $row], $user->getAbout());
+                $sheet->setCellValue([$column++, $row], $user->getNote());
+                $sheet->setCellValue([$column++, $row], $user->getHealthInfo());
+                $sheet->setCellValue([$column++, $row], $usersRole->getRole()->getName());
+                $sheet->setCellValue([$column++, $row], $troop->getName());
+                $sheet->setCellValue([$column++, $row], "");
+
+                $code = substr($troop->getVariableSymbolText(), -4) . '-00-'
+                    . str_pad((string) $i, 2, '0', STR_PAD_LEFT);
+                $sheet->setCellValue([$column++, $row], $code);
+            }
+
             foreach ($troop->getConfirmedPatrols() as $patrol) {
                 $i = 0;
 
                 foreach ($patrol->getUsersRoles() as $usersRole) {
-                    if ($usersRole->getRole()->getSystemName() === Role::LEADER) {
-                        continue;
-                    }
-
                     $user = $usersRole->getUser();
                     $i++;
 
