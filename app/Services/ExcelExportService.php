@@ -32,6 +32,10 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 use function implode;
 use function preg_replace;
+use function str_pad;
+use function substr;
+
+use const STR_PAD_LEFT;
 
 /**
  * Služba pro export do formátu XLSX.
@@ -681,6 +685,243 @@ class ExcelExportService
             $sheet->setCellValue([$column++, $row], $troop->countUsersInRoles([Role::LEADER, Role::ESCORT]));
 
             $sheet->setCellValue([$column++, $row], $troop->getConfirmedPatrols()->count());
+        }
+
+        return new ExcelResponse($this->spreadsheet, $filename);
+    }
+
+    /**
+     * @param Troop[] $troops
+     */
+    public function exportNsjAttendees($troops, string $filename): ExcelResponse
+    {
+        $sheet = $this->spreadsheet->getSheet(0);
+
+        $row    = 1;
+        $column = 1;
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Jméno'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Příjmení'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Přezdívka'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Datum narození'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Adresa'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(50);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('E-mail'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Telefon'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Telefon matky'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Telefon otce'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('O mně'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Poznámka'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Zdravotní informace'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(50);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Role'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Skupina'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Družina'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Kód'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        foreach ($troops as $troop) {
+            $i = 0;
+
+            foreach ($troop->getUsersRoles() as $usersRole) {
+                $user = $usersRole->getUser();
+                $i++;
+
+                $row++;
+                $column = 1;
+
+                $sheet->setCellValue([$column++, $row], $user->getFirstName());
+                $sheet->setCellValue([$column++, $row], $user->getLastName());
+                $sheet->setCellValue([$column++, $row], $user->getNickName());
+                $sheet->setCellValue([$column++, $row], $user->getBirthdate()->format(Helpers::DATE_FORMAT));
+                $sheet->setCellValue([$column++, $row], $user->getAddress());
+                $sheet->setCellValue([$column++, $row], $user->getEmail());
+                $sheet->setCellValue([$column++, $row], $user->getPhone());
+                $sheet->setCellValue([$column++, $row], $user->getMotherPhone());
+                $sheet->setCellValue([$column++, $row], $user->getFatherPhone());
+                $sheet->setCellValue([$column++, $row], $user->getAbout());
+                $sheet->setCellValue([$column++, $row], $user->getNote());
+                $sheet->setCellValue([$column++, $row], $user->getHealthInfo());
+                $sheet->setCellValue([$column++, $row], $usersRole->getRole()->getName());
+                $sheet->setCellValue([$column++, $row], $troop->getName());
+                $sheet->setCellValue([$column++, $row], '');
+
+                $code = substr($troop->getVariableSymbolText(), -4) . '-00-'
+                    . str_pad((string) $i, 2, '0', STR_PAD_LEFT);
+                $sheet->setCellValue([$column++, $row], $code);
+            }
+
+            foreach ($troop->getConfirmedPatrols() as $patrol) {
+                $i = 0;
+
+                foreach ($patrol->getUsersRoles() as $usersRole) {
+                    $user = $usersRole->getUser();
+                    $i++;
+
+                    $row++;
+                    $column = 1;
+
+                    $sheet->setCellValue([$column++, $row], $user->getFirstName());
+                    $sheet->setCellValue([$column++, $row], $user->getLastName());
+                    $sheet->setCellValue([$column++, $row], $user->getNickName());
+                    $sheet->setCellValue([$column++, $row], $user->getBirthdate()->format(Helpers::DATE_FORMAT));
+                    $sheet->setCellValue([$column++, $row], $user->getAddress());
+                    $sheet->setCellValue([$column++, $row], $user->getEmail());
+                    $sheet->setCellValue([$column++, $row], $user->getPhone());
+                    $sheet->setCellValue([$column++, $row], $user->getMotherPhone());
+                    $sheet->setCellValue([$column++, $row], $user->getFatherPhone());
+                    $sheet->setCellValue([$column++, $row], $user->getAbout());
+                    $sheet->setCellValue([$column++, $row], $user->getNote());
+                    $sheet->setCellValue([$column++, $row], $user->getHealthInfo());
+                    $sheet->setCellValue([$column++, $row], $usersRole->getRole()->getName());
+                    $sheet->setCellValue([$column++, $row], $troop->getName());
+                    $sheet->setCellValue([$column++, $row], $patrol->getName());
+
+                    $code = substr($troop->getVariableSymbolText(), -4) . '-'
+                        . substr($patrol->getName(), -2) . '-'
+                        . str_pad((string) $i, 2, '0', STR_PAD_LEFT);
+                    $sheet->setCellValue([$column++, $row], $code);
+                }
+            }
+        }
+
+        return new ExcelResponse($this->spreadsheet, $filename);
+    }
+
+    /**
+     * @param User[] $users
+     */
+    public function exportNsjOthers($users, string $filename): ExcelResponse
+    {
+        $sheet = $this->spreadsheet->getSheet(0);
+
+        $row    = 1;
+        $column = 1;
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Jméno'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Příjmení'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Přezdívka'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Datum narození'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Adresa'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(50);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('E-mail'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('O mně'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Poznámka'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Role'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Kód'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
+        foreach ($users as $user) {
+            $row++;
+            $column = 1;
+
+            $sheet->setCellValue([$column++, $row], $user->getFirstName());
+            $sheet->setCellValue([$column++, $row], $user->getLastName());
+            $sheet->setCellValue([$column++, $row], $user->getNickName());
+            $sheet->setCellValue([$column++, $row], $user->getBirthdate()->format(Helpers::DATE_FORMAT));
+            $sheet->setCellValue([$column++, $row], $user->getAddress());
+            $sheet->setCellValue([$column++, $row], $user->getEmail());
+            $sheet->setCellValue([$column++, $row], $user->getAbout());
+            $sheet->setCellValue([$column++, $row], $user->getNote());
+            $sheet->setCellValue([$column++, $row], $user->getRolesText());
+            $sheet->setCellValue([$column++, $row], substr($user->getRolesApplication()?->getVariableSymbolText() ?: '', -4));
         }
 
         return new ExcelResponse($this->spreadsheet, $filename);
