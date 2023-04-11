@@ -160,7 +160,7 @@ class UsersGridControl extends Control
 
         $grid->addToolbarButton('exportNsjAttendees', 'Export NSJ - účastníci');
 
-//        $grid->addToolbarButton('exportNsjOthers', 'Export NSJ - ostatní');
+        $grid->addToolbarButton('exportNsjOthers', 'Export NSJ - ostatní');
 
         $grid->addColumnText('displayName', 'admin.users.users_name')
             ->setSortable()
@@ -884,11 +884,14 @@ class UsersGridControl extends Control
 
     public function handleExportNsjOthers(): void
     {
-//        $troops = $this->queryBus->handle();
-//
-//        $response = $this->excelExportService->exportNsjOthers($troops, 'nsj-ostatni.xlsx');
-//
-//        $this->getPresenter()->sendResponse($response);
+        $nonRegisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
+        $users             = $this->userRepository->findAll()
+            ->filter(static fn (User $u) => $u->getRoles()->count() > 0 && ! $u->isInRole($nonRegisteredRole))
+            ->toArray();
+
+        $response = $this->excelExportService->exportNsjOthers($users, 'nsj-ostatni.xlsx');
+
+        $this->getPresenter()->sendResponse($response);
     }
 
     /**
