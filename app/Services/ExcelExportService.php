@@ -815,10 +815,6 @@ class ExcelExportService
                 $i = 0;
 
                 foreach ($patrol->getUsersRoles() as $usersRole) {
-                    if ($usersRole->getRole()->getSystemName() === Role::LEADER) {
-                        continue;
-                    }
-
                     $user = $usersRole->getUser();
                     $i++;
 
