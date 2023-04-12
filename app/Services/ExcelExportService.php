@@ -912,6 +912,36 @@ class ExcelExportService
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
 
+        foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+            switch ($customInput->getType()) {
+                case CustomInput::TEXT:
+                case CustomInput::SELECT:
+                case CustomInput::MULTISELECT:
+                case CustomInput::DATETIME:
+                    $width = 30;
+                    break;
+
+                case CustomInput::DATE:
+                    $width = 20;
+                    break;
+
+                case CustomInput::CHECKBOX:
+                    $width = 15;
+                    break;
+
+                case CustomInput::FILE:
+                    continue 2;
+
+                default:
+                    throw new InvalidArgumentException();
+            }
+
+            $sheet->setCellValue([$column, $row], $this->translator->translate($customInput->getName()));
+            $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+            $sheet->getColumnDimensionByColumn($column++)->setWidth($width);
+        }
+
         foreach ($users as $user) {
             $row++;
             $column = 1;
@@ -926,6 +956,25 @@ class ExcelExportService
             $sheet->setCellValue([$column++, $row], $user->getNote());
             $sheet->setCellValue([$column++, $row], $user->getRolesText());
             $sheet->setCellValue([$column++, $row], substr($user->getRolesApplication()?->getVariableSymbolText() ?: '', -4));
+
+            foreach ($this->customInputRepository->findAllOrderedByPosition() as $customInput) {
+                $customInputValue = $user->getCustomInputValue($customInput);
+
+                if ($customInputValue === null) {
+                    $column++;
+                    continue;
+                }
+
+                if ($customInputValue instanceof CustomCheckboxValue) {
+                    $value = $customInputValue->getValue()
+                        ? $this->translator->translate('common.export.common.yes')
+                        : $this->translator->translate('common.export.common.no');
+                } else {
+                    $value = $customInputValue->getValueText();
+                }
+
+                $sheet->setCellValue([$column++, $row], $value);
+            }
         }
 
         return new ExcelResponse($this->spreadsheet, $filename);
