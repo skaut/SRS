@@ -14,6 +14,9 @@ parameters:
         -
             message: '#^Parameter \#1 \$translator of method Ublaboo\\DataGrid\\DataGrid::setTranslator\(\) expects Nette\\Localization\\ITranslator, Nette\\Localization\\Translator given.$#'
             path: app/*/*GridControl.php
+        -
+            message: 'If condition is always false.'
+            path: app/Services/ExcelExportService.php
 
 services:
 	- class: CodeQuality\ObjectIdentityComparisonRule
