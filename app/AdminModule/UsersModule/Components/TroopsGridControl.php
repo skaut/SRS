@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\AdminModule\UsersModule\Components;
 
 use App\Model\Acl\Role;
+use App\Model\Enums\TroopApplicationState;
 use App\Model\User\Commands\RemoveTroop;
+use App\Model\User\Queries\TroopsByStateQuery;
 use App\Model\User\Repositories\TroopRepository;
 use App\Model\User\Troop;
 use App\Services\CommandBus;
 use App\Services\ExcelExportService;
+use App\Services\QueryBus;
 use App\Utils\Helpers;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
@@ -34,6 +37,7 @@ class TroopsGridControl extends Control
     private SessionSection $sessionSection;
 
     public function __construct(
+        private QueryBus $queryBus,
         private CommandBus $commandBus,
         private Translator $translator,
         private TroopRepository $troopRepository,
@@ -71,6 +75,8 @@ class TroopsGridControl extends Control
 
         $grid->addGroupAction('Export seznamu skupin')
             ->onSelect[] = [$this, 'groupExportTroops'];
+
+        $grid->addToolbarButton('exportNsjTroops', 'Export NSJ - skupiny');
 
         $grid->addColumnText('name', 'Název')
             ->setSortable()
@@ -214,6 +220,15 @@ class TroopsGridControl extends Control
         $troops = $this->troopRepository->findTroopsByIds($ids);
 
         $response = $this->excelExportService->exportTroopsList($troops, 'seznam-skupin.xlsx');
+
+        $this->getPresenter()->sendResponse($response);
+    }
+
+    public function handleExportNsjTroops(): void
+    {
+        $troops = $this->queryBus->handle(new TroopsByStateQuery(TroopApplicationState::PAID));
+
+        $response = $this->excelExportService->exportNsjTroops($troops, 'nsj-skupiny.xlsx');
 
         $this->getPresenter()->sendResponse($response);
     }

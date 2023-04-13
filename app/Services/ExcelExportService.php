@@ -691,6 +691,51 @@ class ExcelExportService
     }
 
     /**
+     * @param Collection<int, Troop> $troops
+     *
+     * @throws Exception
+     */
+    public function exportNsjTroops(Collection $troops, string $filename): ExcelResponse
+    {
+        $sheet = $this->spreadsheet->getSheet(0);
+
+        $row    = 1;
+        $column = 1;
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Název'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Vedoucí - jméno'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Vedoucí - userId'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        $sheet->setCellValue([$column, $row], $this->translator->translate('Vedoucí - personId'));
+        $sheet->getStyle([$column, $row])->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(20);
+
+        foreach ($troops as $troop) {
+            $row++;
+            $column = 1;
+
+            $sheet->setCellValue([$column++, $row], $troop->getName());
+            $sheet->setCellValue([$column++, $row], $troop->getLeader()->getDisplayName());
+            $sheet->setCellValue([$column++, $row], $troop->getLeader()->getSkautISUserId());
+            $sheet->setCellValue([$column++, $row], $troop->getLeader()->getSkautISPersonId());
+        }
+
+        return new ExcelResponse($this->spreadsheet, $filename);
+    }
+
+    /**
      * @param Troop[] $troops
      */
     public function exportNsjAttendees($troops, string $filename): ExcelResponse
@@ -811,12 +856,34 @@ class ExcelExportService
                 $sheet->setCellValue([$column++, $row], $code);
             }
 
+            $allUsers      = new ArrayCollection();
+            $duplicitUsers = new ArrayCollection();
+            $exportedUsers = new ArrayCollection();
+
+            foreach ($troop->getConfirmedPatrols() as $patrol) {
+                foreach ($patrol->getUsersRoles() as $usersRole) {
+                    $userId = $usersRole->getUser()->getId();
+
+                    if ($allUsers->contains($userId)) {
+                        $duplicitUsers->add($userId);
+                    } else {
+                        $allUsers->add($userId);
+                    }
+                }
+            }
+
             foreach ($troop->getConfirmedPatrols() as $patrol) {
                 $i = 0;
 
                 foreach ($patrol->getUsersRoles() as $usersRole) {
                     $user = $usersRole->getUser();
                     $i++;
+
+                    if ($exportedUsers->contains($user->getId())) {
+                        continue;
+                    }
+
+                    $exportedUsers->add($user->getId());
 
                     $row++;
                     $column = 1;
@@ -835,12 +902,20 @@ class ExcelExportService
                     $sheet->setCellValue([$column++, $row], $user->getHealthInfo());
                     $sheet->setCellValue([$column++, $row], $usersRole->getRole()->getName());
                     $sheet->setCellValue([$column++, $row], $troop->getName());
-                    $sheet->setCellValue([$column++, $row], $patrol->getName());
 
-                    $code = substr($troop->getVariableSymbolText(), -4) . '-'
-                        . substr($patrol->getName(), -2) . '-'
-                        . str_pad((string) $i, 2, '0', STR_PAD_LEFT);
-                    $sheet->setCellValue([$column++, $row], $code);
+                    if ($duplicitUsers->contains($user->getId())) {
+                        $sheet->setCellValue([$column++, $row], '');
+
+                        $code = substr($troop->getVariableSymbolText(), -4) . '-00-00';
+                        $sheet->setCellValue([$column++, $row], $code);
+                    } else {
+                        $sheet->setCellValue([$column++, $row], $patrol->getName());
+
+                        $code = substr($troop->getVariableSymbolText(), -4) . '-'
+                            . substr($patrol->getName(), -2) . '-'
+                            . str_pad((string) $i, 2, '0', STR_PAD_LEFT);
+                        $sheet->setCellValue([$column++, $row], $code);
+                    }
                 }
             }
         }
