@@ -48,12 +48,13 @@ Stačí přidat následující řádek do `/etc/hosts` souboru:
    ```
 2. Spuštění databázových migrací (v kontejneru):
    ```bash
-   www/console.php migrations:migrate
+   php www/console.php migrations:migrate
    ```
 3. Instalace frontend závislostí (lokálně):
    ```bash
    yarn install
    ```
+   > Instalace Yarn je popsána na: https://classic.yarnpkg.com/lang/en/docs/install/.
 4. Sestavení frontendu (lokálně):
    ```bash
    yarn build
