@@ -187,6 +187,12 @@ class User
     protected ?string $state = null;
 
     /**
+     * Telefonní číslo.
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $phone = null;
+
+    /**
      * Zúčastnil se.
      */
     #[ORM\Column(type: 'boolean')]
@@ -587,6 +593,16 @@ class User
     public function setState(?string $state): void
     {
         $this->state = $state;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): void
+    {
+        $this->phone = $phone;
     }
 
     /**

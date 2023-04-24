@@ -220,9 +220,9 @@ class Settings
     public const TICKETS_API_TOKEN = 'tickets_api_token';
 
     /**
-     * Google Analytics kód měření.
+     * Kód pro měření.
      */
-    public const GA_ID = 'ga_id';
+    public const TRACKING_CODE = 'tracking_code';
 
     /**
      * Příjemci zpráv z kontaktního formuláře.

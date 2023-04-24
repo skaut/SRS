@@ -15,7 +15,7 @@ jobs:
   deploy:
     name: "Manual deploy to ${{ github.event.inputs.environment }}"
     environment: ${{ github.event.inputs.environment }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: skaut/lebeda:8.1
     env:
@@ -42,6 +42,7 @@ jobs:
       DEPLOY_SSH_USERNAME: ${{ secrets.DEPLOY_SSH_USERNAME }}
     steps:
       - uses: actions/checkout@v3
+      - run: git config --global --add safe.directory '*'
       # Copy & paste from https://github.com/actions/cache/blob/master/examples.md#php---composer
       - name: Get composer cache
         id: composer-cache

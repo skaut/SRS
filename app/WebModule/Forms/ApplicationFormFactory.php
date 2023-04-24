@@ -135,7 +135,9 @@ class ApplicationFormFactory
         }
 
         $form->addText('email', 'web.application_content.email')
-            ->addRule(Form::FILLED)
+            ->setDisabled();
+
+        $form->addText('phone', 'web.application_content.phone')
             ->setDisabled();
 
         $form->addText('street', 'web.application_content.street')
@@ -171,6 +173,7 @@ class ApplicationFormFactory
             'nickName' => $this->user->getNickName(),
             'birthdate' => $this->user->getBirthdate(),
             'email' => $this->user->getEmail(),
+            'phone' => $this->user->getPhone(),
             'street' => $this->user->getStreet(),
             'city' => $this->user->getCity(),
             'postcode' => $this->user->getPostcode(),

@@ -137,6 +137,21 @@ class SkautIsService
         ]);
     }
 
+    public function getPersonContact(int $personId, string $contactType): ?stdClass
+    {
+        $contact = $this->skautIs->org->PersonContactAll([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID_Person' => $personId,
+            'ID_ContactType' => $contactType,
+        ], 'personContactAllInput');
+
+        if (empty($contact)) {
+            return null;
+        }
+
+        return $contact[0];
+    }
+
     /**
      * Aktualizuje údaje o osobě.
      */
@@ -195,7 +210,7 @@ class SkautIsService
             'IsValid' => true,
         ]);
 
-        if (empty((array) $membership)) { // todo: odstranit obe pretypovani (array) po update skautis/nette
+        if (empty($membership)) {
             $membership = $this->skautIs->org->MembershipAllPerson([
                 'ID_Login' => $this->skautIs->getUser()->getLoginId(),
                 'ID_Person' => $personId,
@@ -203,7 +218,7 @@ class SkautIsService
                 'IsValid' => true,
             ]);
 
-            if (empty((array) $membership)) {
+            if (empty($membership)) {
                 return null;
             }
         }

@@ -74,8 +74,10 @@ class PersonalDetailsFormFactory
             $inputBirthdateDate->setDisabled();
         }
 
-        $form->addText('email', 'web.application_content.email')
-            ->addRule(Form::FILLED)
+        $form->addText('email', 'web.profile.email')
+            ->setDisabled();
+
+        $form->addText('phone', 'web.profile.phone')
             ->setDisabled();
 
         $form->addText('street', 'web.profile.street')
@@ -101,6 +103,7 @@ class PersonalDetailsFormFactory
             'lastName' => $this->user->getLastName(),
             'nickName' => $this->user->getNickName(),
             'email' => $this->user->getEmail(),
+            'phone' => $this->user->getPhone(),
             'birthdate' => $this->user->getBirthdate(),
             'street' => $this->user->getStreet(),
             'city' => $this->user->getCity(),
