@@ -46,7 +46,7 @@
         "nextras/form-components": "^1.1",
         "nextras/forms-rendering": "^1.1",
         "vojtys/nette-forms-gpspicker": "dev-master",
-        "contributte/recaptcha": "^3.4",
+        "contributte/recaptcha": "^4.0",
 
         "ublaboo/datagrid": "^6.9",
         "ublaboo/mailing": "^1.2",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f64a0db2b61f73a913f10639469d2262",
+    "content-hash": "67df2b58562754bda9742fa96d900678",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -660,31 +660,28 @@
         },
         {
             "name": "contributte/recaptcha",
-            "version": "v3.5.0",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contributte/reCAPTCHA.git",
-                "reference": "750f36dbb6e1013f9d7bb02151cadd1a200c3b74"
+                "reference": "d3d591f12e75edb6ecec4dc48999a9677b3d9aa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contributte/reCAPTCHA/zipball/750f36dbb6e1013f9d7bb02151cadd1a200c3b74",
-                "reference": "750f36dbb6e1013f9d7bb02151cadd1a200c3b74",
+                "url": "https://api.github.com/repos/contributte/reCAPTCHA/zipball/d3d591f12e75edb6ecec4dc48999a9677b3d9aa0",
+                "reference": "d3d591f12e75edb6ecec4dc48999a9677b3d9aa0",
                 "shasum": ""
             },
             "require": {
-                "contributte/di": "^0.5.1",
+                "nette/di": "^3.1.2",
                 "nette/forms": "^3.0.0",
                 "nette/utils": "^3.0.0 || ^4.0",
-                "php": ">=7.2"
+                "php": ">=8.1"
             },
             "require-dev": {
-                "ninjify/nunjuck": "^0.4",
-                "ninjify/qa": "^0.12",
-                "phpstan/phpstan": "^1.0",
-                "phpstan/phpstan-deprecation-rules": "^1.0",
-                "phpstan/phpstan-nette": "^1.0",
-                "phpstan/phpstan-strict-rules": "^1.0"
+                "contributte/phpstan": "^0.1",
+                "contributte/qa": "^0.4",
+                "contributte/tester": "^0.3"
             },
             "suggest": {
                 "ext-openssl": "To make requests via https"
@@ -721,7 +718,7 @@
             ],
             "support": {
                 "issues": "https://github.com/contributte/reCAPTCHA/issues",
-                "source": "https://github.com/contributte/reCAPTCHA/tree/v3.5.0"
+                "source": "https://github.com/contributte/reCAPTCHA/tree/v4.0.0"
             },
             "funding": [
                 {
@@ -733,7 +730,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-02-20T19:05:31+00:00"
+            "time": "2023-07-03T18:08:44+00:00"
         },
         {
             "name": "contributte/translation",
@@ -12655,5 +12652,5 @@
         "ext-soap": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
