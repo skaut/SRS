@@ -34,7 +34,7 @@
         "tracy/tracy": "~2.8.0",
 
         "contributte/console": "^0.9",
-        "contributte/translation": "^1.1",
+        "contributte/translation": "^2.0",
 
         "nettrine/orm": "^0.8",
         "nettrine/migrations": "^0.7",
