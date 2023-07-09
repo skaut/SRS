@@ -80,12 +80,12 @@ class TicketsPresenter extends ApiBasePresenter
     {
         $user = $this->queryBus->handle(new UserByIdQuery($userId));
         if ($user == null) {
-            $this->sendErrorResponse(IResponse::S404_NOT_FOUND, $this->translator->translate('api.tickets.user_not_found'));
+            $this->sendErrorResponse(IResponse::S404_NotFound, $this->translator->translate('api.tickets.user_not_found'));
         }
 
         $subevent = $this->queryBus->handle(new SubeventByIdQuery($subeventId));
         if ($subevent == null) {
-            $this->sendErrorResponse(IResponse::S404_NOT_FOUND, $this->translator->translate('api.tickets.subevent_not_found'));
+            $this->sendErrorResponse(IResponse::S404_NotFound, $this->translator->translate('api.tickets.subevent_not_found'));
         }
 
         $roles       = [];
@@ -113,6 +113,8 @@ class TicketsPresenter extends ApiBasePresenter
 
         $data = new TicketCheckInfo();
         $data->setAttendeeName($user->getDisplayName());
+        $data->setAttendeeAge($user->getAge());
+        $data->setAttendeePhoto($user->getPhoto());
         $data->setRoles($roles);
         $data->setSubevents($subevents);
         $data->setHasSubevent($hasSubevent);
