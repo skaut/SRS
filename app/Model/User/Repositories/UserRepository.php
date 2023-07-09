@@ -29,9 +29,7 @@ class UserRepository extends AbstractRepository
         parent::__construct($em, User::class);
     }
 
-    /**
-     * @return Collection<int, User>
-     */
+    /** @return Collection<int, User> */
     public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
@@ -42,7 +40,7 @@ class UserRepository extends AbstractRepository
     /**
      * Vrací uživatele podle id.
      */
-    public function findById(?int $id): ?User
+    public function findById(int|null $id): User|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -50,7 +48,7 @@ class UserRepository extends AbstractRepository
     /**
      * Vrací uživatele podle skautISUserId.
      */
-    public function findBySkautISUserId(int $skautISUserId): ?User
+    public function findBySkautISUserId(int $skautISUserId): User|null
     {
         return $this->getRepository()->findOneBy(['skautISUserId' => $skautISUserId]);
     }
@@ -169,9 +167,7 @@ class UserRepository extends AbstractRepository
         return new ArrayCollection($this->blockAllowedQuery($block, $paidOnly)->getQuery()->getResult());
     }
 
-    /**
-     * @return Collection<int, User>
-     */
+    /** @return Collection<int, User> */
     public function findBlockAttendees(Block $block): Collection
     {
         $result = $this->createQueryBuilder('u')
@@ -185,9 +181,7 @@ class UserRepository extends AbstractRepository
         return new ArrayCollection($result);
     }
 
-    /**
-     * @return Collection<int, User>
-     */
+    /** @return Collection<int, User> */
     public function findProgramAttendees(Program $program): Collection
     {
         $result = $this->programAttendeesQuery($program, false)->getQuery()->getResult();
@@ -195,9 +189,7 @@ class UserRepository extends AbstractRepository
         return new ArrayCollection($result);
     }
 
-    /**
-     * @return Collection<int, User>
-     */
+    /** @return Collection<int, User> */
     public function findProgramAlternates(Program $program): Collection
     {
         $result = $this->programAttendeesQuery($program, true)->getQuery()->getResult();
@@ -205,7 +197,7 @@ class UserRepository extends AbstractRepository
         return new ArrayCollection($result);
     }
 
-    public function findProgramFirstAlternate(Program $program): ?User
+    public function findProgramFirstAlternate(Program $program): User|null
     {
         $result = $this->programAttendeesQuery($program, true)
             ->orderBy('a.createdAt')
@@ -264,7 +256,7 @@ class UserRepository extends AbstractRepository
     /**
      * Má lektor jiný program ve stejný čas?
      */
-    public function hasOverlappingLecturersProgram(User $lector, ?int $programId, DateTimeImmutable $start, DateTimeImmutable $end): bool
+    public function hasOverlappingLecturersProgram(User $lector, int|null $programId, DateTimeImmutable $start, DateTimeImmutable $end): bool
     {
         $qb = $this->createQueryBuilder('u')
             ->select('u.id')
@@ -335,7 +327,7 @@ class UserRepository extends AbstractRepository
         return $qb;
     }
 
-    private function programAttendeesQuery(Program $program, ?bool $alternate): QueryBuilder
+    private function programAttendeesQuery(Program $program, bool|null $alternate): QueryBuilder
     {
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.programApplications', 'a')

@@ -9,17 +9,13 @@ namespace App\Model\Cms\Dto;
  */
 class UsersContentDto extends ContentDto
 {
-    /**
-     * @param int[] $roles Role, jejichž uživatelé budou vypsáni.
-     */
+    /** @param int[] $roles Role, jejichž uživatelé budou vypsáni. */
     public function __construct(string $type, string $heading, protected array $roles)
     {
         parent::__construct($type, $heading);
     }
 
-    /**
-     * @return int[]
-     */
+    /** @return int[] */
     public function getRoles(): array
     {
         return $this->roles;

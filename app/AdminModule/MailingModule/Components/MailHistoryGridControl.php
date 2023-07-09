@@ -24,7 +24,7 @@ class MailHistoryGridControl extends Control
         private Translator $translator,
         private MailRepository $mailRepository,
         private AclService $aclService,
-        private SubeventService $subeventService
+        private SubeventService $subeventService,
     ) {
     }
 

@@ -32,12 +32,12 @@ class EditUserPersonalDetailsFormFactory
     /**
      * Upravovaný uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     public function __construct(
         private BaseFormFactory $baseFormFactory,
         private UserRepository $userRepository,
-        private FilesService $filesService
+        private FilesService $filesService,
     ) {
     }
 

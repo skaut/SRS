@@ -21,9 +21,7 @@ class ExcelResponse implements Response
     {
     }
 
-    /**
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse): void
     {
         $httpResponse->setContentType('application/force-download');

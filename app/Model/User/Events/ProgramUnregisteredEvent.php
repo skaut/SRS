@@ -13,7 +13,7 @@ class ProgramUnregisteredEvent
         private User $user,
         private Program $program,
         private bool $alternate,
-        private bool $notifyUser
+        private bool $notifyUser,
     ) {
     }
 

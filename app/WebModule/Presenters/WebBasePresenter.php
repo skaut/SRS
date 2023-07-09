@@ -51,7 +51,7 @@ abstract class WebBasePresenter extends BasePresenter
     #[Inject]
     public SkautIsService $skautIsService;
 
-    protected ?User $dbuser = null;
+    protected User|null $dbuser = null;
 
     /**
      * @throws AbortException

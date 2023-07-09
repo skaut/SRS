@@ -223,9 +223,7 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         }
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [User::class, Settings::class];
@@ -234,6 +232,7 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/UnregisterProgramHandlerTest.neon']);
+
         parent::_before();
 
         $this->blockRepository              = $this->tester->grabService(BlockRepository::class);

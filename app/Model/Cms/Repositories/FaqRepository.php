@@ -26,7 +26,7 @@ class FaqRepository extends AbstractRepository
     /**
      * Vrací otázku podle id.
      */
-    public function findById(?int $id): ?Faq
+    public function findById(int|null $id): Faq|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }

@@ -33,7 +33,7 @@ class AddLectorFormFactory
         private BaseFormFactory $baseFormFactory,
         private UserRepository $userRepository,
         private RoleRepository $roleRepository,
-        private FilesService $filesService
+        private FilesService $filesService,
     ) {
     }
 

@@ -9,17 +9,13 @@ namespace App\Model\Cms\Dto;
  */
 class SlideshowContentDto extends ContentDto
 {
-    /**
-     * @param string[] $images Adresy obrázků
-     */
+    /** @param string[] $images Adresy obrázků */
     public function __construct(string $type, string $heading, protected array $images)
     {
         parent::__construct($type, $heading);
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getImages(): array
     {
         return $this->images;

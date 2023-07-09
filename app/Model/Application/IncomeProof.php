@@ -18,7 +18,7 @@ class IncomeProof
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Datum vystavení příjmového dokladu.
@@ -31,7 +31,7 @@ class IncomeProof
         $this->date = new DateTimeImmutable();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

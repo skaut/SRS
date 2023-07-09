@@ -16,7 +16,7 @@ class SaveBlockHandler implements MessageHandlerInterface
     public function __construct(
         private EventBus $eventBus,
         private EntityManagerInterface $em,
-        private BlockRepository $blockRepository
+        private BlockRepository $blockRepository,
     ) {
     }
 

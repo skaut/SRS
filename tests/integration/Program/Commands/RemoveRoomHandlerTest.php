@@ -64,9 +64,7 @@ final class RemoveRoomHandlerTest extends CommandHandlerTest
         $this->assertNull($program->getRoom());
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Room::class];
@@ -75,6 +73,7 @@ final class RemoveRoomHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/RemoveRoomHandlerTest.neon']);
+
         parent::_before();
 
         $this->subeventRepository = $this->tester->grabService(SubeventRepository::class);

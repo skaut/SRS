@@ -34,7 +34,7 @@ class Authenticator implements Nette\Security\Authenticator
         private RoleRepository $roleRepository,
         protected SkautIsService $skautIsService,
         private FilesService $filesService,
-        Storage $storage
+        Storage $storage,
     ) {
         $this->userRolesCache = new Cache($storage, 'UserRoles');
     }
@@ -133,7 +133,7 @@ class Authenticator implements Nette\Security\Authenticator
     /**
      * Aktualizuje role přihlášeného uživatele.
      */
-    public function updateRoles(NS\User $user, ?Role $testedRole = null): void
+    public function updateRoles(NS\User $user, Role|null $testedRole = null): void
     {
         $dbuser = $this->userRepository->findById($user->id);
 

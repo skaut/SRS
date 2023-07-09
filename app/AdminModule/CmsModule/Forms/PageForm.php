@@ -36,7 +36,7 @@ class PageForm extends UI\Control
     /**
      * Upravovaná stránka.
      */
-    private ?Page $page;
+    private Page|null $page;
 
     /**
      * Událost při uložení formuláře.
@@ -65,7 +65,7 @@ class PageForm extends UI\Control
         private CmsService $cmsService,
         private RoleRepository $roleRepository,
         private TagRepository $tagRepository,
-        private FilesService $filesService
+        private FilesService $filesService,
     ) {
         $this->page = $this->pageRepository->findById($id);
     }

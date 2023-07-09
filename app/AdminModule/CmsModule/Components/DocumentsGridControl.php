@@ -35,7 +35,7 @@ class DocumentsGridControl extends Control
         private Translator $translator,
         private DocumentRepository $documentRepository,
         private TagRepository $tagRepository,
-        private FilesService $filesService
+        private FilesService $filesService,
     ) {
     }
 

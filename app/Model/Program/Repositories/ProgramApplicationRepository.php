@@ -32,14 +32,12 @@ class ProgramApplicationRepository extends AbstractRepository
         parent::__construct($em, ProgramApplication::class);
     }
 
-    public function findByUserAndProgram(User $user, Program $program): ?ProgramApplication
+    public function findByUserAndProgram(User $user, Program $program): ProgramApplication|null
     {
         return $this->getRepository()->findOneBy(['user' => $user, 'program' => $program]);
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function save(ProgramApplication $programApplication): void
     {
         $this->em->wrapInTransaction(function (EntityManager $em) use ($programApplication): void {
@@ -81,9 +79,7 @@ class ProgramApplicationRepository extends AbstractRepository
         });
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function remove(ProgramApplication $programApplication): void
     {
         $this->em->wrapInTransaction(function (EntityManager $em) use ($programApplication): void {
@@ -101,9 +97,7 @@ class ProgramApplicationRepository extends AbstractRepository
         });
     }
 
-    /**
-     * @return Collection<int, ProgramApplication>
-     */
+    /** @return Collection<int, ProgramApplication> */
     private function findByUserAlternateAndBlock(User $user, Block $block): Collection
     {
         $result = $this->createQueryBuilder('pa')

@@ -34,7 +34,7 @@ class ApplicationContentControl extends BaseContentControl
         private RoleRepository $roleRepository,
         private SubeventRepository $subeventRepository,
         public IApplicationsGridControlFactory $applicationsGridControlFactory,
-        public CustomInputRepository $customInputRepository
+        public CustomInputRepository $customInputRepository,
     ) {
     }
 
@@ -42,7 +42,7 @@ class ApplicationContentControl extends BaseContentControl
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    public function render(?ContentDto $content = null): void
+    public function render(ContentDto|null $content = null): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/application_content.latte');

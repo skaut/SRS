@@ -12,11 +12,11 @@ class BlockUpdatedEvent
 {
     public function __construct(
         private Block $block,
-        private ?Category $categoryOld,
+        private Category|null $categoryOld,
         private Subevent $subeventOld,
         private string $mandatoryOld,
-        private ?int $capacityOld,
-        private bool $alternatesAllowedOld
+        private int|null $capacityOld,
+        private bool $alternatesAllowedOld,
     ) {
     }
 
@@ -25,7 +25,7 @@ class BlockUpdatedEvent
         return $this->block;
     }
 
-    public function getCategoryOld(): ?Category
+    public function getCategoryOld(): Category|null
     {
         return $this->categoryOld;
     }
@@ -40,7 +40,7 @@ class BlockUpdatedEvent
         return $this->mandatoryOld;
     }
 
-    public function getCapacityOld(): ?int
+    public function getCapacityOld(): int|null
     {
         return $this->capacityOld;
     }

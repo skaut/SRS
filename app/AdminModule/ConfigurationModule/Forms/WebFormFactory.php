@@ -39,7 +39,7 @@ class WebFormFactory
         private CommandBus $commandBus,
         private QueryBus $queryBus,
         private PageRepository $pageRepository,
-        private FilesService $filesService
+        private FilesService $filesService,
     ) {
     }
 

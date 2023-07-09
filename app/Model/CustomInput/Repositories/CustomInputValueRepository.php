@@ -21,7 +21,7 @@ class CustomInputValueRepository extends AbstractRepository
     /**
      * Vrací hodnotu vlastního pole přihlášky podle id.
      */
-    public function findById(?int $id): ?CustomInputValue
+    public function findById(int|null $id): CustomInputValue|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }

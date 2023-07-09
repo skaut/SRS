@@ -17,10 +17,8 @@ class SettingDateTimeValueAsTextQueryHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @throws SettingsItemNotFoundException
-     */
-    public function __invoke(SettingDateTimeValueAsTextQuery $query): ?string
+    /** @throws SettingsItemNotFoundException */
+    public function __invoke(SettingDateTimeValueAsTextQuery $query): string|null
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
         $value   = $setting->getValue();

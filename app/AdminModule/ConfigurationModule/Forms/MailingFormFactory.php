@@ -50,7 +50,7 @@ class MailingFormFactory
         private QueryBus $queryBus,
         private IMailService $mailService,
         private LinkGenerator $linkGenerator,
-        private Validators $validators
+        private Validators $validators,
     ) {
     }
 
@@ -114,13 +114,13 @@ class MailingFormFactory
                 [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                     TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
-                ]
+                ],
             );
         }
 
         $contactFormRecipients = array_map(
             static fn (string $o) => trim($o),
-            explode(',', $values->contactFormRecipients)
+            explode(',', $values->contactFormRecipients),
         );
         $this->commandBus->handle(new SetSettingArrayValue(Settings::CONTACT_FORM_RECIPIENTS, $contactFormRecipients));
 

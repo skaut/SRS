@@ -25,13 +25,13 @@ class Payment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Id platby v systému banky.
      */
     #[ORM\Column(type: 'string', unique: true, nullable: true)]
-    protected ?string $transactionId = null;
+    protected string|null $transactionId = null;
 
     /**
      * Datum platby.
@@ -49,25 +49,25 @@ class Payment
      * Číslo protiúčtu.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $accountNumber = null;
+    protected string|null $accountNumber = null;
 
     /**
      * Majitel protiúčtu.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $accountName = null;
+    protected string|null $accountName = null;
 
     /**
      * Variabilní symbol platby.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $variableSymbol = null;
+    protected string|null $variableSymbol = null;
 
     /**
      * Zpráva pro příjemce.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $message = null;
+    protected string|null $message = null;
 
     /**
      * Spárované přihlášky.
@@ -88,17 +88,17 @@ class Payment
         $this->pairedApplications = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    public function getTransactionId(): ?string
+    public function getTransactionId(): string|null
     {
         return $this->transactionId;
     }
 
-    public function setTransactionId(?string $transactionId): void
+    public function setTransactionId(string|null $transactionId): void
     {
         $this->transactionId = $transactionId;
     }
@@ -123,49 +123,47 @@ class Payment
         $this->amount = $amount;
     }
 
-    public function getAccountNumber(): ?string
+    public function getAccountNumber(): string|null
     {
         return $this->accountNumber;
     }
 
-    public function setAccountNumber(?string $accountNumber): void
+    public function setAccountNumber(string|null $accountNumber): void
     {
         $this->accountNumber = $accountNumber;
     }
 
-    public function getAccountName(): ?string
+    public function getAccountName(): string|null
     {
         return $this->accountName;
     }
 
-    public function setAccountName(?string $accountName): void
+    public function setAccountName(string|null $accountName): void
     {
         $this->accountName = $accountName;
     }
 
-    public function getVariableSymbol(): ?string
+    public function getVariableSymbol(): string|null
     {
         return $this->variableSymbol;
     }
 
-    public function setVariableSymbol(?string $variableSymbol): void
+    public function setVariableSymbol(string|null $variableSymbol): void
     {
         $this->variableSymbol = $variableSymbol;
     }
 
-    public function getMessage(): ?string
+    public function getMessage(): string|null
     {
         return $this->message;
     }
 
-    public function setMessage(?string $message): void
+    public function setMessage(string|null $message): void
     {
         $this->message = $message;
     }
 
-    /**
-     * @return Collection<int, Application>
-     */
+    /** @return Collection<int, Application> */
     public function getPairedApplications(): Collection
     {
         return $this->pairedApplications;
@@ -187,13 +185,11 @@ class Payment
         }
     }
 
-    /**
-     * @return Collection<int, Application>
-     */
+    /** @return Collection<int, Application> */
     public function getPairedValidApplications(): Collection
     {
         $criteria = Criteria::create()->where(
-            Criteria::expr()->isNull('validTo')
+            Criteria::expr()->isNull('validTo'),
         );
 
         return $this->pairedApplications->matching($criteria);

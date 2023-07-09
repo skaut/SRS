@@ -49,11 +49,9 @@ abstract class AdminBasePresenter extends BasePresenter
     /**
      * Přihlášený uživatel.
      */
-    public ?User $dbuser = null;
+    public User|null $dbuser = null;
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();
@@ -130,9 +128,7 @@ abstract class AdminBasePresenter extends BasePresenter
         }
     }
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function handleChangeRole(int $roleId): void
     {
         $this->skautIsService->updateUserRole($roleId);

@@ -28,7 +28,7 @@ class ApplicationRepository extends AbstractRepository
     /**
      * Vrací přihlášku podle id.
      */
-    public function findById(?int $id): ?Application
+    public function findById(int|null $id): Application|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -45,9 +45,7 @@ class ApplicationRepository extends AbstractRepository
         return new ArrayCollection($result);
     }
 
-    /**
-     * @return Collection<int, Application>
-     */
+    /** @return Collection<int, Application> */
     public function findValid(): Collection
     {
         $criteria = Criteria::create()
@@ -56,10 +54,8 @@ class ApplicationRepository extends AbstractRepository
         return $this->getRepository()->matching($criteria);
     }
 
-    /**
-     * @throws NonUniqueResultException
-     */
-    public function findValidByVariableSymbol(?string $variableSymbol): ?Application
+    /** @throws NonUniqueResultException */
+    public function findValidByVariableSymbol(string|null $variableSymbol): Application|null
     {
         $variableSymbolRegex = '^0*' . $variableSymbol . '$';
 
@@ -129,15 +125,13 @@ class ApplicationRepository extends AbstractRepository
             ->andWhere(Criteria::expr()->orX(
                 Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
                 Criteria::expr()->in('id', $pairedApplications->map(static fn (Application $application) => $application->getId())
-                    ->toArray())
+                    ->toArray()),
             ));
 
         return $this->getRepository()->matching($criteria);
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getApplicationsVariableSymbolsOptions(): array
     {
         $options = [];

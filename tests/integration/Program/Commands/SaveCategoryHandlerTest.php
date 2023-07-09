@@ -163,9 +163,7 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
         $this->assertNull($this->programApplicationRepository->findByUserAndProgram($user4, $program));
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Category::class, Settings::class];
@@ -174,6 +172,7 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SaveCategoryHandlerTest.neon']);
+
         parent::_before();
 
         $this->blockRepository              = $this->tester->grabService(BlockRepository::class);

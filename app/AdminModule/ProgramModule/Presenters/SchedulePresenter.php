@@ -13,9 +13,7 @@ use Throwable;
  */
 class SchedulePresenter extends ProgramBasePresenter
 {
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function renderDefault(): void
     {
         $this->template->isAllowedModifySchedule = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_MODIFY_SCHEDULE));

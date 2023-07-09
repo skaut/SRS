@@ -243,9 +243,7 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
         $this->assertEquals(0, $program->getAttendeesCount());
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [User::class, Settings::class];
@@ -254,6 +252,7 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/UpdateUserProgramsHandlerTest.neon']);
+
         parent::_before();
 
         $this->blockRepository       = $this->tester->grabService(BlockRepository::class);

@@ -14,10 +14,8 @@ use Ublaboo\Mailing\IMessageData;
  */
 class SrsMail extends AbstractMail implements IComposableMail
 {
-    /**
-     * @param SrsMailData|null $mailData
-     */
-    public function compose(Message $message, ?IMessageData $mailData = null): void
+    /** @param SrsMailData|null $mailData */
+    public function compose(Message $message, IMessageData|null $mailData = null): void
     {
         $message->setFrom($mailData->getFrom()->getEmail(), $mailData->getFrom()->getName());
 

@@ -34,7 +34,7 @@ class BlockDetailDto
     private int $duration;
 
     #[JMS\Type(values: 'int')]
-    private ?int $capacity = null;
+    private int|null $capacity = null;
 
     #[JMS\Type(values: 'boolean')]
     private bool $alternatesAllowed;
@@ -90,17 +90,13 @@ class BlockDetailDto
         $this->category = $category;
     }
 
-    /**
-     * @return LectorDetailDto[]
-     */
+    /** @return LectorDetailDto[] */
     public function getLectors(): array
     {
         return $this->lectors;
     }
 
-    /**
-     * @param LectorDetailDto[] $lectors
-     */
+    /** @param LectorDetailDto[] $lectors */
     public function setLectors(array $lectors): void
     {
         $this->lectors = $lectors;
@@ -126,12 +122,12 @@ class BlockDetailDto
         $this->duration = $duration;
     }
 
-    public function getCapacity(): ?int
+    public function getCapacity(): int|null
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity): void
+    public function setCapacity(int|null $capacity): void
     {
         $this->capacity = $capacity;
     }

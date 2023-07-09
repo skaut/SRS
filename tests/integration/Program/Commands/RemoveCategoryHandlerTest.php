@@ -99,9 +99,7 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
         $this->assertEquals(1, $program->getAttendeesCount());
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Category::class, Settings::class];
@@ -110,6 +108,7 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/RemoveCategoryHandlerTest.neon']);
+
         parent::_before();
 
         $this->subeventRepository    = $this->tester->grabService(SubeventRepository::class);

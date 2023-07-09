@@ -57,9 +57,7 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->session->getSection('srs')->programId = 0;
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function renderDetail(int $id): void
     {
         $block = $this->blockRepository->findById($id);
@@ -73,9 +71,7 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->template->programMandatoryTypeAutoRegistered = ProgramMandatoryType::AUTO_REGISTERED;
     }
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function renderEdit(int $id): void
     {
         $block = $this->blockRepository->findById($id);

@@ -78,7 +78,7 @@ class CmsService
      *
      * @throws Throwable
      */
-    public function findPublishedBySlugDto(string $slug): ?PageDto
+    public function findPublishedBySlugDto(string $slug): PageDto|null
     {
         $pageDto = $this->pageCache->load($slug);
         if ($pageDto === null) {
@@ -105,7 +105,7 @@ class CmsService
         if ($pagesDto === null) {
             $pagesDto = array_map(
                 static fn (Page $page) => $page->convertToDto(),
-                $this->pageRepository->findPublishedOrderedByPosition()
+                $this->pageRepository->findPublishedOrderedByPosition(),
             );
             $this->menuCache->save(null, $pagesDto);
         }

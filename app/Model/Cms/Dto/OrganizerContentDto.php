@@ -9,15 +9,13 @@ namespace App\Model\Cms\Dto;
  */
 class OrganizerContentDto extends ContentDto
 {
-    /**
-     * @param ?string $organizer Pořadatel.
-     */
-    public function __construct(string $type, string $heading, protected ?string $organizer)
+    /** @param ?string $organizer Pořadatel. */
+    public function __construct(string $type, string $heading, protected string|null $organizer)
     {
         parent::__construct($type, $heading);
     }
 
-    public function getOrganizer(): ?string
+    public function getOrganizer(): string|null
     {
         return $this->organizer;
     }

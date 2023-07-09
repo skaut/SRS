@@ -15,10 +15,10 @@ class UserRegisteredProgramAtQueryHandler implements MessageHandlerInterface
     {
     }
 
-    public function __invoke(UserRegisteredProgramAtQuery $query): ?DateTimeImmutable
+    public function __invoke(UserRegisteredProgramAtQuery $query): DateTimeImmutable|null
     {
         $programApplication = $this->programApplicationRepository->findByUserAndProgram($query->getUser(), $query->getProgram());
 
-        return $programApplication === null ? null : $programApplication->getCreatedAt();
+        return $programApplication?->getCreatedAt();
     }
 }

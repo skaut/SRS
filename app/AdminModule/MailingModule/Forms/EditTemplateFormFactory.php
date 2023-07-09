@@ -21,7 +21,7 @@ class EditTemplateFormFactory
     /**
      * Upravovaná šablona.
      */
-    private ?Template $template = null;
+    private Template|null $template = null;
 
     public function __construct(private BaseFormFactory $baseFormFactory, private TemplateRepository $templateRepository)
     {

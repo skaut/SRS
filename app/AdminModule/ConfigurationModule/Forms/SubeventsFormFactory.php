@@ -25,7 +25,7 @@ class SubeventsFormFactory
     public function __construct(
         private BaseFormFactory $baseFormFactory,
         private CommandBus $commandBus,
-        private QueryBus $queryBus
+        private QueryBus $queryBus,
     ) {
     }
 

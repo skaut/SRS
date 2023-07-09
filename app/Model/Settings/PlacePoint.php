@@ -16,7 +16,7 @@ class PlacePoint
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Název bodu.
@@ -36,7 +36,7 @@ class PlacePoint
     #[ORM\Column(type: 'float')]
     protected float $gpsLon;
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

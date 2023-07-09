@@ -46,7 +46,7 @@ class MailService implements IMailService
         private RoleRepository $roleRepository,
         private SubeventRepository $subeventRepository,
         private TemplateRepository $templateRepository,
-        private Translator $translator
+        private Translator $translator,
     ) {
     }
 
@@ -61,7 +61,7 @@ class MailService implements IMailService
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function sendMail(?Collection $recipientsRoles, ?Collection $recipientsSubevents, ?Collection $recipientsUsers, ?Collection $recipientEmails, string $subject, string $text, bool $automatic = false): void
+    public function sendMail(Collection|null $recipientsRoles, Collection|null $recipientsSubevents, Collection|null $recipientsUsers, Collection|null $recipientEmails, string $subject, string $text, bool $automatic = false): void
     {
         $recipients = [];
 
@@ -139,7 +139,7 @@ class MailService implements IMailService
      * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
-    public function sendMailFromTemplate(?Collection $recipientsUsers, ?Collection $recipientsEmails, string $type, array $parameters): void
+    public function sendMailFromTemplate(Collection|null $recipientsUsers, Collection|null $recipientsEmails, string $type, array $parameters): void
     {
         $template = $this->templateRepository->findByType($type);
 

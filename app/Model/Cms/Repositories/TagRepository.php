@@ -25,7 +25,7 @@ class TagRepository extends AbstractRepository
     /**
      * Vrátí tag podle id.
      */
-    public function findById(?int $id): ?Tag
+    public function findById(int|null $id): Tag|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }

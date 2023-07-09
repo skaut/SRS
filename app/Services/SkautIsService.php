@@ -88,7 +88,7 @@ class SkautIsService
     /**
      * Vrátí id aktuální skautIS role uživatele.
      */
-    public function getUserRoleId(): ?int
+    public function getUserRoleId(): int|null
     {
         return $this->skautIs->getUser()->getRoleId();
     }
@@ -137,7 +137,7 @@ class SkautIsService
         ]);
     }
 
-    public function getPersonContact(int $personId, string $contactType): ?stdClass
+    public function getPersonContact(int $personId, string $contactType): stdClass|null
     {
         $contact = $this->skautIs->org->PersonContactAll([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -193,7 +193,7 @@ class SkautIsService
     /**
      * Vrací id jednotky podle aktuální role uživatele.
      */
-    public function getUnitId(): ?int
+    public function getUnitId(): int|null
     {
         return $this->skautIs->getUser()->getUnitId();
     }
@@ -201,7 +201,7 @@ class SkautIsService
     /**
      * Vrací platné členství typu "řádné" nebo "čestné", pokud osoba žádné nemá vrací null.
      */
-    public function getValidMembership(int $personId): ?stdClass
+    public function getValidMembership(int $personId): stdClass|null
     {
         $membership = $this->skautIs->org->MembershipAllPerson([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),

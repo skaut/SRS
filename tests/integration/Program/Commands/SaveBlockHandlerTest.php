@@ -558,9 +558,7 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
         $this->assertNull($programApplication3);
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Block::class, Settings::class];
@@ -569,6 +567,7 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SaveBlockHandlerTest.neon']);
+
         parent::_before();
 
         $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);

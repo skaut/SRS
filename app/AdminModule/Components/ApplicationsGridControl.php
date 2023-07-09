@@ -37,7 +37,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class ApplicationsGridControl extends Control
 {
-    private ?User $user = null;
+    private User|null $user = null;
 
     public function __construct(
         private Translator $translator,
@@ -47,7 +47,7 @@ class ApplicationsGridControl extends Control
         private SubeventRepository $subeventRepository,
         private ApplicationService $applicationService,
         private SubeventService $subeventService,
-        private Validators $validators
+        private Validators $validators,
     ) {
     }
 
@@ -121,7 +121,7 @@ class ApplicationsGridControl extends Control
                 $container->addMultiSelect(
                     'subevents',
                     '',
-                    $this->subeventService->getSubeventsOptionsWithCapacity(false, false, true, false, $this->user)
+                    $this->subeventService->getSubeventsOptionsWithCapacity(false, false, true, false, $this->user),
                 )->setHtmlAttribute('class', 'datagrid-multiselect')
                 ->addRule(Form::FILLED, 'admin.users.users_applications_subevents_empty');
             };
@@ -132,13 +132,13 @@ class ApplicationsGridControl extends Control
             $container->addMultiSelect(
                 'subevents',
                 '',
-                $this->subeventService->getSubeventsOptionsWithCapacity(false, false, false, false)
+                $this->subeventService->getSubeventsOptionsWithCapacity(false, false, false, false),
             )->setHtmlAttribute('class', 'datagrid-multiselect');
 
             $paymentMethodSelect = $container->addSelect(
                 'paymentMethod',
                 '',
-                $this->preparePaymentMethodOptions()
+                $this->preparePaymentMethodOptions(),
             );
 
             $paymentDateDate = new DateControl('');
@@ -289,7 +289,7 @@ class ApplicationsGridControl extends Control
                 $values->paymentMethod ?: null,
                 $values->paymentDate,
                 $values->maturityDate,
-                $loggedUser
+                $loggedUser,
             );
         });
 

@@ -64,9 +64,7 @@ final class CheckTicketHandlerTest extends CommandHandlerTest
         $this->assertTrue($user->isAttended());
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [TicketCheck::class];
@@ -75,6 +73,7 @@ final class CheckTicketHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/CheckTicketHandlerTest.neon']);
+
         parent::_before();
 
         $this->ticketCheckRepository = $this->tester->grabService(TicketCheckRepository::class);

@@ -16,7 +16,7 @@ class RemoveBlockHandler implements MessageHandlerInterface
     public function __construct(
         private CommandBus $commandBus,
         private EntityManagerInterface $em,
-        private BlockRepository $blockRepository
+        private BlockRepository $blockRepository,
     ) {
     }
 

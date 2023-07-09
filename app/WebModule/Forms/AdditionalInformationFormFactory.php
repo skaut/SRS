@@ -60,7 +60,7 @@ class AdditionalInformationFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     public function __construct(
         private BaseFormFactory $baseFormFactory,
@@ -71,7 +71,7 @@ class AdditionalInformationFormFactory
         private ApplicationService $applicationService,
         private CustomInputValueRepository $customInputValueRepository,
         private FilesService $filesService,
-        private IMailService $mailService
+        private IMailService $mailService,
     ) {
     }
 

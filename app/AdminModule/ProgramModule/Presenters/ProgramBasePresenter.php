@@ -16,9 +16,7 @@ abstract class ProgramBasePresenter extends AdminBasePresenter
 {
     protected string $resource = SrsResource::PROGRAM;
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();

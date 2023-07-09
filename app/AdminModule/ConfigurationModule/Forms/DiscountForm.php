@@ -22,7 +22,7 @@ class DiscountForm extends UI\Control
     /**
      * Upravovaná sleva.
      */
-    private ?Discount $discount;
+    private Discount|null $discount;
 
     /**
      * Událost při uložení formuláře.
@@ -38,15 +38,13 @@ class DiscountForm extends UI\Control
      */
     public array $onConditionError = [];
 
-    /**
-     * @param int $id Id upravované slevy.
-     */
+    /** @param int $id Id upravované slevy. */
     public function __construct(
         public int $id,
         private BaseFormFactory $baseFormFactory,
         private DiscountRepository $discountRepository,
         private SubeventRepository $subeventRepository,
-        private DiscountService $discountService
+        private DiscountService $discountService,
     ) {
         $this->discount = $this->discountRepository->findById($id);
     }

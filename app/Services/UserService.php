@@ -30,7 +30,7 @@ class UserService
         private Translator $translator,
         private UserRepository $userRepository,
         private MailService $mailService,
-        private EntityManagerInterface $em
+        private EntityManagerInterface $em,
     ) {
     }
 
@@ -57,7 +57,7 @@ class UserService
     /**
      * Vrací platební metodu uživatele.
      */
-    public function getPaymentMethod(User $user): ?string
+    public function getPaymentMethod(User $user): string|null
     {
         $paymentMethod = null;
 

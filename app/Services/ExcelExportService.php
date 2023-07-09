@@ -47,7 +47,7 @@ class ExcelExportService
         private SubeventRepository $subeventRepository,
         private CategoryRepository $categoryRepository,
         private ProgramRepository $programRepository,
-        private QueryBus $queryBus
+        private QueryBus $queryBus,
     ) {
         $this->spreadsheet = new Spreadsheet();
     }
@@ -400,9 +400,9 @@ class ExcelExportService
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '');
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getLastPaymentDate() !== null ? $user->getLastPaymentDate()->format(Helpers::DATE_FORMAT) : '');
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getLastPaymentDate()?->format(Helpers::DATE_FORMAT) ?? '');
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getRolesApplicationDate() !== null ? $user->getRolesApplicationDate()->format(Helpers::DATE_FORMAT) : '');
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getRolesApplicationDate()?->format(Helpers::DATE_FORMAT) ?? '');
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->isAttended()
                 ? $this->translator->translate('common.export.common.yes')

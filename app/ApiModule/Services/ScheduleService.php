@@ -64,7 +64,7 @@ class ScheduleService
 {
     use Nette\SmartObject;
 
-    private ?User $user = null;
+    private User|null $user = null;
 
     public function __construct(
         private Translator $translator,
@@ -73,7 +73,7 @@ class ScheduleService
         private BlockRepository $blockRepository,
         private RoomRepository $roomRepository,
         private CommandBus $commandBus,
-        private QueryBus $queryBus
+        private QueryBus $queryBus,
     ) {
     }
 
@@ -289,7 +289,7 @@ class ScheduleService
             $responseDto = new ResponseDto();
             $responseDto->setProgram($this->convertProgramToProgramDetailDto($program));
 
-            if ($room !== null && $room->getCapacity() !== null && $block->getCapacity() !== null && $room->getCapacity() < $block->getCapacity()) {
+            if ($room?->getCapacity() !== null && $block->getCapacity() !== null && $room->getCapacity() < $block->getCapacity()) {
                 $responseDto->setMessage($this->translator->translate('api.schedule.saved_room_capacity'));
                 $responseDto->setStatus('warning');
             } else {
@@ -475,7 +475,7 @@ class ScheduleService
         $blockDetailDto->setLectors(
             $block->getLectors()
                 ->map(fn (User $lector) => $this->convertUserToLectorDetailDto($lector))
-                ->toArray()
+                ->toArray(),
         );
         $blockDetailDto->setLectorsNames($block->getLectorsText());
         $blockDetailDto->setDuration($block->getDuration());
@@ -483,10 +483,10 @@ class ScheduleService
         $blockDetailDto->setAlternatesAllowed($block->isAlternatesAllowed());
         $blockDetailDto->setMandatory(
             $block->getMandatory() === ProgramMandatoryType::MANDATORY ||
-            $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED
+            $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED,
         );
         $blockDetailDto->setAutoRegistered(
-            $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED
+            $block->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED,
         );
         $blockDetailDto->setPerex($block->getPerex());
         $blockDetailDto->setDescription($block->getDescription());

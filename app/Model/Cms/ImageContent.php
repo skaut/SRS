@@ -57,25 +57,25 @@ class ImageContent extends Content implements IContent
      * Adresa obrázku.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $image = null;
+    protected string|null $image = null;
 
     /**
      * Zarovnání obrázku v textu.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $align = null;
+    protected string|null $align = null;
 
     /**
      * Šířka obrázku.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $width = null;
+    protected int|null $width = null;
 
     /**
      * Výška obrázku.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $height = null;
+    protected int|null $height = null;
 
     private FilesService $filesService;
 
@@ -84,58 +84,54 @@ class ImageContent extends Content implements IContent
         $this->filesService = $filesService;
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public static function getAligns(): array
     {
         return self::$aligns;
     }
 
-    /**
-     * @param string[] $aligns
-     */
+    /** @param string[] $aligns */
     public static function setAligns(array $aligns): void
     {
         self::$aligns = $aligns;
     }
 
-    public function getImage(): ?string
+    public function getImage(): string|null
     {
         return $this->image;
     }
 
-    public function setImage(?string $image): void
+    public function setImage(string|null $image): void
     {
         $this->image = $image;
     }
 
-    public function getAlign(): ?string
+    public function getAlign(): string|null
     {
         return $this->align;
     }
 
-    public function setAlign(?string $align): void
+    public function setAlign(string|null $align): void
     {
         $this->align = $align;
     }
 
-    public function getWidth(): ?int
+    public function getWidth(): int|null
     {
         return $this->width;
     }
 
-    public function setWidth(?int $width): void
+    public function setWidth(int|null $width): void
     {
         $this->width = $width;
     }
 
-    public function getHeight(): ?int
+    public function getHeight(): int|null
     {
         return $this->height;
     }
 
-    public function setHeight(?int $height): void
+    public function setHeight(int|null $height): void
     {
         $this->height = $height;
     }

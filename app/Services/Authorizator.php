@@ -14,9 +14,7 @@ use Throwable;
  */
 class Authorizator extends Nette\Security\Permission
 {
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function __construct(AclService $aclService)
     {
         $this->addRole(Role::TEST); // role pouzivana pri testovani jine role

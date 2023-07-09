@@ -18,7 +18,7 @@ class TicketCheck
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Uživatel.
@@ -45,7 +45,7 @@ class TicketCheck
         $this->datetime = new DateTimeImmutable();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

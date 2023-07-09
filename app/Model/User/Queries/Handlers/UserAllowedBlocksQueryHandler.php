@@ -16,9 +16,7 @@ class UserAllowedBlocksQueryHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @return Collection<int, Block>
-     */
+    /** @return Collection<int, Block> */
     public function __invoke(UserAllowedBlocksQuery $query): Collection
     {
         return $this->blockRepository->findUserAllowed($query->getUser(), $query->isPaidOnly());
