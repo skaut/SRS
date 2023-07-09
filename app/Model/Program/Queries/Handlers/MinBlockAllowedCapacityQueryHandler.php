@@ -14,7 +14,7 @@ class MinBlockAllowedCapacityQueryHandler implements MessageHandlerInterface
     {
     }
 
-    public function __invoke(MinBlockAllowedCapacityQuery $query): ?int
+    public function __invoke(MinBlockAllowedCapacityQuery $query): int|null
     {
         return $this->blockRepository->getMinBlockAllowedCapacity($query->getBlock());
     }

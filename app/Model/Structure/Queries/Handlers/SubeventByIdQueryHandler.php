@@ -15,7 +15,7 @@ class SubeventByIdQueryHandler implements MessageHandlerInterface
     {
     }
 
-    public function __invoke(SubeventByIdQuery $query): ?Subevent
+    public function __invoke(SubeventByIdQuery $query): Subevent|null
     {
         return $this->subeventRepository->findById($query->getId());
     }

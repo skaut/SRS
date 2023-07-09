@@ -21,7 +21,7 @@ class TemplateRepository extends AbstractRepository
     /**
      * Vrací šablonu podle id.
      */
-    public function findById(?int $id): ?Template
+    public function findById(int|null $id): Template|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -29,7 +29,7 @@ class TemplateRepository extends AbstractRepository
     /**
      * Vrací šablonu podle typu.
      */
-    public function findByType(string $type): ?Template
+    public function findByType(string $type): Template|null
     {
         return $this->getRepository()->findOneBy(['type' => $type]);
     }

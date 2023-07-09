@@ -34,7 +34,7 @@ class RolesFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     public function __construct(
         private BaseFormFactory $baseFormFactory,
@@ -44,7 +44,7 @@ class RolesFormFactory
         private ApplicationService $applicationService,
         private Translator $translator,
         private Validators $validators,
-        private AclService $aclService
+        private AclService $aclService,
     ) {
     }
 
@@ -63,7 +63,7 @@ class RolesFormFactory
         $form->addHidden('id');
 
         $rolesSelect = $form->addMultiSelect('roles', 'web.profile.roles')->setItems(
-            $this->aclService->getRolesOptionsWithCapacity(true, true, $this->user)
+            $this->aclService->getRolesOptionsWithCapacity(true, true, $this->user),
         )
             ->addRule(Form::FILLED, 'web.profile.roles_empty')
             ->addRule([$this, 'validateRolesCapacities'], 'web.profile.roles_capacity_occupied')
@@ -78,9 +78,9 @@ class RolesFormFactory
                     $this->translator->translate(
                         'web.profile.incompatible_roles_selected',
                         null,
-                        ['role' => $role->getName(), 'incompatibleRoles' => $role->getIncompatibleRolesText()]
+                        ['role' => $role->getName(), 'incompatibleRoles' => $role->getIncompatibleRolesText()],
                     ),
-                    [$role]
+                    [$role],
                 );
             }
 
@@ -90,9 +90,9 @@ class RolesFormFactory
                     $this->translator->translate(
                         'web.profile.required_roles_not_selected',
                         null,
-                        ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()]
+                        ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()],
                     ),
-                    [$role]
+                    [$role],
                 );
             }
         }

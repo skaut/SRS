@@ -17,7 +17,7 @@ class RemoveRoomHandler implements MessageHandlerInterface
     public function __construct(
         private CommandBus $commandBus,
         private EntityManagerInterface $em,
-        private RoomRepository $roomRepository
+        private RoomRepository $roomRepository,
     ) {
     }
 

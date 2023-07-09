@@ -34,7 +34,7 @@
         "tracy/tracy": "~2.8.0",
 
         "contributte/console": "^0.9",
-        "contributte/translation": "^1.1",
+        "contributte/translation": "^2.0",
 
         "nettrine/orm": "^0.8",
         "nettrine/migrations": "^0.7",
@@ -46,7 +46,7 @@
         "nextras/form-components": "^1.1",
         "nextras/forms-rendering": "^1.1",
         "vojtys/nette-forms-gpspicker": "dev-master",
-        "contributte/recaptcha": "^3.4",
+        "contributte/recaptcha": "^4.0",
 
         "ublaboo/datagrid": "^6.9",
         "ublaboo/mailing": "^1.2",
@@ -75,7 +75,7 @@
         "codeception/codeception": "^4.2",
         "codeception/mockery-module": "^0.4",
         "contributte/codeception": "^1.3",
-        "doctrine/coding-standard": "^9.0",
+        "doctrine/coding-standard": "^12.0",
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^1.9",
         "phpstan/phpstan-nette": "^1.2",

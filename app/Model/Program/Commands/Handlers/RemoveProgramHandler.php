@@ -20,7 +20,7 @@ class RemoveProgramHandler implements MessageHandlerInterface
         private CommandBus $commandBus,
         private QueryBus $queryBus,
         private EntityManagerInterface $em,
-        private ProgramRepository $programRepository
+        private ProgramRepository $programRepository,
     ) {
     }
 

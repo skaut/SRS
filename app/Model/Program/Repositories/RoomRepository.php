@@ -24,9 +24,7 @@ class RoomRepository extends AbstractRepository
         parent::__construct($em, Room::class);
     }
 
-    /**
-     * @return Collection<int, Room>
-     */
+    /** @return Collection<int, Room> */
     public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
@@ -37,7 +35,7 @@ class RoomRepository extends AbstractRepository
     /**
      * Vrací místnost podle id.
      */
-    public function findById(?int $id): ?Room
+    public function findById(int|null $id): Room|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -92,7 +90,7 @@ class RoomRepository extends AbstractRepository
     /**
      * Je v místnosti jiný program ve stejnou dobu?
      */
-    public function hasOverlappingProgram(Room $room, ?int $programId, DateTimeImmutable $start, DateTimeImmutable $end): bool
+    public function hasOverlappingProgram(Room $room, int|null $programId, DateTimeImmutable $start, DateTimeImmutable $end): bool
     {
         $result = $this->createQueryBuilder('r')
             ->select('count(r)')

@@ -16,25 +16,25 @@ class VariableSymbol
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Variabilní symbol.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $variableSymbol = null;
+    protected string|null $variableSymbol = null;
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    public function getVariableSymbol(): ?string
+    public function getVariableSymbol(): string|null
     {
         return $this->variableSymbol;
     }
 
-    public function setVariableSymbol(?string $variableSymbol): void
+    public function setVariableSymbol(string|null $variableSymbol): void
     {
         $this->variableSymbol = $variableSymbol;
     }

@@ -23,7 +23,7 @@ class NewsFormFactory
     /**
      * Upravovaná aktualita.
      */
-    private ?News $news = null;
+    private News|null $news = null;
 
     public function __construct(private BaseFormFactory $baseFormFactory, private NewsRepository $newsRepository)
     {
@@ -32,7 +32,7 @@ class NewsFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(?int $id): Form
+    public function create(int|null $id): Form
     {
         $this->news = $this->newsRepository->findById($id);
 

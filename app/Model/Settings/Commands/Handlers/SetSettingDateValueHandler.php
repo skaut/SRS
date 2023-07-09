@@ -15,9 +15,7 @@ class SetSettingDateValueHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @throws SettingsItemNotFoundException
-     */
+    /** @throws SettingsItemNotFoundException */
     public function __invoke(SetSettingDateValue $command): void
     {
         $setting = $this->settingsRepository->findByItem($command->getItem());

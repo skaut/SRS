@@ -19,10 +19,8 @@ class SettingIntValueQueryHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @throws SettingsItemNotFoundException
-     */
-    public function __invoke(SettingIntValueQuery $query): ?int
+    /** @throws SettingsItemNotFoundException */
+    public function __invoke(SettingIntValueQuery $query): int|null
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
         $value   = $setting->getValue();

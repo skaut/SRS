@@ -6,7 +6,7 @@ namespace App\Model\Settings\Commands;
 
 class SetSettingBoolValue
 {
-    public function __construct(private string $item, private ?bool $value)
+    public function __construct(private string $item, private bool|null $value)
     {
     }
 
@@ -15,7 +15,7 @@ class SetSettingBoolValue
         return $this->item;
     }
 
-    public function getValue(): ?bool
+    public function getValue(): bool|null
     {
         return $this->value;
     }

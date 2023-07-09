@@ -25,24 +25,24 @@ class FaqFormFactory
     /**
      * Upravovaná otázka.
      */
-    private ?Faq $faq = null;
+    private Faq|null $faq = null;
 
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     public function __construct(
         private BaseFormFactory $baseFormFactory,
         private FaqRepository $faqRepository,
-        private UserRepository $userRepository
+        private UserRepository $userRepository,
     ) {
     }
 
     /**
      * Vytvoří formulář.
      */
-    public function create(?int $id, int $userId): Form
+    public function create(int|null $id, int $userId): Form
     {
         $this->faq  = $id === null ? null : $this->faqRepository->findById($id);
         $this->user = $this->userRepository->findById($userId);

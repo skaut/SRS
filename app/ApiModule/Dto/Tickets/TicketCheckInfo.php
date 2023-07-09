@@ -38,17 +38,13 @@ class TicketCheckInfo
         $this->attendeeName = $attendeeName;
     }
 
-    /**
-     * @param string[] $roles
-     */
+    /** @param string[] $roles */
     public function setRoles(array $roles): void
     {
         $this->roles = $roles;
     }
 
-    /**
-     * @param SubeventInfo[] $subevents
-     */
+    /** @param SubeventInfo[] $subevents */
     public function setSubevents(array $subevents): void
     {
         $this->subevents = $subevents;
@@ -59,9 +55,7 @@ class TicketCheckInfo
         $this->hasSubevent = $hasSubevent;
     }
 
-    /**
-     * @param DateTimeImmutable[] $subeventChecks
-     */
+    /** @param DateTimeImmutable[] $subeventChecks */
     public function setSubeventChecks(array $subeventChecks): void
     {
         $this->subeventChecks = $subeventChecks;

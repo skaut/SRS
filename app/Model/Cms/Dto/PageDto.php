@@ -20,7 +20,7 @@ class PageDto
         protected array $allowedRoles,
         protected array $mainContents,
         protected array $sidebarContents,
-        protected bool $hasSidebar
+        protected bool $hasSidebar,
     ) {
     }
 
@@ -34,25 +34,19 @@ class PageDto
         return $this->slug;
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getAllowedRoles(): array
     {
         return $this->allowedRoles;
     }
 
-    /**
-     * @return ContentDto[]
-     */
+    /** @return ContentDto[] */
     public function getMainContents(): array
     {
         return $this->mainContents;
     }
 
-    /**
-     * @return ContentDto[]
-     */
+    /** @return ContentDto[] */
     public function getSidebarContents(): array
     {
         return $this->sidebarContents;

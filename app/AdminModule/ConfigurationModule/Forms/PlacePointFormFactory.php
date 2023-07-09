@@ -20,7 +20,7 @@ class PlacePointFormFactory
 {
     use Nette\SmartObject;
 
-    private ?PlacePoint $placePoint = null;
+    private PlacePoint|null $placePoint = null;
 
     public function __construct(private BaseFormFactory $baseFormFactory, private PlacePointRepository $placePointRepository)
     {

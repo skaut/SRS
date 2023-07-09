@@ -17,7 +17,7 @@ class Faq
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Otázka.
@@ -35,7 +35,7 @@ class Faq
      * Odpověď.
      */
     #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $answer = null;
+    protected string|null $answer = null;
 
     /**
      * Otázka zveřejněna všem.
@@ -49,7 +49,7 @@ class Faq
     #[ORM\Column(type: 'integer')]
     protected int $position = 0;
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -74,12 +74,12 @@ class Faq
         $this->author = $author;
     }
 
-    public function getAnswer(): ?string
+    public function getAnswer(): string|null
     {
         return $this->answer;
     }
 
-    public function setAnswer(?string $answer): void
+    public function setAnswer(string|null $answer): void
     {
         $this->answer = $answer;
     }

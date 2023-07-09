@@ -83,7 +83,7 @@ abstract class CustomInput
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Název vlastního pole.
@@ -124,7 +124,7 @@ abstract class CustomInput
         $this->customInputValues = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -164,9 +164,7 @@ abstract class CustomInput
         return $this->type;
     }
 
-    /**
-     * @return Collection<int, CustomInputValue>
-     */
+    /** @return Collection<int, CustomInputValue> */
     public function getCustomInputValues(): Collection
     {
         return $this->customInputValues;
@@ -179,17 +177,13 @@ abstract class CustomInput
         }
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function getRoles(): Collection
     {
         return $this->roles;
     }
 
-    /**
-     * @param Collection<int, Role> $roles
-     */
+    /** @param Collection<int, Role> $roles */
     public function setRoles(Collection $roles): void
     {
         $this->roles = $roles;

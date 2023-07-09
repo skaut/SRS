@@ -16,10 +16,8 @@ class SettingDateTimeValueQueryHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @throws SettingsItemNotFoundException
-     */
-    public function __invoke(SettingDateTimeValueQuery $query): ?DateTimeImmutable
+    /** @throws SettingsItemNotFoundException */
+    public function __invoke(SettingDateTimeValueQuery $query): DateTimeImmutable|null
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
         $value   = $setting->getValue();

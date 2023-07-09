@@ -22,13 +22,11 @@ class ContactFormContentControl extends BaseContentControl
     public function __construct(
         private QueryBus $queryBus,
         private IContactFormFactory $contactFormFactory,
-        private RoleRepository $roleRepository
+        private RoleRepository $roleRepository,
     ) {
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function render(ContentDto $content): void
     {
         $template = $this->template;

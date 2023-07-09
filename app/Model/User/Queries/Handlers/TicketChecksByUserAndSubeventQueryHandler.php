@@ -16,9 +16,7 @@ class TicketChecksByUserAndSubeventQueryHandler implements MessageHandlerInterfa
     {
     }
 
-    /**
-     * @return Collection<int, TicketCheck>
-     */
+    /** @return Collection<int, TicketCheck> */
     public function __invoke(TicketChecksByUserAndSubeventQuery $query): Collection
     {
         return $this->ticketCheckRepository->findByUserAndSubevent($query->getUser(), $query->getSubevent());

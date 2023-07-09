@@ -16,7 +16,7 @@ class SkautIsCourse
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * SkautIS id kurzu.
@@ -30,7 +30,7 @@ class SkautIsCourse
     #[ORM\Column(type: 'string')]
     protected string $name;
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

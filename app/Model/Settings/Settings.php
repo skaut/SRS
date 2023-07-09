@@ -245,20 +245,20 @@ class Settings
      * Hodnota položky nastavení.
      */
     #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $value = null;
+    protected string|null $value = null;
 
-    public function __construct(string $item, ?string $value)
+    public function __construct(string $item, string|null $value)
     {
         $this->item  = $item;
         $this->value = $value;
     }
 
-    public function getValue(): ?string
+    public function getValue(): string|null
     {
         return $this->value;
     }
 
-    public function setValue(?string $value): void
+    public function setValue(string|null $value): void
     {
         $this->value = $value;
     }

@@ -16,9 +16,7 @@ class ProgramAttendeesQueryHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @return Collection<int, User>
-     */
+    /** @return Collection<int, User> */
     public function __invoke(ProgramAttendeesQuery $query): Collection
     {
         return $this->userRepository->findProgramAttendees($query->getProgram());

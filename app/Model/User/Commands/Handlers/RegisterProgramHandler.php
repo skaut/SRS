@@ -23,13 +23,11 @@ class RegisterProgramHandler implements MessageHandlerInterface
         private QueryBus $queryBus,
         private EventBus $eventBus,
         private EntityManagerInterface $em,
-        private ProgramApplicationRepository $programApplicationRepository
+        private ProgramApplicationRepository $programApplicationRepository,
     ) {
     }
 
-    /**
-     * @throws UserNotAllowedProgramException
-     */
+    /** @throws UserNotAllowedProgramException */
     public function __invoke(RegisterProgram $command): void
     {
         $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));

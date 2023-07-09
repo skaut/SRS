@@ -66,7 +66,7 @@ class EditUserSeminarFormFactory
     /**
      * Upravovaný uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     public function __construct(
         private BaseFormFactory $baseFormFactory,
@@ -81,7 +81,7 @@ class EditUserSeminarFormFactory
         private FilesService $filesService,
         private IMailService $mailService,
         private AclService $aclService,
-        private UserService $userService
+        private UserService $userService,
     ) {
     }
 
@@ -100,7 +100,7 @@ class EditUserSeminarFormFactory
             $rolesSelect = $form->addMultiSelect(
                 'roles',
                 'admin.users.users_roles',
-                $this->aclService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED])
+                $this->aclService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED]),
             );
 
             $form->addCheckbox('approved', 'admin.users.users_approved_form');

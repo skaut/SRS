@@ -78,7 +78,7 @@ class ApplicationService
         private Translator $translator,
         private PaymentRepository $paymentRepository,
         private IncomeProofRepository $incomeProofRepository,
-        private EventBus $eventBus
+        private EventBus $eventBus,
     ) {
     }
 
@@ -95,7 +95,7 @@ class ApplicationService
         Collection $roles,
         Collection $subevents,
         User $createdBy,
-        bool $approve = false
+        bool $approve = false,
     ): void {
         $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
         $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
@@ -131,12 +131,12 @@ class ApplicationService
         }
 
         $editRegistrationToText = $this->queryBus->handle(
-            new SettingDateValueAsTextQuery(Settings::EDIT_REGISTRATION_TO)
+            new SettingDateValueAsTextQuery(Settings::EDIT_REGISTRATION_TO),
         );
 
         $this->mailService->sendMailFromTemplate(
             new ArrayCollection(
-                [$user]
+                [$user],
             ),
             null,
             Template::REGISTRATION,
@@ -147,9 +147,9 @@ class ApplicationService
                 TemplateVariable::APPLICATION_FEE => $applicationFee,
                 TemplateVariable::APPLICATION_VARIABLE_SYMBOL => $applicationVariableSymbol,
                 TemplateVariable::BANK_ACCOUNT => $this->queryBus->handle(
-                    new SettingStringValueQuery(Settings::ACCOUNT_NUMBER)
+                    new SettingStringValueQuery(Settings::ACCOUNT_NUMBER),
                 ),
-            ]
+            ],
         );
     }
 
@@ -162,7 +162,7 @@ class ApplicationService
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function updateRoles(User $user, Collection $roles, ?User $createdBy, bool $approve = false): void
+    public function updateRoles(User $user, Collection $roles, User|null $createdBy, bool $approve = false): void
     {
         $rolesOld = clone $user->getRoles();
 
@@ -176,9 +176,9 @@ class ApplicationService
                 $this->createSubeventsApplication(
                     $user,
                     new ArrayCollection(
-                        [$this->subeventRepository->findImplicit()]
+                        [$this->subeventRepository->findImplicit()],
                     ),
-                    $createdBy
+                    $createdBy,
                 );
             } else {
                 $this->incrementRolesOccupancy($roles);
@@ -241,14 +241,14 @@ class ApplicationService
 
         $this->mailService->sendMailFromTemplate(
             new ArrayCollection(
-                [$user]
+                [$user],
             ),
             null,
             Template::ROLES_CHANGED,
             [
                 TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                 TemplateVariable::USERS_ROLES => implode(', ', $roles->map(static fn (Role $role) => $role->getName())->toArray()),
-            ]
+            ],
         );
     }
 
@@ -259,7 +259,7 @@ class ApplicationService
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function cancelRegistration(User $user, string $state, ?User $createdBy): void
+    public function cancelRegistration(User $user, string $state, User|null $createdBy): void
     {
         $this->em->wrapInTransaction(function () use ($user, $state, $createdBy): void {
             $user->setApproved(true);
@@ -303,30 +303,30 @@ class ApplicationService
         if ($state === ApplicationState::CANCELED) {
             $this->mailService->sendMailFromTemplate(
                 new ArrayCollection(
-                    [$user]
+                    [$user],
                 ),
                 null,
                 Template::REGISTRATION_CANCELED,
                 [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(
-                        new SettingStringValueQuery(Settings::SEMINAR_NAME)
+                        new SettingStringValueQuery(Settings::SEMINAR_NAME),
                     ),
-                ]
+                ],
             );
         } elseif ($state === ApplicationState::CANCELED_NOT_PAID) {
             $this->mailService->sendMailFromTemplate(
                 new ArrayCollection(
-                    [$user]
+                    [$user],
                 ),
                 null,
                 Template::REGISTRATION_CANCELED_NOT_PAID,
                 [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(
                         new SettingStringValueQuery(
-                            Settings::SEMINAR_NAME
-                        )
+                            Settings::SEMINAR_NAME,
+                        ),
                     ),
-                ]
+                ],
             );
         }
     }
@@ -351,16 +351,16 @@ class ApplicationService
 
         $this->mailService->sendMailFromTemplate(
             new ArrayCollection(
-                [$user]
+                [$user],
             ),
             null,
             Template::SUBEVENTS_CHANGED,
             [
                 TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(
-                    new SettingStringValueQuery(Settings::SEMINAR_NAME)
+                    new SettingStringValueQuery(Settings::SEMINAR_NAME),
                 ),
                 TemplateVariable::USERS_SUBEVENTS => $user->getSubeventsText(),
-            ]
+            ],
         );
     }
 
@@ -409,16 +409,16 @@ class ApplicationService
 
         $this->mailService->sendMailFromTemplate(
             new ArrayCollection(
-                [$application->getUser()]
+                [$application->getUser()],
             ),
             null,
             Template::SUBEVENTS_CHANGED,
             [
                 TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(
-                    new SettingStringValueQuery(Settings::SEMINAR_NAME)
+                    new SettingStringValueQuery(Settings::SEMINAR_NAME),
                 ),
                 TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
-            ]
+            ],
         );
     }
 
@@ -429,7 +429,7 @@ class ApplicationService
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function cancelSubeventsApplication(SubeventsApplication $application, string $state, ?User $createdBy): void
+    public function cancelSubeventsApplication(SubeventsApplication $application, string $state, User|null $createdBy): void
     {
         if (! $application->isValid()) {
             return;
@@ -464,16 +464,16 @@ class ApplicationService
 
         $this->mailService->sendMailFromTemplate(
             new ArrayCollection(
-                [$application->getUser()]
+                [$application->getUser()],
             ),
             null,
             Template::SUBEVENTS_CHANGED,
             [
                 TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(
-                    new SettingStringValueQuery(Settings::SEMINAR_NAME)
+                    new SettingStringValueQuery(Settings::SEMINAR_NAME),
                 ),
                 TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
-            ]
+            ],
         );
     }
 
@@ -484,10 +484,10 @@ class ApplicationService
      */
     public function updateApplicationPayment(
         Application $application,
-        ?string $paymentMethod,
-        ?DateTimeImmutable $paymentDate,
-        ?DateTimeImmutable $maturityDate,
-        ?User $createdBy
+        string|null $paymentMethod,
+        DateTimeImmutable|null $paymentDate,
+        DateTimeImmutable|null $maturityDate,
+        User|null $createdBy,
     ): void {
         $oldPaymentMethod = $application->getPaymentMethod();
         $oldPaymentDate   = $application->getPaymentDate();
@@ -522,16 +522,16 @@ class ApplicationService
                 new ArrayCollection(
                     [
                         $application->getUser(),
-                    ]
+                    ],
                 ),
                 null,
                 Template::PAYMENT_CONFIRMED,
                 [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(
-                        new SettingStringValueQuery(Settings::SEMINAR_NAME)
+                        new SettingStringValueQuery(Settings::SEMINAR_NAME),
                     ),
                     TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText(),
-                ]
+                ],
             );
         }
     }
@@ -544,12 +544,12 @@ class ApplicationService
     public function createPayment(
         DateTimeImmutable $date,
         float $amount,
-        ?string $variableSymbol,
-        ?string $transactionId,
-        ?string $accountNumber,
-        ?string $accountName,
-        ?string $message,
-        ?User $createdBy = null
+        string|null $variableSymbol,
+        string|null $transactionId,
+        string|null $accountNumber,
+        string|null $accountName,
+        string|null $message,
+        User|null $createdBy = null,
     ): void {
         $this->em->wrapInTransaction(function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy): void {
             $payment = new Payment();
@@ -599,7 +599,7 @@ class ApplicationService
         DateTimeImmutable $date,
         float $amount,
         string $variableSymbol,
-        User $createdBy
+        User $createdBy,
     ): void {
         $this->createPayment($date, $amount, $variableSymbol, null, null, null, null, $createdBy);
     }
@@ -613,11 +613,11 @@ class ApplicationService
      */
     public function updatePayment(
         Payment $payment,
-        ?DateTimeImmutable $date,
-        ?float $amount,
-        ?string $variableSymbol,
+        DateTimeImmutable|null $date,
+        float|null $amount,
+        string|null $variableSymbol,
         Collection $pairedApplications,
-        User $createdBy
+        User $createdBy,
     ): void {
         $this->em->wrapInTransaction(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy): void {
             if ($date !== null) {
@@ -729,7 +729,7 @@ class ApplicationService
         return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
             && ! $user->hasPaidAnyApplication()
             && $this->queryBus->handle(
-                new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO)
+                new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO),
             ) >= (new DateTimeImmutable())
                 ->setTime(0, 0);
     }
@@ -745,7 +745,7 @@ class ApplicationService
             && ! $application->isCanceled()
             && $application->getState() !== ApplicationState::PAID
             && $this->queryBus->handle(
-                new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO)
+                new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO),
             ) >= (new DateTimeImmutable())
                 ->setTime(0, 0);
     }
@@ -758,14 +758,14 @@ class ApplicationService
     public function isAllowedAddApplication(User $user): bool
     {
         return ! $user->isInRole(
-            $this->roleRepository->findBySystemName(Role::NONREGISTERED)
+            $this->roleRepository->findBySystemName(Role::NONREGISTERED),
         )
             && $user->hasPaidEveryApplication()
             && $this->queryBus->handle(
-                new SettingBoolValueQuery(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT)
+                new SettingBoolValueQuery(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT),
             )
             && $this->queryBus->handle(
-                new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO)
+                new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO),
             ) >= (new DateTimeImmutable())
                 ->setTime(0, 0);
     }
@@ -778,7 +778,7 @@ class ApplicationService
     public function isAllowedEditCustomInputs(): bool
     {
         return $this->queryBus->handle(
-            new SettingDateValueQuery(Settings::EDIT_CUSTOM_INPUTS_TO)
+            new SettingDateValueQuery(Settings::EDIT_CUSTOM_INPUTS_TO),
         ) >= (new DateTimeImmutable())
             ->setTime(0, 0);
     }
@@ -847,7 +847,7 @@ class ApplicationService
     private function createSubeventsApplication(
         User $user,
         Collection $subevents,
-        User $createdBy
+        User $createdBy,
     ): SubeventsApplication {
         $this->incrementSubeventsOccupancy($subevents);
 
@@ -868,9 +868,7 @@ class ApplicationService
         return $application;
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     private function generateVariableSymbol(): VariableSymbol
     {
         $variableSymbolCode = $this->queryBus->handle(new SettingStringValueQuery(Settings::VARIABLE_SYMBOL_CODE));
@@ -892,11 +890,11 @@ class ApplicationService
      * @throws ReflectionException
      * @throws Throwable
      */
-    private function countMaturityDate(): ?DateTimeImmutable
+    private function countMaturityDate(): DateTimeImmutable|null
     {
         switch (
             $this->queryBus->handle(
-                new SettingStringValueQuery(Settings::MATURITY_TYPE)
+                new SettingStringValueQuery(Settings::MATURITY_TYPE),
             )
         ) {
             case MaturityType::DATE:

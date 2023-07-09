@@ -26,9 +26,7 @@ class SeminarInfo
         $this->name = $name;
     }
 
-    /**
-     * @param SubeventInfo[] $subevents
-     */
+    /** @param SubeventInfo[] $subevents */
     public function setSubevents(array $subevents): void
     {
         $this->subevents = $subevents;

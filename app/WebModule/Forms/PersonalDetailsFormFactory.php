@@ -29,7 +29,7 @@ class PersonalDetailsFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     /** @var callable[] */
     public array $onSkautIsError = [];
@@ -37,7 +37,7 @@ class PersonalDetailsFormFactory
     public function __construct(
         private BaseFormFactory $baseFormFactory,
         private UserRepository $userRepository,
-        private SkautIsService $skautIsService
+        private SkautIsService $skautIsService,
     ) {
     }
 
@@ -159,7 +159,7 @@ class PersonalDetailsFormFactory
                     $this->user->getBirthdate(),
                     $this->user->getFirstName(),
                     $this->user->getLastName(),
-                    $this->user->getNickName()
+                    $this->user->getNickName(),
                 );
 
                 $this->skautIsService->updatePersonAddress(
@@ -167,7 +167,7 @@ class PersonalDetailsFormFactory
                     $this->user->getStreet(),
                     $this->user->getCity(),
                     $this->user->getPostcode(),
-                    $this->user->getState()
+                    $this->user->getState(),
                 );
             } catch (WsdlException $ex) {
                 Debugger::log($ex, ILogger::WARNING);

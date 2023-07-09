@@ -37,12 +37,11 @@ class DocumentContent extends Content implements IContent
 
     private TagRepository $tagRepository;
 
-    /**
-     * @throws PageException
-     */
+    /** @throws PageException */
     public function __construct(Page $page, string $area)
     {
         parent::__construct($page, $area);
+
         $this->tags = new ArrayCollection();
     }
 
@@ -51,17 +50,13 @@ class DocumentContent extends Content implements IContent
         $this->tagRepository = $tagRepository;
     }
 
-    /**
-     * @return Collection<int, Tag>
-     */
+    /** @return Collection<int, Tag> */
     public function getTags(): Collection
     {
         return $this->tags;
     }
 
-    /**
-     * @param Collection<int, Tag> $tags
-     */
+    /** @param Collection<int, Tag> $tags */
     public function setTags(Collection $tags): void
     {
         $this->tags->clear();
@@ -91,6 +86,7 @@ class DocumentContent extends Content implements IContent
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {
         parent::contentFormSucceeded($form, $values);
+
         $formName   = $this->getContentFormName();
         $values     = $values->$formName;
         $this->tags = $this->tagRepository->findTagsByIds($values->tags);

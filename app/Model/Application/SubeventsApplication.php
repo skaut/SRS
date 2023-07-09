@@ -16,9 +16,7 @@ class SubeventsApplication extends Application
 {
     protected string $type = Application::SUBEVENTS;
 
-    /**
-     * @param Collection<int, Subevent> $subevents
-     */
+    /** @param Collection<int, Subevent> $subevents */
     public function setSubevents(Collection $subevents): void
     {
         foreach ($this->subevents as $subevent) {

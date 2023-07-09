@@ -25,7 +25,7 @@ class RoomScheduleGridControl extends Control
     /**
      * Aktulní místnost
      */
-    private ?Room $room = null;
+    private Room|null $room = null;
 
     public function __construct(private Translator $translator, private RoomRepository $roomRepository, private ProgramRepository $programRepository, private ExcelExportService $excelExportService)
     {
@@ -72,7 +72,7 @@ class RoomScheduleGridControl extends Control
                     $attendeesCount = $program->getAttendeesCount();
 
                     return $capacity === null ? $attendeesCount : $attendeesCount . '/' . $capacity;
-                }
+                },
             );
 
         $grid->addToolbarButton('exportRoomsSchedule!', 'admin.program.rooms.schedule.action.export_schedule');

@@ -40,7 +40,7 @@ class SendFormFactory
         private UserRepository $userRepository,
         private SubeventRepository $subeventRepository,
         private AclService $aclService,
-        private SubeventService $subeventService
+        private SubeventService $subeventService,
     ) {
     }
 
@@ -54,19 +54,19 @@ class SendFormFactory
         $recipientRolesMultiSelect = $form->addMultiSelect(
             'recipientRoles',
             'admin.mailing.send.recipient_roles',
-            $this->aclService->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED])
+            $this->aclService->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED]),
         );
 
         $recipientSubeventsMultiSelect = $form->addMultiSelect(
             'recipientSubevents',
             'admin.mailing.send.recipient_subevents',
-            $this->subeventService->getSubeventsOptionsWithUsersCount()
+            $this->subeventService->getSubeventsOptionsWithUsersCount(),
         );
 
         $recipientUsersMultiSelect = $form->addMultiSelect(
             'recipientUsers',
             'admin.mailing.send.recipient_users',
-            $this->userRepository->getUsersOptions()
+            $this->userRepository->getUsersOptions(),
         )
             ->setHtmlAttribute('data-live-search', 'true');
 

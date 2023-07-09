@@ -165,13 +165,13 @@ abstract class Content implements IContent
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Nadpis obsahu.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $heading = null;
+    protected string|null $heading = null;
 
     /**
      * Stránka, na které je obsah umístěn.
@@ -191,9 +191,7 @@ abstract class Content implements IContent
     #[ORM\Column(type: 'integer')]
     protected int $position = 0;
 
-    /**
-     * @throws PageException
-     */
+    /** @throws PageException */
     public function __construct(Page $page, string $area)
     {
         $this->page = $page;
@@ -214,7 +212,7 @@ abstract class Content implements IContent
         return lcfirst(str_replace('_', '', ucwords($this->type, '_'))) . 'Content';
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

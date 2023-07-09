@@ -40,19 +40,19 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Uživatelské jméno skautIS.
      */
     #[ORM\Column(type: 'string', unique: true, nullable: true, options: ['collation' => 'utf8mb4_bin'])]
-    protected ?string $username = null;
+    protected string|null $username = null;
 
     /**
      * E-mail.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $email = null;
+    protected string|null $email = null;
 
     /**
      * Schválený.
@@ -64,31 +64,31 @@ class User
      * Jméno.
      */
     #[ORM\Column(type: 'string')]
-    protected ?string $firstName = null;
+    protected string|null $firstName = null;
 
     /**
      * Příjmení.
      */
     #[ORM\Column(type: 'string')]
-    protected ?string $lastName = null;
+    protected string|null $lastName = null;
 
     /**
      * Přezdívka.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $nickName = null;
+    protected string|null $nickName = null;
 
     /**
      * Titul před jménem.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $degreePre = null;
+    protected string|null $degreePre = null;
 
     /**
      * Titul za jménem.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $degreePost = null;
+    protected string|null $degreePost = null;
 
     /**
      * Zobrazované jméno - Příjmení Jméno (Přezdívka).
@@ -100,13 +100,13 @@ class User
      * Zobrazované jméno lektora, včetně titulů.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $lectorName = null;
+    protected string|null $lectorName = null;
 
     /**
      * Bezpečnostní kód.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $securityCode = null;
+    protected string|null $securityCode = null;
 
     /**
      * Propojený účet.
@@ -124,73 +124,73 @@ class User
      * Jednotka.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $unit = null;
+    protected string|null $unit = null;
 
     /**
      * Pohlaví.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $sex = null;
+    protected string|null $sex = null;
 
     /**
      * Datum narození.
      */
     #[ORM\Column(type: 'date_immutable', nullable: true)]
-    protected ?DateTimeImmutable $birthdate = null;
+    protected DateTimeImmutable|null $birthdate = null;
 
     /**
      * Id uživatele ve skautIS.
      */
     #[ORM\Column(type: 'integer', unique: true, nullable: true, name: 'skautis_user_id')]
-    protected ?int $skautISUserId = null;
+    protected int|null $skautISUserId = null;
 
     /**
      * Id osoby ve skautIS.
      */
     #[ORM\Column(type: 'integer', unique: true, nullable: true, name: 'skautis_person_id')]
-    protected ?int $skautISPersonId = null;
+    protected int|null $skautISPersonId = null;
 
     /**
      * Datum posledního přihlášení.
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?DateTimeImmutable $lastLogin = null;
+    protected DateTimeImmutable|null $lastLogin = null;
 
     /**
      * O mně.
      */
     #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $about = null;
+    protected string|null $about = null;
 
     /**
      * Ulice.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $street = null;
+    protected string|null $street = null;
 
     /**
      * Město.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $city = null;
+    protected string|null $city = null;
 
     /**
      * Poštovní směrovací číslo.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $postcode = null;
+    protected string|null $postcode = null;
 
     /**
      * Stát.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $state = null;
+    protected string|null $state = null;
 
     /**
      * Telefonní číslo.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $phone = null;
+    protected string|null $phone = null;
 
     /**
      * Zúčastnil se.
@@ -246,19 +246,19 @@ class User
      * Platební metoda.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $paymentMethod = null;
+    protected string|null $paymentMethod = null;
 
     /**
      * Datum poslední platby.
      */
     #[ORM\Column(type: 'date_immutable', nullable: true)]
-    protected ?DateTimeImmutable $lastPaymentDate = null;
+    protected DateTimeImmutable|null $lastPaymentDate = null;
 
     /**
      * Datum a čas vytvoření přihlášky rolí.
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?DateTimeImmutable $rolesApplicationDate = null;
+    protected DateTimeImmutable|null $rolesApplicationDate = null;
 
     /**
      * Programové bloky, které jsou pro uživatele povinné, ale nemá je zapsané.
@@ -286,19 +286,19 @@ class User
      * Neveřejná poznámka.
      */
     #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $note = null;
+    protected string|null $note = null;
 
     /**
      * Fotka.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $photo = null;
+    protected string|null $photo = null;
 
     /**
      * Datum aktualizace fotky.
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?DateTimeImmutable $photoUpdate = null;
+    protected DateTimeImmutable|null $photoUpdate = null;
 
     public function __construct()
     {
@@ -310,27 +310,27 @@ class User
         $this->customInputValues            = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    public function getUsername(): ?string
+    public function getUsername(): string|null
     {
         return $this->username;
     }
 
-    public function setUsername(?string $username): void
+    public function setUsername(string|null $username): void
     {
         $this->username = $username;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string|null
     {
         return $this->email;
     }
 
-    public function setEmail(?string $email): void
+    public function setEmail(string|null $email): void
     {
         $this->email = $email;
     }
@@ -369,35 +369,35 @@ class User
         $this->updateLectorName();
     }
 
-    public function getNickName(): ?string
+    public function getNickName(): string|null
     {
         return $this->nickName;
     }
 
-    public function setNickName(?string $nickName): void
+    public function setNickName(string|null $nickName): void
     {
         $this->nickName = $nickName;
         $this->updateDisplayName();
         $this->updateLectorName();
     }
 
-    public function getDegreePre(): ?string
+    public function getDegreePre(): string|null
     {
         return $this->degreePre;
     }
 
-    public function setDegreePre(?string $degreePre): void
+    public function setDegreePre(string|null $degreePre): void
     {
         $this->degreePre = $degreePre;
         $this->updateLectorName();
     }
 
-    public function getDegreePost(): ?string
+    public function getDegreePost(): string|null
     {
         return $this->degreePost;
     }
 
-    public function setDegreePost(?string $degreePost): void
+    public function setDegreePost(string|null $degreePost): void
     {
         $this->degreePost = $degreePost;
         $this->updateLectorName();
@@ -420,7 +420,7 @@ class User
         }
     }
 
-    public function getLectorName(): ?string
+    public function getLectorName(): string|null
     {
         return $this->lectorName;
     }
@@ -447,12 +447,12 @@ class User
         }
     }
 
-    public function getSecurityCode(): ?string
+    public function getSecurityCode(): string|null
     {
         return $this->securityCode;
     }
 
-    public function setSecurityCode(?string $securityCode): void
+    public function setSecurityCode(string|null $securityCode): void
     {
         $this->securityCode = $securityCode;
     }
@@ -480,127 +480,127 @@ class User
         $this->externalLector = $externalLector;
     }
 
-    public function getUnit(): ?string
+    public function getUnit(): string|null
     {
         return $this->unit;
     }
 
-    public function setUnit(?string $unit): void
+    public function setUnit(string|null $unit): void
     {
         $this->unit = $unit;
     }
 
-    public function getSex(): ?string
+    public function getSex(): string|null
     {
         return $this->sex;
     }
 
-    public function setSex(?string $sex): void
+    public function setSex(string|null $sex): void
     {
         $this->sex = $sex;
     }
 
-    public function getBirthdate(): ?DateTimeImmutable
+    public function getBirthdate(): DateTimeImmutable|null
     {
         return $this->birthdate;
     }
 
-    public function setBirthdate(?DateTimeImmutable $birthdate): void
+    public function setBirthdate(DateTimeImmutable|null $birthdate): void
     {
         $this->birthdate = $birthdate;
     }
 
-    public function getAge(): ?int
+    public function getAge(): int|null
     {
         return $this->birthdate !== null ? (new DateTimeImmutable())->diff($this->birthdate)->y : null;
     }
 
-    public function getSkautISUserId(): ?int
+    public function getSkautISUserId(): int|null
     {
         return $this->skautISUserId;
     }
 
-    public function setSkautISUserId(?int $skautISUserId): void
+    public function setSkautISUserId(int|null $skautISUserId): void
     {
         $this->skautISUserId = $skautISUserId;
     }
 
-    public function getSkautISPersonId(): ?int
+    public function getSkautISPersonId(): int|null
     {
         return $this->skautISPersonId;
     }
 
-    public function setSkautISPersonId(?int $skautISPersonId): void
+    public function setSkautISPersonId(int|null $skautISPersonId): void
     {
         $this->skautISPersonId = $skautISPersonId;
     }
 
-    public function getLastLogin(): ?DateTimeImmutable
+    public function getLastLogin(): DateTimeImmutable|null
     {
         return $this->lastLogin;
     }
 
-    public function setLastLogin(?DateTimeImmutable $lastLogin): void
+    public function setLastLogin(DateTimeImmutable|null $lastLogin): void
     {
         $this->lastLogin = $lastLogin;
     }
 
-    public function getAbout(): ?string
+    public function getAbout(): string|null
     {
         return $this->about;
     }
 
-    public function setAbout(?string $about): void
+    public function setAbout(string|null $about): void
     {
         $this->about = $about;
     }
 
-    public function getStreet(): ?string
+    public function getStreet(): string|null
     {
         return $this->street;
     }
 
-    public function setStreet(?string $street): void
+    public function setStreet(string|null $street): void
     {
         $this->street = $street;
     }
 
-    public function getCity(): ?string
+    public function getCity(): string|null
     {
         return $this->city;
     }
 
-    public function setCity(?string $city): void
+    public function setCity(string|null $city): void
     {
         $this->city = $city;
     }
 
-    public function getPostcode(): ?string
+    public function getPostcode(): string|null
     {
         return $this->postcode;
     }
 
-    public function setPostcode(?string $postcode): void
+    public function setPostcode(string|null $postcode): void
     {
         $this->postcode = $postcode;
     }
 
-    public function getState(): ?string
+    public function getState(): string|null
     {
         return $this->state;
     }
 
-    public function setState(?string $state): void
+    public function setState(string|null $state): void
     {
         $this->state = $state;
     }
 
-    public function getPhone(): ?string
+    public function getPhone(): string|null
     {
         return $this->phone;
     }
 
-    public function setPhone(?string $phone): void
+    public function setPhone(string|null $phone): void
     {
         $this->phone = $phone;
     }
@@ -608,7 +608,7 @@ class User
     /**
      * Vrátí adresu uživatele.
      */
-    public function getAddress(): ?string
+    public function getAddress(): string|null
     {
         if (empty($this->street) || empty($this->city) || empty($this->postcode)) {
             return null;
@@ -627,17 +627,13 @@ class User
         $this->attended = $attended;
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function getRoles(): Collection
     {
         return $this->roles;
     }
 
-    /**
-     * @param Collection<int, Role> $roles
-     */
+    /** @param Collection<int, Role> $roles */
     public function setRoles(Collection $roles): void
     {
         foreach ($this->roles as $role) {
@@ -722,9 +718,7 @@ class User
         return $this->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS) && $block->getLectors()->contains($this);
     }
 
-    /**
-     * @return Collection<int, Application>
-     */
+    /** @return Collection<int, Application> */
     public function getApplications(): Collection
     {
         return $this->applications;
@@ -791,7 +785,7 @@ class User
         $criteria = Criteria::create()
             ->where(Criteria::expr()->andX(
                 Criteria::expr()->isNull('validTo'),
-                Criteria::expr()->eq('state', ApplicationState::PAID)
+                Criteria::expr()->eq('state', ApplicationState::PAID),
             ));
 
         return $this->applications->matching($criteria);
@@ -819,7 +813,7 @@ class User
         $criteria = Criteria::create()
             ->where(Criteria::expr()->andX(
                 Criteria::expr()->isNull('validTo'),
-                Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT)
+                Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
             ));
 
         return $this->applications->matching($criteria);
@@ -838,7 +832,7 @@ class User
     /**
      * Vrací přihlášku rolí.
      */
-    public function getRolesApplication(): ?RolesApplication
+    public function getRolesApplication(): RolesApplication|null
     {
         foreach ($this->getNotCanceledRolesApplications() as $application) {
             return $application;
@@ -881,9 +875,7 @@ class User
         return $this->getRolesApplication()->getState() !== ApplicationState::WAITING_FOR_PAYMENT;
     }
 
-    /**
-     * @return Collection<int, Block>
-     */
+    /** @return Collection<int, Block> */
     public function getLecturersBlocks(): Collection
     {
         return $this->lecturersBlocks;
@@ -933,39 +925,37 @@ class User
         $this->feeRemaining = $feeRemaining;
     }
 
-    public function getPaymentMethod(): ?string
+    public function getPaymentMethod(): string|null
     {
         return $this->paymentMethod;
     }
 
-    public function setPaymentMethod(?string $paymentMethod): void
+    public function setPaymentMethod(string|null $paymentMethod): void
     {
         $this->paymentMethod = $paymentMethod;
     }
 
-    public function getLastPaymentDate(): ?DateTimeImmutable
+    public function getLastPaymentDate(): DateTimeImmutable|null
     {
         return $this->lastPaymentDate;
     }
 
-    public function setLastPaymentDate(?DateTimeImmutable $lastPaymentDate): void
+    public function setLastPaymentDate(DateTimeImmutable|null $lastPaymentDate): void
     {
         $this->lastPaymentDate = $lastPaymentDate;
     }
 
-    public function getRolesApplicationDate(): ?DateTimeImmutable
+    public function getRolesApplicationDate(): DateTimeImmutable|null
     {
         return $this->rolesApplicationDate;
     }
 
-    public function setRolesApplicationDate(?DateTimeImmutable $rolesApplicationDate): void
+    public function setRolesApplicationDate(DateTimeImmutable|null $rolesApplicationDate): void
     {
         $this->rolesApplicationDate = $rolesApplicationDate;
     }
 
-    /**
-     * @return Collection<int, Block>
-     */
+    /** @return Collection<int, Block> */
     public function getNotRegisteredMandatoryBlocks(): Collection
     {
         return $this->notRegisteredMandatoryBlocks;
@@ -976,9 +966,7 @@ class User
         return implode(', ', $this->notRegisteredMandatoryBlocks->map(static fn (Block $block) => $block->getName())->toArray());
     }
 
-    /**
-     * @param Collection<int, Block> $notRegisteredMandatoryBlocks
-     */
+    /** @param Collection<int, Block> $notRegisteredMandatoryBlocks */
     public function setNotRegisteredMandatoryBlocks(Collection $notRegisteredMandatoryBlocks): void
     {
         $this->notRegisteredMandatoryBlocks->clear();
@@ -994,9 +982,7 @@ class User
         return $this->notRegisteredMandatoryBlocksCount;
     }
 
-    /**
-     * @return Collection<int, CustomInputValue>
-     */
+    /** @return Collection<int, CustomInputValue> */
     public function getCustomInputValues(): Collection
     {
         return $this->customInputValues;
@@ -1009,7 +995,7 @@ class User
         }
     }
 
-    public function getCustomInputValue(CustomInput $customInput): ?CustomInputValue
+    public function getCustomInputValue(CustomInput $customInput): CustomInputValue|null
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()
@@ -1024,32 +1010,32 @@ class User
         return $matchingCustomInputValues->first();
     }
 
-    public function getNote(): ?string
+    public function getNote(): string|null
     {
         return $this->note;
     }
 
-    public function setNote(?string $note): void
+    public function setNote(string|null $note): void
     {
         $this->note = $note;
     }
 
-    public function getPhoto(): ?string
+    public function getPhoto(): string|null
     {
         return $this->photo;
     }
 
-    public function setPhoto(?string $photo): void
+    public function setPhoto(string|null $photo): void
     {
         $this->photo = $photo;
     }
 
-    public function getPhotoUpdate(): ?DateTimeImmutable
+    public function getPhotoUpdate(): DateTimeImmutable|null
     {
         return $this->photoUpdate;
     }
 
-    public function setPhotoUpdate(?DateTimeImmutable $photoUpdate): void
+    public function setPhotoUpdate(DateTimeImmutable|null $photoUpdate): void
     {
         $this->photoUpdate = $photoUpdate;
     }
@@ -1120,9 +1106,9 @@ class User
             Criteria::create()->where(
                 Criteria::expr()->andX(
                     Criteria::expr()->eq('program', $program),
-                    Criteria::expr()->eq('alternate', false)
-                )
-            )
+                    Criteria::expr()->eq('alternate', false),
+                ),
+            ),
         )->isEmpty();
     }
 
@@ -1132,9 +1118,9 @@ class User
             Criteria::create()->where(
                 Criteria::expr()->andX(
                     Criteria::expr()->eq('program', $program),
-                    Criteria::expr()->eq('alternate', true)
-                )
-            )
+                    Criteria::expr()->eq('alternate', true),
+                ),
+            ),
         )->isEmpty();
     }
 }

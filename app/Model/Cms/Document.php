@@ -24,7 +24,7 @@ class Document
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Tagy dokumentu.
@@ -50,7 +50,7 @@ class Document
      * Popis.
      */
     #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $description = null;
+    protected string|null $description = null;
 
     /**
      * Datum změny souboru.
@@ -63,22 +63,18 @@ class Document
         $this->tags = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, Tag>
-     */
+    /** @return Collection<int, Tag> */
     public function getTags(): Collection
     {
         return $this->tags;
     }
 
-    /**
-     * @param Collection<int, Tag> $tags
-     */
+    /** @param Collection<int, Tag> $tags */
     public function setTags(Collection $tags): void
     {
         foreach ($this->tags as $tag) {
@@ -126,12 +122,12 @@ class Document
         $this->file = $file;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string|null
     {
         return $this->description;
     }
 
-    public function setDescription(?string $description): void
+    public function setDescription(string|null $description): void
     {
         $this->description = $description;
     }

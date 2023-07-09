@@ -39,7 +39,7 @@ class CustomInputFormFactory
     /**
      * Upravované pole.
      */
-    private ?CustomInput $customInput = null;
+    private CustomInput|null $customInput = null;
 
     public function __construct(private BaseFormFactory $baseFormFactory, private CustomInputRepository $customInputRepository, private AclService $aclService, private RoleRepository $roleRepository)
     {
@@ -129,7 +129,7 @@ class CustomInputFormFactory
                     $this->customInput = new CustomSelect();
                     $options           = array_map(
                         static fn (string $o) => trim($o),
-                        explode(',', $values->options)
+                        explode(',', $values->options),
                     );
                     $this->customInput->setOptions($options);
                     break;
@@ -138,7 +138,7 @@ class CustomInputFormFactory
                     $this->customInput = new CustomMultiSelect();
                     $options           = array_map(
                         static fn (string $o) => trim($o),
-                        explode(',', $values->options)
+                        explode(',', $values->options),
                     );
                     $this->customInput->setOptions($options);
                     break;

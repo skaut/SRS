@@ -16,9 +16,7 @@ class SubeventsQueryHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @return Collection<int, Subevent>
-     */
+    /** @return Collection<int, Subevent> */
     public function __invoke(SubeventsQuery $query): Collection
     {
         return $this->subeventRepository->findFilteredSubevents($query->isExplicitOnly(), $query->isRegisterableNowOnly(), $query->isUserNotRegisteredOnly(), $query->isIncludeUserRegistered(), $query->getUser());

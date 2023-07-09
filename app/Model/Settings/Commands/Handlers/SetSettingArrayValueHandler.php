@@ -17,9 +17,7 @@ class SetSettingArrayValueHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @throws SettingsItemNotFoundException
-     */
+    /** @throws SettingsItemNotFoundException */
     public function __invoke(SetSettingArrayValue $command): void
     {
         $setting = $this->settingsRepository->findByItem($command->getItem());

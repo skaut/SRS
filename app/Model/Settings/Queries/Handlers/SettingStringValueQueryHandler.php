@@ -15,10 +15,8 @@ class SettingStringValueQueryHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @throws SettingsItemNotFoundException
-     */
-    public function __invoke(SettingStringValueQuery $query): ?string
+    /** @throws SettingsItemNotFoundException */
+    public function __invoke(SettingStringValueQuery $query): string|null
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
 

@@ -32,9 +32,7 @@ class PaymentsPresenter extends PaymentsBasePresenter
         return $this->paymentsGridControlFactory->create();
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     protected function createComponentEditPaymentForm(): Form
     {
         $form = $this->editPaymentFormFactory->create((int) $this->getParameter('id'));

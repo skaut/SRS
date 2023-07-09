@@ -22,7 +22,7 @@ class SettingArrayValueQueryHandler implements MessageHandlerInterface
      *
      * @throws SettingsItemNotFoundException
      */
-    public function __invoke(SettingArrayValueQuery $query): ?array
+    public function __invoke(SettingArrayValueQuery $query): array|null
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
 

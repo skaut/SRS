@@ -24,12 +24,12 @@ class FaqFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     public function __construct(
         private BaseFormFactory $baseFormFactory,
         private FaqRepository $faqRepository,
-        private UserRepository $userRepository
+        private UserRepository $userRepository,
     ) {
     }
 

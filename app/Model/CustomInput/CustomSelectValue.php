@@ -19,9 +19,9 @@ class CustomSelectValue extends CustomInputValue
      * Vybraná položka výběrového pole přihlášky.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $value = null;
+    protected int|null $value = null;
 
-    public function getValue(): ?int
+    public function getValue(): int|null
     {
         return $this->value;
     }

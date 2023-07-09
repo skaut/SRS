@@ -6,7 +6,7 @@ namespace App\Model\Settings\Commands;
 
 class SetSettingStringValue
 {
-    public function __construct(private string $item, private ?string $value)
+    public function __construct(private string $item, private string|null $value)
     {
     }
 
@@ -15,7 +15,7 @@ class SetSettingStringValue
         return $this->item;
     }
 
-    public function getValue(): ?string
+    public function getValue(): string|null
     {
         return $this->value;
     }

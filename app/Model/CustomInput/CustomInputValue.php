@@ -28,7 +28,7 @@ abstract class CustomInputValue
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Vlastní pole přihlášky.
@@ -48,7 +48,7 @@ abstract class CustomInputValue
         $this->user  = $user;
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

@@ -16,9 +16,7 @@ class UserAttendsProgramsQueryHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @return Collection<int, Program>
-     */
+    /** @return Collection<int, Program> */
     public function __invoke(UserAttendsProgramsQuery $query): Collection
     {
         return $this->programRepository->findUserAttends($query->getUser());

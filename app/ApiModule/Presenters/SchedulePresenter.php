@@ -30,9 +30,7 @@ class SchedulePresenter extends ApiBasePresenter
 
     private SerializerInterface $serializer;
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();

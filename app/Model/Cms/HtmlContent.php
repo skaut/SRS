@@ -26,14 +26,14 @@ class HtmlContent extends Content implements IContent
      * Text.
      */
     #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $text = null;
+    protected string|null $text = null;
 
-    public function getText(): ?string
+    public function getText(): string|null
     {
         return $this->text;
     }
 
-    public function setText(?string $text): void
+    public function setText(string|null $text): void
     {
         $this->text = $text;
     }
@@ -60,6 +60,7 @@ class HtmlContent extends Content implements IContent
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {
         parent::contentFormSucceeded($form, $values);
+
         $formName   = $this->getContentFormName();
         $values     = $values->$formName;
         $this->text = $values->text;

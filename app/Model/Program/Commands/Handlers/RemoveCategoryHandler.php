@@ -16,7 +16,7 @@ class RemoveCategoryHandler implements MessageHandlerInterface
     public function __construct(
         private CommandBus $commandBus,
         private EntityManagerInterface $em,
-        private CategoryRepository $categoryRepository
+        private CategoryRepository $categoryRepository,
     ) {
     }
 

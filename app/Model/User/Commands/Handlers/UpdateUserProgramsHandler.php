@@ -22,7 +22,7 @@ class UpdateUserProgramsHandler implements MessageHandlerInterface
     public function __construct(
         private QueryBus $queryBus,
         private CommandBus $commandBus,
-        private EntityManagerInterface $em
+        private EntityManagerInterface $em,
     ) {
     }
 

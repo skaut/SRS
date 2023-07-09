@@ -17,7 +17,7 @@ class UnregisterProgramHandler implements MessageHandlerInterface
     public function __construct(
         private EventBus $eventBus,
         private EntityManagerInterface $em,
-        private ProgramApplicationRepository $programApplicationRepository
+        private ProgramApplicationRepository $programApplicationRepository,
     ) {
     }
 

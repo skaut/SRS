@@ -47,12 +47,12 @@ class BlockFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     /**
      * Upravovaný programový blok.
      */
-    private ?Block $block = null;
+    private Block|null $block = null;
 
     /**
      * Jsou vytvořené podakce.
@@ -68,7 +68,7 @@ class BlockFormFactory
         private CategoryRepository $categoryRepository,
         private SubeventRepository $subeventRepository,
         private SubeventService $subeventService,
-        private Validators $validators
+        private Validators $validators,
     ) {
     }
 

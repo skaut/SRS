@@ -30,7 +30,7 @@ class Validators
     public function __construct(
         private QueryBus $queryBus,
         private RoleRepository $roleRepository,
-        private ProgramRepository $programRepository
+        private ProgramRepository $programRepository,
     ) {
     }
 
@@ -207,7 +207,7 @@ class Validators
     public function validateSubeventsRegistered(
         Collection $selectedSubevents,
         User $user,
-        ?Application $editedApplication = null
+        Application|null $editedApplication = null,
     ): bool {
         foreach ($selectedSubevents as $subevent) {
             foreach ($user->getNotCanceledSubeventsApplications() as $application) {
@@ -223,7 +223,7 @@ class Validators
     /**
      * Ověří, zda může být program automaticky přihlašovaný.
      */
-    public function validateBlockAutoRegistered(Block $block, ?int $capacity): bool
+    public function validateBlockAutoRegistered(Block $block, int|null $capacity): bool
     {
         if ($capacity !== null) {
             return false;
@@ -247,7 +247,7 @@ class Validators
     {
         $emails = array_map(
             static fn (string $o) => trim($o),
-            explode(',', $emails)
+            explode(',', $emails),
         );
 
         foreach ($emails as $email) {

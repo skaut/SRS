@@ -23,9 +23,7 @@ class SkautIsCourseRepository extends AbstractRepository
         parent::__construct($em, SkautIsCourse::class);
     }
 
-    /**
-     * @return Collection<int, SkautIsCourse>
-     */
+    /** @return Collection<int, SkautIsCourse> */
     public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
@@ -36,7 +34,7 @@ class SkautIsCourseRepository extends AbstractRepository
     /**
      * Vrací skautIS kurz podle id.
      */
-    public function findById(?int $id): ?SkautIsCourse
+    public function findById(int|null $id): SkautIsCourse|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }

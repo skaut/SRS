@@ -38,9 +38,7 @@ class AclPresenter extends AdminBasePresenter
     #[Inject]
     public Authenticator $authenticator;
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();
@@ -74,9 +72,7 @@ class AclPresenter extends AdminBasePresenter
         return $this->rolesGridControlFactory->create();
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     protected function createComponentAddRoleForm(): Form
     {
         $form = $this->addRoleFormFactory->create();

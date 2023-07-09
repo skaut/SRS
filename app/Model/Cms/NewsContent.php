@@ -26,14 +26,14 @@ class NewsContent extends Content implements IContent
      * Počet posledních novinek k zobrazení.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $count = null;
+    protected int|null $count = null;
 
-    public function getCount(): ?int
+    public function getCount(): int|null
     {
         return $this->count;
     }
 
-    public function setCount(?int $count): void
+    public function setCount(int|null $count): void
     {
         $this->count = $count;
     }
@@ -63,6 +63,7 @@ class NewsContent extends Content implements IContent
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {
         parent::contentFormSucceeded($form, $values);
+
         $formName    = $this->getContentFormName();
         $values      = $values->$formName;
         $this->count = $values->count !== '' ? $values->count : null;

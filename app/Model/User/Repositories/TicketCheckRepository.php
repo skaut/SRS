@@ -22,9 +22,7 @@ class TicketCheckRepository extends AbstractRepository
         parent::__construct($em, TicketCheck::class);
     }
 
-    /**
-     * @return Collection<int, TicketCheck>
-     */
+    /** @return Collection<int, TicketCheck> */
     public function findByUserAndSubevent(User $user, Subevent $subevent): Collection
     {
         $result = $this->getRepository()

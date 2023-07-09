@@ -74,7 +74,7 @@ class ApplicationFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     /** @var callable[] */
     public array $onSkautIsError = [];
@@ -94,7 +94,7 @@ class ApplicationFormFactory
         private Validators $validators,
         private FilesService $filesService,
         private SubeventService $subeventService,
-        private Translator $translator
+        private Translator $translator,
     ) {
     }
 
@@ -282,7 +282,7 @@ class ApplicationFormFactory
                         $this->user->getBirthdate(),
                         $this->user->getFirstName(),
                         $this->user->getLastName(),
-                        $this->user->getNickName()
+                        $this->user->getNickName(),
                     );
 
                     $this->skautIsService->updatePersonAddress(
@@ -290,7 +290,7 @@ class ApplicationFormFactory
                         $this->user->getStreet(),
                         $this->user->getCity(),
                         $this->user->getPostcode(),
-                        $this->user->getState()
+                        $this->user->getState(),
                     );
                 } catch (WsdlException $ex) {
                     Debugger::log($ex, ILogger::WARNING);
@@ -374,7 +374,7 @@ class ApplicationFormFactory
         $subeventsOptions = $this->subeventService->getSubeventsOptionsWithCapacity(true, true, false, false);
 
         $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
-            $subeventsOptions
+            $subeventsOptions,
         );
         $subeventsSelect->setOption('id', 'form-group-subevents');
 
@@ -383,7 +383,7 @@ class ApplicationFormFactory
         $subeventsSelect->addConditionOn(
             $rolesSelect,
             self::class . '::toggleSubeventsRequired',
-            Helpers::getIds($this->roleRepository->findFilteredRoles(false, true, false))
+            Helpers::getIds($this->roleRepository->findFilteredRoles(false, true, false)),
         )->addRule(Form::FILLED, 'web.application_content.subevents_empty');
 
         $subeventsSelect
@@ -398,9 +398,9 @@ class ApplicationFormFactory
                     $this->translator->translate(
                         'web.application_content.incompatible_subevents_selected',
                         null,
-                        ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
+                        ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()],
                     ),
-                    [$subevent]
+                    [$subevent],
                 );
             }
 
@@ -410,9 +410,9 @@ class ApplicationFormFactory
                     $this->translator->translate(
                         'web.application_content.required_subevents_not_selected',
                         null,
-                        ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
+                        ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()],
                     ),
-                    [$subevent]
+                    [$subevent],
                 );
             }
         }
@@ -426,7 +426,7 @@ class ApplicationFormFactory
         $registerableOptions = $this->aclService->getRolesOptionsWithCapacity(true, false);
 
         $rolesSelect = $form->addMultiSelect('roles', 'web.application_content.roles')->setItems(
-            $registerableOptions
+            $registerableOptions,
         );
 
         foreach ($this->customInputRepository->findAll() as $customInput) {
@@ -448,9 +448,9 @@ class ApplicationFormFactory
                     $this->translator->translate(
                         'web.application_content.incompatible_roles_selected',
                         null,
-                        ['role' => $role->getName(), 'incompatibleRoles' => $role->getIncompatibleRolesText()]
+                        ['role' => $role->getName(), 'incompatibleRoles' => $role->getIncompatibleRolesText()],
                     ),
-                    [$role]
+                    [$role],
                 );
             }
 
@@ -460,9 +460,9 @@ class ApplicationFormFactory
                     $this->translator->translate(
                         'web.application_content.required_roles_not_selected',
                         null,
-                        ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()]
+                        ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()],
                     ),
-                    [$role]
+                    [$role],
                 );
             }
         }

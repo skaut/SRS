@@ -81,7 +81,7 @@ class Role
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id           = null;
+    private int|null $id       = null;
 
     /**
      * Název role.
@@ -93,7 +93,7 @@ class Role
      * Systémový název systémové role.
      */
     #[ORM\Column(type: 'string', unique: true, nullable: true)]
-    protected ?string $systemName = null;
+    protected string|null $systemName = null;
 
     /**
      * Uživatelé v roli.
@@ -141,19 +141,19 @@ class Role
      * Registrovatelná od.
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?DateTimeImmutable $registerableFrom = null;
+    protected DateTimeImmutable|null $registerableFrom = null;
 
     /**
      * Registrovatelná do.
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?DateTimeImmutable $registerableTo = null;
+    protected DateTimeImmutable|null $registerableTo = null;
 
     /**
      * Kapacita.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $capacity = null;
+    protected int|null $capacity = null;
 
     /**
      * Obsazenost.
@@ -166,7 +166,7 @@ class Role
      * Poplatek.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $fee = 0;
+    protected int|null $fee = 0;
 
     /**
      * Minimální věk.
@@ -222,7 +222,7 @@ class Role
      * Adresa, na kterou budou uživatelé v roli přesměrováni po přihlášení.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $redirectAfterLogin = null;
+    protected string|null $redirectAfterLogin = null;
 
     /**
      * Kategorie dokumentů, ke kterým má role přístup.
@@ -245,7 +245,7 @@ class Role
         $this->tags                   = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -260,14 +260,12 @@ class Role
         $this->name = $name;
     }
 
-    public function getSystemName(): ?string
+    public function getSystemName(): string|null
     {
         return $this->systemName;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
+    /** @return Collection<int, User> */
     public function getUsers(): Collection
     {
         return $this->users;
@@ -289,17 +287,13 @@ class Role
         }
     }
 
-    /**
-     * @return Collection<int, Permission>
-     */
+    /** @return Collection<int, Permission> */
     public function getPermissions(): Collection
     {
         return $this->permissions;
     }
 
-    /**
-     * @param Collection<int, Permission> $permissions
-     */
+    /** @param Collection<int, Permission> $permissions */
     public function setPermissions(Collection $permissions): void
     {
         foreach ($this->permissions as $permission) {
@@ -327,17 +321,13 @@ class Role
         }
     }
 
-    /**
-     * @return Collection<int, Page>
-     */
+    /** @return Collection<int, Page> */
     public function getPages(): Collection
     {
         return $this->pages;
     }
 
-    /**
-     * @param Collection<int, Page> $pages
-     */
+    /** @param Collection<int, Page> $pages */
     public function setPages(Collection $pages): void
     {
         foreach ($this->pages as $page) {
@@ -407,32 +397,32 @@ class Role
         $this->approvedAfterRegistration = $approvedAfterRegistration;
     }
 
-    public function getRegisterableFrom(): ?DateTimeImmutable
+    public function getRegisterableFrom(): DateTimeImmutable|null
     {
         return $this->registerableFrom;
     }
 
-    public function setRegisterableFrom(?DateTimeImmutable $registerableFrom): void
+    public function setRegisterableFrom(DateTimeImmutable|null $registerableFrom): void
     {
         $this->registerableFrom = $registerableFrom;
     }
 
-    public function getRegisterableTo(): ?DateTimeImmutable
+    public function getRegisterableTo(): DateTimeImmutable|null
     {
         return $this->registerableTo;
     }
 
-    public function setRegisterableTo(?DateTimeImmutable $registerableTo): void
+    public function setRegisterableTo(DateTimeImmutable|null $registerableTo): void
     {
         $this->registerableTo = $registerableTo;
     }
 
-    public function getCapacity(): ?int
+    public function getCapacity(): int|null
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity): void
+    public function setCapacity(int|null $capacity): void
     {
         $this->capacity = $capacity;
     }
@@ -447,12 +437,12 @@ class Role
         return $this->occupancy;
     }
 
-    public function getFee(): ?int
+    public function getFee(): int|null
     {
         return $this->fee;
     }
 
-    public function setFee(?int $fee): void
+    public function setFee(int|null $fee): void
     {
         $this->fee = $fee;
     }
@@ -477,17 +467,13 @@ class Role
         $this->syncedWithSkautIS = $syncedWithSkautIS;
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function getIncompatibleRoles(): Collection
     {
         return $this->incompatibleRoles;
     }
 
-    /**
-     * @param Collection<int, Role> $incompatibleRoles
-     */
+    /** @param Collection<int, Role> $incompatibleRoles */
     public function setIncompatibleRoles(Collection $incompatibleRoles): void
     {
         foreach ($this->incompatibleRoles as $role) {
@@ -523,9 +509,7 @@ class Role
         }
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function getRequiredByRole(): Collection
     {
         return $this->requiredByRole;
@@ -562,9 +546,7 @@ class Role
         return $allRequiredByRole;
     }
 
-    /**
-     * @param Collection<int, Role> $allRequiredByRole
-     */
+    /** @param Collection<int, Role> $allRequiredByRole */
     private function getRequiredByRoleTransitiveRec(Collection &$allRequiredByRole, Role $role): void
     {
         if ($this->getId() !== $role->getId() && ! $allRequiredByRole->contains($role)) {
@@ -576,17 +558,13 @@ class Role
         }
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function getRequiredRoles(): Collection
     {
         return $this->requiredRoles;
     }
 
-    /**
-     * @param Collection<int, Role> $requiredRoles
-     */
+    /** @param Collection<int, Role> $requiredRoles */
     public function setRequiredRoles(Collection $requiredRoles): void
     {
         foreach ($this->requiredRoles as $requiredRole) {
@@ -629,9 +607,7 @@ class Role
         return $allRequiredRoles;
     }
 
-    /**
-     * @param Collection<int, Role> $allRequiredRoles
-     */
+    /** @param Collection<int, Role> $allRequiredRoles */
     private function getRequiredRolesTransitiveRec(Collection &$allRequiredRoles, Role $role): void
     {
         if ($this->getId() !== $role->getId() && ! $allRequiredRoles->contains($role)) {
@@ -651,9 +627,7 @@ class Role
         return implode(', ', $this->getRequiredRolesTransitive()->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
-    /**
-     * @return Collection<int, Category>
-     */
+    /** @return Collection<int, Category> */
     public function getRegisterableCategories(): Collection
     {
         return $this->registerableCategories;
@@ -675,19 +649,17 @@ class Role
         }
     }
 
-    public function getRedirectAfterLogin(): ?string
+    public function getRedirectAfterLogin(): string|null
     {
         return $this->redirectAfterLogin;
     }
 
-    public function setRedirectAfterLogin(?string $redirectAfterLogin): void
+    public function setRedirectAfterLogin(string|null $redirectAfterLogin): void
     {
         $this->redirectAfterLogin = $redirectAfterLogin;
     }
 
-    /**
-     * @return Collection<int, Tag>
-     */
+    /** @return Collection<int, Tag> */
     public function getTags(): Collection
     {
         return $this->tags;
@@ -714,7 +686,7 @@ class Role
         return $this->users->count();
     }
 
-    public function countUnoccupied(): ?int
+    public function countUnoccupied(): int|null
     {
         return $this->capacity ? $this->capacity - $this->countUsers() : null;
     }

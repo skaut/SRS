@@ -27,9 +27,7 @@ class RoleRepository extends AbstractRepository
         parent::__construct($em, Role::class);
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
@@ -40,7 +38,7 @@ class RoleRepository extends AbstractRepository
     /**
      * Vrací roli podle id.
      */
-    public function findById(?int $id): ?Role
+    public function findById(int|null $id): Role|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -59,7 +57,7 @@ class RoleRepository extends AbstractRepository
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function findLastId(): ?int
+    public function findLastId(): int|null
     {
         return (int) $this->createQueryBuilder('r')
             ->select('MAX(r.id)')
@@ -136,7 +134,7 @@ class RoleRepository extends AbstractRepository
      *
      * @return Collection<int, Role>
      */
-    public function findFilteredRoles(bool $registerableNowOnly, bool $subeventsRoleOnly, bool $includeUsers, ?User $user = null): Collection
+    public function findFilteredRoles(bool $registerableNowOnly, bool $subeventsRoleOnly, bool $includeUsers, User|null $user = null): Collection
     {
         $qb = $this->createQueryBuilder('r');
 
@@ -149,11 +147,11 @@ class RoleRepository extends AbstractRepository
                 ->andWhere($qb->expr()->eq('r.registerable', true))
                 ->andWhere($qb->expr()->orX(
                     $qb->expr()->lte('r.registerableFrom', 'CURRENT_TIMESTAMP()'),
-                    $qb->expr()->isNull('r.registerableFrom')
+                    $qb->expr()->isNull('r.registerableFrom'),
                 ))
                 ->andWhere($qb->expr()->orX(
                     $qb->expr()->gte('r.registerableTo', 'CURRENT_TIMESTAMP()'),
-                    $qb->expr()->isNull('r.registerableTo')
+                    $qb->expr()->isNull('r.registerableTo'),
                 ));
         }
 
@@ -187,10 +185,8 @@ class RoleRepository extends AbstractRepository
             ->getResult();
     }
 
-    /**
-     * @throws NonUniqueResultException
-     */
-    public function getRegistrationStart(): ?DateTimeImmutable
+    /** @throws NonUniqueResultException */
+    public function getRegistrationStart(): DateTimeImmutable|null
     {
         $result = $this->createQueryBuilder('r')
             ->select('r.registerableFrom')
@@ -204,10 +200,8 @@ class RoleRepository extends AbstractRepository
         return $result ? $result['registerableFrom'] : null;
     }
 
-    /**
-     * @throws NonUniqueResultException
-     */
-    public function getRegistrationEnd(): ?DateTimeImmutable
+    /** @throws NonUniqueResultException */
+    public function getRegistrationEnd(): DateTimeImmutable|null
     {
         $result = $this->createQueryBuilder('r')
             ->select('r.registerableTo')

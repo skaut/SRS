@@ -19,10 +19,8 @@ class SettingBoolValueQueryHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @throws SettingsItemNotFoundException
-     */
-    public function __invoke(SettingBoolValueQuery $query): ?bool
+    /** @throws SettingsItemNotFoundException */
+    public function __invoke(SettingBoolValueQuery $query): bool|null
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
         $value   = $setting->getValue();
