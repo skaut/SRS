@@ -8,8 +8,8 @@ use App\Model\SkautIs\Repositories\SkautIsCourseRepository;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\User;
 use Doctrine\Common\Collections\Collection;
-use Skautis\Skautis;
-use Skautis\Wsdl\WsdlException;
+use Skaut\Skautis\Skautis;
+use Skaut\Skautis\Wsdl\WsdlException;
 use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -26,7 +26,7 @@ class SkautIsEventEducationService extends SkautIsEventService
     public function __construct(
         Skautis $skautIs,
         private SkautIsCourseRepository $skautIsCourseRepository,
-        private SubeventRepository $subeventRepository
+        private SubeventRepository $subeventRepository,
     ) {
         parent::__construct($skautIs);
     }
@@ -38,9 +38,7 @@ class SkautIsEventEducationService extends SkautIsEventService
 //        return $this->getEventDetail($eventId)->ID_EventEducationState === 'draft';
     }
 
-    /**
-     * @param Collection<int, User> $users
-     */
+    /** @param Collection<int, User> $users */
     public function insertParticipants(int $eventId, Collection $users, bool $accept = false): bool
     {
         try {
@@ -91,9 +89,7 @@ class SkautIsEventEducationService extends SkautIsEventService
         ]);
     }
 
-    /**
-     * @return stdClass[]
-     */
+    /** @return stdClass[] */
     protected function getDraftEvents(): array
     {
         $response = $this->skautIs->event->EventEducationAllMyActions([
@@ -148,7 +144,7 @@ class SkautIsEventEducationService extends SkautIsEventService
         Debugger::log(sprintf(
             'Calling ParticipantEducationAll for ID_EventEducation: %d, ID_EventEducationCourse: %d.',
             $eventId,
-            $courseId
+            $courseId,
         ));
 
         $response = $this->skautIs->event->ParticipantEducationAll([
@@ -174,7 +170,7 @@ class SkautIsEventEducationService extends SkautIsEventService
             'Calling ParticipantEducationInsert for ID_EventEducation: %d, ID_EventEducationCourse: %d, ID_Person: %d.',
             $eventId,
             $courseId,
-            $personId
+            $personId,
         ));
 
         $response = $this->skautIs->event->ParticipantEducationInsert([

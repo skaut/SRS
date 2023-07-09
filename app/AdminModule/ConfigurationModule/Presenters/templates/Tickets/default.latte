@@ -6,6 +6,10 @@
 
     <h2>{_admin.configuration.tickets.scanner.heading}</h2>
     <div class="card card-body bg-light pb-1 mb-3">
+        <div class="alert alert-info alert-forever">
+            {_admin.configuration.tickets.scanner.application_info_begin}
+            <a href="https://play.google.com/store/apps/details?id=cz.skaut.srs.ticketsreader" target="_blank">{_admin.configuration.tickets.scanner.application_info_link}</a>{_admin.configuration.tickets.scanner.application_info_end}
+        </div>
         {if $apiToken}
             <p>
                 <img src="{$qr|dataStream}">

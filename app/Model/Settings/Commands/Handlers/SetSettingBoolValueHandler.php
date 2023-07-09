@@ -15,9 +15,7 @@ class SetSettingBoolValueHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @throws SettingsItemNotFoundException
-     */
+    /** @throws SettingsItemNotFoundException */
     public function __invoke(SetSettingBoolValue $command): void
     {
         $setting = $this->settingsRepository->findByItem($command->getItem());

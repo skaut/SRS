@@ -53,7 +53,7 @@ import 'bootstrap-select'
 import 'bootstrap-select/dist/js/i18n/defaults-cs_CZ'
 import 'bootstrap-confirmation2'
 import 'bootstrap-fileinput'
-import 'bootstrap-fileinput/themes/fa/theme'
+import 'bootstrap-fileinput/themes/fa6/theme'
 import 'bootstrap-fileinput/js/locales/cs'
 
 // datagrid
@@ -122,7 +122,7 @@ function initSelects() {
 function initFileInputs() {
     $('input[type="file"]').fileinput({
         language: 'cs',
-        theme: 'fa',
+        theme: 'fa6',
         showPreview: false,
         showRemove: false,
         showUpload: false,

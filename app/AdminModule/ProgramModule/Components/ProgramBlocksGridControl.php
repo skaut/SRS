@@ -55,7 +55,7 @@ class ProgramBlocksGridControl extends Control
         private ExcelExportService $excelExportService,
         private Validators $validators,
         private SubeventService $subeventService,
-        private Session $session
+        private Session $session,
     ) {
         $this->sessionSection = $session->getSection('srs');
     }

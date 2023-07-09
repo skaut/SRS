@@ -30,13 +30,13 @@ class SubeventFormFactory
     /**
      * Upravovaná podakce.
      */
-    private ?Subevent $subevent = null;
+    private Subevent|null $subevent = null;
 
     public function __construct(
         private EntityManagerInterface $em,
         private BaseFormFactory $baseFormFactory,
         private SubeventRepository $subeventRepository,
-        private SubeventService $subeventService
+        private SubeventService $subeventService,
     ) {
     }
 
@@ -104,7 +104,7 @@ class SubeventFormFactory
             ->addRule(
                 [$this, 'validateIncompatibleAndRequiredCollision'],
                 'admin.configuration.subevents_incompatible_collision',
-                [$incompatibleSubeventsSelect, $requiredSubeventsSelect]
+                [$incompatibleSubeventsSelect, $requiredSubeventsSelect],
             );
 
         $requiredSubeventsSelect
@@ -112,7 +112,7 @@ class SubeventFormFactory
             ->addRule(
                 [$this, 'validateIncompatibleAndRequiredCollision'],
                 'admin.configuration.subevents_required_collision',
-                [$incompatibleSubeventsSelect, $requiredSubeventsSelect]
+                [$incompatibleSubeventsSelect, $requiredSubeventsSelect],
             );
 
         $form->addSubmit('submit', 'admin.common.save');

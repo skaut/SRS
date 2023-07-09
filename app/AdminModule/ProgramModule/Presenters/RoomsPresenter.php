@@ -27,9 +27,7 @@ class RoomsPresenter extends ProgramBasePresenter
     #[Inject]
     public IRoomScheduleGridControlFactory $roomScheduleGridControlFactory;
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();

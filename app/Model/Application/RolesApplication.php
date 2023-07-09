@@ -16,9 +16,7 @@ class RolesApplication extends Application
 {
     protected string $type = Application::ROLES;
 
-    /**
-     * @param Collection<int, Role> $roles
-     */
+    /** @param Collection<int, Role> $roles */
     public function setRoles(Collection $roles): void
     {
         $this->roles->clear();

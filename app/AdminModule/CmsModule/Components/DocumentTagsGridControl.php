@@ -31,7 +31,7 @@ class DocumentTagsGridControl extends Control
         private Translator $translator,
         private RoleRepository $roleRepository,
         private AclService $aclService,
-        private TagRepository $tagRepository
+        private TagRepository $tagRepository,
     ) {
     }
 

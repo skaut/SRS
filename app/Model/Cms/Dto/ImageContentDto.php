@@ -16,30 +16,30 @@ class ImageContentDto extends ContentDto
     public function __construct(
         string $type,
         string $heading,
-        protected ?string $image,
-        protected ?string $align,
-        protected ?int $width,
-        protected ?int $height
+        protected string|null $image,
+        protected string|null $align,
+        protected int|null $width,
+        protected int|null $height,
     ) {
         parent::__construct($type, $heading);
     }
 
-    public function getImage(): ?string
+    public function getImage(): string|null
     {
         return $this->image;
     }
 
-    public function getAlign(): ?string
+    public function getAlign(): string|null
     {
         return $this->align;
     }
 
-    public function getWidth(): ?int
+    public function getWidth(): int|null
     {
         return $this->width;
     }
 
-    public function getHeight(): ?int
+    public function getHeight(): int|null
     {
         return $this->height;
     }

@@ -23,7 +23,7 @@ class DocumentRepository extends AbstractRepository
     /**
      * Vrátí dokument podle id.
      */
-    public function findById(?int $id): ?Document
+    public function findById(int|null $id): Document|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }

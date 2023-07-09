@@ -41,7 +41,7 @@ class PaymentsGridControl extends Control
         private UserRepository $userRepository,
         private ApplicationService $applicationService,
         private BankService $bankService,
-        private Session $session
+        private Session $session,
     ) {
     }
 
@@ -174,7 +174,7 @@ class PaymentsGridControl extends Control
     public function handleGeneratePaymentProofBank(int $id): void
     {
         $this->session->getSection('srs')->applicationIds = Helpers::getIds(
-            $this->paymentRepository->findById($id)->getPairedApplications()
+            $this->paymentRepository->findById($id)->getPairedApplications(),
         );
         $this->presenter->redirect(':Export:IncomeProof:applications');
     }

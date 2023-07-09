@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
-use Skautis\Skautis;
+use Skaut\Skautis\Skautis;
 use stdClass;
 use Throwable;
 
@@ -88,7 +88,7 @@ class SkautIsService
     /**
      * Vrátí id aktuální skautIS role uživatele.
      */
-    public function getUserRoleId(): ?int
+    public function getUserRoleId(): int|null
     {
         return $this->skautIs->getUser()->getRoleId();
     }
@@ -137,6 +137,21 @@ class SkautIsService
         ]);
     }
 
+    public function getPersonContact(int $personId, string $contactType): stdClass|null
+    {
+        $contact = $this->skautIs->org->PersonContactAll([
+            'ID_Login' => $this->skautIs->getUser()->getLoginId(),
+            'ID_Person' => $personId,
+            'ID_ContactType' => $contactType,
+        ], 'personContactAllInput');
+
+        if (empty($contact)) {
+            return null;
+        }
+
+        return $contact[0];
+    }
+
     /**
      * Aktualizuje údaje o osobě.
      */
@@ -178,7 +193,7 @@ class SkautIsService
     /**
      * Vrací id jednotky podle aktuální role uživatele.
      */
-    public function getUnitId(): ?int
+    public function getUnitId(): int|null
     {
         return $this->skautIs->getUser()->getUnitId();
     }
@@ -186,7 +201,7 @@ class SkautIsService
     /**
      * Vrací platné členství typu "řádné" nebo "čestné", pokud osoba žádné nemá vrací null.
      */
-    public function getValidMembership(int $personId): ?stdClass
+    public function getValidMembership(int $personId): stdClass|null
     {
         $membership = $this->skautIs->org->MembershipAllPerson([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
@@ -195,7 +210,7 @@ class SkautIsService
             'IsValid' => true,
         ]);
 
-        if (empty((array) $membership)) { // todo: odstranit obe pretypovani (array) po update skautis/nette
+        if (empty($membership)) {
             $membership = $this->skautIs->org->MembershipAllPerson([
                 'ID_Login' => $this->skautIs->getUser()->getLoginId(),
                 'ID_Person' => $personId,
@@ -203,7 +218,7 @@ class SkautIsService
                 'IsValid' => true,
             ]);
 
-            if (empty((array) $membership)) {
+            if (empty($membership)) {
                 return null;
             }
         }

@@ -25,17 +25,13 @@ class CustomMultiSelect extends CustomInput
     #[ORM\Column(type: 'simple_array')]
     protected array $options = [];
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getOptions(): array
     {
         return $this->options;
     }
 
-    /**
-     * @param string[] $options
-     */
+    /** @param string[] $options */
     public function setOptions(array $options): void
     {
         $this->options = $options;

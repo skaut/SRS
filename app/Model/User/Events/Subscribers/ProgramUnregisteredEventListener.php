@@ -23,7 +23,7 @@ class ProgramUnregisteredEventListener implements MessageHandlerInterface
         private CommandBus $commandBus,
         private QueryBus $queryBus,
         private UserRepository $userRepository,
-        private IMailService $mailService
+        private IMailService $mailService,
     ) {
     }
 

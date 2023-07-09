@@ -26,7 +26,7 @@ class RolesGridControl extends Control
     public function __construct(
         private Translator $translator,
         private AclService $aclService,
-        private RoleRepository $roleRepository
+        private RoleRepository $roleRepository,
     ) {
     }
 

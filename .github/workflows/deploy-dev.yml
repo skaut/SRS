@@ -12,9 +12,9 @@ jobs:
   deploy:
     name: "Deploy to test-srs.skauting.cz"
     environment: test-srs.skauting.cz
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
-      image: skaut/lebeda:8.0
+      image: skaut/lebeda:8.1
     env:
       CONFIG_DATABASE_HOST: ${{ secrets.CONFIG_DATABASE_HOST }}
       CONFIG_DATABASE_NAME: ${{ secrets.CONFIG_DATABASE_NAME }}
@@ -31,19 +31,20 @@ jobs:
       CONFIG_RECAPTCHA_SITE_KEY: ${{ secrets.CONFIG_RECAPTCHA_SITE_KEY }}
       CONFIG_RECAPTCHA_SECRET_KEY: ${{ secrets.CONFIG_RECAPTCHA_SECRET_KEY }}
       DEPLOY_DIRECTORY: ${{ secrets.DEPLOY_DIRECTORY }}
+      DEPLOY_LEBEDA: ${{ secrets.DEPLOY_LEBEDA }}
       DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
       DEPLOY_SSH_IP: ${{ secrets.DEPLOY_SSH_IP }}
       DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
       DEPLOY_SSH_PORT: ${{ secrets.DEPLOY_SSH_PORT }}
       DEPLOY_SSH_USERNAME: ${{ secrets.DEPLOY_SSH_USERNAME }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - run: git config --global --add safe.directory '*'
       # Copy & paste from https://github.com/actions/cache/blob/master/examples.md#php---composer
       - name: Get composer cache
         id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - uses: actions/cache@v1
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -56,12 +57,11 @@ jobs:
           npm install --global yarn
       #Copy & paste from https://github.com/actions/cache/blob/master/examples.md#node---yarn
       - name: Get yarn cache
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v1
         id: yarn-cache
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          path: ${{ steps.yarn-cache.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-

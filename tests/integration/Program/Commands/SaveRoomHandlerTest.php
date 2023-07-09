@@ -34,9 +34,7 @@ final class SaveRoomHandlerTest extends CommandHandlerTest
         $this->assertContains($room, $this->roomRepository->findAll());
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Room::class];
@@ -45,6 +43,7 @@ final class SaveRoomHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SaveRoomHandlerTest.neon']);
+
         parent::_before();
 
         $this->roomRepository = $this->tester->grabService(RoomRepository::class);

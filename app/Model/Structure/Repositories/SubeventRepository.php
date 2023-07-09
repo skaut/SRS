@@ -26,9 +26,7 @@ class SubeventRepository extends AbstractRepository
         parent::__construct($em, Subevent::class);
     }
 
-    /**
-     * @return Collection<int, Subevent>
-     */
+    /** @return Collection<int, Subevent> */
     public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
@@ -39,7 +37,7 @@ class SubeventRepository extends AbstractRepository
     /**
      * Vrací podakci podle id.
      */
-    public function findById(?int $id): ?Subevent
+    public function findById(int|null $id): Subevent|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -72,7 +70,7 @@ class SubeventRepository extends AbstractRepository
      *
      * @return Collection<int, Subevent>
      */
-    public function findFilteredSubevents(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null): Collection
+    public function findFilteredSubevents(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, User|null $user = null): Collection
     {
         $qb = $this->createQueryBuilder('s');
 
@@ -88,11 +86,11 @@ class SubeventRepository extends AbstractRepository
             $query = $query
                 ->andWhere($qb->expr()->orX(
                     $qb->expr()->lte('s.registerableFrom', 'CURRENT_TIMESTAMP()'),
-                    $qb->expr()->isNull('s.registerableFrom')
+                    $qb->expr()->isNull('s.registerableFrom'),
                 ))
                 ->andWhere($qb->expr()->orX(
                     $qb->expr()->gte('s.registerableTo', 'CURRENT_TIMESTAMP()'),
-                    $qb->expr()->isNull('s.registerableTo')
+                    $qb->expr()->isNull('s.registerableTo'),
                 ));
         }
 

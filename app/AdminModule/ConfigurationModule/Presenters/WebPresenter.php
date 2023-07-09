@@ -21,9 +21,7 @@ class WebPresenter extends ConfigurationBasePresenter
     #[Inject]
     public WebFormFactory $webFormFactory;
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function renderDefault(): void
     {
         $this->template->logo = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));

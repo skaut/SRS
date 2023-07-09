@@ -21,7 +21,7 @@ class ResponseDto
     private string $status;
 
     #[JMS\Type(values: ProgramDetailDto::class)]
-    private ?ProgramDetailDto $program = null;
+    private ProgramDetailDto|null $program = null;
 
     public function getMessage(): string
     {
@@ -43,7 +43,7 @@ class ResponseDto
         $this->status = $status;
     }
 
-    public function getProgram(): ?ProgramDetailDto
+    public function getProgram(): ProgramDetailDto|null
     {
         return $this->program;
     }

@@ -17,7 +17,7 @@ class Recipient
      */
     public function __construct(
         private string $email,
-        private ?string $name = null
+        private string|null $name = null,
     ) {
     }
 
@@ -26,7 +26,7 @@ class Recipient
         return $this->email;
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }

@@ -32,12 +32,12 @@ class EditUserPersonalDetailsFormFactory
     /**
      * Upravovaný uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     public function __construct(
         private BaseFormFactory $baseFormFactory,
         private UserRepository $userRepository,
-        private FilesService $filesService
+        private FilesService $filesService,
     ) {
     }
 
@@ -81,6 +81,10 @@ class EditUserPersonalDetailsFormFactory
             ->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, 'admin.users.users_email_format');
 
+        $form->addText('phone', 'admin.users.users_phone')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'admin.users.users_phone_format', '^\d{9}$');
+
         $birthdateDate = new DateControl('admin.users.users_birthdate');
         $form->addComponent($birthdateDate, 'birthdate');
 
@@ -108,6 +112,7 @@ class EditUserPersonalDetailsFormFactory
             'degreePre' => $this->user->getDegreePre(),
             'degreePost' => $this->user->getDegreePost(),
             'email' => $this->user->getEmail(),
+            'phone' => $this->user->getPhone(),
             'birthdate' => $this->user->getBirthdate(),
             'street' => $this->user->getStreet(),
             'city' => $this->user->getCity(),
@@ -138,6 +143,7 @@ class EditUserPersonalDetailsFormFactory
         $this->user->setDegreePre($values->degreePre);
         $this->user->setDegreePost($values->degreePost);
         $this->user->setEmail($values->email);
+        $this->user->setPhone($values->phone);
         $this->user->setBirthdate($values->birthdate);
         $this->user->setStreet($values->street);
         $this->user->setCity($values->city);

@@ -19,14 +19,14 @@ class CustomDateTimeValue extends CustomInputValue
      * Hodnota pole přihlášky typu datum a čas.
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?DateTimeImmutable $value = null;
+    protected DateTimeImmutable|null $value = null;
 
-    public function getValue(): ?DateTimeImmutable
+    public function getValue(): DateTimeImmutable|null
     {
         return $this->value;
     }
 
-    public function setValue(?DateTimeImmutable $value): void
+    public function setValue(DateTimeImmutable|null $value): void
     {
         $this->value = $value;
     }

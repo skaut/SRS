@@ -261,9 +261,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $this->assertEquals($room, $program->getRoom());
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Program::class, Settings::class];
@@ -272,6 +270,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SaveProgramHandlerTest.neon']);
+
         parent::_before();
 
         $this->blockRepository              = $this->tester->grabService(BlockRepository::class);

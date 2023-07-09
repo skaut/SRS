@@ -29,7 +29,7 @@ class CustomInputsGridControl extends Control
     public function __construct(
         private Translator $translator,
         private CustomInputRepository $customInputRepository,
-        private AclService $aclService
+        private AclService $aclService,
     ) {
     }
 
@@ -120,7 +120,7 @@ class CustomInputsGridControl extends Control
      * @throws ORMException
      * @throws AbortException
      */
-    public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id): void
+    public function handleSort(string|null $item_id, string|null $prev_id, string|null $next_id): void
     {
         $this->customInputRepository->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 

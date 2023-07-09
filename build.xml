@@ -121,6 +121,7 @@
         <property name="deploy.workDir" refid="env.DEPLOY_DIRECTORY"/>
         <property name="deploy.releasesDir" value="${deploy.workDir}/releases"/>
         <exec command="git rev-parse --short HEAD" outputProperty="build.hash"/>
+        <property name="deploy.lebeda" refid="env.DEPLOY_LEBEDA"/>
         <property name="deploy.ssh.host" refid="env.DEPLOY_SSH_HOST"/>
         <property name="deploy.ssh.username" refid="env.DEPLOY_SSH_USERNAME"/>
         <property name="deploy.ssh.port" refid="env.DEPLOY_SSH_PORT"/>
@@ -231,8 +232,13 @@
     </target>
 
     <target name="deploy:app-command">
+        <condition property="phpCommand"
+                   value="php81-cli &quot;${deploy.release}/www/console.php ${command}&quot;"
+                   else="php8.1 ${deploy.release}/www/console.php ${command}">
+            <equals arg1="${deploy.lebeda}" arg2="true"/>
+        </condition>
         <phingcall target="deploy:ssh">
-            <property name="command" value="php80-cli &quot;${deploy.release}/www/console.php ${command}&quot;"/>
+            <property name="command" value="${phpCommand}"/>
         </phingcall>
     </target>
 

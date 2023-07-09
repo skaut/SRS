@@ -33,7 +33,7 @@ class AddLectorFormFactory
         private BaseFormFactory $baseFormFactory,
         private UserRepository $userRepository,
         private RoleRepository $roleRepository,
-        private FilesService $filesService
+        private FilesService $filesService,
     ) {
     }
 
@@ -65,6 +65,10 @@ class AddLectorFormFactory
         $form->addText('email', 'admin.users.users_email')
             ->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, 'admin.users.users_email_format');
+
+        $form->addText('phone', 'admin.users.users_phone')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'admin.users.users_phone_format', '^\d{9}$');
 
         $birthdateDate = new DateControl('admin.users.users_birthdate');
         $form->addComponent($birthdateDate, 'birthdate');
@@ -115,6 +119,7 @@ class AddLectorFormFactory
         $user->setDegreePre($values->degreePre);
         $user->setDegreePost($values->degreePost);
         $user->setEmail($values->email);
+        $user->setPhone($values->phone);
         $user->setBirthdate($values->birthdate);
         $user->setStreet($values->street);
         $user->setCity($values->city);

@@ -26,9 +26,7 @@ class CustomInputRepository extends AbstractRepository
         parent::__construct($em, CustomInput::class);
     }
 
-    /**
-     * @return Collection<int, CustomInput>
-     */
+    /** @return Collection<int, CustomInput> */
     public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
@@ -39,7 +37,7 @@ class CustomInputRepository extends AbstractRepository
     /**
      * Vrací pole podle id.
      */
-    public function findById(?int $id): ?CustomInput
+    public function findById(int|null $id): CustomInput|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }

@@ -12,7 +12,7 @@ class RegisterProgram
     public function __construct(
         private User $user,
         private Program $program,
-        private bool $notifyUser = true
+        private bool $notifyUser = true,
     ) {
     }
 

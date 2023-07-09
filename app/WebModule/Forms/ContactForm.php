@@ -34,7 +34,7 @@ class ContactForm extends UI\Control
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     /**
      * Událost při úspěšném odeslání formuláře.
@@ -48,7 +48,7 @@ class ContactForm extends UI\Control
         private QueryBus $queryBus,
         private UserRepository $userRepository,
         private ReCaptchaProvider $recaptchaProvider,
-        private IMailService $mailService
+        private IMailService $mailService,
     ) {
     }
 
@@ -145,7 +145,7 @@ class ContactForm extends UI\Control
                 TemplateVariable::SENDER_NAME => $senderName,
                 TemplateVariable::SENDER_EMAIL => $senderEmail,
                 TemplateVariable::MESSAGE => str_replace(["\n", "\r"], '', nl2br($values->message, false)),
-            ]
+            ],
         );
 
         $this->onSave();

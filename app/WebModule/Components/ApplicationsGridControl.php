@@ -39,7 +39,7 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
  */
 class ApplicationsGridControl extends BaseContentControl
 {
-    private ?User $user = null;
+    private User|null $user = null;
 
     public function __construct(
         private QueryBus $queryBus,
@@ -51,7 +51,7 @@ class ApplicationsGridControl extends BaseContentControl
         private Validators $validators,
         private RolesApplicationRepository $rolesApplicationRepository,
         private SubeventsApplicationRepository $subeventsApplicationRepository,
-        private SubeventService $subeventService
+        private SubeventService $subeventService,
     ) {
     }
 
@@ -211,7 +211,7 @@ class ApplicationsGridControl extends BaseContentControl
                 $message = $this->translator->translate(
                     'web.profile.applications_incompatible_subevents_selected',
                     null,
-                    ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
+                    ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()],
                 );
                 $p->flashMessage($message, 'danger');
                 $p->redrawControl('flashes');
@@ -223,7 +223,7 @@ class ApplicationsGridControl extends BaseContentControl
                 $message = $this->translator->translate(
                     'web.profile.applications_required_subevents_not_selected',
                     null,
-                    ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
+                    ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()],
                 );
                 $p->flashMessage($message, 'danger');
                 $p->redrawControl('flashes');
@@ -275,7 +275,7 @@ class ApplicationsGridControl extends BaseContentControl
                     $message = $this->translator->translate(
                         'web.profile.applications_incompatible_subevents_selected',
                         null,
-                        ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
+                        ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()],
                     );
                     $p->flashMessage($message, 'danger');
                     $p->redrawControl('flashes');
@@ -287,7 +287,7 @@ class ApplicationsGridControl extends BaseContentControl
                     $message = $this->translator->translate(
                         'web.profile.applications_required_subevents_not_selected',
                         null,
-                        ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
+                        ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()],
                     );
                     $p->flashMessage($message, 'danger');
                     $p->redrawControl('flashes');

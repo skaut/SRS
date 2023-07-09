@@ -20,9 +20,7 @@ class PlaceContentControl extends BaseContentControl
     {
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function render(ContentDto $content): void
     {
         $template = $this->template;

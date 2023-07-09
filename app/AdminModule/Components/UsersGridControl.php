@@ -74,7 +74,7 @@ class UsersGridControl extends Control
         private UserService $userService,
         private SkautIsEventEducationService $skautIsEventEducationService,
         private SkautIsEventGeneralService $skautIsEventGeneralService,
-        private SubeventService $subeventService
+        private SubeventService $subeventService,
     ) {
         $this->sessionSection = $session->getSection('srs');
     }
@@ -110,7 +110,7 @@ class UsersGridControl extends Control
 
         $grid->addGroupMultiSelectAction(
             'admin.users.users_group_action_change_roles',
-            $this->aclService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
+            $this->aclService->getRolesWithoutRolesOptionsWithCapacity([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]),
         )
             ->onSelect[] = [$this, 'groupChangeRoles'];
 
@@ -225,6 +225,12 @@ class UsersGridControl extends Control
                 ->href('mailto:' . $row->getEmail())
                 ->setText($row->getEmail()))
             ->setSortable()
+            ->setFilterText();
+
+        $grid->addColumnText('phone', 'admin.users.users_phone')
+            ->setRenderer(static fn (User $row) => Html::el('a')
+                ->href('tel:' . $row->getPhone())
+                ->setText($row->getPhone()))
             ->setFilterText();
 
         $grid->addColumnText('city', 'admin.users.users_city')
@@ -618,7 +624,7 @@ class UsersGridControl extends Control
                         $paymentMethod,
                         new DateTimeImmutable(),
                         $application->getMaturityDate(),
-                        $loggedUser
+                        $loggedUser,
                     );
                 }
             }
@@ -635,7 +641,7 @@ class UsersGridControl extends Control
      *
      * @throws Throwable
      */
-    public function groupInsertIntoSkautIs(array $ids, ?int $accept): void
+    public function groupInsertIntoSkautIs(array $ids, int|null $accept): void
     {
         $users = $this->userRepository->findUsersByIds($ids);
 

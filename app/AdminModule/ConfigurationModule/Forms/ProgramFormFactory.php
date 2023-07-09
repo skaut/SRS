@@ -54,7 +54,7 @@ class ProgramFormFactory
         $registerProgramsTypeSelect = $form->addSelect(
             'registerProgramsType',
             'admin.configuration.register_programs_type',
-            $this->prepareRegisterProgramsTypeOptions()
+            $this->prepareRegisterProgramsTypeOptions(),
         );
         $registerProgramsTypeSelect
             ->addCondition($form::EQUAL, ProgramRegistrationType::ALLOWED_FROM_TO)

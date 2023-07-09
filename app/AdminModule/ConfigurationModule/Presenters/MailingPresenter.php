@@ -21,9 +21,7 @@ class MailingPresenter extends ConfigurationBasePresenter
     #[Inject]
     public MailingFormFactory $mailingFormFactory;
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function renderDefault(): void
     {
         $this->template->waiting = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL_VERIFICATION_CODE)) !== null;

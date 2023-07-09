@@ -16,9 +16,7 @@ abstract class PaymentsBasePresenter extends AdminBasePresenter
 {
     protected string $resource = SrsResource::PAYMENTS;
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();

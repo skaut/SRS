@@ -29,7 +29,7 @@ class BlockUpdatedEventListener implements MessageHandlerInterface
         private CommandBus $commandBus,
         private QueryBus $queryBus,
         private EntityManagerInterface $em,
-        private UserRepository $userRepository
+        private UserRepository $userRepository,
     ) {
     }
 

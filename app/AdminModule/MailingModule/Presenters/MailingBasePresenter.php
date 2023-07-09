@@ -16,9 +16,7 @@ abstract class MailingBasePresenter extends AdminBasePresenter
 {
     protected string $resource = SrsResource::MAILING;
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();

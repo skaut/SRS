@@ -16,9 +16,7 @@ class UserAttendsBlocksQueryHandler implements MessageHandlerInterface
     {
     }
 
-    /**
-     * @return Collection<int, Block>
-     */
+    /** @return Collection<int, Block> */
     public function __invoke(UserAttendsBlocksQuery $query): Collection
     {
         return $this->blockRepository->findUserAttends($query->getUser());

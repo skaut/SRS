@@ -34,7 +34,7 @@ class SeminarFormFactory
         private BaseFormFactory $baseFormFactory,
         private CommandBus $commandBus,
         private QueryBus $queryBus,
-        private SubeventRepository $subeventRepository
+        private SubeventRepository $subeventRepository,
     ) {
     }
 

@@ -22,7 +22,7 @@ class SrsMailData implements IMessageData
         private Recipient $from,
         private array $recipients,
         private string $subject,
-        private string $text
+        private string $text,
     ) {
     }
 
@@ -31,9 +31,7 @@ class SrsMailData implements IMessageData
         return $this->from;
     }
 
-    /**
-     * @return Recipient[]
-     */
+    /** @return Recipient[] */
     public function getRecipients(): array
     {
         return $this->recipients;

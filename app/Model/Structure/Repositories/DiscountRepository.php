@@ -20,9 +20,7 @@ class DiscountRepository extends AbstractRepository
         parent::__construct($em, Discount::class);
     }
 
-    /**
-     * @return Collection<int, Discount>
-     */
+    /** @return Collection<int, Discount> */
     public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
@@ -33,7 +31,7 @@ class DiscountRepository extends AbstractRepository
     /**
      * Vrací slevu podle id.
      */
-    public function findById(?int $id): ?Discount
+    public function findById(int|null $id): Discount|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }

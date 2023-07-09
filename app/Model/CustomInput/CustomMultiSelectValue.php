@@ -24,17 +24,13 @@ class CustomMultiSelectValue extends CustomInputValue
     #[ORM\Column(type: 'simple_array', nullable: true)]
     protected array $value = [];
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getValue(): array
     {
         return $this->value;
     }
 
-    /**
-     * @param string[] $value
-     */
+    /** @param string[] $value */
     public function setValue(array $value): void
     {
         $this->value = $value;

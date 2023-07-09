@@ -98,7 +98,7 @@ class AuthPresenter extends BasePresenter
      * @throws AbortException
      * @throws Throwable
      */
-    private function redirectAfterLogin(?string $returnUrl): void
+    private function redirectAfterLogin(string|null $returnUrl): void
     {
         if ($returnUrl) {
             if (str_contains($returnUrl, ':')) {

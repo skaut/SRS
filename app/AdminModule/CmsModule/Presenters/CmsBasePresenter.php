@@ -16,9 +16,7 @@ abstract class CmsBasePresenter extends AdminBasePresenter
 {
     protected string $resource = SrsResource::CMS;
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();

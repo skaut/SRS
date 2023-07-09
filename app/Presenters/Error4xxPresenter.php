@@ -10,12 +10,11 @@ use function is_file;
 
 final class Error4xxPresenter extends BasePresenter
 {
-    /**
-     * @throws Nette\Application\BadRequestException
-     */
+    /** @throws Nette\Application\BadRequestException */
     public function startup(): void
     {
         parent::startup();
+
         if (! $this->getRequest()->isMethod(Nette\Application\Request::FORWARD)) {
             $this->error();
         }

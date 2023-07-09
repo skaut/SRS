@@ -33,7 +33,7 @@ class PageRepository extends AbstractRepository
     /**
      * Vrací stránku podle id.
      */
-    public function findById(?int $id): ?Page
+    public function findById(int|null $id): Page|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -43,7 +43,7 @@ class PageRepository extends AbstractRepository
      *
      * @throws Throwable
      */
-    public function findPublishedBySlug(string $slug): ?Page
+    public function findPublishedBySlug(string $slug): Page|null
     {
         return $this->getRepository()->findOneBy(['public' => true, 'slug' => $slug]);
     }

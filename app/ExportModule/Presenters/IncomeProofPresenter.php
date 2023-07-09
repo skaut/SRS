@@ -50,9 +50,7 @@ class IncomeProofPresenter extends ExportBasePresenter
     #[Inject]
     public UserRepository $userRepository;
 
-    /**
-     * @throws ForbiddenRequestException
-     */
+    /** @throws ForbiddenRequestException */
     public function startup(): void
     {
         parent::startup();

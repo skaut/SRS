@@ -29,7 +29,7 @@ class BankService
         private QueryBus $queryBus,
         private ApplicationService $applicationService,
         private EntityManagerInterface $em,
-        private PaymentRepository $paymentRepository
+        private PaymentRepository $paymentRepository,
     ) {
     }
 
@@ -37,7 +37,7 @@ class BankService
      * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
-    public function downloadTransactions(DateTimeImmutable $from, ?string $token = null): void
+    public function downloadTransactions(DateTimeImmutable $from, string|null $token = null): void
     {
         $token = $token ?: $this->queryBus->handle(new SettingStringValueQuery(Settings::BANK_TOKEN));
         if ($token === null) {
@@ -50,9 +50,7 @@ class BankService
         $this->createPayments($transactionList);
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     private function createPayments(TransactionList $transactionList): void
     {
         foreach ($transactionList->getTransactions() as $transaction) {
@@ -72,7 +70,7 @@ class BankService
                         $id,
                         $accountNumber,
                         $transaction->getSenderName(),
-                        $transaction->getUserMessage()
+                        $transaction->getUserMessage(),
                     );
                 }
             });

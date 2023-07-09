@@ -37,7 +37,7 @@ class AclService
         private PermissionRepository $permissionRepository,
         private SrsResourceRepository $resourceRepository,
         private Translator $translator,
-        Storage $storage
+        Storage $storage,
     ) {
         $this->roleNamesCache       = new Cache($storage, 'RoleNames');
         $this->permissionNamesCache = new Cache($storage, 'PermissionNames');
@@ -209,7 +209,7 @@ class AclService
                 $role->countUsers(),
                 [
                     'role' => $role->getName(),
-                ]
+                ],
             );
         }
 
@@ -221,7 +221,7 @@ class AclService
      *
      * @return string[]
      */
-    public function getRolesOptionsWithCapacity(bool $registerableNowOnly, bool $includeUsers, ?User $user = null): array
+    public function getRolesOptionsWithCapacity(bool $registerableNowOnly, bool $includeUsers, User|null $user = null): array
     {
         $roles = $this->roleRepository->findFilteredRoles($registerableNowOnly, false, $includeUsers, $user);
 

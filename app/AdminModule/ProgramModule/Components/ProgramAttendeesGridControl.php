@@ -56,7 +56,7 @@ class ProgramAttendeesGridControl extends Control
         Session $session,
         private CommandBus $commandBus,
         private QueryBus $queryBus,
-        private EntityManagerInterface $em
+        private EntityManagerInterface $em,
     ) {
         $this->sessionSection = $session->getSection('srs');
     }
@@ -143,7 +143,7 @@ class ProgramAttendeesGridControl extends Control
                 ->setRenderer(function (User $user) {
                     $registeredAt = $this->queryBus->handle(new UserRegisteredProgramAtQuery($user, $this->program));
 
-                    return $registeredAt === null ? null : $registeredAt->format(Helpers::DATETIME_FORMAT);
+                    return $registeredAt?->format(Helpers::DATETIME_FORMAT);
                 });
 
             $grid->setDefaultFilter(['attends' => 'yes'], false);

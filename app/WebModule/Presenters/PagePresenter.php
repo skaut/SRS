@@ -97,7 +97,7 @@ class PagePresenter extends WebBasePresenter
      * @throws BadRequestException
      * @throws Throwable
      */
-    public function renderDefault(?string $slug): void
+    public function renderDefault(string|null $slug): void
     {
         if ($slug === null) {
             $page = $this->cmsService->findPublishedBySlugDto('/');

@@ -37,7 +37,7 @@ class RoomsGridControl extends Control
         private Translator $translator,
         private RoomRepository $roomRepository,
         private ExcelExportService $excelExportService,
-        private Session $session
+        private Session $session,
     ) {
         $this->sessionSection = $session->getSection('srs');
     }

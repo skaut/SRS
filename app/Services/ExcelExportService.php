@@ -47,7 +47,7 @@ class ExcelExportService
         private SubeventRepository $subeventRepository,
         private CategoryRepository $categoryRepository,
         private ProgramRepository $programRepository,
-        private QueryBus $queryBus
+        private QueryBus $queryBus,
     ) {
         $this->spreadsheet = new Spreadsheet();
     }
@@ -284,6 +284,11 @@ class ExcelExportService
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
         $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
 
+        $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.phone'));
+        $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+        $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+        $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
         $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.city'));
         $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
         $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
@@ -382,6 +387,8 @@ class ExcelExportService
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getEmail());
 
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getPhone());
+
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getCity());
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getFee());
@@ -393,9 +400,9 @@ class ExcelExportService
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '');
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getLastPaymentDate() !== null ? $user->getLastPaymentDate()->format(Helpers::DATE_FORMAT) : '');
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getLastPaymentDate()?->format(Helpers::DATE_FORMAT) ?? '');
 
-            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getRolesApplicationDate() !== null ? $user->getRolesApplicationDate()->format(Helpers::DATE_FORMAT) : '');
+            $sheet->setCellValueByColumnAndRow($column++, $row, $user->getRolesApplicationDate()?->format(Helpers::DATE_FORMAT) ?? '');
 
             $sheet->setCellValueByColumnAndRow($column++, $row, $user->isAttended()
                 ? $this->translator->translate('common.export.common.yes')
@@ -540,6 +547,11 @@ class ExcelExportService
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
             $sheet->getColumnDimensionByColumn($column++)->setWidth(30);
 
+            $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.phone'));
+            $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
+            $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
+            $sheet->getColumnDimensionByColumn($column++)->setWidth(15);
+
             $sheet->setCellValueByColumnAndRow($column, $row, $this->translator->translate('common.export.user.address'));
             $sheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
             $sheet->getColumnDimensionByColumn($column)->setAutoSize(false);
@@ -553,6 +565,7 @@ class ExcelExportService
 
                 $sheet->setCellValueByColumnAndRow($column++, $row, $attendee->getDisplayName());
                 $sheet->setCellValueByColumnAndRow($column++, $row, $attendee->getEmail());
+                $sheet->setCellValueByColumnAndRow($column++, $row, $attendee->getPhone());
                 $sheet->setCellValueByColumnAndRow($column++, $row, $attendee->getAddress());
             }
         }

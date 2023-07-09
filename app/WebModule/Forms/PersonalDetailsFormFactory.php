@@ -12,7 +12,7 @@ use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\FormComponents\Controls\DateControl;
-use Skautis\Wsdl\WsdlException;
+use Skaut\Skautis\Wsdl\WsdlException;
 use stdClass;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -29,7 +29,7 @@ class PersonalDetailsFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     /** @var callable[] */
     public array $onSkautIsError = [];
@@ -37,7 +37,7 @@ class PersonalDetailsFormFactory
     public function __construct(
         private BaseFormFactory $baseFormFactory,
         private UserRepository $userRepository,
-        private SkautIsService $skautIsService
+        private SkautIsService $skautIsService,
     ) {
     }
 
@@ -74,8 +74,10 @@ class PersonalDetailsFormFactory
             $inputBirthdateDate->setDisabled();
         }
 
-        $form->addText('email', 'web.application_content.email')
-            ->addRule(Form::FILLED)
+        $form->addText('email', 'web.profile.email')
+            ->setDisabled();
+
+        $form->addText('phone', 'web.profile.phone')
             ->setDisabled();
 
         $form->addText('street', 'web.profile.street')
@@ -101,6 +103,7 @@ class PersonalDetailsFormFactory
             'lastName' => $this->user->getLastName(),
             'nickName' => $this->user->getNickName(),
             'email' => $this->user->getEmail(),
+            'phone' => $this->user->getPhone(),
             'birthdate' => $this->user->getBirthdate(),
             'street' => $this->user->getStreet(),
             'city' => $this->user->getCity(),
@@ -156,7 +159,7 @@ class PersonalDetailsFormFactory
                     $this->user->getBirthdate(),
                     $this->user->getFirstName(),
                     $this->user->getLastName(),
-                    $this->user->getNickName()
+                    $this->user->getNickName(),
                 );
 
                 $this->skautIsService->updatePersonAddress(
@@ -164,7 +167,7 @@ class PersonalDetailsFormFactory
                     $this->user->getStreet(),
                     $this->user->getCity(),
                     $this->user->getPostcode(),
-                    $this->user->getState()
+                    $this->user->getState(),
                 );
             } catch (WsdlException $ex) {
                 Debugger::log($ex, ILogger::WARNING);

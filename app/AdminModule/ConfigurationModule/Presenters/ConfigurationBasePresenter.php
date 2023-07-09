@@ -24,9 +24,7 @@ abstract class ConfigurationBasePresenter extends AdminBasePresenter
     #[Inject]
     public SubeventRepository $subeventRepository;
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();

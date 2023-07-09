@@ -16,7 +16,7 @@ class SaveCategoryHandler implements MessageHandlerInterface
     public function __construct(
         private EventBus $eventBus,
         private EntityManagerInterface $em,
-        private CategoryRepository $categoryRepository
+        private CategoryRepository $categoryRepository,
     ) {
     }
 

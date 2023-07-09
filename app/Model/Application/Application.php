@@ -11,11 +11,11 @@ use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use App\Utils\Helpers;
 use DateTimeImmutable;
+use Defr\QRPlatba\QRPlatba;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Numbers_Words;
-use Swejzi\QRPlatba\QRPlatba;
 
 use function implode;
 use function str_replace;
@@ -51,13 +51,13 @@ abstract class Application
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Id přihlášky.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $applicationId = null;
+    protected int|null $applicationId = null;
 
     /**
      * Uživatel.
@@ -103,43 +103,43 @@ abstract class Application
      * Datum splatnosti.
      */
     #[ORM\Column(type: 'date_immutable', nullable: true)]
-    protected ?DateTimeImmutable $maturityDate = null;
+    protected DateTimeImmutable|null $maturityDate = null;
 
     /**
      * Platební metoda.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $paymentMethod = null;
+    protected string|null $paymentMethod = null;
 
     /**
      * Datum zaplacení.
      */
     #[ORM\Column(type: 'date_immutable', nullable: true)]
-    protected ?DateTimeImmutable $paymentDate = null;
+    protected DateTimeImmutable|null $paymentDate = null;
 
     /**
      * Spárovaná platba.
      */
     #[ORM\ManyToOne(targetEntity: Payment::class, inversedBy: 'pairedApplications', cascade: ['persist'])]
-    protected ?Payment $payment = null;
+    protected Payment|null $payment = null;
 
     /**
      * Příjmový doklad. Používá se pro generování id.
      */
     #[ORM\ManyToOne(targetEntity: IncomeProof::class, cascade: ['persist'])]
-    protected ?IncomeProof $incomeProof = null;
+    protected IncomeProof|null $incomeProof = null;
 
     /**
      * Stav přihlášky.
      */
     #[ORM\Column(type: 'string')]
-    protected ?string $state = null;
+    protected string|null $state = null;
 
     /**
      * Uživatel, který vytvořil přihlášku.
      */
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
-    protected ?User $createdBy = null;
+    protected User|null $createdBy = null;
 
     /**
      * Platnost záznamu od.
@@ -151,7 +151,7 @@ abstract class Application
      * Platnost záznamu do.
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?DateTimeImmutable $validTo = null;
+    protected DateTimeImmutable|null $validTo = null;
 
     public function __construct(User $user)
     {
@@ -168,7 +168,7 @@ abstract class Application
         }
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -188,9 +188,7 @@ abstract class Application
         return $this->user;
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function getRoles(): Collection
     {
         return $this->roles;
@@ -204,9 +202,7 @@ abstract class Application
         return implode(', ', $this->roles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
-    /**
-     * @return Collection<int, Subevent>
-     */
+    /** @return Collection<int, Subevent> */
     public function getSubevents(): Collection
     {
         return $this->subevents;
@@ -269,7 +265,7 @@ abstract class Application
         $this->applicationDate = $applicationDate;
     }
 
-    public function getMaturityDate(): ?DateTimeImmutable
+    public function getMaturityDate(): DateTimeImmutable|null
     {
         return $this->maturityDate;
     }
@@ -277,27 +273,27 @@ abstract class Application
     /**
      * Vrací datum splastnosti jako text.
      */
-    public function getMaturityDateText(): ?string
+    public function getMaturityDateText(): string|null
     {
-        return $this->maturityDate !== null ? $this->maturityDate->format(Helpers::DATE_FORMAT) : null;
+        return $this->maturityDate?->format(Helpers::DATE_FORMAT);
     }
 
-    public function setMaturityDate(?DateTimeImmutable $maturityDate): void
+    public function setMaturityDate(DateTimeImmutable|null $maturityDate): void
     {
         $this->maturityDate = $maturityDate;
     }
 
-    public function getPaymentMethod(): ?string
+    public function getPaymentMethod(): string|null
     {
         return $this->paymentMethod;
     }
 
-    public function setPaymentMethod(?string $paymentMethod): void
+    public function setPaymentMethod(string|null $paymentMethod): void
     {
         $this->paymentMethod = $paymentMethod;
     }
 
-    public function getPaymentDate(): ?DateTimeImmutable
+    public function getPaymentDate(): DateTimeImmutable|null
     {
         return $this->paymentDate;
     }
@@ -305,22 +301,22 @@ abstract class Application
     /**
      * Vrací datum platby jako text.
      */
-    public function getPaymentDateText(): ?string
+    public function getPaymentDateText(): string|null
     {
-        return $this->paymentDate !== null ? $this->paymentDate->format(Helpers::DATE_FORMAT) : null;
+        return $this->paymentDate?->format(Helpers::DATE_FORMAT);
     }
 
-    public function setPaymentDate(?DateTimeImmutable $paymentDate): void
+    public function setPaymentDate(DateTimeImmutable|null $paymentDate): void
     {
         $this->paymentDate = $paymentDate;
     }
 
-    public function getPayment(): ?Payment
+    public function getPayment(): Payment|null
     {
         return $this->payment;
     }
 
-    public function setPayment(?Payment $payment): void
+    public function setPayment(Payment|null $payment): void
     {
         if ($this->payment !== null) {
             $this->payment->removePairedApplication($this);
@@ -333,17 +329,17 @@ abstract class Application
         $this->payment = $payment;
     }
 
-    public function getIncomeProof(): ?IncomeProof
+    public function getIncomeProof(): IncomeProof|null
     {
         return $this->incomeProof;
     }
 
-    public function setIncomeProof(?IncomeProof $incomeProof): void
+    public function setIncomeProof(IncomeProof|null $incomeProof): void
     {
         $this->incomeProof = $incomeProof;
     }
 
-    public function getState(): ?string
+    public function getState(): string|null
     {
         return $this->state;
     }
@@ -353,12 +349,12 @@ abstract class Application
         $this->state = $state;
     }
 
-    public function getCreatedBy(): ?User
+    public function getCreatedBy(): User|null
     {
         return $this->createdBy;
     }
 
-    public function setCreatedBy(?User $createdBy): void
+    public function setCreatedBy(User|null $createdBy): void
     {
         $this->createdBy = $createdBy;
     }
@@ -373,12 +369,12 @@ abstract class Application
         $this->validFrom = $validFrom;
     }
 
-    public function getValidTo(): ?DateTimeImmutable
+    public function getValidTo(): DateTimeImmutable|null
     {
         return $this->validTo;
     }
 
-    public function setValidTo(?DateTimeImmutable $validTo): void
+    public function setValidTo(DateTimeImmutable|null $validTo): void
     {
         $this->validTo = $validTo;
     }

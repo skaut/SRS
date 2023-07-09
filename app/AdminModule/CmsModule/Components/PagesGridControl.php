@@ -38,7 +38,7 @@ class PagesGridControl extends Control
         private CmsService $cmsService,
         private PageRepository $pageRepository,
         private RoleRepository $roleRepository,
-        private AclService $aclService
+        private AclService $aclService,
     ) {
     }
 
@@ -222,7 +222,7 @@ class PagesGridControl extends Control
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id): void
+    public function handleSort(string|null $item_id, string|null $prev_id, string|null $next_id): void
     {
         $this->cmsService->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 

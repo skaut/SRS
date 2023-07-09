@@ -23,7 +23,7 @@ class Discount
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Podmínka.
@@ -37,7 +37,7 @@ class Discount
     #[ORM\Column(type: 'integer')]
     protected int $discount;
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

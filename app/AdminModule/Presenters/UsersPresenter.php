@@ -58,9 +58,7 @@ class UsersPresenter extends AdminBasePresenter
     #[Inject]
     public ApplicationService $applicationService;
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();
@@ -96,7 +94,7 @@ class UsersPresenter extends AdminBasePresenter
     /**
      * Zpracuje fulltext vyhledávání v displayName uživatelů.
      */
-    public function handleSearch(?string $text): void
+    public function handleSearch(string|null $text): void
     {
         $this->template->results = $this->userRepository->findNamesByLikeDisplayNameOrderedByDisplayName($text);
         $this->redrawControl('results');
@@ -150,9 +148,7 @@ class UsersPresenter extends AdminBasePresenter
         }
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function handleCancelRegistration(): void
     {
         $user       = $this->userRepository->findById((int) $this->getParameter('id'));

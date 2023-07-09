@@ -42,7 +42,7 @@ class SkautIsEventFormFactory
         private SkautIsCourseRepository $skautIsCourseRepository,
         private SkautIsEventGeneralService $skautIsEventGeneralService,
         private SkautIsEventEducationService $skautIsEventEducationService,
-        private SubeventRepository $subeventRepository
+        private SubeventRepository $subeventRepository,
     ) {
     }
 
@@ -63,7 +63,7 @@ class SkautIsEventFormFactory
         $eventTypeSelect = $form->addSelect(
             'skautisEventType',
             'admin.configuration.skautis_event_type',
-            SkautIsEventType::getSkautIsEventTypesOptions()
+            SkautIsEventType::getSkautIsEventTypesOptions(),
         );
         $eventTypeSelect->addCondition($form::EQUAL, SkautIsEventType::GENERAL)
             ->toggle('event-general');
@@ -73,14 +73,14 @@ class SkautIsEventFormFactory
         $form->addSelect(
             'skautisEventGeneral',
             'admin.configuration.skautis_event',
-            $this->skautIsEventGeneralService->getEventsOptions()
+            $this->skautIsEventGeneralService->getEventsOptions(),
         )
             ->setOption('id', 'event-general');
 
         $form->addSelect(
             'skautisEventEducation',
             'admin.configuration.skautis_event',
-            $this->skautIsEventEducationService->getEventsOptions()
+            $this->skautIsEventEducationService->getEventsOptions(),
         )
             ->setOption('id', 'event-education');
 

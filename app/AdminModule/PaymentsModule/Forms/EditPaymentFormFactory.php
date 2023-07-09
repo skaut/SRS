@@ -26,14 +26,14 @@ class EditPaymentFormFactory
     /**
      * Upravovaná platba.
      */
-    private ?Payment $payment = null;
+    private Payment|null $payment = null;
 
     public function __construct(
         private BaseFormFactory $baseFormFactory,
         private PaymentRepository $paymentRepository,
         private ApplicationRepository $applicationRepository,
         private UserRepository $userRepository,
-        private ApplicationService $applicationService
+        private ApplicationService $applicationService,
     ) {
     }
 
@@ -84,7 +84,7 @@ class EditPaymentFormFactory
         $pairedValidApplications = $this->payment->getPairedValidApplications();
 
         $inputPairedApplication->setItems(
-            $this->applicationRepository->getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions($pairedValidApplications)
+            $this->applicationRepository->getWaitingForPaymentOrPairedApplicationsVariableSymbolsOptions($pairedValidApplications),
         );
 
         $form->setDefaults([

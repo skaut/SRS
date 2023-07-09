@@ -21,8 +21,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\DI\Attributes\Inject;
-use Skautis\Skautis;
-use Skautis\Wsdl\WsdlException;
+use Skaut\Skautis\Skautis;
+use Skaut\Skautis\Wsdl\WsdlException;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
@@ -142,7 +142,7 @@ class InstallPresenter extends InstallBasePresenter
                 new ArrayCollection([$adminRole]),
                 new ArrayCollection([$implicitSubevent]),
                 $user,
-                true
+                true,
             );
 
             $this->commandBus->handle(new SetSettingBoolValue(Settings::ADMIN_CREATED, true));
