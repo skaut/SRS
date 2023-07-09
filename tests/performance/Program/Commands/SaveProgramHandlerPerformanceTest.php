@@ -85,9 +85,7 @@ final class SaveProgramHandlerPerformanceTest extends CommandHandlerTest
         $this->assertLessThan(30, $duration);
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Program::class, Settings::class];
@@ -96,6 +94,7 @@ final class SaveProgramHandlerPerformanceTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SaveProgramHandlerPerformanceTest.neon']);
+
         parent::_before();
 
         $this->blockRepository       = $this->tester->grabService(BlockRepository::class);

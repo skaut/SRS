@@ -63,9 +63,7 @@ final class SettingDateValueAsTextQueryHandlerTest extends CommandHandlerTest
         }
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Settings::class];
@@ -74,6 +72,7 @@ final class SettingDateValueAsTextQueryHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SettingDateValueAsTextQueryHandlerTest.neon']);
+
         parent::_before();
 
         $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);

@@ -91,9 +91,7 @@ final class RemoveProgramHandlerTest extends CommandHandlerTest
         $this->assertNotContains($program, $block->getPrograms());
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Program::class, Settings::class];
@@ -102,6 +100,7 @@ final class RemoveProgramHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/RemoveProgramHandlerTest.neon']);
+
         parent::_before();
 
         $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);

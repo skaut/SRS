@@ -102,9 +102,7 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
         $this->assertNotContains($block, $subevent->getBlocks());
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Block::class, Settings::class];
@@ -113,6 +111,7 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/RemoveBlockHandlerTest.neon']);
+
         parent::_before();
 
         $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);

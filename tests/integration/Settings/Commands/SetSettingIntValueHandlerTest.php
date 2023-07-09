@@ -61,9 +61,7 @@ final class SetSettingIntValueHandlerTest extends CommandHandlerTest
         }
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Settings::class];
@@ -72,6 +70,7 @@ final class SetSettingIntValueHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SetSettingIntValueHandlerTest.neon']);
+
         parent::_before();
 
         $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);
