@@ -18,6 +18,12 @@ class TicketCheckInfo
     #[JMS\Type(values: 'string')]
     private string $attendeeName;
 
+    #[JMS\Type(values: 'integer')]
+    private int $attendeeAge;
+
+    #[JMS\Type(values: 'string')]
+    private string $attendeePhoto;
+
     /** @var string[] */
     #[JMS\Type(values: 'array')]
     private array $roles;
@@ -36,6 +42,16 @@ class TicketCheckInfo
     public function setAttendeeName(string $attendeeName): void
     {
         $this->attendeeName = $attendeeName;
+    }
+
+    public function setAttendeeAge(int $attendeeAge): void
+    {
+        $this->attendeeAge = $attendeeAge;
+    }
+
+    public function setAttendeePhoto(string $attendeePhoto): void
+    {
+        $this->attendeePhoto = $attendeePhoto;
     }
 
     /** @param string[] $roles */
