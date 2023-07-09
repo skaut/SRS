@@ -43,7 +43,7 @@ jobs:
 
   tests-unit:
     name: "Unit tests"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: skaut/lebeda:8.1
     needs: workdir
@@ -59,7 +59,7 @@ jobs:
 
   tests-integration:
     name: "Integration tests"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: workdir
     steps:
       - name: Download workdir
@@ -76,7 +76,7 @@ jobs:
   code-coverage:
     name: "Code coverage"
     if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: workdir
     steps:
       - name: Download workdir
@@ -99,7 +99,7 @@ jobs:
 
   static-analysis:
     name: "PHPStan analysis"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: skaut/lebeda:8.1
     needs: workdir
@@ -115,7 +115,7 @@ jobs:
 
   coding-standard:
     name: "Coding standard"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: skaut/lebeda:8.1
     needs: workdir
@@ -131,7 +131,7 @@ jobs:
 
   doctrine-checks:
     name: "Doctrine checks"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: skaut/lebeda:8.1
     services:
