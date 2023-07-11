@@ -13,7 +13,7 @@
     "@fullcalendar/resource-timeline": "^5.11.5",
     "@fullcalendar/timegrid": "^5.10.1",
     "@fullcalendar/vue": "^5.10.1",
-    "axios": "^0.25.0",
+    "axios": "^1.4.0",
     "bootstrap": "^4.6.1",
     "bootstrap-confirmation2": "^4.2.1",
     "bootstrap-datetime-picker": "^2.4.4",
