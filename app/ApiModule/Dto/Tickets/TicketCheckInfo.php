@@ -22,7 +22,7 @@ class TicketCheckInfo
     private int $attendeeAge;
 
     #[JMS\Type(values: 'string')]
-    private string $attendeePhoto;
+    private ?string $attendeePhoto;
 
     /** @var string[] */
     #[JMS\Type(values: 'array')]
@@ -49,7 +49,7 @@ class TicketCheckInfo
         $this->attendeeAge = $attendeeAge;
     }
 
-    public function setAttendeePhoto(string $attendeePhoto): void
+    public function setAttendeePhoto(?string $attendeePhoto): void
     {
         $this->attendeePhoto = $attendeePhoto;
     }
