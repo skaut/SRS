@@ -5,7 +5,7 @@
                 <div class="col-8">
                     <h1 style="padding-top: 24px">{_export.income_proof.cash.heading}</h1>
                 </div>
-                <div class="col-4 text-right">
+                <div class="col-4 text-end">
                     <img src="{$basePath}{$logo}" style="max-height: 60px"/>
                 </div>
             </div>
@@ -18,7 +18,7 @@
                         {_export.income_proof.ico} {$ico}
                     </div>
                 </div>
-                <div class="col-4 text-right">
+                <div class="col-4 text-end">
                     {_export.income_proof.cash.number} {$application->getIncomeProof()->getId()}
                     {_export.income_proof.cash.date} {$application->getIncomeProof()->getDateText()}
                 </div>
@@ -56,7 +56,7 @@
                 <div class="col-8">
                     <h1 style="padding-top: 24px">{_export.income_proof.bank.heading}</h1>
                 </div>
-                <div class="col-4 text-right">
+                <div class="col-4 text-end">
                     <img src="{$basePath}{$logo}" style="max-height: 60px"/>
                 </div>
             </div>
@@ -92,7 +92,7 @@
             </div>
 
             <div class="row mt-4">
-                <div class="col-12 text-right">
+                <div class="col-12 text-end">
                     {_export.income_proof.bank.accountant} {$accountant} {_export.income_proof.bank.date} {$date}
                 </div>
             </div>

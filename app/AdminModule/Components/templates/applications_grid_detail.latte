@@ -7,14 +7,14 @@
             <tr class="bg-white">
                 <th>{_admin.users.users_applications_roles}</th>
                 <th>{_admin.users.users_applications_subevents}</th>
-                <th class="text-right">{_admin.users.users_applications_fee}</th>
+                <th class="text-end">{_admin.users.users_applications_fee}</th>
                 <th>{_admin.users.users_applications_variable_symbol}</th>
-                <th class="text-right">{_admin.users.users_applications_maturity_date}</th>
+                <th class="text-end">{_admin.users.users_applications_maturity_date}</th>
                 <th>{_admin.users.users_applications_payment_method}</th>
-                <th class="text-right">{_admin.users.users_applications_payment_date}</th>
+                <th class="text-end">{_admin.users.users_applications_payment_date}</th>
                 <th>{_admin.users.users_applications_state}</th>
-                <th class="text-right">{_admin.users.users_applications_valid_from}</th>
-                <th class="text-right">{_admin.users.users_applications_valid_to}</th>
+                <th class="text-end">{_admin.users.users_applications_valid_from}</th>
+                <th class="text-end">{_admin.users.users_applications_valid_to}</th>
                 <th>{_admin.users.users_applications_created_by}</th>
             </tr>
         </thead>
@@ -22,14 +22,14 @@
             <tr n:foreach="$applications as $application">
                 <td>{$application->getRolesText()}</td>
                 <td>{$application->getSubeventsText()}</td>
-                <td class="text-right">{$application->getFee()}</td>
+                <td class="text-end">{$application->getFee()}</td>
                 <td>{$application->getVariableSymbolText()}</td>
-                <td class="text-right">{$application->getMaturityDateText()}</td>
+                <td class="text-end">{$application->getMaturityDateText()}</td>
                 <td>{if $application->getPaymentMethod()}{_'common.payment.' . $application->getPaymentMethod()}{/if}</td>
-                <td class="text-right">{$application->getPaymentDateText()}</td>
+                <td class="text-end">{$application->getPaymentDateText()}</td>
                 <td>{_'common.application_state.' . $application->getState()}</td>
-                <td class="text-right">{$application->getValidFrom()|date:'j. n. Y H:i'}</td>
-                <td class="text-right">{$application->getValidTo()|date:'j. n. Y H:i'}</td>
+                <td class="text-end">{$application->getValidFrom()|date:'j. n. Y H:i'}</td>
+                <td class="text-end">{$application->getValidTo()|date:'j. n. Y H:i'}</td>
                 <td>{if $application->getCreatedBy()}{$application->getCreatedBy()->getDisplayName()}{/if}</td>
             </tr>
         </tbody>

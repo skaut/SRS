@@ -7,22 +7,22 @@
                         <h5 class="card-title">{_admin.menu.cms}</h5>
                         <div class="row">
                             <div class="col-6 mb-3">
-                                <a href="{plink Cms:Pages:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Cms:Pages:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-file-lines"></span><br>{_admin.cms.menu.pages}
                                 </a>
                             </div>
                             <div class="col-6 mb-3">
-                                <a href="{plink Cms:News:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Cms:News:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-newspaper"></span><br>{_admin.cms.menu.news}
                                 </a>
                             </div>
                             <div class="col-6 mb-3">
-                                <a href="{plink Cms:Documents:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Cms:Documents:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-folder"></span><br>{_admin.cms.menu.documents}
                                 </a>
                             </div>
                             <div class="col-6 mb-3">
-                                <a href="{plink Cms:Faq:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Cms:Faq:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-comments"></span><br>{_admin.cms.menu.faq}
                                 </a>
                             </div>
@@ -37,22 +37,22 @@
                         <h5 class="card-title">{_admin.menu.program}</h5>
                         <div class="row">
                             <div class="col-6 mb-3">
-                                <a href="{plink Program:Blocks:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Program:Blocks:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-calendar-day"></span><br>{_admin.program.menu.blocks}
                                 </a>
                             </div>
                             <div class="col-6 mb-3">
-                                <a href="{plink Program:Schedule:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Program:Schedule:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-calendar-days"></span><br>{_admin.program.menu.schedule}
                                 </a>
                             </div>
                             <div class="col-6 mb-3" n:if="$user->isAllowed($resourceProgram, $permissionManageCategories)">
-                                <a href="{plink Program:Categories:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Program:Categories:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-tags"></span><br>{_admin.program.menu.categories}
                                 </a>
                             </div>
                             <div class="col-6 mb-3" n:if="$user->isAllowed($resourceProgram, $permissionManageRooms)">
-                                <a href="{plink Program:Rooms:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Program:Rooms:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-house-chimney"></span><br>{_admin.program.menu.rooms}
                                 </a>
                             </div>
@@ -67,7 +67,7 @@
                         <h5 class="card-title">{_admin.menu.users}</h5>
                         <div class="row">
                             <div class="col-6 mb-3">
-                                <a href="{plink Users:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Users:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-users"></span><br>{_admin.menu.users}
                                 </a>
                             </div>
@@ -82,7 +82,7 @@
                         <h5 class="card-title">{_admin.menu.payments}</h5>
                         <div class="row">
                             <div class="col-6 mb-3">
-                                <a href="{plink Payments:Payments:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Payments:Payments:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-money-bill"></span><br>{_admin.menu.payments}
                                 </a>
                             </div>
@@ -97,7 +97,7 @@
                         <h5 class="card-title">{_admin.menu.acl}</h5>
                         <div class="row">
                             <div class="col-6 mb-3">
-                                <a href="{plink Acl:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Acl:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-user-group"></span><br>{_admin.menu.acl}
                                 </a>
                             </div>
@@ -112,17 +112,17 @@
                         <h5 class="card-title">{_admin.menu.mailing}</h5>
                         <div class="row">
                             <div class="col-6 mb-3">
-                                <a href="{plink Mailing:Templates:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Mailing:Templates:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-envelope"></span><br>{_admin.mailing.menu.templates}
                                 </a>
                             </div>
                             <div class="col-6 mb-3">
-                                <a href="{plink Mailing:Send:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Mailing:Send:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-envelope-open-text"></span><br>{_admin.mailing.menu.send}
                                 </a>
                             </div>
                             <div class="col-6 mb-3">
-                                <a href="{plink Mailing:History:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Mailing:History:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-box-archive"></span><br>{_admin.mailing.menu.history}
                                 </a>
                             </div>
@@ -137,62 +137,62 @@
                         <h5 class="card-title">{_admin.menu.configuration}</h5>
                         <div class="row">
                             <div class="col-2 mb-3">
-                                <a href="{plink Configuration:Seminar:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Configuration:Seminar:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-calendar"></span><br>{_admin.configuration.menu.seminar}
                                 </a>
                             </div>
                             <div class="col-2 mb-3">
-                                <a href="{plink Configuration:Program:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Configuration:Program:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-calendar-days"></span><br>{_admin.configuration.menu.program}
                                 </a>
                             </div>
                             <div class="col-2 mb-3">
-                                <a href="{plink Configuration:Subevents:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Configuration:Subevents:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-calendar-week"></span><br>{_admin.configuration.menu.subevents}
                                 </a>
                             </div>
                             <div class="col-2 mb-3">
-                                <a href="{plink Configuration:Application:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Configuration:Application:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-address-card"></span><br>{_admin.configuration.menu.application}
                                 </a>
                             </div>
                             <div class="col-2 mb-3">
-                                <a href="{plink Configuration:Payment:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Configuration:Payment:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-file-invoice"></span><br>{_admin.configuration.menu.payment}
                                 </a>
                             </div>
                             <div class="col-2 mb-3" n:if="$explicitSubeventsExists">
-                                <a href="{plink Configuration:Discounts:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Configuration:Discounts:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-percent"></span><br>{_admin.configuration.menu.discounts}
                                 </a>
                             </div>
                             <div class="col-2 mb-3">
-                                <a href="{plink Configuration:Tickets:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Configuration:Tickets:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-ticket"></span><br>{_admin.configuration.menu.tickets}
                                 </a>
                             </div>
                             <div class="col-2 mb-3">
-                                <a href="{plink Configuration:Place:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Configuration:Place:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-map-location-dot"></span><br>{_admin.configuration.menu.place}
                                 </a>
                             </div>
                             <div class="col-2 mb-3">
-                                <a href="{plink Configuration:Mailing:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Configuration:Mailing:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-envelopes-bulk"></span><br>{_admin.configuration.menu.mailing}
                                 </a>
                             </div>
                             <div class="col-2 mb-3">
-                                <a href="{plink Configuration:SkautIs:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Configuration:SkautIs:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-rotate"></span><br>{_admin.configuration.menu.skautis}
                                 </a>
                             </div>
                             <div class="col-2 mb-3">
-                                <a href="{plink Configuration:Web:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Configuration:Web:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-file-code"></span><br>{_admin.configuration.menu.web}
                                 </a>
                             </div>
                             <div class="col-2 mb-3">
-                                <a href="{plink Configuration:System:default}" class="btn btn-secondary btn-sm btn-block">
+                                <a href="{plink Configuration:System:default}" class="btn btn-secondary btn-sm">
                                     <span class="fa fa-2x fa-gear"></span><br>{_admin.configuration.menu.system}
                                 </a>
                             </div>

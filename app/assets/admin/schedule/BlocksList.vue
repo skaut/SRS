@@ -20,21 +20,21 @@
                             <div class="col">
                                 <b>{{ block.name }}</b>
                             </div>
-                            <div class="col-auto text-right">
-                                <span class="badge badge-dark badge-pill">{{ block.programsCount }} ×</span>
+                            <div class="col-auto text-end">
+                                <span class="badge bg-dark rounded-pill">{{ block.programsCount }} ×</span>
                             </div>
                         </div>
                         <table>
                             <tr>
-                                <td class="pr-3 align-top">Kategorie</td>
+                                <td class="pe-3 align-top">Kategorie</td>
                                 <td>{{ block.category }}</td>
                             </tr>
                             <tr>
-                                <td class="pr-3 align-top">Lektoři</td>
+                                <td class="pe-3 align-top">Lektoři</td>
                                 <td>{{ block.lectorsNames }}</td>
                             </tr>
                             <tr>
-                                <td class="pr-3">Kapacita</td>
+                                <td class="pe-3">Kapacita</td>
                                 <td>{{ block.capacity }}</td>
                             </tr>
                         </table>
