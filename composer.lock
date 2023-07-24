@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "690306b2789928f13c96642d2715e20d",
+    "content-hash": "164bb438772c3fb7ee5ac54d5e614485",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -8410,22 +8410,22 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.8.10",
+            "version": "v2.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "361d71494c49f77e4ccfe3f7d312fda6143b3193"
+                "reference": "882fee7cf4258a602ad4a37461e837ed2ca1406b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/361d71494c49f77e4ccfe3f7d312fda6143b3193",
-                "reference": "361d71494c49f77e4ccfe3f7d312fda6143b3193",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/882fee7cf4258a602ad4a37461e837ed2ca1406b",
+                "reference": "882fee7cf4258a602ad4a37461e837ed2ca1406b",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-session": "*",
-                "php": ">=7.2 <8.2"
+                "php": ">=8.0 <8.3"
             },
             "conflict": {
                 "nette/di": "<3.0"
@@ -8442,7 +8442,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "2.10-dev"
                 }
             },
             "autoload": {
@@ -8478,9 +8478,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/tracy/issues",
-                "source": "https://github.com/nette/tracy/tree/v2.8.10"
+                "source": "https://github.com/nette/tracy/tree/v2.10.2"
             },
-            "time": "2021-12-20T14:59:19+00:00"
+            "time": "2023-03-29T12:34:53+00:00"
         },
         {
             "name": "ublaboo/datagrid",
