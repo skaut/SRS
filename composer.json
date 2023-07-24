@@ -53,7 +53,7 @@
 
         "jms/serializer": "^3.20",
         "phpoffice/phpspreadsheet": "^1.26",
-        "contributte/pdf": "^6.1",
+        "contributte/pdf": "^7.0",
         "mpdf/qrcode": "^1.2",
         "dfridrich/qr-platba": "^2.0",
         "eluceo/ical": "^2.9",
