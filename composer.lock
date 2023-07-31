@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "690306b2789928f13c96642d2715e20d",
+    "content-hash": "ceea52dbf2f631eb815459b614c28512",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -8410,22 +8410,22 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.8.10",
+            "version": "v2.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "361d71494c49f77e4ccfe3f7d312fda6143b3193"
+                "reference": "ec6637866d6836ef6f8de2bab63ae7708b23bcd7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/361d71494c49f77e4ccfe3f7d312fda6143b3193",
-                "reference": "361d71494c49f77e4ccfe3f7d312fda6143b3193",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/ec6637866d6836ef6f8de2bab63ae7708b23bcd7",
+                "reference": "ec6637866d6836ef6f8de2bab63ae7708b23bcd7",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-session": "*",
-                "php": ">=7.2 <8.2"
+                "php": ">=8.0 <8.4"
             },
             "conflict": {
                 "nette/di": "<3.0"
@@ -8433,6 +8433,7 @@
             "require-dev": {
                 "latte/latte": "^2.5",
                 "nette/di": "^3.0",
+                "nette/http": "^3.0",
                 "nette/mail": "^3.0",
                 "nette/tester": "^2.2",
                 "nette/utils": "^3.0",
@@ -8442,7 +8443,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "2.10-dev"
                 }
             },
             "autoload": {
@@ -8478,9 +8479,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/tracy/issues",
-                "source": "https://github.com/nette/tracy/tree/v2.8.10"
+                "source": "https://github.com/nette/tracy/tree/v2.10.3"
             },
-            "time": "2021-12-20T14:59:19+00:00"
+            "time": "2023-07-30T13:56:20+00:00"
         },
         {
             "name": "ublaboo/datagrid",
