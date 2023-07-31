@@ -15,7 +15,7 @@ jobs:
     name: "Build"
     runs-on: ubuntu-22.04
     container:
-      image: skaut/lebeda:8.1
+      image: skaut/lebeda:8.1-ci
     steps:
       - uses: actions/checkout@v3
       # Copy & paste from https://github.com/actions/cache/blob/master/examples.md#php---composer
