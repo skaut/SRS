@@ -22,7 +22,7 @@
         "nette/bootstrap": "^3.2",
         "nette/caching": "^3.2",
         "nette/database": "^3.1",
-        "nette/di": "^3.0",
+        "nette/di": "^3.1",
         "nette/finder": "^2.6",
         "nette/forms": "^3.1",
         "nette/http": "^3.2",
@@ -41,7 +41,7 @@
         "beberlei/doctrineextensions": "^1.3",
         "dg/mysql-dump": "^1.5",
 
-        "fmasa/messenger": "^2.0",
+        "fmasa/messenger": "^2.1",
 
         "nextras/form-components": "^1.1",
         "nextras/forms-rendering": "^1.1",
@@ -51,19 +51,19 @@
         "ublaboo/datagrid": "^6.9",
         "ublaboo/mailing": "^1.2",
 
-        "jms/serializer": "^3.20",
-        "phpoffice/phpspreadsheet": "^1.26",
+        "jms/serializer": "^3.28",
+        "phpoffice/phpspreadsheet": "^1.29",
         "contributte/pdf": "^7.0",
         "mpdf/qrcode": "^1.2",
         "dfridrich/qr-platba": "^2.0",
-        "eluceo/ical": "^2.9",
-        "endroid/qr-code": "^4.7",
+        "eluceo/ical": "^2.12",
+        "endroid/qr-code": "^4.8",
 
         "skautis/skautis": "3.0.0-alpha.5",
         "skautis/nette": "3.0.0-alpha.3",
 
         "pear/numbers_words": "^0.18",
-        "azuyalabs/yasumi": "^2.5",
+        "azuyalabs/yasumi": "^2.6",
 
         "mhujer/fio-api-php": "^4.1",
         "composer/ca-bundle": "^1.3"
@@ -76,7 +76,7 @@
         "codeception/mockery-module": "^0.4",
         "contributte/codeception": "^1.3",
         "doctrine/coding-standard": "^12.0",
-        "phpstan/extension-installer": "^1.2",
+        "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-nette": "^1.2",
         "phpstan/phpstan-doctrine": "^1.3",

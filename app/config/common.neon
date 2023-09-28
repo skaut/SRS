@@ -117,6 +117,9 @@ latte:
     macros:
         - Nextras\FormsRendering\LatteMacros\Bs3InputMacros::install
 
+tracy:
+    maxDepth: 3
+
 forms:
     messages:
         MAX_FILE_SIZE: 'Velikost nahraného souboru může být nejvýše %d bytů.'
