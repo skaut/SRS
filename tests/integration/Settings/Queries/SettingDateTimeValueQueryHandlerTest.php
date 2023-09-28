@@ -55,7 +55,6 @@ final class SettingDateTimeValueQueryHandlerTest extends CommandHandlerTest
      *
      * @throws Exception
      * @throws Throwable
-     * @throws Throwable
      */
     public function testGetValueNotExistingItem(): void
     {

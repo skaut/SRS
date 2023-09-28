@@ -52,12 +52,6 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
      *
      * @throws OptimisticLockException
      * @throws Throwable
-     * @throws Throwable
-     * @throws Throwable
-     * @throws Throwable
-     * @throws Throwable
-     * @throws Throwable
-     * @throws Throwable
      */
     public function testReplaceByAlternates(): void
     {
@@ -192,7 +186,6 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
      * Uživatel není účastníkem programu.
      *
      * @throws OptimisticLockException
-     * @throws Throwable
      * @throws Throwable
      */
     public function testNotAttends(): void

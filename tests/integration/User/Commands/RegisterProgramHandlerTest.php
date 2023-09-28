@@ -416,7 +416,6 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
      * Uživatel nemá příslušnou podakci zaplacenou, ale je povoleno přihlašování před zaplacením.
      *
      * @throws SettingsItemNotFoundException
-     * @throws SettingsItemNotFoundException
      */
     public function testNotPaidSubeventAllowed(): void
     {

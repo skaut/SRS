@@ -54,7 +54,6 @@ final class SettingDateTimeValueAsTextQueryHandlerTest extends CommandHandlerTes
      *
      * @throws Exception
      * @throws Throwable
-     * @throws Throwable
      */
     public function testGetValueNotExistingItem(): void
     {

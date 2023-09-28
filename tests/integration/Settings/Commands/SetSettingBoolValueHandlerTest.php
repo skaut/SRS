@@ -54,7 +54,6 @@ final class SetSettingBoolValueHandlerTest extends CommandHandlerTest
      *
      * @throws Exception
      * @throws Throwable
-     * @throws Throwable
      */
     public function testSetValueNotExistingItem(): void
     {

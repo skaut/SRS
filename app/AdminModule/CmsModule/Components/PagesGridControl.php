@@ -160,7 +160,6 @@ class PagesGridControl extends Control
      *
      * @throws NonUniqueResultException
      * @throws NoResultException
-     * @throws NoResultException
      */
     public function add(stdClass $values): void
     {
@@ -180,7 +179,6 @@ class PagesGridControl extends Control
      * Zpracuje upravení stránky.
      *
      * @throws NonUniqueResultException
-     * @throws NoResultException
      * @throws NoResultException
      */
     public function edit(string $id, stdClass $values): void
@@ -242,7 +240,6 @@ class PagesGridControl extends Control
      * @throws AbortException
      * @throws NonUniqueResultException
      * @throws OptimisticLockException
-     * @throws NoResultException
      * @throws NoResultException
      */
     public function changeStatus(string $id, string $public): void

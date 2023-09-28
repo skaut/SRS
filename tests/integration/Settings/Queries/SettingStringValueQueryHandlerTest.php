@@ -50,7 +50,6 @@ final class SettingStringValueQueryHandlerTest extends CommandHandlerTest
      *
      * @throws Exception
      * @throws Throwable
-     * @throws Throwable
      */
     public function testGetValueNotExistingItem(): void
     {

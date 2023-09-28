@@ -62,7 +62,6 @@ class SlideshowContent extends Content implements IContent
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
      *
      * @throws JsonException
-     * @throws JsonException
      */
     public function addContentForm(Form $form): Form
     {

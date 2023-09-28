@@ -98,7 +98,6 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
      * Vytvoření automaticky zapisovaného programu - oprávnění uživatelé jsou zapsáni.
      *
      * @throws SettingsItemNotFoundException
-     * @throws SettingsItemNotFoundException
      */
     public function testCreateAutoRegisteredProgram(): void
     {
