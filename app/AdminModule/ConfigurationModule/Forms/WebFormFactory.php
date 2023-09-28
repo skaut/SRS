@@ -35,11 +35,11 @@ class WebFormFactory
     use Nette\SmartObject;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private CommandBus $commandBus,
-        private QueryBus $queryBus,
-        private PageRepository $pageRepository,
-        private FilesService $filesService,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
+        private readonly PageRepository $pageRepository,
+        private readonly FilesService $filesService,
     ) {
     }
 

@@ -25,11 +25,11 @@ class BankService
     use Nette\SmartObject;
 
     public function __construct(
-        private CommandBus $commandBus,
-        private QueryBus $queryBus,
-        private ApplicationService $applicationService,
-        private EntityManagerInterface $em,
-        private PaymentRepository $paymentRepository,
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
+        private readonly ApplicationService $applicationService,
+        private readonly EntityManagerInterface $em,
+        private readonly PaymentRepository $paymentRepository,
     ) {
     }
 

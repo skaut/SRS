@@ -16,8 +16,8 @@ class Recipient
      * @param ?string $name  Jméno příjemce.
      */
     public function __construct(
-        private string $email,
-        private string|null $name = null,
+        private readonly string $email,
+        private readonly string|null $name = null,
     ) {
     }
 

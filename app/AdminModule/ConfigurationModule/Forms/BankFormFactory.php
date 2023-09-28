@@ -31,7 +31,7 @@ class BankFormFactory
 {
     use Nette\SmartObject;
 
-    public function __construct(private BaseFormFactory $baseFormFactory, private CommandBus $commandBus, private BankService $bankService)
+    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly CommandBus $commandBus, private readonly BankService $bankService)
     {
     }
 

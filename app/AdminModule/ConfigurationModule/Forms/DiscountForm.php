@@ -9,7 +9,6 @@ use App\Model\Structure\Discount;
 use App\Model\Structure\Repositories\DiscountRepository;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Services\DiscountService;
-use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -41,10 +40,10 @@ class DiscountForm extends UI\Control
     /** @param int $id Id upravované slevy. */
     public function __construct(
         public int $id,
-        private BaseFormFactory $baseFormFactory,
-        private DiscountRepository $discountRepository,
-        private SubeventRepository $subeventRepository,
-        private DiscountService $discountService,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly DiscountRepository $discountRepository,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly DiscountService $discountService,
     ) {
         $this->discount = $this->discountRepository->findById($id);
     }
@@ -107,8 +106,6 @@ class DiscountForm extends UI\Control
 
     /**
      * Zpracuje formulář.
-     *
-     * @throws ORMException
      */
     public function processForm(Form $form, stdClass $values): void
     {

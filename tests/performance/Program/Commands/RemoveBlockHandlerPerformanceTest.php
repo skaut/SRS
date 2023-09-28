@@ -25,7 +25,6 @@ use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Throwable;
 
 use function microtime;
@@ -52,7 +51,6 @@ final class RemoveBlockHandlerPerformanceTest extends CommandHandlerTest
     /**
      * Odstranění bloku s velkým množstvím programů a účastníků.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
      * @throws Throwable
      */

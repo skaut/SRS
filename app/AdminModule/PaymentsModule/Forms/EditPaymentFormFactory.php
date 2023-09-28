@@ -29,11 +29,11 @@ class EditPaymentFormFactory
     private Payment|null $payment = null;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private PaymentRepository $paymentRepository,
-        private ApplicationRepository $applicationRepository,
-        private UserRepository $userRepository,
-        private ApplicationService $applicationService,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly PaymentRepository $paymentRepository,
+        private readonly ApplicationRepository $applicationRepository,
+        private readonly UserRepository $userRepository,
+        private readonly ApplicationService $applicationService,
     ) {
     }
 
@@ -107,7 +107,7 @@ class EditPaymentFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() !== $form['cancel']) {
+        if ($form->isSubmitted() != $form['cancel']) {
             $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
             $pairedApplications = $this->applicationRepository->findApplicationsByIds($values->pairedApplications);

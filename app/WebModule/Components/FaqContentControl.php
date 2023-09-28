@@ -18,9 +18,9 @@ use stdClass;
 class FaqContentControl extends BaseContentControl
 {
     public function __construct(
-        private FaqFormFactory $faqFormFactory,
-        private FaqRepository $faqRepository,
-        private RoleRepository $roleRepository,
+        private readonly FaqFormFactory $faqFormFactory,
+        private readonly FaqRepository $faqRepository,
+        private readonly RoleRepository $roleRepository,
     ) {
     }
 

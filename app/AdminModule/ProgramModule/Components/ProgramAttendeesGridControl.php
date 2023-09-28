@@ -50,13 +50,13 @@ class ProgramAttendeesGridControl extends Control
     private SessionSection $sessionSection;
 
     public function __construct(
-        private Translator $translator,
-        private ProgramRepository $programRepository,
-        private UserRepository $userRepository,
+        private readonly Translator $translator,
+        private readonly ProgramRepository $programRepository,
+        private readonly UserRepository $userRepository,
         Session $session,
-        private CommandBus $commandBus,
-        private QueryBus $queryBus,
-        private EntityManagerInterface $em,
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
+        private readonly EntityManagerInterface $em,
     ) {
         $this->sessionSection = $session->getSection('srs');
     }

@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class TicketChecksByUserAndSubeventQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private TicketCheckRepository $ticketCheckRepository)
+    public function __construct(private readonly TicketCheckRepository $ticketCheckRepository)
     {
     }
 

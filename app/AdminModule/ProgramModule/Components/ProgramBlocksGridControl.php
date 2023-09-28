@@ -46,16 +46,16 @@ class ProgramBlocksGridControl extends Control
     private SessionSection $sessionSection;
 
     public function __construct(
-        private CommandBus $commandBus,
-        private QueryBus $queryBus,
-        private Translator $translator,
-        private BlockRepository $blockRepository,
-        private UserRepository $userRepository,
-        private CategoryRepository $categoryRepository,
-        private ExcelExportService $excelExportService,
-        private Validators $validators,
-        private SubeventService $subeventService,
-        private Session $session,
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
+        private readonly Translator $translator,
+        private readonly BlockRepository $blockRepository,
+        private readonly UserRepository $userRepository,
+        private readonly CategoryRepository $categoryRepository,
+        private readonly ExcelExportService $excelExportService,
+        private readonly Validators $validators,
+        private readonly SubeventService $subeventService,
+        private readonly Session $session,
     ) {
         $this->sessionSection = $session->getSection('srs');
     }
@@ -210,6 +210,7 @@ class ProgramBlocksGridControl extends Control
      * Změní povinnost bloku.
      *
      * @throws AbortException
+     * @throws Exception
      */
     public function changeMandatory(string $id, string $mandatory): void
     {

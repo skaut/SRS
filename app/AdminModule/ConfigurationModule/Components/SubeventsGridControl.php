@@ -18,7 +18,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class SubeventsGridControl extends Control
 {
-    public function __construct(private Translator $translator, private SubeventRepository $subeventRepository)
+    public function __construct(private readonly Translator $translator, private readonly SubeventRepository $subeventRepository)
     {
     }
 

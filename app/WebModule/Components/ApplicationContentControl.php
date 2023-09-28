@@ -27,12 +27,12 @@ use Throwable;
 class ApplicationContentControl extends BaseContentControl
 {
     public function __construct(
-        private QueryBus $queryBus,
-        private ApplicationFormFactory $applicationFormFactory,
-        private Authenticator $authenticator,
-        private UserRepository $userRepository,
-        private RoleRepository $roleRepository,
-        private SubeventRepository $subeventRepository,
+        private readonly QueryBus $queryBus,
+        private readonly ApplicationFormFactory $applicationFormFactory,
+        private readonly Authenticator $authenticator,
+        private readonly UserRepository $userRepository,
+        private readonly RoleRepository $roleRepository,
+        private readonly SubeventRepository $subeventRepository,
         public IApplicationsGridControlFactory $applicationsGridControlFactory,
         public CustomInputRepository $customInputRepository,
     ) {

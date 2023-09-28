@@ -6,7 +6,6 @@ namespace App\AdminModule\CmsModule\Components;
 
 use App\Model\Cms\Repositories\NewsRepository;
 use App\Utils\Helpers;
-use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;
@@ -19,7 +18,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class NewsGridControl extends Control
 {
-    public function __construct(private Translator $translator, private NewsRepository $newsRepository)
+    public function __construct(private readonly Translator $translator, private readonly NewsRepository $newsRepository)
     {
     }
 
@@ -98,7 +97,6 @@ class NewsGridControl extends Control
     /**
      * Změní připíchnutí aktuality.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function changePinned(string $id, string $pinned): void

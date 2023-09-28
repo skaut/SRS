@@ -27,8 +27,6 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Throwable;
 
 final class SaveProgramHandlerTest extends CommandHandlerTest
@@ -53,9 +51,6 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
 
     /**
      * Vytvoření volitelného programu.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testCreateVoluntaryProgram(): void
     {
@@ -102,8 +97,8 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
     /**
      * Vytvoření automaticky zapisovaného programu - oprávnění uživatelé jsou zapsáni.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @throws SettingsItemNotFoundException
+     * @throws SettingsItemNotFoundException
      */
     public function testCreateAutoRegisteredProgram(): void
     {
@@ -166,8 +161,6 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
      * Vytvoření automaticky zapisovaného programu - oprávnění uživatelé jsou zapsáni, včetně nezaplacených.
      *
      * @throws SettingsItemNotFoundException
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
     public function testCreateAutoRegisteredProgramNotPaidAllowed(): void
@@ -229,9 +222,6 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
 
     /**
      * Test uložení změn programu.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testUpdateProgram(): void
     {

@@ -23,6 +23,8 @@ class SettingsRepository extends AbstractRepository
 
     /**
      * Vrací položku nastavení podle názvu.
+     *
+     * @throws SettingsItemNotFoundException
      */
     public function findByItem(string $item): Settings
     {

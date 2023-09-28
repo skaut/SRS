@@ -12,7 +12,7 @@ use App\Model\User\Repositories\UserRepository;
  */
 class UsersContentControl extends BaseContentControl
 {
-    public function __construct(private UserRepository $userRepository)
+    public function __construct(private readonly UserRepository $userRepository)
     {
     }
 

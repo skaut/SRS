@@ -17,10 +17,10 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class RemoveProgramHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private CommandBus $commandBus,
-        private QueryBus $queryBus,
-        private EntityManagerInterface $em,
-        private ProgramRepository $programRepository,
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
+        private readonly EntityManagerInterface $em,
+        private readonly ProgramRepository $programRepository,
     ) {
     }
 

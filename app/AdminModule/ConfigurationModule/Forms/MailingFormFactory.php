@@ -45,12 +45,12 @@ class MailingFormFactory
     use Nette\SmartObject;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private CommandBus $commandBus,
-        private QueryBus $queryBus,
-        private IMailService $mailService,
-        private LinkGenerator $linkGenerator,
-        private Validators $validators,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
+        private readonly IMailService $mailService,
+        private readonly LinkGenerator $linkGenerator,
+        private readonly Validators $validators,
     ) {
     }
 

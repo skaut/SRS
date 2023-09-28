@@ -6,7 +6,7 @@ namespace App\Model\Settings\Queries;
 
 class SettingArrayValueQuery
 {
-    public function __construct(private string $item)
+    public function __construct(private readonly string $item)
     {
     }
 

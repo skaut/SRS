@@ -11,6 +11,7 @@ use App\Model\Settings\Settings;
 use CommandHandlerTest;
 use Exception;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Throwable;
 
 final class SettingIntValueQueryHandlerTest extends CommandHandlerTest
 {
@@ -20,8 +21,6 @@ final class SettingIntValueQueryHandlerTest extends CommandHandlerTest
 
     /**
      * Načtení hodnoty.
-     *
-     * @throws SettingsItemNotFoundException
      */
     public function testGetValue(): void
     {
@@ -50,6 +49,8 @@ final class SettingIntValueQueryHandlerTest extends CommandHandlerTest
      * Načtení hodnoty neexistující položky.
      *
      * @throws Exception
+     * @throws Throwable
+     * @throws Throwable
      */
     public function testGetValueNotExistingItem(): void
     {

@@ -15,12 +15,13 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class UnregisterProgramHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private EventBus $eventBus,
-        private EntityManagerInterface $em,
-        private ProgramApplicationRepository $programApplicationRepository,
+        private readonly EventBus $eventBus,
+        private readonly EntityManagerInterface $em,
+        private readonly ProgramApplicationRepository $programApplicationRepository,
     ) {
     }
 
+    /** @throws UserNotAttendsProgramException */
     public function __invoke(UnregisterProgram $command): void
     {
         $programApplication = $this->programApplicationRepository->findByUserAndProgram($command->getUser(), $command->getProgram());

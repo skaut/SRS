@@ -11,7 +11,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UserRegisteredProgramAtQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private ProgramApplicationRepository $programApplicationRepository)
+    public function __construct(private readonly ProgramApplicationRepository $programApplicationRepository)
     {
     }
 

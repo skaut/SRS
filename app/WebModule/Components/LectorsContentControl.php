@@ -14,7 +14,7 @@ use App\Model\User\Repositories\UserRepository;
  */
 class LectorsContentControl extends BaseContentControl
 {
-    public function __construct(private UserRepository $userRepository, private RoleRepository $roleRepository)
+    public function __construct(private readonly UserRepository $userRepository, private readonly RoleRepository $roleRepository)
     {
     }
 

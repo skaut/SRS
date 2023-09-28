@@ -10,8 +10,8 @@ use App\Model\User\User;
 class CheckTicket
 {
     public function __construct(
-        private User $user,
-        private Subevent|null $subevent,
+        private readonly User $user,
+        private readonly Subevent|null $subevent,
     ) {
     }
 

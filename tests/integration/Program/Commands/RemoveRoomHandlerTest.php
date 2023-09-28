@@ -16,8 +16,6 @@ use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use CommandHandlerTest;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Throwable;
 
 final class RemoveRoomHandlerTest extends CommandHandlerTest
@@ -33,8 +31,6 @@ final class RemoveRoomHandlerTest extends CommandHandlerTest
     /**
      * Odstranění místnosti.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
     public function testRemoveRoom(): void

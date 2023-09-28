@@ -17,7 +17,7 @@ class ExcelResponse implements Response
 {
     use Nette\SmartObject;
 
-    public function __construct(private Spreadsheet $spreadsheet, private string $filename)
+    public function __construct(private readonly Spreadsheet $spreadsheet, private readonly string $filename)
     {
     }
 

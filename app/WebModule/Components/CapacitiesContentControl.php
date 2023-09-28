@@ -12,7 +12,7 @@ use App\Model\Cms\Dto\CapacitiesContentDto;
  */
 class CapacitiesContentControl extends BaseContentControl
 {
-    public function __construct(private RoleRepository $roleRepository)
+    public function __construct(private readonly RoleRepository $roleRepository)
     {
     }
 

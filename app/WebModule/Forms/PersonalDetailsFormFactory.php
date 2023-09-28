@@ -8,7 +8,6 @@ use App\Model\Enums\Sex;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\SkautIsService;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\FormComponents\Controls\DateControl;
@@ -35,9 +34,9 @@ class PersonalDetailsFormFactory
     public array $onSkautIsError = [];
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private UserRepository $userRepository,
-        private SkautIsService $skautIsService,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly UserRepository $userRepository,
+        private readonly SkautIsService $skautIsService,
     ) {
     }
 
@@ -118,8 +117,6 @@ class PersonalDetailsFormFactory
 
     /**
      * Zpracuje formulář.
-     *
-     * @throws ORMException
      */
     public function processForm(Form $form, stdClass $values): void
     {

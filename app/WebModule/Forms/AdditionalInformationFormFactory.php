@@ -63,15 +63,15 @@ class AdditionalInformationFormFactory
     private User|null $user = null;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private QueryBus $queryBus,
-        private EntityManagerInterface $em,
-        private UserRepository $userRepository,
-        private CustomInputRepository $customInputRepository,
-        private ApplicationService $applicationService,
-        private CustomInputValueRepository $customInputValueRepository,
-        private FilesService $filesService,
-        private IMailService $mailService,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly QueryBus $queryBus,
+        private readonly EntityManagerInterface $em,
+        private readonly UserRepository $userRepository,
+        private readonly CustomInputRepository $customInputRepository,
+        private readonly ApplicationService $applicationService,
+        private readonly CustomInputValueRepository $customInputValueRepository,
+        private readonly FilesService $filesService,
+        private readonly IMailService $mailService,
     ) {
     }
 

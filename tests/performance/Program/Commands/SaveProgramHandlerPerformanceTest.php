@@ -21,8 +21,6 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 
 use function microtime;
 
@@ -42,9 +40,6 @@ final class SaveProgramHandlerPerformanceTest extends CommandHandlerTest
 
     /**
      * Vytvoření automaticky zapisovaného programu - oprávnění uživatelé jsou zapsáni.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testCreateAutoRegisteredProgram(): void
     {

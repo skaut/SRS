@@ -24,8 +24,6 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Throwable;
 
 final class RemoveCategoryHandlerTest extends CommandHandlerTest
@@ -49,8 +47,6 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
     /**
      * Odstranění kategorie - automaticky přihlašovaní, kteří jsou nově oprávněni jsou přihlášeni.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
     public function testRemoveCategory(): void

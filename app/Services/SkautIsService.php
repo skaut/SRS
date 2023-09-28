@@ -21,7 +21,7 @@ class SkautIsService
 
     private Cache $userRolesCache;
 
-    public function __construct(private Skautis $skautIs, Storage $storage)
+    public function __construct(private readonly Skautis $skautIs, Storage $storage)
     {
         $this->userRolesCache = new Cache($storage, 'UserRoles');
     }

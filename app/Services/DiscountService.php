@@ -42,9 +42,9 @@ class DiscountService
     private array $selectedSubeventsIds;
 
     public function __construct(
-        private DiscountRepository $discountRepository,
-        private SubeventRepository $subeventRepository,
-        private Translator $translator,
+        private readonly DiscountRepository $discountRepository,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly Translator $translator,
     ) {
     }
 

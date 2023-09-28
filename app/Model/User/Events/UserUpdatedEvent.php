@@ -8,7 +8,7 @@ use App\Model\User\User;
 
 class UserUpdatedEvent
 {
-    public function __construct(private User $user, private bool $approvedOld)
+    public function __construct(private readonly User $user, private readonly bool $approvedOld)
     {
     }
 

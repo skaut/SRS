@@ -13,15 +13,11 @@ use function unserialize;
 
 class SettingArrayValueQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private SettingsRepository $settingsRepository)
+    public function __construct(private readonly SettingsRepository $settingsRepository)
     {
     }
 
-    /**
-     * @return mixed[]|null
-     *
-     * @throws SettingsItemNotFoundException
-     */
+    /** @throws SettingsItemNotFoundException */
     public function __invoke(SettingArrayValueQuery $query): array|null
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());

@@ -34,13 +34,13 @@ class SendFormFactory
     public bool $mailSuccess;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private IMailService $mailService,
-        private RoleRepository $roleRepository,
-        private UserRepository $userRepository,
-        private SubeventRepository $subeventRepository,
-        private AclService $aclService,
-        private SubeventService $subeventService,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly IMailService $mailService,
+        private readonly RoleRepository $roleRepository,
+        private readonly UserRepository $userRepository,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly AclService $aclService,
+        private readonly SubeventService $subeventService,
     ) {
     }
 

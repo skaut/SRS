@@ -8,7 +8,7 @@ use App\Model\Program\Block;
 
 class SaveBlock
 {
-    public function __construct(private Block $block, private Block|null $blockOld = null)
+    public function __construct(private readonly Block $block, private readonly Block|null $blockOld = null)
     {
     }
 

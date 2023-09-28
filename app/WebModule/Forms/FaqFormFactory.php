@@ -9,7 +9,7 @@ use App\Model\Cms\Repositories\FaqRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\NoResultException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -27,9 +27,9 @@ class FaqFormFactory
     private User|null $user = null;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private FaqRepository $faqRepository,
-        private UserRepository $userRepository,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly FaqRepository $faqRepository,
+        private readonly UserRepository $userRepository,
     ) {
     }
 
@@ -56,7 +56,7 @@ class FaqFormFactory
      * Zpracuje formulář.
      *
      * @throws NonUniqueResultException
-     * @throws ORMException
+     * @throws NoResultException
      */
     public function processForm(Form $form, stdClass $values): void
     {

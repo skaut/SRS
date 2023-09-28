@@ -35,7 +35,6 @@ use App\Services\UserService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
 use InvalidArgumentException;
@@ -61,20 +60,20 @@ class UsersGridControl extends Control
     private SessionSection $sessionSection;
 
     public function __construct(
-        private QueryBus $queryBus,
-        private Translator $translator,
-        private EntityManagerInterface $em,
-        private UserRepository $userRepository,
-        private CustomInputRepository $customInputRepository,
-        private RoleRepository $roleRepository,
-        private ExcelExportService $excelExportService,
-        private Session $session,
-        private AclService $aclService,
-        private ApplicationService $applicationService,
-        private UserService $userService,
-        private SkautIsEventEducationService $skautIsEventEducationService,
-        private SkautIsEventGeneralService $skautIsEventGeneralService,
-        private SubeventService $subeventService,
+        private readonly QueryBus $queryBus,
+        private readonly Translator $translator,
+        private readonly EntityManagerInterface $em,
+        private readonly UserRepository $userRepository,
+        private readonly CustomInputRepository $customInputRepository,
+        private readonly RoleRepository $roleRepository,
+        private readonly ExcelExportService $excelExportService,
+        private readonly Session $session,
+        private readonly AclService $aclService,
+        private readonly ApplicationService $applicationService,
+        private readonly UserService $userService,
+        private readonly SkautIsEventEducationService $skautIsEventEducationService,
+        private readonly SkautIsEventGeneralService $skautIsEventGeneralService,
+        private readonly SubeventService $subeventService,
     ) {
         $this->sessionSection = $session->getSection('srs');
     }
@@ -449,7 +448,6 @@ class UsersGridControl extends Control
     /**
      * Změní stav uživatele.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function changeApproved(string $id, string $approved): void
@@ -472,7 +470,6 @@ class UsersGridControl extends Control
     /**
      * Změní účast uživatele na semináři.
      *
-     * @throws ORMException
      * @throws AbortException
      */
     public function changeAttended(string $id, string $attended): void
@@ -872,6 +869,7 @@ class UsersGridControl extends Control
         return $options;
     }
 
+    /** @throws AbortException */
     private function reload(): void
     {
         $p = $this->getPresenter();

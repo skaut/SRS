@@ -19,10 +19,10 @@ class SrsMailData implements IMessageData
      * @param string      $text       Text mailu.
      */
     public function __construct(
-        private Recipient $from,
-        private array $recipients,
-        private string $subject,
-        private string $text,
+        private readonly Recipient $from,
+        private readonly array $recipients,
+        private readonly string $subject,
+        private readonly string $text,
     ) {
     }
 

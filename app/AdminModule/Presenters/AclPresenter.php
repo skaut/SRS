@@ -78,7 +78,7 @@ class AclPresenter extends AdminBasePresenter
         $form = $this->addRoleFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() === $form['cancel']) {
+            if ($form->isSubmitted() == $form['cancel']) {
                 $this->redirect('Acl:default');
             }
 
@@ -100,13 +100,13 @@ class AclPresenter extends AdminBasePresenter
         $form = $this->editRoleFormFactory->create((int) $this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() === $form['cancel']) {
+            if ($form->isSubmitted() == $form['cancel']) {
                 $this->redirect('Acl:default');
             }
 
             $this->flashMessage('admin.acl.roles_saved', 'success');
 
-            if ($form->isSubmitted() === $form['submitAndContinue']) {
+            if ($form->isSubmitted() == $form['submitAndContinue']) {
                 $id = $values->id;
                 $this->redirect('Acl:edit', ['id' => $id]);
             } else {

@@ -23,7 +23,7 @@ class EditTemplateFormFactory
      */
     private Template|null $template = null;
 
-    public function __construct(private BaseFormFactory $baseFormFactory, private TemplateRepository $templateRepository)
+    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly TemplateRepository $templateRepository)
     {
     }
 
@@ -71,7 +71,7 @@ class EditTemplateFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 

@@ -16,7 +16,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class ProgramRegisteredEventListener implements MessageHandlerInterface
 {
-    public function __construct(private QueryBus $queryBus, private IMailService $mailService)
+    public function __construct(private readonly QueryBus $queryBus, private readonly IMailService $mailService)
     {
     }
 

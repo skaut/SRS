@@ -33,10 +33,10 @@ class AclService
     private Cache $resourceNamesCache;
 
     public function __construct(
-        private RoleRepository $roleRepository,
-        private PermissionRepository $permissionRepository,
-        private SrsResourceRepository $resourceRepository,
-        private Translator $translator,
+        private readonly RoleRepository $roleRepository,
+        private readonly PermissionRepository $permissionRepository,
+        private readonly SrsResourceRepository $resourceRepository,
+        private readonly Translator $translator,
         Storage $storage,
     ) {
         $this->roleNamesCache       = new Cache($storage, 'RoleNames');
@@ -72,8 +72,8 @@ class AclService
     public function saveRole(Role $role): void
     {
         $this->roleRepository->save($role);
-        $this->roleNamesCache->clean([Cache::NAMESPACES => ['RoleNames']]);
-        $this->permissionNamesCache->clean([Cache::NAMESPACES => ['PermissionNames']]);
+        $this->roleNamesCache->clean([Cache::Namespaces => ['RoleNames']]);
+        $this->permissionNamesCache->clean([Cache::Namespaces => ['PermissionNames']]);
     }
 
     /**
@@ -82,7 +82,7 @@ class AclService
     public function removeRole(Role $role): void
     {
         $this->roleRepository->remove($role);
-        $this->roleNamesCache->clean([Cache::NAMESPACES => ['RoleNames']]);
+        $this->roleNamesCache->clean([Cache::Namespaces => ['RoleNames']]);
     }
 
     /**

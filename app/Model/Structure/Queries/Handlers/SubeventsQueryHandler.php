@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SubeventsQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private SubeventRepository $subeventRepository)
+    public function __construct(private readonly SubeventRepository $subeventRepository)
     {
     }
 
