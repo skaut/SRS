@@ -37,9 +37,9 @@ class BackupDatabaseCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $host      = $this->em->getConnection()->getParams()['host'];
-        $user      = $this->em->getConnection()->getParams()['username'];
-        $password  = $this->em->getConnection()->getParams()['password'];
+        $host      = $this->em->getConnection()->getParams()['primary']['host'];
+        $user      = $this->em->getConnection()->getParams()['primary']['username'];
+        $password  = $this->em->getConnection()->getParams()['primary']['password'];
         $dbname    = $this->em->getConnection()->getDatabase();
         $timestamp = (new DateTimeImmutable())->format('YmdHi');
 
