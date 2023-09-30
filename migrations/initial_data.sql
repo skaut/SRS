@@ -113,9 +113,9 @@ INSERT INTO `settings` (`item`, `value`) VALUES
   ('register_programs_from', NULL),
   ('register_programs_to', NULL),
   ('seminar_email', 'srs@skaut.cz'),
-  ('seminar_from_date', CURDATE() + 1),
+  ('seminar_from_date', CURDATE() + INTERVAL 1 DAY),
   ('seminar_name', 'Název semináře'),
-  ('seminar_to_date', CURDATE() + 2),
+  ('seminar_to_date', CURDATE() + INTERVAL 2 DAY),
   ('skautis_event_id', NULL),
   ('skautis_event_name', NULL),
   ('variable_symbol_code', '');
