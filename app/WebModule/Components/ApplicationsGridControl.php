@@ -166,7 +166,7 @@ class ApplicationsGridControl extends BaseContentControl
         $grid->setItemsDetail()
             ->setRenderCondition(static fn (Application $item) => $item->isWaitingForPayment())
             ->setText($this->translator->translate('web.profile.applications_pay'))
-            ->setIcon('money')
+            ->setIcon('money-bill-1')
             ->setClass('btn btn-xs btn-primary ajax')
             ->setTemplateParameters([
                 'account' => $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER)),
