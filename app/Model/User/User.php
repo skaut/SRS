@@ -141,13 +141,13 @@ class User
     /**
      * Id uživatele ve skautIS.
      */
-    #[ORM\Column(type: 'integer', unique: true, nullable: true, name: 'skautis_user_id')]
+    #[ORM\Column(name: 'skautis_user_id', type: 'integer', unique: true, nullable: true)]
     protected int|null $skautISUserId = null;
 
     /**
      * Id osoby ve skautIS.
      */
-    #[ORM\Column(type: 'integer', unique: true, nullable: true, name: 'skautis_person_id')]
+    #[ORM\Column(name: 'skautis_person_id', type: 'integer', unique: true, nullable: true)]
     protected int|null $skautISPersonId = null;
 
     /**
@@ -211,7 +211,7 @@ class User
      *
      * @var Collection<int, Application>
      */
-    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'user', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Application::class, cascade: ['persist'])]
     protected Collection $applications;
 
     /**
@@ -219,7 +219,7 @@ class User
      *
      * @var Collection<int, ProgramApplication>
      */
-    #[ORM\OneToMany(targetEntity: ProgramApplication::class, mappedBy: 'user', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ProgramApplication::class, cascade: ['persist'])]
     protected Collection $programApplications;
 
     /**
@@ -279,7 +279,7 @@ class User
      *
      * @var Collection<int, CustomInputValue>
      */
-    #[ORM\OneToMany(targetEntity: CustomInputValue::class, mappedBy: 'user', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: CustomInputValue::class, cascade: ['persist'])]
     protected Collection $customInputValues;
 
     /**

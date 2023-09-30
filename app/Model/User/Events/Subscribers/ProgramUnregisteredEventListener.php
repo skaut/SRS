@@ -20,10 +20,10 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class ProgramUnregisteredEventListener implements MessageHandlerInterface
 {
     public function __construct(
-        private CommandBus $commandBus,
-        private QueryBus $queryBus,
-        private UserRepository $userRepository,
-        private IMailService $mailService,
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
+        private readonly UserRepository $userRepository,
+        private readonly IMailService $mailService,
     ) {
     }
 

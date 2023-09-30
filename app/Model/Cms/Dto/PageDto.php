@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Cms\Dto;
 
+use function in_array;
+
 class PageDto
 {
     /**
@@ -65,10 +67,8 @@ class PageDto
     public function isAllowedForRoles(array $userRoles): bool
     {
         foreach ($userRoles as $userRole) {
-            foreach ($this->allowedRoles as $allowedRole) {
-                if ($userRole === $allowedRole) {
-                    return true;
-                }
+            if (in_array($userRole, $this->allowedRoles, true)) {
+                return true;
             }
         }
 

@@ -25,8 +25,8 @@ class SkautIsEventEducationService extends SkautIsEventService
 {
     public function __construct(
         Skautis $skautIs,
-        private SkautIsCourseRepository $skautIsCourseRepository,
-        private SubeventRepository $subeventRepository,
+        private readonly SkautIsCourseRepository $skautIsCourseRepository,
+        private readonly SubeventRepository $subeventRepository,
     ) {
         parent::__construct($skautIs);
     }

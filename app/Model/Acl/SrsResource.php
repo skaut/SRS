@@ -83,7 +83,7 @@ class SrsResource
      *
      * @var Collection<int, Permission>
      */
-    #[ORM\OneToMany(targetEntity: Permission::class, mappedBy: 'resource', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'resource', targetEntity: Permission::class, cascade: ['persist'])]
     protected Collection $permissions;
 
     /** @param string $name Název prostředku. */

@@ -13,6 +13,7 @@ use CommandHandlerTest;
 use DateTimeImmutable;
 use Exception;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Throwable;
 
 final class SettingDateValueAsTextQueryHandlerTest extends CommandHandlerTest
 {
@@ -22,8 +23,6 @@ final class SettingDateValueAsTextQueryHandlerTest extends CommandHandlerTest
 
     /**
      * Načtení hodnoty.
-     *
-     * @throws SettingsItemNotFoundException
      */
     public function testGetValue(): void
     {
@@ -52,6 +51,7 @@ final class SettingDateValueAsTextQueryHandlerTest extends CommandHandlerTest
      * Načtení hodnoty neexistující položky.
      *
      * @throws Exception
+     * @throws Throwable
      */
     public function testGetValueNotExistingItem(): void
     {

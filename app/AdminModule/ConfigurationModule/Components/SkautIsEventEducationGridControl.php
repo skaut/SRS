@@ -20,9 +20,9 @@ use Ublaboo\DataGrid\DataGrid;
 class SkautIsEventEducationGridControl extends Control
 {
     public function __construct(
-        private Translator $translator,
-        private SubeventRepository $subeventRepository,
-        private SkautIsCourseRepository $skautIsCourseRepository,
+        private readonly Translator $translator,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly SkautIsCourseRepository $skautIsCourseRepository,
     ) {
     }
 

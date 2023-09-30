@@ -12,8 +12,9 @@ use CommandHandlerTest;
 use DateTimeImmutable;
 use Exception;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Throwable;
 
-use const DATE_ISO8601;
+use const DATE_ATOM;
 
 final class SetSettingDateTimeValueHandlerTest extends CommandHandlerTest
 {
@@ -34,11 +35,13 @@ final class SetSettingDateTimeValueHandlerTest extends CommandHandlerTest
 
         $setting = $this->settingsRepository->findByItem(self::ITEM);
         $this->assertNotNull($setting);
-        $this->assertEquals($value->format(DATE_ISO8601), $setting->getValue());
+        $this->assertEquals($value->format(DATE_ATOM), $setting->getValue());
     }
 
     /**
      * Nastavení hodnoty na null.
+     *
+     * @throws SettingsItemNotFoundException
      */
     public function testSetValueNull(): void
     {
@@ -53,6 +56,7 @@ final class SetSettingDateTimeValueHandlerTest extends CommandHandlerTest
      * Nastavení hodnoty neexistující položce.
      *
      * @throws Exception
+     * @throws Throwable
      */
     public function testSetValueNotExistingItem(): void
     {

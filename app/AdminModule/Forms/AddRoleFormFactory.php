@@ -19,7 +19,7 @@ class AddRoleFormFactory
 {
     use Nette\SmartObject;
 
-    public function __construct(private BaseFormFactory $baseFormFactory, private AclService $aclService, private RoleRepository $roleRepository)
+    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly AclService $aclService, private readonly RoleRepository $roleRepository)
     {
     }
 
@@ -57,7 +57,7 @@ class AddRoleFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 

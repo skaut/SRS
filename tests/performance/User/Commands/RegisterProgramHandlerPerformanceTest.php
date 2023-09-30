@@ -22,8 +22,6 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 
 use function microtime;
 
@@ -45,9 +43,6 @@ final class RegisterProgramHandlerPerformanceTest extends CommandHandlerTest
 
     /**
      * Hromadné přihlášení velkého množství účastníků.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testRegisterMultipleUsers(): void
     {

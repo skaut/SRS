@@ -37,14 +37,14 @@ class RolesFormFactory
     private User|null $user = null;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private QueryBus $queryBus,
-        private UserRepository $userRepository,
-        private RoleRepository $roleRepository,
-        private ApplicationService $applicationService,
-        private Translator $translator,
-        private Validators $validators,
-        private AclService $aclService,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly QueryBus $queryBus,
+        private readonly UserRepository $userRepository,
+        private readonly RoleRepository $roleRepository,
+        private readonly ApplicationService $applicationService,
+        private readonly Translator $translator,
+        private readonly Validators $validators,
+        private readonly AclService $aclService,
     ) {
     }
 
@@ -156,10 +156,10 @@ class RolesFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['submit']) {
+        if ($form->isSubmitted() == $form['submit']) {
             $selectedRoles = $this->roleRepository->findRolesByIds($values->roles);
             $this->applicationService->updateRoles($this->user, $selectedRoles, $this->user);
-        } elseif ($form->isSubmitted() === $form['cancelRegistration']) {
+        } elseif ($form->isSubmitted() == $form['cancelRegistration']) {
             $this->applicationService->cancelRegistration($this->user, ApplicationState::CANCELED, $this->user);
         }
     }

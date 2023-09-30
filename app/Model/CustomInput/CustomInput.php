@@ -108,7 +108,7 @@ abstract class CustomInput
      *
      * @var Collection<int, CustomInputValue>
      */
-    #[ORM\OneToMany(targetEntity: CustomInputValue::class, mappedBy: 'input', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'input', targetEntity: CustomInputValue::class, cascade: ['persist'])]
     protected Collection $customInputValues;
 
     /**

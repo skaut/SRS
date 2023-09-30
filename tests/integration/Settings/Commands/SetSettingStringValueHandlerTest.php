@@ -11,6 +11,7 @@ use App\Model\Settings\Settings;
 use CommandHandlerTest;
 use Exception;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Throwable;
 
 final class SetSettingStringValueHandlerTest extends CommandHandlerTest
 {
@@ -36,6 +37,8 @@ final class SetSettingStringValueHandlerTest extends CommandHandlerTest
 
     /**
      * Nastavení hodnoty na null.
+     *
+     * @throws SettingsItemNotFoundException
      */
     public function testSetValueNull(): void
     {
@@ -50,6 +53,7 @@ final class SetSettingStringValueHandlerTest extends CommandHandlerTest
      * Nastavení hodnoty neexistující položce.
      *
      * @throws Exception
+     * @throws Throwable
      */
     public function testSetValueNotExistingItem(): void
     {

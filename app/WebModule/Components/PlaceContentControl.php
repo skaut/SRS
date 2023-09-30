@@ -16,7 +16,7 @@ use Throwable;
  */
 class PlaceContentControl extends BaseContentControl
 {
-    public function __construct(private QueryBus $queryBus, private PlacePointRepository $placePointRepository)
+    public function __construct(private readonly QueryBus $queryBus, private readonly PlacePointRepository $placePointRepository)
     {
     }
 

@@ -12,7 +12,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\ORMException;
 
 use const PHP_INT_MAX;
 
@@ -90,7 +89,7 @@ class CustomInputRepository extends AbstractRepository
      * Uloží pole.
      *
      * @throws NonUniqueResultException
-     * @throws ORMException
+     * @throws NoResultException
      */
     public function save(CustomInput $input): void
     {
@@ -117,8 +116,6 @@ class CustomInputRepository extends AbstractRepository
 
     /**
      * Přesune pole mezi pole s id prevId a nextId.
-     *
-     * @throws ORMException
      */
     public function sort(int $itemId, int $prevId, int $nextId): void
     {

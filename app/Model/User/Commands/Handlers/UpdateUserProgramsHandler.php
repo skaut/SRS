@@ -20,9 +20,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class UpdateUserProgramsHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private QueryBus $queryBus,
-        private CommandBus $commandBus,
-        private EntityManagerInterface $em,
+        private readonly QueryBus $queryBus,
+        private readonly CommandBus $commandBus,
+        private readonly EntityManagerInterface $em,
     ) {
     }
 

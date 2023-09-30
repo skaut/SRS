@@ -14,7 +14,7 @@ use function array_keys;
  */
 class DocumentContentControl extends BaseContentControl
 {
-    public function __construct(private DocumentRepository $documentRepository)
+    public function __construct(private readonly DocumentRepository $documentRepository)
     {
     }
 

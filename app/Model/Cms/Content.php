@@ -176,7 +176,7 @@ abstract class Content implements IContent
     /**
      * Stránka, na které je obsah umístěn.
      */
-    #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'contents', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Page::class, cascade: ['persist'], inversedBy: 'contents')]
     protected Page $page;
 
     /**

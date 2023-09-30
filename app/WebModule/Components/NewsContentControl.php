@@ -12,7 +12,7 @@ use App\Model\Cms\Repositories\NewsRepository;
  */
 class NewsContentControl extends BaseContentControl
 {
-    public function __construct(private NewsRepository $newsRepository)
+    public function __construct(private readonly NewsRepository $newsRepository)
     {
     }
 

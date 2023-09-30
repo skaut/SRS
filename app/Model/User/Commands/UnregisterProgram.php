@@ -10,9 +10,9 @@ use App\Model\User\User;
 class UnregisterProgram
 {
     public function __construct(
-        private User $user,
-        private Program $program,
-        private bool $notifyUser = true,
+        private readonly User $user,
+        private readonly Program $program,
+        private readonly bool $notifyUser = true,
     ) {
     }
 

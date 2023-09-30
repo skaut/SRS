@@ -11,12 +11,12 @@ use App\Model\Structure\Subevent;
 class BlockUpdatedEvent
 {
     public function __construct(
-        private Block $block,
-        private Category|null $categoryOld,
-        private Subevent $subeventOld,
-        private string $mandatoryOld,
-        private int|null $capacityOld,
-        private bool $alternatesAllowedOld,
+        private readonly Block $block,
+        private readonly Category|null $categoryOld,
+        private readonly Subevent $subeventOld,
+        private readonly string $mandatoryOld,
+        private readonly int|null $capacityOld,
+        private readonly bool $alternatesAllowedOld,
     ) {
     }
 

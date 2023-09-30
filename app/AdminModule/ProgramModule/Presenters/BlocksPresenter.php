@@ -18,6 +18,8 @@ use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Attributes\Inject;
@@ -135,6 +137,10 @@ class BlocksPresenter extends ProgramBasePresenter
         return $this->programAttendeesGridControlFactory->create();
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     protected function createComponentBlockForm(): Form
     {
         return $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getUser()->getId());

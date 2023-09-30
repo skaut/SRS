@@ -37,7 +37,7 @@ class Room
      *
      * @var Collection<int, Program>
      */
-    #[ORM\OneToMany(targetEntity: Program::class, mappedBy: 'room', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'room', targetEntity: Program::class, cascade: ['persist'])]
     #[ORM\OrderBy(['start' => 'ASC'])]
     protected Collection $programs;
 

@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class ProgramAlternatesQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private UserRepository $userRepository)
+    public function __construct(private readonly UserRepository $userRepository)
     {
     }
 

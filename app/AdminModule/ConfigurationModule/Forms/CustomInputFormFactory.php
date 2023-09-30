@@ -19,7 +19,7 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Services\AclService;
 use App\Utils\Helpers;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\NoResultException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -41,7 +41,7 @@ class CustomInputFormFactory
      */
     private CustomInput|null $customInput = null;
 
-    public function __construct(private BaseFormFactory $baseFormFactory, private CustomInputRepository $customInputRepository, private AclService $aclService, private RoleRepository $roleRepository)
+    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly CustomInputRepository $customInputRepository, private readonly AclService $aclService, private readonly RoleRepository $roleRepository)
     {
     }
 
@@ -107,11 +107,11 @@ class CustomInputFormFactory
      * Zpracuje formulář.
      *
      * @throws NonUniqueResultException
-     * @throws ORMException
+     * @throws NoResultException
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 

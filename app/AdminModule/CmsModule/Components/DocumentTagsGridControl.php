@@ -28,10 +28,10 @@ use function count;
 class DocumentTagsGridControl extends Control
 {
     public function __construct(
-        private Translator $translator,
-        private RoleRepository $roleRepository,
-        private AclService $aclService,
-        private TagRepository $tagRepository,
+        private readonly Translator $translator,
+        private readonly RoleRepository $roleRepository,
+        private readonly AclService $aclService,
+        private readonly TagRepository $tagRepository,
     ) {
     }
 

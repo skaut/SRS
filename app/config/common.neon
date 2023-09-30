@@ -103,6 +103,8 @@ translation:
         fallback: [cs]
     dirs:
         - %appDir%/lang
+    localeResolvers:
+    	- Contributte\Translation\LocalesResolvers\Router
 
 messenger:
     buses:
@@ -116,6 +118,9 @@ messenger:
 latte:
     macros:
         - Nextras\FormsRendering\LatteMacros\Bs3InputMacros::install
+
+tracy:
+    maxDepth: 3
 
 forms:
     messages:

@@ -22,6 +22,7 @@ use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
+use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Repositories\SettingsRepository;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -32,8 +33,8 @@ use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Throwable;
 
 final class RegisterProgramHandlerTest extends CommandHandlerTest
 {
@@ -57,9 +58,6 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
 
     /**
      * 1. uživatel se na program registruje jako poslední, 2. se stává náhradník.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testAlternatesAllowed(): void
     {
@@ -118,8 +116,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * 1. uživatel se na program registruje jako poslední, 2. se registrovat nemůže (náhradníci nejsou povoleni).
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testAlterantesNotAllowed(): void
     {
@@ -175,8 +173,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Role uživatele není mezi povolenými pro kategorii.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testWrongRole(): void
     {
@@ -220,8 +218,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel není na akci přihlášený (chybějící role, chybějící přihláška podakcí).
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testNotRegistered(): void
     {
@@ -254,8 +252,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel není schválený.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testNotApproved(): void
     {
@@ -295,8 +293,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel nemá zaplacenou registraci a není povoleno přihlašování před zaplacením.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testNotPaid(): void
     {
@@ -336,8 +334,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel není přihlášen na správnou podakci.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testWrongSubevent(): void
     {
@@ -376,8 +374,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel nemá příslušnou podakci zaplacenou a není povoleno přihlašování před zaplacením.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testNotPaidSubevent(): void
     {
@@ -417,8 +415,7 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel nemá příslušnou podakci zaplacenou, ale je povoleno přihlašování před zaplacením.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @throws SettingsItemNotFoundException
      */
     public function testNotPaidSubeventAllowed(): void
     {
@@ -460,8 +457,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel už se stejného programu účastní.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testAlreadyAttendsProgram(): void
     {
@@ -507,8 +504,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel už se stejného programového bloku účastní.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testAlreadyAttendsBlock(): void
     {
@@ -558,8 +555,8 @@ final class RegisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel má zapsaný program, který se časově překrývá.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testAttendsConflictingProgram(): void
     {

@@ -23,9 +23,9 @@ use Throwable;
 class ProgramsContentControl extends BaseContentControl
 {
     public function __construct(
-        private QueryBus $queryBus,
-        private UserRepository $userRepository,
-        private RoleRepository $roleRepository,
+        private readonly QueryBus $queryBus,
+        private readonly UserRepository $userRepository,
+        private readonly RoleRepository $roleRepository,
     ) {
     }
 

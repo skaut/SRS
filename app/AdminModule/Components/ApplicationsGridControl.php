@@ -40,14 +40,14 @@ class ApplicationsGridControl extends Control
     private User|null $user = null;
 
     public function __construct(
-        private Translator $translator,
-        private EntityManagerInterface $em,
-        private ApplicationRepository $applicationRepository,
-        private UserRepository $userRepository,
-        private SubeventRepository $subeventRepository,
-        private ApplicationService $applicationService,
-        private SubeventService $subeventService,
-        private Validators $validators,
+        private readonly Translator $translator,
+        private readonly EntityManagerInterface $em,
+        private readonly ApplicationRepository $applicationRepository,
+        private readonly UserRepository $userRepository,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly ApplicationService $applicationService,
+        private readonly SubeventService $subeventService,
+        private readonly Validators $validators,
     ) {
     }
 

@@ -7,7 +7,7 @@ namespace App\AdminModule\Forms;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\FilesService;
-use Doctrine\ORM\ORMException;
+use JsonException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\ImageException;
@@ -35,14 +35,16 @@ class EditUserPersonalDetailsFormFactory
     private User|null $user = null;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private UserRepository $userRepository,
-        private FilesService $filesService,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly UserRepository $userRepository,
+        private readonly FilesService $filesService,
     ) {
     }
 
     /**
      * Vytvoří formulář.
+     *
+     * @throws JsonException
      */
     public function create(int $id): Form
     {
@@ -128,12 +130,11 @@ class EditUserPersonalDetailsFormFactory
      * Zpracuje formulář.
      *
      * @throws Nette\Utils\UnknownImageFileException
-     * @throws ORMException
      * @throws ImageException
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 

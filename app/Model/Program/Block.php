@@ -35,7 +35,7 @@ class Block
      *
      * @var Collection<int, Program>
      */
-    #[ORM\OneToMany(targetEntity: Program::class, mappedBy: 'block', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'block', targetEntity: Program::class, cascade: ['persist'])]
     #[ORM\OrderBy(['start' => 'ASC'])]
     protected Collection $programs;
 
@@ -50,13 +50,13 @@ class Block
     /**
      * Kategorie bloku.
      */
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'blocks', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Category::class, cascade: ['persist'], inversedBy: 'blocks')]
     protected Category|null $category = null;
 
     /**
      * Podakce bloku.
      */
-    #[ORM\ManyToOne(targetEntity: Subevent::class, inversedBy: 'blocks', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Subevent::class, cascade: ['persist'], inversedBy: 'blocks')]
     protected Subevent $subevent;
 
     /**
@@ -200,13 +200,9 @@ class Block
 
     public function setCategory(Category|null $category): void
     {
-        if ($this->category !== null) {
-            $this->category->removeBlock($this);
-        }
+        $this->category?->removeBlock($this);
 
-        if ($category !== null) {
-            $category->addBlock($this);
-        }
+        $category?->addBlock($this);
 
         $this->category = $category;
     }

@@ -6,7 +6,7 @@ namespace App\Model\Settings\Commands;
 
 class SetSettingBoolValue
 {
-    public function __construct(private string $item, private bool|null $value)
+    public function __construct(private readonly string $item, private readonly bool|null $value)
     {
     }
 

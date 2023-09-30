@@ -42,16 +42,16 @@ class ApplicationsGridControl extends BaseContentControl
     private User|null $user = null;
 
     public function __construct(
-        private QueryBus $queryBus,
-        private Translator $translator,
-        private ApplicationRepository $applicationRepository,
-        private UserRepository $userRepository,
-        private SubeventRepository $subeventRepository,
-        private ApplicationService $applicationService,
-        private Validators $validators,
-        private RolesApplicationRepository $rolesApplicationRepository,
-        private SubeventsApplicationRepository $subeventsApplicationRepository,
-        private SubeventService $subeventService,
+        private readonly QueryBus $queryBus,
+        private readonly Translator $translator,
+        private readonly ApplicationRepository $applicationRepository,
+        private readonly UserRepository $userRepository,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly ApplicationService $applicationService,
+        private readonly Validators $validators,
+        private readonly RolesApplicationRepository $rolesApplicationRepository,
+        private readonly SubeventsApplicationRepository $subeventsApplicationRepository,
+        private readonly SubeventService $subeventService,
     ) {
     }
 
@@ -166,7 +166,7 @@ class ApplicationsGridControl extends BaseContentControl
         $grid->setItemsDetail()
             ->setRenderCondition(static fn (Application $item) => $item->isWaitingForPayment())
             ->setText($this->translator->translate('web.profile.applications_pay'))
-            ->setIcon('money')
+            ->setIcon('money-bill-1')
             ->setClass('btn btn-xs btn-primary ajax')
             ->setTemplateParameters([
                 'account' => $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER)),

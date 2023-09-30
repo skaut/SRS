@@ -44,11 +44,11 @@ class ContactForm extends UI\Control
     public array $onSave = [];
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private QueryBus $queryBus,
-        private UserRepository $userRepository,
-        private ReCaptchaProvider $recaptchaProvider,
-        private IMailService $mailService,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly QueryBus $queryBus,
+        private readonly UserRepository $userRepository,
+        private readonly ReCaptchaProvider $recaptchaProvider,
+        private readonly IMailService $mailService,
     ) {
     }
 

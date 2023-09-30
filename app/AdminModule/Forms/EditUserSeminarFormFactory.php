@@ -39,6 +39,7 @@ use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
+use JsonException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -69,24 +70,26 @@ class EditUserSeminarFormFactory
     private User|null $user = null;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private QueryBus $queryBus,
-        private EntityManagerInterface $em,
-        private UserRepository $userRepository,
-        private CustomInputRepository $customInputRepository,
-        private CustomInputValueRepository $customInputValueRepository,
-        private RoleRepository $roleRepository,
-        private ApplicationService $applicationService,
-        private Validators $validators,
-        private FilesService $filesService,
-        private IMailService $mailService,
-        private AclService $aclService,
-        private UserService $userService,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly QueryBus $queryBus,
+        private readonly EntityManagerInterface $em,
+        private readonly UserRepository $userRepository,
+        private readonly CustomInputRepository $customInputRepository,
+        private readonly CustomInputValueRepository $customInputValueRepository,
+        private readonly RoleRepository $roleRepository,
+        private readonly ApplicationService $applicationService,
+        private readonly Validators $validators,
+        private readonly FilesService $filesService,
+        private readonly IMailService $mailService,
+        private readonly AclService $aclService,
+        private readonly UserService $userService,
     ) {
     }
 
     /**
      * Vytvoří formulář.
+     *
+     * @throws JsonException
      */
     public function create(int $id): Form
     {
@@ -250,7 +253,7 @@ class EditUserSeminarFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 

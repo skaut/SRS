@@ -35,13 +35,13 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 class PaymentsGridControl extends Control
 {
     public function __construct(
-        private QueryBus $queryBus,
-        private Translator $translator,
-        private PaymentRepository $paymentRepository,
-        private UserRepository $userRepository,
-        private ApplicationService $applicationService,
-        private BankService $bankService,
-        private Session $session,
+        private readonly QueryBus $queryBus,
+        private readonly Translator $translator,
+        private readonly PaymentRepository $paymentRepository,
+        private readonly UserRepository $userRepository,
+        private readonly ApplicationService $applicationService,
+        private readonly BankService $bankService,
+        private readonly Session $session,
     ) {
     }
 

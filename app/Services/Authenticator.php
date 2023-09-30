@@ -9,7 +9,6 @@ use App\Model\Acl\Role;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use DateTimeImmutable;
-use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;
 use Nette\Caching\Cache;
@@ -30,10 +29,10 @@ class Authenticator implements Nette\Security\Authenticator
     private Cache $userRolesCache;
 
     public function __construct(
-        private UserRepository $userRepository,
-        private RoleRepository $roleRepository,
+        private readonly UserRepository $userRepository,
+        private readonly RoleRepository $roleRepository,
         protected SkautIsService $skautIsService,
-        private FilesService $filesService,
+        private readonly FilesService $filesService,
         Storage $storage,
     ) {
         $this->userRolesCache = new Cache($storage, 'UserRoles');
@@ -42,7 +41,6 @@ class Authenticator implements Nette\Security\Authenticator
     /**
      * Autentizuje uživatele a případně vytvoří nového.
      *
-     * @throws ORMException
      * @throws Exception
      */
     public function authenticate(string $user, string $password): SimpleIdentity

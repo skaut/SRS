@@ -10,10 +10,10 @@ use App\Model\User\User;
 class ProgramUnregisteredEvent
 {
     public function __construct(
-        private User $user,
-        private Program $program,
-        private bool $alternate,
-        private bool $notifyUser,
+        private readonly User $user,
+        private readonly Program $program,
+        private readonly bool $alternate,
+        private readonly bool $notifyUser,
     ) {
     }
 

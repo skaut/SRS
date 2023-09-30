@@ -6,8 +6,8 @@ namespace App\Model\Settings\Commands;
 
 class SetSettingArrayValue
 {
-    /** @param mixed[] $value */
-    public function __construct(private string $item, private array|null $value)
+    /** @param string[]|null $value */
+    public function __construct(private readonly string $item, private readonly array|null $value)
     {
     }
 
@@ -16,7 +16,7 @@ class SetSettingArrayValue
         return $this->item;
     }
 
-    /** @return mixed[]|null */
+    /** @return string[]|null */
     public function getValue(): array|null
     {
         return $this->value;

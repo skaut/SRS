@@ -27,8 +27,6 @@ use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 
 final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
 {
@@ -50,9 +48,6 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
 
     /**
      * Aktualizace programů schváleného a neschváleného uživatele.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testUserApproved(): void
     {
@@ -104,9 +99,6 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
 
     /**
      * Aktualizace programů při změně podakcí.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testUserSubeventsChanged(): void
     {
@@ -163,9 +155,6 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
 
     /**
      * Aktualizace programů při změně rolí.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testUserRolesChanged(): void
     {

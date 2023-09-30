@@ -26,8 +26,8 @@ use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Throwable;
 
 final class UnregisterProgramHandlerTest extends CommandHandlerTest
 {
@@ -50,8 +50,8 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Odhlášení uživatelé jsou nahrazeni prvními náhradníky, přihlášení jako náhradník se registrací na program ruší.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testReplaceByAlternates(): void
     {
@@ -185,8 +185,8 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel není účastníkem programu.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testNotAttends(): void
     {

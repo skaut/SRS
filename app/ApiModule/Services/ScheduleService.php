@@ -55,7 +55,7 @@ use Throwable;
 
 use function in_array;
 
-use const DATE_ISO8601;
+use const DATE_ATOM;
 
 /**
  * Služba pro zpracování požadavků z API pro správu harmonogramu a zapisování programů.
@@ -67,13 +67,13 @@ class ScheduleService
     private User|null $user = null;
 
     public function __construct(
-        private Translator $translator,
-        private UserRepository $userRepository,
-        private ProgramRepository $programRepository,
-        private BlockRepository $blockRepository,
-        private RoomRepository $roomRepository,
-        private CommandBus $commandBus,
-        private QueryBus $queryBus,
+        private readonly Translator $translator,
+        private readonly UserRepository $userRepository,
+        private readonly ProgramRepository $programRepository,
+        private readonly BlockRepository $blockRepository,
+        private readonly RoomRepository $roomRepository,
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
     ) {
     }
 
@@ -450,10 +450,10 @@ class ScheduleService
         $programDetailDto = new ProgramDetailDto();
 
         $programDetailDto->setId($program->getId());
-        $programDetailDto->setStart($program->getStart()->format(DATE_ISO8601));
-        $programDetailDto->setEnd($program->getEnd()->format(DATE_ISO8601));
+        $programDetailDto->setStart($program->getStart()->format(DATE_ATOM));
+        $programDetailDto->setEnd($program->getEnd()->format(DATE_ATOM));
         $programDetailDto->setBlockId($program->getBlock()->getId());
-        $programDetailDto->setRoomId($program->getRoom() ? $program->getRoom()->getId() : null);
+        $programDetailDto->setRoomId($program->getRoom()?->getId());
 
         return $programDetailDto;
     }

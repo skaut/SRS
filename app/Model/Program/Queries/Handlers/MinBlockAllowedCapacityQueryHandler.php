@@ -10,7 +10,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class MinBlockAllowedCapacityQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private BlockRepository $blockRepository)
+    public function __construct(private readonly BlockRepository $blockRepository)
     {
     }
 

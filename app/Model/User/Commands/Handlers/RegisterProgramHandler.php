@@ -20,10 +20,10 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class RegisterProgramHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private QueryBus $queryBus,
-        private EventBus $eventBus,
-        private EntityManagerInterface $em,
-        private ProgramApplicationRepository $programApplicationRepository,
+        private readonly QueryBus $queryBus,
+        private readonly EventBus $eventBus,
+        private readonly EntityManagerInterface $em,
+        private readonly ProgramApplicationRepository $programApplicationRepository,
     ) {
     }
 

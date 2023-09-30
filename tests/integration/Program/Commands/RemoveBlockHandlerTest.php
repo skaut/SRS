@@ -27,7 +27,6 @@ use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Throwable;
 
 final class RemoveBlockHandlerTest extends CommandHandlerTest
@@ -53,7 +52,6 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
     /**
      * Odstranění bloku - odstraní se i jeho programy a účastníci.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
      * @throws Throwable
      */

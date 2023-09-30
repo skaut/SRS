@@ -40,7 +40,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Nette;
 use Nette\Localization\Translator;
@@ -64,21 +63,21 @@ class ApplicationService
     use Nette\SmartObject;
 
     public function __construct(
-        private QueryBus $queryBus,
-        private EntityManagerInterface $em,
-        private ApplicationRepository $applicationRepository,
-        private UserRepository $userRepository,
-        private AclService $aclService,
-        private RoleRepository $roleRepository,
-        private SubeventRepository $subeventRepository,
-        private DiscountService $discountService,
-        private VariableSymbolRepository $variableSymbolRepository,
-        private MailService $mailService,
-        private UserService $userService,
-        private Translator $translator,
-        private PaymentRepository $paymentRepository,
-        private IncomeProofRepository $incomeProofRepository,
-        private EventBus $eventBus,
+        private readonly QueryBus $queryBus,
+        private readonly EntityManagerInterface $em,
+        private readonly ApplicationRepository $applicationRepository,
+        private readonly UserRepository $userRepository,
+        private readonly AclService $aclService,
+        private readonly RoleRepository $roleRepository,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly DiscountService $discountService,
+        private readonly VariableSymbolRepository $variableSymbolRepository,
+        private readonly MailService $mailService,
+        private readonly UserService $userService,
+        private readonly Translator $translator,
+        private readonly PaymentRepository $paymentRepository,
+        private readonly IncomeProofRepository $incomeProofRepository,
+        private readonly EventBus $eventBus,
     ) {
     }
 
@@ -787,7 +786,6 @@ class ApplicationService
      * @param Collection<int, Role> $roles
      *
      * @throws SettingsItemNotFoundException
-     * @throws ORMException
      * @throws OptimisticLockException
      * @throws ReflectionException
      * @throws Throwable
@@ -839,7 +837,6 @@ class ApplicationService
      * @param Collection<int, Subevent> $subevents
      *
      * @throws SettingsItemNotFoundException
-     * @throws ORMException
      * @throws OptimisticLockException
      * @throws ReflectionException
      * @throws Throwable
@@ -887,7 +884,6 @@ class ApplicationService
     /**
      * Vypočítá datum splatnosti podle zvolené metody.
      *
-     * @throws ReflectionException
      * @throws Throwable
      */
     private function countMaturityDate(): DateTimeImmutable|null

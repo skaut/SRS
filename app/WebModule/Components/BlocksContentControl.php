@@ -13,7 +13,7 @@ use App\Model\Program\Repositories\CategoryRepository;
  */
 class BlocksContentControl extends BaseContentControl
 {
-    public function __construct(private BlockRepository $blockRepository, private CategoryRepository $categoryRepository)
+    public function __construct(private readonly BlockRepository $blockRepository, private readonly CategoryRepository $categoryRepository)
     {
     }
 

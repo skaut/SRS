@@ -13,7 +13,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Throwable;
 
 use function array_map;
@@ -169,7 +168,7 @@ class PageRepository extends AbstractRepository
      * Uloží stránku.
      *
      * @throws NonUniqueResultException
-     * @throws ORMException
+     * @throws NoResultException
      */
     public function save(Page $page): void
     {
@@ -199,7 +198,6 @@ class PageRepository extends AbstractRepository
     /**
      * Přesune stránku mezi stránky s id prevId a nextId.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
      */
     public function sort(int $itemId, int $prevId, int $nextId): void

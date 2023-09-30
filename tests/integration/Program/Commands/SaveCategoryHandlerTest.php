@@ -26,7 +26,6 @@ use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Throwable;
 
 final class SaveCategoryHandlerTest extends CommandHandlerTest
@@ -50,7 +49,6 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
     /**
      * Změna rolí u kategorie - neoprávnění účastníci a náhradníci jsou odhlášeni, automaticky přihlašovaní přihlášeni.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
      * @throws Throwable
      */

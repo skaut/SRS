@@ -33,10 +33,10 @@ class SubeventFormFactory
     private Subevent|null $subevent = null;
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private BaseFormFactory $baseFormFactory,
-        private SubeventRepository $subeventRepository,
-        private SubeventService $subeventService,
+        private readonly EntityManagerInterface $em,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly SubeventService $subeventService,
     ) {
     }
 
@@ -144,7 +144,7 @@ class SubeventFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 

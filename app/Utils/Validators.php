@@ -16,6 +16,7 @@ use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use App\Services\QueryBus;
 use Doctrine\Common\Collections\Collection;
+use Exception;
 use Throwable;
 
 use function array_map;
@@ -28,9 +29,9 @@ use function trim;
 class Validators
 {
     public function __construct(
-        private QueryBus $queryBus,
-        private RoleRepository $roleRepository,
-        private ProgramRepository $programRepository,
+        private readonly QueryBus $queryBus,
+        private readonly RoleRepository $roleRepository,
+        private readonly ProgramRepository $programRepository,
     ) {
     }
 
@@ -222,6 +223,8 @@ class Validators
 
     /**
      * Ověří, zda může být program automaticky přihlašovaný.
+     *
+     * @throws Exception
      */
     public function validateBlockAutoRegistered(Block $block, int|null $capacity): bool
     {

@@ -39,14 +39,14 @@ class MailService implements IMailService
     use Nette\SmartObject;
 
     public function __construct(
-        private QueryBus $queryBus,
-        private MailFactory $mailFactory,
-        private MailRepository $mailRepository,
-        private UserRepository $userRepository,
-        private RoleRepository $roleRepository,
-        private SubeventRepository $subeventRepository,
-        private TemplateRepository $templateRepository,
-        private Translator $translator,
+        private readonly QueryBus $queryBus,
+        private readonly MailFactory $mailFactory,
+        private readonly MailRepository $mailRepository,
+        private readonly UserRepository $userRepository,
+        private readonly RoleRepository $roleRepository,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly TemplateRepository $templateRepository,
+        private readonly Translator $translator,
     ) {
     }
 
@@ -133,7 +133,7 @@ class MailService implements IMailService
      *
      * @param Collection<int, User>|null   $recipientsUsers
      * @param Collection<int, string>|null $recipientsEmails
-     * @param string[]                     $parameters
+     * @param mixed[]                      $parameters
      *
      * @throws MailingMailCreationException
      * @throws SettingsItemNotFoundException

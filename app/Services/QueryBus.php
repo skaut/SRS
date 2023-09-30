@@ -11,7 +11,7 @@ use function assert;
 
 final class QueryBus
 {
-    public function __construct(private MessageBusInterface $bus)
+    public function __construct(private readonly MessageBusInterface $bus)
     {
     }
 

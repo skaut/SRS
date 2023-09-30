@@ -53,7 +53,7 @@ class Subevent
      *
      * @var Collection<int, Block>
      */
-    #[ORM\OneToMany(targetEntity: Block::class, mappedBy: 'subevent', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'subevent', targetEntity: Block::class, cascade: ['persist'])]
     #[ORM\OrderBy(['name' => 'ASC'])]
     protected Collection $blocks;
 

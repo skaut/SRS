@@ -14,9 +14,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class SaveBlockHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private EventBus $eventBus,
-        private EntityManagerInterface $em,
-        private BlockRepository $blockRepository,
+        private readonly EventBus $eventBus,
+        private readonly EntityManagerInterface $em,
+        private readonly BlockRepository $blockRepository,
     ) {
     }
 

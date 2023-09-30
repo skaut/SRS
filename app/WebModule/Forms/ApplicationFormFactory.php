@@ -80,21 +80,21 @@ class ApplicationFormFactory
     public array $onSkautIsError = [];
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private QueryBus $queryBus,
-        private EntityManagerInterface $em,
-        private UserRepository $userRepository,
-        private RoleRepository $roleRepository,
-        private CustomInputRepository $customInputRepository,
-        private CustomInputValueRepository $customInputValueRepository,
-        private SkautIsService $skautIsService,
-        private SubeventRepository $subeventRepository,
-        private AclService $aclService,
-        private ApplicationService $applicationService,
-        private Validators $validators,
-        private FilesService $filesService,
-        private SubeventService $subeventService,
-        private Translator $translator,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly QueryBus $queryBus,
+        private readonly EntityManagerInterface $em,
+        private readonly UserRepository $userRepository,
+        private readonly RoleRepository $roleRepository,
+        private readonly CustomInputRepository $customInputRepository,
+        private readonly CustomInputValueRepository $customInputValueRepository,
+        private readonly SkautIsService $skautIsService,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly AclService $aclService,
+        private readonly ApplicationService $applicationService,
+        private readonly Validators $validators,
+        private readonly FilesService $filesService,
+        private readonly SubeventService $subeventService,
+        private readonly Translator $translator,
     ) {
     }
 

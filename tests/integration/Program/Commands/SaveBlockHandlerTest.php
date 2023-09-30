@@ -27,7 +27,6 @@ use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
@@ -52,7 +51,6 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
     /**
      * Změna kategorie bloku - neoprávnění uživatelé jsou odhlášeni.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
      * @throws Throwable
      */
@@ -153,7 +151,6 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
     /**
      * Změna podakce automaticky zapisovaného bloku - neoprávnění uživatelé jsou odhlášeni, nově oprávnění přihlášeni.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
      * @throws Throwable
      */
@@ -246,9 +243,6 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
 
     /**
      * Změna bloku na automaticky zapisovaný - oprávnění uživatelé jsou zapsáni.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testChangeVoluntaryToAutoRegistered(): void
     {
@@ -300,7 +294,6 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
     /**
      * Změna bloku z automaticky zapisovaného na povinný - uživatelé jsou odhlášeni.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
      * @throws Throwable
      */
@@ -358,7 +351,6 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
     /**
      * Změna kapacity bloku - přihlášení náhradníků, nepovolení snížení pod počet účastníků.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
      * @throws Throwable
      */
@@ -480,7 +472,6 @@ final class SaveBlockHandlerTest extends CommandHandlerTest
     /**
      * Zrušení povolení náhradníků.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
      * @throws Throwable
      */

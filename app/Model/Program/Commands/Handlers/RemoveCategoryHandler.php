@@ -14,9 +14,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class RemoveCategoryHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private CommandBus $commandBus,
-        private EntityManagerInterface $em,
-        private CategoryRepository $categoryRepository,
+        private readonly CommandBus $commandBus,
+        private readonly EntityManagerInterface $em,
+        private readonly CategoryRepository $categoryRepository,
     ) {
     }
 

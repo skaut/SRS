@@ -53,12 +53,12 @@
                     <tr n:foreach="$ticketUserPrograms as $program">
                         <td class="text-right">
                             {var $startDay = $program->getStart()->format('N')}
-                            {_common.day.$startDay}
+                            {_"common.day.$startDay"}
                             {$program->getStart()|date:"j. n. G:i"}
                         </td>
                         <td class="text-right">
                             {var $endDay = $program->getEnd()->format('N')}
-                            {_common.day.$endDay}
+                            {_"common.day.$endDay"}
                             {$program->getEnd()|date:"j. n. G:i"}
                         </td>
                         <td>{$program->getBlock()->getName()}</td>
