@@ -103,6 +103,8 @@ translation:
         fallback: [cs]
     dirs:
         - %appDir%/lang
+    localeResolvers:
+    	- Contributte\Translation\LocalesResolvers\Router
 
 messenger:
     buses:
