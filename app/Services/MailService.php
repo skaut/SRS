@@ -29,6 +29,7 @@ use Ublaboo\Mailing\MailFactory;
 
 use function in_array;
 use function str_replace;
+use function strval;
 
 /**
  * Služba pro rozesílání e-mailů.
@@ -132,7 +133,7 @@ class MailService implements IMailService
      *
      * @param Collection<int, User>|null   $recipientsUsers
      * @param Collection<int, string>|null $recipientsEmails
-     * @param string[]                     $parameters
+     * @param mixed[]                      $parameters
      *
      * @throws MailingMailCreationException
      * @throws SettingsItemNotFoundException
@@ -153,8 +154,8 @@ class MailService implements IMailService
             $variableName = '%' . $this->translator->translate('common.mailing.variable_name.' . $variable->getName()) . '%';
             $value        = $parameters[$variable->getName()];
 
-            $subject = str_replace($variableName, $value, $subject);
-            $text    = str_replace($variableName, $value, $text);
+            $subject = str_replace($variableName, strval($value), $subject);
+            $text    = str_replace($variableName, strval($value), $text);
         }
 
         $this->sendMail(null, null, $recipientsUsers, $recipientsEmails, $subject, $text, true);
