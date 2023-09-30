@@ -379,14 +379,13 @@ class ExcelExportService
                 ? $this->translator->translate('common.export.common.yes')
                 : $this->translator->translate('common.export.common.no'));
 
-            $sheet->getCell([$column++, $row])
-                ->setValueExplicit($this->userService->getMembershipText($user));
+            $sheet->getCell([$column++, $row])->setValueExplicit($this->userService->getMembershipText($user));
 
             $sheet->setCellValue([$column++, $row], $user->getAge());
 
             $sheet->setCellValue([$column++, $row], $user->getEmail());
 
-            $sheet->setCellValue([$column++, $row], $user->getPhone());
+            $sheet->getCell([$column++, $row])->setValueExplicit($user->getPhone());
 
             $sheet->setCellValue([$column++, $row], $user->getCity());
 
@@ -394,8 +393,7 @@ class ExcelExportService
 
             $sheet->setCellValue([$column++, $row], $user->getFeeRemaining());
 
-            $sheet->getCell([$column++, $row])
-                ->setValueExplicit($user->getVariableSymbolsText());
+            $sheet->getCell([$column++, $row])->setValueExplicit($user->getVariableSymbolsText());
 
             $sheet->setCellValue([$column++, $row], $user->getPaymentMethod() ? $this->translator->translate('common.payment.' . $user->getPaymentMethod()) : '');
 
@@ -564,7 +562,7 @@ class ExcelExportService
 
                 $sheet->setCellValue([$column++, $row], $attendee->getDisplayName());
                 $sheet->setCellValue([$column++, $row], $attendee->getEmail());
-                $sheet->setCellValue([$column++, $row], $attendee->getPhone());
+                $sheet->getCell([$column++, $row])->setValueExplicit($attendee->getPhone());
                 $sheet->setCellValue([$column++, $row], $attendee->getAddress());
             }
         }
