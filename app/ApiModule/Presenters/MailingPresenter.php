@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ActionModule\Presenters;
+namespace App\ApiModule\Presenters;
 
+use App\ActionModule\Presenters\ActionBasePresenter;
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Settings\Commands\SetSettingStringValue;
@@ -18,7 +19,7 @@ use Throwable;
 /**
  * Presenter obsluhující potvrzení změny e-mailu.
  */
-class MailingPresenter extends ActionBasePresenter
+class MailingPresenter extends ApiBasePresenter
 {
     #[Inject]
     public CommandBus $commandBus;
