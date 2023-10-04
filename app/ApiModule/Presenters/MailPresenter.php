@@ -18,7 +18,7 @@ use Throwable;
 /**
  * Presenter obsluhující potvrzení změny e-mailu.
  */
-class MailingPresenter extends ApiBasePresenter
+class MailPresenter extends ApiBasePresenter
 {
     #[Inject]
     public CommandBus $commandBus;
