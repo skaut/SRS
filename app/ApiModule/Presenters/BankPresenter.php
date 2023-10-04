@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\ApiModule\Presenters;
 
-use App\ActionModule\Presenters\ActionBasePresenter;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Settings;

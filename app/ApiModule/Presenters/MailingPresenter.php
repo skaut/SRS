@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\ApiModule\Presenters;
 
-use App\ActionModule\Presenters\ActionBasePresenter;
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Settings\Commands\SetSettingStringValue;

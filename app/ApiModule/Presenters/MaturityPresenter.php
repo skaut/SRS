@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\ApiModule\Presenters;
 
-use App\ActionModule\Presenters\ActionBasePresenter;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
