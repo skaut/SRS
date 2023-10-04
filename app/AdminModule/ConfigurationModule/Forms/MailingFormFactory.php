@@ -105,7 +105,7 @@ class MailingFormFactory
             $verificationCode = substr(md5(uniqid((string) mt_rand(), true)), 0, 8);
             $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode));
 
-            $link = $this->linkGenerator->link('Action:Mailing:verify', ['code' => $verificationCode]);
+            $link = $this->linkGenerator->link('Api:Mail:verify', ['code' => $verificationCode]);
 
             $this->mailService->sendMailFromTemplate(
                 null,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ActionModule\Presenters;
+namespace App\ApiModule\Presenters;
 
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
@@ -27,7 +27,7 @@ use Throwable;
 /**
  * Presenter obsluhující kontrolu splatnosti přihlášek.
  */
-class MaturityPresenter extends ActionBasePresenter
+class MaturityPresenter extends ApiBasePresenter
 {
     #[Inject]
     public QueryBus $queryBus;
