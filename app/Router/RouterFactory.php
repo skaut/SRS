@@ -36,13 +36,6 @@ final class RouterFactory
             'id' => null,
         ]);
 
-        $router->addRoute('action/<presenter>/<action>[/<id>]', [
-            'module' => 'Action',
-            'presenter' => null,
-            'action' => null,
-            'id' => null,
-        ]);
-
         $router->addRoute('admin/cms/<presenter>/<action>[/<id>][/<area>]', [
             'module' => 'Admin:Cms',
             'presenter' => 'Page',

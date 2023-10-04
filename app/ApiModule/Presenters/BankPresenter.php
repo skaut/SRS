@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ActionModule\Presenters;
+namespace App\ApiModule\Presenters;
 
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
@@ -16,7 +16,7 @@ use Throwable;
 /**
  * Presenter obsluhující načítání plateb z API banky.
  */
-class BankPresenter extends ActionBasePresenter
+class BankPresenter extends ApiBasePresenter
 {
     #[Inject]
     public QueryBus $queryBus;
