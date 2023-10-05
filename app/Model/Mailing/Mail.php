@@ -63,7 +63,7 @@ class Mail
     protected string $text;
 
     /**
-     * Datum a čas odeslání.
+     * Datum a čas vytvoření.
      */
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $datetime;
