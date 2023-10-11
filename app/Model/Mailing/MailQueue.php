@@ -4,15 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Mailing;
 
-use App\Model\Acl\Role;
-use App\Model\Structure\Subevent;
-use App\Model\User\User;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
-use function implode;
 
 /**
  * Entita položka fronty e-mailů.
@@ -29,7 +22,7 @@ class MailQueue
     #[ORM\Column(type: 'string')]
     protected string $recipient;
 
-
+    #[ORM\ManyToOne(targetEntity: Mail::class, cascade: ['persist'])]
     protected Mail $mail;
 
     #[ORM\Column(type: 'boolean')]
@@ -47,9 +40,50 @@ class MailQueue
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $sendDatetime;
 
+    public function __construct(string $recipient, Mail $mail, DateTimeImmutable $enqueueDatetime)
+    {
+        $this->recipient       = $recipient;
+        $this->mail            = $mail;
+        $this->enqueueDatetime = $enqueueDatetime;
+    }
 
     public function getId(): int|null
     {
         return $this->id;
+    }
+
+    public function getRecipient(): string
+    {
+        return $this->recipient;
+    }
+
+    public function getMail(): Mail
+    {
+        return $this->mail;
+    }
+
+    public function isSent(): bool
+    {
+        return $this->sent;
+    }
+
+    public function setSent(bool $sent): void
+    {
+        $this->sent = $sent;
+    }
+
+    public function getEnqueueDatetime(): DateTimeImmutable
+    {
+        return $this->enqueueDatetime;
+    }
+
+    public function getSendDatetime(): DateTimeImmutable
+    {
+        return $this->sendDatetime;
+    }
+
+    public function setSendDatetime(DateTimeImmutable $sendDatetime): void
+    {
+        $this->sendDatetime = $sendDatetime;
     }
 }

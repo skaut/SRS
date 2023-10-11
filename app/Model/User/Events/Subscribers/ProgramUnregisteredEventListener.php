@@ -12,7 +12,6 @@ use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramUnregisteredEvent;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
-use App\Services\IMailService;
 use App\Services\QueryBus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -23,7 +22,6 @@ class ProgramUnregisteredEventListener implements MessageHandlerInterface
         private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
         private readonly UserRepository $userRepository,
-        private readonly IMailService $mailService,
     ) {
     }
 

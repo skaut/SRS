@@ -28,8 +28,8 @@ use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
+use App\Services\CommandBus;
 use App\Services\FilesService;
-use App\Services\IMailService;
 use App\Services\QueryBus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -64,6 +64,7 @@ class AdditionalInformationFormFactory
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
+        private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
         private readonly EntityManagerInterface $em,
         private readonly UserRepository $userRepository,
@@ -71,7 +72,6 @@ class AdditionalInformationFormFactory
         private readonly ApplicationService $applicationService,
         private readonly CustomInputValueRepository $customInputValueRepository,
         private readonly FilesService $filesService,
-        private readonly IMailService $mailService,
     ) {
     }
 

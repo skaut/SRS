@@ -11,7 +11,7 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\IMailService;
+use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -31,6 +31,9 @@ use function str_contains;
 class AuthPresenter extends BasePresenter
 {
     #[Inject]
+    public CommandBus $commandBus;
+
+    #[Inject]
     public QueryBus $queryBus;
 
     #[Inject]
@@ -38,9 +41,6 @@ class AuthPresenter extends BasePresenter
 
     #[Inject]
     public UserRepository $userRepository;
-
-    #[Inject]
-    public IMailService $mailService;
 
     /**
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.

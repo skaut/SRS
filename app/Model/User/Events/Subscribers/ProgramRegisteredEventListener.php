@@ -9,14 +9,14 @@ use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Events\ProgramRegisteredEvent;
-use App\Services\IMailService;
+use App\Services\CommandBus;
 use App\Services\QueryBus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class ProgramRegisteredEventListener implements MessageHandlerInterface
 {
-    public function __construct(private readonly QueryBus $queryBus, private readonly IMailService $mailService)
+    public function __construct(private readonly CommandBus $commandBus, private readonly QueryBus $queryBus)
     {
     }
 

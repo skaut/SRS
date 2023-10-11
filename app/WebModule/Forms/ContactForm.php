@@ -12,7 +12,7 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\IMailService;
+use App\Services\CommandBus;
 use App\Services\QueryBus;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
 use Contributte\ReCaptcha\ReCaptchaProvider;
@@ -45,10 +45,10 @@ class ContactForm extends UI\Control
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
+        private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
         private readonly UserRepository $userRepository,
         private readonly ReCaptchaProvider $recaptchaProvider,
-        private readonly IMailService $mailService,
     ) {
     }
 

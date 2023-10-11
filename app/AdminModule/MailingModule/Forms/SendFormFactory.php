@@ -10,7 +10,7 @@ use App\Model\Acl\Role;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\AclService;
-use App\Services\IMailService;
+use App\Services\CommandBus;
 use App\Services\SubeventService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
@@ -35,7 +35,7 @@ class SendFormFactory
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
-        private readonly IMailService $mailService,
+        private readonly CommandBus $commandBus,
         private readonly RoleRepository $roleRepository,
         private readonly UserRepository $userRepository,
         private readonly SubeventRepository $subeventRepository,

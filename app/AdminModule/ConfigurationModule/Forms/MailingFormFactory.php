@@ -15,7 +15,6 @@ use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
-use App\Services\IMailService;
 use App\Services\QueryBus;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -48,7 +47,6 @@ class MailingFormFactory
         private readonly BaseFormFactory $baseFormFactory,
         private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
-        private readonly IMailService $mailService,
         private readonly LinkGenerator $linkGenerator,
         private readonly Validators $validators,
     ) {

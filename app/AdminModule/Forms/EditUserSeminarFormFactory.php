@@ -30,8 +30,8 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
+use App\Services\CommandBus;
 use App\Services\FilesService;
-use App\Services\IMailService;
 use App\Services\QueryBus;
 use App\Services\UserService;
 use App\Utils\Helpers;
@@ -71,6 +71,7 @@ class EditUserSeminarFormFactory
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
+        private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
         private readonly EntityManagerInterface $em,
         private readonly UserRepository $userRepository,
@@ -80,7 +81,6 @@ class EditUserSeminarFormFactory
         private readonly ApplicationService $applicationService,
         private readonly Validators $validators,
         private readonly FilesService $filesService,
-        private readonly IMailService $mailService,
         private readonly AclService $aclService,
         private readonly UserService $userService,
     ) {
