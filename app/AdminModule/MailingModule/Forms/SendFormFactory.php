@@ -104,14 +104,15 @@ class SendFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-               $recipientsRoles  = $this->roleRepository->findRolesByIds($values->recipientRoles);
-            $recipientsSubevents = $this->subeventRepository->findSubeventsByIds($values->recipientSubevents);
-            $recipientsUsers     = $this->userRepository->findUsersByIds($values->recipientUsers);
-            $recipientsEmails    = new ArrayCollection();
+        $recipientsUsers     = $this->userRepository->findUsersByIds($values->recipientUsers);
+        $recipientsRoles     = $this->roleRepository->findRolesByIds($values->recipientRoles);
+        $recipientsSubevents = $this->subeventRepository->findSubeventsByIds($values->recipientSubevents);
+        $recipientsEmails    = new ArrayCollection();
+
         if (! empty($values->copy)) {
             $recipientsEmails->add($values->copy);
         }
 
-            $this->commandBus->handle(new CreateMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $recipientsEmails, $values->subject, $values->text));
+        $this->commandBus->handle(new CreateMail($recipientsUsers, $recipientsRoles, $recipientsSubevents, $recipientsEmails, $values->subject, $values->text));
     }
 }

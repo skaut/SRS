@@ -13,7 +13,7 @@ use App\Model\Mailing\Repositories\MailRepository;
 use App\Model\Mailing\Repositories\TemplateRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Translation\Translator;
+use Nette\Localization\Translator;
 
 use function array_unique;
 use function str_replace;

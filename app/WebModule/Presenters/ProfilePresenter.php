@@ -12,7 +12,6 @@ use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
-use App\Services\CommandBus;
 use App\Services\ExcelExportService;
 use App\WebModule\Components\ApplicationsGridControl;
 use App\WebModule\Components\IApplicationsGridControlFactory;
