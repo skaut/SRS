@@ -163,11 +163,13 @@ class Mail
         return implode(', ', $this->recipientSubevents->map(static fn (Subevent $subevent) => $subevent->getName())->toArray());
     }
 
+    /** @return string[] */
     public function getRecipientEmails(): array
     {
         return $this->recipientEmails;
     }
 
+    /** @param string[] $recipientEmails */
     public function setRecipientEmails(array $recipientEmails): void
     {
         $this->recipientEmails = $recipientEmails;

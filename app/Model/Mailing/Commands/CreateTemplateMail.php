@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 
 class CreateTemplateMail
 {
+    /** @param string[] $parameters */
     public function __construct(
         private readonly Collection|null $recipientUsers,
         private readonly Collection|null $recipientEmails,
@@ -34,6 +35,7 @@ class CreateTemplateMail
         return $this->template;
     }
 
+    /** @return string[] */
     public function getParameters(): array
     {
         return $this->parameters;
