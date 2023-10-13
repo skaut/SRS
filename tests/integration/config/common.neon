@@ -3,6 +3,7 @@ services:
     - App\Services\QueryBus(@messenger.queryBus.bus)
     - App\Services\EventBus(@messenger.eventBus.bus)
     - Tracy\Bar
+    - Nette\Localization\Translator
 
 extensions:
     console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
