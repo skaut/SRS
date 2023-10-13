@@ -10,6 +10,6 @@ class TranslatorStub implements Translator
 {
     function translate($message, ...$parameters): string
     {
-        return "";
+        return '';
     }
 }
