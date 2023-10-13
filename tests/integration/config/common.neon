@@ -3,10 +3,10 @@ services:
     - App\Services\QueryBus(@messenger.queryBus.bus)
     - App\Services\EventBus(@messenger.eventBus.bus)
     - Tracy\Bar
-    - Nette\Localization\Translator
 
 extensions:
     console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
+    translation: Contributte\Translation\DI\TranslationExtension
     messenger: Fmasa\Messenger\DI\MessengerExtension
 
 nettrine.dbal:
