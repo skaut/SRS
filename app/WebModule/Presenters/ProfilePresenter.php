@@ -32,9 +32,6 @@ use Throwable;
 class ProfilePresenter extends WebBasePresenter
 {
     #[Inject]
-    public CommandBus $commandBus;
-
-    #[Inject]
     public PersonalDetailsFormFactory $personalDetailsFormFactory;
 
     #[Inject]
