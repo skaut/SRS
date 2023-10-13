@@ -8,6 +8,9 @@ services:
     - App\Model\Application\Repositories\ApplicationRepository
     - App\Model\Program\Repositories\CategoryRepository
     - App\Model\Settings\Repositories\SettingsRepository
+    - App\Model\Mailing\Repositories\MailRepository
+    - App\Model\Mailing\Repositories\MailQueueRepository
+    - App\Model\Mailing\Repositories\TemplateRepository
 
     - class: App\Model\User\Commands\Handlers\UpdateUserProgramsHandler
       tags:

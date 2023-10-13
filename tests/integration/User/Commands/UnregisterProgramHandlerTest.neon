@@ -7,6 +7,9 @@ services:
     - App\Model\Program\Repositories\ProgramApplicationRepository
     - App\Model\Application\Repositories\ApplicationRepository
     - App\Model\Settings\Repositories\SettingsRepository
+    - App\Model\Mailing\Repositories\MailRepository
+    - App\Model\Mailing\Repositories\MailQueueRepository
+    - App\Model\Mailing\Repositories\TemplateRepository
 
     - class: App\Model\User\Commands\Handlers\UnregisterProgramHandler
       tags:
