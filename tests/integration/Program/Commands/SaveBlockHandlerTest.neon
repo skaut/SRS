@@ -21,6 +21,10 @@ services:
       tags:
         messenger.messageHandler:
         bus: commandBus
+    - class: App\Model\Mailing\Commands\Handlers\CreateTemplateMailHandler
+      tags:
+        messenger.messageHandler:
+        bus: commandBus
 
     - class: App\Model\Program\Queries\Handlers\ProgramAttendeesQueryHandler
       tags:
