@@ -7,6 +7,7 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
+use App\Model\Mailing\Commands\CreateMail;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\AclService;
@@ -15,11 +16,8 @@ use App\Services\SubeventService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Mail\SendException;
 use stdClass;
 use Throwable;
-use Tracy\Debugger;
-use Tracy\ILogger;
 
 /**
  * Formulář pro vytvoření e-mailu.
@@ -27,11 +25,6 @@ use Tracy\ILogger;
 class SendFormFactory
 {
     use Nette\SmartObject;
-
-    /**
-     * Stav odeslání e-mailu.
-     */
-    public bool $mailSuccess;
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
@@ -111,20 +104,14 @@ class SendFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        try {
-            $recipientsRoles     = $this->roleRepository->findRolesByIds($values->recipientRoles);
+               $recipientsRoles  = $this->roleRepository->findRolesByIds($values->recipientRoles);
             $recipientsSubevents = $this->subeventRepository->findSubeventsByIds($values->recipientSubevents);
             $recipientsUsers     = $this->userRepository->findUsersByIds($values->recipientUsers);
             $recipientsEmails    = new ArrayCollection();
-            if (! empty($values->copy)) {
-                $recipientsEmails->add($values->copy);
-            }
-
-            $this->mailService->sendMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $recipientsEmails, $values->subject, $values->text);
-            $this->mailSuccess = true;
-        } catch (SendException $ex) {
-            Debugger::log($ex, ILogger::WARNING);
-            $this->mailSuccess = false;
+        if (! empty($values->copy)) {
+            $recipientsEmails->add($values->copy);
         }
+
+            $this->commandBus->handle(new CreateMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $recipientsEmails, $values->subject, $values->text));
     }
 }

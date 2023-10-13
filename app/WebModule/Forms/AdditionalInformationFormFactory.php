@@ -20,6 +20,7 @@ use App\Model\CustomInput\CustomText;
 use App\Model\CustomInput\CustomTextValue;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\CustomInput\Repositories\CustomInputValueRepository;
+use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
@@ -279,10 +280,10 @@ class AdditionalInformationFormFactory
 
             if ($customInputValueChanged) {
                 assert($this->user instanceof User);
-                $this->mailService->sendMailFromTemplate(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
+                $this->commandBus->handle(new CreateTemplateMail(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                     TemplateVariable::USER => $this->user->getDisplayName(),
-                ]);
+                ]));
             }
         });
     }

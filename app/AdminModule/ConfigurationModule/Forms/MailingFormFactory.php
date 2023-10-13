@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Commands\SetSettingArrayValue;
@@ -105,7 +106,7 @@ class MailingFormFactory
 
             $link = $this->linkGenerator->link('Api:Mail:verify', ['code' => $verificationCode]);
 
-            $this->mailService->sendMailFromTemplate(
+            $this->commandBus->handle(new CreateTemplateMail(
                 null,
                 new ArrayCollection([$values->seminarEmail]),
                 Template::EMAIL_VERIFICATION,
@@ -113,7 +114,7 @@ class MailingFormFactory
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                     TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
                 ],
-            );
+            ));
         }
 
         $contactFormRecipients = array_map(

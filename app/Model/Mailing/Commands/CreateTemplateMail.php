@@ -11,7 +11,7 @@ class CreateTemplateMail
 {
     public function __construct(
         private readonly Collection|null $recipientUsers,
-        private readonly array|null $recipientEmails,
+        private readonly Collection|null $recipientEmails,
         private readonly string $template,
         private readonly array $parameters,
     ) {

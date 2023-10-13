@@ -7,6 +7,7 @@ namespace App\ApiModule\Presenters;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
+use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Queries\SettingIntValueQuery;
@@ -120,10 +121,10 @@ class MaturityPresenter extends ApiBasePresenter
                 $maturityDate = $application->getMaturityDate();
 
                 if ($maturityReminderDate == $maturityDate) {
-                    $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::MATURITY_REMINDER, [
+                    $this->commandBus->handle(new CreateTemplateMail(new ArrayCollection([$application->getUser()]), null, Template::MATURITY_REMINDER, [
                         TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                         TemplateVariable::APPLICATION_MATURITY => $maturityDate->format(Helpers::DATE_FORMAT),
-                    ]);
+                    ]));
                 }
             }
         }

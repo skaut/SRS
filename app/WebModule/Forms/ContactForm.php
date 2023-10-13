@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
+use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
@@ -136,7 +137,7 @@ class ContactForm extends UI\Control
             $recipientsEmails->add($recipient);
         }
 
-        $this->mailService->sendMailFromTemplate(
+        $this->commandBus->handle(new CreateTemplateMail(
             $recipientsUsers,
             $recipientsEmails,
             Template::CONTACT_FORM,
@@ -146,7 +147,7 @@ class ContactForm extends UI\Control
                 TemplateVariable::SENDER_EMAIL => $senderEmail,
                 TemplateVariable::MESSAGE => str_replace(["\n", "\r"], '', nl2br($values->message, false)),
             ],
-        );
+        ));
 
         $this->onSave();
     }

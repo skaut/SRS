@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
+use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
@@ -68,9 +69,9 @@ class AuthPresenter extends BasePresenter
             $user = $this->userRepository->findById($this->user->id);
 
             assert($user instanceof User);
-            $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::SIGN_IN, [
+            $this->commandBus->handle(new CreateTemplateMail(new ArrayCollection([$user]), null, Template::SIGN_IN, [
                 TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
-            ]);
+            ]));
         }
 
         $this->redirectAfterLogin($this->getParameter('ReturnUrl'));
