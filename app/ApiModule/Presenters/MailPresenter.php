@@ -6,6 +6,7 @@ namespace App\ApiModule\Presenters;
 
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
+use App\Model\Mailing\Commands\SendMails;
 use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -25,6 +26,14 @@ class MailPresenter extends ApiBasePresenter
 
     #[Inject]
     public QueryBus $queryBus;
+
+    /**
+     * Odešle e-maily z fronty.
+     */
+    public function actionSend(): void
+    {
+        $this->commandBus->handle(new SendMails());
+    }
 
     /**
      * Ověří e-mail semináře.

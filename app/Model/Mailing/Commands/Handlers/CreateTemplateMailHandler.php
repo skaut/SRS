@@ -7,6 +7,7 @@ namespace App\Model\Mailing\Commands\Handlers;
 use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailQueue;
+use App\Model\Mailing\Recipient;
 use App\Model\Mailing\Repositories\MailQueueRepository;
 use App\Model\Mailing\Repositories\MailRepository;
 use App\Model\Mailing\Repositories\TemplateRepository;
@@ -17,6 +18,8 @@ use Symfony\Component\Translation\Translator;
 use function array_unique;
 use function str_replace;
 use function strval;
+
+use const SORT_REGULAR;
 
 class CreateTemplateMailHandler
 {
@@ -55,14 +58,14 @@ class CreateTemplateMailHandler
             if ($command->getRecipientUsers() !== null) {
                 $mail->setRecipientUsers($command->getRecipientUsers());
                 foreach ($command->getRecipientUsers() as $user) {
-                    $recipients[] = $user->getEmail();
+                    $recipients[] = Recipient::createFromUser($user);
                 }
             }
 
             if ($command->getRecipientEmails() !== null) {
                 $mail->setRecipientEmails($command->getRecipientEmails()->toArray());
                 foreach ($command->getRecipientEmails() as $email) {
-                    $recipients[] = $email;
+                    $recipients[] = new Recipient($email);
                 }
             }
 
@@ -73,7 +76,7 @@ class CreateTemplateMailHandler
 
             $this->mailRepository->save($mail);
 
-            foreach (array_unique($recipients) as $recipient) {
+            foreach (array_unique($recipients, SORT_REGULAR) as $recipient) {
                 $this->mailQueueRepository->save(new MailQueue($recipient, $mail, new DateTimeImmutable()));
             }
         });

@@ -18,13 +18,7 @@ class SrsMail extends AbstractMail implements IComposableMail
     public function compose(Message $message, IMessageData|null $mailData = null): void
     {
         $message->setFrom($mailData->getFrom()->getEmail(), $mailData->getFrom()->getName());
-
-        foreach ($mailData->getRecipients() as $recipient) {
-            if (! empty($recipient->getEmail())) {
-                $message->addBcc($recipient->getEmail(), $recipient->getName());
-            }
-        }
-
+        $message->addTo($mailData->getTo()->getEmail(), $mailData->getTo()->getName());
         $message->setSubject($mailData->getSubject());
 
         $this->template->subject = $mailData->getSubject();

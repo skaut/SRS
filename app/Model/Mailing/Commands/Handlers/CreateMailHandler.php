@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace App\Model\Mailing\Commands\Handlers;
 
+use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Mailing\Commands\CreateMail;
 use App\Model\Mailing\Mail;
 use App\Model\Mailing\MailQueue;
+use App\Model\Mailing\Recipient;
 use App\Model\Mailing\Repositories\MailQueueRepository;
 use App\Model\Mailing\Repositories\MailRepository;
+use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 
 use function array_unique;
+
+use const SORT_REGULAR;
 
 class CreateMailHandler
 {
@@ -20,6 +26,9 @@ class CreateMailHandler
         private readonly EntityManagerInterface $em,
         private readonly MailRepository $mailRepository,
         private readonly MailQueueRepository $mailQueueRepository,
+        private readonly UserRepository $userRepository,
+        private readonly RoleRepository $roleRepository,
+        private readonly SubeventRepository $subeventRepository,
     ) {
     }
 
@@ -32,28 +41,30 @@ class CreateMailHandler
             if ($command->getRecipientUsers() !== null) {
                 $mail->setRecipientUsers($command->getRecipientUsers());
                 foreach ($command->getRecipientUsers() as $user) {
-                    $recipients[] = $user->getEmail();
+                    $recipients[] = Recipient::createFromUser($user);
                 }
             }
 
             if ($command->getRecipientRoles() !== null) {
                 $mail->setRecipientRoles($command->getRecipientRoles());
-                foreach ($command->getRecipientUsers() as $user) { //todo
-                    $recipients[] = $user->getEmail();
+                $rolesIds = $this->roleRepository->findRolesIds($command->getRecipientRoles());
+                foreach ($this->userRepository->findAllApprovedInRoles($rolesIds) as $user) {
+                    $recipients[] = Recipient::createFromUser($user);
                 }
             }
 
             if ($command->getRecipientSubevents() !== null) {
                 $mail->setRecipientSubevents($command->getRecipientSubevents());
-                foreach ($command->getRecipientUsers() as $user) { //todo
-                    $recipients[] = $user->getEmail();
+                $subeventsIds = $this->subeventRepository->findSubeventsIds($command->getRecipientSubevents());
+                foreach ($this->userRepository->findAllWithSubevents($subeventsIds) as $user) {
+                    $recipients[] = Recipient::createFromUser($user);
                 }
             }
 
             if ($command->getRecipientEmails() !== null) {
                 $mail->setRecipientEmails($command->getRecipientEmails()->toArray());
                 foreach ($command->getRecipientEmails() as $email) {
-                    $recipients[] = $email;
+                    $recipients[] = new Recipient($email);
                 }
             }
 
@@ -64,7 +75,7 @@ class CreateMailHandler
 
             $this->mailRepository->save($mail);
 
-            foreach (array_unique($recipients) as $recipient) {
+            foreach (array_unique($recipients, SORT_REGULAR) as $recipient) {
                 $this->mailQueueRepository->save(new MailQueue($recipient, $mail, new DateTimeImmutable()));
             }
         });

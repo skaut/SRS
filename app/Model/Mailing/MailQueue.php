@@ -20,7 +20,10 @@ class MailQueue
     private int|null $id = null;
 
     #[ORM\Column(type: 'string')]
-    protected string $recipient;
+    protected string $recipientEmail;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected string|null $recipientName;
 
     #[ORM\ManyToOne(targetEntity: Mail::class, cascade: ['persist'])]
     protected Mail $mail;
@@ -40,9 +43,10 @@ class MailQueue
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $sendDatetime;
 
-    public function __construct(string $recipient, Mail $mail, DateTimeImmutable $enqueueDatetime)
+    public function __construct(Recipient $recipient, Mail $mail, DateTimeImmutable $enqueueDatetime)
     {
-        $this->recipient       = $recipient;
+        $this->recipientEmail  = $recipient->getEmail();
+        $this->recipientName   = $recipient->getName();
         $this->mail            = $mail;
         $this->enqueueDatetime = $enqueueDatetime;
     }
@@ -52,9 +56,14 @@ class MailQueue
         return $this->id;
     }
 
-    public function getRecipient(): string
+    public function getRecipientEmail(): string
     {
-        return $this->recipient;
+        return $this->recipientEmail;
+    }
+
+    public function getRecipientName(): string|null
+    {
+        return $this->recipientName;
     }
 
     public function getMail(): Mail
