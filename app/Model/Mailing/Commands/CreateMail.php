@@ -13,7 +13,7 @@ class CreateMail
 {
     /**
      * @param Collection<int, User>|null     $recipientUsers
-     * @param Collection<int, Role>|null`    $recipientRoles
+     * @param Collection<int, Role>|null     $recipientRoles
      * @param Collection<int, Subevent>|null $recipientSubevents
      * @param Collection<int, string>|null   $recipientEmails
      */
