@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
+use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
@@ -12,7 +13,7 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\IMailService;
+use App\Services\CommandBus;
 use App\Services\QueryBus;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
 use Contributte\ReCaptcha\ReCaptchaProvider;
@@ -45,10 +46,10 @@ class ContactForm extends UI\Control
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
+        private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
         private readonly UserRepository $userRepository,
         private readonly ReCaptchaProvider $recaptchaProvider,
-        private readonly IMailService $mailService,
     ) {
     }
 
@@ -136,7 +137,7 @@ class ContactForm extends UI\Control
             $recipientsEmails->add($recipient);
         }
 
-        $this->mailService->sendMailFromTemplate(
+        $this->commandBus->handle(new CreateTemplateMail(
             $recipientsUsers,
             $recipientsEmails,
             Template::CONTACT_FORM,
@@ -146,7 +147,7 @@ class ContactForm extends UI\Control
                 TemplateVariable::SENDER_EMAIL => $senderEmail,
                 TemplateVariable::MESSAGE => str_replace(["\n", "\r"], '', nl2br($values->message, false)),
             ],
-        );
+        ));
 
         $this->onSave();
     }

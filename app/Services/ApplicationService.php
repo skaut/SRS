@@ -19,6 +19,7 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Enums\MaturityType;
 use App\Model\Enums\PaymentState;
 use App\Model\Enums\PaymentType;
+use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Payment\Payment;
@@ -63,6 +64,7 @@ class ApplicationService
     use Nette\SmartObject;
 
     public function __construct(
+        private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
         private readonly EntityManagerInterface $em,
         private readonly ApplicationRepository $applicationRepository,
@@ -72,7 +74,6 @@ class ApplicationService
         private readonly SubeventRepository $subeventRepository,
         private readonly DiscountService $discountService,
         private readonly VariableSymbolRepository $variableSymbolRepository,
-        private readonly MailService $mailService,
         private readonly UserService $userService,
         private readonly Translator $translator,
         private readonly PaymentRepository $paymentRepository,
@@ -133,7 +134,7 @@ class ApplicationService
             new SettingDateValueAsTextQuery(Settings::EDIT_REGISTRATION_TO),
         );
 
-        $this->mailService->sendMailFromTemplate(
+        $this->commandBus->handle(new CreateTemplateMail(
             new ArrayCollection(
                 [$user],
             ),
@@ -149,7 +150,7 @@ class ApplicationService
                     new SettingStringValueQuery(Settings::ACCOUNT_NUMBER),
                 ),
             ],
-        );
+        ));
     }
 
     /**
@@ -238,7 +239,7 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
-        $this->mailService->sendMailFromTemplate(
+        $this->commandBus->handle(new CreateTemplateMail(
             new ArrayCollection(
                 [$user],
             ),
@@ -248,7 +249,7 @@ class ApplicationService
                 TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                 TemplateVariable::USERS_ROLES => implode(', ', $roles->map(static fn (Role $role) => $role->getName())->toArray()),
             ],
-        );
+        ));
     }
 
     /**
@@ -300,7 +301,7 @@ class ApplicationService
         });
 
         if ($state === ApplicationState::CANCELED) {
-            $this->mailService->sendMailFromTemplate(
+            $this->commandBus->handle(new CreateTemplateMail(
                 new ArrayCollection(
                     [$user],
                 ),
@@ -311,9 +312,9 @@ class ApplicationService
                         new SettingStringValueQuery(Settings::SEMINAR_NAME),
                     ),
                 ],
-            );
+            ));
         } elseif ($state === ApplicationState::CANCELED_NOT_PAID) {
-            $this->mailService->sendMailFromTemplate(
+            $this->commandBus->handle(new CreateTemplateMail(
                 new ArrayCollection(
                     [$user],
                 ),
@@ -326,7 +327,7 @@ class ApplicationService
                         ),
                     ),
                 ],
-            );
+            ));
         }
     }
 
@@ -348,7 +349,7 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
-        $this->mailService->sendMailFromTemplate(
+        $this->commandBus->handle(new CreateTemplateMail(
             new ArrayCollection(
                 [$user],
             ),
@@ -360,7 +361,7 @@ class ApplicationService
                 ),
                 TemplateVariable::USERS_SUBEVENTS => $user->getSubeventsText(),
             ],
-        );
+        ));
     }
 
     /**
@@ -406,7 +407,7 @@ class ApplicationService
             $this->decrementSubeventsOccupancy($application->getSubevents());
         });
 
-        $this->mailService->sendMailFromTemplate(
+        $this->commandBus->handle(new CreateTemplateMail(
             new ArrayCollection(
                 [$application->getUser()],
             ),
@@ -418,7 +419,7 @@ class ApplicationService
                 ),
                 TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
             ],
-        );
+        ));
     }
 
     /**
@@ -461,7 +462,7 @@ class ApplicationService
             $this->decrementSubeventsOccupancy($application->getSubevents());
         });
 
-        $this->mailService->sendMailFromTemplate(
+        $this->commandBus->handle(new CreateTemplateMail(
             new ArrayCollection(
                 [$application->getUser()],
             ),
@@ -473,7 +474,7 @@ class ApplicationService
                 ),
                 TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
             ],
-        );
+        ));
     }
 
     /**
@@ -517,7 +518,7 @@ class ApplicationService
         });
 
         if ($paymentDate !== null && $oldPaymentDate === null) {
-            $this->mailService->sendMailFromTemplate(
+            $this->commandBus->handle(new CreateTemplateMail(
                 new ArrayCollection(
                     [
                         $application->getUser(),
@@ -531,7 +532,7 @@ class ApplicationService
                     ),
                     TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText(),
                 ],
-            );
+            ));
         }
     }
 

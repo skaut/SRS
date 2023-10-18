@@ -31,10 +31,15 @@ class Recipient
         return $this->name;
     }
 
+    public function isValid(): bool
+    {
+        return ! empty($this->email);
+    }
+
     /**
      * Vytvoří objekt na základě údajů uživatele.
      */
-    public static function createFromUser(User $user): Recipient
+    public static function createFromUser(User $user): Recipient|null
     {
         return new Recipient($user->getEmail(), $user->getDisplayName());
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
+use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
@@ -11,7 +12,7 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\IMailService;
+use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Services\SkautIsService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -31,6 +32,9 @@ use function str_contains;
 class AuthPresenter extends BasePresenter
 {
     #[Inject]
+    public CommandBus $commandBus;
+
+    #[Inject]
     public QueryBus $queryBus;
 
     #[Inject]
@@ -38,9 +42,6 @@ class AuthPresenter extends BasePresenter
 
     #[Inject]
     public UserRepository $userRepository;
-
-    #[Inject]
-    public IMailService $mailService;
 
     /**
      * Přesměruje na přihlašovací stránku skautIS, nastaví přihlášení.
@@ -68,9 +69,9 @@ class AuthPresenter extends BasePresenter
             $user = $this->userRepository->findById($this->user->id);
 
             assert($user instanceof User);
-            $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::SIGN_IN, [
+            $this->commandBus->handle(new CreateTemplateMail(new ArrayCollection([$user]), null, Template::SIGN_IN, [
                 TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
-            ]);
+            ]));
         }
 
         $this->redirectAfterLogin($this->getParameter('ReturnUrl'));

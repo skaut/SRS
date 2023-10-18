@@ -13,7 +13,6 @@ use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\ExcelExportService;
-use App\Services\IMailService;
 use App\WebModule\Components\ApplicationsGridControl;
 use App\WebModule\Components\IApplicationsGridControlFactory;
 use App\WebModule\Forms\AdditionalInformationFormFactory;
@@ -48,9 +47,6 @@ class ProfilePresenter extends WebBasePresenter
 
     #[Inject]
     public SubeventRepository $subeventRepository;
-
-    #[Inject]
-    public IMailService $mailService;
 
     #[Inject]
     public ApplicationService $applicationService;
