@@ -84,7 +84,7 @@ class CreateTemplateMailHandler
     /** @param Collection<int, Recipient> $recipients */
     private function addRecipient(Collection $recipients, Recipient $recipient): void
     {
-        if ($recipient->isValid() && ! $recipients->contains($recipient)) {
+        if ($recipient->isValid() && ! $recipients->exists(static fn (int $i, Recipient $r) => $r->getEmail() === $recipient->getEmail())) {
             $recipients->add($recipient);
         }
     }
