@@ -20,6 +20,7 @@ use App\Model\CustomInput\CustomText;
 use App\Model\CustomInput\CustomTextValue;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\CustomInput\Repositories\CustomInputValueRepository;
+use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
@@ -28,8 +29,8 @@ use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
+use App\Services\CommandBus;
 use App\Services\FilesService;
-use App\Services\IMailService;
 use App\Services\QueryBus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -64,6 +65,7 @@ class AdditionalInformationFormFactory
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
+        private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
         private readonly EntityManagerInterface $em,
         private readonly UserRepository $userRepository,
@@ -71,7 +73,6 @@ class AdditionalInformationFormFactory
         private readonly ApplicationService $applicationService,
         private readonly CustomInputValueRepository $customInputValueRepository,
         private readonly FilesService $filesService,
-        private readonly IMailService $mailService,
     ) {
     }
 
@@ -279,10 +280,10 @@ class AdditionalInformationFormFactory
 
             if ($customInputValueChanged) {
                 assert($this->user instanceof User);
-                $this->mailService->sendMailFromTemplate(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
+                $this->commandBus->handle(new CreateTemplateMail(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                     TemplateVariable::USER => $this->user->getDisplayName(),
-                ]);
+                ]));
             }
         });
     }

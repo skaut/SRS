@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
+use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Commands\SetSettingArrayValue;
@@ -15,7 +16,6 @@ use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
-use App\Services\IMailService;
 use App\Services\QueryBus;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -48,7 +48,6 @@ class MailingFormFactory
         private readonly BaseFormFactory $baseFormFactory,
         private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
-        private readonly IMailService $mailService,
         private readonly LinkGenerator $linkGenerator,
         private readonly Validators $validators,
     ) {
@@ -107,7 +106,7 @@ class MailingFormFactory
 
             $link = $this->linkGenerator->link('Api:Mail:verify', ['code' => $verificationCode]);
 
-            $this->mailService->sendMailFromTemplate(
+            $this->commandBus->handle(new CreateTemplateMail(
                 null,
                 new ArrayCollection([$values->seminarEmail]),
                 Template::EMAIL_VERIFICATION,
@@ -115,7 +114,7 @@ class MailingFormFactory
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                     TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
                 ],
-            );
+            ));
         }
 
         $contactFormRecipients = array_map(

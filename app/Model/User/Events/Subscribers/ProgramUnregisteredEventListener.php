@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\User\Events\Subscribers;
 
+use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -12,7 +13,6 @@ use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramUnregisteredEvent;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
-use App\Services\IMailService;
 use App\Services\QueryBus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -23,7 +23,6 @@ class ProgramUnregisteredEventListener implements MessageHandlerInterface
         private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
         private readonly UserRepository $userRepository,
-        private readonly IMailService $mailService,
     ) {
     }
 
@@ -37,10 +36,10 @@ class ProgramUnregisteredEventListener implements MessageHandlerInterface
             }
 
             if ($event->isNotifyUser()) {
-                $this->mailService->sendMailFromTemplate(new ArrayCollection([$event->getUser()]), null, Template::PROGRAM_UNREGISTERED, [
+                $this->commandBus->handle(new CreateTemplateMail(new ArrayCollection([$event->getUser()]), null, Template::PROGRAM_UNREGISTERED, [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                     TemplateVariable::PROGRAM_NAME => $event->getProgram()->getBlock()->getName(),
-                ]);
+                ]));
             }
         }
     }
