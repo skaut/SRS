@@ -9,6 +9,13 @@ Aplikace vyžaduje:
 
 ## Docker
 Pro lokální vývoj je připraven Docker image a konfigurace pro **docker-compose**.
+
+Před prvním spuštěním je třeba vytvořit docker volume pro databázi pomocí:
+
+```bash
+docker volume create srs_mysql
+```
+
 Kontejner je možné spustit z root adresáře projektu pomocí:
 
 ```bash
