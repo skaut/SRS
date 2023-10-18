@@ -13,6 +13,7 @@ use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
 use Nette\Application\AbortException;
+use Nette\Application\Responses\TextResponse;
 use Nette\DI\Attributes\Inject;
 use Throwable;
 
@@ -33,6 +34,9 @@ class MailPresenter extends ApiBasePresenter
     public function actionSend(): void
     {
         $this->commandBus->handle(new SendMails());
+
+        $response = new TextResponse(null);
+        $this->sendResponse($response);
     }
 
     /**

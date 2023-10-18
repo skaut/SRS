@@ -14,11 +14,9 @@ use App\Model\Mailing\Repositories\MailRepository;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-
-use function array_unique;
-
-use const SORT_REGULAR;
 
 class CreateMailHandler
 {
@@ -36,12 +34,12 @@ class CreateMailHandler
     {
         $this->em->wrapInTransaction(function () use ($command): void {
             $mail       = new Mail();
-            $recipients = [];
+            $recipients = new ArrayCollection();
 
             if ($command->getRecipientUsers() !== null) {
                 $mail->setRecipientUsers($command->getRecipientUsers());
                 foreach ($command->getRecipientUsers() as $user) {
-                    $recipients[] = Recipient::createFromUser($user);
+                    $this->addRecipient($recipients, Recipient::createFromUser($user));
                 }
             }
 
@@ -49,7 +47,7 @@ class CreateMailHandler
                 $mail->setRecipientRoles($command->getRecipientRoles());
                 $rolesIds = $this->roleRepository->findRolesIds($command->getRecipientRoles());
                 foreach ($this->userRepository->findAllApprovedInRoles($rolesIds) as $user) {
-                    $recipients[] = Recipient::createFromUser($user);
+                    $this->addRecipient($recipients, Recipient::createFromUser($user));
                 }
             }
 
@@ -57,14 +55,14 @@ class CreateMailHandler
                 $mail->setRecipientSubevents($command->getRecipientSubevents());
                 $subeventsIds = $this->subeventRepository->findSubeventsIds($command->getRecipientSubevents());
                 foreach ($this->userRepository->findAllWithSubevents($subeventsIds) as $user) {
-                    $recipients[] = Recipient::createFromUser($user);
+                    $this->addRecipient($recipients, Recipient::createFromUser($user));
                 }
             }
 
             if ($command->getRecipientEmails() !== null) {
                 $mail->setRecipientEmails($command->getRecipientEmails()->toArray());
                 foreach ($command->getRecipientEmails() as $email) {
-                    $recipients[] = new Recipient($email);
+                    $this->addRecipient($recipients, new Recipient($email));
                 }
             }
 
@@ -75,9 +73,16 @@ class CreateMailHandler
 
             $this->mailRepository->save($mail);
 
-            foreach (array_unique($recipients, SORT_REGULAR) as $recipient) {
+            foreach ($recipients as $recipient) {
                 $this->mailQueueRepository->save(new MailQueue($recipient, $mail, new DateTimeImmutable()));
             }
         });
+    }
+
+    private function addRecipient(Collection $recipients, Recipient $recipient): void
+    {
+        if ($recipient->isValid() && ! $recipients->contains($recipient)) {
+            $recipients->add($recipient);
+        }
     }
 }

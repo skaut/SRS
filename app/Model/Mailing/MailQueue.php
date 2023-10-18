@@ -40,8 +40,8 @@ class MailQueue
     /**
      * Datum a čas odeslání.
      */
-    #[ORM\Column(type: 'datetime_immutable')]
-    protected DateTimeImmutable $sendDatetime;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected DateTimeImmutable|null $sendDatetime;
 
     public function __construct(Recipient $recipient, Mail $mail, DateTimeImmutable $enqueueDatetime)
     {
@@ -86,7 +86,7 @@ class MailQueue
         return $this->enqueueDatetime;
     }
 
-    public function getSendDatetime(): DateTimeImmutable
+    public function getSendDatetime(): DateTimeImmutable|null
     {
         return $this->sendDatetime;
     }

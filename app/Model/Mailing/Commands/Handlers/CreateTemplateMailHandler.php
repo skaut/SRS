@@ -12,14 +12,13 @@ use App\Model\Mailing\Repositories\MailQueueRepository;
 use App\Model\Mailing\Repositories\MailRepository;
 use App\Model\Mailing\Repositories\TemplateRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Nette\Localization\Translator;
 
-use function array_unique;
 use function str_replace;
 use function strval;
-
-use const SORT_REGULAR;
 
 class CreateTemplateMailHandler
 {
@@ -53,19 +52,19 @@ class CreateTemplateMailHandler
             }
 
             $mail       = new Mail();
-            $recipients = [];
+            $recipients = new ArrayCollection();
 
             if ($command->getRecipientUsers() !== null) {
                 $mail->setRecipientUsers($command->getRecipientUsers());
                 foreach ($command->getRecipientUsers() as $user) {
-                    $recipients[] = Recipient::createFromUser($user);
+                    $this->addRecipient($recipients, Recipient::createFromUser($user));
                 }
             }
 
             if ($command->getRecipientEmails() !== null) {
                 $mail->setRecipientEmails($command->getRecipientEmails()->toArray());
                 foreach ($command->getRecipientEmails() as $email) {
-                    $recipients[] = new Recipient($email);
+                    $this->addRecipient($recipients, new Recipient($email));
                 }
             }
 
@@ -76,9 +75,16 @@ class CreateTemplateMailHandler
 
             $this->mailRepository->save($mail);
 
-            foreach (array_unique($recipients, SORT_REGULAR) as $recipient) {
+            foreach ($recipients as $recipient) {
                 $this->mailQueueRepository->save(new MailQueue($recipient, $mail, new DateTimeImmutable()));
             }
         });
+    }
+
+    private function addRecipient(Collection $recipients, Recipient $recipient): void
+    {
+        if ($recipient->isValid() && ! $recipients->contains($recipient)) {
+            $recipients->add($recipient);
+        }
     }
 }
