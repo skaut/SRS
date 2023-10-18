@@ -175,6 +175,11 @@ class Mail
         $this->recipientEmails = $recipientEmails;
     }
 
+    public function getRecipientEmailsText(): string
+    {
+        return implode(', ', $this->recipientEmails);
+    }
+
     public function getSubject(): string
     {
         return $this->subject;
