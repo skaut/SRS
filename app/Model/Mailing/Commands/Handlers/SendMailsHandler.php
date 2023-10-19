@@ -51,7 +51,6 @@ class SendMailsHandler
             $this->mailQueueRepository->save($mailToSend);
 
             $i++;
-
             if ($i % 10 === 0) {
                 sleep(2);
             }
