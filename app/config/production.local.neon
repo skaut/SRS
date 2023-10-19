@@ -1,4 +1,6 @@
 parameters:
+    mailing:
+        seminarEmail: "__CONFIG_MAILING_SEMINAR_EMAIL__"
 
 nettrine.dbal:
     connection:

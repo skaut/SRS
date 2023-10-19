@@ -67,10 +67,6 @@ class MailingFormFactory
         $renderer->wrappers['control']['container'] = 'div class="col-7"';
         $renderer->wrappers['label']['container']   = 'div class="col-5 col-form-label"';
 
-        $form->addText('seminarEmail', 'admin.configuration.mailing_email')
-            ->addRule(Form::FILLED, 'admin.configuration.mailing_email_empty')
-            ->addRule(Form::EMAIL, 'admin.configuration.mailing_email_format');
-
         $form->addText('contactFormRecipients', 'admin.configuration.mailing_contact_form_recipients')
             ->addRule(Form::FILLED, 'admin.configuration.mailing_contact_form_recipients_empty')
             ->addRule([$this, 'validateEmails'], 'admin.configuration.mailing_contact_form_recipients_format');
@@ -80,7 +76,6 @@ class MailingFormFactory
         $form->addSubmit('submit', 'admin.common.save');
 
         $form->setDefaults([
-            'seminarEmail' => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL)),
             'contactFormRecipients' => implode(', ', $this->queryBus->handle(new SettingArrayValueQuery(Settings::CONTACT_FORM_RECIPIENTS))),
             'contactFormGuestsAllowed' => $this->queryBus->handle(new SettingBoolValueQuery(Settings::CONTACT_FORM_GUESTS_ALLOWED)),
         ]);
@@ -98,25 +93,6 @@ class MailingFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL)) !== $values->seminarEmail) {
-            $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_EMAIL_UNVERIFIED, $values->seminarEmail));
-
-            $verificationCode = substr(md5(uniqid((string) mt_rand(), true)), 0, 8);
-            $this->commandBus->handle(new SetSettingStringValue(Settings::SEMINAR_EMAIL_VERIFICATION_CODE, $verificationCode));
-
-            $link = $this->linkGenerator->link('Api:Mail:verify', ['code' => $verificationCode]);
-
-            $this->commandBus->handle(new CreateTemplateMail(
-                null,
-                new ArrayCollection([$values->seminarEmail]),
-                Template::EMAIL_VERIFICATION,
-                [
-                    TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
-                    TemplateVariable::EMAIL_VERIFICATION_LINK => $link,
-                ],
-            ));
-        }
-
         $contactFormRecipients = array_map(
             static fn (string $o) => trim($o),
             explode(',', $values->contactFormRecipients),

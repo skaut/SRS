@@ -21,9 +21,10 @@ use function sleep;
 class SendMailsHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private readonly QueryBus $queryBus,
+        private readonly string              $seminarEmail,
+        private readonly QueryBus            $queryBus,
         private readonly MailQueueRepository $mailQueueRepository,
-        private readonly MailFactory $mailFactory,
+        private readonly MailFactory         $mailFactory,
     ) {
     }
 
@@ -36,7 +37,7 @@ class SendMailsHandler implements MessageHandlerInterface
         }
 
         $from = new Recipient(
-            $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_EMAIL)),
+            $this->seminarEmail,
             $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
         );
 

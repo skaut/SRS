@@ -25,21 +25,6 @@ class Settings
     public const SEMINAR_NAME = 'seminar_name';
 
     /**
-     * E-mail semináře.
-     */
-    public const SEMINAR_EMAIL = 'seminar_email';
-
-    /**
-     * Neověřený změněný e-mail semináře.
-     */
-    public const SEMINAR_EMAIL_UNVERIFIED = 'seminar_email_unverified';
-
-    /**
-     * Ověřovací kód pro změnu e-mailu.
-     */
-    public const SEMINAR_EMAIL_VERIFICATION_CODE = 'seminar_email_verification_code';
-
-    /**
      * Začátek semináře.
      */
     public const SEMINAR_FROM_DATE = 'seminar_from_date';
