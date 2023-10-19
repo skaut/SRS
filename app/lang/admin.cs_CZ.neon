@@ -625,9 +625,10 @@ mailing:
         heading: "Historie"
         datetime: "Odesláno"
         subject: "Předmět"
+        recipient_users: "Příjemci - uživatelé"
         recipient_roles: "Příjemci - role"
         recipient_subevents: "Příjemci - podakce"
-        recipient_users: "Příjemci - uživatelé"
+        recipient_emails: "Příjemci - e-maily"
         automatic: "Automatický"
 
 configuration:

@@ -44,6 +44,13 @@ class SendFormFactory
     {
         $form = $this->baseFormFactory->create();
 
+        $recipientUsersMultiSelect = $form->addMultiSelect(
+            'recipientUsers',
+            'admin.mailing.send.recipient_users',
+            $this->userRepository->getUsersOptions(),
+        )
+            ->setHtmlAttribute('data-live-search', 'true');
+
         $recipientRolesMultiSelect = $form->addMultiSelect(
             'recipientRoles',
             'admin.mailing.send.recipient_roles',
@@ -56,12 +63,10 @@ class SendFormFactory
             $this->subeventService->getSubeventsOptionsWithUsersCount(),
         );
 
-        $recipientUsersMultiSelect = $form->addMultiSelect(
-            'recipientUsers',
-            'admin.mailing.send.recipient_users',
-            $this->userRepository->getUsersOptions(),
-        )
-            ->setHtmlAttribute('data-live-search', 'true');
+        $recipientUsersMultiSelect
+            ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
+            ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
+            ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
 
         $recipientRolesMultiSelect
             ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
@@ -71,11 +76,6 @@ class SendFormFactory
         $recipientSubeventsMultiSelect
             ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
             ->addConditionOn($recipientUsersMultiSelect, Form::BLANK)
-            ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
-
-        $recipientUsersMultiSelect
-            ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
-            ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
             ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
 
         $form->addText('copy', 'admin.mailing.send.copy')
