@@ -15,6 +15,8 @@ use App\Services\QueryBus;
 use DateTimeImmutable;
 use Ublaboo\Mailing\MailFactory;
 
+use function sleep;
+
 class SendMailsHandler
 {
     public function __construct(
@@ -37,6 +39,7 @@ class SendMailsHandler
             $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
         );
 
+        $i = 0;
         foreach ($mailsToSend as $mailToSend) {
             $to          = new Recipient($mailToSend->getRecipientEmail(), $mailToSend->getRecipientName());
             $messageData = new SrsMailData($from, $to, $mailToSend->getMail()->getSubject(), $mailToSend->getMail()->getText());
@@ -46,6 +49,11 @@ class SendMailsHandler
             $mailToSend->setSent(true);
             $mailToSend->setSendDatetime(new DateTimeImmutable());
             $this->mailQueueRepository->save($mailToSend);
+
+            $i++;
+            if ($i % 10 === 0) {
+                sleep(2);
+            }
         }
     }
 }
