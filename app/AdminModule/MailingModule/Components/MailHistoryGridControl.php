@@ -76,8 +76,8 @@ class MailHistoryGridControl extends Control
         $grid->addColumnText('recipientEmails', 'admin.mailing.history.recipient_emails', 'recipientEmailsText')
             ->setFilterText()
             ->setCondition(static function (QueryBuilder $qb, string $value): void {
-                $qb->andWhere('m.recipientUsers LIKE :email')
-                    ->setParameter('email', $value);
+                $qb->andWhere('m.recipientEmails LIKE :email')
+                    ->setParameter('email', '%' . $value . '%');
             });
 
         $grid->addColumnText('subject', 'admin.mailing.history.subject')
