@@ -268,5 +268,6 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
 
         TemplateFactory::createTemplate($this->templateRepository, Template::PROGRAM_REGISTERED);
+        TemplateFactory::createTemplate($this->templateRepository, Template::PROGRAM_UNREGISTERED);
     }
 }
