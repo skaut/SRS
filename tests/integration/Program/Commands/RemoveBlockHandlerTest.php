@@ -9,6 +9,11 @@ use App\Model\Acl\Role;
 use App\Model\Application\ApplicationFactory;
 use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Mailing\Mail;
+use App\Model\Mailing\MailQueue;
+use App\Model\Mailing\Repositories\TemplateRepository;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateFactory;
 use App\Model\Program\Block;
 use App\Model\Program\Category;
 use App\Model\Program\Commands\RemoveBlock;
@@ -49,13 +54,13 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
 
     private SettingsRepository $settingsRepository;
 
+    private TemplateRepository $templateRepository;
+
     /**
      * Odstranění bloku - odstraní se i jeho programy a účastníci.
      *
      * @throws OptimisticLockException
      * @throws Throwable
-     *
-     * @skip temporary skip because of Translator
      */
     public function testRemoveBlock(): void
     {
@@ -73,6 +78,7 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
         $user = new User();
         $user->setFirstName('First');
         $user->setLastName('Last');
+        $user->setEmail('mail@mail.cz');
         $user->addRole($role);
         $user->setApproved(true);
         $this->userRepository->save($user);
@@ -105,7 +111,7 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
     /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
-        return [Block::class, Settings::class];
+        return [Block::class, Settings::class, Mail::class, MailQueue::class, Template::class];
     }
 
     protected function _before(): void
@@ -123,7 +129,10 @@ final class RemoveBlockHandlerTest extends CommandHandlerTest
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
         $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
         $this->settingsRepository           = $this->tester->grabService(SettingsRepository::class);
+        $this->templateRepository           = $this->tester->grabService(TemplateRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
+
+        TemplateFactory::createTemplate($this->templateRepository, Template::PROGRAM_UNREGISTERED);
     }
 }

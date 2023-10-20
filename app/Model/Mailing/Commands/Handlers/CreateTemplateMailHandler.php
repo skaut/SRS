@@ -17,10 +17,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Nette\Localization\Translator;
 
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use function str_replace;
 use function strval;
 
-class CreateTemplateMailHandler
+class CreateTemplateMailHandler implements MessageHandlerInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
