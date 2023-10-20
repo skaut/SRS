@@ -13,11 +13,12 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\QueryBus;
 use DateTimeImmutable;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Ublaboo\Mailing\MailFactory;
 
 use function sleep;
 
-class SendMailsHandler
+class SendMailsHandler implements MessageHandlerInterface
 {
     public function __construct(
         private readonly QueryBus $queryBus,

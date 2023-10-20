@@ -188,4 +188,9 @@ class Template
     {
         return $this->systemTemplate;
     }
+
+    public function setSystemTemplate(bool $systemTemplate): void
+    {
+        $this->systemTemplate = $systemTemplate;
+    }
 }

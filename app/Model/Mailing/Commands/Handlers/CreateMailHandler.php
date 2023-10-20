@@ -17,8 +17,9 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class CreateMailHandler
+class CreateMailHandler implements MessageHandlerInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $em,

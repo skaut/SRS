@@ -9,6 +9,11 @@ use App\Model\Acl\Role;
 use App\Model\Application\ApplicationFactory;
 use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Mailing\Mail;
+use App\Model\Mailing\MailQueue;
+use App\Model\Mailing\Repositories\TemplateRepository;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateFactory;
 use App\Model\Program\Block;
 use App\Model\Program\Category;
 use App\Model\Program\Commands\RemoveCategory;
@@ -44,12 +49,12 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
 
     private SettingsRepository $settingsRepository;
 
+    private TemplateRepository $templateRepository;
+
     /**
      * Odstranění kategorie - automaticky přihlašovaní, kteří jsou nově oprávněni jsou přihlášeni.
      *
      * @throws Throwable
-     *
-     * @skip temporary skip because of Translator
      */
     public function testRemoveCategory(): void
     {
@@ -70,6 +75,7 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
         $user = new User();
         $user->setFirstName('First');
         $user->setLastName('Last');
+        $user->setEmail('mail@mail.cz');
         $user->addRole($role2);
         $user->setApproved(true);
         $this->userRepository->save($user);
@@ -100,7 +106,7 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
     /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
-        return [Category::class, Settings::class];
+        return [Category::class, Settings::class, Mail::class, MailQueue::class, Template::class];
     }
 
     protected function _before(): void
@@ -117,8 +123,11 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
         $this->applicationRepository = $this->tester->grabService(ApplicationRepository::class);
         $this->blockRepository       = $this->tester->grabService(BlockRepository::class);
         $this->settingsRepository    = $this->tester->grabService(SettingsRepository::class);
+        $this->templateRepository    = $this->tester->grabService(TemplateRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
+
+        TemplateFactory::createTemplate($this->templateRepository, Template::PROGRAM_REGISTERED);
     }
 }

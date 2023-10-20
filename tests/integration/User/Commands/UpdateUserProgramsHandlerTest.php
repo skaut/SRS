@@ -11,6 +11,11 @@ use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Application\RolesApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Mailing\Mail;
+use App\Model\Mailing\MailQueue;
+use App\Model\Mailing\Repositories\TemplateRepository;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateFactory;
 use App\Model\Program\Block;
 use App\Model\Program\Category;
 use App\Model\Program\Program;
@@ -46,10 +51,10 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
 
     private SettingsRepository $settingsRepository;
 
+    private TemplateRepository $templateRepository;
+
     /**
      * Aktualizace programů schváleného a neschváleného uživatele.
-     *
-     * @skip temporary skip because of Translator
      */
     public function testUserApproved(): void
     {
@@ -71,6 +76,7 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
         $user = new User();
         $user->setFirstName('First');
         $user->setLastName('Last');
+        $user->setEmail('mail@mail.cz');
         $user->addRole($role);
         $user->setApproved(false);
         $this->userRepository->save($user);
@@ -101,8 +107,6 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
 
     /**
      * Aktualizace programů při změně podakcí.
-     *
-     * @skip temporary skip because of Translator
      */
     public function testUserSubeventsChanged(): void
     {
@@ -128,6 +132,7 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
         $user = new User();
         $user->setFirstName('First');
         $user->setLastName('Last');
+        $user->setEmail('mail@mail.cz');
         $user->addRole($role);
         $user->setApproved(true);
         $this->userRepository->save($user);
@@ -159,8 +164,6 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
 
     /**
      * Aktualizace programů při změně rolí.
-     *
-     * @skip temporary skip because of Translator
      */
     public function testUserRolesChanged(): void
     {
@@ -190,6 +193,7 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
         $user = new User();
         $user->setFirstName('First');
         $user->setLastName('Last');
+        $user->setEmail('mail@mail.cz');
         $user->addRole($role1);
         $user->setApproved(true);
         $this->userRepository->save($user);
@@ -241,7 +245,7 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
     /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
-        return [User::class, Settings::class];
+        return [User::class, Settings::class, Mail::class, MailQueue::class, Template::class];
     }
 
     protected function _before(): void
@@ -258,8 +262,12 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
         $this->applicationRepository = $this->tester->grabService(ApplicationRepository::class);
         $this->categoryRepository    = $this->tester->grabService(CategoryRepository::class);
         $this->settingsRepository    = $this->tester->grabService(SettingsRepository::class);
+        $this->templateRepository    = $this->tester->grabService(TemplateRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
+
+        TemplateFactory::createTemplate($this->templateRepository, Template::PROGRAM_REGISTERED);
+        TemplateFactory::createTemplate($this->templateRepository, Template::PROGRAM_UNREGISTERED);
     }
 }

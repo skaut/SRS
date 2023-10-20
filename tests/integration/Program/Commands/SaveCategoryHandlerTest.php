@@ -9,6 +9,11 @@ use App\Model\Acl\Role;
 use App\Model\Application\ApplicationFactory;
 use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Mailing\Mail;
+use App\Model\Mailing\MailQueue;
+use App\Model\Mailing\Repositories\TemplateRepository;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateFactory;
 use App\Model\Program\Block;
 use App\Model\Program\Category;
 use App\Model\Program\Commands\SaveCategory;
@@ -46,13 +51,13 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
 
     private SettingsRepository $settingsRepository;
 
+    private TemplateRepository $templateRepository;
+
     /**
      * Změna rolí u kategorie - neoprávnění účastníci a náhradníci jsou odhlášeni, automaticky přihlašovaní přihlášeni.
      *
      * @throws OptimisticLockException
      * @throws Throwable
-     *
-     * @skip temporary skip because of Translator
      */
     public function testChangeRegisterableRoles(): void
     {
@@ -86,6 +91,7 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
         $user1 = new User();
         $user1->setFirstName('First');
         $user1->setLastName('Last');
+        $user1->setEmail('mail@mail.cz');
         $user1->addRole($role1);
         $user1->setApproved(true);
         $this->userRepository->save($user1);
@@ -96,6 +102,7 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
         $user2 = new User();
         $user2->setFirstName('First');
         $user2->setLastName('Last');
+        $user2->setEmail('mail@mail.cz');
         $user2->addRole($role2);
         $user2->setApproved(true);
         $this->userRepository->save($user2);
@@ -106,6 +113,7 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
         $user3 = new User();
         $user3->setFirstName('First');
         $user3->setLastName('Last');
+        $user3->setEmail('mail@mail.cz');
         $user3->addRole($role3);
         $user3->setApproved(true);
         $this->userRepository->save($user3);
@@ -116,6 +124,7 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
         $user4 = new User();
         $user4->setFirstName('First');
         $user4->setLastName('Last');
+        $user4->setEmail('mail@mail.cz');
         $user4->addRole($role2);
         $user4->setApproved(true);
         $this->userRepository->save($user4);
@@ -166,7 +175,7 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
     /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
-        return [Category::class, Settings::class];
+        return [Category::class, Settings::class, Mail::class, MailQueue::class, Template::class];
     }
 
     protected function _before(): void
@@ -183,8 +192,12 @@ final class SaveCategoryHandlerTest extends CommandHandlerTest
         $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
         $this->settingsRepository           = $this->tester->grabService(SettingsRepository::class);
+        $this->templateRepository           = $this->tester->grabService(TemplateRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
+
+        TemplateFactory::createTemplate($this->templateRepository, Template::PROGRAM_REGISTERED);
+        TemplateFactory::createTemplate($this->templateRepository, Template::PROGRAM_UNREGISTERED);
     }
 }
