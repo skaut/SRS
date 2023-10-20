@@ -8,7 +8,11 @@ use Nette\Localization\Translator;
 
 class TranslatorStub implements Translator
 {
-    function translate($message, ...$parameters): string
+    /**
+     * @param string $message
+     * @param mixed  ...$parameters
+     */
+    public function translate($message, ...$parameters): string
     {
         return $message;
     }

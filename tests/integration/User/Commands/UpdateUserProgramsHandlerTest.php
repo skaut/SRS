@@ -11,6 +11,8 @@ use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Application\RolesApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Mailing\Mail;
+use App\Model\Mailing\MailQueue;
 use App\Model\Mailing\Repositories\TemplateRepository;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateFactory;
@@ -243,7 +245,7 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
     /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
-        return [User::class, Settings::class];
+        return [User::class, Settings::class, Mail::class, MailQueue::class, Template::class];
     }
 
     protected function _before(): void
