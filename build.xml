@@ -50,6 +50,7 @@
                     <token key="CONFIG_MAIL_USERNAME" value="${env.CONFIG_MAIL_USERNAME}"/>
                     <token key="CONFIG_MAIL_PASSWORD" value="${env.CONFIG_MAIL_PASSWORD}"/>
                     <token key="CONFIG_MAIL_SECURE" value="${env.CONFIG_MAIL_SECURE}"/>
+                    <token key="CONFIG_MAILING_SENDER_EMAIL" value="${env.CONFIG_MAILING_SENDER_EMAIL}"/>
                     <token key="CONFIG_RECAPTCHA_SITE_KEY" value="${env.CONFIG_RECAPTCHA_SITE_KEY}"/>
                     <token key="CONFIG_RECAPTCHA_SECRET_KEY" value="${env.CONFIG_RECAPTCHA_SECRET_KEY}"/>
                 </replacetokens>

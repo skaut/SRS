@@ -16,6 +16,11 @@ mail:
     smtp: true
     host: smtp-srs.loc
 
+mailing:
+    mails: [
+    	senderEmail: srs@skaut.cz
+    ]
+
 recaptcha:
     siteKey: 6LdUAuMZAAAAALl3JDqMpjZpmhjwtOjGwRfuW7y7
     secretKey: 6LdUAuMZAAAAAJcLosipAZ1vw9o3voIzjvQwaPMX
