@@ -14,15 +14,15 @@ class SrsMailData implements IMessageData
 {
     /**
      * @param string    $senderName Jméno odesilatele mailu.
-     * @param Recipient $to       Příjemce mailu.
-     * @param string    $subject  Předmět mailu.
-     * @param string    $text     Text mailu.
+     * @param Recipient $to         Příjemce mailu.
+     * @param string    $subject    Předmět mailu.
+     * @param string    $text       Text mailu.
      */
     public function __construct(
-        private readonly string    $senderName,
+        private readonly string $senderName,
         private readonly Recipient $to,
-        private readonly string    $subject,
-        private readonly string    $text,
+        private readonly string $subject,
+        private readonly string $text,
     ) {
     }
 
