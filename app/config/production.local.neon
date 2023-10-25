@@ -22,7 +22,7 @@ mail:
 
 mailing:
     mails: [
-        senderEmail: "__CONFIG_MAILING_SEMINAR_EMAIL__"
+        senderEmail: "__CONFIG_MAILING_SENDER_EMAIL__"
     ]
 
 recaptcha:
