@@ -1,4 +1,6 @@
 parameters:
+    mailing:
+        seminarEmail: srs@skaut.cz
 
 nettrine.dbal:
     connection:
