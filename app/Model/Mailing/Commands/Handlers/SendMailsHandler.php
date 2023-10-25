@@ -20,17 +20,13 @@ use function sleep;
 
 class SendMailsHandler implements MessageHandlerInterface
 {
-    /**
-     * Limit počtu e-mailů odeslaných v rámci jednoho volání.
-     */
+    /** Limit počtu e-mailů odeslaných v rámci jednoho volání. */
     private const BATCH_LIMIT = 100;
 
     /** Počet e-mailů, po jejichž odeslání se čeká. */
     private const BATCH_WAIT_LIMIT = 10;
 
-    /**
-     * Počet sekund čekání před odesláním dalších e-mailů.
-     */
+    /** Počet sekund čekání před odesláním dalších e-mailů. */
     private const BATCH_WAIT_SECONDS = 2;
 
     public function __construct(
