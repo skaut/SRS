@@ -21,10 +21,10 @@ use function sleep;
 class SendMailsHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private readonly string              $seminarEmail,
-        private readonly QueryBus            $queryBus,
+        private readonly string $seminarEmail,
+        private readonly QueryBus $queryBus,
         private readonly MailQueueRepository $mailQueueRepository,
-        private readonly MailFactory         $mailFactory,
+        private readonly MailFactory $mailFactory,
     ) {
     }
 

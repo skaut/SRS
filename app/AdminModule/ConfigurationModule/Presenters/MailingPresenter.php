@@ -6,8 +6,6 @@ namespace App\AdminModule\ConfigurationModule\Presenters;
 
 use App\AdminModule\ConfigurationModule\Forms\MailingFormFactory;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
-use App\Model\Settings\Queries\SettingStringValueQuery;
-use App\Model\Settings\Settings;
 use Nette\Application\UI\Form;
 use Nette\DI\Attributes\Inject;
 use stdClass;

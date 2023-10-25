@@ -5,22 +5,15 @@ declare(strict_types=1);
 namespace App\AdminModule\ConfigurationModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
-use App\Model\Mailing\Commands\CreateTemplateMail;
-use App\Model\Mailing\Template;
-use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Commands\SetSettingArrayValue;
 use App\Model\Settings\Commands\SetSettingBoolValue;
-use App\Model\Settings\Commands\SetSettingStringValue;
 use App\Model\Settings\Queries\SettingArrayValueQuery;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
-use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Utils\Validators;
-use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
-use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\TextInput;
 use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
@@ -31,11 +24,7 @@ use function array_map;
 use function assert;
 use function explode;
 use function implode;
-use function md5;
-use function mt_rand;
-use function substr;
 use function trim;
-use function uniqid;
 
 /**
  * Formulář pro nastavení mailingu.
@@ -48,7 +37,6 @@ class MailingFormFactory
         private readonly BaseFormFactory $baseFormFactory,
         private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
-        private readonly LinkGenerator $linkGenerator,
         private readonly Validators $validators,
     ) {
     }
