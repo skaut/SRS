@@ -64,8 +64,6 @@ services:
     - App\Services\QueryBus(@messenger.queryBus.bus)
     - App\Services\EventBus(@messenger.eventBus.bus)
 
-    - App\Model\Mailing\Commands\Handlers\SendMailsHandler(%mailing.seminarEmail%, _)
-
     - App\ApiModule\Services\ScheduleService
 
     - App\Commands\ClearCacheCommand(%appDir%/..)

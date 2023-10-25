@@ -1,6 +1,4 @@
 parameters:
-    mailing:
-        seminarEmail: srs@skaut.cz
 
 nettrine.dbal:
     connection:
@@ -17,6 +15,11 @@ skautis:
 mail:
     smtp: true
     host: smtp-srs.loc
+
+mailing:
+    mails: [
+    	senderEmail: srs@skaut.cz
+    ]
 
 recaptcha:
     siteKey: 6LdUAuMZAAAAALl3JDqMpjZpmhjwtOjGwRfuW7y7

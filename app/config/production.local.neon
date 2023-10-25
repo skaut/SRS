@@ -1,6 +1,4 @@
 parameters:
-    mailing:
-        seminarEmail: "__CONFIG_MAILING_SEMINAR_EMAIL__"
 
 nettrine.dbal:
     connection:
@@ -21,6 +19,11 @@ mail:
     username: "__CONFIG_MAIL_USERNAME__"
     password: "__CONFIG_MAIL_PASSWORD__"
     secure: __CONFIG_MAIL_SECURE__
+
+mailing:
+    mails: [
+        senderEmail: "__CONFIG_MAILING_SEMINAR_EMAIL__"
+    ]
 
 recaptcha:
     siteKey: "__CONFIG_RECAPTCHA_SITE_KEY__"
