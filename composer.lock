@@ -4209,16 +4209,16 @@
         },
         {
             "name": "nette/forms",
-            "version": "v3.1.12",
+            "version": "v3.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/forms.git",
-                "reference": "6c1db887a4cdaf5679203bfd658bac958fc04d99"
+                "reference": "94bad1c606de0d6f3dcea2f3ec53b713278f8119"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/forms/zipball/6c1db887a4cdaf5679203bfd658bac958fc04d99",
-                "reference": "6c1db887a4cdaf5679203bfd658bac958fc04d99",
+                "url": "https://api.github.com/repos/nette/forms/zipball/94bad1c606de0d6f3dcea2f3ec53b713278f8119",
+                "reference": "94bad1c606de0d6f3dcea2f3ec53b713278f8119",
                 "shasum": ""
             },
             "require": {
@@ -4237,6 +4237,9 @@
                 "nette/tester": "^2.4",
                 "phpstan/phpstan-nette": "^1",
                 "tracy/tracy": "^2.9"
+            },
+            "suggest": {
+                "ext-intl": "to use date/time controls"
             },
             "type": "library",
             "extra": {
@@ -4277,9 +4280,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/forms/issues",
-                "source": "https://github.com/nette/forms/tree/v3.1.12"
+                "source": "https://github.com/nette/forms/tree/v3.1.13"
             },
-            "time": "2023-10-10T00:56:51+00:00"
+            "time": "2023-10-29T15:28:11+00:00"
         },
         {
             "name": "nette/http",
@@ -12692,5 +12695,5 @@
         "ext-soap": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
