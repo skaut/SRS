@@ -11,8 +11,6 @@ use App\Model\Cms\Dto\ContentDto;
  */
 class TicketContentControl extends BaseContentControl
 {
-
-
     public function __construct(private readonly ITicketControlFactory $ticketControlFactory)
     {
     }
@@ -27,7 +25,8 @@ class TicketContentControl extends BaseContentControl
         $template->render();
     }
 
-    public function createComponentTicket(): TicketControl {
+    public function createComponentTicket(): TicketControl
+    {
         return $this->ticketControlFactory->create();
     }
 }

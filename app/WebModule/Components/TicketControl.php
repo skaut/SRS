@@ -10,11 +10,12 @@ use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\QueryBus;
 use DateTimeImmutable;
-use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Nette\Application\UI\Control;
+
+use function strval;
 
 /**
  * Komponenta se vstupenkou.
@@ -32,21 +33,20 @@ class TicketControl extends Control
 
         $ticketDownloadFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
 
-        $template->ticketsEnabled = $ticketDownloadFrom !== null;
-        $template->ticketsAvailable = $ticketDownloadFrom !== null && $ticketDownloadFrom > new DateTimeImmutable();
+        $template->ticketsEnabled    = $ticketDownloadFrom !== null;
+        $template->ticketsAvailable  = $ticketDownloadFrom !== null && $ticketDownloadFrom > new DateTimeImmutable();
         $template->registeredAndPaid = $this->getPresenter()->dbuser !== null
             && ! $this->dbuser->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
             && $this->dbuser->hasPaidEveryApplication();
-
-
 
         $template->qr = $this->generateQr($this->presenter->getUser()->getId());
 
         $template->render();
     }
 
-    public function handleDownloadTicket() {
-        $this->getPresenter()->redirect(":Export:Ticket:pdf");
+    public function handleDownloadTicket(): void
+    {
+        $this->getPresenter()->redirect(':Export:Ticket:pdf');
     }
 
     private function generateQr(int $id): string
