@@ -193,7 +193,7 @@ class AdditionalInformationFormFactory
 
         $form->addTextArea('about', 'web.profile.additional_information.about_me');
 
-        $form->addSubmit('submit', 'web.profile.additional_information.update_additional_information');
+        $form->addSubmit('submit', 'web.profile.additional_information.update');
 
         $form->setDefaults([
             'about' => $this->user->getAbout(),

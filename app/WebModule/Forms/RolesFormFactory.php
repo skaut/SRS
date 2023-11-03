@@ -122,24 +122,6 @@ class RolesFormFactory
                 ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.seminar.roles.cancel_registration_disabled'));
         }
 
-        $ticketDownloadFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
-        if ($ticketDownloadFrom !== null) {
-            $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.seminar.roles.download_ticket')
-                ->setHtmlAttribute('class', 'btn-secondary');
-
-            if (
-                $this->user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
-                || ! $this->user->hasPaidEveryApplication()
-                || $ticketDownloadFrom > new DateTimeImmutable()
-            ) {
-                $downloadTicketButton
-                    ->setDisabled()
-                    ->setHtmlAttribute('data-toggle', 'tooltip')
-                    ->setHtmlAttribute('data-placement', 'bottom')
-                    ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.seminar.roles.download_ticket_disabled'));
-            }
-        }
-
         $form->setDefaults([
             'id' => $id,
             'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),

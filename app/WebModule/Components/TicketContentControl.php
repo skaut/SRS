@@ -11,6 +11,12 @@ use App\Model\Cms\Dto\ContentDto;
  */
 class TicketContentControl extends BaseContentControl
 {
+
+
+    public function __construct(private readonly ITicketControlFactory $ticketControlFactory)
+    {
+    }
+
     public function render(ContentDto $content): void
     {
         $template = $this->template;
@@ -19,5 +25,9 @@ class TicketContentControl extends BaseContentControl
         $template->heading = $content->getHeading();
 
         $template->render();
+    }
+
+    public function createComponentTicket(): TicketControl {
+        return $this->ticketControlFactory->create();
     }
 }

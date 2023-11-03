@@ -93,7 +93,7 @@ class PersonalDetailsFormFactory
         $form->addText('state', 'web.profile.personal_details.state')
             ->addRule(Form::FILLED, 'web.profile.personal_details.state_empty');
 
-        $form->addSubmit('submit', 'web.profile.personal_details.update_personal_details');
+        $form->addSubmit('submit', 'web.profile.personal_details.update');
 
         $form->setDefaults([
             'id' => $id,

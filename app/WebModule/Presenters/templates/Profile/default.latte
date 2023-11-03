@@ -54,14 +54,7 @@
                         </div>
 
                         <legend>{_web.profile.seminar.ticket.heading}</legend>
-                        <div class="row mb-3">
-                            <div class="col-md-3 col-form-label">
-                                Vstupenka
-                            </div>
-                            <div class="col-md-9 col-form-label">
-
-                            </div>
-                        </div>
+                        {control ticket}
                     </div>
                 </div>
             </div>
@@ -180,7 +173,7 @@
                         <div class="row">
                             <div class="col">
                                 <div class="alert alert-info alert-forever" n:if="!$isAllowedEditCustomInputs">
-                                    {_web.profile.additional_information.additional_information_edit_not_allowed}
+                                    {_web.profile.additional_information.edit_not_allowed}
                                 </div>
                             </div>
                         </div>

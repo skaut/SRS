@@ -7,15 +7,5 @@
         </div>
     </div>
 
-    <div class="row mb-3">
-        <div class="col">
-            <barcode class="barcode" code="{$ticketUser->getId()}" type="QR" error="M" disableborder="1"/>
-        </div>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col">
-            <a n:href="exportschedule" class="btn btn-secondary mr-2">Stáhnout vstupenku (PDF)</a>
-        </div>
-    </div>
+    {control ticket}
 </div>

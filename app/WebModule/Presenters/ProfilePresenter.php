@@ -15,6 +15,8 @@ use App\Services\Authenticator;
 use App\Services\ExcelExportService;
 use App\WebModule\Components\ApplicationsGridControl;
 use App\WebModule\Components\IApplicationsGridControlFactory;
+use App\WebModule\Components\ITicketControlFactory;
+use App\WebModule\Components\TicketControl;
 use App\WebModule\Forms\AdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesFormFactory;
@@ -41,6 +43,9 @@ class ProfilePresenter extends WebBasePresenter
 
     #[Inject]
     public IApplicationsGridControlFactory $applicationsGridControlFactory;
+
+    #[Inject]
+    public ITicketControlFactory $ticketControlFactory;
 
     #[Inject]
     public ExcelExportService $excelExportService;
@@ -99,12 +104,12 @@ class ProfilePresenter extends WebBasePresenter
         $form = $this->personalDetailsFormFactory->create($this->user->id);
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            $this->flashMessage('web.profile.personal_details.personal_details_update_successful', 'success');
+            $this->flashMessage('web.profile.personal_details.update_successful', 'success');
             $this->redirect('this#personal-details');
         };
 
         $this->personalDetailsFormFactory->onSkautIsError[] = function (): void {
-            $this->flashMessage('web.profile.personal_details.personal_details_synchronization_failed', 'danger');
+            $this->flashMessage('web.profile.personal_details.synchronization_failed', 'danger');
         };
 
         return $form;
@@ -119,7 +124,7 @@ class ProfilePresenter extends WebBasePresenter
         $form = $this->additionalInformationFormFactory->create($this->user->id);
 
         $form->onSuccess[] = function (): void {
-            $this->flashMessage('web.profile.additional_information.additional_information_update_successfull', 'success');
+            $this->flashMessage('web.profile.additional_information.update_successfull', 'success');
             $this->redirect('this#additional-information');
         };
 
@@ -139,8 +144,6 @@ class ProfilePresenter extends WebBasePresenter
                 $this->flashMessage('web.profile.roles.roles_changed', 'success');
             } elseif ($form->isSubmitted() == $form['cancelRegistration']) {
                 $this->flashMessage('web.profile.roles.registration_canceled', 'success');
-            } elseif ($form->isSubmitted() == $form['downloadTicket']) {
-                $this->redirect(':Export:Ticket:pdf');
             }
 
             $this->authenticator->updateRoles($this->user);
@@ -153,5 +156,10 @@ class ProfilePresenter extends WebBasePresenter
     protected function createComponentApplicationsGrid(): ApplicationsGridControl
     {
         return $this->applicationsGridControlFactory->create();
+    }
+
+    protected function createComponentTicket(): TicketControl
+    {
+        return $this->ticketControlFactory->create();
     }
 }

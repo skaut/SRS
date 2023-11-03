@@ -112,17 +112,17 @@ profile:
         postcode_format: "Zadejte PSČ ve správném formátu."
         state: "Stát"
         state_empty: "Zadejte stát."
-        update_personal_details: "Aktualizovat údaje a uložit do skautISu"
-        personal_details_synchronization_failed: "Synchronizace se skautIS se nepodařila. Zkuste se znovu přihlásit."
-        personal_details_update_successful: "Osobní údaje úspěšně aktualizovány."
+        update: "Aktualizovat údaje a uložit do skautISu"
+        synchronization_failed: "Synchronizace se skautIS se nepodařila. Zkuste se znovu přihlásit."
+        update_successful: "Osobní údaje úspěšně aktualizovány."
 
     additional_information:
         group_heading: "Doplňující informace"
         custom_input_empty: "Pole je povinné."
         about_me: "O mně"
-        update_additional_information: "Upravit doplňující informace"
-        additional_information_update_successfull: "Doplňující informace úspěšně upraveny."
-        additional_information_edit_not_allowed: "Úprava údajů z přihlášky již není povolena."
+        update: "Upravit doplňující informace"
+        update_successfull: "Doplňující informace úspěšně upraveny."
+        edit_not_allowed: "Úprava údajů z přihlášky již není povolena."
 
 member:
     name: "Nepropojený účet člena"
