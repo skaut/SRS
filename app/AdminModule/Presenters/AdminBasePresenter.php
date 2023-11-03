@@ -134,4 +134,9 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->skautIsService->updateUserRole($roleId);
         $this->redirect('this');
     }
+
+    public function getDbUser(): User|null
+    {
+        return $this->dbuser;
+    }
 }

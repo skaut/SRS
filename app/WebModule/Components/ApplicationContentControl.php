@@ -12,7 +12,6 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
-use App\Model\User\Repositories\UserRepository;
 use App\Services\Authenticator;
 use App\Services\QueryBus;
 use App\WebModule\Forms\ApplicationFormFactory;
@@ -30,7 +29,6 @@ class ApplicationContentControl extends BaseContentControl
         private readonly QueryBus $queryBus,
         private readonly ApplicationFormFactory $applicationFormFactory,
         private readonly Authenticator $authenticator,
-        private readonly UserRepository $userRepository,
         private readonly RoleRepository $roleRepository,
         private readonly SubeventRepository $subeventRepository,
         public IApplicationsGridControlFactory $applicationsGridControlFactory,
@@ -60,7 +58,7 @@ class ApplicationContentControl extends BaseContentControl
         $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         if ($user->isLoggedIn()) {
-            $dbuser              = $this->userRepository->findById($user->id);
+            $dbuser              = $this->getPresenter()->getDbUser();
             $userHasFixedFeeRole = $dbuser->hasFixedFeeRole();
 
             $template->unapprovedRole      = $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName());

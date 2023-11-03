@@ -109,6 +109,11 @@ abstract class WebBasePresenter extends BasePresenter
         $this->redirect(':Admin:Acl:default');
     }
 
+    public function getDbUser(): User|null
+    {
+        return $this->dbuser;
+    }
+
     /**
      * Zkontroluje stav instalace.
      *

@@ -31,15 +31,19 @@ class TicketControl extends Control
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/ticket.latte');
 
-        $ticketDownloadFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
+        if ($this->getPresenter()->getUser()->isLoggedIn()) {
+            $ticketDownloadFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
 
-        $template->ticketsEnabled    = $ticketDownloadFrom !== null;
-        $template->ticketsAvailable  = $ticketDownloadFrom !== null && $ticketDownloadFrom > new DateTimeImmutable();
-        $template->registeredAndPaid = $this->getPresenter()->dbuser !== null
-            && ! $this->dbuser->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
-            && $this->dbuser->hasPaidEveryApplication();
+            $template->ticketsEnabled   = $ticketDownloadFrom !== null;
+            $template->ticketsAvailable = $ticketDownloadFrom !== null && $ticketDownloadFrom > new DateTimeImmutable();
 
-        $template->qr = $this->generateQr($this->presenter->getUser()->getId());
+            $user = $this->getPresenter()->getDbUser();
+
+            $template->registeredAndPaid = ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
+                && $user->hasPaidEveryApplication();
+
+            $template->qr = $this->generateQr($this->presenter->getUser()->getId());
+        }
 
         $template->render();
     }

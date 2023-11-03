@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
-use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
@@ -35,8 +34,6 @@ use Tracy\ILogger;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
-
-use function assert;
 
 /**
  * Komponenta pro správu programových bloků.
@@ -277,9 +274,6 @@ class ProgramBlocksGridControl extends Control
      */
     public function isAllowedModifyBlock(Block $block): bool
     {
-        $presenter = $this->getPresenter();
-        assert($presenter instanceof AdminBasePresenter);
-
-        return $presenter->dbuser->isAllowedModifyBlock($block);
+        return $this->getPresenter()->getDbUser()->isAllowedModifyBlock($block);
     }
 }
