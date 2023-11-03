@@ -13,7 +13,7 @@ use Nette\Application\UI\Form;
 use stdClass;
 
 /**
- * Komponenta s FAQ.
+ * Komponenta obsahu s FAQ.
  */
 class FaqContentControl extends BaseContentControl
 {

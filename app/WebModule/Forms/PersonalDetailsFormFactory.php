@@ -51,18 +51,18 @@ class PersonalDetailsFormFactory
 
         $form->addHidden('id');
 
-        $inputSex = $form->addRadioList('sex', 'web.profile.sex', Sex::getSexOptions());
+        $inputSex = $form->addRadioList('sex', 'web.profile.personal_details.sex', Sex::getSexOptions());
 
-        $inputFirstName = $form->addText('firstName', 'web.profile.firstname')
-            ->addRule(Form::FILLED, 'web.profile.firstname_empty');
+        $inputFirstName = $form->addText('firstName', 'web.profile.personal_details.firstname')
+            ->addRule(Form::FILLED, 'web.profile.personal_details.firstname_empty');
 
-        $inputLastName = $form->addText('lastName', 'web.profile.lastname')
-            ->addRule(Form::FILLED, 'web.profile.lastname_empty');
+        $inputLastName = $form->addText('lastName', 'web.profile.personal_details.lastname')
+            ->addRule(Form::FILLED, 'web.profile.personal_details.lastname_empty');
 
-        $inputNickName = $form->addText('nickName', 'web.profile.nickname');
+        $inputNickName = $form->addText('nickName', 'web.profile.personal_details.nickname');
 
-        $inputBirthdateDate = new DateControl('web.profile.birthdate');
-        $inputBirthdateDate->addRule(Form::FILLED, 'web.profile.birthdate_empty');
+        $inputBirthdateDate = new DateControl('web.profile.personal_details.birthdate');
+        $inputBirthdateDate->addRule(Form::FILLED, 'web.profile.personal_details.birthdate_empty');
         $form->addComponent($inputBirthdateDate, 'birthdate');
 
         if ($this->user->isMember()) {
@@ -73,27 +73,27 @@ class PersonalDetailsFormFactory
             $inputBirthdateDate->setDisabled();
         }
 
-        $form->addText('email', 'web.profile.email')
+        $form->addText('email', 'web.profile.personal_details.email')
             ->setDisabled();
 
-        $form->addText('phone', 'web.profile.phone')
+        $form->addText('phone', 'web.profile.personal_details.phone')
             ->setDisabled();
 
-        $form->addText('street', 'web.profile.street')
-            ->addRule(Form::FILLED, 'web.profile.street_empty')
-            ->addRule(Form::PATTERN, 'web.profile.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
+        $form->addText('street', 'web.profile.personal_details.street')
+            ->addRule(Form::FILLED, 'web.profile.personal_details.street_empty')
+            ->addRule(Form::PATTERN, 'web.profile.personal_details.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
 
-        $form->addText('city', 'web.profile.city')
-            ->addRule(Form::FILLED, 'web.profile.city_empty');
+        $form->addText('city', 'web.profile.personal_details.city')
+            ->addRule(Form::FILLED, 'web.profile.personal_details.city_empty');
 
-        $form->addText('postcode', 'web.profile.postcode')
-            ->addRule(Form::FILLED, 'web.profile.postcode_empty')
-            ->addRule(Form::PATTERN, 'web.profile.postcode_format', '^\d{3} ?\d{2}$');
+        $form->addText('postcode', 'web.profile.personal_details.postcode')
+            ->addRule(Form::FILLED, 'web.profile.personal_details.postcode_empty')
+            ->addRule(Form::PATTERN, 'web.profile.personal_details.postcode_format', '^\d{3} ?\d{2}$');
 
-        $form->addText('state', 'web.profile.state')
-            ->addRule(Form::FILLED, 'web.profile.state_empty');
+        $form->addText('state', 'web.profile.personal_details.state')
+            ->addRule(Form::FILLED, 'web.profile.personal_details.state_empty');
 
-        $form->addSubmit('submit', 'web.profile.update_personal_details');
+        $form->addSubmit('submit', 'web.profile.personal_details.update_personal_details');
 
         $form->setDefaults([
             'id' => $id,

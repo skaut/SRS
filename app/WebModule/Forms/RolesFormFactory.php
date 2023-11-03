@@ -62,13 +62,13 @@ class RolesFormFactory
 
         $form->addHidden('id');
 
-        $rolesSelect = $form->addMultiSelect('roles', 'web.profile.roles')->setItems(
+        $rolesSelect = $form->addMultiSelect('roles', 'web.profile.seminar.roles.roles')->setItems(
             $this->aclService->getRolesOptionsWithCapacity(true, true, $this->user),
         )
-            ->addRule(Form::FILLED, 'web.profile.roles_empty')
-            ->addRule([$this, 'validateRolesCapacities'], 'web.profile.roles_capacity_occupied')
-            ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.roles_not_registerable')
-            ->addRule([$this, 'validateRolesMinimumAge'], 'web.application_content.roles_require_minimum_age')
+            ->addRule(Form::FILLED, 'web.profile.seminar.roles.roles_empty')
+            ->addRule([$this, 'validateRolesCapacities'], 'web.profile.seminar.roles.roles_capacity_occupied')
+            ->addRule([$this, 'validateRolesRegisterable'], 'web.profile.seminar.roles.roles_not_registerable')
+            ->addRule([$this, 'validateRolesMinimumAge'], 'web.profile.seminar.roles.roles_require_minimum_age')
             ->setDisabled(! $this->applicationService->isAllowedEditRegistration($this->user));
 
         foreach ($this->roleRepository->findFilteredRoles(true, false, true, $this->user) as $role) {
@@ -76,7 +76,7 @@ class RolesFormFactory
                 $rolesSelect->addRule(
                     [$this, 'validateRolesIncompatible'],
                     $this->translator->translate(
-                        'web.profile.incompatible_roles_selected',
+                        'web.profile.seminar.roles.incompatible_roles_selected',
                         null,
                         ['role' => $role->getName(), 'incompatibleRoles' => $role->getIncompatibleRolesText()],
                     ),
@@ -88,7 +88,7 @@ class RolesFormFactory
                 $rolesSelect->addRule(
                     [$this, 'validateRolesRequired'],
                     $this->translator->translate(
-                        'web.profile.required_roles_not_selected',
+                        'web.profile.seminar.roles.required_roles_not_selected',
                         null,
                         ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()],
                     ),
@@ -97,34 +97,34 @@ class RolesFormFactory
             }
         }
 
-        $submitButton = $form->addSubmit('submit', 'web.profile.change_roles');
+        $submitButton = $form->addSubmit('submit', 'web.profile.seminar.roles.change_roles');
 
-        $cancelRegistrationButton = $form->addSubmit('cancelRegistration', 'web.profile.cancel_registration')
+        $cancelRegistrationButton = $form->addSubmit('cancelRegistration', 'web.profile.seminar.roles.cancel_registration')
             ->setHtmlAttribute('class', 'btn-danger');
 
         if ($this->applicationService->isAllowedEditRegistration($this->user)) {
             $submitButton
                 ->setHtmlAttribute('data-toggle', 'confirmation')
-                ->setHtmlAttribute('data-content', $form->getTranslator()->translate('web.profile.change_roles_confirm'));
+                ->setHtmlAttribute('data-content', $form->getTranslator()->translate('web.profile.seminar.roles.change_roles_confirm'));
             $cancelRegistrationButton
                 ->setHtmlAttribute('data-toggle', 'confirmation')
-                ->setHtmlAttribute('data-content', $form->getTranslator()->translate('web.profile.cancel_registration_confirm'));
+                ->setHtmlAttribute('data-content', $form->getTranslator()->translate('web.profile.seminar.roles.cancel_registration_confirm'));
         } else {
             $submitButton
                 ->setDisabled()
                 ->setHtmlAttribute('data-toggle', 'tooltip')
                 ->setHtmlAttribute('data-placement', 'bottom')
-                ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.change_roles_disabled'));
+                ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.seminar.roles.change_roles_disabled'));
             $cancelRegistrationButton
                 ->setDisabled()
                 ->setHtmlAttribute('data-toggle', 'tooltip')
                 ->setHtmlAttribute('data-placement', 'bottom')
-                ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.cancel_registration_disabled'));
+                ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.seminar.roles.cancel_registration_disabled'));
         }
 
         $ticketDownloadFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
         if ($ticketDownloadFrom !== null) {
-            $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.download_ticket')
+            $downloadTicketButton = $form->addSubmit('downloadTicket', 'web.profile.seminar.roles.download_ticket')
                 ->setHtmlAttribute('class', 'btn-secondary');
 
             if (
@@ -136,7 +136,7 @@ class RolesFormFactory
                     ->setDisabled()
                     ->setHtmlAttribute('data-toggle', 'tooltip')
                     ->setHtmlAttribute('data-placement', 'bottom')
-                    ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.download_ticket_disabled'));
+                    ->setHtmlAttribute('title', $form->getTranslator()->translate('web.profile.seminar.roles.download_ticket_disabled'));
             }
         }
 

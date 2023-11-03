@@ -15,7 +15,7 @@ use App\WebModule\Forms\IContactFormFactory;
 use Throwable;
 
 /**
- * Komponenta s kontaktním formulářem.
+ * Komponenta obsahu s kontaktním formulářem.
  */
 class ContactFormContentControl extends BaseContentControl
 {

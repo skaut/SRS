@@ -1,0 +1,21 @@
+<div class="clearfix"></div>
+
+<div class="ticket-content">
+    <div class="row" n:ifcontent>
+        <div class="col" n:ifcontent>
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <barcode class="barcode" code="{$ticketUser->getId()}" type="QR" error="M" disableborder="1"/>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <a n:href="exportschedule" class="btn btn-secondary mr-2">Stáhnout vstupenku (PDF)</a>
+        </div>
+    </div>
+</div>

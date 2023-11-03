@@ -99,12 +99,12 @@ class ProfilePresenter extends WebBasePresenter
         $form = $this->personalDetailsFormFactory->create($this->user->id);
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            $this->flashMessage('web.profile.personal_details_update_successful', 'success');
+            $this->flashMessage('web.profile.personal_details.personal_details_update_successful', 'success');
             $this->redirect('this#personal-details');
         };
 
         $this->personalDetailsFormFactory->onSkautIsError[] = function (): void {
-            $this->flashMessage('web.profile.personal_details_synchronization_failed', 'danger');
+            $this->flashMessage('web.profile.personal_details.personal_details_synchronization_failed', 'danger');
         };
 
         return $form;
@@ -119,7 +119,7 @@ class ProfilePresenter extends WebBasePresenter
         $form = $this->additionalInformationFormFactory->create($this->user->id);
 
         $form->onSuccess[] = function (): void {
-            $this->flashMessage('web.profile.additional_information_update_successfull', 'success');
+            $this->flashMessage('web.profile.additional_information.additional_information_update_successfull', 'success');
             $this->redirect('this#additional-information');
         };
 
@@ -136,9 +136,9 @@ class ProfilePresenter extends WebBasePresenter
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() == $form['submit']) {
-                $this->flashMessage('web.profile.roles_changed', 'success');
+                $this->flashMessage('web.profile.roles.roles_changed', 'success');
             } elseif ($form->isSubmitted() == $form['cancelRegistration']) {
-                $this->flashMessage('web.profile.registration_canceled', 'success');
+                $this->flashMessage('web.profile.roles.registration_canceled', 'success');
             } elseif ($form->isSubmitted() == $form['downloadTicket']) {
                 $this->redirect(':Export:Ticket:pdf');
             }

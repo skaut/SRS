@@ -12,7 +12,7 @@ use App\Services\QueryBus;
 use Throwable;
 
 /**
- * Komponenta s místem.
+ * Komponenta obsahu s místem.
  */
 class PlaceContentControl extends BaseContentControl
 {

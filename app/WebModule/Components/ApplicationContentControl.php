@@ -22,7 +22,7 @@ use stdClass;
 use Throwable;
 
 /**
- * Komponenta s přihláškou.
+ * Komponenta obsahu s přihláškou.
  */
 class ApplicationContentControl extends BaseContentControl
 {

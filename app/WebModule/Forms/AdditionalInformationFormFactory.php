@@ -187,13 +187,13 @@ class AdditionalInformationFormFactory
             $custom->setDisabled(! $isAllowedEditCustomInputs);
 
             if ($customInput->isMandatory()) {
-                $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
+                $custom->addRule(Form::FILLED, 'web.profile.additional_information.custom_input_empty');
             }
         }
 
-        $form->addTextArea('about', 'web.profile.about_me');
+        $form->addTextArea('about', 'web.profile.additional_information.about_me');
 
-        $form->addSubmit('submit', 'web.profile.update_additional_information');
+        $form->addSubmit('submit', 'web.profile.additional_information.update_additional_information');
 
         $form->setDefaults([
             'about' => $this->user->getAbout(),

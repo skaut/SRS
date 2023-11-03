@@ -9,7 +9,7 @@ use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\CategoryRepository;
 
 /**
- * Komponenta s podrobnostmi o programových blocích.
+ * Komponenta obsahu s podrobnostmi o programových blocích.
  */
 class BlocksContentControl extends BaseContentControl
 {

@@ -11,20 +11,20 @@
         <div id="accordion" class="col">
             <div class="card mb-1">
                 <div class="card-header" style="transform: rotate(0);">
-                    <h5 class="mb-0">{_web.profile.seminar_group}</h5>
+                    <h4 class="mb-0">{_web.profile.seminar.group_heading}</h4>
                     <a href="#seminar" class="stretched-link" data-toggle="collapse" data-target="#seminar"></a>
                 </div>
                 <div id="seminar" class="collapse show" data-parent="#accordion">
                     <div class="card-body pb-1">
                         <div class="row mb-3">
                             <div class="col-md-3 col-form-label">
-                                {_web.profile.attendance}
+                                {_web.profile.seminar.attendance}
                             </div>
                             <div class="col-md-9 col-form-label">
                                 {if $dbuser->isInRole($nonregisteredRole)}
-                                    {_web.profile.nonregistered}
+                                    {_web.profile.seminar.nonregistered}
                                 {elseif !$dbuser->isApproved()}
-                                    {_web.profile.unapproved}
+                                    {_web.profile.seminar.unapproved}
                                 {else}
                                     {foreach $dbuser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}
                                 {/if}
@@ -32,44 +32,34 @@
                         </div>
                         <div class="row mb-3" n:if="$dbuser->isPaying()">
                             <div class="col-md-3 col-form-label">
-                                {_web.profile.account_number}
+                                {_web.profile.seminar.account_number}
                             </div>
                             <div class="col-md-9 col-form-label">
                                 {$accountNumber}
                             </div>
                         </div>
+
+                        <legend>{_web.profile.seminar.roles.heading}</legend>
                         <div class="row mb-3">
                             <div class="col">
                                 {control rolesForm}
                             </div>
                         </div>
+
+                        <legend>{_web.profile.seminar.applications.heading}</legend>
                         <div class="row mb-3">
                             <div class="col">
                                 {control applicationsGrid}
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="card mb-1">
-                <div class="card-header" style="transform: rotate(0);">
-                    <h5 class="mb-0">{_web.profile.personal_details_group}</h5>
-                    <a href="#personal-details" class="stretched-link" data-toggle="collapse" data-target="#personal-details"></a>
-                </div>
-                <div id="personal-details" class="collapse" data-parent="#accordion">
-                    <div class="card-body pb-1">
-                        <div class="row mb-3" n:if="$dbuser->getPhoto()">
+                        <legend>{_web.profile.seminar.ticket.heading}</legend>
+                        <div class="row mb-3">
                             <div class="col-md-3 col-form-label">
-                                {_web.profile.photo}
+                                Vstupenka
                             </div>
                             <div class="col-md-9 col-form-label">
-                                <img src="{$basePath}{$dbuser->getPhoto()}" alt="user photo"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                {control personalDetailsForm}
+
                             </div>
                         </div>
                     </div>
@@ -78,30 +68,7 @@
 
             <div class="card mb-1">
                 <div class="card-header" style="transform: rotate(0);">
-                    <h5 class="mb-0">{_web.profile.additional_information_group}</h5>
-                    <a href="#additional-information" class="stretched-link" data-toggle="collapse" data-target="#additional-information"></a>
-                </div>
-                <div id="additional-information" class="collapse" data-parent="#accordion">
-                    <div class="card-body pb-1">
-                        <div class="row">
-                            <div class="col">
-                                <div class="alert alert-info alert-forever" n:if="!$isAllowedEditCustomInputs">
-                                    {_web.profile.additional_information_edit_not_allowed}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                {control additionalInformationForm}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-1">
-                <div class="card-header" style="transform: rotate(0);">
-                    <h5 class="mb-0">{_web.profile.my_schedule_group}</h5>
+                    <h4 class="mb-0">{_web.profile.schedule.group_heading}</h4>
                     <a href="#schedule" class="stretched-link" data-toggle="collapse" data-target="#schedule"></a>
                 </div>
                 <div id="schedule" class="collapse" data-parent="#accordion">
@@ -109,7 +76,7 @@
                         <div class="row">
                             <div class="col">
                                 {if $userPrograms->isEmpty()}
-                                    <p>{_web.profile.no_programs}</p>
+                                    <p>{_web.profile.schedule.no_programs}</p>
                                 {else}
                                     <div class="row">
                                         <div class="col">
@@ -117,11 +84,11 @@
                                                 <table class="table table-sm table-bordered table-striped">
                                                     <thead>
                                                         <tr>
-                                                            <th class="text-right" style="width: 15%">{_web.profile.from}</th>
-                                                            <th class="text-right" style="width: 15%">{_web.profile.to}</th>
-                                                            <th style="width: 25%">{_web.profile.program_name}</th>
-                                                            <th style="width: 20%">{_web.profile.room}</th>
-                                                            <th style="width: 25%">{_web.profile.lectors}</th>
+                                                            <th class="text-right" style="width: 15%">{_web.profile.schedule.from}</th>
+                                                            <th class="text-right" style="width: 15%">{_web.profile.schedule.to}</th>
+                                                            <th style="width: 25%">{_web.profile.schedule.program_name}</th>
+                                                            <th style="width: 20%">{_web.profile.schedule.room}</th>
+                                                            <th style="width: 25%">{_web.profile.schedule.lectors}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -148,17 +115,17 @@
                                     <div class="row mb-3">
                                         <div class="col">
                                             <div class="btn-toolbar">
-                                                <a n:href="exportschedule" class="btn btn-secondary mr-2">{_web.profile.download_schedule_excel}</a>
+                                                <a n:href="exportschedule" class="btn btn-secondary mr-2">{_web.profile.schedule.download_schedule_excel}</a>
 
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <a n:href=":Export:Schedule:ical $user->id" class="btn btn-secondary">
-                                                            {_web.profile.download_schedule_ical}
+                                                            {_web.profile.schedule.download_schedule_ical}
                                                         </a>
                                                     </div>
                                                     <input type="text" class="form-control" id="schedule-url" value="{plink //:Export:Schedule:ical $user->id}">
                                                     <div class="input-group-append">
-                                                        <button class="btn btn-outline-secondary" onclick="clipboard()" title="{_web.profile.download_schedule_ical_copy}">
+                                                        <button class="btn btn-outline-secondary" onclick="clipboard()" title="{_web.profile.schedule.download_schedule_ical_copy}">
                                                             <span class="fa fa-clipboard">
                                                         </button>
                                                     </div>
@@ -173,6 +140,53 @@
                                         }
                                     </script>
                                 {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-1">
+                <div class="card-header" style="transform: rotate(0);">
+                    <h4 class="mb-0">{_web.profile.personal_details.group_heading}</h4>
+                    <a href="#personal-details" class="stretched-link" data-toggle="collapse" data-target="#personal-details"></a>
+                </div>
+                <div id="personal-details" class="collapse" data-parent="#accordion">
+                    <div class="card-body pb-1">
+                        <div class="row mb-3" n:if="$dbuser->getPhoto()">
+                            <div class="col-md-3 col-form-label">
+                                {_web.profile.personal_details.photo}
+                            </div>
+                            <div class="col-md-9 col-form-label">
+                                <img src="{$basePath}{$dbuser->getPhoto()}" alt="user photo"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {control personalDetailsForm}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-1">
+                <div class="card-header" style="transform: rotate(0);">
+                    <h4 class="mb-0">{_web.profile.additional_information.group_heading}</h4>
+                    <a href="#additional-information" class="stretched-link" data-toggle="collapse" data-target="#additional-information"></a>
+                </div>
+                <div id="additional-information" class="collapse" data-parent="#accordion">
+                    <div class="card-body pb-1">
+                        <div class="row">
+                            <div class="col">
+                                <div class="alert alert-info alert-forever" n:if="!$isAllowedEditCustomInputs">
+                                    {_web.profile.additional_information.additional_information_edit_not_allowed}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {control additionalInformationForm}
                             </div>
                         </div>
                     </div>
