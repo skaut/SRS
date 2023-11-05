@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
@@ -24,7 +23,6 @@ class ProgramsContentControl extends BaseContentControl
     public function __construct(
         private readonly QueryBus $queryBus,
         private readonly UserRepository $userRepository,
-        private readonly RoleRepository $roleRepository,
     ) {
     }
 

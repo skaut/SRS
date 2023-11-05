@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Cms\Repositories\FaqRepository;
 use App\WebModule\Forms\FaqFormFactory;
@@ -19,7 +18,6 @@ class FaqContentControl extends BaseContentControl
     public function __construct(
         private readonly FaqFormFactory $faqFormFactory,
         private readonly FaqRepository $faqRepository,
-        private readonly RoleRepository $roleRepository,
     ) {
     }
 

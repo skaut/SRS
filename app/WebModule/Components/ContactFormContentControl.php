@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
@@ -21,7 +20,6 @@ class ContactFormContentControl extends BaseContentControl
     public function __construct(
         private readonly QueryBus $queryBus,
         private readonly IContactFormFactory $contactFormFactory,
-        private readonly RoleRepository $roleRepository,
     ) {
     }
 
