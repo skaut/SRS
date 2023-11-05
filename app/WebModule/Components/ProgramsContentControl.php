@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 use App\Model\Acl\Repositories\RoleRepository;
-use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Enums\ProgramRegistrationType;
 use App\Model\Settings\Queries\IsAllowedRegisterProgramsQuery;
@@ -45,12 +44,14 @@ class ProgramsContentControl extends BaseContentControl
         $template->registerProgramsFrom          = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::REGISTER_PROGRAMS_FROM));
         $template->registerProgramsTo            = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::REGISTER_PROGRAMS_TO));
 
-        $user                = $this->getPresenter()->user;
-        $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
+        $user = $this->getPresenter()->getUser();
 
         if ($user->isLoggedIn()) {
+            $template->guestRole             = false;
             $template->userWaitingForPayment = ! $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT))
                 && $this->userRepository->findById($user->getId())->getWaitingForPaymentApplications()->count() > 0;
+        } else {
+            $template->guestRole = true;
         }
 
         $template->render();
