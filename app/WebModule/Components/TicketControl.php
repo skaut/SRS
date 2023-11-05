@@ -16,6 +16,7 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Nette\Application\UI\Control;
 
+use function assert;
 use function strval;
 
 /**
@@ -38,7 +39,9 @@ class TicketControl extends Control
         $user = $presenter->getUser();
 
         if ($presenter->getUser()->isLoggedIn()) {
-            $ticketDownloadFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
+            $template->guestRole = false;
+
+            $ticketDownloadFrom         = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
             $template->ticketsAvailable = $ticketDownloadFrom !== null && $ticketDownloadFrom > new DateTimeImmutable();
 
             $template->registeredAndPaid = ! $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName())
@@ -46,6 +49,8 @@ class TicketControl extends Control
                 && $presenter->getDbUser()->hasPaidEveryApplication();
 
             $template->qr = $this->generateQr($this->presenter->getUser()->getId());
+        } else {
+            $template->guestRole = true;
         }
 
         $template->render();

@@ -66,6 +66,7 @@ class ApplicationContentControl extends BaseContentControl
             $dbUser              = $presenter->getDbUser();
             $userHasFixedFeeRole = $dbUser->hasFixedFeeRole();
 
+            $template->guestRole           = false;
             $template->unapprovedRole      = $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName());
             $template->nonregisteredRole   = $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName());
             $template->noRegisterableRole  = $this->roleRepository->findFilteredRoles(true, false, false)->isEmpty();

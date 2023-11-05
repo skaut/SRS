@@ -12,7 +12,6 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
-use App\Services\QueryBus;
 use App\Utils\Validators;
 use Nette;
 use Nette\Application\UI\Form;
@@ -35,7 +34,6 @@ class RolesFormFactory
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
-        private readonly QueryBus $queryBus,
         private readonly UserRepository $userRepository,
         private readonly RoleRepository $roleRepository,
         private readonly ApplicationService $applicationService,
