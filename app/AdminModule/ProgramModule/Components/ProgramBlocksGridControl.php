@@ -280,6 +280,6 @@ class ProgramBlocksGridControl extends Control
         $presenter = $this->getPresenter();
         assert($presenter instanceof AdminBasePresenter);
 
-        return $presenter->dbuser->isAllowedModifyBlock($block);
+        return $presenter->dbUser->isAllowedModifyBlock($block);
     }
 }
