@@ -22,6 +22,11 @@ class TicketContentControl extends BaseContentControl
 
         $template->heading = $content->getHeading();
 
+        $presenter = $this->getPresenter();
+
+        $template->guestRole = !$presenter->getUser()->isLoggedIn();
+        $template->backlink = $presenter->getHttpRequest()->getUrl()->getPath();
+
         $template->render();
     }
 

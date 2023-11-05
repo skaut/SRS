@@ -1,11 +1,17 @@
-<div class="row mb-3">
-    <div class="col">
-        <img src="{$qr|dataStream}">
-    </div>
-</div>
+{if ! $ticketsAvailable}
 
-<div class="row mb-3">
-    <div class="col">
-        <a n:href="downloadTicket" class="btn btn-secondary mr-2">Stáhnout vstupenku (PDF)</a>
+{elseif ! $registeredAndPaid}
+
+{else}
+    <div class="row mb-3">
+        <div class="col">
+            <img src="{$qr|dataStream}">
+        </div>
     </div>
-</div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <a n:href="downloadTicket" class="btn btn-secondary mr-2">{_web.profile.seminar.ticket.download_ticket}</a>
+        </div>
+    </div>
+{/if}

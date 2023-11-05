@@ -39,8 +39,6 @@ class TicketControl extends Control
         $user = $presenter->getUser();
 
         if ($presenter->getUser()->isLoggedIn()) {
-            $template->guestRole = false;
-
             $ticketDownloadFrom         = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
             $template->ticketsAvailable = $ticketDownloadFrom !== null && $ticketDownloadFrom > new DateTimeImmutable();
 
@@ -49,8 +47,6 @@ class TicketControl extends Control
                 && $presenter->getDbUser()->hasPaidEveryApplication();
 
             $template->qr = $this->generateQr($this->presenter->getUser()->getId());
-        } else {
-            $template->guestRole = true;
         }
 
         $template->render();

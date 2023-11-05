@@ -76,6 +76,8 @@ profile:
 
         ticket:
             heading: "Vstupenka"
+            download_ticket: "Stáhnout vstupenku (PDF)"
+            download_ticket_disabled: "Stahování vstupenek ještě není povoleno, nejste na seminář registrováni nebo chybí zaplatit některou přihlášku."
 
     schedule:
         group_heading: "Můj harmonogram semináře"
@@ -182,14 +184,6 @@ application_content:
     register_synchronization_failed: "Synchronizace se skautIS se nepodařila. Zkuste se znovu přihlásit a upravit údaje v profilu."
     register_successful: "Registrace byla úspěšně odeslána."
 
-    application_date: "Datum přihlášky"
-    application_roles: "Role"
-    application_subevents: "Podakce"
-    application_fee: "Poplatek"
-    application_variable_symbol: "Variabilní symbol"
-    application_maturity_date: "Splatnost"
-    application_state: "Stav"
-
 blocks_content:
     uncategorized: "Nezařazené"
     categories: "Kategorie"
@@ -255,6 +249,6 @@ contact_form_content:
     login_required_end: "."
 
 ticket_content:
-    download_ticket: "Stáhnout vstupenku"
-    download_ticket_disabled: "Stahování vstupenek ještě není povoleno, nejste na seminář registrováni nebo chybí zaplatit některou přihlášku."
-
+    login_required_begin: "Pro zobrazení vstupenky se musíte nejprve"
+    login_required_link: "přihlásit přes skautIS"
+    login_required_end: "."
