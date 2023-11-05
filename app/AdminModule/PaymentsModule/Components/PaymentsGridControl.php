@@ -12,7 +12,6 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
-use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\BankService;
 use App\Services\QueryBus;
@@ -41,7 +40,6 @@ class PaymentsGridControl extends Control
         private readonly QueryBus $queryBus,
         private readonly Translator $translator,
         private readonly PaymentRepository $paymentRepository,
-        private readonly UserRepository $userRepository,
         private readonly ApplicationService $applicationService,
         private readonly BankService $bankService,
         private readonly Session $session,

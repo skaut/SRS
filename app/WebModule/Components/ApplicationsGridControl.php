@@ -15,7 +15,6 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
-use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
 use App\Services\QueryBus;
@@ -49,7 +48,6 @@ class ApplicationsGridControl extends Control
         private readonly QueryBus $queryBus,
         private readonly Translator $translator,
         private readonly ApplicationRepository $applicationRepository,
-        private readonly UserRepository $userRepository,
         private readonly SubeventRepository $subeventRepository,
         private readonly ApplicationService $applicationService,
         private readonly Validators $validators,
