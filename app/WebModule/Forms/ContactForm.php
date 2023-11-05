@@ -67,7 +67,7 @@ class ContactForm extends UI\Control
      */
     public function createComponentForm(): Form
     {
-        $this->user = $this->userRepository->findById($this->presenter->user->getId());
+        $this->user = $this->userRepository->findById($this->presenter->getUser()->getId());
 
         $form = $this->baseFormFactory->create();
 

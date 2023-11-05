@@ -23,7 +23,7 @@ class DocumentContentControl extends BaseContentControl
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/document_content.latte');
 
-        $roles = $this->presenter->user->roles;
+        $roles = $this->presenter->getUser()->getRoles();
 
         $template->heading   = $content->getHeading();
         $template->documents = $this->documentRepository->findRolesAllowedByTagsOrderedByName(array_keys($roles), $content->getTags());

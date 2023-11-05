@@ -152,8 +152,8 @@ class ProgramBlocksGridControl extends Control
             ->setRenderer(static fn (Block $row) => $row->getProgramsCount());
 
         if (
-            ($this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
-                $this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
+            ($this->getPresenter()->getUser()->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
+                $this->getPresenter()->getUser()->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
             $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_ADD_BLOCK))
         ) {
             $grid->addToolbarButton('Blocks:add')

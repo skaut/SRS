@@ -258,7 +258,7 @@ class EditUserSeminarFormFactory
             return;
         }
 
-        $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
+        $loggedUser = $this->userRepository->findById($form->getPresenter()->getUser()->getId());
 
         $this->em->wrapInTransaction(function () use ($values, $loggedUser): void {
             $customInputValueChanged = false;

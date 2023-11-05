@@ -57,7 +57,7 @@ class ApplicationContentControl extends BaseContentControl
 
         $template->backlink = $presenter->getHttpRequest()->getUrl()->getPath();
 
-        $user               = $presenter->user;
+        $user               = $presenter->getUser();
         $template->testRole = Role::TEST;
 
         $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
@@ -105,12 +105,12 @@ class ApplicationContentControl extends BaseContentControl
      */
     protected function createComponentApplicationForm(): Form
     {
-        $form = $this->applicationFormFactory->create($this->getPresenter()->user->id);
+        $form = $this->applicationFormFactory->create($this->getPresenter()->getUser()->getId());
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->getPresenter()->flashMessage('web.application_content.register_successful', 'success');
 
-            $this->authenticator->updateRoles($this->getPresenter()->user);
+            $this->authenticator->updateRoles($this->getPresenter()->getUser());
 
             $this->getPresenter()->redirect('this');
         };

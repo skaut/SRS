@@ -226,7 +226,7 @@ class ApplicationsGridControl extends Control
             return;
         }
 
-        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
+        $loggedUser = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
 
         $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $loggedUser);
 
@@ -277,7 +277,7 @@ class ApplicationsGridControl extends Control
             return;
         }
 
-        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
+        $loggedUser = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
 
         $this->em->wrapInTransaction(function () use ($application, $selectedSubevents, $values, $loggedUser): void {
             if ($application instanceof SubeventsApplication) {
@@ -330,7 +330,7 @@ class ApplicationsGridControl extends Control
         $p = $this->getPresenter();
 
         if ($application instanceof SubeventsApplication && ! $application->isCanceled()) {
-            $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
+            $loggedUser = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
             $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $loggedUser);
             $p->flashMessage('admin.users.users_applications_application_canceled', 'success');
         }

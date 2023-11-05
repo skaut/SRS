@@ -62,7 +62,7 @@ class AclPresenter extends AdminBasePresenter
     {
         $role = $this->roleRepository->findById($id);
 
-        $this->authenticator->updateRoles($this->getPresenter()->user, $role);
+        $this->authenticator->updateRoles($this->getPresenter()->getUser(), $role);
 
         $this->redirect(':Web:Page:default');
     }

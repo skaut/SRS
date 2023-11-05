@@ -140,7 +140,7 @@ class PaymentsGridControl extends Control
      */
     public function add(stdClass $values): void
     {
-        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
+        $loggedUser = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
 
         $this->applicationService->createPaymentManual($values->date, $values->amount, $values->variableSymbol, $loggedUser);
 
@@ -157,7 +157,7 @@ class PaymentsGridControl extends Control
     {
         $payment = $this->paymentRepository->findById($id);
 
-        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
+        $loggedUser = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
 
         $this->applicationService->removePayment($payment, $loggedUser);
 
