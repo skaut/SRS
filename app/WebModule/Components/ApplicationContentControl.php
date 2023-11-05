@@ -15,10 +15,13 @@ use App\Model\Structure\Repositories\SubeventRepository;
 use App\Services\Authenticator;
 use App\Services\QueryBus;
 use App\WebModule\Forms\ApplicationFormFactory;
+use App\WebModule\Presenters\WebBasePresenter;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
+
+use function assert;
 
 /**
  * Komponenta obsahu s přihláškou.
@@ -49,17 +52,19 @@ class ApplicationContentControl extends BaseContentControl
             $template->heading = $content->getHeading();
         }
 
-        $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
+        $presenter = $this->getPresenter();
+        assert($presenter instanceof WebBasePresenter);
 
-        $user                = $this->getPresenter()->user;
-        $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
-        $template->testRole  = Role::TEST;
+        $template->backlink = $presenter->getHttpRequest()->getUrl()->getPath();
+
+        $user               = $presenter->user;
+        $template->testRole = Role::TEST;
 
         $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         if ($user->isLoggedIn()) {
-            $dbuser              = $this->getPresenter()->getDbUser();
-            $userHasFixedFeeRole = $dbuser->hasFixedFeeRole();
+            $dbUser              = $presenter->getDbUser();
+            $userHasFixedFeeRole = $dbUser->hasFixedFeeRole();
 
             $template->unapprovedRole      = $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName());
             $template->nonregisteredRole   = $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName());
@@ -67,15 +72,17 @@ class ApplicationContentControl extends BaseContentControl
             $template->registrationStart   = $this->roleRepository->getRegistrationStart();
             $template->registrationEnd     = $this->roleRepository->getRegistrationEnd();
             $template->bankAccount         = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
-            $template->dbuser              = $dbuser;
+            $template->dbUser              = $dbUser;
             $template->userHasFixedFeeRole = $userHasFixedFeeRole;
 
             $template->usersApplications = $explicitSubeventsExists && $userHasFixedFeeRole
-                ? $dbuser->getNotCanceledApplications()
+                ? $dbUser->getNotCanceledApplications()
                 : ($explicitSubeventsExists
-                    ? $dbuser->getNotCanceledSubeventsApplications()
-                    : $dbuser->getNotCanceledRolesApplications()
+                    ? $dbUser->getNotCanceledSubeventsApplications()
+                    : $dbUser->getNotCanceledRolesApplications()
                 );
+        } else {
+            $template->guestRole = true;
         }
 
         $template->explicitSubeventsExists = $explicitSubeventsExists;

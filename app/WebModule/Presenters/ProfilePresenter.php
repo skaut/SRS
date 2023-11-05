@@ -82,7 +82,7 @@ class ProfilePresenter extends WebBasePresenter
         $this->template->pageName                  = $this->translator->translate('web.profile.title');
         $this->template->paymentMethodBank         = PaymentType::BANK;
         $this->template->isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
-        $this->template->userPrograms              = $this->queryBus->handle(new UserAttendsProgramsQuery($this->dbuser));
+        $this->template->userPrograms              = $this->queryBus->handle(new UserAttendsProgramsQuery($this->dbUser));
         $this->template->accountNumber             = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
     }
 

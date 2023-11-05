@@ -21,16 +21,16 @@
                                 {_web.profile.seminar.attendance}
                             </div>
                             <div class="col-md-9 col-form-label">
-                                {if $dbuser->isInRole($nonregisteredRole)}
+                                {if $dbUser->isInRole($nonregisteredRole)}
                                     {_web.profile.seminar.nonregistered}
-                                {elseif !$dbuser->isApproved()}
+                                {elseif !$dbUser->isApproved()}
                                     {_web.profile.seminar.unapproved}
                                 {else}
-                                    {foreach $dbuser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}
+                                    {foreach $dbUser->getRoles() as $role}{$role->getName()}{sep}, {/sep}{/foreach}
                                 {/if}
                             </div>
                         </div>
-                        <div class="row mb-3" n:if="$dbuser->isPaying()">
+                        <div class="row mb-3" n:if="$dbUser->isPaying()">
                             <div class="col-md-3 col-form-label">
                                 {_web.profile.seminar.account_number}
                             </div>
@@ -146,12 +146,12 @@
                 </div>
                 <div id="personal-details" class="collapse" data-parent="#accordion">
                     <div class="card-body pb-1">
-                        <div class="row mb-3" n:if="$dbuser->getPhoto()">
+                        <div class="row mb-3" n:if="$dbUser->getPhoto()">
                             <div class="col-md-3 col-form-label">
                                 {_web.profile.personal_details.photo}
                             </div>
                             <div class="col-md-9 col-form-label">
-                                <img src="{$basePath}{$dbuser->getPhoto()}" alt="user photo"/>
+                                <img src="{$basePath}{$dbUser->getPhoto()}" alt="user photo"/>
                             </div>
                         </div>
                         <div class="row">

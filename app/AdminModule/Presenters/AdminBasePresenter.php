@@ -49,7 +49,7 @@ abstract class AdminBasePresenter extends BasePresenter
     /**
      * Přihlášený uživatel.
      */
-    public User|null $dbuser = null;
+    public User|null $dbUser = null;
 
     /** @throws AbortException */
     public function startup(): void
@@ -71,7 +71,7 @@ abstract class AdminBasePresenter extends BasePresenter
             $this->redirect(':Web:Page:default');
         }
 
-        $this->dbuser = $this->userRepository->findById($this->user->id);
+        $this->dbUser = $this->userRepository->findById($this->user->id);
     }
 
     /**
@@ -82,7 +82,7 @@ abstract class AdminBasePresenter extends BasePresenter
     {
         parent::beforeRender();
 
-        $this->template->dbuser = $this->dbuser;
+        $this->template->dbUser = $this->dbUser;
 
         $this->template->resourceAcl           = SrsResource::ACL;
         $this->template->resourceCms           = SrsResource::CMS;
@@ -103,7 +103,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->footer      = $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER));
         $this->template->seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
 
-        $skautIsUserId                = $this->dbuser->getSkautISUserId();
+        $skautIsUserId                = $this->dbUser->getSkautISUserId();
         $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId);
         $skautIsRoleSelectedId        = $this->skautIsService->getUserRoleId();
         $skautIsRoleSelected          = array_filter($skautIsRoles, static fn (stdClass $r) => $r->ID === $skautIsRoleSelectedId);
@@ -137,6 +137,6 @@ abstract class AdminBasePresenter extends BasePresenter
 
     public function getDbUser(): User|null
     {
-        return $this->dbuser;
+        return $this->dbUser;
     }
 }

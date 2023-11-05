@@ -54,7 +54,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
     public function renderDefault(): void
     {
-        $this->template->emptyUserInfo = empty($this->dbuser->getAbout());
+        $this->template->emptyUserInfo = empty($this->dbUser->getAbout());
 
         $this->session->getSection('srs')->programId = 0;
     }

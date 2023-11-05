@@ -9,6 +9,7 @@ use App\Model\Acl\Role;
 use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\QueryBus;
+use App\WebModule\Presenters\WebBasePresenter;
 use DateTimeImmutable;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\QrCode;
@@ -31,16 +32,18 @@ class TicketControl extends Control
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/ticket.latte');
 
-        if ($this->getPresenter()->getUser()->isLoggedIn()) {
-            $ticketDownloadFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
+        $presenter = $this->getPresenter();
+        assert($presenter instanceof WebBasePresenter);
 
-            $template->ticketsEnabled   = $ticketDownloadFrom !== null;
+        $user = $presenter->getUser();
+
+        if ($presenter->getUser()->isLoggedIn()) {
+            $ticketDownloadFrom = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
             $template->ticketsAvailable = $ticketDownloadFrom !== null && $ticketDownloadFrom > new DateTimeImmutable();
 
-            $user = $this->getPresenter()->getDbUser();
-
-            $template->registeredAndPaid = ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
-                && $user->hasPaidEveryApplication();
+            $template->registeredAndPaid = ! $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName())
+                && ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName())
+                && $presenter->getDbUser()->hasPaidEveryApplication();
 
             $template->qr = $this->generateQr($this->presenter->getUser()->getId());
         }
