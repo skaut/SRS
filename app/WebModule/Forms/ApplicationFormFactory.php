@@ -104,13 +104,11 @@ class ApplicationFormFactory
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    public function create(int $id): Form
+    public function create(User|null $user): Form
     {
-        $this->user = $this->userRepository->findById($id);
+        $this->user = $user;
 
         $form = $this->baseFormFactory->create();
-
-        $form->addHidden('id');
 
         $inputSex = $form->addRadioList('sex', 'web.application_content.sex', Sex::getSexOptions());
 
@@ -166,7 +164,6 @@ class ApplicationFormFactory
         $form->addSubmit('submit', 'web.application_content.register');
 
         $form->setDefaults([
-            'id' => $id,
             'sex' => $this->user->getSex(),
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),

@@ -22,6 +22,7 @@ use App\Services\QueryBus;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
+use App\WebModule\Presenters\WebBasePresenter;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
@@ -34,6 +35,8 @@ use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
+
+use function assert;
 
 /**
  * Komponenta pro správu vlastních přihlášek.
@@ -75,7 +78,10 @@ class ApplicationsGridControl extends Control
      */
     public function createComponentApplicationsGrid(string $name): void
     {
-        $this->user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+        $presenter = $this->getPresenter();
+        assert($presenter instanceof WebBasePresenter);
+
+        $this->user = $presenter->getDbUser();
 
         $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
         $userHasFixedFeeRole     = $this->user->hasFixedFeeRole();

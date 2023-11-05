@@ -36,9 +36,9 @@ class FaqFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id): Form
+    public function create(User|null $user): Form
     {
-        $this->user = $this->userRepository->findById($id);
+        $this->user = $user;
 
         $form = $this->baseFormFactory->create();
 

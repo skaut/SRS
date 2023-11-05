@@ -52,8 +52,6 @@ class EditUserPersonalDetailsFormFactory
 
         $form = $this->baseFormFactory->create();
 
-        $form->addHidden('id');
-
         $photoUpload = $form->addUpload('photo', 'admin.users.users_photo');
         $photoUpload->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
@@ -107,7 +105,6 @@ class EditUserPersonalDetailsFormFactory
             ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->setDefaults([
-            'id' => $id,
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),
             'nickName' => $this->user->getNickName(),

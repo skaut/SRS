@@ -43,13 +43,11 @@ class PersonalDetailsFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id): Form
+    public function create(User|null $user): Form
     {
-        $this->user = $this->userRepository->findById($id);
+        $this->user = $user;
 
         $form = $this->baseFormFactory->create();
-
-        $form->addHidden('id');
 
         $inputSex = $form->addRadioList('sex', 'web.profile.personal_details.sex', Sex::getSexOptions());
 
@@ -96,7 +94,6 @@ class PersonalDetailsFormFactory
         $form->addSubmit('submit', 'web.profile.personal_details.update');
 
         $form->setDefaults([
-            'id' => $id,
             'sex' => $this->user->getSex(),
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),

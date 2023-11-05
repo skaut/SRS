@@ -105,18 +105,21 @@ class ApplicationContentControl extends BaseContentControl
      */
     protected function createComponentApplicationForm(): Form
     {
-        $form = $this->applicationFormFactory->create($this->getPresenter()->getUser()->getId());
+        $p = $this->getPresenter();
+        assert($p instanceof WebBasePresenter);
 
-        $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            $this->getPresenter()->flashMessage('web.application_content.register_successful', 'success');
+        $form = $this->applicationFormFactory->create($p->getDbUser());
 
-            $this->authenticator->updateRoles($this->getPresenter()->getUser());
+        $form->onSuccess[] = function (Form $form, stdClass $values) use ($p): void {
+            $p->flashMessage('web.application_content.register_successful', 'success');
 
-            $this->getPresenter()->redirect('this');
+            $this->authenticator->updateRoles($p->getUser());
+
+            $p->redirect('this');
         };
 
-        $this->applicationFormFactory->onSkautIsError[] = function (): void {
-            $this->getPresenter()->flashMessage('web.application_content.register_synchronization_failed', 'danger');
+        $this->applicationFormFactory->onSkautIsError[] = static function () use ($p): void {
+            $p->flashMessage('web.application_content.register_synchronization_failed', 'danger');
         };
 
         return $form;

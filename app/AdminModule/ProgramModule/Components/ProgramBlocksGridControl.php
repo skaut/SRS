@@ -194,8 +194,9 @@ class ProgramBlocksGridControl extends Control
         $block = $this->blockRepository->findById($id);
 
         $p = $this->getPresenter();
+        assert($p instanceof AdminBasePresenter);
 
-        if (! $this->userRepository->findById($this->getPresenter()->getUser()->getId())->isAllowedModifyBlock($block)) {
+        if (! $p->getDbUser()->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks.message.delete_not_allowed', 'danger');
             $p->redirect('this');
         }

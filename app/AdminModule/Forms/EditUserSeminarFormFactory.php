@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
+use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\CustomInput\CustomCheckbox;
@@ -97,8 +98,6 @@ class EditUserSeminarFormFactory
         $this->user = $this->userRepository->findById($id);
 
         $form = $this->baseFormFactory->create();
-
-        $form->addHidden('id');
 
         if (! $this->user->isExternalLector()) {
             $rolesSelect = $form->addMultiSelect(
@@ -234,7 +233,6 @@ class EditUserSeminarFormFactory
             ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->setDefaults([
-            'id' => $id,
             'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
             'approved' => $this->user->isApproved(),
             'attended' => $this->user->isAttended(),
@@ -258,7 +256,10 @@ class EditUserSeminarFormFactory
             return;
         }
 
-        $loggedUser = $this->userRepository->findById($form->getPresenter()->getUser()->getId());
+        $presenter = $form->getPresenter();
+        assert($presenter instanceof AdminBasePresenter);
+
+        $loggedUser = $presenter->getDbUser();
 
         $this->em->wrapInTransaction(function () use ($values, $loggedUser): void {
             $customInputValueChanged = false;

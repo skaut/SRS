@@ -11,9 +11,11 @@ use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
-use App\Model\User\Repositories\UserRepository;
 use App\Services\QueryBus;
+use App\WebModule\Presenters\WebBasePresenter;
 use Throwable;
+
+use function assert;
 
 /**
  * Komponenta obsahu s výběrem programů.
@@ -22,7 +24,6 @@ class ProgramsContentControl extends BaseContentControl
 {
     public function __construct(
         private readonly QueryBus $queryBus,
-        private readonly UserRepository $userRepository,
     ) {
     }
 
@@ -42,12 +43,13 @@ class ProgramsContentControl extends BaseContentControl
         $template->registerProgramsFrom          = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::REGISTER_PROGRAMS_FROM));
         $template->registerProgramsTo            = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::REGISTER_PROGRAMS_TO));
 
-        $user = $this->getPresenter()->getUser();
+        $presenter = $this->getPresenter();
+        assert($presenter instanceof WebBasePresenter);
 
-        if ($user->isLoggedIn()) {
+        if ($presenter->getUser()->isLoggedIn()) {
             $template->guestRole             = false;
             $template->userWaitingForPayment = ! $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT))
-                && $this->userRepository->findById($user->getId())->getWaitingForPaymentApplications()->count() > 0;
+                && $presenter->getDbUser()->getWaitingForPaymentApplications()->count() > 0;
         } else {
             $template->guestRole = true;
         }

@@ -94,14 +94,13 @@ class ProfilePresenter extends WebBasePresenter
      */
     public function actionExportSchedule(): void
     {
-        $user     = $this->userRepository->findById($this->user->id);
-        $response = $this->excelExportService->exportUserSchedule($user, 'harmonogram.xlsx');
+        $response = $this->excelExportService->exportUserSchedule($this->dbUser, 'harmonogram.xlsx');
         $this->sendResponse($response);
     }
 
     protected function createComponentPersonalDetailsForm(): Form
     {
-        $form = $this->personalDetailsFormFactory->create($this->user->id);
+        $form = $this->personalDetailsFormFactory->create($this->dbUser);
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->flashMessage('web.profile.personal_details.update_successful', 'success');
@@ -121,7 +120,7 @@ class ProfilePresenter extends WebBasePresenter
      */
     protected function createComponentAdditionalInformationForm(): Form
     {
-        $form = $this->additionalInformationFormFactory->create($this->user->id);
+        $form = $this->additionalInformationFormFactory->create($this->dbUser);
 
         $form->onSuccess[] = function (): void {
             $this->flashMessage('web.profile.additional_information.update_successfull', 'success');
@@ -137,7 +136,7 @@ class ProfilePresenter extends WebBasePresenter
      */
     protected function createComponentRolesForm(): Form
     {
-        $form = $this->rolesFormFactory->create($this->user->id);
+        $form = $this->rolesFormFactory->create($this->dbUser);
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() == $form['submit']) {

@@ -54,8 +54,6 @@ class CustomInputFormFactory
 
         $form = $this->baseFormFactory->create();
 
-        $form->addHidden('id');
-
         $form->addText('name', 'admin.configuration.custom_inputs_name')
             ->addRule(Form::FILLED, 'admin.configuration.custom_inputs_name_empty');
 
@@ -83,7 +81,6 @@ class CustomInputFormFactory
             $optionsText->setDisabled();
 
             $form->setDefaults([
-                'id' => $id,
                 'name' => $this->customInput->getName(),
                 'roles' => Helpers::getIds($this->customInput->getRoles()),
                 'type' => $this->customInput->getType(),

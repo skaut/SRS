@@ -11,10 +11,10 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingArrayValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
-use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\CommandBus;
 use App\Services\QueryBus;
+use App\WebModule\Presenters\WebBasePresenter;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
 use Contributte\ReCaptcha\ReCaptchaProvider;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,6 +24,7 @@ use stdClass;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
+use function assert;
 use function nl2br;
 use function str_replace;
 
@@ -48,7 +49,6 @@ class ContactForm extends UI\Control
         private readonly BaseFormFactory $baseFormFactory,
         private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
-        private readonly UserRepository $userRepository,
         private readonly ReCaptchaProvider $recaptchaProvider,
     ) {
     }
@@ -67,7 +67,10 @@ class ContactForm extends UI\Control
      */
     public function createComponentForm(): Form
     {
-        $this->user = $this->userRepository->findById($this->presenter->getUser()->getId());
+        $presenter = $this->getPresenter();
+        assert($presenter instanceof WebBasePresenter);
+
+        $this->user = $presenter->getDbUser();
 
         $form = $this->baseFormFactory->create();
 

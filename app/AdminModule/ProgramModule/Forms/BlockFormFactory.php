@@ -79,16 +79,14 @@ class BlockFormFactory
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function create(int $id, int $userId): Form
+    public function create(int $id, User $user): Form
     {
         $this->block = $this->blockRepository->findById($id);
-        $this->user  = $this->userRepository->findById($userId);
+        $this->user  = $user;
 
         $this->subeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         $form = $this->baseFormFactory->create();
-
-        $form->addHidden('id');
 
         $form->addText('name', 'admin.program.blocks.common.name')
             ->addRule(Form::FILLED, 'admin.program.blocks.form.name_empty');
@@ -174,7 +172,6 @@ class BlockFormFactory
             $nameText->addRule(Form::IS_NOT_IN, 'admin.program.blocks.form.name_exists', $this->blockRepository->findOthersNames($id));
 
             $form->setDefaults([
-                'id' => $id,
                 'name' => $this->block->getName(),
                 'category' => $this->block->getCategory()?->getId(),
                 'lectors' => Helpers::getIds($this->block->getLectors()),

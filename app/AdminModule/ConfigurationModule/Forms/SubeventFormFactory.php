@@ -49,8 +49,6 @@ class SubeventFormFactory
 
         $form = $this->baseFormFactory->create();
 
-        $form->addHidden('id');
-
         $nameText = $form->addText('name', 'admin.configuration.subevents_name')
             ->addRule(Form::FILLED, 'admin.configuration.subevents_name_empty');
 
@@ -123,7 +121,6 @@ class SubeventFormFactory
 
         if ($this->subevent) {
             $form->setDefaults([
-                'id' => $id,
                 'name' => $this->subevent->getName(),
                 'registerableFrom' => $this->subevent->getRegisterableFrom(),
                 'registerableTo' => $this->subevent->getRegisterableTo(),

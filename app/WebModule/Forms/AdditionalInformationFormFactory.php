@@ -82,9 +82,9 @@ class AdditionalInformationFormFactory
      * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
-    public function create(int $userId): Form
+    public function create(User|null $user): Form
     {
-        $this->user                = $this->userRepository->findById($userId);
+        $this->user                = $user;
         $isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
 
         $form = $this->baseFormFactory->create();
