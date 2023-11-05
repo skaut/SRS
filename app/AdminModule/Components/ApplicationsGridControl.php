@@ -12,7 +12,6 @@ use App\Model\Application\SubeventsApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Structure\Repositories\SubeventRepository;
-use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
 use App\Services\SubeventService;
@@ -46,7 +45,6 @@ class ApplicationsGridControl extends Control
         private readonly Translator $translator,
         private readonly EntityManagerInterface $em,
         private readonly ApplicationRepository $applicationRepository,
-        private readonly UserRepository $userRepository,
         private readonly SubeventRepository $subeventRepository,
         private readonly ApplicationService $applicationService,
         private readonly SubeventService $subeventService,

@@ -8,7 +8,6 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
-use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
@@ -34,7 +33,6 @@ class RolesFormFactory
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
-        private readonly UserRepository $userRepository,
         private readonly RoleRepository $roleRepository,
         private readonly ApplicationService $applicationService,
         private readonly Translator $translator,

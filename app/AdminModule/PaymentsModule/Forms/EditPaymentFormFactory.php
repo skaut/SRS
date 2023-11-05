@@ -9,7 +9,6 @@ use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Payment\Payment;
 use App\Model\Payment\Repositories\PaymentRepository;
-use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use Nette;
 use Nette\Application\UI\Form;
@@ -35,7 +34,6 @@ class EditPaymentFormFactory
         private readonly BaseFormFactory $baseFormFactory,
         private readonly PaymentRepository $paymentRepository,
         private readonly ApplicationRepository $applicationRepository,
-        private readonly UserRepository $userRepository,
         private readonly ApplicationService $applicationService,
     ) {
     }

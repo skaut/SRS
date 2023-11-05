@@ -7,7 +7,6 @@ namespace App\AdminModule\CmsModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\Faq;
 use App\Model\Cms\Repositories\FaqRepository;
-use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -35,7 +34,6 @@ class FaqFormFactory
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
         private readonly FaqRepository $faqRepository,
-        private readonly UserRepository $userRepository,
     ) {
     }
 

@@ -110,7 +110,7 @@ class ProgramAttendeesGridControl extends Control
                 ->setFilterText();
 
             $grid->addColumnText('attends', 'admin.program.blocks.attendees.column.attends')
-                ->setRenderer(fn (User $user) => $loggedUser->isAttendee($this->program)
+                ->setRenderer(fn (User $user) => $user->isAttendee($this->program)
                     ? $this->translator->translate('admin.common.yes')
                     : $this->translator->translate('admin.common.no'))
                 ->setFilterSelect(['' => 'admin.common.all', 'yes' => 'admin.common.yes', 'no' => 'admin.common.no'])
@@ -126,7 +126,7 @@ class ProgramAttendeesGridControl extends Control
                 ->setTranslateOptions();
 
             $grid->addColumnText('alternates', 'admin.program.blocks.attendees.column.alternates')
-                ->setRenderer(fn (User $user) => $loggedUser->isAlternate($this->program)
+                ->setRenderer(fn (User $user) => $user->isAlternate($this->program)
                     ? $this->translator->translate('admin.common.yes')
                     : $this->translator->translate('admin.common.no'))
                 ->setFilterSelect(['' => 'admin.common.all', 'yes' => 'admin.common.yes', 'no' => 'admin.common.no'])
