@@ -23,7 +23,7 @@ class FaqFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private User|null $user = null;
+    private User $user;
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
@@ -34,7 +34,7 @@ class FaqFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(User|null $user): Form
+    public function create(User $user): Form
     {
         $this->user = $user;
 

@@ -74,7 +74,7 @@ class ApplicationFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private User|null $user = null;
+    private User $user;
 
     /** @var callable[] */
     public array $onSkautIsError = [];
@@ -104,7 +104,7 @@ class ApplicationFormFactory
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    public function create(User|null $user): Form
+    public function create(User $user): Form
     {
         $this->user = $user;
 

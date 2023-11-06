@@ -48,7 +48,7 @@ class BlockFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private User|null $user = null;
+    private User $user;
 
     /**
      * Upravovaný programový blok.

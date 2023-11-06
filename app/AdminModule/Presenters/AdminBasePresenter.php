@@ -49,7 +49,7 @@ abstract class AdminBasePresenter extends BasePresenter
     /**
      * Přihlášený uživatel.
      */
-    public User|null $dbUser = null;
+    public User $dbUser;
 
     /** @throws AbortException */
     public function startup(): void
@@ -135,7 +135,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->redirect('this');
     }
 
-    public function getDbUser(): User|null
+    public function getDbUser(): User
     {
         return $this->dbUser;
     }

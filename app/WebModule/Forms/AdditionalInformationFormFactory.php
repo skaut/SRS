@@ -61,7 +61,7 @@ class AdditionalInformationFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private User|null $user = null;
+    private User $user;
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
@@ -82,7 +82,7 @@ class AdditionalInformationFormFactory
      * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
-    public function create(User|null $user): Form
+    public function create(User $user): Form
     {
         $this->user                = $user;
         $isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();

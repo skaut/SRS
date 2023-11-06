@@ -28,7 +28,7 @@ class PersonalDetailsFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private User|null $user = null;
+    private User $user;
 
     /** @var callable[] */
     public array $onSkautIsError = [];
@@ -43,7 +43,7 @@ class PersonalDetailsFormFactory
     /**
      * Vytvoří formulář.
      */
-    public function create(User|null $user): Form
+    public function create(User $user): Form
     {
         $this->user = $user;
 
