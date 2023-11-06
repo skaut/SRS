@@ -56,7 +56,7 @@ class Mail
      * @var string[]
      */
     #[ORM\Column(type: 'simple_array', nullable: true)]
-    protected array $recipientEmails;
+    protected array $recipientEmails = [];
 
     /**
      * Předmět e-mailu.
