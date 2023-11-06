@@ -57,8 +57,9 @@ class ApplicationContentControl extends BaseContentControl
 
         $template->backlink = $presenter->getHttpRequest()->getUrl()->getPath();
 
-        $user               = $presenter->getUser();
-        $template->testRole = Role::TEST;
+        $user                = $presenter->getUser();
+        $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
+        $template->testRole  = Role::TEST;
 
         $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
@@ -66,7 +67,6 @@ class ApplicationContentControl extends BaseContentControl
             $dbUser              = $presenter->getDbUser();
             $userHasFixedFeeRole = $dbUser->hasFixedFeeRole();
 
-            $template->guestRole           = false;
             $template->unapprovedRole      = $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName());
             $template->nonregisteredRole   = $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName());
             $template->noRegisterableRole  = $this->roleRepository->findFilteredRoles(true, false, false)->isEmpty();
@@ -82,8 +82,6 @@ class ApplicationContentControl extends BaseContentControl
                     ? $dbUser->getNotCanceledSubeventsApplications()
                     : $dbUser->getNotCanceledRolesApplications()
                 );
-        } else {
-            $template->guestRole = true;
         }
 
         $template->explicitSubeventsExists = $explicitSubeventsExists;

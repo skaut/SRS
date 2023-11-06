@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\Acl\Repositories\RoleRepository;
+use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Cms\Repositories\FaqRepository;
 use App\WebModule\Forms\FaqFormFactory;
@@ -21,6 +23,7 @@ class FaqContentControl extends BaseContentControl
     public function __construct(
         private readonly FaqFormFactory $faqFormFactory,
         private readonly FaqRepository $faqRepository,
+        private readonly RoleRepository $roleRepository,
     ) {
     }
 
@@ -34,7 +37,7 @@ class FaqContentControl extends BaseContentControl
 
         $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
 
-        $template->guestRole = ! $this->getPresenter()->getUser()->isLoggedIn();
+        $template->guestRole = $this->getPresenter()->getUser()->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
 
         $template->render();
     }

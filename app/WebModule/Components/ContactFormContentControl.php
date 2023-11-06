@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\Acl\Repositories\RoleRepository;
+use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
@@ -20,6 +22,7 @@ class ContactFormContentControl extends BaseContentControl
     public function __construct(
         private readonly QueryBus $queryBus,
         private readonly IContactFormFactory $contactFormFactory,
+        private readonly RoleRepository $roleRepository,
     ) {
     }
 
@@ -33,7 +36,7 @@ class ContactFormContentControl extends BaseContentControl
 
         $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
 
-        $template->guestRole     = ! $this->getPresenter()->getUser()->isLoggedIn();
+        $template->guestRole     = $this->getPresenter()->getUser()->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
         $template->guestsAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::CONTACT_FORM_GUESTS_ALLOWED));
 
         $template->render();

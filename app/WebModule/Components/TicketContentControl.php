@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
+use App\Model\Acl\Repositories\RoleRepository;
+use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 
 /**
@@ -11,8 +13,10 @@ use App\Model\Cms\Dto\ContentDto;
  */
 class TicketContentControl extends BaseContentControl
 {
-    public function __construct(private readonly ITicketControlFactory $ticketControlFactory)
-    {
+    public function __construct(
+        private readonly RoleRepository $roleRepository,
+        private readonly ITicketControlFactory $ticketControlFactory,
+    ) {
     }
 
     public function render(ContentDto $content): void
@@ -24,8 +28,9 @@ class TicketContentControl extends BaseContentControl
 
         $presenter = $this->getPresenter();
 
-        $template->guestRole = ! $presenter->getUser()->isLoggedIn();
         $template->backlink  = $presenter->getHttpRequest()->getUrl()->getPath();
+
+        $template->guestRole = $presenter->getUser()->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
 
         $template->render();
     }
