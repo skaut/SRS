@@ -58,7 +58,7 @@ class EditUserPersonalDetailsFormFactory
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.users.users_photo_format');
 
-        if ($this->user->getPhoto() !== null) {
+        if ($this->user->hasPhoto()) {
             $photoUpload->setHtmlAttribute('data-delete-url', '?do=removePhoto')
                 ->setHtmlAttribute('data-initial-preview', json_encode([$this->user->getPhoto()], JSON_THROW_ON_ERROR))
                 ->setHtmlAttribute('data-initial-preview-show-delete', 'true')

@@ -1,7 +1,58 @@
+{if $dbUser && ! $dbUser->isMember() && ! $dbUser->hasPhoto()}
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-warning alert-forever">
+                {_web.ticket_content.no_membership_and_photo_begin}
+                <a href="{plink :Web:Member:default}">
+                    {_web.ticket_content.no_membership_and_photo_link_1}
+                </a>
+                {_web.ticket_content.no_membership_and_photo_middle}
+                <a href="https://is.skaut.cz/Junak/OrganizationUnit/PersonUpdate.aspx?ID={$dbUser->getSkautISPersonId()}" target="_blank">
+                    {_web.ticket_content.no_membership_and_photo_link_2}
+                </a>{_web.ticket_content.no_membership_and_photo_end}
+            </div>
+        </div>
+    </div>
+{elseif $dbUser && ! $dbUser->isMember()}
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-warning alert-forever">
+                 {_web.ticket_content.no_membership_begin}
+                 <a href="{plink :Web:Member:default}">
+                    {_web.ticket_content.no_membership_link}
+                 </a>{_web.ticket_content.no_membership_end}
+            </div>
+        </div>
+    </div>
+{elseif $dbUser && ! $dbUser->hasPhoto()}
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-warning alert-forever">
+                {_web.ticket_content.no_photo_begin}
+                <a href="https://is.skaut.cz/Junak/OrganizationUnit/PersonUpdate.aspx?ID={$dbUser->getSkautISPersonId()}" target="_blank">
+                    {_web.ticket_content.no_photo_link}
+                </a>{_web.ticket_content.no_photo_end}
+            </div>
+        </div>
+    </div>
+{/if}
+
 {if ! $ticketsAvailable}
-
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-info alert-forever">
+                {_web.ticket_content.not_available}
+            </div>
+        </div>
+    </div>
 {elseif ! $registeredAndPaid}
-
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-info alert-forever">
+                {_web.ticket_content.not_registered_or_paid}
+            </div>
+        </div>
+    </div>
 {else}
     <div class="row mb-3">
         <div class="col">

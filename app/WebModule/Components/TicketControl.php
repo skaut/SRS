@@ -36,11 +36,13 @@ class TicketControl extends Control
         $presenter = $this->getPresenter();
         assert($presenter instanceof WebBasePresenter);
 
+        $this->template->dbUser = $presenter->getDbUser();
+
         $user = $presenter->getUser();
 
         if ($presenter->getUser()->isLoggedIn()) {
             $ticketDownloadFrom         = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
-            $template->ticketsAvailable = $ticketDownloadFrom !== null && $ticketDownloadFrom > new DateTimeImmutable();
+            $template->ticketsAvailable = $ticketDownloadFrom !== null && $ticketDownloadFrom <= new DateTimeImmutable();
 
             $template->registeredAndPaid = ! $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName())
                 && ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName())
