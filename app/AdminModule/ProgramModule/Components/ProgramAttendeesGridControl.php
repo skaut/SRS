@@ -153,7 +153,7 @@ class ProgramAttendeesGridControl extends Control
             $p = $this->getPresenter();
             assert($p instanceof AdminBasePresenter);
 
-            if ($p->getDbUser()->isAllowed(SrsResource::USERS, Permission::MANAGE)) {
+            if ($p->getUser()->isAllowed(SrsResource::USERS, Permission::MANAGE)) {
                 $grid->addAction('detail', 'admin.common.detail', ':Admin:Users:detail')
                     ->setClass('btn btn-xs btn-primary')
                     ->addAttributes(['target' => '_blank']);
