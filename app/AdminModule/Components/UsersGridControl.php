@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
+use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\CustomInput\CustomCheckbox;
@@ -50,6 +51,7 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
+use function assert;
 use function basename;
 
 /**
@@ -526,6 +528,7 @@ class UsersGridControl extends Control
         $selectedRoles = $this->roleRepository->findRolesByIds($value);
 
         $p = $this->getPresenter();
+        assert($p instanceof AdminBasePresenter);
 
         // neni vybrana zadna role
         if ($selectedRoles->isEmpty()) {
@@ -563,7 +566,7 @@ class UsersGridControl extends Control
             return;
         }
 
-        $loggedUser = $this->userRepository->findById($p->getUser()->id);
+        $loggedUser = $p->getDbUser();
 
         $this->em->wrapInTransaction(function () use ($selectedRoles, $users, $loggedUser): void {
             foreach ($users as $user) {
@@ -610,8 +613,9 @@ class UsersGridControl extends Control
         $users = $this->userRepository->findUsersByIds($ids);
 
         $p = $this->getPresenter();
+        assert($p instanceof AdminBasePresenter);
 
-        $loggedUser = $this->userRepository->findById($p->getUser()->id);
+        $loggedUser = $p->getDbUser();
 
         $this->em->wrapInTransaction(function () use ($users, $paymentMethod, $loggedUser): void {
             foreach ($users as $user) {

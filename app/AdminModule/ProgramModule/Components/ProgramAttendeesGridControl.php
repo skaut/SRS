@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\ProgramModule\Components;
 
+use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Acl\Permission;
 use App\Model\Acl\SrsResource;
 use App\Model\Enums\ProgramMandatoryType;
@@ -36,6 +37,8 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
+
+use function assert;
 
 /**
  * Komponenta pro správu účastníků programu.
@@ -90,7 +93,6 @@ class ProgramAttendeesGridControl extends Control
             $grid->setDataSource([]);
         } else {
             $this->program                    = $program;
-            $user                             = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
             $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
 
             $grid->setTranslator($this->translator);
@@ -148,13 +150,16 @@ class ProgramAttendeesGridControl extends Control
 
             $grid->setDefaultFilter(['attends' => 'yes'], false);
 
-            if ($user->isAllowed(SrsResource::USERS, Permission::MANAGE)) {
+            $p = $this->getPresenter();
+            assert($p instanceof AdminBasePresenter);
+
+            if ($p->getUser()->isAllowed(SrsResource::USERS, Permission::MANAGE)) {
                 $grid->addAction('detail', 'admin.common.detail', ':Admin:Users:detail')
                     ->setClass('btn btn-xs btn-primary')
                     ->addAttributes(['target' => '_blank']);
             }
 
-            if ($user->isAllowedModifyBlock($this->program->getBlock()) && $program->getBlock()->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED) {
+            if ($p->getDbUser()->isAllowedModifyBlock($this->program->getBlock()) && $program->getBlock()->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED) {
                 $grid->addAction('register', 'admin.program.blocks.attendees.action.register', 'register!')
                     ->setClass('btn btn-xs btn-success ajax');
                 $grid->allowRowsAction('register', function (User $user) {
@@ -342,8 +347,9 @@ class ProgramAttendeesGridControl extends Control
 
     private function isAllowedModifyProgram(Program $program): bool
     {
-        $user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
+        $p = $this->getPresenter();
+        assert($p instanceof AdminBasePresenter);
 
-        return $user->isAllowedModifyBlock($program->getBlock());
+        return $p->getDbUser()->isAllowedModifyBlock($program->getBlock());
     }
 }

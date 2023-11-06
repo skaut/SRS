@@ -10,7 +10,7 @@ use App\Model\Cms\Dto\ContentDto;
 use App\Model\User\Repositories\UserRepository;
 
 /**
- * Komponenta s přehledem lektorů.
+ * Komponenta obsahu s přehledem lektorů.
  */
 class LectorsContentControl extends BaseContentControl
 {

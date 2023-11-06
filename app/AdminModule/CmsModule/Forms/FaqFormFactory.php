@@ -7,7 +7,6 @@ namespace App\AdminModule\CmsModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Cms\Faq;
 use App\Model\Cms\Repositories\FaqRepository;
-use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -30,22 +29,21 @@ class FaqFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private User|null $user = null;
+    private User $user;
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
         private readonly FaqRepository $faqRepository,
-        private readonly UserRepository $userRepository,
     ) {
     }
 
     /**
      * Vytvoří formulář.
      */
-    public function create(int|null $id, int $userId): Form
+    public function create(int|null $id, User $user): Form
     {
         $this->faq  = $id === null ? null : $this->faqRepository->findById($id);
-        $this->user = $this->userRepository->findById($userId);
+        $this->user = $user;
 
         $form = $this->baseFormFactory->create();
 

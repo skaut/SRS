@@ -52,15 +52,13 @@ class EditUserPersonalDetailsFormFactory
 
         $form = $this->baseFormFactory->create();
 
-        $form->addHidden('id');
-
         $photoUpload = $form->addUpload('photo', 'admin.users.users_photo');
         $photoUpload->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.users.users_photo_format');
 
-        if ($this->user->getPhoto() !== null) {
+        if ($this->user->hasPhoto()) {
             $photoUpload->setHtmlAttribute('data-delete-url', '?do=removePhoto')
                 ->setHtmlAttribute('data-initial-preview', json_encode([$this->user->getPhoto()], JSON_THROW_ON_ERROR))
                 ->setHtmlAttribute('data-initial-preview-show-delete', 'true')
@@ -107,7 +105,6 @@ class EditUserPersonalDetailsFormFactory
             ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->setDefaults([
-            'id' => $id,
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),
             'nickName' => $this->user->getNickName(),

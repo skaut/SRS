@@ -54,7 +54,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
     public function renderDefault(): void
     {
-        $this->template->emptyUserInfo = empty($this->dbuser->getAbout());
+        $this->template->emptyUserInfo = empty($this->dbUser->getAbout());
 
         $this->session->getSection('srs')->programId = 0;
     }
@@ -78,7 +78,7 @@ class BlocksPresenter extends ProgramBasePresenter
     {
         $block = $this->blockRepository->findById($id);
 
-        if (! $this->userRepository->findById($this->getUser()->getId())->isAllowedModifyBlock($block)) {
+        if (! $this->dbUser->isAllowedModifyBlock($block)) {
             $this->flashMessage('admin.program.blocks.message.edit_not_allowed', 'danger');
             $this->redirect('Blocks:default');
         }
@@ -143,6 +143,6 @@ class BlocksPresenter extends ProgramBasePresenter
      */
     protected function createComponentBlockForm(): Form
     {
-        return $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getUser()->getId());
+        return $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getDbUser());
     }
 }

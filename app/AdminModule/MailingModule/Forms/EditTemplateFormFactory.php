@@ -36,8 +36,6 @@ class EditTemplateFormFactory
 
         $form = $this->baseFormFactory->create();
 
-        $form->addHidden('id');
-
         $form->addCheckbox('active', 'admin.mailing.templates.active_form');
 
         $form->addText('subject', 'admin.mailing.templates.subject')
@@ -54,7 +52,6 @@ class EditTemplateFormFactory
             ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->setDefaults([
-            'id' => $id,
             'active' => $this->template->isActive(),
             'subject' => $this->template->getSubject(),
             'text' => $this->template->getText(),

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\PaymentsModule\Components;
 
+use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Enums\PaymentState;
 use App\Model\Payment\Payment;
 use App\Model\Payment\Repositories\PaymentRepository;
@@ -11,7 +12,6 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
-use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use App\Services\BankService;
 use App\Services\QueryBus;
@@ -29,6 +29,8 @@ use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
+use function assert;
+
 /**
  * Komponenta pro správu plateb.
  */
@@ -38,7 +40,6 @@ class PaymentsGridControl extends Control
         private readonly QueryBus $queryBus,
         private readonly Translator $translator,
         private readonly PaymentRepository $paymentRepository,
-        private readonly UserRepository $userRepository,
         private readonly ApplicationService $applicationService,
         private readonly BankService $bankService,
         private readonly Session $session,
@@ -140,12 +141,13 @@ class PaymentsGridControl extends Control
      */
     public function add(stdClass $values): void
     {
-        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
+        $p = $this->getPresenter();
+        assert($p instanceof AdminBasePresenter);
 
-        $this->applicationService->createPaymentManual($values->date, $values->amount, $values->variableSymbol, $loggedUser);
+        $this->applicationService->createPaymentManual($values->date, $values->amount, $values->variableSymbol, $p->getDbUser());
 
-        $this->getPresenter()->flashMessage('admin.payments.payments.saved', 'success');
-        $this->getPresenter()->redrawControl('flashes');
+        $p->flashMessage('admin.payments.payments.saved', 'success');
+        $p->redrawControl('flashes');
     }
 
     /**
@@ -157,11 +159,11 @@ class PaymentsGridControl extends Control
     {
         $payment = $this->paymentRepository->findById($id);
 
-        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
-
-        $this->applicationService->removePayment($payment, $loggedUser);
-
         $p = $this->getPresenter();
+        assert($p instanceof AdminBasePresenter);
+
+        $this->applicationService->removePayment($payment, $p->getDbUser());
+
         $p->flashMessage('admin.payments.payments.deleted', 'success');
         $p->redirect('this');
     }

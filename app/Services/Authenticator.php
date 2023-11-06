@@ -133,13 +133,13 @@ class Authenticator implements Nette\Security\Authenticator
      */
     public function updateRoles(NS\User $user, Role|null $testedRole = null): void
     {
-        $dbuser = $this->userRepository->findById($user->id);
+        $dbUser = $this->userRepository->findById($user->id);
 
         $netteRoles = [];
 
         if (! $testedRole) {
-            if ($dbuser->isApproved()) {
-                foreach ($dbuser->getRoles() as $role) {
+            if ($dbUser->isApproved()) {
+                foreach ($dbUser->getRoles() as $role) {
                     $netteRoles[$role->getId()] = $role->getName();
                 }
             } else {

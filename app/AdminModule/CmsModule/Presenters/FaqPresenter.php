@@ -37,7 +37,7 @@ class FaqPresenter extends CmsBasePresenter
 
     protected function createComponentFaqForm(): Form
     {
-        $form = $this->faqFormFactory->create((int) $this->getParameter('id'), $this->user->id);
+        $form = $this->faqFormFactory->create((int) $this->getParameter('id'), $this->dbUser);
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() == $form['cancel']) {

@@ -15,7 +15,7 @@ use App\WebModule\Forms\IContactFormFactory;
 use Throwable;
 
 /**
- * Komponenta s kontaktním formulářem.
+ * Komponenta obsahu s kontaktním formulářem.
  */
 class ContactFormContentControl extends BaseContentControl
 {
@@ -36,8 +36,7 @@ class ContactFormContentControl extends BaseContentControl
 
         $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
 
-        $user                    = $this->getPresenter()->user;
-        $template->guestRole     = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
+        $template->guestRole     = $this->getPresenter()->getUser()->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
         $template->guestsAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::CONTACT_FORM_GUESTS_ALLOWED));
 
         $template->render();

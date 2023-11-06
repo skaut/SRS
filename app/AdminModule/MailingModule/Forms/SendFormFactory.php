@@ -107,10 +107,10 @@ class SendFormFactory
         $recipientsUsers     = $this->userRepository->findUsersByIds($values->recipientUsers);
         $recipientsRoles     = $this->roleRepository->findRolesByIds($values->recipientRoles);
         $recipientsSubevents = $this->subeventRepository->findSubeventsByIds($values->recipientSubevents);
-        $recipientsEmails    = new ArrayCollection();
+        $recipientsEmails    = null;
 
         if (! empty($values->copy)) {
-            $recipientsEmails->add($values->copy);
+            $recipientsEmails = new ArrayCollection([$values->copy]);
         }
 
         $this->commandBus->handle(new CreateMail($recipientsUsers, $recipientsRoles, $recipientsSubevents, $recipientsEmails, $values->subject, $values->text));

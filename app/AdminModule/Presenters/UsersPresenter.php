@@ -152,10 +152,9 @@ class UsersPresenter extends AdminBasePresenter
     /** @throws Throwable */
     public function handleCancelRegistration(): void
     {
-        $user       = $this->userRepository->findById((int) $this->getParameter('id'));
-        $loggedUser = $this->userRepository->findById($this->user->id);
+        $user = $this->userRepository->findById((int) $this->getParameter('id'));
 
-        $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED, $loggedUser);
+        $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED, $this->dbUser);
 
         $this->flashMessage('admin.users.users_registration_canceled', 'success');
         $this->redirect('this');

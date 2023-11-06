@@ -8,7 +8,7 @@ use App\Model\Cms\Dto\NewsContentDto;
 use App\Model\Cms\Repositories\NewsRepository;
 
 /**
- * Komponenta s aktualitami.
+ * Komponenta obsahu s aktualitami.
  */
 class NewsContentControl extends BaseContentControl
 {

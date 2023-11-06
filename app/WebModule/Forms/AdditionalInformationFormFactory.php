@@ -61,7 +61,7 @@ class AdditionalInformationFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private User|null $user = null;
+    private User $user;
 
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
@@ -82,9 +82,9 @@ class AdditionalInformationFormFactory
      * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
-    public function create(int $userId): Form
+    public function create(User $user): Form
     {
-        $this->user                = $this->userRepository->findById($userId);
+        $this->user                = $user;
         $isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
 
         $form = $this->baseFormFactory->create();
@@ -187,13 +187,13 @@ class AdditionalInformationFormFactory
             $custom->setDisabled(! $isAllowedEditCustomInputs);
 
             if ($customInput->isMandatory()) {
-                $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
+                $custom->addRule(Form::FILLED, 'web.profile.additional_information.custom_input_empty');
             }
         }
 
-        $form->addTextArea('about', 'web.profile.about_me');
+        $form->addTextArea('about', 'web.profile.additional_information.about_me');
 
-        $form->addSubmit('submit', 'web.profile.update_additional_information');
+        $form->addSubmit('submit', 'web.profile.additional_information.update');
 
         $form->setDefaults([
             'about' => $this->user->getAbout(),

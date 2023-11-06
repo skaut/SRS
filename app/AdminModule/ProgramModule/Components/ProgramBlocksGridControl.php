@@ -152,8 +152,8 @@ class ProgramBlocksGridControl extends Control
             ->setRenderer(static fn (Block $row) => $row->getProgramsCount());
 
         if (
-            ($this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
-                $this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
+            ($this->getPresenter()->getUser()->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
+                $this->getPresenter()->getUser()->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
             $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_ADD_BLOCK))
         ) {
             $grid->addToolbarButton('Blocks:add')
@@ -194,8 +194,9 @@ class ProgramBlocksGridControl extends Control
         $block = $this->blockRepository->findById($id);
 
         $p = $this->getPresenter();
+        assert($p instanceof AdminBasePresenter);
 
-        if (! $this->userRepository->findById($this->getPresenter()->getUser()->getId())->isAllowedModifyBlock($block)) {
+        if (! $p->getDbUser()->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks.message.delete_not_allowed', 'danger');
             $p->redirect('this');
         }
@@ -280,6 +281,6 @@ class ProgramBlocksGridControl extends Control
         $presenter = $this->getPresenter();
         assert($presenter instanceof AdminBasePresenter);
 
-        return $presenter->dbuser->isAllowedModifyBlock($block);
+        return $presenter->dbUser->isAllowedModifyBlock($block);
     }
 }

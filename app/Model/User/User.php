@@ -1025,6 +1025,11 @@ class User
         return $this->photo;
     }
 
+    public function hasPhoto(): bool
+    {
+        return $this->photo !== null;
+    }
+
     public function setPhoto(string|null $photo): void
     {
         $this->photo = $photo;

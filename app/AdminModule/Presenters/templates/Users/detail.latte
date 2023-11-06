@@ -7,7 +7,7 @@
         <h3>{_admin.users.users_detail_personal_details}</h3>
         <div class="card card-body bg-light pb-1 mb-3">
             {if !$editPersonalDetails}
-                <div class="form-group row" n:if="$detailUser->getPhoto()">
+                <div class="form-group row" n:if="$detailUser->hasPhoto()">
                     <div class="col-3">{_admin.users.users_photo}</div>
                     <div class="col-9"><img src="{$detailUser->getPhoto()}"/></div>
                 </div>

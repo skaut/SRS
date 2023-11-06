@@ -56,7 +56,7 @@ class Mail
      * @var string[]
      */
     #[ORM\Column(type: 'simple_array', nullable: true)]
-    protected array $recipientEmails = [];
+    protected array|null $recipientEmails;
 
     /**
      * Předmět e-mailu.
@@ -170,7 +170,7 @@ class Mail
     }
 
     /** @param string[] $recipientEmails */
-    public function setRecipientEmails(array $recipientEmails): void
+    public function setRecipientEmails(array|null $recipientEmails): void
     {
         $this->recipientEmails = $recipientEmails;
     }
