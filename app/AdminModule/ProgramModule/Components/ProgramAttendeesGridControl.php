@@ -153,15 +153,13 @@ class ProgramAttendeesGridControl extends Control
             $p = $this->getPresenter();
             assert($p instanceof AdminBasePresenter);
 
-            $loggedUser = $p->getDbUser();
-
-            if ($loggedUser->isAllowed(SrsResource::USERS, Permission::MANAGE)) {
+            if ($p->getDbUser()->isAllowed(SrsResource::USERS, Permission::MANAGE)) {
                 $grid->addAction('detail', 'admin.common.detail', ':Admin:Users:detail')
                     ->setClass('btn btn-xs btn-primary')
                     ->addAttributes(['target' => '_blank']);
             }
 
-            if ($loggedUser->isAllowedModifyBlock($this->program->getBlock()) && $program->getBlock()->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED) {
+            if ($p->getDbUser()->isAllowedModifyBlock($this->program->getBlock()) && $program->getBlock()->getMandatory() !== ProgramMandatoryType::AUTO_REGISTERED) {
                 $grid->addAction('register', 'admin.program.blocks.attendees.action.register', 'register!')
                     ->setClass('btn btn-xs btn-success ajax');
                 $grid->allowRowsAction('register', function (User $user) {
@@ -181,7 +179,7 @@ class ProgramAttendeesGridControl extends Control
 
                 $grid->addAction('unregister', 'admin.program.blocks.attendees.action.unregister', 'unregister!')
                     ->setClass('btn btn-xs btn-danger ajax');
-                $grid->allowRowsAction('unregister', fn (User $user) => $loggedUser->isAttendee($this->program) || $loggedUser->isAlternate($this->program));
+                $grid->allowRowsAction('unregister', fn (User $user) => $user->isAttendee($this->program) || $user->isAlternate($this->program));
 
                 $grid->addGroupAction('admin.program.blocks.attendees.action.register')->onSelect[]   = [$this, 'groupRegister'];
                 $grid->addGroupAction('admin.program.blocks.attendees.action.unregister')->onSelect[] = [$this, 'groupUnregister'];
