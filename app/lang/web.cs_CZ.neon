@@ -76,8 +76,6 @@ profile:
 
         ticket:
             heading: "Vstupenka"
-            download_ticket: "Stáhnout vstupenku (PDF)"
-            download_ticket_disabled: "Stahování vstupenek ještě není povoleno, nejste na seminář registrováni nebo chybí zaplatit některou přihlášku."
 
     schedule:
         group_heading: "Můj harmonogram semináře"
@@ -263,5 +261,6 @@ ticket_content:
     no_photo_begin: "Nemáte nahranou"
     no_photo_link: "fotku ve skautIS"
     no_photo_end: "."
-    not_available: "Zobrazení vstupenek zatím není povoleno."
-    not_registered_or_paid: "Zobrazení vstupenky je možné až po přihlášení na seminář a uhrazení poplatku."
+    not_available: "Zobrazení vstupenek ještě není povoleno."
+    not_registered_or_paid: "Zobrazení vstupenky je možné až po přihlášení na seminář, schválení registrace a uhrazení poplatku za všechny podakce."
+    download_ticket: "Stáhnout vstupenku (PDF)"
