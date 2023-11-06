@@ -61,7 +61,8 @@ class LectorDetailDto
         return $this->photo;
     }
 
-    public function hasPhoto(): bool {
+    public function hasPhoto(): bool
+    {
         return $this->photo !== null;
     }
 
