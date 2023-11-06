@@ -28,7 +28,7 @@ class TicketContentControl extends BaseContentControl
 
         $presenter = $this->getPresenter();
 
-        $template->backlink  = $presenter->getHttpRequest()->getUrl()->getPath();
+        $template->backlink = $presenter->getHttpRequest()->getUrl()->getPath();
 
         $template->guestRole = $presenter->getUser()->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
 
