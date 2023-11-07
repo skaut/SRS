@@ -11,8 +11,8 @@ use App\Model\Cms\Page;
 use App\Model\Cms\Repositories\ContentRepository;
 use App\Model\Cms\Repositories\PageRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Throwable;
@@ -28,7 +28,7 @@ class CmsService
 
     private Cache $menuCache;
 
-    public function __construct(private PageRepository $pageRepository, private ContentRepository $contentRepository, Storage $storage)
+    public function __construct(private readonly PageRepository $pageRepository, private readonly ContentRepository $contentRepository, Storage $storage)
     {
         $this->pageCache = new Cache($storage, 'Page');
         $this->menuCache = new Cache($storage, 'Menu');
@@ -38,14 +38,13 @@ class CmsService
      * Uloží stránku.
      *
      * @throws NonUniqueResultException
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @throws NoResultException
      */
     public function savePage(Page $page): void
     {
         $this->pageRepository->save($page);
-        $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);
-        $this->menuCache->clean([Cache::NAMESPACES => ['Menu']]);
+        $this->pageCache->clean([Cache::Namespaces => ['Page']]);
+        $this->menuCache->clean([Cache::Namespaces => ['Menu']]);
     }
 
     /**
@@ -56,21 +55,20 @@ class CmsService
     public function removePage(Page $page): void
     {
         $this->pageRepository->remove($page);
-        $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);
-        $this->menuCache->clean([Cache::NAMESPACES => ['Menu']]);
+        $this->pageCache->clean([Cache::Namespaces => ['Page']]);
+        $this->menuCache->clean([Cache::Namespaces => ['Menu']]);
     }
 
     /**
      * Přesune stránku mezi stránky s id prevId a nextId.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
      */
     public function sort(int $itemId, int $prevId, int $nextId): void
     {
         $this->pageRepository->sort($itemId, $prevId, $nextId);
-        $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);
-        $this->menuCache->clean([Cache::NAMESPACES => ['Menu']]);
+        $this->pageCache->clean([Cache::Namespaces => ['Page']]);
+        $this->menuCache->clean([Cache::Namespaces => ['Menu']]);
     }
 
     /**
@@ -78,7 +76,7 @@ class CmsService
      *
      * @throws Throwable
      */
-    public function findPublishedBySlugDto(string $slug): ?PageDto
+    public function findPublishedBySlugDto(string $slug): PageDto|null
     {
         $pageDto = $this->pageCache->load($slug);
         if ($pageDto === null) {
@@ -105,7 +103,7 @@ class CmsService
         if ($pagesDto === null) {
             $pagesDto = array_map(
                 static fn (Page $page) => $page->convertToDto(),
-                $this->pageRepository->findPublishedOrderedByPosition()
+                $this->pageRepository->findPublishedOrderedByPosition(),
             );
             $this->menuCache->save(null, $pagesDto);
         }
@@ -119,8 +117,8 @@ class CmsService
     public function saveContent(Content $content): void
     {
         $this->contentRepository->save($content);
-        $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);
-        $this->menuCache->clean([Cache::NAMESPACES => ['Menu']]);
+        $this->pageCache->clean([Cache::Namespaces => ['Page']]);
+        $this->menuCache->clean([Cache::Namespaces => ['Menu']]);
     }
 
     /**
@@ -129,7 +127,7 @@ class CmsService
     public function removeContent(Content $content): void
     {
         $this->contentRepository->remove($content);
-        $this->pageCache->clean([Cache::NAMESPACES => ['Page']]);
-        $this->menuCache->clean([Cache::NAMESPACES => ['Menu']]);
+        $this->pageCache->clean([Cache::Namespaces => ['Page']]);
+        $this->menuCache->clean([Cache::Namespaces => ['Menu']]);
     }
 }

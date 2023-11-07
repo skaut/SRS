@@ -13,23 +13,39 @@ concurrency:
 jobs:
   workdir:
     name: "Build"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: skaut/lebeda:8.1
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       # Copy & paste from https://github.com/actions/cache/blob/master/examples.md#php---composer
-      - name: Get Composer Cache Directory
+      - name: Get composer cache
         id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - uses: actions/cache@v1
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
+      - name: Install yarn
+        run: |
+          apt-get update
+          apt-get install -y npm
+          npm install --global yarn
+      #Copy & paste from https://github.com/actions/cache/blob/master/examples.md#node---yarn
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - run: composer install
+      - run: yarn install
+      - run: yarn build
       - name: Remove development docker-compose override
         run: rm docker-compose.override.yml
       - name: Fix permissions
@@ -44,7 +60,7 @@ jobs:
 
   tests-unit:
     name: "Unit tests"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: skaut/lebeda:8.1
     needs: workdir
@@ -60,7 +76,7 @@ jobs:
 
   tests-integration:
     name: "Integration tests"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: workdir
     steps:
       - name: Download workdir
@@ -77,7 +93,7 @@ jobs:
   code-coverage:
     name: "Code coverage"
     if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: workdir
     steps:
       - name: Download workdir
@@ -100,7 +116,7 @@ jobs:
 
   static-analysis:
     name: "PHPStan analysis"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: skaut/lebeda:8.1
     needs: workdir
@@ -116,7 +132,7 @@ jobs:
 
   coding-standard:
     name: "Coding standard"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: skaut/lebeda:8.1
     needs: workdir
@@ -132,7 +148,7 @@ jobs:
 
   doctrine-checks:
     name: "Doctrine checks"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: skaut/lebeda:8.1
     services:

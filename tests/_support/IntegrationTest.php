@@ -25,6 +25,9 @@ abstract class IntegrationTest extends Codeception\Test\Unit
         return [];
     }
 
+    /**
+     * @throws \Doctrine\ORM\Tools\ToolsException
+     */
     protected function _before() : void
     {
         $this->em         = $this->tester->grabService(EntityManagerInterface::class);

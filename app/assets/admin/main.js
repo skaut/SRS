@@ -7,13 +7,13 @@ import tinymce from 'tinymce';
 import 'tinymce/themes/silver';
 import 'tinymce/skins/ui/oxide/skin.css'
 import 'tinymce-i18n/langs/cs';
+import 'tinymce/models/dom'
 import 'tinymce/icons/default/icons';
 import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/link';
 import 'tinymce/plugins/code';
 import 'tinymce/plugins/fullscreen';
-import 'tinymce/plugins/paste';
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.css';
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.css';
 
@@ -26,7 +26,7 @@ tinymce.init({
     skin: false,
     content_css: false,
     content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
-    plugins: 'autolink lists link code fullscreen paste',
+    plugins: 'autolink lists link code fullscreen',
     toolbar: 'undo redo | bold italic | bullist numlist | link unlink | code | fullscreen',
     paste_auto_cleanup_on_paste: true,
     convert_urls : false,
@@ -42,8 +42,8 @@ tinymce.init({
     skin: false,
     content_css: false,
     content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
-    plugins: 'autolink lists link code fullscreen paste',
-    toolbar: 'undo redo | formatselect | bold italic | bullist numlist | link unlink | code | fullscreen',
+    plugins: 'autolink lists link code fullscreen',
+    toolbar: 'undo redo | blocks | bold italic | bullist numlist | link unlink | code | fullscreen',
     paste_auto_cleanup_on_paste: true,
     convert_urls : false,
     relative_urls: false,

@@ -25,7 +25,7 @@ class FilesService
 {
     use Nette\SmartObject;
 
-    public function __construct(private string $dir)
+    public function __construct(private readonly string $dir)
     {
     }
 
@@ -73,7 +73,7 @@ class FilesService
      *
      * @throws UnknownImageFileException
      */
-    public function openImage(string $path): ?Image
+    public function openImage(string $path): Image|null
     {
         $absolutePath = $this->getAbsolutePath($path);
 
@@ -90,7 +90,7 @@ class FilesService
      * @throws ImageException
      * @throws UnknownImageFileException
      */
-    public function resizeImage(string $path, ?int $width, ?int $height): void
+    public function resizeImage(string $path, int|null $width, int|null $height): void
     {
         $absolutePath = $this->getAbsolutePath($path);
 
@@ -106,7 +106,7 @@ class FilesService
      * @throws UnknownImageFileException
      * @throws ImageException
      */
-    public function resizeAndCropImage(string $path, ?int $width, ?int $height): void
+    public function resizeAndCropImage(string $path, int|null $width, int|null $height): void
     {
         $absolutePath = $this->getAbsolutePath($path);
 

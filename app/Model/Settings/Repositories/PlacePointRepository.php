@@ -20,9 +20,7 @@ class PlacePointRepository extends AbstractRepository
         parent::__construct($em, PlacePoint::class);
     }
 
-    /**
-     * @return Collection<int, PlacePoint>
-     */
+    /** @return Collection<int, PlacePoint> */
     public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
@@ -30,7 +28,7 @@ class PlacePointRepository extends AbstractRepository
         return new ArrayCollection($result);
     }
 
-    public function findById(?int $id): ?PlacePoint
+    public function findById(int|null $id): PlacePoint|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }

@@ -56,7 +56,7 @@ class PermissionRepository extends AbstractRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function findByPermissionAndResourceName(string $permissionName, string $resourceName): ?Permission
+    public function findByPermissionAndResourceName(string $permissionName, string $resourceName): Permission|null
     {
         return $this->createQueryBuilder('p')
             ->select('p')

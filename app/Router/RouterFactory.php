@@ -12,7 +12,7 @@ use Nette\Application\Routers\RouteList;
 
 final class RouterFactory
 {
-    public function __construct(private CmsService $cmsService)
+    public function __construct(private readonly CmsService $cmsService)
     {
     }
 
@@ -31,13 +31,6 @@ final class RouterFactory
 
         $router->addRoute('export/<presenter>/<action>[/<id>]', [
             'module' => 'Export',
-            'presenter' => null,
-            'action' => null,
-            'id' => null,
-        ]);
-
-        $router->addRoute('action/<presenter>/<action>[/<id>]', [
-            'module' => 'Action',
             'presenter' => null,
             'action' => null,
             'id' => null,

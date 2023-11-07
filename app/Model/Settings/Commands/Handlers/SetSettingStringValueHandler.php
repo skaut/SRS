@@ -11,13 +11,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SetSettingStringValueHandler implements MessageHandlerInterface
 {
-    public function __construct(private SettingsRepository $settingsRepository)
+    public function __construct(private readonly SettingsRepository $settingsRepository)
     {
     }
 
-    /**
-     * @throws SettingsItemNotFoundException
-     */
+    /** @throws SettingsItemNotFoundException */
     public function __invoke(SetSettingStringValue $command): void
     {
         $setting = $this->settingsRepository->findByItem($command->getItem());

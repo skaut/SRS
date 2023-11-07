@@ -11,9 +11,6 @@ use function file_get_contents;
 use function preg_split;
 use function trim;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
 class Version20170331220954 extends AbstractMigration
 {
     public function up(Schema $schema): void

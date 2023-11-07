@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Cms\Dto;
 
+use function in_array;
+
 class PageDto
 {
     /**
@@ -20,7 +22,7 @@ class PageDto
         protected array $allowedRoles,
         protected array $mainContents,
         protected array $sidebarContents,
-        protected bool $hasSidebar
+        protected bool $hasSidebar,
     ) {
     }
 
@@ -34,25 +36,19 @@ class PageDto
         return $this->slug;
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getAllowedRoles(): array
     {
         return $this->allowedRoles;
     }
 
-    /**
-     * @return ContentDto[]
-     */
+    /** @return ContentDto[] */
     public function getMainContents(): array
     {
         return $this->mainContents;
     }
 
-    /**
-     * @return ContentDto[]
-     */
+    /** @return ContentDto[] */
     public function getSidebarContents(): array
     {
         return $this->sidebarContents;
@@ -71,10 +67,8 @@ class PageDto
     public function isAllowedForRoles(array $userRoles): bool
     {
         foreach ($userRoles as $userRole) {
-            foreach ($this->allowedRoles as $allowedRole) {
-                if ($userRole === $allowedRole) {
-                    return true;
-                }
+            if (in_array($userRole, $this->allowedRoles, true)) {
+                return true;
             }
         }
 

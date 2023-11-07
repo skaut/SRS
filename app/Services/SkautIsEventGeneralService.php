@@ -63,9 +63,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
         ]);
     }
 
-    /**
-     * @return stdClass[]
-     */
+    /** @return stdClass[] */
     protected function getDraftEvents(): array
     {
         $response = $this->skautIs->event->EventGeneralAll([
@@ -105,7 +103,7 @@ class SkautIsEventGeneralService extends SkautIsEventService
         Debugger::log(sprintf(
             'Calling ParticipantGeneralInsert for ID_EventGeneral: %d, ID_Person: %d.',
             $eventId,
-            $personId
+            $personId,
         ));
 
         $this->skautIs->event->ParticipantGeneralInsert([

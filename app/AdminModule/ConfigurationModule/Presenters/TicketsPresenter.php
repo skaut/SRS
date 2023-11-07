@@ -35,16 +35,14 @@ class TicketsPresenter extends ConfigurationBasePresenter
     #[Inject]
     public TicketsFormFactory $ticketsFormFactory;
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function renderDefault(): void
     {
         $apiToken                 = $this->queryBus->handle(new SettingStringValueQuery(Settings::TICKETS_API_TOKEN));
         $this->template->apiToken = $apiToken;
 
         $connectionInfo             = [];
-        $connectionInfo['apiUrl']   = $this->getHttpRequest()->getUrl()->getBaseUrl() . 'api/';
+        $connectionInfo['srsUrl']   = $this->getHttpRequest()->getUrl()->getBaseUrl();
         $connectionInfo['apiToken'] = $apiToken;
         $this->template->qr         = $this->generateQr(json_encode($connectionInfo, JSON_THROW_ON_ERROR));
     }

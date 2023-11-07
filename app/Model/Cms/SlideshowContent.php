@@ -8,6 +8,7 @@ use App\Model\Cms\Dto\ContentDto;
 use App\Model\Cms\Dto\SlideshowContentDto;
 use App\Services\FilesService;
 use Doctrine\ORM\Mapping as ORM;
+use JsonException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Http\FileUpload;
@@ -36,7 +37,7 @@ class SlideshowContent extends Content implements IContent
      * @var string[]|null.
      */
     #[ORM\Column(type: 'simple_array', nullable: true)]
-    protected ?array $images = null;
+    protected array|null $images = null;
 
     private FilesService $filesService;
 
@@ -45,24 +46,22 @@ class SlideshowContent extends Content implements IContent
         $this->filesService = $filesService;
     }
 
-    /**
-     * @return string[]|null
-     */
-    public function getImages(): ?array
+    /** @return string[]|null */
+    public function getImages(): array|null
     {
         return $this->images;
     }
 
-    /**
-     * @param string[]|null $images
-     */
-    public function setImages(?array $images): void
+    /** @param string[]|null $images */
+    public function setImages(array|null $images): void
     {
         $this->images = $images;
     }
 
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
+     *
+     * @throws JsonException
      */
     public function addContentForm(Form $form): Form
     {

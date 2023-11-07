@@ -10,6 +10,11 @@ use App\Model\Application\ApplicationFactory;
 use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Mailing\Mail;
+use App\Model\Mailing\MailQueue;
+use App\Model\Mailing\Repositories\TemplateRepository;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateFactory;
 use App\Model\Program\Block;
 use App\Model\Program\Commands\SaveProgram;
 use App\Model\Program\Program;
@@ -27,8 +32,6 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Throwable;
 
 final class SaveProgramHandlerTest extends CommandHandlerTest
@@ -51,11 +54,10 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
 
     private SettingsRepository $settingsRepository;
 
+    private TemplateRepository $templateRepository;
+
     /**
      * Vytvoření volitelného programu.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testCreateVoluntaryProgram(): void
     {
@@ -73,6 +75,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $user1 = new User();
         $user1->setFirstName('First');
         $user1->setLastName('Last');
+        $user1->setEmail('mail@mail.cz');
         $user1->addRole($role);
         $user1->setApproved(true);
         $this->userRepository->save($user1);
@@ -83,6 +86,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $user2 = new User();
         $user2->setFirstName('First');
         $user2->setLastName('Last');
+        $user2->setEmail('mail@mail.cz');
         $user2->addRole($role);
         $user2->setApproved(true);
         $this->userRepository->save($user2);
@@ -102,8 +106,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
     /**
      * Vytvoření automaticky zapisovaného programu - oprávnění uživatelé jsou zapsáni.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @throws SettingsItemNotFoundException
      */
     public function testCreateAutoRegisteredProgram(): void
     {
@@ -121,6 +124,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $user1 = new User();
         $user1->setFirstName('First');
         $user1->setLastName('Last');
+        $user1->setEmail('mail@mail.cz');
         $user1->addRole($role);
         $user1->setApproved(true);
         $this->userRepository->save($user1);
@@ -131,6 +135,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $user2 = new User();
         $user2->setFirstName('First');
         $user2->setLastName('Last');
+        $user2->setEmail('mail@mail.cz');
         $user2->addRole($role);
         $user2->setApproved(true);
         $this->userRepository->save($user2);
@@ -141,6 +146,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $user3 = new User();
         $user3->setFirstName('First');
         $user3->setLastName('Last');
+        $user3->setEmail('mail@mail.cz');
         $user3->addRole($role);
         $user3->setApproved(true);
         $this->userRepository->save($user3);
@@ -166,8 +172,6 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
      * Vytvoření automaticky zapisovaného programu - oprávnění uživatelé jsou zapsáni, včetně nezaplacených.
      *
      * @throws SettingsItemNotFoundException
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
     public function testCreateAutoRegisteredProgramNotPaidAllowed(): void
@@ -186,6 +190,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $user1 = new User();
         $user1->setFirstName('First');
         $user1->setLastName('Last');
+        $user1->setEmail('mail@mail.cz');
         $user1->addRole($role);
         $user1->setApproved(true);
         $this->userRepository->save($user1);
@@ -196,6 +201,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $user2 = new User();
         $user2->setFirstName('First');
         $user2->setLastName('Last');
+        $user2->setEmail('mail@mail.cz');
         $user2->addRole($role);
         $user2->setApproved(true);
         $this->userRepository->save($user2);
@@ -206,6 +212,7 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $user3 = new User();
         $user3->setFirstName('First');
         $user3->setLastName('Last');
+        $user3->setEmail('mail@mail.cz');
         $user3->addRole($role);
         $user3->setApproved(true);
         $this->userRepository->save($user3);
@@ -229,9 +236,6 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
 
     /**
      * Test uložení změn programu.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testUpdateProgram(): void
     {
@@ -261,17 +265,16 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $this->assertEquals($room, $program->getRoom());
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
-        return [Program::class, Settings::class];
+        return [Program::class, Settings::class, Mail::class, MailQueue::class, Template::class];
     }
 
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SaveProgramHandlerTest.neon']);
+
         parent::_before();
 
         $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
@@ -283,8 +286,11 @@ final class SaveProgramHandlerTest extends CommandHandlerTest
         $this->roomRepository               = $this->tester->grabService(RoomRepository::class);
         $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
         $this->settingsRepository           = $this->tester->grabService(SettingsRepository::class);
+        $this->templateRepository           = $this->tester->grabService(TemplateRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
+
+        TemplateFactory::createTemplate($this->templateRepository, Template::PROGRAM_REGISTERED);
     }
 }

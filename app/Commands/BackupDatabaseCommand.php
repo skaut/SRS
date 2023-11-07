@@ -18,7 +18,7 @@ use Throwable;
  */
 class BackupDatabaseCommand extends Command
 {
-    public function __construct(private string $dir, private EntityManagerInterface $em)
+    public function __construct(private readonly string $dir, private readonly EntityManagerInterface $em)
     {
         parent::__construct();
     }
@@ -37,9 +37,9 @@ class BackupDatabaseCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $host      = $this->em->getConnection()->getHost();
-        $user      = $this->em->getConnection()->getUsername();
-        $password  = $this->em->getConnection()->getPassword();
+        $host      = $this->em->getConnection()->getParams()['host'];
+        $user      = $this->em->getConnection()->getParams()['user'];
+        $password  = $this->em->getConnection()->getParams()['password'];
         $dbname    = $this->em->getConnection()->getDatabase();
         $timestamp = (new DateTimeImmutable())->format('YmdHi');
 

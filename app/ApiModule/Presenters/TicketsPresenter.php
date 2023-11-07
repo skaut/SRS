@@ -22,6 +22,7 @@ use App\Services\CommandBus;
 use App\Services\QueryBus;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
+use Nette\Application\AbortException;
 use Nette\DI\Attributes\Inject;
 use Nette\Http\IResponse;
 
@@ -40,6 +41,7 @@ class TicketsPresenter extends ApiBasePresenter
 
     private Serializer $serializer;
 
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();
@@ -48,19 +50,20 @@ class TicketsPresenter extends ApiBasePresenter
 
         $apiToken = $this->queryBus->handle(new SettingStringValueQuery(Settings::TICKETS_API_TOKEN));
         if ($apiToken == null) {
-            $this->sendErrorResponse(IResponse::S403_FORBIDDEN, $this->translator->translate('api.tickets.token_not_generated'));
+            $this->sendErrorResponse(IResponse::S403_Forbidden, $this->translator->translate('api.tickets.token_not_generated'));
         }
 
         $headers = $this->getHttpRequest()->getHeaders();
         if (! array_key_exists('api-token', $headers)) {
-            $this->sendErrorResponse(IResponse::S403_FORBIDDEN, $this->translator->translate('api.tickets.token_not_set'));
+            $this->sendErrorResponse(IResponse::S403_Forbidden, $this->translator->translate('api.tickets.token_not_set'));
         }
 
         if ($headers['api-token'] != $apiToken) {
-            $this->sendErrorResponse(IResponse::S403_FORBIDDEN, $this->translator->translate('api.tickets.token_invalid'));
+            $this->sendErrorResponse(IResponse::S403_Forbidden, $this->translator->translate('api.tickets.token_invalid'));
         }
     }
 
+    /** @throws AbortException */
     public function actionSeminar(): void
     {
         $seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
@@ -76,16 +79,17 @@ class TicketsPresenter extends ApiBasePresenter
         $this->sendJson($dataArray);
     }
 
+    /** @throws AbortException */
     public function actionCheckTicket(int $userId, int $subeventId): void
     {
         $user = $this->queryBus->handle(new UserByIdQuery($userId));
         if ($user == null) {
-            $this->sendErrorResponse(IResponse::S404_NOT_FOUND, $this->translator->translate('api.tickets.user_not_found'));
+            $this->sendErrorResponse(IResponse::S404_NotFound, $this->translator->translate('api.tickets.user_not_found'));
         }
 
         $subevent = $this->queryBus->handle(new SubeventByIdQuery($subeventId));
         if ($subevent == null) {
-            $this->sendErrorResponse(IResponse::S404_NOT_FOUND, $this->translator->translate('api.tickets.subevent_not_found'));
+            $this->sendErrorResponse(IResponse::S404_NotFound, $this->translator->translate('api.tickets.subevent_not_found'));
         }
 
         $roles       = [];
@@ -113,6 +117,8 @@ class TicketsPresenter extends ApiBasePresenter
 
         $data = new TicketCheckInfo();
         $data->setAttendeeName($user->getDisplayName());
+        $data->setAttendeeAge($user->getAge());
+        $data->setAttendeePhoto($user->getPhoto());
         $data->setRoles($roles);
         $data->setSubevents($subevents);
         $data->setHasSubevent($hasSubevent);
@@ -124,6 +130,7 @@ class TicketsPresenter extends ApiBasePresenter
         $this->sendJson($dataArray);
     }
 
+    /** @throws AbortException */
     private function sendErrorResponse(int $code, string $message): void
     {
         $httpResponse = $this->getHttpResponse();

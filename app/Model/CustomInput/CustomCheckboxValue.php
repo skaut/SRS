@@ -17,9 +17,9 @@ class CustomCheckboxValue extends CustomInputValue
      * Hodnota zaškrtávacího pole přihlášky.
      */
     #[ORM\Column(type: 'boolean')]
-    protected ?bool $value = null;
+    protected bool|null $value = null;
 
-    public function getValue(): ?bool
+    public function getValue(): bool|null
     {
         return $this->value;
     }

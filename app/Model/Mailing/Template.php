@@ -88,7 +88,7 @@ class Template
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Typ e-mailu.
@@ -133,7 +133,7 @@ class Template
         $this->variables = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -178,9 +178,7 @@ class Template
         $this->active = $active;
     }
 
-    /**
-     * @return Collection<int, TemplateVariable>
-     */
+    /** @return Collection<int, TemplateVariable> */
     public function getVariables(): Collection
     {
         return $this->variables;
@@ -189,5 +187,10 @@ class Template
     public function isSystemTemplate(): bool
     {
         return $this->systemTemplate;
+    }
+
+    public function setSystemTemplate(bool $systemTemplate): void
+    {
+        $this->systemTemplate = $systemTemplate;
     }
 }

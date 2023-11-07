@@ -41,12 +41,11 @@ class UsersContent extends Content implements IContent
 
     private AclService $aclService;
 
-    /**
-     * @throws PageException
-     */
+    /** @throws PageException */
     public function __construct(Page $page, string $area)
     {
         parent::__construct($page, $area);
+
         $this->roles = new ArrayCollection();
     }
 
@@ -60,17 +59,13 @@ class UsersContent extends Content implements IContent
         $this->aclService = $aclService;
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function getRoles(): Collection
     {
         return $this->roles;
     }
 
-    /**
-     * @param Collection<int, Role> $roles
-     */
+    /** @param Collection<int, Role> $roles */
     public function setRoles(Collection $roles): void
     {
         $this->roles->clear();
@@ -91,7 +86,7 @@ class UsersContent extends Content implements IContent
         $formContainer->addMultiSelect(
             'roles',
             'admin.cms.pages.content.form.users_roles',
-            $this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])
+            $this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]),
         )
             ->setDefaultValue($this->roleRepository->findRolesIds($this->roles));
 
@@ -104,6 +99,7 @@ class UsersContent extends Content implements IContent
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {
         parent::contentFormSucceeded($form, $values);
+
         $formName    = $this->getContentFormName();
         $values      = $values->$formName;
         $this->roles = $this->roleRepository->findRolesByIds($values->roles);

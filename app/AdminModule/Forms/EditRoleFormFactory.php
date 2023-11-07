@@ -36,15 +36,15 @@ class EditRoleFormFactory
     /**
      * Upravovaná role.
      */
-    private ?Role $role = null;
+    private Role|null $role = null;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private EntityManagerInterface $em,
-        private AclService $aclService,
-        private RoleRepository $roleRepository,
-        private PageRepository $pageRepository,
-        private PermissionRepository $permissionRepository
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly EntityManagerInterface $em,
+        private readonly AclService $aclService,
+        private readonly RoleRepository $roleRepository,
+        private readonly PageRepository $pageRepository,
+        private readonly PermissionRepository $permissionRepository,
     ) {
     }
 
@@ -132,7 +132,7 @@ class EditRoleFormFactory
             ->addRule(
                 [$this, 'validateIncompatibleAndRequiredCollision'],
                 'admin.acl.roles_incompatible_collision',
-                [$incompatibleRolesSelect, $requiredRolesSelect]
+                [$incompatibleRolesSelect, $requiredRolesSelect],
             );
 
         $requiredRolesSelect
@@ -140,7 +140,7 @@ class EditRoleFormFactory
             ->addRule(
                 [$this, 'validateIncompatibleAndRequiredCollision'],
                 'admin.acl.roles_required_collision',
-                [$incompatibleRolesSelect, $requiredRolesSelect]
+                [$incompatibleRolesSelect, $requiredRolesSelect],
             );
 
         $form->addSubmit('submit', 'admin.common.save');
@@ -183,7 +183,7 @@ class EditRoleFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 
@@ -250,7 +250,7 @@ class EditRoleFormFactory
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    private function preparePermissionOption(?array &$options, string $permissionName, string $resourceName): void
+    private function preparePermissionOption(array|null &$options, string $permissionName, string $resourceName): void
     {
         $permission                    = $this->permissionRepository->findByPermissionAndResourceName($permissionName, $resourceName);
         $options[$permission->getId()] = 'common.permission_name.' . $permissionName . '.' . $resourceName;

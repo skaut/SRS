@@ -8,7 +8,7 @@ use App\Model\Program\Room;
 
 class RemoveRoom
 {
-    public function __construct(private Room $room)
+    public function __construct(private readonly Room $room)
     {
     }
 

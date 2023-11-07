@@ -42,9 +42,9 @@ class DiscountService
     private array $selectedSubeventsIds;
 
     public function __construct(
-        private DiscountRepository $discountRepository,
-        private SubeventRepository $subeventRepository,
-        private Translator $translator
+        private readonly DiscountRepository $discountRepository,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly Translator $translator,
     ) {
     }
 
@@ -170,7 +170,7 @@ class DiscountService
         $this->nextSymbol();
     }
 
-    private function acceptSubevent(?int &$sValue): void
+    private function acceptSubevent(int|null &$sValue): void
     {
         if ($this->symbol() !== Discount::SUBEVENT_ID || $this->subeventRepository->findById((int) $this->symbolValue()) === null) {
             throw new InvalidArgumentException();
@@ -180,7 +180,7 @@ class DiscountService
         $this->nextSymbol();
     }
 
-    private function parseExpression(?int &$sValue): void
+    private function parseExpression(int|null &$sValue): void
     {
         switch ($this->symbol()) {
             case Discount::SUBEVENT_ID:
@@ -195,7 +195,7 @@ class DiscountService
         }
     }
 
-    private function parseExpressionRest(int $dValue, ?int &$sValue): void
+    private function parseExpressionRest(int $dValue, int|null &$sValue): void
     {
         switch ($this->symbol()) {
             case Discount::OPERATOR_OR:
@@ -215,7 +215,7 @@ class DiscountService
         }
     }
 
-    private function parseTerm(?int &$sValue): void
+    private function parseTerm(int|null &$sValue): void
     {
         switch ($this->symbol()) {
             case Discount::SUBEVENT_ID:
@@ -230,7 +230,7 @@ class DiscountService
         }
     }
 
-    private function parseTermRest(int $dValue, ?int &$sValue): void
+    private function parseTermRest(int $dValue, int|null &$sValue): void
     {
         switch ($this->symbol()) {
             case Discount::OPERATOR_AND:
@@ -251,7 +251,7 @@ class DiscountService
         }
     }
 
-    private function parseFactor(?int &$sValue): void
+    private function parseFactor(int|null &$sValue): void
     {
         switch ($this->symbol()) {
             case Discount::SUBEVENT_ID:

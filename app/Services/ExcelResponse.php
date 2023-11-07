@@ -17,13 +17,11 @@ class ExcelResponse implements Response
 {
     use Nette\SmartObject;
 
-    public function __construct(private Spreadsheet $spreadsheet, private string $filename)
+    public function __construct(private readonly Spreadsheet $spreadsheet, private readonly string $filename)
     {
     }
 
-    /**
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse): void
     {
         $httpResponse->setContentType('application/force-download');

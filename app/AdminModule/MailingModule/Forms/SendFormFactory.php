@@ -7,19 +7,17 @@ namespace App\AdminModule\MailingModule\Forms;
 use App\AdminModule\Forms\BaseFormFactory;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
+use App\Model\Mailing\Commands\CreateMail;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\AclService;
-use App\Services\IMailService;
+use App\Services\CommandBus;
 use App\Services\SubeventService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Mail\SendException;
 use stdClass;
 use Throwable;
-use Tracy\Debugger;
-use Tracy\ILogger;
 
 /**
  * Formulář pro vytvoření e-mailu.
@@ -28,19 +26,14 @@ class SendFormFactory
 {
     use Nette\SmartObject;
 
-    /**
-     * Stav odeslání e-mailu.
-     */
-    public bool $mailSuccess;
-
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private IMailService $mailService,
-        private RoleRepository $roleRepository,
-        private UserRepository $userRepository,
-        private SubeventRepository $subeventRepository,
-        private AclService $aclService,
-        private SubeventService $subeventService
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly CommandBus $commandBus,
+        private readonly RoleRepository $roleRepository,
+        private readonly UserRepository $userRepository,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly AclService $aclService,
+        private readonly SubeventService $subeventService,
     ) {
     }
 
@@ -51,24 +44,29 @@ class SendFormFactory
     {
         $form = $this->baseFormFactory->create();
 
+        $recipientUsersMultiSelect = $form->addMultiSelect(
+            'recipientUsers',
+            'admin.mailing.send.recipient_users',
+            $this->userRepository->getUsersOptions(),
+        )
+            ->setHtmlAttribute('data-live-search', 'true');
+
         $recipientRolesMultiSelect = $form->addMultiSelect(
             'recipientRoles',
             'admin.mailing.send.recipient_roles',
-            $this->aclService->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED])
+            $this->aclService->getRolesWithoutRolesOptionsWithApprovedUsersCount([Role::GUEST, Role::UNAPPROVED]),
         );
 
         $recipientSubeventsMultiSelect = $form->addMultiSelect(
             'recipientSubevents',
             'admin.mailing.send.recipient_subevents',
-            $this->subeventService->getSubeventsOptionsWithUsersCount()
+            $this->subeventService->getSubeventsOptionsWithUsersCount(),
         );
 
-        $recipientUsersMultiSelect = $form->addMultiSelect(
-            'recipientUsers',
-            'admin.mailing.send.recipient_users',
-            $this->userRepository->getUsersOptions()
-        )
-            ->setHtmlAttribute('data-live-search', 'true');
+        $recipientUsersMultiSelect
+            ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
+            ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
+            ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
 
         $recipientRolesMultiSelect
             ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
@@ -78,11 +76,6 @@ class SendFormFactory
         $recipientSubeventsMultiSelect
             ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
             ->addConditionOn($recipientUsersMultiSelect, Form::BLANK)
-            ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
-
-        $recipientUsersMultiSelect
-            ->addConditionOn($recipientRolesMultiSelect, Form::BLANK)
-            ->addConditionOn($recipientSubeventsMultiSelect, Form::BLANK)
             ->addRule(Form::FILLED, 'admin.mailing.send.recipients_empty');
 
         $form->addText('copy', 'admin.mailing.send.copy')
@@ -111,20 +104,15 @@ class SendFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        try {
-            $recipientsRoles     = $this->roleRepository->findRolesByIds($values->recipientRoles);
-            $recipientsSubevents = $this->subeventRepository->findSubeventsByIds($values->recipientSubevents);
-            $recipientsUsers     = $this->userRepository->findUsersByIds($values->recipientUsers);
-            $recipientsEmails    = new ArrayCollection();
-            if (! empty($values->copy)) {
-                $recipientsEmails->add($values->copy);
-            }
+        $recipientsUsers     = $this->userRepository->findUsersByIds($values->recipientUsers);
+        $recipientsRoles     = $this->roleRepository->findRolesByIds($values->recipientRoles);
+        $recipientsSubevents = $this->subeventRepository->findSubeventsByIds($values->recipientSubevents);
+        $recipientsEmails    = null;
 
-            $this->mailService->sendMail($recipientsRoles, $recipientsSubevents, $recipientsUsers, $recipientsEmails, $values->subject, $values->text);
-            $this->mailSuccess = true;
-        } catch (SendException $ex) {
-            Debugger::log($ex, ILogger::WARNING);
-            $this->mailSuccess = false;
+        if (! empty($values->copy)) {
+            $recipientsEmails = new ArrayCollection([$values->copy]);
         }
+
+        $this->commandBus->handle(new CreateMail($recipientsUsers, $recipientsRoles, $recipientsSubevents, $recipientsEmails, $values->subject, $values->text));
     }
 }

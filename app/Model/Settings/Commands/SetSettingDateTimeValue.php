@@ -8,7 +8,7 @@ use DateTimeImmutable;
 
 class SetSettingDateTimeValue
 {
-    public function __construct(private string $item, private ?DateTimeImmutable $value)
+    public function __construct(private readonly string $item, private readonly DateTimeImmutable|null $value)
     {
     }
 
@@ -17,7 +17,7 @@ class SetSettingDateTimeValue
         return $this->item;
     }
 
-    public function getValue(): ?DateTimeImmutable
+    public function getValue(): DateTimeImmutable|null
     {
         return $this->value;
     }

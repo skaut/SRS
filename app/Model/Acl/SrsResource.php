@@ -70,7 +70,7 @@ class SrsResource
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Název prostředku.
@@ -83,19 +83,17 @@ class SrsResource
      *
      * @var Collection<int, Permission>
      */
-    #[ORM\OneToMany(targetEntity: Permission::class, mappedBy: 'resource', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'resource', targetEntity: Permission::class, cascade: ['persist'])]
     protected Collection $permissions;
 
-    /**
-     * @param string $name Název prostředku.
-     */
+    /** @param string $name Název prostředku. */
     public function __construct(string $name)
     {
         $this->name        = $name;
         $this->permissions = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -105,9 +103,7 @@ class SrsResource
         return $this->name;
     }
 
-    /**
-     * @return Collection<int, Permission>
-     */
+    /** @return Collection<int, Permission> */
     public function getPermissions(): Collection
     {
         return $this->permissions;

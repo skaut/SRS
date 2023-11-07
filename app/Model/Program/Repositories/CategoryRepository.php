@@ -22,9 +22,7 @@ class CategoryRepository extends AbstractRepository
         parent::__construct($em, Category::class);
     }
 
-    /**
-     * @return Collection<int, Category>
-     */
+    /** @return Collection<int, Category> */
     public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
@@ -35,7 +33,7 @@ class CategoryRepository extends AbstractRepository
     /**
      * Vrací kategorii podle id.
      */
-    public function findById(?int $id): ?Category
+    public function findById(int|null $id): Category|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }

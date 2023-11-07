@@ -12,13 +12,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class BlockAttendeesQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private UserRepository $userRepository)
+    public function __construct(private readonly UserRepository $userRepository)
     {
     }
 
-    /**
-     * @return Collection<int, User>
-     */
+    /** @return Collection<int, User> */
     public function __invoke(BlockAttendeesQuery $query): Collection
     {
         return $this->userRepository->findBlockAttendees($query->getBlock());

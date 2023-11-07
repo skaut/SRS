@@ -28,18 +28,18 @@ abstract class CustomInputValue
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Vlastní pole přihlášky.
      */
-    #[ORM\ManyToOne(targetEntity: CustomInput::class, inversedBy: 'customInputValues', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: CustomInput::class, cascade: ['persist'], inversedBy: 'customInputValues')]
     protected CustomInput $input;
 
     /**
      * Uživatel.
      */
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'customInputValues', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'customInputValues')]
     protected User $user;
 
     public function __construct(CustomInput $input, User $user)
@@ -48,7 +48,7 @@ abstract class CustomInputValue
         $this->user  = $user;
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

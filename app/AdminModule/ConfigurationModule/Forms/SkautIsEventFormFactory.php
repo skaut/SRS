@@ -18,7 +18,6 @@ use App\Services\QueryBus;
 use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\FormsRendering\Renderers\Bs4FormRenderer;
@@ -36,13 +35,13 @@ class SkautIsEventFormFactory
     use Nette\SmartObject;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private CommandBus $commandBus,
-        private QueryBus $queryBus,
-        private SkautIsCourseRepository $skautIsCourseRepository,
-        private SkautIsEventGeneralService $skautIsEventGeneralService,
-        private SkautIsEventEducationService $skautIsEventEducationService,
-        private SubeventRepository $subeventRepository
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
+        private readonly SkautIsCourseRepository $skautIsCourseRepository,
+        private readonly SkautIsEventGeneralService $skautIsEventGeneralService,
+        private readonly SkautIsEventEducationService $skautIsEventEducationService,
+        private readonly SubeventRepository $subeventRepository,
     ) {
     }
 
@@ -63,7 +62,7 @@ class SkautIsEventFormFactory
         $eventTypeSelect = $form->addSelect(
             'skautisEventType',
             'admin.configuration.skautis_event_type',
-            SkautIsEventType::getSkautIsEventTypesOptions()
+            SkautIsEventType::getSkautIsEventTypesOptions(),
         );
         $eventTypeSelect->addCondition($form::EQUAL, SkautIsEventType::GENERAL)
             ->toggle('event-general');
@@ -73,14 +72,14 @@ class SkautIsEventFormFactory
         $form->addSelect(
             'skautisEventGeneral',
             'admin.configuration.skautis_event',
-            $this->skautIsEventGeneralService->getEventsOptions()
+            $this->skautIsEventGeneralService->getEventsOptions(),
         )
             ->setOption('id', 'event-general');
 
         $form->addSelect(
             'skautisEventEducation',
             'admin.configuration.skautis_event',
-            $this->skautIsEventEducationService->getEventsOptions()
+            $this->skautIsEventEducationService->getEventsOptions(),
         )
             ->setOption('id', 'event-education');
 
@@ -99,7 +98,6 @@ class SkautIsEventFormFactory
      * Zpracuje formulář.
      *
      * @throws NonUniqueResultException
-     * @throws ORMException
      * @throws Throwable
      */
     public function processForm(Form $form, stdClass $values): void

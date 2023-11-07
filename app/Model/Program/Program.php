@@ -22,12 +22,12 @@ class Program
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Programový blok.
      */
-    #[ORM\ManyToOne(targetEntity: Block::class, inversedBy: 'programs', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Block::class, cascade: ['persist'], inversedBy: 'programs')]
     protected Block $block;
 
     /**
@@ -35,7 +35,7 @@ class Program
      *
      * @var Collection<int, ProgramApplication>
      */
-    #[ORM\OneToMany(targetEntity: ProgramApplication::class, mappedBy: 'program', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'program', targetEntity: ProgramApplication::class, cascade: ['persist'])]
     protected Collection $programApplications;
 
     /**
@@ -47,8 +47,8 @@ class Program
     /**
      * Místnost.
      */
-    #[ORM\ManyToOne(targetEntity: Room::class, inversedBy: 'programs', cascade: ['persist'])]
-    protected ?Room $room = null;
+    #[ORM\ManyToOne(targetEntity: Room::class, cascade: ['persist'], inversedBy: 'programs')]
+    protected Room|null $room = null;
 
     /**
      * Začátek programu.
@@ -62,7 +62,7 @@ class Program
         $this->programApplications = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -92,25 +92,21 @@ class Program
     {
         return $this->programApplications->matching(
             Criteria::create()->where(
-                Criteria::expr()->eq('alternate', true)
-            )
+                Criteria::expr()->eq('alternate', true),
+            ),
         )->count();
     }
 
-    public function getRoom(): ?Room
+    public function getRoom(): Room|null
     {
         return $this->room;
     }
 
-    public function setRoom(?Room $room): void
+    public function setRoom(Room|null $room): void
     {
-        if ($this->room !== null) {
-            $this->room->removeProgram($this);
-        }
+        $this->room?->removeProgram($this);
 
-        if ($room !== null) {
-            $room->addProgram($this);
-        }
+        $room?->addProgram($this);
 
         $this->room = $room;
     }
@@ -128,7 +124,7 @@ class Program
     /**
      * Vrací kapacitu programového bloku.
      */
-    public function getBlockCapacity(): ?int
+    public function getBlockCapacity(): int|null
     {
         return $this->block->getCapacity();
     }

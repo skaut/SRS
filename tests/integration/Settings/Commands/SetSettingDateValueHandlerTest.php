@@ -12,6 +12,7 @@ use CommandHandlerTest;
 use DateTimeImmutable;
 use Exception;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Throwable;
 
 final class SetSettingDateValueHandlerTest extends CommandHandlerTest
 {
@@ -37,6 +38,8 @@ final class SetSettingDateValueHandlerTest extends CommandHandlerTest
 
     /**
      * Nastavení hodnoty na null.
+     *
+     * @throws SettingsItemNotFoundException
      */
     public function testSetValueNull(): void
     {
@@ -51,6 +54,7 @@ final class SetSettingDateValueHandlerTest extends CommandHandlerTest
      * Nastavení hodnoty neexistující položce.
      *
      * @throws Exception
+     * @throws Throwable
      */
     public function testSetValueNotExistingItem(): void
     {
@@ -62,9 +66,7 @@ final class SetSettingDateValueHandlerTest extends CommandHandlerTest
         }
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Settings::class];
@@ -73,6 +75,7 @@ final class SetSettingDateValueHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SetSettingDateValueHandlerTest.neon']);
+
         parent::_before();
 
         $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);

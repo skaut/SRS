@@ -12,13 +12,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UserAllowedBlocksQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private BlockRepository $blockRepository)
+    public function __construct(private readonly BlockRepository $blockRepository)
     {
     }
 
-    /**
-     * @return Collection<int, Block>
-     */
+    /** @return Collection<int, Block> */
     public function __invoke(UserAllowedBlocksQuery $query): Collection
     {
         return $this->blockRepository->findUserAllowed($query->getUser(), $query->isPaidOnly());

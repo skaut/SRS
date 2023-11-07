@@ -8,7 +8,6 @@ use App\Model\Enums\Sex;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\SkautIsService;
-use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\FormComponents\Controls\DateControl;
@@ -29,41 +28,39 @@ class PersonalDetailsFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user = null;
+    private User $user;
 
     /** @var callable[] */
     public array $onSkautIsError = [];
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private UserRepository $userRepository,
-        private SkautIsService $skautIsService
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly UserRepository $userRepository,
+        private readonly SkautIsService $skautIsService,
     ) {
     }
 
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id): Form
+    public function create(User $user): Form
     {
-        $this->user = $this->userRepository->findById($id);
+        $this->user = $user;
 
         $form = $this->baseFormFactory->create();
 
-        $form->addHidden('id');
+        $inputSex = $form->addRadioList('sex', 'web.profile.personal_details.sex', Sex::getSexOptions());
 
-        $inputSex = $form->addRadioList('sex', 'web.profile.sex', Sex::getSexOptions());
+        $inputFirstName = $form->addText('firstName', 'web.profile.personal_details.firstname')
+            ->addRule(Form::FILLED, 'web.profile.personal_details.firstname_empty');
 
-        $inputFirstName = $form->addText('firstName', 'web.profile.firstname')
-            ->addRule(Form::FILLED, 'web.profile.firstname_empty');
+        $inputLastName = $form->addText('lastName', 'web.profile.personal_details.lastname')
+            ->addRule(Form::FILLED, 'web.profile.personal_details.lastname_empty');
 
-        $inputLastName = $form->addText('lastName', 'web.profile.lastname')
-            ->addRule(Form::FILLED, 'web.profile.lastname_empty');
+        $inputNickName = $form->addText('nickName', 'web.profile.personal_details.nickname');
 
-        $inputNickName = $form->addText('nickName', 'web.profile.nickname');
-
-        $inputBirthdateDate = new DateControl('web.profile.birthdate');
-        $inputBirthdateDate->addRule(Form::FILLED, 'web.profile.birthdate_empty');
+        $inputBirthdateDate = new DateControl('web.profile.personal_details.birthdate');
+        $inputBirthdateDate->addRule(Form::FILLED, 'web.profile.personal_details.birthdate_empty');
         $form->addComponent($inputBirthdateDate, 'birthdate');
 
         if ($this->user->isMember()) {
@@ -74,33 +71,35 @@ class PersonalDetailsFormFactory
             $inputBirthdateDate->setDisabled();
         }
 
-        $form->addText('email', 'web.application_content.email')
-            ->addRule(Form::FILLED)
+        $form->addText('email', 'web.profile.personal_details.email')
             ->setDisabled();
 
-        $form->addText('street', 'web.profile.street')
-            ->addRule(Form::FILLED, 'web.profile.street_empty')
-            ->addRule(Form::PATTERN, 'web.profile.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
+        $form->addText('phone', 'web.profile.personal_details.phone')
+            ->setDisabled();
 
-        $form->addText('city', 'web.profile.city')
-            ->addRule(Form::FILLED, 'web.profile.city_empty');
+        $form->addText('street', 'web.profile.personal_details.street')
+            ->addRule(Form::FILLED, 'web.profile.personal_details.street_empty')
+            ->addRule(Form::PATTERN, 'web.profile.personal_details.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
 
-        $form->addText('postcode', 'web.profile.postcode')
-            ->addRule(Form::FILLED, 'web.profile.postcode_empty')
-            ->addRule(Form::PATTERN, 'web.profile.postcode_format', '^\d{3} ?\d{2}$');
+        $form->addText('city', 'web.profile.personal_details.city')
+            ->addRule(Form::FILLED, 'web.profile.personal_details.city_empty');
 
-        $form->addText('state', 'web.profile.state')
-            ->addRule(Form::FILLED, 'web.profile.state_empty');
+        $form->addText('postcode', 'web.profile.personal_details.postcode')
+            ->addRule(Form::FILLED, 'web.profile.personal_details.postcode_empty')
+            ->addRule(Form::PATTERN, 'web.profile.personal_details.postcode_format', '^\d{3} ?\d{2}$');
 
-        $form->addSubmit('submit', 'web.profile.update_personal_details');
+        $form->addText('state', 'web.profile.personal_details.state')
+            ->addRule(Form::FILLED, 'web.profile.personal_details.state_empty');
+
+        $form->addSubmit('submit', 'web.profile.personal_details.update');
 
         $form->setDefaults([
-            'id' => $id,
             'sex' => $this->user->getSex(),
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),
             'nickName' => $this->user->getNickName(),
             'email' => $this->user->getEmail(),
+            'phone' => $this->user->getPhone(),
             'birthdate' => $this->user->getBirthdate(),
             'street' => $this->user->getStreet(),
             'city' => $this->user->getCity(),
@@ -115,8 +114,6 @@ class PersonalDetailsFormFactory
 
     /**
      * Zpracuje formulář.
-     *
-     * @throws ORMException
      */
     public function processForm(Form $form, stdClass $values): void
     {
@@ -156,7 +153,7 @@ class PersonalDetailsFormFactory
                     $this->user->getBirthdate(),
                     $this->user->getFirstName(),
                     $this->user->getLastName(),
-                    $this->user->getNickName()
+                    $this->user->getNickName(),
                 );
 
                 $this->skautIsService->updatePersonAddress(
@@ -164,7 +161,7 @@ class PersonalDetailsFormFactory
                     $this->user->getStreet(),
                     $this->user->getCity(),
                     $this->user->getPostcode(),
-                    $this->user->getState()
+                    $this->user->getState(),
                 );
             } catch (WsdlException $ex) {
                 Debugger::log($ex, ILogger::WARNING);

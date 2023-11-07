@@ -8,8 +8,6 @@ use App\Model\Program\Commands\SaveRoom;
 use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
 use CommandHandlerTest;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Throwable;
 
 final class SaveRoomHandlerTest extends CommandHandlerTest
@@ -19,8 +17,6 @@ final class SaveRoomHandlerTest extends CommandHandlerTest
     /**
      * Uložení místnosti.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
     public function testSaveRoom(): void
@@ -34,9 +30,7 @@ final class SaveRoomHandlerTest extends CommandHandlerTest
         $this->assertContains($room, $this->roomRepository->findAll());
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Room::class];
@@ -45,6 +39,7 @@ final class SaveRoomHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SaveRoomHandlerTest.neon']);
+
         parent::_before();
 
         $this->roomRepository = $this->tester->grabService(RoomRepository::class);

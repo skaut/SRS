@@ -21,7 +21,7 @@ class PaymentRepository extends AbstractRepository
     /**
      * Vrací platbu podle id.
      */
-    public function findById(?int $id): ?Payment
+    public function findById(int|null $id): Payment|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -29,7 +29,7 @@ class PaymentRepository extends AbstractRepository
     /**
      * Vrací platbu podle id transakce.
      */
-    public function findByTransactionId(string $transactionId): ?Payment
+    public function findByTransactionId(string $transactionId): Payment|null
     {
         return $this->getRepository()->findOneBy(['transactionId' => $transactionId]);
     }

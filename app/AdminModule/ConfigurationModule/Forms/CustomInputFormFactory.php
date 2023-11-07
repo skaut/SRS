@@ -19,7 +19,7 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Services\AclService;
 use App\Utils\Helpers;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\NoResultException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -39,9 +39,9 @@ class CustomInputFormFactory
     /**
      * Upravované pole.
      */
-    private ?CustomInput $customInput = null;
+    private CustomInput|null $customInput = null;
 
-    public function __construct(private BaseFormFactory $baseFormFactory, private CustomInputRepository $customInputRepository, private AclService $aclService, private RoleRepository $roleRepository)
+    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly CustomInputRepository $customInputRepository, private readonly AclService $aclService, private readonly RoleRepository $roleRepository)
     {
     }
 
@@ -53,8 +53,6 @@ class CustomInputFormFactory
         $this->customInput = $this->customInputRepository->findById($id);
 
         $form = $this->baseFormFactory->create();
-
-        $form->addHidden('id');
 
         $form->addText('name', 'admin.configuration.custom_inputs_name')
             ->addRule(Form::FILLED, 'admin.configuration.custom_inputs_name_empty');
@@ -83,7 +81,6 @@ class CustomInputFormFactory
             $optionsText->setDisabled();
 
             $form->setDefaults([
-                'id' => $id,
                 'name' => $this->customInput->getName(),
                 'roles' => Helpers::getIds($this->customInput->getRoles()),
                 'type' => $this->customInput->getType(),
@@ -107,11 +104,11 @@ class CustomInputFormFactory
      * Zpracuje formulář.
      *
      * @throws NonUniqueResultException
-     * @throws ORMException
+     * @throws NoResultException
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 
@@ -129,7 +126,7 @@ class CustomInputFormFactory
                     $this->customInput = new CustomSelect();
                     $options           = array_map(
                         static fn (string $o) => trim($o),
-                        explode(',', $values->options)
+                        explode(',', $values->options),
                     );
                     $this->customInput->setOptions($options);
                     break;
@@ -138,7 +135,7 @@ class CustomInputFormFactory
                     $this->customInput = new CustomMultiSelect();
                     $options           = array_map(
                         static fn (string $o) => trim($o),
-                        explode(',', $values->options)
+                        explode(',', $values->options),
                     );
                     $this->customInput->setOptions($options);
                     break;

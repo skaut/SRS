@@ -11,14 +11,12 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SettingStringValueQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private SettingsRepository $settingsRepository)
+    public function __construct(private readonly SettingsRepository $settingsRepository)
     {
     }
 
-    /**
-     * @throws SettingsItemNotFoundException
-     */
-    public function __invoke(SettingStringValueQuery $query): ?string
+    /** @throws SettingsItemNotFoundException */
+    public function __invoke(SettingStringValueQuery $query): string|null
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
 

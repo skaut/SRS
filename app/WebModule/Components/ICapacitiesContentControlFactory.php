@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 /**
- * Factory komponenty s kapacitami rolí.
+ * Factory komponenty obsahu s kapacitami rolí.
  */
 interface ICapacitiesContentControlFactory
 {

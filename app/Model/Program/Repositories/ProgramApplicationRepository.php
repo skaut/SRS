@@ -18,6 +18,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Exception;
 use Throwable;
 
 use function assert;
@@ -32,14 +35,12 @@ class ProgramApplicationRepository extends AbstractRepository
         parent::__construct($em, ProgramApplication::class);
     }
 
-    public function findByUserAndProgram(User $user, Program $program): ?ProgramApplication
+    public function findByUserAndProgram(User $user, Program $program): ProgramApplication|null
     {
         return $this->getRepository()->findOneBy(['user' => $user, 'program' => $program]);
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function save(ProgramApplication $programApplication): void
     {
         $this->em->wrapInTransaction(function (EntityManager $em) use ($programApplication): void {
@@ -81,9 +82,7 @@ class ProgramApplicationRepository extends AbstractRepository
         });
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function remove(ProgramApplication $programApplication): void
     {
         $this->em->wrapInTransaction(function (EntityManager $em) use ($programApplication): void {
@@ -101,9 +100,7 @@ class ProgramApplicationRepository extends AbstractRepository
         });
     }
 
-    /**
-     * @return Collection<int, ProgramApplication>
-     */
+    /** @return Collection<int, ProgramApplication> */
     private function findByUserAlternateAndBlock(User $user, Block $block): Collection
     {
         $result = $this->createQueryBuilder('pa')
@@ -118,6 +115,10 @@ class ProgramApplicationRepository extends AbstractRepository
         return new ArrayCollection($result);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     private function userAttendsSameProgram(User $user, Program $program): bool
     {
         $result = $this->createQueryBuilder('pa')
@@ -133,6 +134,10 @@ class ProgramApplicationRepository extends AbstractRepository
         return $result !== 0;
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     private function userAttendsSameBlockProgram(User $user, Block $block): bool
     {
         $result = $this->createQueryBuilder('pa')
@@ -148,6 +153,11 @@ class ProgramApplicationRepository extends AbstractRepository
         return $result !== 0;
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     * @throws Exception
+     */
     private function userAttendsOrAlternatesConflictingProgram(User $user, Program $program): bool
     {
         $start = $program->getStart();

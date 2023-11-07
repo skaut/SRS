@@ -10,10 +10,8 @@ use Doctrine\Common\Collections\Collection;
 
 class CategoryUpdatedEvent
 {
-    /**
-     * @param Collection<int, Role> $registerableRolesOld
-     */
-    public function __construct(private Category $category, private Collection $registerableRolesOld)
+    /** @param Collection<int, Role> $registerableRolesOld */
+    public function __construct(private readonly Category $category, private readonly Collection $registerableRolesOld)
     {
     }
 
@@ -22,9 +20,7 @@ class CategoryUpdatedEvent
         return $this->category;
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function getRegisterableRolesOld(): Collection
     {
         return $this->registerableRolesOld;

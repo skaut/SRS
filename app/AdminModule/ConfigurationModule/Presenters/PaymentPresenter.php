@@ -39,9 +39,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
     #[Inject]
     public TicketsFormFactory $ticketsFormFactory;
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function renderDefault(): void
     {
         $bankToken = $this->queryBus->handle(new SettingStringValueQuery(Settings::BANK_TOKEN));
@@ -93,9 +91,7 @@ class PaymentPresenter extends ConfigurationBasePresenter
         return $form;
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     protected function createComponentBankForm(): Form
     {
         $form = $this->bankFormFactory->create();

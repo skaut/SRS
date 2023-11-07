@@ -26,7 +26,7 @@ class Subevent
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Název podakce.
@@ -53,7 +53,7 @@ class Subevent
      *
      * @var Collection<int, Block>
      */
-    #[ORM\OneToMany(targetEntity: Block::class, mappedBy: 'subevent', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'subevent', targetEntity: Block::class, cascade: ['persist'])]
     #[ORM\OrderBy(['name' => 'ASC'])]
     protected Collection $blocks;
 
@@ -67,7 +67,7 @@ class Subevent
      * Kapacita.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $capacity = null;
+    protected int|null $capacity = null;
 
     /**
      * Obsazenost.
@@ -118,13 +118,13 @@ class Subevent
      * Registrovatelná od.
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?DateTimeImmutable $registerableFrom = null;
+    protected DateTimeImmutable|null $registerableFrom = null;
 
     /**
      * Registrovatelná do.
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?DateTimeImmutable $registerableTo = null;
+    protected DateTimeImmutable|null $registerableTo = null;
 
     public function __construct()
     {
@@ -136,7 +136,7 @@ class Subevent
         $this->skautIsCourses        = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -161,9 +161,7 @@ class Subevent
         $this->implicit = $implicit;
     }
 
-    /**
-     * @return Collection<int, Block>
-     */
+    /** @return Collection<int, Block> */
     public function getBlocks(): Collection
     {
         return $this->blocks;
@@ -193,12 +191,12 @@ class Subevent
         $this->fee = $fee;
     }
 
-    public function getCapacity(): ?int
+    public function getCapacity(): int|null
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity): void
+    public function setCapacity(int|null $capacity): void
     {
         $this->capacity = $capacity;
     }
@@ -213,17 +211,13 @@ class Subevent
         return $this->occupancy;
     }
 
-    /**
-     * @return Collection<int, Subevent>
-     */
+    /** @return Collection<int, Subevent> */
     public function getIncompatibleSubevents(): Collection
     {
         return $this->incompatibleSubevents;
     }
 
-    /**
-     * @param Collection<int, Subevent> $incompatibleSubevents
-     */
+    /** @param Collection<int, Subevent> $incompatibleSubevents */
     public function setIncompatibleSubevents(Collection $incompatibleSubevents): void
     {
         foreach ($this->incompatibleSubevents as $subevent) {
@@ -264,9 +258,7 @@ class Subevent
         return implode(', ', $incompatibleSubeventsNames);
     }
 
-    /**
-     * @return Collection<int, Subevent>
-     */
+    /** @return Collection<int, Subevent> */
     public function getRequiredBySubevent(): Collection
     {
         return $this->requiredBySubevent;
@@ -303,9 +295,7 @@ class Subevent
         return $allRequiredBySubevent;
     }
 
-    /**
-     * @param Collection<int, Subevent> $allRequiredBySubevent
-     */
+    /** @param Collection<int, Subevent> $allRequiredBySubevent */
     private function getRequiredBySubeventTransitiveRec(Collection &$allRequiredBySubevent, Subevent $subevent): void
     {
         if ($this->getId() !== $subevent->getId() && ! $allRequiredBySubevent->contains($subevent)) {
@@ -317,17 +307,13 @@ class Subevent
         }
     }
 
-    /**
-     * @return Collection<int, Subevent>
-     */
+    /** @return Collection<int, Subevent> */
     public function getRequiredSubevents(): Collection
     {
         return $this->requiredSubevents;
     }
 
-    /**
-     * @param Collection<int, Subevent> $requiredSubevents
-     */
+    /** @param Collection<int, Subevent> $requiredSubevents */
     public function setRequiredSubevents(Collection $requiredSubevents): void
     {
         foreach ($this->requiredSubevents as $requiredSubevent) {
@@ -370,9 +356,7 @@ class Subevent
         return $allRequiredSubevents;
     }
 
-    /**
-     * @param Collection<int, Subevent> $allRequiredSubevents
-     */
+    /** @param Collection<int, Subevent> $allRequiredSubevents */
     private function getRequiredSubeventsTransitiveRec(Collection &$allRequiredSubevents, Subevent $subevent): void
     {
         if ($this->getId() !== $subevent->getId() && ! $allRequiredSubevents->contains($subevent)) {
@@ -397,9 +381,7 @@ class Subevent
         return implode(', ', $requiredSubeventsNames);
     }
 
-    /**
-     * @return Collection<int, SkautIsCourse>
-     */
+    /** @return Collection<int, SkautIsCourse> */
     public function getSkautIsCourses(): Collection
     {
         return $this->skautIsCourses;
@@ -410,9 +392,7 @@ class Subevent
         return implode(', ', $this->skautIsCourses->map(static fn (SkautIsCourse $skautIsCourse) => $skautIsCourse->getName())->toArray());
     }
 
-    /**
-     * @param Collection<int, SkautIsCourse> $skautIsCourses
-     */
+    /** @param Collection<int, SkautIsCourse> $skautIsCourses */
     public function setSkautIsCourses(Collection $skautIsCourses): void
     {
         $this->skautIsCourses = $skautIsCourses;
@@ -455,7 +435,7 @@ class Subevent
             $application->getState() === ApplicationState::PAID))->count();
     }
 
-    public function countUnoccupied(): ?int
+    public function countUnoccupied(): int|null
     {
         return $this->capacity ? $this->capacity - $this->countUsers() : null;
     }
@@ -465,22 +445,22 @@ class Subevent
         return $this->capacity ? $this->countUsers() . '/' . $this->capacity : '' . $this->countUsers();
     }
 
-    public function getRegisterableFrom(): ?DateTimeImmutable
+    public function getRegisterableFrom(): DateTimeImmutable|null
     {
         return $this->registerableFrom;
     }
 
-    public function setRegisterableFrom(?DateTimeImmutable $registerableFrom): void
+    public function setRegisterableFrom(DateTimeImmutable|null $registerableFrom): void
     {
         $this->registerableFrom = $registerableFrom;
     }
 
-    public function getRegisterableTo(): ?DateTimeImmutable
+    public function getRegisterableTo(): DateTimeImmutable|null
     {
         return $this->registerableTo;
     }
 
-    public function setRegisterableTo(?DateTimeImmutable $registerableTo): void
+    public function setRegisterableTo(DateTimeImmutable|null $registerableTo): void
     {
         $this->registerableTo = $registerableTo;
     }

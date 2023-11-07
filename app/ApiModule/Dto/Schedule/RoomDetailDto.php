@@ -21,7 +21,7 @@ class RoomDetailDto
     private string $name;
 
     #[JMS\Type(values: 'int')]
-    private ?int $capacity = null;
+    private int|null $capacity = null;
 
     public function getId(): int
     {
@@ -43,12 +43,12 @@ class RoomDetailDto
         $this->name = $name;
     }
 
-    public function getCapacity(): ?int
+    public function getCapacity(): int|null
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity): void
+    public function setCapacity(int|null $capacity): void
     {
         $this->capacity = $capacity;
     }

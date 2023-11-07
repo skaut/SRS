@@ -24,10 +24,18 @@ class Mail
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
-     * Role, kterým byl e-mail odeslán.
+     * Příjemci e-mailu - uživatelé.
+     *
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class)]
+    protected Collection $recipientUsers;
+
+    /**
+     * Příjemci e-mailu - uživatelé s rolemi.
      *
      * @var Collection<int, Role>
      */
@@ -35,7 +43,7 @@ class Mail
     protected Collection $recipientRoles;
 
     /**
-     * Podakce, jejichž účastníkům byl e-mail odeslán.
+     * Příjemci e-mailu - uživatelé s podakcemi.
      *
      * @var Collection<int, Subevent>
      */
@@ -43,12 +51,12 @@ class Mail
     protected Collection $recipientSubevents;
 
     /**
-     * Uživatelé, kterém byl e-mail odeslán.
+     * Příjemci e-mailu - e-maily.
      *
-     * @var Collection<int, User>
+     * @var string[]
      */
-    #[ORM\ManyToMany(targetEntity: User::class)]
-    protected Collection $recipientUsers;
+    #[ORM\Column(type: 'simple_array', nullable: true)]
+    protected array|null $recipientEmails;
 
     /**
      * Předmět e-mailu.
@@ -63,7 +71,7 @@ class Mail
     protected string $text;
 
     /**
-     * Datum a čas odeslání.
+     * Datum a čas vytvoření.
      */
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $datetime;
@@ -76,27 +84,46 @@ class Mail
 
     public function __construct()
     {
+        $this->recipientUsers     = new ArrayCollection();
         $this->recipientRoles     = new ArrayCollection();
         $this->recipientSubevents = new ArrayCollection();
-        $this->recipientUsers     = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
 
+    /** @return Collection<int, User> */
+    public function getRecipientUsers(): Collection
+    {
+        return $this->recipientUsers;
+    }
+
+    /** @param Collection<int, User> $recipientUsers */
+    public function setRecipientUsers(Collection $recipientUsers): void
+    {
+        $this->recipientUsers->clear();
+        foreach ($recipientUsers as $recipientUser) {
+            $this->recipientUsers->add($recipientUser);
+        }
+    }
+
     /**
-     * @return Collection<int, Role>
+     * Vrací příjemce (uživatele) oddělené čárkou.
      */
+    public function getRecipientUsersText(): string
+    {
+        return implode(', ', $this->recipientUsers->map(static fn (User $user) => $user->getDisplayName())->toArray());
+    }
+
+    /** @return Collection<int, Role> */
     public function getRecipientRoles(): Collection
     {
         return $this->recipientRoles;
     }
 
-    /**
-     * @param Collection<int, Role> $recipientRoles
-     */
+    /** @param Collection<int, Role> $recipientRoles */
     public function setRecipientRoles(Collection $recipientRoles): void
     {
         $this->recipientRoles->clear();
@@ -113,17 +140,13 @@ class Mail
         return implode(', ', $this->recipientRoles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
-    /**
-     * @return Collection<int, Subevent>
-     */
+    /** @return Collection<int, Subevent> */
     public function getRecipientSubevents(): Collection
     {
         return $this->recipientSubevents;
     }
 
-    /**
-     * @param Collection<int, Subevent> $recipientSubevents
-     */
+    /** @param Collection<int, Subevent> $recipientSubevents */
     public function setRecipientSubevents(Collection $recipientSubevents): void
     {
         $this->recipientSubevents->clear();
@@ -140,31 +163,21 @@ class Mail
         return implode(', ', $this->recipientSubevents->map(static fn (Subevent $subevent) => $subevent->getName())->toArray());
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getRecipientUsers(): Collection
+    /** @return string[] */
+    public function getRecipientEmails(): array
     {
-        return $this->recipientUsers;
+        return $this->recipientEmails;
     }
 
-    /**
-     * @param Collection<int, User> $recipientUsers
-     */
-    public function setRecipientUsers(Collection $recipientUsers): void
+    /** @param string[] $recipientEmails */
+    public function setRecipientEmails(array|null $recipientEmails): void
     {
-        $this->recipientUsers->clear();
-        foreach ($recipientUsers as $recipientUser) {
-            $this->recipientUsers->add($recipientUser);
-        }
+        $this->recipientEmails = $recipientEmails;
     }
 
-    /**
-     * Vrací příjemce (uživatele) oddělené čárkou.
-     */
-    public function getRecipientUsersText(): string
+    public function getRecipientEmailsText(): string
     {
-        return implode(', ', $this->recipientUsers->map(static fn (User $user) => $user->getDisplayName())->toArray());
+        return implode(', ', $this->recipientEmails);
     }
 
     public function getSubject(): string

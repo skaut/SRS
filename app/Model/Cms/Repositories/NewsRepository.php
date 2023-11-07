@@ -23,7 +23,7 @@ class NewsRepository extends AbstractRepository
     /**
      * Vrací aktualitu podle id.
      */
-    public function findById(?int $id): ?News
+    public function findById(int|null $id): News|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -47,7 +47,7 @@ class NewsRepository extends AbstractRepository
      *
      * @return News[]
      */
-    public function findPublishedOrderedByPinnedAndDate(?int $maxCount): array
+    public function findPublishedOrderedByPinnedAndDate(int|null $maxCount): array
     {
         return $this->createQueryBuilder('n')
             ->where($this->createQueryBuilder('n')->expr()->lte('n.published', 'CURRENT_TIMESTAMP()'))

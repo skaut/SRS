@@ -142,7 +142,7 @@ class InstallPresenter extends InstallBasePresenter
                 new ArrayCollection([$adminRole]),
                 new ArrayCollection([$implicitSubevent]),
                 $user,
-                true
+                true,
             );
 
             $this->commandBus->handle(new SetSettingBoolValue(Settings::ADMIN_CREATED, true));

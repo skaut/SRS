@@ -21,9 +21,9 @@ class EditTemplateFormFactory
     /**
      * Upravovaná šablona.
      */
-    private ?Template $template = null;
+    private Template|null $template = null;
 
-    public function __construct(private BaseFormFactory $baseFormFactory, private TemplateRepository $templateRepository)
+    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly TemplateRepository $templateRepository)
     {
     }
 
@@ -35,8 +35,6 @@ class EditTemplateFormFactory
         $this->template = $this->templateRepository->findById($id);
 
         $form = $this->baseFormFactory->create();
-
-        $form->addHidden('id');
 
         $form->addCheckbox('active', 'admin.mailing.templates.active_form');
 
@@ -54,7 +52,6 @@ class EditTemplateFormFactory
             ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->setDefaults([
-            'id' => $id,
             'active' => $this->template->isActive(),
             'subject' => $this->template->getSubject(),
             'text' => $this->template->getText(),
@@ -71,7 +68,7 @@ class EditTemplateFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 

@@ -18,7 +18,7 @@ class Room
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Název místnosti.
@@ -30,25 +30,25 @@ class Room
      * Kapacita.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $capacity;
+    protected int|null $capacity;
 
     /**
      * Programy v místnosti.
      *
      * @var Collection<int, Program>
      */
-    #[ORM\OneToMany(targetEntity: Program::class, mappedBy: 'room', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'room', targetEntity: Program::class, cascade: ['persist'])]
     #[ORM\OrderBy(['start' => 'ASC'])]
     protected Collection $programs;
 
-    public function __construct(string $name, ?int $capacity)
+    public function __construct(string $name, int|null $capacity)
     {
         $this->name     = $name;
         $this->capacity = $capacity;
         $this->programs = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -63,19 +63,17 @@ class Room
         $this->name = $name;
     }
 
-    public function getCapacity(): ?int
+    public function getCapacity(): int|null
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity): void
+    public function setCapacity(int|null $capacity): void
     {
         $this->capacity = $capacity;
     }
 
-    /**
-     * @return Collection<int, Program>
-     */
+    /** @return Collection<int, Program> */
     public function getPrograms(): Collection
     {
         return $this->programs;

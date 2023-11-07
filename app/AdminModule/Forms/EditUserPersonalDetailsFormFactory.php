@@ -7,7 +7,7 @@ namespace App\AdminModule\Forms;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\FilesService;
-use Doctrine\ORM\ORMException;
+use JsonException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\ImageException;
@@ -32,17 +32,19 @@ class EditUserPersonalDetailsFormFactory
     /**
      * Upravovaný uživatel.
      */
-    private ?User $user = null;
+    private User|null $user = null;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private UserRepository $userRepository,
-        private FilesService $filesService
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly UserRepository $userRepository,
+        private readonly FilesService $filesService,
     ) {
     }
 
     /**
      * Vytvoří formulář.
+     *
+     * @throws JsonException
      */
     public function create(int $id): Form
     {
@@ -50,15 +52,13 @@ class EditUserPersonalDetailsFormFactory
 
         $form = $this->baseFormFactory->create();
 
-        $form->addHidden('id');
-
         $photoUpload = $form->addUpload('photo', 'admin.users.users_photo');
         $photoUpload->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.users.users_photo_format');
 
-        if ($this->user->getPhoto() !== null) {
+        if ($this->user->hasPhoto()) {
             $photoUpload->setHtmlAttribute('data-delete-url', '?do=removePhoto')
                 ->setHtmlAttribute('data-initial-preview', json_encode([$this->user->getPhoto()], JSON_THROW_ON_ERROR))
                 ->setHtmlAttribute('data-initial-preview-show-delete', 'true')
@@ -81,6 +81,10 @@ class EditUserPersonalDetailsFormFactory
             ->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, 'admin.users.users_email_format');
 
+        $form->addText('phone', 'admin.users.users_phone')
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'admin.users.users_phone_format', '^\d{9}$');
+
         $birthdateDate = new DateControl('admin.users.users_birthdate');
         $form->addComponent($birthdateDate, 'birthdate');
 
@@ -101,13 +105,13 @@ class EditUserPersonalDetailsFormFactory
             ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->setDefaults([
-            'id' => $id,
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),
             'nickName' => $this->user->getNickName(),
             'degreePre' => $this->user->getDegreePre(),
             'degreePost' => $this->user->getDegreePost(),
             'email' => $this->user->getEmail(),
+            'phone' => $this->user->getPhone(),
             'birthdate' => $this->user->getBirthdate(),
             'street' => $this->user->getStreet(),
             'city' => $this->user->getCity(),
@@ -123,12 +127,11 @@ class EditUserPersonalDetailsFormFactory
      * Zpracuje formulář.
      *
      * @throws Nette\Utils\UnknownImageFileException
-     * @throws ORMException
      * @throws ImageException
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 
@@ -138,6 +141,7 @@ class EditUserPersonalDetailsFormFactory
         $this->user->setDegreePre($values->degreePre);
         $this->user->setDegreePost($values->degreePost);
         $this->user->setEmail($values->email);
+        $this->user->setPhone($values->phone);
         $this->user->setBirthdate($values->birthdate);
         $this->user->setStreet($values->street);
         $this->user->setCity($values->city);

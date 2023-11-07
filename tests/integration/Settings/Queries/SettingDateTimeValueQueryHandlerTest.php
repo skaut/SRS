@@ -12,8 +12,9 @@ use CommandHandlerTest;
 use DateTimeImmutable;
 use Exception;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Throwable;
 
-use const DATE_ISO8601;
+use const DATE_ATOM;
 
 final class SettingDateTimeValueQueryHandlerTest extends CommandHandlerTest
 {
@@ -23,14 +24,12 @@ final class SettingDateTimeValueQueryHandlerTest extends CommandHandlerTest
 
     /**
      * Načtení hodnoty.
-     *
-     * @throws SettingsItemNotFoundException
      */
     public function testGetValue(): void
     {
         $value = new DateTimeImmutable();
 
-        $this->settingsRepository->save(new Settings(self::ITEM, $value->format(DATE_ISO8601)));
+        $this->settingsRepository->save(new Settings(self::ITEM, $value->format(DATE_ATOM)));
 
         $result = $this->queryBus->handle(new SettingDateTimeValueQuery(self::ITEM));
 
@@ -55,6 +54,7 @@ final class SettingDateTimeValueQueryHandlerTest extends CommandHandlerTest
      * Načtení hodnoty neexistující položky.
      *
      * @throws Exception
+     * @throws Throwable
      */
     public function testGetValueNotExistingItem(): void
     {
@@ -66,9 +66,7 @@ final class SettingDateTimeValueQueryHandlerTest extends CommandHandlerTest
         }
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Settings::class];
@@ -77,6 +75,7 @@ final class SettingDateTimeValueQueryHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SettingDateTimeValueQueryHandlerTest.neon']);
+
         parent::_before();
 
         $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);

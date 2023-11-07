@@ -16,7 +16,7 @@ class SubeventService
 {
     use Nette\SmartObject;
 
-    public function __construct(private SubeventRepository $subeventRepository, private Translator $translator)
+    public function __construct(private readonly SubeventRepository $subeventRepository, private readonly Translator $translator)
     {
     }
 
@@ -68,7 +68,7 @@ class SubeventService
      *
      * @return string[]
      */
-    public function getSubeventsOptionsWithCapacity(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, ?User $user = null): array
+    public function getSubeventsOptionsWithCapacity(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, User|null $user = null): array
     {
         $subevents = $this->subeventRepository->findFilteredSubevents($explicitOnly, $registerableNowOnly, $notRegisteredOnly, $includeUsers, $user);
 
@@ -104,7 +104,7 @@ class SubeventService
                 $subevent->countUsers(),
                 [
                     'subevent' => $subevent->getName(),
-                ]
+                ],
             );
         }
 

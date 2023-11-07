@@ -72,13 +72,11 @@ services:
     - App\Utils\Validators
 
     pageFormFactory:
-        factory: App\AdminModule\CmsModule\Forms\PageForm(%id%, %area%, ...)
+        factory: App\AdminModule\CmsModule\Forms\PageForm($id, $area, _)
         implement: App\AdminModule\CmsModule\Forms\IPageFormFactory
-        parameters: [id, area]
     discountFormFactory:
-        factory: App\AdminModule\ConfigurationModule\Forms\DiscountForm(%id%, ...)
+        factory: App\AdminModule\ConfigurationModule\Forms\DiscountForm($id, _)
         implement: App\AdminModule\ConfigurationModule\Forms\IDiscountFormFactory
-        parameters: [id]
 
 extensions:
     console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
@@ -105,6 +103,8 @@ translation:
         fallback: [cs]
     dirs:
         - %appDir%/lang
+    localeResolvers:
+    	- Contributte\Translation\LocalesResolvers\Router
 
 messenger:
     buses:
@@ -118,6 +118,9 @@ messenger:
 latte:
     macros:
         - Nextras\FormsRendering\LatteMacros\Bs3InputMacros::install
+
+tracy:
+    maxDepth: 3
 
 forms:
     messages:

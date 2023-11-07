@@ -18,18 +18,18 @@ class ProgramApplication
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Uživatel.
      */
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'programApplications', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'programApplications')]
     protected User $user;
 
     /**
      * Zapsaný program.
      */
-    #[ORM\ManyToOne(targetEntity: Program::class, inversedBy: 'programApplications', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Program::class, cascade: ['persist'], inversedBy: 'programApplications')]
     protected Program $program;
 
     /**
@@ -51,7 +51,7 @@ class ProgramApplication
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

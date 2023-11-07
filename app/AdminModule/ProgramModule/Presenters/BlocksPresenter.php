@@ -18,6 +18,8 @@ use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Attributes\Inject;
@@ -52,14 +54,12 @@ class BlocksPresenter extends ProgramBasePresenter
 
     public function renderDefault(): void
     {
-        $this->template->emptyUserInfo = empty($this->dbuser->getAbout());
+        $this->template->emptyUserInfo = empty($this->dbUser->getAbout());
 
         $this->session->getSection('srs')->programId = 0;
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function renderDetail(int $id): void
     {
         $block = $this->blockRepository->findById($id);
@@ -73,14 +73,12 @@ class BlocksPresenter extends ProgramBasePresenter
         $this->template->programMandatoryTypeAutoRegistered = ProgramMandatoryType::AUTO_REGISTERED;
     }
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function renderEdit(int $id): void
     {
         $block = $this->blockRepository->findById($id);
 
-        if (! $this->userRepository->findById($this->getUser()->getId())->isAllowedModifyBlock($block)) {
+        if (! $this->dbUser->isAllowedModifyBlock($block)) {
             $this->flashMessage('admin.program.blocks.message.edit_not_allowed', 'danger');
             $this->redirect('Blocks:default');
         }
@@ -139,8 +137,12 @@ class BlocksPresenter extends ProgramBasePresenter
         return $this->programAttendeesGridControlFactory->create();
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     protected function createComponentBlockForm(): Form
     {
-        return $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getUser()->getId());
+        return $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getDbUser());
     }
 }

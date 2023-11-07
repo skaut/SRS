@@ -9,7 +9,6 @@ use App\Model\Acl\Role;
 use App\Services\AclService;
 use App\Utils\Helpers;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;
@@ -24,9 +23,9 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 class RolesGridControl extends Control
 {
     public function __construct(
-        private Translator $translator,
-        private AclService $aclService,
-        private RoleRepository $roleRepository
+        private readonly Translator $translator,
+        private readonly AclService $aclService,
+        private readonly RoleRepository $roleRepository,
     ) {
     }
 
@@ -129,7 +128,6 @@ class RolesGridControl extends Control
      * Změní registrovatelnost role.
      *
      * @throws AbortException
-     * @throws ORMException
      * @throws OptimisticLockException
      */
     public function changeRegisterable(string $id, string $registerable): void

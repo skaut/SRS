@@ -39,7 +39,7 @@ class PaymentForm extends UI\Control
      */
     public array $onSave = [];
 
-    public function __construct(private BaseFormFactory $baseFormFactory, private CommandBus $commandBus, private QueryBus $queryBus)
+    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly CommandBus $commandBus, private readonly QueryBus $queryBus)
     {
     }
 
@@ -149,28 +149,28 @@ class PaymentForm extends UI\Control
         if (property_exists($values, 'maturityDays')) {
             $this->commandBus->handle(new SetSettingIntValue(
                 Settings::MATURITY_DAYS,
-                $values->maturityDays !== '' ? $values->maturityDays : 0
+                $values->maturityDays !== '' ? $values->maturityDays : 0,
             ));
         }
 
         if (property_exists($values, 'maturityWorkDays')) {
             $this->commandBus->handle(new SetSettingIntValue(
                 Settings::MATURITY_WORK_DAYS,
-                $values->maturityWorkDays !== '' ? $values->maturityWorkDays : 0
+                $values->maturityWorkDays !== '' ? $values->maturityWorkDays : 0,
             ));
         }
 
         if (property_exists($values, 'maturityReminder')) {
             $this->commandBus->handle(new SetSettingIntValue(
                 Settings::MATURITY_REMINDER,
-                $values->maturityReminder !== '' ? $values->maturityReminder : null
+                $values->maturityReminder !== '' ? $values->maturityReminder : null,
             ));
         }
 
         if (property_exists($values, 'cancelRegistrationAfterMaturity')) {
             $this->commandBus->handle(new SetSettingIntValue(
                 Settings::CANCEL_REGISTRATION_AFTER_MATURITY,
-                $values->cancelRegistrationAfterMaturity !== '' ? $values->cancelRegistrationAfterMaturity : null
+                $values->cancelRegistrationAfterMaturity !== '' ? $values->cancelRegistrationAfterMaturity : null,
             ));
         }
 

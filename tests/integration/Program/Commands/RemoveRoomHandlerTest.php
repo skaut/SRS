@@ -16,8 +16,6 @@ use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use CommandHandlerTest;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Throwable;
 
 final class RemoveRoomHandlerTest extends CommandHandlerTest
@@ -33,8 +31,6 @@ final class RemoveRoomHandlerTest extends CommandHandlerTest
     /**
      * Odstranění místnosti.
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Throwable
      */
     public function testRemoveRoom(): void
@@ -64,9 +60,7 @@ final class RemoveRoomHandlerTest extends CommandHandlerTest
         $this->assertNull($program->getRoom());
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Room::class];
@@ -75,6 +69,7 @@ final class RemoveRoomHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/RemoveRoomHandlerTest.neon']);
+
         parent::_before();
 
         $this->subeventRepository = $this->tester->grabService(SubeventRepository::class);

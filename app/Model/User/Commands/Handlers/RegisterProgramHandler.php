@@ -20,16 +20,14 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class RegisterProgramHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private QueryBus $queryBus,
-        private EventBus $eventBus,
-        private EntityManagerInterface $em,
-        private ProgramApplicationRepository $programApplicationRepository
+        private readonly QueryBus $queryBus,
+        private readonly EventBus $eventBus,
+        private readonly EntityManagerInterface $em,
+        private readonly ProgramApplicationRepository $programApplicationRepository,
     ) {
     }
 
-    /**
-     * @throws UserNotAllowedProgramException
-     */
+    /** @throws UserNotAllowedProgramException */
     public function __invoke(RegisterProgram $command): void
     {
         $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));

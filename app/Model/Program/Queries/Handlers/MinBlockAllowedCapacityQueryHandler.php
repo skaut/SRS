@@ -10,11 +10,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class MinBlockAllowedCapacityQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private BlockRepository $blockRepository)
+    public function __construct(private readonly BlockRepository $blockRepository)
     {
     }
 
-    public function __invoke(MinBlockAllowedCapacityQuery $query): ?int
+    public function __invoke(MinBlockAllowedCapacityQuery $query): int|null
     {
         return $this->blockRepository->getMinBlockAllowedCapacity($query->getBlock());
     }

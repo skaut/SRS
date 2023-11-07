@@ -22,7 +22,7 @@ class Block
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Název programového bloku.
@@ -35,7 +35,7 @@ class Block
      *
      * @var Collection<int, Program>
      */
-    #[ORM\OneToMany(targetEntity: Program::class, mappedBy: 'block', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'block', targetEntity: Program::class, cascade: ['persist'])]
     #[ORM\OrderBy(['start' => 'ASC'])]
     protected Collection $programs;
 
@@ -50,13 +50,13 @@ class Block
     /**
      * Kategorie bloku.
      */
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'blocks', cascade: ['persist'])]
-    protected ?Category $category = null;
+    #[ORM\ManyToOne(targetEntity: Category::class, cascade: ['persist'], inversedBy: 'blocks')]
+    protected Category|null $category = null;
 
     /**
      * Podakce bloku.
      */
-    #[ORM\ManyToOne(targetEntity: Subevent::class, inversedBy: 'blocks', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Subevent::class, cascade: ['persist'], inversedBy: 'blocks')]
     protected Subevent $subevent;
 
     /**
@@ -75,7 +75,7 @@ class Block
      * Kapacita.
      */
     #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $capacity = null;
+    protected int|null $capacity = null;
 
     /**
      * Povoleno přihlašování náhradníků?
@@ -87,26 +87,26 @@ class Block
      * Pomůcky.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $tools = null;
+    protected string|null $tools = null;
 
     /**
      * Stručný popis.
      */
     #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $perex = null;
+    protected string|null $perex = null;
 
     /**
      * Podrobný popis.
      */
     #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $description = null;
+    protected string|null $description = null;
 
     public function __construct(
         string $name,
         int $duration,
-        ?int $capacity,
+        int|null $capacity,
         bool $alternatesAllowed,
-        string $mandatory
+        string $mandatory,
     ) {
         $this->name              = $name;
         $this->duration          = $duration;
@@ -117,7 +117,7 @@ class Block
         $this->lectors           = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -132,9 +132,7 @@ class Block
         $this->name = $name;
     }
 
-    /**
-     * @return Collection<int, Program>
-     */
+    /** @return Collection<int, Program> */
     public function getPrograms(): Collection
     {
         return $this->programs;
@@ -156,9 +154,7 @@ class Block
         }
     }
 
-    /**
-     * @return Collection<int, User>
-     */
+    /** @return Collection<int, User> */
     public function getLectors(): Collection
     {
         return $this->lectors;
@@ -169,9 +165,7 @@ class Block
         return implode(', ', $this->lectors->map(static fn (User $lector) => $lector->getDisplayName())->toArray());
     }
 
-    /**
-     * @param Collection<int, User> $lectors
-     */
+    /** @param Collection<int, User> $lectors */
     public function setLectors(Collection $lectors): void
     {
         foreach ($this->lectors as $lector) {
@@ -199,25 +193,21 @@ class Block
         }
     }
 
-    public function getCategory(): ?Category
+    public function getCategory(): Category|null
     {
         return $this->category;
     }
 
-    public function setCategory(?Category $category): void
+    public function setCategory(Category|null $category): void
     {
-        if ($this->category !== null) {
-            $this->category->removeBlock($this);
-        }
+        $this->category?->removeBlock($this);
 
-        if ($category !== null) {
-            $category->addBlock($this);
-        }
+        $category?->addBlock($this);
 
         $this->category = $category;
     }
 
-    public function getSubevent(): ?Subevent
+    public function getSubevent(): Subevent|null
     {
         return $this->subevent;
     }
@@ -253,12 +243,12 @@ class Block
         $this->duration = $duration;
     }
 
-    public function getCapacity(): ?int
+    public function getCapacity(): int|null
     {
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity): void
+    public function setCapacity(int|null $capacity): void
     {
         $this->capacity = $capacity;
     }
@@ -273,32 +263,32 @@ class Block
         $this->alternatesAllowed = $alternatesAllowed;
     }
 
-    public function getTools(): ?string
+    public function getTools(): string|null
     {
         return $this->tools;
     }
 
-    public function setTools(?string $tools): void
+    public function setTools(string|null $tools): void
     {
         $this->tools = $tools;
     }
 
-    public function getPerex(): ?string
+    public function getPerex(): string|null
     {
         return $this->perex;
     }
 
-    public function setPerex(?string $perex): void
+    public function setPerex(string|null $perex): void
     {
         $this->perex = $perex;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string|null
     {
         return $this->description;
     }
 
-    public function setDescription(?string $description): void
+    public function setDescription(string|null $description): void
     {
         $this->description = $description;
     }

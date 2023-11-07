@@ -11,12 +11,12 @@ use App\Model\Structure\Subevent;
 class BlockUpdatedEvent
 {
     public function __construct(
-        private Block $block,
-        private ?Category $categoryOld,
-        private Subevent $subeventOld,
-        private string $mandatoryOld,
-        private ?int $capacityOld,
-        private bool $alternatesAllowedOld
+        private readonly Block $block,
+        private readonly Category|null $categoryOld,
+        private readonly Subevent $subeventOld,
+        private readonly string $mandatoryOld,
+        private readonly int|null $capacityOld,
+        private readonly bool $alternatesAllowedOld,
     ) {
     }
 
@@ -25,7 +25,7 @@ class BlockUpdatedEvent
         return $this->block;
     }
 
-    public function getCategoryOld(): ?Category
+    public function getCategoryOld(): Category|null
     {
         return $this->categoryOld;
     }
@@ -40,7 +40,7 @@ class BlockUpdatedEvent
         return $this->mandatoryOld;
     }
 
-    public function getCapacityOld(): ?int
+    public function getCapacityOld(): int|null
     {
         return $this->capacityOld;
     }

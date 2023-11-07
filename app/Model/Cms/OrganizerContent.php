@@ -26,14 +26,14 @@ class OrganizerContent extends Content implements IContent
      * Pořadatel.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $organizer = null;
+    protected string|null $organizer = null;
 
-    public function getOrganizer(): ?string
+    public function getOrganizer(): string|null
     {
         return $this->organizer;
     }
 
-    public function setOrganizer(?string $organizer): void
+    public function setOrganizer(string|null $organizer): void
     {
         $this->organizer = $organizer;
     }
@@ -59,6 +59,7 @@ class OrganizerContent extends Content implements IContent
     public function contentFormSucceeded(Form $form, stdClass $values): void
     {
         parent::contentFormSucceeded($form, $values);
+
         $formName        = $this->getContentFormName();
         $values          = $values->$formName;
         $this->organizer = $values->organizer;

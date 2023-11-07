@@ -11,7 +11,7 @@ use App\Model\CustomInput\CustomSelect;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Services\AclService;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;
@@ -27,9 +27,9 @@ use function count;
 class CustomInputsGridControl extends Control
 {
     public function __construct(
-        private Translator $translator,
-        private CustomInputRepository $customInputRepository,
-        private AclService $aclService
+        private readonly Translator $translator,
+        private readonly CustomInputRepository $customInputRepository,
+        private readonly AclService $aclService,
     ) {
     }
 
@@ -117,10 +117,9 @@ class CustomInputsGridControl extends Control
     /**
      * Přesune vlastní pole s id $item_id mezi $prev_id a $next_id.
      *
-     * @throws ORMException
      * @throws AbortException
      */
-    public function handleSort(?string $item_id, ?string $prev_id, ?string $next_id): void
+    public function handleSort(string|null $item_id, string|null $prev_id, string|null $next_id): void
     {
         $this->customInputRepository->sort((int) $item_id, (int) $prev_id, (int) $next_id);
 
@@ -139,8 +138,8 @@ class CustomInputsGridControl extends Control
      * Změní povinnost pole.
      *
      * @throws NonUniqueResultException
-     * @throws ORMException
      * @throws AbortException
+     * @throws NoResultException
      */
     public function changeMandatory(string $id, string $mandatory): void
     {

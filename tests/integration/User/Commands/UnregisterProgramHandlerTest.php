@@ -9,6 +9,11 @@ use App\Model\Acl\Role;
 use App\Model\Application\ApplicationFactory;
 use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Enums\ProgramMandatoryType;
+use App\Model\Mailing\Mail;
+use App\Model\Mailing\MailQueue;
+use App\Model\Mailing\Repositories\TemplateRepository;
+use App\Model\Mailing\Template;
+use App\Model\Mailing\TemplateFactory;
 use App\Model\Program\Block;
 use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Program;
@@ -26,8 +31,8 @@ use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Throwable;
 
 final class UnregisterProgramHandlerTest extends CommandHandlerTest
 {
@@ -47,11 +52,13 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
 
     private SettingsRepository $settingsRepository;
 
+    private TemplateRepository $templateRepository;
+
     /**
      * Odhlášení uživatelé jsou nahrazeni prvními náhradníky, přihlášení jako náhradník se registrací na program ruší.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testReplaceByAlternates(): void
     {
@@ -77,6 +84,7 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $user1 = new User();
         $user1->setFirstName('First');
         $user1->setLastName('Last');
+        $user1->setEmail('mail@mail.cz');
         $user1->addRole($role);
         $user1->setApproved(true);
         $this->userRepository->save($user1);
@@ -88,6 +96,7 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $user2 = new User();
         $user2->setFirstName('First');
         $user2->setLastName('Last');
+        $user2->setEmail('mail@mail.cz');
         $user2->addRole($role);
         $user2->setApproved(true);
         $this->userRepository->save($user2);
@@ -99,6 +108,7 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $user3 = new User();
         $user3->setFirstName('First');
         $user3->setLastName('Last');
+        $user3->setEmail('mail@mail.cz');
         $user3->addRole($role);
         $user3->setApproved(true);
         $this->userRepository->save($user3);
@@ -111,6 +121,7 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $user4 = new User();
         $user4->setFirstName('First');
         $user4->setLastName('Last');
+        $user4->setEmail('mail@mail.cz');
         $user4->addRole($role);
         $user4->setApproved(true);
         $this->userRepository->save($user4);
@@ -185,8 +196,8 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
     /**
      * Uživatel není účastníkem programu.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Throwable
      */
     public function testNotAttends(): void
     {
@@ -208,6 +219,7 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $user = new User();
         $user->setFirstName('First');
         $user->setLastName('Last');
+        $user->setEmail('mail@mail.cz');
         $user->addRole($role);
         $user->setApproved(true);
         $this->userRepository->save($user);
@@ -223,17 +235,16 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         }
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
-        return [User::class, Settings::class];
+        return [User::class, Settings::class, Mail::class, MailQueue::class, Template::class];
     }
 
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/UnregisterProgramHandlerTest.neon']);
+
         parent::_before();
 
         $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
@@ -244,8 +255,11 @@ final class UnregisterProgramHandlerTest extends CommandHandlerTest
         $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
         $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
         $this->settingsRepository           = $this->tester->grabService(SettingsRepository::class);
+        $this->templateRepository           = $this->tester->grabService(TemplateRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
+
+        TemplateFactory::createTemplate($this->templateRepository, Template::PROGRAM_REGISTERED);
     }
 }

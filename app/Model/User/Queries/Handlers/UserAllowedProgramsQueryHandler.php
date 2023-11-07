@@ -12,13 +12,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UserAllowedProgramsQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private ProgramRepository $programRepository)
+    public function __construct(private readonly ProgramRepository $programRepository)
     {
     }
 
-    /**
-     * @return Collection<int, Program>
-     */
+    /** @return Collection<int, Program> */
     public function __invoke(UserAllowedProgramsQuery $query): Collection
     {
         return $this->programRepository->findUserAllowed($query->getUser(), $query->isPaidOnly());

@@ -38,6 +38,7 @@ use function ucwords;
     'organizer_content' => OrganizerContent::class,
     'contact_form_content' => ContactFormContent::class,
     'slideshow_content' => SlideshowContent::class,
+    'ticket_content' => TicketContent::class,
 ])]
 abstract class Content implements IContent
 {
@@ -122,6 +123,11 @@ abstract class Content implements IContent
     public const SLIDESHOW = 'slideshow';
 
     /**
+     * TicketContent.
+     */
+    public const TICKET = 'ticket';
+
+    /**
      * Hlavní oblast stránky.
      */
     public const MAIN = 'main';
@@ -140,6 +146,7 @@ abstract class Content implements IContent
         self::NEWS,
         self::DOCUMENT,
         self::APPLICATION,
+        self::TICKET,
         self::PROGRAMS,
         self::CONTACT_FORM,
         self::FAQ,
@@ -165,18 +172,18 @@ abstract class Content implements IContent
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Nadpis obsahu.
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    protected ?string $heading = null;
+    protected string|null $heading = null;
 
     /**
      * Stránka, na které je obsah umístěn.
      */
-    #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'contents', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Page::class, cascade: ['persist'], inversedBy: 'contents')]
     protected Page $page;
 
     /**
@@ -191,9 +198,7 @@ abstract class Content implements IContent
     #[ORM\Column(type: 'integer')]
     protected int $position = 0;
 
-    /**
-     * @throws PageException
-     */
+    /** @throws PageException */
     public function __construct(Page $page, string $area)
     {
         $this->page = $page;
@@ -214,7 +219,7 @@ abstract class Content implements IContent
         return lcfirst(str_replace('_', '', ucwords($this->type, '_'))) . 'Content';
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

@@ -26,9 +26,7 @@ class ProgramRepository extends AbstractRepository
         parent::__construct($em, Program::class);
     }
 
-    /**
-     * @return Collection<int, Program>
-     */
+    /** @return Collection<int, Program> */
     public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
@@ -39,14 +37,12 @@ class ProgramRepository extends AbstractRepository
     /**
      * Vrací program podle id.
      */
-    public function findById(?int $id): ?Program
+    public function findById(int|null $id): Program|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
 
-    /**
-     * @return Collection<int, Program>
-     */
+    /** @return Collection<int, Program> */
     public function findUserAttends(User $user): Collection
     {
         $result = $this->createQueryBuilder('p')
@@ -153,7 +149,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * Překrývá se program s jiným programem?
      */
-    public function hasOverlappingProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end): bool
+    public function hasOverlappingProgram(int|null $programId, DateTimeImmutable $start, DateTimeImmutable $end): bool
     {
         $result = $this->createQueryBuilder('p')
             ->select('count(p)')
@@ -172,7 +168,7 @@ class ProgramRepository extends AbstractRepository
     /**
      * Překrývá se s jiným programem, který je automaticky zapisovaný?
      */
-    public function hasOverlappingAutoRegisteredProgram(?int $programId, DateTimeImmutable $start, DateTimeImmutable $end): bool
+    public function hasOverlappingAutoRegisteredProgram(int|null $programId, DateTimeImmutable $start, DateTimeImmutable $end): bool
     {
         $result = $this->createQueryBuilder('p')
             ->select('count(p)')

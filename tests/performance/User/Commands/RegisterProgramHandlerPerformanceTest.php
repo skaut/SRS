@@ -22,8 +22,6 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 
 use function microtime;
 
@@ -45,9 +43,6 @@ final class RegisterProgramHandlerPerformanceTest extends CommandHandlerTest
 
     /**
      * Hromadné přihlášení velkého množství účastníků.
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function testRegisterMultipleUsers(): void
     {
@@ -93,9 +88,7 @@ final class RegisterProgramHandlerPerformanceTest extends CommandHandlerTest
         $this->assertLessThan(30, $duration);
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [User::class, Settings::class];
@@ -104,6 +97,7 @@ final class RegisterProgramHandlerPerformanceTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/RegisterProgramHandlerPerformanceTest.neon']);
+
         parent::_before();
 
         $this->blockRepository       = $this->tester->grabService(BlockRepository::class);

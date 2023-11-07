@@ -395,6 +395,8 @@ users:
     users_degree_post: "Titul za jménem"
     users_email: "E-mail"
     users_email_format: "Zadejte e-mail ve správném formátu."
+    users_phone: "Telefon"
+    users_phone_format: "Zadejte telefon ve formátu: 123456789."
     users_birthdate: "Datum narození"
     users_address: "Bydliště"
     users_about_me: "O mně"
@@ -623,9 +625,10 @@ mailing:
         heading: "Historie"
         datetime: "Odesláno"
         subject: "Předmět"
+        recipient_users: "Příjemci - uživatelé"
         recipient_roles: "Příjemci - role"
         recipient_subevents: "Příjemci - podakce"
-        recipient_users: "Příjemci - uživatelé"
+        recipient_emails: "Příjemci - e-maily"
         automatic: "Automatický"
 
 configuration:
@@ -815,16 +818,10 @@ configuration:
     place_points_saved: "Mapový bod byl úspěšně uložen."
 
     mailing_heading: "Mailing"
-    mailing_email: "E-mail pro mailing"
-    mailing_email_empty: "Zadejte e-mail."
-    mailing_email_format: "Zadejte e-mail ve správném formátu."
     mailing_contact_form_recipients: "E-maily pro zaslání zpráv z kontaktního formuláře"
     mailing_contact_form_recipients_empty: "Zadete alespoň jeden e-mail."
     mailing_contact_form_recipients_format: "Zadejte e-mailové adresy oddělené čárkou."
     mailing_contact_form_guests_allowed: "povolit kontaktní formulář pro nepřihlášené uživatele"
-    mailing_email_verification_needed: "Změna e-mailu čeká na ověření. Ověřit ji můžete pomocí odkazu zaslaného na nový e-mail."
-    mailing_email_verification_successful: "E-mail byl úspěšně ověřen."
-    mailing_email_verification_error: "E-mail se nepodařilo ověřit."
 
     skautis_event_heading: "Propojení s akcí ve skautIS"
     skautis_event_type: "Typ skautIS akce"
@@ -846,7 +843,7 @@ configuration:
     web_logo: "Logo"
     web_logo_format: "Logo musí být ve formátu JPG, PNG nebo GIF."
     web_footer: "Text v patičce"
-    web_ga_id: "Google Analytics číslo pro měření"
+    web_tracking_code: "Kód pro sledování návštěvnosti"
     web_redirect_after_login: "Po přihlášení přesměrovat na"
     web_redirect_after_login_empty: "Vyberte stránku, na kterou budou uživatelé přesměrováni po přihlášení."
 

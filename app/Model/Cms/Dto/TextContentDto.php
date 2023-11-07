@@ -9,12 +9,12 @@ namespace App\Model\Cms\Dto;
  */
 class TextContentDto extends ContentDto
 {
-    public function __construct(string $type, string $heading, protected ?string $text)
+    public function __construct(string $type, string $heading, protected string|null $text)
     {
         parent::__construct($type, $heading);
     }
 
-    public function getText(): ?string
+    public function getText(): string|null
     {
         return $this->text;
     }

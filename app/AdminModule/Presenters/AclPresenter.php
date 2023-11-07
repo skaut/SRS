@@ -38,9 +38,7 @@ class AclPresenter extends AdminBasePresenter
     #[Inject]
     public Authenticator $authenticator;
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();
@@ -64,7 +62,7 @@ class AclPresenter extends AdminBasePresenter
     {
         $role = $this->roleRepository->findById($id);
 
-        $this->authenticator->updateRoles($this->getPresenter()->user, $role);
+        $this->authenticator->updateRoles($this->getPresenter()->getUser(), $role);
 
         $this->redirect(':Web:Page:default');
     }
@@ -74,15 +72,13 @@ class AclPresenter extends AdminBasePresenter
         return $this->rolesGridControlFactory->create();
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     protected function createComponentAddRoleForm(): Form
     {
         $form = $this->addRoleFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() === $form['cancel']) {
+            if ($form->isSubmitted() == $form['cancel']) {
                 $this->redirect('Acl:default');
             }
 
@@ -104,13 +100,13 @@ class AclPresenter extends AdminBasePresenter
         $form = $this->editRoleFormFactory->create((int) $this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() === $form['cancel']) {
+            if ($form->isSubmitted() == $form['cancel']) {
                 $this->redirect('Acl:default');
             }
 
             $this->flashMessage('admin.acl.roles_saved', 'success');
 
-            if ($form->isSubmitted() === $form['submitAndContinue']) {
+            if ($form->isSubmitted() == $form['submitAndContinue']) {
                 $id = $values->id;
                 $this->redirect('Acl:edit', ['id' => $id]);
             } else {

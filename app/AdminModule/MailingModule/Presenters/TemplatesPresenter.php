@@ -44,7 +44,7 @@ class TemplatesPresenter extends MailingBasePresenter
         $form = $this->editTemplateFormFactory->create((int) $this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() === $form['cancel']) {
+            if ($form->isSubmitted() == $form['cancel']) {
                 $this->redirect('Templates:default');
             }
 

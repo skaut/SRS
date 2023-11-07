@@ -37,9 +37,7 @@ class SkautIsPresenter extends ConfigurationBasePresenter
     #[Inject]
     public SkautIsCourseRepository $skautIsCourseRepository;
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function renderDefault(): void
     {
         $eventId = $this->queryBus->handle(new SettingStringValueQuery(Settings::SKAUTIS_EVENT_ID));

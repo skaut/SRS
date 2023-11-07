@@ -8,7 +8,7 @@ use App\Model\Program\Block;
 
 class SaveBlock
 {
-    public function __construct(private Block $block, private ?Block $blockOld = null)
+    public function __construct(private readonly Block $block, private readonly Block|null $blockOld = null)
     {
     }
 
@@ -17,7 +17,7 @@ class SaveBlock
         return $this->block;
     }
 
-    public function getBlockOld(): ?Block
+    public function getBlockOld(): Block|null
     {
         return $this->blockOld;
     }

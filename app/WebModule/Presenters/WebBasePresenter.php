@@ -51,7 +51,7 @@ abstract class WebBasePresenter extends BasePresenter
     #[Inject]
     public SkautIsService $skautIsService;
 
-    protected ?User $dbuser = null;
+    protected User|null $dbUser = null;
 
     /**
      * @throws AbortException
@@ -69,7 +69,7 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->user->setAuthorizator($this->authorizator);
 
-        $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findById($this->user->id) : null;
+        $this->dbUser = $this->user->isLoggedIn() ? $this->userRepository->findById($this->user->id) : null;
     }
 
     /**
@@ -80,13 +80,14 @@ abstract class WebBasePresenter extends BasePresenter
     {
         parent::beforeRender();
 
-        $this->template->dbuser = $this->dbuser;
+        $this->template->dbUser = $this->dbUser;
 
         $this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
 
-        $this->template->logo        = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
-        $this->template->footer      = $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER));
-        $this->template->seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
+        $this->template->logo         = $this->queryBus->handle(new SettingStringValueQuery(Settings::LOGO));
+        $this->template->footer       = $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER));
+        $this->template->seminarName  = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
+        $this->template->trackingCode = $this->queryBus->handle(new SettingStringValueQuery(Settings::TRACKING_CODE));
 
         $this->template->nonregisteredRole = $this->roleRepository->findBySystemName(Role::NONREGISTERED);
         $this->template->unapprovedRole    = $this->roleRepository->findBySystemName(Role::UNAPPROVED);
@@ -106,6 +107,11 @@ abstract class WebBasePresenter extends BasePresenter
     {
         $this->authenticator->updateRoles($this->user);
         $this->redirect(':Admin:Acl:default');
+    }
+
+    public function getDbUser(): User|null
+    {
+        return $this->dbUser;
     }
 
     /**

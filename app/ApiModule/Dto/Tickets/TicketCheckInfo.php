@@ -18,6 +18,12 @@ class TicketCheckInfo
     #[JMS\Type(values: 'string')]
     private string $attendeeName;
 
+    #[JMS\Type(values: 'integer')]
+    private int $attendeeAge;
+
+    #[JMS\Type(values: 'string')]
+    private string|null $attendeePhoto;
+
     /** @var string[] */
     #[JMS\Type(values: 'array')]
     private array $roles;
@@ -38,17 +44,23 @@ class TicketCheckInfo
         $this->attendeeName = $attendeeName;
     }
 
-    /**
-     * @param string[] $roles
-     */
+    public function setAttendeeAge(int $attendeeAge): void
+    {
+        $this->attendeeAge = $attendeeAge;
+    }
+
+    public function setAttendeePhoto(string|null $attendeePhoto): void
+    {
+        $this->attendeePhoto = $attendeePhoto;
+    }
+
+    /** @param string[] $roles */
     public function setRoles(array $roles): void
     {
         $this->roles = $roles;
     }
 
-    /**
-     * @param SubeventInfo[] $subevents
-     */
+    /** @param SubeventInfo[] $subevents */
     public function setSubevents(array $subevents): void
     {
         $this->subevents = $subevents;
@@ -59,9 +71,7 @@ class TicketCheckInfo
         $this->hasSubevent = $hasSubevent;
     }
 
-    /**
-     * @param DateTimeImmutable[] $subeventChecks
-     */
+    /** @param DateTimeImmutable[] $subeventChecks */
     public function setSubeventChecks(array $subeventChecks): void
     {
         $this->subeventChecks = $subeventChecks;

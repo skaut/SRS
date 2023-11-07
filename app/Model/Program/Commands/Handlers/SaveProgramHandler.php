@@ -14,9 +14,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class SaveProgramHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private EventBus $eventBus,
-        private EntityManagerInterface $em,
-        private ProgramRepository $programRepository
+        private readonly EventBus $eventBus,
+        private readonly EntityManagerInterface $em,
+        private readonly ProgramRepository $programRepository,
     ) {
     }
 

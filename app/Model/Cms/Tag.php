@@ -21,7 +21,7 @@ class Tag
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Dokumenty s tagem.
@@ -51,14 +51,12 @@ class Tag
         $this->roles     = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, Document>
-     */
+    /** @return Collection<int, Document> */
     public function getDocuments(): Collection
     {
         return $this->documents;
@@ -90,9 +88,7 @@ class Tag
         $this->name = $name;
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function getRoles(): Collection
     {
         return $this->roles;
@@ -103,9 +99,7 @@ class Tag
         return implode(', ', $this->roles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
-    /**
-     * @param Collection<int, Role> $roles
-     */
+    /** @param Collection<int, Role> $roles */
     public function setRoles(Collection $roles): void
     {
         foreach ($this->roles as $role) {

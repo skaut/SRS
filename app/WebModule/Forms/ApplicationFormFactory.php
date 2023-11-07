@@ -74,27 +74,27 @@ class ApplicationFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user = null;
+    private User $user;
 
     /** @var callable[] */
     public array $onSkautIsError = [];
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private QueryBus $queryBus,
-        private EntityManagerInterface $em,
-        private UserRepository $userRepository,
-        private RoleRepository $roleRepository,
-        private CustomInputRepository $customInputRepository,
-        private CustomInputValueRepository $customInputValueRepository,
-        private SkautIsService $skautIsService,
-        private SubeventRepository $subeventRepository,
-        private AclService $aclService,
-        private ApplicationService $applicationService,
-        private Validators $validators,
-        private FilesService $filesService,
-        private SubeventService $subeventService,
-        private Translator $translator
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly QueryBus $queryBus,
+        private readonly EntityManagerInterface $em,
+        private readonly UserRepository $userRepository,
+        private readonly RoleRepository $roleRepository,
+        private readonly CustomInputRepository $customInputRepository,
+        private readonly CustomInputValueRepository $customInputValueRepository,
+        private readonly SkautIsService $skautIsService,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly AclService $aclService,
+        private readonly ApplicationService $applicationService,
+        private readonly Validators $validators,
+        private readonly FilesService $filesService,
+        private readonly SubeventService $subeventService,
+        private readonly Translator $translator,
     ) {
     }
 
@@ -104,13 +104,11 @@ class ApplicationFormFactory
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    public function create(int $id): Form
+    public function create(User $user): Form
     {
-        $this->user = $this->userRepository->findById($id);
+        $this->user = $user;
 
         $form = $this->baseFormFactory->create();
-
-        $form->addHidden('id');
 
         $inputSex = $form->addRadioList('sex', 'web.application_content.sex', Sex::getSexOptions());
 
@@ -135,7 +133,9 @@ class ApplicationFormFactory
         }
 
         $form->addText('email', 'web.application_content.email')
-            ->addRule(Form::FILLED)
+            ->setDisabled();
+
+        $form->addText('phone', 'web.application_content.phone')
             ->setDisabled();
 
         $form->addText('street', 'web.application_content.street')
@@ -164,13 +164,13 @@ class ApplicationFormFactory
         $form->addSubmit('submit', 'web.application_content.register');
 
         $form->setDefaults([
-            'id' => $id,
             'sex' => $this->user->getSex(),
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),
             'nickName' => $this->user->getNickName(),
             'birthdate' => $this->user->getBirthdate(),
             'email' => $this->user->getEmail(),
+            'phone' => $this->user->getPhone(),
             'street' => $this->user->getStreet(),
             'city' => $this->user->getCity(),
             'postcode' => $this->user->getPostcode(),
@@ -279,7 +279,7 @@ class ApplicationFormFactory
                         $this->user->getBirthdate(),
                         $this->user->getFirstName(),
                         $this->user->getLastName(),
-                        $this->user->getNickName()
+                        $this->user->getNickName(),
                     );
 
                     $this->skautIsService->updatePersonAddress(
@@ -287,7 +287,7 @@ class ApplicationFormFactory
                         $this->user->getStreet(),
                         $this->user->getCity(),
                         $this->user->getPostcode(),
-                        $this->user->getState()
+                        $this->user->getState(),
                     );
                 } catch (WsdlException $ex) {
                     Debugger::log($ex, ILogger::WARNING);
@@ -371,7 +371,7 @@ class ApplicationFormFactory
         $subeventsOptions = $this->subeventService->getSubeventsOptionsWithCapacity(true, true, false, false);
 
         $subeventsSelect = $form->addMultiSelect('subevents', 'web.application_content.subevents')->setItems(
-            $subeventsOptions
+            $subeventsOptions,
         );
         $subeventsSelect->setOption('id', 'form-group-subevents');
 
@@ -380,7 +380,7 @@ class ApplicationFormFactory
         $subeventsSelect->addConditionOn(
             $rolesSelect,
             self::class . '::toggleSubeventsRequired',
-            Helpers::getIds($this->roleRepository->findFilteredRoles(false, true, false))
+            Helpers::getIds($this->roleRepository->findFilteredRoles(false, true, false)),
         )->addRule(Form::FILLED, 'web.application_content.subevents_empty');
 
         $subeventsSelect
@@ -395,9 +395,9 @@ class ApplicationFormFactory
                     $this->translator->translate(
                         'web.application_content.incompatible_subevents_selected',
                         null,
-                        ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()]
+                        ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()],
                     ),
-                    [$subevent]
+                    [$subevent],
                 );
             }
 
@@ -407,9 +407,9 @@ class ApplicationFormFactory
                     $this->translator->translate(
                         'web.application_content.required_subevents_not_selected',
                         null,
-                        ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()]
+                        ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()],
                     ),
-                    [$subevent]
+                    [$subevent],
                 );
             }
         }
@@ -423,7 +423,7 @@ class ApplicationFormFactory
         $registerableOptions = $this->aclService->getRolesOptionsWithCapacity(true, false);
 
         $rolesSelect = $form->addMultiSelect('roles', 'web.application_content.roles')->setItems(
-            $registerableOptions
+            $registerableOptions,
         );
 
         foreach ($this->customInputRepository->findAll() as $customInput) {
@@ -445,9 +445,9 @@ class ApplicationFormFactory
                     $this->translator->translate(
                         'web.application_content.incompatible_roles_selected',
                         null,
-                        ['role' => $role->getName(), 'incompatibleRoles' => $role->getIncompatibleRolesText()]
+                        ['role' => $role->getName(), 'incompatibleRoles' => $role->getIncompatibleRolesText()],
                     ),
-                    [$role]
+                    [$role],
                 );
             }
 
@@ -457,9 +457,9 @@ class ApplicationFormFactory
                     $this->translator->translate(
                         'web.application_content.required_roles_not_selected',
                         null,
-                        ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()]
+                        ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()],
                     ),
-                    [$role]
+                    [$role],
                 );
             }
         }

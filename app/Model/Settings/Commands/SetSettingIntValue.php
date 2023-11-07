@@ -6,7 +6,7 @@ namespace App\Model\Settings\Commands;
 
 class SetSettingIntValue
 {
-    public function __construct(private string $item, private ?int $value)
+    public function __construct(private readonly string $item, private readonly int|null $value)
     {
     }
 
@@ -15,7 +15,7 @@ class SetSettingIntValue
         return $this->item;
     }
 
-    public function getValue(): ?int
+    public function getValue(): int|null
     {
         return $this->value;
     }

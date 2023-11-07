@@ -16,7 +16,7 @@ class IcalResponse implements Response
 {
     use Nette\SmartObject;
 
-    public function __construct(private Calendar $calendar, private string $filename)
+    public function __construct(private readonly Calendar $calendar, private readonly string $filename)
     {
     }
 

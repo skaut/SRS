@@ -25,7 +25,6 @@ use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Throwable;
 
 use function microtime;
@@ -52,7 +51,6 @@ final class RemoveBlockHandlerPerformanceTest extends CommandHandlerTest
     /**
      * Odstranění bloku s velkým množstvím programů a účastníků.
      *
-     * @throws ORMException
      * @throws OptimisticLockException
      * @throws Throwable
      */
@@ -103,9 +101,7 @@ final class RemoveBlockHandlerPerformanceTest extends CommandHandlerTest
         $this->assertLessThan(30, $duration);
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Block::class, Settings::class];
@@ -114,6 +110,7 @@ final class RemoveBlockHandlerPerformanceTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/RemoveBlockHandlerPerformanceTest.neon']);
+
         parent::_before();
 
         $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);

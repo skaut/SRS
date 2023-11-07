@@ -32,15 +32,13 @@ class PaymentsPresenter extends PaymentsBasePresenter
         return $this->paymentsGridControlFactory->create();
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     protected function createComponentEditPaymentForm(): Form
     {
         $form = $this->editPaymentFormFactory->create((int) $this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() !== $form['cancel']) {
+            if ($form->isSubmitted() != $form['cancel']) {
                 $this->flashMessage('admin.payments.payments.saved', 'success');
             }
 

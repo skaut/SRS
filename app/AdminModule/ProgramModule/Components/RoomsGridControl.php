@@ -33,11 +33,11 @@ class RoomsGridControl extends Control
     private SessionSection $sessionSection;
 
     public function __construct(
-        private CommandBus $commandBus,
-        private Translator $translator,
-        private RoomRepository $roomRepository,
-        private ExcelExportService $excelExportService,
-        private Session $session
+        private readonly CommandBus $commandBus,
+        private readonly Translator $translator,
+        private readonly RoomRepository $roomRepository,
+        private readonly ExcelExportService $excelExportService,
+        private readonly Session $session,
     ) {
         $this->sessionSection = $session->getSection('srs');
     }

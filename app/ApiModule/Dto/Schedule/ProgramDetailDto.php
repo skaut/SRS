@@ -18,42 +18,42 @@ class ProgramDetailDto
     private int $id;
 
     #[JMS\Type(values: 'string')]
-    private ?string $start = null;
+    private string|null $start = null;
 
     #[JMS\Type(values: 'string')]
-    private ?string $end = null;
+    private string|null $end = null;
 
     #[JMS\Type(values: 'int')]
-    private ?int $blockId = null;
+    private int|null $blockId = null;
 
     #[JMS\Type(values: 'int')]
-    private ?int $roomId = null;
+    private int|null $roomId = null;
 
     #[JMS\Type(values: 'int')]
-    private ?int $attendeesCount = null;
+    private int|null $attendeesCount = null;
 
     #[JMS\Type(values: 'int')]
-    private ?int $alternatesCount = null;
+    private int|null $alternatesCount = null;
 
     #[JMS\Type(values: 'boolean')]
-    private ?bool $userAttends = null;
+    private bool|null $userAttends = null;
 
     #[JMS\Type(values: 'boolean')]
-    private ?bool $userAlternates = null;
+    private bool|null $userAlternates = null;
 
     /** @var int[] */
     #[JMS\Type(values: 'array<int>')]
-    private ?array $sameBlockPrograms = null;
+    private array|null $sameBlockPrograms = null;
 
     /** @var int[] */
     #[JMS\Type(values: 'array<int>')]
-    private ?array $overlappingPrograms = null;
+    private array|null $overlappingPrograms = null;
 
     #[JMS\Type(values: 'boolean')]
-    private ?bool $blocked = null;
+    private bool|null $blocked = null;
 
     #[JMS\Type(values: 'boolean')]
-    private ?bool $paid = null;
+    private bool|null $paid = null;
 
     public function getId(): int
     {
@@ -95,12 +95,12 @@ class ProgramDetailDto
         $this->blockId = $blockId;
     }
 
-    public function getRoomId(): ?int
+    public function getRoomId(): int|null
     {
         return $this->roomId;
     }
 
-    public function setRoomId(?int $roomId): void
+    public function setRoomId(int|null $roomId): void
     {
         $this->roomId = $roomId;
     }
@@ -115,7 +115,7 @@ class ProgramDetailDto
         $this->attendeesCount = $attendeesCount;
     }
 
-    public function getAlternatesCount(): ?int
+    public function getAlternatesCount(): int|null
     {
         return $this->alternatesCount;
     }
@@ -125,54 +125,46 @@ class ProgramDetailDto
         $this->alternatesCount = $alternatesCount;
     }
 
-    public function getUserAttends(): ?bool
+    public function getUserAttends(): bool|null
     {
         return $this->userAttends;
     }
 
-    public function setUserAttends(?bool $userAttends): void
+    public function setUserAttends(bool|null $userAttends): void
     {
         $this->userAttends = $userAttends;
     }
 
-    public function getUserAlternates(): ?bool
+    public function getUserAlternates(): bool|null
     {
         return $this->userAlternates;
     }
 
-    public function setUserAlternates(?bool $userAlternates): void
+    public function setUserAlternates(bool|null $userAlternates): void
     {
         $this->userAlternates = $userAlternates;
     }
 
-    /**
-     * @return int[]|null
-     */
-    public function getSameBlockPrograms(): ?array
+    /** @return int[]|null */
+    public function getSameBlockPrograms(): array|null
     {
         return $this->sameBlockPrograms;
     }
 
-    /**
-     * @param int[] $sameBlockPrograms
-     */
-    public function setSameBlockPrograms(?array $sameBlockPrograms): void
+    /** @param int[] $sameBlockPrograms */
+    public function setSameBlockPrograms(array|null $sameBlockPrograms): void
     {
         $this->sameBlockPrograms = $sameBlockPrograms;
     }
 
-    /**
-     * @return int[]|null
-     */
-    public function getOverlappingPrograms(): ?array
+    /** @return int[]|null */
+    public function getOverlappingPrograms(): array|null
     {
         return $this->overlappingPrograms;
     }
 
-    /**
-     * @param int[] $overlappingPrograms
-     */
-    public function setOverlappingPrograms(?array $overlappingPrograms): void
+    /** @param int[] $overlappingPrograms */
+    public function setOverlappingPrograms(array|null $overlappingPrograms): void
     {
         $this->overlappingPrograms = $overlappingPrograms;
     }

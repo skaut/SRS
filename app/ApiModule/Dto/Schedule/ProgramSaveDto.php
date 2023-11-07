@@ -16,18 +16,18 @@ class ProgramSaveDto
     use Nette\SmartObject;
 
     #[JMS\Type(values: 'int')]
-    private ?int $id = null;
+    private int|null $id = null;
 
     #[JMS\Type(values: 'int')]
     private int $blockId;
 
     #[JMS\Type(values: 'int')]
-    private ?int $roomId = null;
+    private int|null $roomId = null;
 
     #[JMS\Type(values: "DateTimeImmutable<'Y-m-d\TH:i:s.v\Z'>")]
     private DateTimeImmutable $start;
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -47,12 +47,12 @@ class ProgramSaveDto
         $this->blockId = $blockId;
     }
 
-    public function getRoomId(): ?int
+    public function getRoomId(): int|null
     {
         return $this->roomId;
     }
 
-    public function setRoomId(?int $roomId): void
+    public function setRoomId(int|null $roomId): void
     {
         $this->roomId = $roomId;
     }

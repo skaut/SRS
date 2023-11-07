@@ -12,17 +12,15 @@ use App\Services\QueryBus;
 use Throwable;
 
 /**
- * Komponenta s místem.
+ * Komponenta obsahu s místem.
  */
 class PlaceContentControl extends BaseContentControl
 {
-    public function __construct(private QueryBus $queryBus, private PlacePointRepository $placePointRepository)
+    public function __construct(private readonly QueryBus $queryBus, private readonly PlacePointRepository $placePointRepository)
     {
     }
 
-    /**
-     * @throws Throwable
-     */
+    /** @throws Throwable */
     public function render(ContentDto $content): void
     {
         $template = $this->template;

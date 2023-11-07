@@ -23,16 +23,16 @@ class NewsFormFactory
     /**
      * Upravovaná aktualita.
      */
-    private ?News $news = null;
+    private News|null $news = null;
 
-    public function __construct(private BaseFormFactory $baseFormFactory, private NewsRepository $newsRepository)
+    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly NewsRepository $newsRepository)
     {
     }
 
     /**
      * Vytvoří formulář.
      */
-    public function create(?int $id): Form
+    public function create(int|null $id): Form
     {
         $this->news = $this->newsRepository->findById($id);
 
@@ -82,7 +82,7 @@ class NewsFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 

@@ -25,21 +25,6 @@ class Settings
     public const SEMINAR_NAME = 'seminar_name';
 
     /**
-     * E-mail semináře.
-     */
-    public const SEMINAR_EMAIL = 'seminar_email';
-
-    /**
-     * Neověřený změněný e-mail semináře.
-     */
-    public const SEMINAR_EMAIL_UNVERIFIED = 'seminar_email_unverified';
-
-    /**
-     * Ověřovací kód pro změnu e-mailu.
-     */
-    public const SEMINAR_EMAIL_VERIFICATION_CODE = 'seminar_email_verification_code';
-
-    /**
      * Začátek semináře.
      */
     public const SEMINAR_FROM_DATE = 'seminar_from_date';
@@ -220,9 +205,9 @@ class Settings
     public const TICKETS_API_TOKEN = 'tickets_api_token';
 
     /**
-     * Google Analytics kód měření.
+     * Kód pro měření.
      */
-    public const GA_ID = 'ga_id';
+    public const TRACKING_CODE = 'tracking_code';
 
     /**
      * Příjemci zpráv z kontaktního formuláře.
@@ -245,20 +230,20 @@ class Settings
      * Hodnota položky nastavení.
      */
     #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $value = null;
+    protected string|null $value = null;
 
-    public function __construct(string $item, ?string $value)
+    public function __construct(string $item, string|null $value)
     {
         $this->item  = $item;
         $this->value = $value;
     }
 
-    public function getValue(): ?string
+    public function getValue(): string|null
     {
         return $this->value;
     }
 
-    public function setValue(?string $value): void
+    public function setValue(string|null $value): void
     {
         $this->value = $value;
     }

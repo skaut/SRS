@@ -27,6 +27,7 @@ use App\WebModule\Components\IPlaceContentControlFactory;
 use App\WebModule\Components\IProgramsContentControlFactory;
 use App\WebModule\Components\ISlideshowContentControlFactory;
 use App\WebModule\Components\ITextContentControlFactory;
+use App\WebModule\Components\ITicketContentControlFactory;
 use App\WebModule\Components\IUsersContentControlFactory;
 use App\WebModule\Components\LectorsContentControl;
 use App\WebModule\Components\NewsContentControl;
@@ -35,6 +36,7 @@ use App\WebModule\Components\PlaceContentControl;
 use App\WebModule\Components\ProgramsContentControl;
 use App\WebModule\Components\SlideshowContentControl;
 use App\WebModule\Components\TextContentControl;
+use App\WebModule\Components\TicketContentControl;
 use App\WebModule\Components\UsersContentControl;
 use Nette\Application\BadRequestException;
 use Nette\DI\Attributes\Inject;
@@ -93,11 +95,14 @@ class PagePresenter extends WebBasePresenter
     #[Inject]
     public ISlideshowContentControlFactory $slideshowContentFactory;
 
+    #[Inject]
+    public ITicketContentControlFactory $ticketContentControlFactory;
+
     /**
      * @throws BadRequestException
      * @throws Throwable
      */
-    public function renderDefault(?string $slug): void
+    public function renderDefault(string|null $slug): void
     {
         if ($slug === null) {
             $page = $this->cmsService->findPublishedBySlugDto('/');
@@ -205,5 +210,10 @@ class PagePresenter extends WebBasePresenter
     protected function createComponentSlideshowContent(): SlideshowContentControl
     {
         return $this->slideshowContentFactory->create();
+    }
+
+    protected function createComponentTicketContent(): TicketContentControl
+    {
+        return $this->ticketContentControlFactory->create();
     }
 }

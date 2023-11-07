@@ -11,6 +11,7 @@ use App\Model\Settings\Settings;
 use CommandHandlerTest;
 use Exception;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Throwable;
 
 final class SettingIntValueQueryHandlerTest extends CommandHandlerTest
 {
@@ -20,8 +21,6 @@ final class SettingIntValueQueryHandlerTest extends CommandHandlerTest
 
     /**
      * Načtení hodnoty.
-     *
-     * @throws SettingsItemNotFoundException
      */
     public function testGetValue(): void
     {
@@ -50,6 +49,7 @@ final class SettingIntValueQueryHandlerTest extends CommandHandlerTest
      * Načtení hodnoty neexistující položky.
      *
      * @throws Exception
+     * @throws Throwable
      */
     public function testGetValueNotExistingItem(): void
     {
@@ -61,9 +61,7 @@ final class SettingIntValueQueryHandlerTest extends CommandHandlerTest
         }
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Settings::class];
@@ -72,6 +70,7 @@ final class SettingIntValueQueryHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SettingIntValueQueryHandlerTest.neon']);
+
         parent::_before();
 
         $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);

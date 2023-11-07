@@ -33,11 +33,11 @@ class AclService
     private Cache $resourceNamesCache;
 
     public function __construct(
-        private RoleRepository $roleRepository,
-        private PermissionRepository $permissionRepository,
-        private SrsResourceRepository $resourceRepository,
-        private Translator $translator,
-        Storage $storage
+        private readonly RoleRepository $roleRepository,
+        private readonly PermissionRepository $permissionRepository,
+        private readonly SrsResourceRepository $resourceRepository,
+        private readonly Translator $translator,
+        Storage $storage,
     ) {
         $this->roleNamesCache       = new Cache($storage, 'RoleNames');
         $this->permissionNamesCache = new Cache($storage, 'PermissionNames');
@@ -72,8 +72,8 @@ class AclService
     public function saveRole(Role $role): void
     {
         $this->roleRepository->save($role);
-        $this->roleNamesCache->clean([Cache::NAMESPACES => ['RoleNames']]);
-        $this->permissionNamesCache->clean([Cache::NAMESPACES => ['PermissionNames']]);
+        $this->roleNamesCache->clean([Cache::Namespaces => ['RoleNames']]);
+        $this->permissionNamesCache->clean([Cache::Namespaces => ['PermissionNames']]);
     }
 
     /**
@@ -82,7 +82,7 @@ class AclService
     public function removeRole(Role $role): void
     {
         $this->roleRepository->remove($role);
-        $this->roleNamesCache->clean([Cache::NAMESPACES => ['RoleNames']]);
+        $this->roleNamesCache->clean([Cache::Namespaces => ['RoleNames']]);
     }
 
     /**
@@ -209,7 +209,7 @@ class AclService
                 $role->countUsers(),
                 [
                     'role' => $role->getName(),
-                ]
+                ],
             );
         }
 
@@ -221,7 +221,7 @@ class AclService
      *
      * @return string[]
      */
-    public function getRolesOptionsWithCapacity(bool $registerableNowOnly, bool $includeUsers, ?User $user = null): array
+    public function getRolesOptionsWithCapacity(bool $registerableNowOnly, bool $includeUsers, User|null $user = null): array
     {
         $roles = $this->roleRepository->findFilteredRoles($registerableNowOnly, false, $includeUsers, $user);
 

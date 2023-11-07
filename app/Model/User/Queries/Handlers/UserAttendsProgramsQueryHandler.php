@@ -12,13 +12,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UserAttendsProgramsQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private ProgramRepository $programRepository)
+    public function __construct(private readonly ProgramRepository $programRepository)
     {
     }
 
-    /**
-     * @return Collection<int, Program>
-     */
+    /** @return Collection<int, Program> */
     public function __invoke(UserAttendsProgramsQuery $query): Collection
     {
         return $this->programRepository->findUserAttends($query->getUser());

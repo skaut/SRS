@@ -9,7 +9,7 @@ use App\Model\User\User;
 
 class TicketChecksByUserAndSubeventQuery
 {
-    public function __construct(private User $user, private Subevent $subevent)
+    public function __construct(private readonly User $user, private readonly Subevent $subevent)
     {
     }
 

@@ -12,13 +12,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class ProgramAlternatesQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private UserRepository $userRepository)
+    public function __construct(private readonly UserRepository $userRepository)
     {
     }
 
-    /**
-     * @return Collection<int, User>
-     */
+    /** @return Collection<int, User> */
     public function __invoke(ProgramAlternatesQuery $query): Collection
     {
         return $this->userRepository->findProgramAlternates($query->getProgram());

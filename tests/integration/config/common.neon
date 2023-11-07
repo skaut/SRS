@@ -2,8 +2,8 @@ services:
     - App\Services\CommandBus(@messenger.commandBus.bus)
     - App\Services\QueryBus(@messenger.queryBus.bus)
     - App\Services\EventBus(@messenger.eventBus.bus)
-    - App\Services\MailServiceStub
     - Tracy\Bar
+    - App\Services\TranslatorStub
 
 extensions:
     console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)

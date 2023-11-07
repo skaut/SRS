@@ -30,9 +30,7 @@ class BlockRepository extends AbstractRepository
         parent::__construct($em, Block::class);
     }
 
-    /**
-     * @return Collection<int, Block>
-     */
+    /** @return Collection<int, Block> */
     public function findAll(): Collection
     {
         $result = $this->getRepository()->findAll();
@@ -43,7 +41,7 @@ class BlockRepository extends AbstractRepository
     /**
      * Vrací blok podle id.
      */
-    public function findById(?int $id): ?Block
+    public function findById(int|null $id): Block|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
     }
@@ -122,9 +120,7 @@ class BlockRepository extends AbstractRepository
         return $this->getRepository()->matching($criteria);
     }
 
-    /**
-     * @return Collection<int, Block>
-     */
+    /** @return Collection<int, Block> */
     public function findUserAttends(User $user): Collection
     {
         $result = $this->createQueryBuilder('b')
@@ -167,7 +163,7 @@ class BlockRepository extends AbstractRepository
         return new ArrayCollection($qb->getQuery()->getResult());
     }
 
-    public function getMinBlockAllowedCapacity(Block $block): ?int
+    public function getMinBlockAllowedCapacity(Block $block): int|null
     {
         $result = $this->createQueryBuilder('b')
             ->select('count(pa) c')

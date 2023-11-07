@@ -64,11 +64,6 @@ class TemplateVariable
     public const BANK_ACCOUNT = 'bank_account';
 
     /**
-     * Odkaz pro potvrzení změny e-mailu.
-     */
-    public const EMAIL_VERIFICATION_LINK = 'email_verification_link';
-
-    /**
      * Jméno uživatele.
      */
     public const USER = 'user';
@@ -91,7 +86,7 @@ class TemplateVariable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Název proměnné.
@@ -99,7 +94,7 @@ class TemplateVariable
     #[ORM\Column(type: 'string')]
     protected string $name;
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

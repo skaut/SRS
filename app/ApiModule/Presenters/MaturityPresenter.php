@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\ActionModule\Presenters;
+namespace App\ApiModule\Presenters;
 
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
+use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Queries\SettingIntValueQuery;
@@ -14,7 +15,7 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
-use App\Services\IMailService;
+use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use DateTimeImmutable;
@@ -27,8 +28,11 @@ use Throwable;
 /**
  * Presenter obsluhující kontrolu splatnosti přihlášek.
  */
-class MaturityPresenter extends ActionBasePresenter
+class MaturityPresenter extends ApiBasePresenter
 {
+    #[Inject]
+    public CommandBus $commandBus;
+
     #[Inject]
     public QueryBus $queryBus;
 
@@ -40,9 +44,6 @@ class MaturityPresenter extends ActionBasePresenter
 
     #[Inject]
     public RoleRepository $roleRepository;
-
-    #[Inject]
-    public IMailService $mailService;
 
     #[Inject]
     public ApplicationService $applicationService;
@@ -120,10 +121,10 @@ class MaturityPresenter extends ActionBasePresenter
                 $maturityDate = $application->getMaturityDate();
 
                 if ($maturityReminderDate == $maturityDate) {
-                    $this->mailService->sendMailFromTemplate(new ArrayCollection([$application->getUser()]), null, Template::MATURITY_REMINDER, [
+                    $this->commandBus->handle(new CreateTemplateMail(new ArrayCollection([$application->getUser()]), null, Template::MATURITY_REMINDER, [
                         TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                         TemplateVariable::APPLICATION_MATURITY => $maturityDate->format(Helpers::DATE_FORMAT),
-                    ]);
+                    ]));
                 }
             }
         }

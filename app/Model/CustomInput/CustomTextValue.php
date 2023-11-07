@@ -17,9 +17,9 @@ class CustomTextValue extends CustomInputValue
      * Hodnota textového pole přihlášky.
      */
     #[ORM\Column(type: 'text')]
-    protected ?string $value = null;
+    protected string|null $value = null;
 
-    public function getValue(): ?string
+    public function getValue(): string|null
     {
         return $this->value;
     }

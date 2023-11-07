@@ -12,13 +12,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SubeventsQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private SubeventRepository $subeventRepository)
+    public function __construct(private readonly SubeventRepository $subeventRepository)
     {
     }
 
-    /**
-     * @return Collection<int, Subevent>
-     */
+    /** @return Collection<int, Subevent> */
     public function __invoke(SubeventsQuery $query): Collection
     {
         return $this->subeventRepository->findFilteredSubevents($query->isExplicitOnly(), $query->isRegisterableNowOnly(), $query->isUserNotRegisteredOnly(), $query->isIncludeUserRegistered(), $query->getUser());

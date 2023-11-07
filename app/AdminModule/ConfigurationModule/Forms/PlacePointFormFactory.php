@@ -20,9 +20,9 @@ class PlacePointFormFactory
 {
     use Nette\SmartObject;
 
-    private ?PlacePoint $placePoint = null;
+    private PlacePoint|null $placePoint = null;
 
-    public function __construct(private BaseFormFactory $baseFormFactory, private PlacePointRepository $placePointRepository)
+    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly PlacePointRepository $placePointRepository)
     {
     }
 
@@ -70,7 +70,7 @@ class PlacePointFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 

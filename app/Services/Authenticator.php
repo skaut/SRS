@@ -9,7 +9,6 @@ use App\Model\Acl\Role;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use DateTimeImmutable;
-use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;
 use Nette\Caching\Cache;
@@ -30,11 +29,11 @@ class Authenticator implements Nette\Security\Authenticator
     private Cache $userRolesCache;
 
     public function __construct(
-        private UserRepository $userRepository,
-        private RoleRepository $roleRepository,
+        private readonly UserRepository $userRepository,
+        private readonly RoleRepository $roleRepository,
         protected SkautIsService $skautIsService,
-        private FilesService $filesService,
-        Storage $storage
+        private readonly FilesService $filesService,
+        Storage $storage,
     ) {
         $this->userRolesCache = new Cache($storage, 'UserRoles');
     }
@@ -42,7 +41,6 @@ class Authenticator implements Nette\Security\Authenticator
     /**
      * Autentizuje uživatele a případně vytvoří nového.
      *
-     * @throws ORMException
      * @throws Exception
      */
     public function authenticate(string $user, string $password): SimpleIdentity
@@ -88,6 +86,7 @@ class Authenticator implements Nette\Security\Authenticator
     private function updateUserFromSkautIS(User $user, stdClass $skautISUser): void
     {
         $skautISPerson = $this->skautIsService->getPersonDetail($skautISUser->ID_Person);
+        $skautISPhone  = $this->skautIsService->getPersonContact($skautISUser->ID_Person, 'telefon_hlavni');
 
         $user->setUsername($skautISUser->UserName);
         $user->setSkautISUserId($skautISUser->ID);
@@ -103,6 +102,7 @@ class Authenticator implements Nette\Security\Authenticator
         $user->setCity($skautISPerson->City);
         $user->setPostcode($skautISPerson->Postcode);
         $user->setState($skautISPerson->State);
+        $user->setPhone($skautISPhone?->Value);
         $user->setLastLogin(new DateTimeImmutable());
         $user->setMember($skautISUser->HasMembership);
 
@@ -131,15 +131,15 @@ class Authenticator implements Nette\Security\Authenticator
     /**
      * Aktualizuje role přihlášeného uživatele.
      */
-    public function updateRoles(NS\User $user, ?Role $testedRole = null): void
+    public function updateRoles(NS\User $user, Role|null $testedRole = null): void
     {
-        $dbuser = $this->userRepository->findById($user->id);
+        $dbUser = $this->userRepository->findById($user->id);
 
         $netteRoles = [];
 
         if (! $testedRole) {
-            if ($dbuser->isApproved()) {
-                foreach ($dbuser->getRoles() as $role) {
+            if ($dbUser->isApproved()) {
+                foreach ($dbUser->getRoles() as $role) {
                     $netteRoles[$role->getId()] = $role->getName();
                 }
             } else {

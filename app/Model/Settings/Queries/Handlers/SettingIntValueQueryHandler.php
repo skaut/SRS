@@ -15,14 +15,12 @@ use const FILTER_VALIDATE_INT;
 
 class SettingIntValueQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private SettingsRepository $settingsRepository)
+    public function __construct(private readonly SettingsRepository $settingsRepository)
     {
     }
 
-    /**
-     * @throws SettingsItemNotFoundException
-     */
-    public function __invoke(SettingIntValueQuery $query): ?int
+    /** @throws SettingsItemNotFoundException */
+    public function __invoke(SettingIntValueQuery $query): int|null
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());
         $value   = $setting->getValue();

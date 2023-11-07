@@ -33,7 +33,7 @@ class ProgramFormFactory
 {
     use Nette\SmartObject;
 
-    public function __construct(private BaseFormFactory $baseFormFactory, private CommandBus $commandBus, private QueryBus $queryBus)
+    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly CommandBus $commandBus, private readonly QueryBus $queryBus)
     {
     }
 
@@ -54,7 +54,7 @@ class ProgramFormFactory
         $registerProgramsTypeSelect = $form->addSelect(
             'registerProgramsType',
             'admin.configuration.register_programs_type',
-            $this->prepareRegisterProgramsTypeOptions()
+            $this->prepareRegisterProgramsTypeOptions(),
         );
         $registerProgramsTypeSelect
             ->addCondition($form::EQUAL, ProgramRegistrationType::ALLOWED_FROM_TO)

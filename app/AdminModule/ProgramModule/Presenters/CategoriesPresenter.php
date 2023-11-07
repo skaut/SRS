@@ -18,9 +18,7 @@ class CategoriesPresenter extends ProgramBasePresenter
     #[Inject]
     public IProgramCategoriesGridControlFactory $programCategoriesGridControlFactory;
 
-    /**
-     * @throws AbortException
-     */
+    /** @throws AbortException */
     public function startup(): void
     {
         parent::startup();

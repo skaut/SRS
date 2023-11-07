@@ -21,10 +21,10 @@ class LectorDetailDto
     private string $name;
 
     #[JMS\Type(values: 'string')]
-    private ?string $about = null;
+    private string|null $about = null;
 
     #[JMS\Type(values: 'string')]
-    private ?string $photo = null;
+    private string|null $photo = null;
 
     public function getId(): int
     {
@@ -46,22 +46,27 @@ class LectorDetailDto
         $this->name = $name;
     }
 
-    public function getAbout(): ?string
+    public function getAbout(): string|null
     {
         return $this->about;
     }
 
-    public function setAbout(?string $about): void
+    public function setAbout(string|null $about): void
     {
         $this->about = $about;
     }
 
-    public function getPhoto(): ?string
+    public function getPhoto(): string|null
     {
         return $this->photo;
     }
 
-    public function setPhoto(?string $photo): void
+    public function hasPhoto(): bool
+    {
+        return $this->photo !== null;
+    }
+
+    public function setPhoto(string|null $photo): void
     {
         $this->photo = $photo;
     }

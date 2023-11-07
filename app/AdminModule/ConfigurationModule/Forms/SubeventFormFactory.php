@@ -30,13 +30,13 @@ class SubeventFormFactory
     /**
      * Upravovaná podakce.
      */
-    private ?Subevent $subevent = null;
+    private Subevent|null $subevent = null;
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private BaseFormFactory $baseFormFactory,
-        private SubeventRepository $subeventRepository,
-        private SubeventService $subeventService
+        private readonly EntityManagerInterface $em,
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly SubeventService $subeventService,
     ) {
     }
 
@@ -48,8 +48,6 @@ class SubeventFormFactory
         $this->subevent = $this->subeventRepository->findById($id);
 
         $form = $this->baseFormFactory->create();
-
-        $form->addHidden('id');
 
         $nameText = $form->addText('name', 'admin.configuration.subevents_name')
             ->addRule(Form::FILLED, 'admin.configuration.subevents_name_empty');
@@ -104,7 +102,7 @@ class SubeventFormFactory
             ->addRule(
                 [$this, 'validateIncompatibleAndRequiredCollision'],
                 'admin.configuration.subevents_incompatible_collision',
-                [$incompatibleSubeventsSelect, $requiredSubeventsSelect]
+                [$incompatibleSubeventsSelect, $requiredSubeventsSelect],
             );
 
         $requiredSubeventsSelect
@@ -112,7 +110,7 @@ class SubeventFormFactory
             ->addRule(
                 [$this, 'validateIncompatibleAndRequiredCollision'],
                 'admin.configuration.subevents_required_collision',
-                [$incompatibleSubeventsSelect, $requiredSubeventsSelect]
+                [$incompatibleSubeventsSelect, $requiredSubeventsSelect],
             );
 
         $form->addSubmit('submit', 'admin.common.save');
@@ -123,7 +121,6 @@ class SubeventFormFactory
 
         if ($this->subevent) {
             $form->setDefaults([
-                'id' => $id,
                 'name' => $this->subevent->getName(),
                 'registerableFrom' => $this->subevent->getRegisterableFrom(),
                 'registerableTo' => $this->subevent->getRegisterableTo(),
@@ -144,7 +141,7 @@ class SubeventFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() === $form['cancel']) {
+        if ($form->isSubmitted() == $form['cancel']) {
             return;
         }
 

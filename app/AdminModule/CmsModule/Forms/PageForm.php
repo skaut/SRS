@@ -20,7 +20,6 @@ use App\Services\AclService;
 use App\Services\CmsService;
 use App\Services\FilesService;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Nette\Application\UI;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -36,7 +35,7 @@ class PageForm extends UI\Control
     /**
      * Upravovaná stránka.
      */
-    private ?Page $page;
+    private Page|null $page;
 
     /**
      * Událost při uložení formuláře.
@@ -59,13 +58,13 @@ class PageForm extends UI\Control
     public function __construct(
         public int $id,
         public string $area,
-        private BaseFormFactory $baseFormFactory,
-        private PageRepository $pageRepository,
-        private AclService $aclService,
-        private CmsService $cmsService,
-        private RoleRepository $roleRepository,
-        private TagRepository $tagRepository,
-        private FilesService $filesService
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly PageRepository $pageRepository,
+        private readonly AclService $aclService,
+        private readonly CmsService $cmsService,
+        private readonly RoleRepository $roleRepository,
+        private readonly TagRepository $tagRepository,
+        private readonly FilesService $filesService,
     ) {
         $this->page = $this->pageRepository->findById($id);
     }
@@ -153,7 +152,6 @@ class PageForm extends UI\Control
      * Zpracuje formulář.
      *
      * @throws PageException
-     * @throws ORMException
      * @throws OptimisticLockException
      */
     public function processForm(Form $form, stdClass $values): void
@@ -174,20 +172,20 @@ class PageForm extends UI\Control
             }
         }
 
-        if ($form->isSubmitted() === $form['submitAdd']) {
+        if ($form->isSubmitted() == $form['submitAdd']) {
             $contentClass = '\\App\\Model\\Cms\\' . str_replace('_', '', ucwords($type, '_')) . 'Content';
             $content      = new $contentClass($page, $area);
             $content->setHeading($form->getTranslator()->translate('common.content.default_heading.' . $type));
             $this->cmsService->saveContent($content);
         }
 
-        if ($form->isSubmitted() === $form['submitAdd']) {
+        if ($form->isSubmitted() == $form['submitAdd']) {
             $submitName = 'submitAdd';
-        } elseif ($form->isSubmitted() === $form['submitMain']) {
+        } elseif ($form->isSubmitted() == $form['submitMain']) {
             $submitName = 'submitMain';
-        } elseif ($form->isSubmitted() === $form['submitSidebar']) {
+        } elseif ($form->isSubmitted() == $form['submitSidebar']) {
             $submitName = 'submitSidebar';
-        } elseif ($form->isSubmitted() === $form['submitAndContinue']) {
+        } elseif ($form->isSubmitted() == $form['submitAndContinue']) {
             $submitName = 'submitAndContinue';
         } else {
             $submitName = 'submit';

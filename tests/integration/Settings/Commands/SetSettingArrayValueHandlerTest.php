@@ -11,6 +11,7 @@ use App\Model\Settings\Settings;
 use CommandHandlerTest;
 use Exception;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Throwable;
 
 use function serialize;
 
@@ -38,6 +39,8 @@ final class SetSettingArrayValueHandlerTest extends CommandHandlerTest
 
     /**
      * Nastavení hodnoty na null.
+     *
+     * @throws SettingsItemNotFoundException
      */
     public function testSetValueNull(): void
     {
@@ -52,6 +55,7 @@ final class SetSettingArrayValueHandlerTest extends CommandHandlerTest
      * Nastavení hodnoty neexistující položce.
      *
      * @throws Exception
+     * @throws Throwable
      */
     public function testSetValueNotExistingItem(): void
     {
@@ -63,9 +67,7 @@ final class SetSettingArrayValueHandlerTest extends CommandHandlerTest
         }
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function getTestedAggregateRoots(): array
     {
         return [Settings::class];
@@ -74,6 +76,7 @@ final class SetSettingArrayValueHandlerTest extends CommandHandlerTest
     protected function _before(): void
     {
         $this->tester->useConfigFiles([__DIR__ . '/SetSettingArrayValueHandlerTest.neon']);
+
         parent::_before();
 
         $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);

@@ -26,7 +26,7 @@ class Page
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Název stránky.
@@ -65,7 +65,7 @@ class Page
      *
      * @var Collection<int, Content>
      */
-    #[ORM\OneToMany(targetEntity: Content::class, mappedBy: 'page', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'page', targetEntity: Content::class, cascade: ['persist'])]
     #[ORM\OrderBy(['position' => 'ASC'])]
     protected Collection $contents;
 
@@ -77,7 +77,7 @@ class Page
         $this->contents = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -122,9 +122,7 @@ class Page
         $this->public = $public;
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function getRoles(): Collection
     {
         return $this->roles;
@@ -135,9 +133,7 @@ class Page
         return implode(', ', $this->roles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
-    /**
-     * @param Collection<int, Role> $roles
-     */
+    /** @param Collection<int, Role> $roles */
     public function setRoles(Collection $roles): void
     {
         foreach ($this->roles as $role) {
@@ -172,7 +168,7 @@ class Page
      *
      * @throws PageException
      */
-    public function getContents(?string $area = null): Collection
+    public function getContents(string|null $area = null): Collection
     {
         if ($area === null) {
             return $this->contents;
@@ -196,9 +192,7 @@ class Page
         }
     }
 
-    /**
-     * @throws PageException
-     */
+    /** @throws PageException */
     public function convertToDto(): PageDto
     {
         $allowedRoles = array_map(static fn (Role $role) => $role->getName(), $this->roles->toArray());

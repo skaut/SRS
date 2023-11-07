@@ -1,0 +1,22 @@
+<div class="clearfix"></div>
+
+<div class="ticket-content">
+    <div class="row" n:ifcontent>
+        <div class="col" n:ifcontent>
+            <h3 n:ifcontent>{$heading}</h3>
+        </div>
+    </div>
+
+    {if $guestRole}
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-warning alert-forever">
+                    {_web.ticket_content.login_required_begin}
+                    <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.ticket_content.login_required_link}</a>{_web.ticket_content.login_required_end}
+                </div>
+            </div>
+        </div>
+    {else}
+        {control ticket}
+    {/if}
+</div>

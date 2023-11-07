@@ -6,7 +6,7 @@ namespace App\Model\Structure\Queries;
 
 class SubeventByIdQuery
 {
-    public function __construct(private int $id)
+    public function __construct(private readonly int $id)
     {
     }
 

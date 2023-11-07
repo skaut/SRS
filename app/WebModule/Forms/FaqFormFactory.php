@@ -6,10 +6,9 @@ namespace App\WebModule\Forms;
 
 use App\Model\Cms\Faq;
 use App\Model\Cms\Repositories\FaqRepository;
-use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\NoResultException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -24,21 +23,20 @@ class FaqFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private ?User $user = null;
+    private User $user;
 
     public function __construct(
-        private BaseFormFactory $baseFormFactory,
-        private FaqRepository $faqRepository,
-        private UserRepository $userRepository
+        private readonly BaseFormFactory $baseFormFactory,
+        private readonly FaqRepository $faqRepository,
     ) {
     }
 
     /**
      * Vytvoří formulář.
      */
-    public function create(int $id): Form
+    public function create(User $user): Form
     {
-        $this->user = $this->userRepository->findById($id);
+        $this->user = $user;
 
         $form = $this->baseFormFactory->create();
 
@@ -56,7 +54,7 @@ class FaqFormFactory
      * Zpracuje formulář.
      *
      * @throws NonUniqueResultException
-     * @throws ORMException
+     * @throws NoResultException
      */
     public function processForm(Form $form, stdClass $values): void
     {

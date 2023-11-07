@@ -21,7 +21,7 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Název kategorie.
@@ -42,7 +42,7 @@ class Category
      *
      * @var Collection<int, Block>
      */
-    #[ORM\OneToMany(targetEntity: Block::class, mappedBy: 'category', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Block::class, cascade: ['persist'])]
     #[ORM\OrderBy(['name' => 'ASC'])]
     protected Collection $blocks;
 
@@ -58,7 +58,7 @@ class Category
         $this->registerableRoles = clone $this->registerableRoles;
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -73,9 +73,7 @@ class Category
         $this->name = $name;
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function getRegisterableRoles(): Collection
     {
         return $this->registerableRoles;
@@ -86,9 +84,7 @@ class Category
         return implode(', ', $this->registerableRoles->map(static fn (Role $role) => $role->getName())->toArray());
     }
 
-    /**
-     * @param Collection<int, Role> $registerableRoles
-     */
+    /** @param Collection<int, Role> $registerableRoles */
     public function setRegisterableRoles(Collection $registerableRoles): void
     {
         foreach ($this->registerableRoles as $registerableRole) {
@@ -116,9 +112,7 @@ class Category
         }
     }
 
-    /**
-     * @return Collection<int, Block>
-     */
+    /** @return Collection<int, Block> */
     public function getBlocks(): Collection
     {
         return $this->blocks;

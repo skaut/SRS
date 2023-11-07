@@ -9,15 +9,13 @@ namespace App\Model\Cms\Dto;
  */
 class NewsContentDto extends ContentDto
 {
-    /**
-     * @param ?int $count Počet posledních novinek k zobrazení
-     */
-    public function __construct(string $type, string $heading, protected ?int $count)
+    /** @param ?int $count Počet posledních novinek k zobrazení */
+    public function __construct(string $type, string $heading, protected int|null $count)
     {
         parent::__construct($type, $heading);
     }
 
-    public function getCount(): ?int
+    public function getCount(): int|null
     {
         return $this->count;
     }

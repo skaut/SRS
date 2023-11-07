@@ -62,7 +62,7 @@ class Permission
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     /**
      * Název oprávnění.
@@ -81,7 +81,7 @@ class Permission
     /**
      * Prostředek oprávnění.
      */
-    #[ORM\ManyToOne(targetEntity: SrsResource::class, inversedBy: 'permissions', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: SrsResource::class, cascade: ['persist'], inversedBy: 'permissions')]
     protected SrsResource $resource;
 
     public function __construct(string $name, SrsResource $resource)
@@ -91,7 +91,7 @@ class Permission
         $this->roles    = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -101,9 +101,7 @@ class Permission
         return $this->name;
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
+    /** @return Collection<int, Role> */
     public function getRoles(): Collection
     {
         return $this->roles;

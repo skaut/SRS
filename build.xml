@@ -50,6 +50,7 @@
                     <token key="CONFIG_MAIL_USERNAME" value="${env.CONFIG_MAIL_USERNAME}"/>
                     <token key="CONFIG_MAIL_PASSWORD" value="${env.CONFIG_MAIL_PASSWORD}"/>
                     <token key="CONFIG_MAIL_SECURE" value="${env.CONFIG_MAIL_SECURE}"/>
+                    <token key="CONFIG_MAILING_SENDER_EMAIL" value="${env.CONFIG_MAILING_SENDER_EMAIL}"/>
                     <token key="CONFIG_RECAPTCHA_SITE_KEY" value="${env.CONFIG_RECAPTCHA_SITE_KEY}"/>
                     <token key="CONFIG_RECAPTCHA_SECRET_KEY" value="${env.CONFIG_RECAPTCHA_SECRET_KEY}"/>
                 </replacetokens>
@@ -121,6 +122,7 @@
         <property name="deploy.workDir" refid="env.DEPLOY_DIRECTORY"/>
         <property name="deploy.releasesDir" value="${deploy.workDir}/releases"/>
         <exec command="git rev-parse --short HEAD" outputProperty="build.hash"/>
+        <property name="deploy.lebeda" refid="env.DEPLOY_LEBEDA"/>
         <property name="deploy.ssh.host" refid="env.DEPLOY_SSH_HOST"/>
         <property name="deploy.ssh.username" refid="env.DEPLOY_SSH_USERNAME"/>
         <property name="deploy.ssh.port" refid="env.DEPLOY_SSH_PORT"/>
@@ -231,8 +233,13 @@
     </target>
 
     <target name="deploy:app-command">
+        <condition property="phpCommand"
+                   value="php81-cli &quot;${deploy.release}/www/console.php ${command}&quot;"
+                   else="php8.1 ${deploy.release}/www/console.php ${command}">
+            <equals arg1="${deploy.lebeda}" arg2="true"/>
+        </condition>
         <phingcall target="deploy:ssh">
-            <property name="command" value="php81-cli &quot;${deploy.release}/www/console.php ${command}&quot;"/>
+            <property name="command" value="${phpCommand}"/>
         </phingcall>
     </target>
 
