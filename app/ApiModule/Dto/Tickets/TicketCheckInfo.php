@@ -24,6 +24,9 @@ class TicketCheckInfo
     #[JMS\Type(values: 'string')]
     private string|null $attendeePhoto;
 
+    #[JMS\Type(values: 'boolean')]
+    private bool $attendeeMember;
+
     /** @var string[] */
     #[JMS\Type(values: 'array')]
     private array $roles;
@@ -52,6 +55,11 @@ class TicketCheckInfo
     public function setAttendeePhoto(string|null $attendeePhoto): void
     {
         $this->attendeePhoto = $attendeePhoto;
+    }
+
+    public function setAttendeeMember(bool $attendeeMember): void
+    {
+        $this->attendeeMember = $attendeeMember;
     }
 
     /** @param string[] $roles */

@@ -119,6 +119,7 @@ class TicketsPresenter extends ApiBasePresenter
         $data->setAttendeeName($user->getDisplayName());
         $data->setAttendeeAge($user->getAge());
         $data->setAttendeePhoto($user->getPhoto());
+        $data->setAttendeeMember($user->isMember());
         $data->setRoles($roles);
         $data->setSubevents($subevents);
         $data->setHasSubevent($hasSubevent);
