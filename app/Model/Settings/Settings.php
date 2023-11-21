@@ -100,11 +100,6 @@ class Settings
     public const ACCOUNTANT = 'accountant';
 
     /**
-     * Místo vystavení dokladu.
-     */
-    public const PRINT_LOCATION = 'print_location';
-
-    /**
      * Číslo účtu.
      */
     public const ACCOUNT_NUMBER = 'account_number';

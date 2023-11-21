@@ -6,6 +6,7 @@ namespace App\WebModule\Presenters;
 
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
+use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -84,6 +85,7 @@ class ProfilePresenter extends WebBasePresenter
         $this->template->isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
         $this->template->userPrograms              = $this->queryBus->handle(new UserAttendsProgramsQuery($this->dbUser));
         $this->template->accountNumber             = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
+        $this->template->ticketsActive             = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM)) !== null;
     }
 
     /**

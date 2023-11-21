@@ -53,8 +53,10 @@
                             </div>
                         </div>
 
-                        <legend>{_web.profile.seminar.ticket.heading}</legend>
-                        {control ticket}
+                        {if $ticketsActive}
+                            <legend>{_web.profile.seminar.ticket.heading}</legend>
+                            {control ticket}
+                        {/if}
                     </div>
                 </div>
             </div>
