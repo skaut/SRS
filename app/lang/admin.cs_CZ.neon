@@ -40,6 +40,7 @@ menu:
     payments: "Platby"
     acl: "Role"
     mailing: "Mailing"
+    groups: "Skupiny"
     configuration: "Nastavení"
     help: "Nápověda"
 
@@ -631,6 +632,20 @@ mailing:
         recipient_emails: "Příjemci - e-maily"
         automatic: "Automatický"
 
+groups:
+    menu:
+        statuses: "Statusy"
+        groups: "Skupiny"
+
+    status:
+        heading: "Statusy"
+
+    group:
+        heading: "Skupiny"
+
+        column:
+            name: "Název"
+
 configuration:
     menu:
         seminar: "Seminář"
@@ -641,6 +656,7 @@ configuration:
         place: "Místo"
         mailing: "Mailing"
         skautis: "SkautIS"
+        group: "Skupinová registrace"
         web: "Web"
         system: "Systém"
         subevents: "Podakce"

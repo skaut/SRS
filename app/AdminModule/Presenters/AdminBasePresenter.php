@@ -91,6 +91,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->resourcePayments      = SrsResource::PAYMENTS;
         $this->template->resourceMailing       = SrsResource::MAILING;
         $this->template->resourceProgram       = SrsResource::PROGRAM;
+        $this->template->resourceGroups        = SrsResource::GROUPS;
 
         $this->template->permissionAccess            = Permission::ACCESS;
         $this->template->permissionManage            = Permission::MANAGE;

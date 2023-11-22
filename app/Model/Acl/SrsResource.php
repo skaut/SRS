@@ -46,6 +46,11 @@ class SrsResource
     public const USERS = 'users';
 
     /**
+     * Skupiny.
+     */
+    public const GROUPS = 'groups';
+
+    /**
      * Mailing.
      */
     public const MAILING = 'mailing';
@@ -63,6 +68,7 @@ class SrsResource
         self::PROGRAM,
         self::CONFIGURATION,
         self::USERS,
+        self::GROUPS,
         self::MAILING,
         self::PAYMENTS,
     ];

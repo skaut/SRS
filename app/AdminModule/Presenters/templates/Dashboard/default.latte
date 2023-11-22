@@ -106,6 +106,26 @@
                 </div>
             </div>
 
+            <div class="col-4 mb-4" n:if="$user->isAllowed($resourceGroups, $permissionManage)">
+                <div class="card h-100">
+                    <div class="card-body pb-1">
+                        <h5 class="card-title">{_admin.menu.groups}</h5>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <a href="{plink Groups:Groups:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-user-group"></span><br>{_admin.groups.menu.groups}
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <a href="{plink Groups:Status:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-user-group"></span><br>{_admin.groups.menu.statuses}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-4 mb-4" n:if="$user->isAllowed($resourceMailing, $permissionManage)">
                 <div class="card h-100">
                     <div class="card-body pb-1">
