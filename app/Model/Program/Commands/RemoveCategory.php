@@ -8,7 +8,7 @@ use App\Model\Program\Category;
 
 class RemoveCategory
 {
-    public function __construct(private readonly Category $category)
+    public function __construct(private Category $category)
     {
     }
 

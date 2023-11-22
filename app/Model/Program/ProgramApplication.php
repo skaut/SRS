@@ -23,13 +23,13 @@ class ProgramApplication
     /**
      * Uživatel.
      */
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'programApplications')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'programApplications', cascade: ['persist'])]
     protected User $user;
 
     /**
      * Zapsaný program.
      */
-    #[ORM\ManyToOne(targetEntity: Program::class, cascade: ['persist'], inversedBy: 'programApplications')]
+    #[ORM\ManyToOne(targetEntity: Program::class, inversedBy: 'programApplications', cascade: ['persist'])]
     protected Program $program;
 
     /**

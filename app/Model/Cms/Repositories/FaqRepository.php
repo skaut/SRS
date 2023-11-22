@@ -9,6 +9,7 @@ use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\ORMException;
 
 use const PHP_INT_MAX;
 
@@ -72,7 +73,7 @@ class FaqRepository extends AbstractRepository
      * Uloží otázku.
      *
      * @throws NonUniqueResultException
-     * @throws NoResultException
+     * @throws ORMException
      */
     public function save(Faq $faq): void
     {
@@ -95,6 +96,8 @@ class FaqRepository extends AbstractRepository
 
     /**
      * Přesune otázku mezi otázky s id prevId a nextId.
+     *
+     * @throws ORMException
      */
     public function sort(int $itemId, int $prevId, int $nextId): void
     {

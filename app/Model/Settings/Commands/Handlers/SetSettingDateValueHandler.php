@@ -11,7 +11,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SetSettingDateValueHandler implements MessageHandlerInterface
 {
-    public function __construct(private readonly SettingsRepository $settingsRepository)
+    public function __construct(private SettingsRepository $settingsRepository)
     {
     }
 

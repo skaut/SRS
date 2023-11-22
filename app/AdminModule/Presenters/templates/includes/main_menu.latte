@@ -42,7 +42,13 @@
                 <a class="nav-link" href="{plink :Admin:Mailing:Templates:default}">{_admin.menu.mailing}</a>
             </li>
 
-            <li n:if="$user->isAllowed($resourceConfiguration, $permissionManage)"
+             <li n:if="$user->isAllowed($resourceGroups, $permissionManage)"
+                    n:class="nav-item, $presenter->isLinkCurrent(':Admin:Groups:Groups:*')
+                    || $presenter->isLinkCurrent(':Admin:Groups:Status:*') ? active">
+                <a class="nav-link" href="{plink :Admin:Groups:Status:default}">{_admin.menu.groups}</a>
+            </li>
+
+           <li n:if="$user->isAllowed($resourceConfiguration, $permissionManage)"
                     n:class="nav-item, $presenter->isLinkCurrent(':Admin:Configuration:Application:*')
                     || $presenter->isLinkCurrent(':Admin:Configuration:Mailing:*')
                     || $presenter->isLinkCurrent(':Admin:Configuration:Payment:*')
@@ -88,7 +94,7 @@
                 <div class="navbar-btn">
                     <button class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown">
                         <span class="fa fa-user-circle"></span>
-                        {$dbUser->getUsername()}
+                        {$dbuser->getUsername()}
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="{plink :Web:Profile:default}">

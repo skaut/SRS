@@ -6,7 +6,7 @@ namespace App\AdminModule\CmsModule\Components;
 
 use App\Model\Cms\Repositories\FaqRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;
@@ -19,7 +19,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class FaqGridControl extends Control
 {
-    public function __construct(private readonly Translator $translator, private readonly FaqRepository $faqRepository)
+    public function __construct(private Translator $translator, private FaqRepository $faqRepository)
     {
     }
 
@@ -102,6 +102,7 @@ class FaqGridControl extends Control
     /**
      * Přesuene otázku $item_id mezi $prev_id a $next_id.
      *
+     * @throws ORMException
      * @throws AbortException
      */
     public function handleSort(string|null $item_id, string|null $prev_id, string|null $next_id): void
@@ -123,8 +124,8 @@ class FaqGridControl extends Control
      * Změní viditelnost otázky.
      *
      * @throws NonUniqueResultException
+     * @throws ORMException
      * @throws AbortException
-     * @throws NoResultException
      */
     public function changeStatus(string $id, string $public): void
     {

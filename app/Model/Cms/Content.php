@@ -38,7 +38,6 @@ use function ucwords;
     'organizer_content' => OrganizerContent::class,
     'contact_form_content' => ContactFormContent::class,
     'slideshow_content' => SlideshowContent::class,
-    'ticket_content' => TicketContent::class,
 ])]
 abstract class Content implements IContent
 {
@@ -123,11 +122,6 @@ abstract class Content implements IContent
     public const SLIDESHOW = 'slideshow';
 
     /**
-     * TicketContent.
-     */
-    public const TICKET = 'ticket';
-
-    /**
      * Hlavní oblast stránky.
      */
     public const MAIN = 'main';
@@ -146,7 +140,6 @@ abstract class Content implements IContent
         self::NEWS,
         self::DOCUMENT,
         self::APPLICATION,
-        self::TICKET,
         self::PROGRAMS,
         self::CONTACT_FORM,
         self::FAQ,
@@ -183,7 +176,7 @@ abstract class Content implements IContent
     /**
      * Stránka, na které je obsah umístěn.
      */
-    #[ORM\ManyToOne(targetEntity: Page::class, cascade: ['persist'], inversedBy: 'contents')]
+    #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'contents', cascade: ['persist'])]
     protected Page $page;
 
     /**

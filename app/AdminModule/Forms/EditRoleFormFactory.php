@@ -39,12 +39,12 @@ class EditRoleFormFactory
     private Role|null $role = null;
 
     public function __construct(
-        private readonly BaseFormFactory $baseFormFactory,
-        private readonly EntityManagerInterface $em,
-        private readonly AclService $aclService,
-        private readonly RoleRepository $roleRepository,
-        private readonly PageRepository $pageRepository,
-        private readonly PermissionRepository $permissionRepository,
+        private BaseFormFactory $baseFormFactory,
+        private EntityManagerInterface $em,
+        private AclService $aclService,
+        private RoleRepository $roleRepository,
+        private PageRepository $pageRepository,
+        private PermissionRepository $permissionRepository,
     ) {
     }
 
@@ -183,7 +183,7 @@ class EditRoleFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() == $form['cancel']) {
+        if ($form->isSubmitted() === $form['cancel']) {
             return;
         }
 

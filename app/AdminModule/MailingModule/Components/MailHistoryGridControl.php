@@ -21,10 +21,10 @@ use Ublaboo\DataGrid\DataGrid;
 class MailHistoryGridControl extends Control
 {
     public function __construct(
-        private readonly Translator $translator,
-        private readonly MailRepository $mailRepository,
-        private readonly AclService $aclService,
-        private readonly SubeventService $subeventService,
+        private Translator $translator,
+        private MailRepository $mailRepository,
+        private AclService $aclService,
+        private SubeventService $subeventService,
     ) {
     }
 
@@ -49,14 +49,6 @@ class MailHistoryGridControl extends Control
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
         $grid->setStrictSessionFilterValues(false);
 
-        $grid->addColumnText('recipientUsers', 'admin.mailing.history.recipient_users', 'recipientUsersText')
-            ->setFilterText()
-            ->setCondition(static function (QueryBuilder $qb, string $value): void {
-                $qb->join('m.recipientUsers', 'u')
-                    ->andWhere('u.displayName LIKE :displayName')
-                    ->setParameter('displayName', '%' . $value . '%');
-            });
-
         $grid->addColumnText('recipientRoles', 'admin.mailing.history.recipient_roles', 'recipientRolesText')
             ->setFilterMultiSelect($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED]))
             ->setCondition(static function (QueryBuilder $qb, ArrayHash $values): void {
@@ -73,11 +65,12 @@ class MailHistoryGridControl extends Control
                     ->setParameter('sids', (array) $values);
             });
 
-        $grid->addColumnText('recipientEmails', 'admin.mailing.history.recipient_emails', 'recipientEmailsText')
+        $grid->addColumnText('recipientUsers', 'admin.mailing.history.recipient_users', 'recipientUsersText')
             ->setFilterText()
             ->setCondition(static function (QueryBuilder $qb, string $value): void {
-                $qb->andWhere('m.recipientEmails LIKE :email')
-                    ->setParameter('email', '%' . $value . '%');
+                $qb->join('m.recipientUsers', 'u')
+                    ->andWhere('u.displayName LIKE :displayName')
+                    ->setParameter('displayName', '%' . $value . '%');
             });
 
         $grid->addColumnText('subject', 'admin.mailing.history.subject')

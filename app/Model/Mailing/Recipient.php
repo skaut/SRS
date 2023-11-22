@@ -16,8 +16,8 @@ class Recipient
      * @param ?string $name  Jméno příjemce.
      */
     public function __construct(
-        private readonly string $email,
-        private readonly string|null $name = null,
+        private string $email,
+        private string|null $name = null,
     ) {
     }
 
@@ -31,15 +31,10 @@ class Recipient
         return $this->name;
     }
 
-    public function isValid(): bool
-    {
-        return ! empty($this->email);
-    }
-
     /**
      * Vytvoří objekt na základě údajů uživatele.
      */
-    public static function createFromUser(User $user): Recipient|null
+    public static function createFromUser(User $user): Recipient
     {
         return new Recipient($user->getEmail(), $user->getDisplayName());
     }

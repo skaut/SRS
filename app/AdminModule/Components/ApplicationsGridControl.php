@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
-use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Application\Application;
 use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Application\RolesApplication;
@@ -33,8 +32,6 @@ use Throwable;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
-use function assert;
-
 /**
  * Komponenta pro správu přihlášek.
  */
@@ -43,14 +40,14 @@ class ApplicationsGridControl extends Control
     private User|null $user = null;
 
     public function __construct(
-        private readonly Translator $translator,
-        private readonly EntityManagerInterface $em,
-        private readonly ApplicationRepository $applicationRepository,
-        private readonly UserRepository $userRepository,
-        private readonly SubeventRepository $subeventRepository,
-        private readonly ApplicationService $applicationService,
-        private readonly SubeventService $subeventService,
-        private readonly Validators $validators,
+        private Translator $translator,
+        private EntityManagerInterface $em,
+        private ApplicationRepository $applicationRepository,
+        private UserRepository $userRepository,
+        private SubeventRepository $subeventRepository,
+        private ApplicationService $applicationService,
+        private SubeventService $subeventService,
+        private Validators $validators,
     ) {
     }
 
@@ -214,7 +211,6 @@ class ApplicationsGridControl extends Control
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values->subevents);
 
         $p = $this->getPresenter();
-        assert($p instanceof AdminBasePresenter);
 
         if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
             $p->flashMessage('admin.users.users_applications_subevents_occupied', 'danger');
@@ -230,7 +226,9 @@ class ApplicationsGridControl extends Control
             return;
         }
 
-        $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $p->getDbUser());
+        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
+
+        $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $loggedUser);
 
         $p->flashMessage('admin.users.users_applications_saved', 'success');
         $p->redrawControl('flashes');
@@ -248,7 +246,6 @@ class ApplicationsGridControl extends Control
         $selectedSubevents = $this->subeventRepository->findSubeventsByIds($values->subevents);
 
         $p = $this->getPresenter();
-        assert($p instanceof AdminBasePresenter);
 
         if ($application instanceof RolesApplication) {
             if (! $selectedSubevents->isEmpty()) {
@@ -280,7 +277,7 @@ class ApplicationsGridControl extends Control
             return;
         }
 
-        $loggedUser = $p->getDbUser();
+        $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
 
         $this->em->wrapInTransaction(function () use ($application, $selectedSubevents, $values, $loggedUser): void {
             if ($application instanceof SubeventsApplication) {
@@ -331,10 +328,10 @@ class ApplicationsGridControl extends Control
         $application = $this->applicationRepository->findById($id);
 
         $p = $this->getPresenter();
-        assert($p instanceof AdminBasePresenter);
 
         if ($application instanceof SubeventsApplication && ! $application->isCanceled()) {
-            $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $p->getDbUser());
+            $loggedUser = $this->userRepository->findById($this->getPresenter()->user->id);
+            $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $loggedUser);
             $p->flashMessage('admin.users.users_applications_application_canceled', 'success');
         }
 

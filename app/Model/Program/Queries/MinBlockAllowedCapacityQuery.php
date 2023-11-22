@@ -8,7 +8,7 @@ use App\Model\Program\Block;
 
 class MinBlockAllowedCapacityQuery
 {
-    public function __construct(private readonly Block $block)
+    public function __construct(private Block $block)
     {
     }
 

@@ -8,11 +8,11 @@ use App\Model\Cms\Dto\NewsContentDto;
 use App\Model\Cms\Repositories\NewsRepository;
 
 /**
- * Komponenta obsahu s aktualitami.
+ * Komponenta s aktualitami.
  */
 class NewsContentControl extends BaseContentControl
 {
-    public function __construct(private readonly NewsRepository $newsRepository)
+    public function __construct(private NewsRepository $newsRepository)
     {
     }
 

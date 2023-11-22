@@ -24,11 +24,6 @@ mail:
     password: ""
     secure:
 
-mailing:
-    mails: [
-    	senderEmail: srs@skaut.cz
-    ]
-
 recaptcha:
     siteKey: ""
     secretKey: ""

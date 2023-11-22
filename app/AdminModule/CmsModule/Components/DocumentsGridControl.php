@@ -32,10 +32,10 @@ use const UPLOAD_ERR_OK;
 class DocumentsGridControl extends Control
 {
     public function __construct(
-        private readonly Translator $translator,
-        private readonly DocumentRepository $documentRepository,
-        private readonly TagRepository $tagRepository,
-        private readonly FilesService $filesService,
+        private Translator $translator,
+        private DocumentRepository $documentRepository,
+        private TagRepository $tagRepository,
+        private FilesService $filesService,
     ) {
     }
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Enums\PaymentType;
-use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -26,12 +25,12 @@ class UserService
     use Nette\SmartObject;
 
     public function __construct(
-        private readonly CommandBus $commandBus,
-        private readonly QueryBus $queryBus,
-        private readonly EventBus $eventBus,
-        private readonly Translator $translator,
-        private readonly UserRepository $userRepository,
-        private readonly EntityManagerInterface $em,
+        private QueryBus $queryBus,
+        private EventBus $eventBus,
+        private Translator $translator,
+        private UserRepository $userRepository,
+        private MailService $mailService,
+        private EntityManagerInterface $em,
     ) {
     }
 
@@ -93,9 +92,9 @@ class UserService
             $this->eventBus->handle(new UserUpdatedEvent($user, $approvedOld));
 
             if ($approved) {
-                $this->commandBus->handle(new CreateTemplateMail(new ArrayCollection([$user]), null, Template::REGISTRATION_APPROVED, [
+                $this->mailService->sendMailFromTemplate(new ArrayCollection([$user]), null, Template::REGISTRATION_APPROVED, [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
-                ]));
+                ]);
             }
         });
     }

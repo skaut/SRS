@@ -11,8 +11,8 @@ use App\Model\Cms\Repositories\PageRepository;
 use App\Services\AclService;
 use App\Services\CmsService;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -34,11 +34,11 @@ use function count;
 class PagesGridControl extends Control
 {
     public function __construct(
-        private readonly Translator $translator,
-        private readonly CmsService $cmsService,
-        private readonly PageRepository $pageRepository,
-        private readonly RoleRepository $roleRepository,
-        private readonly AclService $aclService,
+        private Translator $translator,
+        private CmsService $cmsService,
+        private PageRepository $pageRepository,
+        private RoleRepository $roleRepository,
+        private AclService $aclService,
     ) {
     }
 
@@ -159,7 +159,8 @@ class PagesGridControl extends Control
      * Zpracuje přidání stránky.
      *
      * @throws NonUniqueResultException
-     * @throws NoResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function add(stdClass $values): void
     {
@@ -179,7 +180,8 @@ class PagesGridControl extends Control
      * Zpracuje upravení stránky.
      *
      * @throws NonUniqueResultException
-     * @throws NoResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function edit(string $id, stdClass $values): void
     {
@@ -217,6 +219,7 @@ class PagesGridControl extends Control
      * Přesune stránku s $item_id mezi $prev_id a $next_id.
      *
      * @throws AbortException
+     * @throws ORMException
      * @throws OptimisticLockException
      */
     public function handleSort(string|null $item_id, string|null $prev_id, string|null $next_id): void
@@ -239,8 +242,8 @@ class PagesGridControl extends Control
      *
      * @throws AbortException
      * @throws NonUniqueResultException
+     * @throws ORMException
      * @throws OptimisticLockException
-     * @throws NoResultException
      */
     public function changeStatus(string $id, string $public): void
     {

@@ -65,7 +65,7 @@ class Page
      *
      * @var Collection<int, Content>
      */
-    #[ORM\OneToMany(mappedBy: 'page', targetEntity: Content::class, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Content::class, mappedBy: 'page', cascade: ['persist'])]
     #[ORM\OrderBy(['position' => 'ASC'])]
     protected Collection $contents;
 

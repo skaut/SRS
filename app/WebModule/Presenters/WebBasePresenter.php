@@ -51,7 +51,7 @@ abstract class WebBasePresenter extends BasePresenter
     #[Inject]
     public SkautIsService $skautIsService;
 
-    protected User|null $dbUser = null;
+    protected User|null $dbuser = null;
 
     /**
      * @throws AbortException
@@ -69,7 +69,7 @@ abstract class WebBasePresenter extends BasePresenter
 
         $this->user->setAuthorizator($this->authorizator);
 
-        $this->dbUser = $this->user->isLoggedIn() ? $this->userRepository->findById($this->user->id) : null;
+        $this->dbuser = $this->user->isLoggedIn() ? $this->userRepository->findById($this->user->id) : null;
     }
 
     /**
@@ -80,7 +80,7 @@ abstract class WebBasePresenter extends BasePresenter
     {
         parent::beforeRender();
 
-        $this->template->dbUser = $this->dbUser;
+        $this->template->dbuser = $this->dbuser;
 
         $this->template->backlink = $this->getHttpRequest()->getUrl()->getPath();
 
@@ -107,11 +107,6 @@ abstract class WebBasePresenter extends BasePresenter
     {
         $this->authenticator->updateRoles($this->user);
         $this->redirect(':Admin:Acl:default');
-    }
-
-    public function getDbUser(): User|null
-    {
-        return $this->dbUser;
     }
 
     /**

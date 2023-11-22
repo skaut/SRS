@@ -8,7 +8,7 @@ use App\Model\User\User;
 
 class UserAllowedBlocksQuery
 {
-    public function __construct(private readonly User $user, private readonly bool $paidOnly)
+    public function __construct(private User $user, private bool $paidOnly)
     {
     }
 

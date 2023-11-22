@@ -8,11 +8,11 @@ use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Cms\Dto\CapacitiesContentDto;
 
 /**
- * Komponenta obsahu s kapacitami rolí.
+ * Komponenta s kapacitami rolí.
  */
 class CapacitiesContentControl extends BaseContentControl
 {
-    public function __construct(private readonly RoleRepository $roleRepository)
+    public function __construct(private RoleRepository $roleRepository)
     {
     }
 

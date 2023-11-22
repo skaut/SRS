@@ -6,7 +6,7 @@ namespace App\Model\Settings\Queries;
 
 class SettingDateTimeValueAsTextQuery
 {
-    public function __construct(private readonly string $item)
+    public function __construct(private string $item)
     {
     }
 

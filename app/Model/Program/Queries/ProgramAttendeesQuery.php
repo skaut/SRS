@@ -8,7 +8,7 @@ use App\Model\Program\Program;
 
 class ProgramAttendeesQuery
 {
-    public function __construct(private readonly Program $program)
+    public function __construct(private Program $program)
     {
     }
 

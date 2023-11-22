@@ -10,11 +10,11 @@ use App\Model\Cms\Repositories\DocumentRepository;
 use function array_keys;
 
 /**
- * Komponenta obsahu s dokumenty.
+ * Komponenta s dokumenty.
  */
 class DocumentContentControl extends BaseContentControl
 {
-    public function __construct(private readonly DocumentRepository $documentRepository)
+    public function __construct(private DocumentRepository $documentRepository)
     {
     }
 
@@ -23,7 +23,7 @@ class DocumentContentControl extends BaseContentControl
         $template = $this->template;
         $template->setFile(__DIR__ . '/templates/document_content.latte');
 
-        $roles = $this->presenter->getUser()->getRoles();
+        $roles = $this->presenter->user->roles;
 
         $template->heading   = $content->getHeading();
         $template->documents = $this->documentRepository->findRolesAllowedByTagsOrderedByName(array_keys($roles), $content->getTags());

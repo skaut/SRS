@@ -22,7 +22,7 @@ class PlacePointFormFactory
 
     private PlacePoint|null $placePoint = null;
 
-    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly PlacePointRepository $placePointRepository)
+    public function __construct(private BaseFormFactory $baseFormFactory, private PlacePointRepository $placePointRepository)
     {
     }
 
@@ -70,7 +70,7 @@ class PlacePointFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() == $form['cancel']) {
+        if ($form->isSubmitted() === $form['cancel']) {
             return;
         }
 

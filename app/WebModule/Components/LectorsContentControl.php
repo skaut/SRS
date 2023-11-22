@@ -10,11 +10,11 @@ use App\Model\Cms\Dto\ContentDto;
 use App\Model\User\Repositories\UserRepository;
 
 /**
- * Komponenta obsahu s přehledem lektorů.
+ * Komponenta s přehledem lektorů.
  */
 class LectorsContentControl extends BaseContentControl
 {
-    public function __construct(private readonly UserRepository $userRepository, private readonly RoleRepository $roleRepository)
+    public function __construct(private UserRepository $userRepository, private RoleRepository $roleRepository)
     {
     }
 

@@ -24,7 +24,7 @@ use function unlink;
  */
 class ClearCacheCommand extends Command
 {
-    public function __construct(private readonly string $dir)
+    public function __construct(private string $dir)
     {
         parent::__construct();
     }

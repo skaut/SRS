@@ -9,21 +9,18 @@ use App\Model\Acl\Role;
 use App\Model\Cms\Dto\ContentDto;
 use App\Model\Cms\Repositories\FaqRepository;
 use App\WebModule\Forms\FaqFormFactory;
-use App\WebModule\Presenters\WebBasePresenter;
 use Nette\Application\UI\Form;
 use stdClass;
 
-use function assert;
-
 /**
- * Komponenta obsahu s FAQ.
+ * Komponenta s FAQ.
  */
 class FaqContentControl extends BaseContentControl
 {
     public function __construct(
-        private readonly FaqFormFactory $faqFormFactory,
-        private readonly FaqRepository $faqRepository,
-        private readonly RoleRepository $roleRepository,
+        private FaqFormFactory $faqFormFactory,
+        private FaqRepository $faqRepository,
+        private RoleRepository $roleRepository,
     ) {
     }
 
@@ -37,19 +34,18 @@ class FaqContentControl extends BaseContentControl
 
         $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
 
-        $template->guestRole = $this->getPresenter()->getUser()->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
+        $user                = $this->getPresenter()->user;
+        $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
 
         $template->render();
     }
 
     public function createComponentFaqForm(): Form
     {
-        $p = $this->getPresenter();
-        assert($p instanceof WebBasePresenter);
+        $form = $this->faqFormFactory->create($this->getPresenter()->getUser()->id);
 
-        $form = $this->faqFormFactory->create($p->getDbUser());
-
-        $form->onSuccess[] = static function (Form $form, stdClass $values) use ($p): void {
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
+            $p = $this->getPresenter();
             $p->flashMessage('web.faq_content.add_question_successful', 'success');
             $p->redirect('this');
         };

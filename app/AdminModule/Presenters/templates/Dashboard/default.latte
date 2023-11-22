@@ -83,7 +83,7 @@
                         <div class="row">
                             <div class="col-6 mb-3">
                                 <a href="{plink Payments:Payments:default}" class="btn btn-secondary btn-sm btn-block">
-                                    <span class="fa fa-2x fa-money-bill-1"></span><br>{_admin.menu.payments}
+                                    <span class="fa fa-2x fa-money-bill"></span><br>{_admin.menu.payments}
                                 </a>
                             </div>
                         </div>
@@ -106,7 +106,27 @@
                 </div>
             </div>
 
-            <div class="col-4 mb-4" n:if="$user->isAllowed($resourceMailing, $permissionManage)">
+            <div class="col-4 mb-4" n:if="$user->isAllowed($resourceGroups, $permissionManage)">
+                <div class="card h-100">
+                    <div class="card-body pb-1">
+                        <h5 class="card-title">{_admin.menu.groups}</h5>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <a href="{plink Groups:Groups:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-user-group"></span><br>{_admin.groups.menu.groups}
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <a href="{plink Groups:Status:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-user-group"></span><br>{_admin.groups.menu.statuses}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                                <div class="col-4 mb-4" n:if="$user->isAllowed($resourceMailing, $permissionManage)">
                 <div class="card h-100">
                     <div class="card-body pb-1">
                         <h5 class="card-title">{_admin.menu.mailing}</h5>
@@ -184,6 +204,11 @@
                             <div class="col-2 mb-3">
                                 <a href="{plink Configuration:SkautIs:default}" class="btn btn-secondary btn-sm btn-block">
                                     <span class="fa fa-2x fa-rotate"></span><br>{_admin.configuration.menu.skautis}
+                                </a>
+                            </div>
+                            <div class="col-2 mb-3">
+                                <a href="{plink Configuration:Group:default}" class="btn btn-secondary btn-sm btn-block">
+                                    <span class="fa fa-2x fa-rotate"></span><br>{_admin.configuration.menu.group}
                                 </a>
                             </div>
                             <div class="col-2 mb-3">

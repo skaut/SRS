@@ -15,7 +15,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class IsAllowedRegisterProgramsQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private readonly QueryBus $queryBus)
+    public function __construct(private QueryBus $queryBus)
     {
     }
 

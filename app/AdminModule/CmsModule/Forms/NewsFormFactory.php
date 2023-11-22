@@ -25,7 +25,7 @@ class NewsFormFactory
      */
     private News|null $news = null;
 
-    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly NewsRepository $newsRepository)
+    public function __construct(private BaseFormFactory $baseFormFactory, private NewsRepository $newsRepository)
     {
     }
 
@@ -82,7 +82,7 @@ class NewsFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() == $form['cancel']) {
+        if ($form->isSubmitted() === $form['cancel']) {
             return;
         }
 

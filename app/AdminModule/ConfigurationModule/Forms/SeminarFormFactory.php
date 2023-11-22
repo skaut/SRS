@@ -31,10 +31,10 @@ class SeminarFormFactory
     use Nette\SmartObject;
 
     public function __construct(
-        private readonly BaseFormFactory $baseFormFactory,
-        private readonly CommandBus $commandBus,
-        private readonly QueryBus $queryBus,
-        private readonly SubeventRepository $subeventRepository,
+        private BaseFormFactory $baseFormFactory,
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private SubeventRepository $subeventRepository,
     ) {
     }
 

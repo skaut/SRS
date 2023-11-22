@@ -22,7 +22,7 @@ class CustomMultiSelectValue extends CustomInputValue
      * @var string[]
      */
     #[ORM\Column(type: 'simple_array', nullable: true)]
-    protected array|null $value;
+    protected array $value = [];
 
     /** @return string[] */
     public function getValue(): array
@@ -33,11 +33,7 @@ class CustomMultiSelectValue extends CustomInputValue
     /** @param string[] $value */
     public function setValue(array $value): void
     {
-        if (empty($value)) {
-            $this->value = null;
-        } else {
-            $this->value = $value;
-        }
+        $this->value = $value;
     }
 
     /**

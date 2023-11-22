@@ -19,7 +19,6 @@ use App\Model\Enums\ApplicationState;
 use App\Model\Enums\MaturityType;
 use App\Model\Enums\PaymentState;
 use App\Model\Enums\PaymentType;
-use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Payment\Payment;
@@ -41,6 +40,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Nette;
 use Nette\Localization\Translator;
@@ -64,21 +64,21 @@ class ApplicationService
     use Nette\SmartObject;
 
     public function __construct(
-        private readonly CommandBus $commandBus,
-        private readonly QueryBus $queryBus,
-        private readonly EntityManagerInterface $em,
-        private readonly ApplicationRepository $applicationRepository,
-        private readonly UserRepository $userRepository,
-        private readonly AclService $aclService,
-        private readonly RoleRepository $roleRepository,
-        private readonly SubeventRepository $subeventRepository,
-        private readonly DiscountService $discountService,
-        private readonly VariableSymbolRepository $variableSymbolRepository,
-        private readonly UserService $userService,
-        private readonly Translator $translator,
-        private readonly PaymentRepository $paymentRepository,
-        private readonly IncomeProofRepository $incomeProofRepository,
-        private readonly EventBus $eventBus,
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em,
+        private ApplicationRepository $applicationRepository,
+        private UserRepository $userRepository,
+        private AclService $aclService,
+        private RoleRepository $roleRepository,
+        private SubeventRepository $subeventRepository,
+        private DiscountService $discountService,
+        private VariableSymbolRepository $variableSymbolRepository,
+        private MailService $mailService,
+        private UserService $userService,
+        private Translator $translator,
+        private PaymentRepository $paymentRepository,
+        private IncomeProofRepository $incomeProofRepository,
+        private EventBus $eventBus,
     ) {
     }
 
@@ -134,7 +134,7 @@ class ApplicationService
             new SettingDateValueAsTextQuery(Settings::EDIT_REGISTRATION_TO),
         );
 
-        $this->commandBus->handle(new CreateTemplateMail(
+        $this->mailService->sendMailFromTemplate(
             new ArrayCollection(
                 [$user],
             ),
@@ -150,7 +150,7 @@ class ApplicationService
                     new SettingStringValueQuery(Settings::ACCOUNT_NUMBER),
                 ),
             ],
-        ));
+        );
     }
 
     /**
@@ -239,7 +239,7 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
-        $this->commandBus->handle(new CreateTemplateMail(
+        $this->mailService->sendMailFromTemplate(
             new ArrayCollection(
                 [$user],
             ),
@@ -249,7 +249,7 @@ class ApplicationService
                 TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                 TemplateVariable::USERS_ROLES => implode(', ', $roles->map(static fn (Role $role) => $role->getName())->toArray()),
             ],
-        ));
+        );
     }
 
     /**
@@ -301,7 +301,7 @@ class ApplicationService
         });
 
         if ($state === ApplicationState::CANCELED) {
-            $this->commandBus->handle(new CreateTemplateMail(
+            $this->mailService->sendMailFromTemplate(
                 new ArrayCollection(
                     [$user],
                 ),
@@ -312,9 +312,9 @@ class ApplicationService
                         new SettingStringValueQuery(Settings::SEMINAR_NAME),
                     ),
                 ],
-            ));
+            );
         } elseif ($state === ApplicationState::CANCELED_NOT_PAID) {
-            $this->commandBus->handle(new CreateTemplateMail(
+            $this->mailService->sendMailFromTemplate(
                 new ArrayCollection(
                     [$user],
                 ),
@@ -327,7 +327,7 @@ class ApplicationService
                         ),
                     ),
                 ],
-            ));
+            );
         }
     }
 
@@ -349,7 +349,7 @@ class ApplicationService
             $this->updateUserPaymentInfo($user);
         });
 
-        $this->commandBus->handle(new CreateTemplateMail(
+        $this->mailService->sendMailFromTemplate(
             new ArrayCollection(
                 [$user],
             ),
@@ -361,7 +361,7 @@ class ApplicationService
                 ),
                 TemplateVariable::USERS_SUBEVENTS => $user->getSubeventsText(),
             ],
-        ));
+        );
     }
 
     /**
@@ -407,7 +407,7 @@ class ApplicationService
             $this->decrementSubeventsOccupancy($application->getSubevents());
         });
 
-        $this->commandBus->handle(new CreateTemplateMail(
+        $this->mailService->sendMailFromTemplate(
             new ArrayCollection(
                 [$application->getUser()],
             ),
@@ -419,7 +419,7 @@ class ApplicationService
                 ),
                 TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
             ],
-        ));
+        );
     }
 
     /**
@@ -462,7 +462,7 @@ class ApplicationService
             $this->decrementSubeventsOccupancy($application->getSubevents());
         });
 
-        $this->commandBus->handle(new CreateTemplateMail(
+        $this->mailService->sendMailFromTemplate(
             new ArrayCollection(
                 [$application->getUser()],
             ),
@@ -474,7 +474,7 @@ class ApplicationService
                 ),
                 TemplateVariable::USERS_SUBEVENTS => $application->getUser()->getSubeventsText(),
             ],
-        ));
+        );
     }
 
     /**
@@ -518,7 +518,7 @@ class ApplicationService
         });
 
         if ($paymentDate !== null && $oldPaymentDate === null) {
-            $this->commandBus->handle(new CreateTemplateMail(
+            $this->mailService->sendMailFromTemplate(
                 new ArrayCollection(
                     [
                         $application->getUser(),
@@ -532,7 +532,7 @@ class ApplicationService
                     ),
                     TemplateVariable::APPLICATION_SUBEVENTS => $application->getSubeventsText(),
                 ],
-            ));
+            );
         }
     }
 
@@ -787,6 +787,7 @@ class ApplicationService
      * @param Collection<int, Role> $roles
      *
      * @throws SettingsItemNotFoundException
+     * @throws ORMException
      * @throws OptimisticLockException
      * @throws ReflectionException
      * @throws Throwable
@@ -838,6 +839,7 @@ class ApplicationService
      * @param Collection<int, Subevent> $subevents
      *
      * @throws SettingsItemNotFoundException
+     * @throws ORMException
      * @throws OptimisticLockException
      * @throws ReflectionException
      * @throws Throwable
@@ -885,6 +887,7 @@ class ApplicationService
     /**
      * Vypočítá datum splatnosti podle zvolené metody.
      *
+     * @throws ReflectionException
      * @throws Throwable
      */
     private function countMaturityDate(): DateTimeImmutable|null

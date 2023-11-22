@@ -9,11 +9,11 @@ use App\Model\User\User;
 class SubeventsQuery
 {
     public function __construct(
-        private readonly bool $explicitOnly = false,
-        private readonly bool $registerableNowOnly = false,
-        private readonly User|null $user = null,
-        private readonly bool $userNotRegisteredOnly = false,
-        private readonly bool $includeUserRegistered = false,
+        private bool $explicitOnly = false,
+        private bool $registerableNowOnly = false,
+        private User|null $user = null,
+        private bool $userNotRegisteredOnly = false,
+        private bool $includeUserRegistered = false,
     ) {
     }
 

@@ -40,6 +40,7 @@ menu:
     payments: "Platby"
     acl: "Role"
     mailing: "Mailing"
+    groups: "Skupiny"
     configuration: "Nastavení"
     help: "Nápověda"
 
@@ -625,11 +626,24 @@ mailing:
         heading: "Historie"
         datetime: "Odesláno"
         subject: "Předmět"
-        recipient_users: "Příjemci - uživatelé"
         recipient_roles: "Příjemci - role"
         recipient_subevents: "Příjemci - podakce"
-        recipient_emails: "Příjemci - e-maily"
+        recipient_users: "Příjemci - uživatelé"
         automatic: "Automatický"
+
+groups:
+    menu:
+        statuses: "Statusy"
+        groups: "Skupiny"
+
+    status:
+        heading: "Statusy"
+
+    group:
+        heading: "Skupiny"
+
+        column:
+            name: "Název"
 
 configuration:
     menu:
@@ -641,6 +655,7 @@ configuration:
         place: "Místo"
         mailing: "Mailing"
         skautis: "SkautIS"
+        group: "Skupinová registrace"
         web: "Web"
         system: "Systém"
         subevents: "Podakce"
@@ -818,10 +833,16 @@ configuration:
     place_points_saved: "Mapový bod byl úspěšně uložen."
 
     mailing_heading: "Mailing"
+    mailing_email: "E-mail pro mailing"
+    mailing_email_empty: "Zadejte e-mail."
+    mailing_email_format: "Zadejte e-mail ve správném formátu."
     mailing_contact_form_recipients: "E-maily pro zaslání zpráv z kontaktního formuláře"
     mailing_contact_form_recipients_empty: "Zadete alespoň jeden e-mail."
     mailing_contact_form_recipients_format: "Zadejte e-mailové adresy oddělené čárkou."
     mailing_contact_form_guests_allowed: "povolit kontaktní formulář pro nepřihlášené uživatele"
+    mailing_email_verification_needed: "Změna e-mailu čeká na ověření. Ověřit ji můžete pomocí odkazu zaslaného na nový e-mail."
+    mailing_email_verification_successful: "E-mail byl úspěšně ověřen."
+    mailing_email_verification_error: "E-mail se nepodařilo ověřit."
 
     skautis_event_heading: "Propojení s akcí ve skautIS"
     skautis_event_type: "Typ skautIS akce"
@@ -838,6 +859,11 @@ configuration:
     skautis_event_education_subevent: "Podakce"
     skautis_event_education_skaut_is_courses: "Propojené skautIS kurzy"
     skautis_event_education_connection_saved: "Propojení se skautIS kurzy bylo úspěšně uloženo."
+
+    group_heading: "Nastavení skupin"
+    group_min_members: "Minimální počet členů"
+    group_max_members: "Maximální počet členů"
+    group_fill_term: "Termín pro naplnění skupiny členy"
 
     web_heading: "Web"
     web_logo: "Logo"

@@ -18,8 +18,6 @@ use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Services\CommandBus;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Attributes\Inject;
@@ -54,7 +52,7 @@ class BlocksPresenter extends ProgramBasePresenter
 
     public function renderDefault(): void
     {
-        $this->template->emptyUserInfo = empty($this->dbUser->getAbout());
+        $this->template->emptyUserInfo = empty($this->dbuser->getAbout());
 
         $this->session->getSection('srs')->programId = 0;
     }
@@ -78,7 +76,7 @@ class BlocksPresenter extends ProgramBasePresenter
     {
         $block = $this->blockRepository->findById($id);
 
-        if (! $this->dbUser->isAllowedModifyBlock($block)) {
+        if (! $this->userRepository->findById($this->getUser()->getId())->isAllowedModifyBlock($block)) {
             $this->flashMessage('admin.program.blocks.message.edit_not_allowed', 'danger');
             $this->redirect('Blocks:default');
         }
@@ -137,12 +135,8 @@ class BlocksPresenter extends ProgramBasePresenter
         return $this->programAttendeesGridControlFactory->create();
     }
 
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
     protected function createComponentBlockForm(): Form
     {
-        return $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getDbUser());
+        return $this->blockFormFactory->create((int) $this->getParameter('id'), $this->getUser()->getId());
     }
 }

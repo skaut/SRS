@@ -15,44 +15,27 @@ class TicketCheckInfo
 {
     use Nette\SmartObject;
 
-    /** Jméno účastníka. */
     #[JMS\Type(values: 'string')]
     private string $attendeeName;
 
-    /** Věk účastníka. */
     #[JMS\Type(values: 'integer')]
     private int $attendeeAge;
 
-    /** Odkaz na fotku účastníka. */
     #[JMS\Type(values: 'string')]
     private string|null $attendeePhoto;
 
-    /** Má účastník propojený účet? */
-    #[JMS\Type(values: 'boolean')]
-    private bool $attendeeMember;
-
-    /**
-     * Role účastníka.
-     * @var string[]
-     */
+    /** @var string[] */
     #[JMS\Type(values: 'array')]
     private array $roles;
 
-    /**
-     * Podakce účastníka.
-     * @var SubeventInfo[]
-     */
+    /** @var SubeventInfo[] */
     #[JMS\Type(values: 'array<App\ApiModule\Dto\Tickets\SubeventInfo>')]
     private array $subevents;
 
-    /** Má účastník podakci? */
     #[JMS\Type(values: 'boolean')]
     private bool $hasSubevent;
 
-    /**
-     * Seznam časů kontroly vstupenky.
-     * @var DateTimeImmutable[]
-     */
+    /** @var DateTimeImmutable[] */
     #[JMS\Type(values: 'array<DateTimeImmutable>')]
     private array $subeventChecks;
 
@@ -69,11 +52,6 @@ class TicketCheckInfo
     public function setAttendeePhoto(string|null $attendeePhoto): void
     {
         $this->attendeePhoto = $attendeePhoto;
-    }
-
-    public function setAttendeeMember(bool $attendeeMember): void
-    {
-        $this->attendeeMember = $attendeeMember;
     }
 
     /** @param string[] $roles */

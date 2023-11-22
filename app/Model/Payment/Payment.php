@@ -74,7 +74,7 @@ class Payment
      *
      * @var Collection<int, Application>
      */
-    #[ORM\OneToMany(mappedBy: 'payment', targetEntity: Application::class, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'payment', cascade: ['persist'])]
     protected Collection $pairedApplications;
 
     /**

@@ -12,11 +12,11 @@ use App\Services\QueryBus;
 use Throwable;
 
 /**
- * Komponenta obsahu s místem.
+ * Komponenta s místem.
  */
 class PlaceContentControl extends BaseContentControl
 {
-    public function __construct(private readonly QueryBus $queryBus, private readonly PlacePointRepository $placePointRepository)
+    public function __construct(private QueryBus $queryBus, private PlacePointRepository $placePointRepository)
     {
     }
 

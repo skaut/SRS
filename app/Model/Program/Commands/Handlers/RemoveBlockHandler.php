@@ -14,9 +14,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class RemoveBlockHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private readonly CommandBus $commandBus,
-        private readonly EntityManagerInterface $em,
-        private readonly BlockRepository $blockRepository,
+        private CommandBus $commandBus,
+        private EntityManagerInterface $em,
+        private BlockRepository $blockRepository,
     ) {
     }
 

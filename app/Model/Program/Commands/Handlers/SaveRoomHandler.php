@@ -10,7 +10,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SaveRoomHandler implements MessageHandlerInterface
 {
-    public function __construct(private readonly RoomRepository $roomRepository)
+    public function __construct(private RoomRepository $roomRepository)
     {
     }
 

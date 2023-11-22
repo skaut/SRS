@@ -14,9 +14,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class SaveCategoryHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private readonly EventBus $eventBus,
-        private readonly EntityManagerInterface $em,
-        private readonly CategoryRepository $categoryRepository,
+        private EventBus $eventBus,
+        private EntityManagerInterface $em,
+        private CategoryRepository $categoryRepository,
     ) {
     }
 

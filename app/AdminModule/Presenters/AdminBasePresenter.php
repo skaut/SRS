@@ -49,7 +49,7 @@ abstract class AdminBasePresenter extends BasePresenter
     /**
      * Přihlášený uživatel.
      */
-    public User $dbUser;
+    public User|null $dbuser = null;
 
     /** @throws AbortException */
     public function startup(): void
@@ -71,7 +71,7 @@ abstract class AdminBasePresenter extends BasePresenter
             $this->redirect(':Web:Page:default');
         }
 
-        $this->dbUser = $this->userRepository->findById($this->user->id);
+        $this->dbuser = $this->userRepository->findById($this->user->id);
     }
 
     /**
@@ -82,7 +82,7 @@ abstract class AdminBasePresenter extends BasePresenter
     {
         parent::beforeRender();
 
-        $this->template->dbUser = $this->dbUser;
+        $this->template->dbuser = $this->dbuser;
 
         $this->template->resourceAcl           = SrsResource::ACL;
         $this->template->resourceCms           = SrsResource::CMS;
@@ -91,6 +91,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->resourcePayments      = SrsResource::PAYMENTS;
         $this->template->resourceMailing       = SrsResource::MAILING;
         $this->template->resourceProgram       = SrsResource::PROGRAM;
+        $this->template->resourceGroups        = SrsResource::GROUPS;
 
         $this->template->permissionAccess            = Permission::ACCESS;
         $this->template->permissionManage            = Permission::MANAGE;
@@ -103,7 +104,7 @@ abstract class AdminBasePresenter extends BasePresenter
         $this->template->footer      = $this->queryBus->handle(new SettingStringValueQuery(Settings::FOOTER));
         $this->template->seminarName = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
 
-        $skautIsUserId                = $this->dbUser->getSkautISUserId();
+        $skautIsUserId                = $this->dbuser->getSkautISUserId();
         $skautIsRoles                 = $this->skautIsService->getUserRoles($skautIsUserId);
         $skautIsRoleSelectedId        = $this->skautIsService->getUserRoleId();
         $skautIsRoleSelected          = array_filter($skautIsRoles, static fn (stdClass $r) => $r->ID === $skautIsRoleSelectedId);
@@ -133,10 +134,5 @@ abstract class AdminBasePresenter extends BasePresenter
     {
         $this->skautIsService->updateUserRole($roleId);
         $this->redirect('this');
-    }
-
-    public function getDbUser(): User
-    {
-        return $this->dbUser;
     }
 }

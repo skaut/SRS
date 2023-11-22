@@ -18,10 +18,10 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class ProgramCreatedEventListener implements MessageHandlerInterface
 {
     public function __construct(
-        private readonly CommandBus $commandBus,
-        private readonly QueryBus $queryBus,
-        private readonly EntityManagerInterface $em,
-        private readonly UserRepository $userRepository,
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository,
     ) {
     }
 

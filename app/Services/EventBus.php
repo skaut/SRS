@@ -8,7 +8,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 final class EventBus
 {
-    public function __construct(private readonly MessageBusInterface $bus)
+    public function __construct(private MessageBusInterface $bus)
     {
     }
 

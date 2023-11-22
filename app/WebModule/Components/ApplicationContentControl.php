@@ -12,28 +12,27 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\Authenticator;
 use App\Services\QueryBus;
 use App\WebModule\Forms\ApplicationFormFactory;
-use App\WebModule\Presenters\WebBasePresenter;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\UI\Form;
 use stdClass;
 use Throwable;
 
-use function assert;
-
 /**
- * Komponenta obsahu s přihláškou.
+ * Komponenta s přihláškou.
  */
 class ApplicationContentControl extends BaseContentControl
 {
     public function __construct(
-        private readonly QueryBus $queryBus,
-        private readonly ApplicationFormFactory $applicationFormFactory,
-        private readonly Authenticator $authenticator,
-        private readonly RoleRepository $roleRepository,
-        private readonly SubeventRepository $subeventRepository,
+        private QueryBus $queryBus,
+        private ApplicationFormFactory $applicationFormFactory,
+        private Authenticator $authenticator,
+        private UserRepository $userRepository,
+        private RoleRepository $roleRepository,
+        private SubeventRepository $subeventRepository,
         public IApplicationsGridControlFactory $applicationsGridControlFactory,
         public CustomInputRepository $customInputRepository,
     ) {
@@ -52,20 +51,17 @@ class ApplicationContentControl extends BaseContentControl
             $template->heading = $content->getHeading();
         }
 
-        $presenter = $this->getPresenter();
-        assert($presenter instanceof WebBasePresenter);
+        $template->backlink = $this->getPresenter()->getHttpRequest()->getUrl()->getPath();
 
-        $template->backlink = $presenter->getHttpRequest()->getUrl()->getPath();
-
-        $user                = $presenter->getUser();
+        $user                = $this->getPresenter()->user;
         $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
         $template->testRole  = Role::TEST;
 
         $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         if ($user->isLoggedIn()) {
-            $dbUser              = $presenter->getDbUser();
-            $userHasFixedFeeRole = $dbUser->hasFixedFeeRole();
+            $dbuser              = $this->userRepository->findById($user->id);
+            $userHasFixedFeeRole = $dbuser->hasFixedFeeRole();
 
             $template->unapprovedRole      = $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName());
             $template->nonregisteredRole   = $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName());
@@ -73,14 +69,14 @@ class ApplicationContentControl extends BaseContentControl
             $template->registrationStart   = $this->roleRepository->getRegistrationStart();
             $template->registrationEnd     = $this->roleRepository->getRegistrationEnd();
             $template->bankAccount         = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
-            $template->dbUser              = $dbUser;
+            $template->dbuser              = $dbuser;
             $template->userHasFixedFeeRole = $userHasFixedFeeRole;
 
             $template->usersApplications = $explicitSubeventsExists && $userHasFixedFeeRole
-                ? $dbUser->getNotCanceledApplications()
+                ? $dbuser->getNotCanceledApplications()
                 : ($explicitSubeventsExists
-                    ? $dbUser->getNotCanceledSubeventsApplications()
-                    : $dbUser->getNotCanceledRolesApplications()
+                    ? $dbuser->getNotCanceledSubeventsApplications()
+                    : $dbuser->getNotCanceledRolesApplications()
                 );
         }
 
@@ -103,21 +99,18 @@ class ApplicationContentControl extends BaseContentControl
      */
     protected function createComponentApplicationForm(): Form
     {
-        $p = $this->getPresenter();
-        assert($p instanceof WebBasePresenter);
+        $form = $this->applicationFormFactory->create($this->getPresenter()->user->id);
 
-        $form = $this->applicationFormFactory->create($p->getDbUser());
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
+            $this->getPresenter()->flashMessage('web.application_content.register_successful', 'success');
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) use ($p): void {
-            $p->flashMessage('web.application_content.register_successful', 'success');
+            $this->authenticator->updateRoles($this->getPresenter()->user);
 
-            $this->authenticator->updateRoles($p->getUser());
-
-            $p->redirect('this');
+            $this->getPresenter()->redirect('this');
         };
 
-        $this->applicationFormFactory->onSkautIsError[] = static function () use ($p): void {
-            $p->flashMessage('web.application_content.register_synchronization_failed', 'danger');
+        $this->applicationFormFactory->onSkautIsError[] = function (): void {
+            $this->getPresenter()->flashMessage('web.application_content.register_synchronization_failed', 'danger');
         };
 
         return $form;

@@ -13,27 +13,28 @@ use Ublaboo\Mailing\IMessageData;
 class SrsMailData implements IMessageData
 {
     /**
-     * @param string    $senderName Jméno odesilatele mailu.
-     * @param Recipient $to         Příjemce mailu.
-     * @param string    $subject    Předmět mailu.
-     * @param string    $text       Text mailu.
+     * @param Recipient   $from       Odesilatel mailu.
+     * @param Recipient[] $recipients Příjemci mailu.
+     * @param string      $subject    Předmět mailu.
+     * @param string      $text       Text mailu.
      */
     public function __construct(
-        private readonly string $senderName,
-        private readonly Recipient $to,
-        private readonly string $subject,
-        private readonly string $text,
+        private Recipient $from,
+        private array $recipients,
+        private string $subject,
+        private string $text,
     ) {
     }
 
-    public function getSenderName(): string
+    public function getFrom(): Recipient
     {
-        return $this->senderName;
+        return $this->from;
     }
 
-    public function getTo(): Recipient
+    /** @return Recipient[] */
+    public function getRecipients(): array
     {
-        return $this->to;
+        return $this->recipients;
     }
 
     public function getSubject(): string

@@ -19,7 +19,7 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Services\AclService;
 use App\Utils\Helpers;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use stdClass;
@@ -41,7 +41,7 @@ class CustomInputFormFactory
      */
     private CustomInput|null $customInput = null;
 
-    public function __construct(private readonly BaseFormFactory $baseFormFactory, private readonly CustomInputRepository $customInputRepository, private readonly AclService $aclService, private readonly RoleRepository $roleRepository)
+    public function __construct(private BaseFormFactory $baseFormFactory, private CustomInputRepository $customInputRepository, private AclService $aclService, private RoleRepository $roleRepository)
     {
     }
 
@@ -53,6 +53,8 @@ class CustomInputFormFactory
         $this->customInput = $this->customInputRepository->findById($id);
 
         $form = $this->baseFormFactory->create();
+
+        $form->addHidden('id');
 
         $form->addText('name', 'admin.configuration.custom_inputs_name')
             ->addRule(Form::FILLED, 'admin.configuration.custom_inputs_name_empty');
@@ -81,6 +83,7 @@ class CustomInputFormFactory
             $optionsText->setDisabled();
 
             $form->setDefaults([
+                'id' => $id,
                 'name' => $this->customInput->getName(),
                 'roles' => Helpers::getIds($this->customInput->getRoles()),
                 'type' => $this->customInput->getType(),
@@ -104,11 +107,11 @@ class CustomInputFormFactory
      * Zpracuje formulář.
      *
      * @throws NonUniqueResultException
-     * @throws NoResultException
+     * @throws ORMException
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() == $form['cancel']) {
+        if ($form->isSubmitted() === $form['cancel']) {
             return;
         }
 

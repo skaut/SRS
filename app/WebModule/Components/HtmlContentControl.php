@@ -7,7 +7,7 @@ namespace App\WebModule\Components;
 use App\Model\Cms\Dto\HtmlContentDto;
 
 /**
- * Komponenta obsahu s HTML.
+ * Komponenta s HTML.
  */
 class HtmlContentControl extends BaseContentControl
 {

@@ -8,7 +8,7 @@ use App\Model\Program\Room;
 
 class SaveRoom
 {
-    public function __construct(private readonly Room $room)
+    public function __construct(private Room $room)
     {
     }
 

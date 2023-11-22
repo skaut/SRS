@@ -11,7 +11,7 @@
         <div class="col">
             <p>{_web.member.text_info}</p>
             <p>{_web.member.text_instructions}</p>
-            <p>{_web.member.text_details, ['username' => $dbUser->getUsername(), 'securityCode' => $dbUser->getSecurityCode()]|noescape}</p>
+            <p>{_web.member.text_details, ['username' => $dbuser->getUsername(), 'securityCode' => $dbuser->getSecurityCode()]|noescape}</p>
             <p>{_web.member.text_note}</p>
         </div>
     </div>

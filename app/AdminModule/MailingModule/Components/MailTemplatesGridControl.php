@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\MailingModule\Components;
 
 use App\Model\Mailing\Repositories\TemplateRepository;
+use Doctrine\ORM\ORMException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;
@@ -17,7 +18,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class MailTemplatesGridControl extends Control
 {
-    public function __construct(private readonly Translator $translator, private readonly TemplateRepository $templateRepository)
+    public function __construct(private Translator $translator, private TemplateRepository $templateRepository)
     {
     }
 
@@ -65,6 +66,7 @@ class MailTemplatesGridControl extends Control
     /**
      * Aktivuje/deaktivuje automatický e-mail.
      *
+     * @throws ORMException
      * @throws AbortException
      */
     public function changeActive(string $id, string $active): void

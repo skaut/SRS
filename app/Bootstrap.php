@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
-use Nette\Bootstrap\Configurator;
+use Nette\Configurator;
 
 use function dirname;
 use function getenv;

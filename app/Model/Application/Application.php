@@ -62,7 +62,7 @@ abstract class Application
     /**
      * Uživatel.
      */
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'applications')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'applications', cascade: ['persist'])]
     protected User $user;
 
     /**
@@ -120,7 +120,7 @@ abstract class Application
     /**
      * Spárovaná platba.
      */
-    #[ORM\ManyToOne(targetEntity: Payment::class, cascade: ['persist'], inversedBy: 'pairedApplications')]
+    #[ORM\ManyToOne(targetEntity: Payment::class, inversedBy: 'pairedApplications', cascade: ['persist'])]
     protected Payment|null $payment = null;
 
     /**
@@ -318,9 +318,13 @@ abstract class Application
 
     public function setPayment(Payment|null $payment): void
     {
-        $this->payment?->removePairedApplication($this);
+        if ($this->payment !== null) {
+            $this->payment->removePairedApplication($this);
+        }
 
-        $payment?->addPairedApplication($this);
+        if ($payment !== null) {
+            $payment->addPairedApplication($this);
+        }
 
         $this->payment = $payment;
     }

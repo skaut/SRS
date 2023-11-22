@@ -9,5 +9,8 @@ namespace App\WebModule\Components;
  */
 interface IApplicationsGridControlFactory
 {
+    /**
+     * Vytvoří komponentu.
+     */
     public function create(): ApplicationsGridControl;
 }

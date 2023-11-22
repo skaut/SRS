@@ -9,19 +9,15 @@ use App\Model\Settings\Queries\SettingDateValueAsTextQuery;
 use App\Model\Settings\Repositories\SettingsRepository;
 use App\Utils\Helpers;
 use DateTimeImmutable;
-use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SettingDateValueAsTextQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private readonly SettingsRepository $settingsRepository)
+    public function __construct(private SettingsRepository $settingsRepository)
     {
     }
 
-    /**
-     * @throws SettingsItemNotFoundException
-     * @throws Exception
-     */
+    /** @throws SettingsItemNotFoundException */
     public function __invoke(SettingDateValueAsTextQuery $query): string|null
     {
         $setting = $this->settingsRepository->findByItem($query->getItem());

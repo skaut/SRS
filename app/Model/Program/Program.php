@@ -27,7 +27,7 @@ class Program
     /**
      * Programový blok.
      */
-    #[ORM\ManyToOne(targetEntity: Block::class, cascade: ['persist'], inversedBy: 'programs')]
+    #[ORM\ManyToOne(targetEntity: Block::class, inversedBy: 'programs', cascade: ['persist'])]
     protected Block $block;
 
     /**
@@ -35,7 +35,7 @@ class Program
      *
      * @var Collection<int, ProgramApplication>
      */
-    #[ORM\OneToMany(mappedBy: 'program', targetEntity: ProgramApplication::class, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: ProgramApplication::class, mappedBy: 'program', cascade: ['persist'])]
     protected Collection $programApplications;
 
     /**
@@ -47,7 +47,7 @@ class Program
     /**
      * Místnost.
      */
-    #[ORM\ManyToOne(targetEntity: Room::class, cascade: ['persist'], inversedBy: 'programs')]
+    #[ORM\ManyToOne(targetEntity: Room::class, inversedBy: 'programs', cascade: ['persist'])]
     protected Room|null $room = null;
 
     /**
@@ -104,9 +104,13 @@ class Program
 
     public function setRoom(Room|null $room): void
     {
-        $this->room?->removeProgram($this);
+        if ($this->room !== null) {
+            $this->room->removeProgram($this);
+        }
 
-        $room?->addProgram($this);
+        if ($room !== null) {
+            $room->addProgram($this);
+        }
 
         $this->room = $room;
     }

@@ -30,7 +30,7 @@ use function assert;
  */
 class ProgramCategoriesGridControl extends Control
 {
-    public function __construct(private readonly CommandBus $commandBus, private readonly Translator $translator, private readonly CategoryRepository $categoryRepository, private readonly RoleRepository $roleRepository, private readonly AclService $aclService)
+    public function __construct(private CommandBus $commandBus, private Translator $translator, private CategoryRepository $categoryRepository, private RoleRepository $roleRepository, private AclService $aclService)
     {
     }
 

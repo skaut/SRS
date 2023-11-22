@@ -20,7 +20,6 @@ use App\Model\CustomInput\CustomText;
 use App\Model\CustomInput\CustomTextValue;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\CustomInput\Repositories\CustomInputValueRepository;
-use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
@@ -29,8 +28,8 @@ use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
-use App\Services\CommandBus;
 use App\Services\FilesService;
+use App\Services\IMailService;
 use App\Services\QueryBus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,18 +60,18 @@ class AdditionalInformationFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private User $user;
+    private User|null $user = null;
 
     public function __construct(
-        private readonly BaseFormFactory $baseFormFactory,
-        private readonly CommandBus $commandBus,
-        private readonly QueryBus $queryBus,
-        private readonly EntityManagerInterface $em,
-        private readonly UserRepository $userRepository,
-        private readonly CustomInputRepository $customInputRepository,
-        private readonly ApplicationService $applicationService,
-        private readonly CustomInputValueRepository $customInputValueRepository,
-        private readonly FilesService $filesService,
+        private BaseFormFactory $baseFormFactory,
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository,
+        private CustomInputRepository $customInputRepository,
+        private ApplicationService $applicationService,
+        private CustomInputValueRepository $customInputValueRepository,
+        private FilesService $filesService,
+        private IMailService $mailService,
     ) {
     }
 
@@ -82,9 +81,9 @@ class AdditionalInformationFormFactory
      * @throws SettingsItemNotFoundException
      * @throws Throwable
      */
-    public function create(User $user): Form
+    public function create(int $userId): Form
     {
-        $this->user                = $user;
+        $this->user                = $this->userRepository->findById($userId);
         $isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
 
         $form = $this->baseFormFactory->create();
@@ -187,13 +186,13 @@ class AdditionalInformationFormFactory
             $custom->setDisabled(! $isAllowedEditCustomInputs);
 
             if ($customInput->isMandatory()) {
-                $custom->addRule(Form::FILLED, 'web.profile.additional_information.custom_input_empty');
+                $custom->addRule(Form::FILLED, 'web.profile.custom_input_empty');
             }
         }
 
-        $form->addTextArea('about', 'web.profile.additional_information.about_me');
+        $form->addTextArea('about', 'web.profile.about_me');
 
-        $form->addSubmit('submit', 'web.profile.additional_information.update');
+        $form->addSubmit('submit', 'web.profile.update_additional_information');
 
         $form->setDefaults([
             'about' => $this->user->getAbout(),
@@ -280,10 +279,10 @@ class AdditionalInformationFormFactory
 
             if ($customInputValueChanged) {
                 assert($this->user instanceof User);
-                $this->commandBus->handle(new CreateTemplateMail(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
+                $this->mailService->sendMailFromTemplate(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                     TemplateVariable::USER => $this->user->getDisplayName(),
-                ]));
+                ]);
             }
         });
     }

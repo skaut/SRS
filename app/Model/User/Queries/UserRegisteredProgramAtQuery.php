@@ -9,7 +9,7 @@ use App\Model\User\User;
 
 class UserRegisteredProgramAtQuery
 {
-    public function __construct(private readonly User $user, private readonly Program $program)
+    public function __construct(private User $user, private Program $program)
     {
     }
 

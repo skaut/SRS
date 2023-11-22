@@ -8,7 +8,7 @@ use App\Model\Program\Category;
 
 class SaveCategory
 {
-    public function __construct(private readonly Category $category, private readonly Category|null $categoryOld)
+    public function __construct(private Category $category, private Category|null $categoryOld)
     {
     }
 

@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UserAllowedBlocksQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private readonly BlockRepository $blockRepository)
+    public function __construct(private BlockRepository $blockRepository)
     {
     }
 

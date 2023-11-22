@@ -7,7 +7,7 @@ namespace App\WebModule\Components;
 use App\Model\Cms\Dto\TextContentDto;
 
 /**
- * Komponenta obsahu s textem.
+ * Komponenta s textem.
  */
 class TextContentControl extends BaseContentControl
 {

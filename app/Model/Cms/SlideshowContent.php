@@ -8,7 +8,6 @@ use App\Model\Cms\Dto\ContentDto;
 use App\Model\Cms\Dto\SlideshowContentDto;
 use App\Services\FilesService;
 use Doctrine\ORM\Mapping as ORM;
-use JsonException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Http\FileUpload;
@@ -60,8 +59,6 @@ class SlideshowContent extends Content implements IContent
 
     /**
      * Přidá do formuláře pro editaci stránky formulář pro úpravu obsahu.
-     *
-     * @throws JsonException
      */
     public function addContentForm(Form $form): Form
     {

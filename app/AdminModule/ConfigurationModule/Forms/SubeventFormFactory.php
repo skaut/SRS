@@ -33,10 +33,10 @@ class SubeventFormFactory
     private Subevent|null $subevent = null;
 
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly BaseFormFactory $baseFormFactory,
-        private readonly SubeventRepository $subeventRepository,
-        private readonly SubeventService $subeventService,
+        private EntityManagerInterface $em,
+        private BaseFormFactory $baseFormFactory,
+        private SubeventRepository $subeventRepository,
+        private SubeventService $subeventService,
     ) {
     }
 
@@ -48,6 +48,8 @@ class SubeventFormFactory
         $this->subevent = $this->subeventRepository->findById($id);
 
         $form = $this->baseFormFactory->create();
+
+        $form->addHidden('id');
 
         $nameText = $form->addText('name', 'admin.configuration.subevents_name')
             ->addRule(Form::FILLED, 'admin.configuration.subevents_name_empty');
@@ -121,6 +123,7 @@ class SubeventFormFactory
 
         if ($this->subevent) {
             $form->setDefaults([
+                'id' => $id,
                 'name' => $this->subevent->getName(),
                 'registerableFrom' => $this->subevent->getRegisterableFrom(),
                 'registerableTo' => $this->subevent->getRegisterableTo(),
@@ -141,7 +144,7 @@ class SubeventFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() == $form['cancel']) {
+        if ($form->isSubmitted() === $form['cancel']) {
             return;
         }
 

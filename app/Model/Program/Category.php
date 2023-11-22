@@ -42,7 +42,7 @@ class Category
      *
      * @var Collection<int, Block>
      */
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Block::class, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Block::class, mappedBy: 'category', cascade: ['persist'])]
     #[ORM\OrderBy(['name' => 'ASC'])]
     protected Collection $blocks;
 

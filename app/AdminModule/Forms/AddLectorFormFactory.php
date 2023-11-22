@@ -30,10 +30,10 @@ class AddLectorFormFactory
     use Nette\SmartObject;
 
     public function __construct(
-        private readonly BaseFormFactory $baseFormFactory,
-        private readonly UserRepository $userRepository,
-        private readonly RoleRepository $roleRepository,
-        private readonly FilesService $filesService,
+        private BaseFormFactory $baseFormFactory,
+        private UserRepository $userRepository,
+        private RoleRepository $roleRepository,
+        private FilesService $filesService,
     ) {
     }
 
@@ -106,7 +106,7 @@ class AddLectorFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() == $form['cancel']) {
+        if ($form->isSubmitted() === $form['cancel']) {
             return;
         }
 

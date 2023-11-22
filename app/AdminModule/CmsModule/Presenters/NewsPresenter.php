@@ -40,13 +40,13 @@ class NewsPresenter extends CmsBasePresenter
         $form = $this->newsFormFactory->create((int) $this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() == $form['cancel']) {
+            if ($form->isSubmitted() === $form['cancel']) {
                 $this->redirect('News:default');
             }
 
             $this->flashMessage('admin.cms.news.message.save_success', 'success');
 
-            if ($form->isSubmitted() == $form['submitAndContinue']) {
+            if ($form->isSubmitted() === $form['submitAndContinue']) {
                 $id = $values->id ?: $this->newsRepository->findLastId(); // todo: nahradit
                 $this->redirect('News:edit', ['id' => $id]);
             } else {

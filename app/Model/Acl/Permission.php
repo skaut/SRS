@@ -81,7 +81,7 @@ class Permission
     /**
      * Prostředek oprávnění.
      */
-    #[ORM\ManyToOne(targetEntity: SrsResource::class, cascade: ['persist'], inversedBy: 'permissions')]
+    #[ORM\ManyToOne(targetEntity: SrsResource::class, inversedBy: 'permissions', cascade: ['persist'])]
     protected SrsResource $resource;
 
     public function __construct(string $name, SrsResource $resource)

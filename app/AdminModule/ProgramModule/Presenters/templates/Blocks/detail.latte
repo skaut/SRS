@@ -107,12 +107,12 @@
                     <tr style="background-color: {$background|noescape}">
                         <td class="text-right">
                             {var $startDay = $program->getStart()->format('N')}
-                            {_"common.day.$startDay"}
+                            {_common.day.$startDay}
                             {$program->getStart()|date:"j. n. G:i"}
                         </td>
                         <td class="text-right">
                             {var $endDay = $program->getEnd()->format('N')}
-                            {_"common.day.$endDay"}
+                            {_common.day.$endDay}
                             {$program->getEnd()|date:"j. n. G:i"}
                         </td>
                         <td>

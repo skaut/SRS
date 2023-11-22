@@ -21,7 +21,6 @@ use App\Model\Enums\PaymentType;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
-use JsonException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Attributes\Inject;
@@ -152,15 +151,15 @@ class UsersPresenter extends AdminBasePresenter
     /** @throws Throwable */
     public function handleCancelRegistration(): void
     {
-        $user = $this->userRepository->findById((int) $this->getParameter('id'));
+        $user       = $this->userRepository->findById((int) $this->getParameter('id'));
+        $loggedUser = $this->userRepository->findById($this->user->id);
 
-        $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED, $this->dbUser);
+        $this->applicationService->cancelRegistration($user, ApplicationState::CANCELED, $loggedUser);
 
         $this->flashMessage('admin.users.users_registration_canceled', 'success');
         $this->redirect('this');
     }
 
-    /** @throws AbortException */
     public function handleRemovePhoto(): void
     {
         $user = $this->userRepository->findById((int) $this->getParameter('id'));
@@ -181,7 +180,7 @@ class UsersPresenter extends AdminBasePresenter
         $form = $this->addLectorFormFactory->create();
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() != $form['cancel']) {
+            if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.users.users_saved', 'success');
             }
 
@@ -191,13 +190,12 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    /** @throws JsonException */
     protected function createComponentEditUserPersonalDetailsForm(): Form
     {
         $form = $this->editUserPersonalDetailsFormFactory->create((int) $this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() != $form['cancel']) {
+            if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.users.users_saved', 'success');
             }
 
@@ -207,7 +205,6 @@ class UsersPresenter extends AdminBasePresenter
         return $form;
     }
 
-    /** @throws JsonException */
     protected function createComponentEditUserSeminarForm(): Form
     {
         $form = $this->editUserSeminarFormFactory->create((int) $this->getParameter('id'));
@@ -221,7 +218,7 @@ class UsersPresenter extends AdminBasePresenter
         };
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() != $form['cancel']) {
+            if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.users.users_saved', 'success');
             }
 

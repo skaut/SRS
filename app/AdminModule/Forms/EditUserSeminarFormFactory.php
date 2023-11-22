@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
-use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\CustomInput\CustomCheckbox;
@@ -23,7 +22,6 @@ use App\Model\CustomInput\CustomText;
 use App\Model\CustomInput\CustomTextValue;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\CustomInput\Repositories\CustomInputValueRepository;
-use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Queries\SettingStringValueQuery;
@@ -32,8 +30,8 @@ use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
-use App\Services\CommandBus;
 use App\Services\FilesService;
+use App\Services\IMailService;
 use App\Services\QueryBus;
 use App\Services\UserService;
 use App\Utils\Helpers;
@@ -41,7 +39,6 @@ use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
-use JsonException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
@@ -72,32 +69,32 @@ class EditUserSeminarFormFactory
     private User|null $user = null;
 
     public function __construct(
-        private readonly BaseFormFactory $baseFormFactory,
-        private readonly CommandBus $commandBus,
-        private readonly QueryBus $queryBus,
-        private readonly EntityManagerInterface $em,
-        private readonly UserRepository $userRepository,
-        private readonly CustomInputRepository $customInputRepository,
-        private readonly CustomInputValueRepository $customInputValueRepository,
-        private readonly RoleRepository $roleRepository,
-        private readonly ApplicationService $applicationService,
-        private readonly Validators $validators,
-        private readonly FilesService $filesService,
-        private readonly AclService $aclService,
-        private readonly UserService $userService,
+        private BaseFormFactory $baseFormFactory,
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository,
+        private CustomInputRepository $customInputRepository,
+        private CustomInputValueRepository $customInputValueRepository,
+        private RoleRepository $roleRepository,
+        private ApplicationService $applicationService,
+        private Validators $validators,
+        private FilesService $filesService,
+        private IMailService $mailService,
+        private AclService $aclService,
+        private UserService $userService,
     ) {
     }
 
     /**
      * Vytvoří formulář.
-     *
-     * @throws JsonException
      */
     public function create(int $id): Form
     {
         $this->user = $this->userRepository->findById($id);
 
         $form = $this->baseFormFactory->create();
+
+        $form->addHidden('id');
 
         if (! $this->user->isExternalLector()) {
             $rolesSelect = $form->addMultiSelect(
@@ -233,6 +230,7 @@ class EditUserSeminarFormFactory
             ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->setDefaults([
+            'id' => $id,
             'roles' => $this->roleRepository->findRolesIds($this->user->getRoles()),
             'approved' => $this->user->isApproved(),
             'attended' => $this->user->isAttended(),
@@ -252,14 +250,11 @@ class EditUserSeminarFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() == $form['cancel']) {
+        if ($form->isSubmitted() === $form['cancel']) {
             return;
         }
 
-        $presenter = $form->getPresenter();
-        assert($presenter instanceof AdminBasePresenter);
-
-        $loggedUser = $presenter->getDbUser();
+        $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
         $this->em->wrapInTransaction(function () use ($values, $loggedUser): void {
             $customInputValueChanged = false;
@@ -338,10 +333,10 @@ class EditUserSeminarFormFactory
 
             if ($customInputValueChanged) {
                 assert($this->user instanceof User);
-                $this->commandBus->handle(new CreateTemplateMail(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
+                $this->mailService->sendMailFromTemplate(new ArrayCollection([$this->user]), null, Template::CUSTOM_INPUT_VALUE_CHANGED, [
                     TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
                     TemplateVariable::USER => $this->user->getDisplayName(),
-                ]));
+                ]);
             }
         });
     }

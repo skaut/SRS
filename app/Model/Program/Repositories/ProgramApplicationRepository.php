@@ -18,9 +18,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
-use Exception;
 use Throwable;
 
 use function assert;
@@ -115,10 +112,6 @@ class ProgramApplicationRepository extends AbstractRepository
         return new ArrayCollection($result);
     }
 
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
     private function userAttendsSameProgram(User $user, Program $program): bool
     {
         $result = $this->createQueryBuilder('pa')
@@ -134,10 +127,6 @@ class ProgramApplicationRepository extends AbstractRepository
         return $result !== 0;
     }
 
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
     private function userAttendsSameBlockProgram(User $user, Block $block): bool
     {
         $result = $this->createQueryBuilder('pa')
@@ -153,11 +142,6 @@ class ProgramApplicationRepository extends AbstractRepository
         return $result !== 0;
     }
 
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     * @throws Exception
-     */
     private function userAttendsOrAlternatesConflictingProgram(User $user, Program $program): bool
     {
         $start = $program->getStart();

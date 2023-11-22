@@ -15,16 +15,15 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
 use App\Services\QueryBus;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
-use App\WebModule\Presenters\WebBasePresenter;
 use Doctrine\ORM\NonUniqueResultException;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Localization\Translator;
@@ -35,25 +34,24 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
-use function assert;
-
 /**
  * Komponenta pro správu vlastních přihlášek.
  */
-class ApplicationsGridControl extends Control
+class ApplicationsGridControl extends BaseContentControl
 {
     private User|null $user = null;
 
     public function __construct(
-        private readonly QueryBus $queryBus,
-        private readonly Translator $translator,
-        private readonly ApplicationRepository $applicationRepository,
-        private readonly SubeventRepository $subeventRepository,
-        private readonly ApplicationService $applicationService,
-        private readonly Validators $validators,
-        private readonly RolesApplicationRepository $rolesApplicationRepository,
-        private readonly SubeventsApplicationRepository $subeventsApplicationRepository,
-        private readonly SubeventService $subeventService,
+        private QueryBus $queryBus,
+        private Translator $translator,
+        private ApplicationRepository $applicationRepository,
+        private UserRepository $userRepository,
+        private SubeventRepository $subeventRepository,
+        private ApplicationService $applicationService,
+        private Validators $validators,
+        private RolesApplicationRepository $rolesApplicationRepository,
+        private SubeventsApplicationRepository $subeventsApplicationRepository,
+        private SubeventService $subeventService,
     ) {
     }
 
@@ -76,10 +74,7 @@ class ApplicationsGridControl extends Control
      */
     public function createComponentApplicationsGrid(string $name): void
     {
-        $presenter = $this->getPresenter();
-        assert($presenter instanceof WebBasePresenter);
-
-        $this->user = $presenter->getDbUser();
+        $this->user = $this->userRepository->findById($this->getPresenter()->getUser()->getId());
 
         $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
         $userHasFixedFeeRole     = $this->user->hasFixedFeeRole();
@@ -105,25 +100,25 @@ class ApplicationsGridControl extends Control
         $grid->setDataSource($qb);
         $grid->setPagination(false);
 
-        $grid->addColumnDateTime('applicationDate', 'web.profile.seminar.applications.application_date')
+        $grid->addColumnDateTime('applicationDate', 'web.profile.applications_application_date')
             ->setFormat(Helpers::DATETIME_FORMAT);
 
         if ($userHasFixedFeeRole) {
-            $grid->addColumnText('roles', 'web.profile.seminar.applications.roles', 'rolesText');
+            $grid->addColumnText('roles', 'web.profile.applications_roles', 'rolesText');
         }
 
         if ($explicitSubeventsExists) {
-            $grid->addColumnText('subevents', 'web.profile.seminar.applications.subevents', 'subeventsText');
+            $grid->addColumnText('subevents', 'web.profile.applications_subevents', 'subeventsText');
         }
 
-        $grid->addColumnNumber('fee', 'web.profile.seminar.applications.fee');
+        $grid->addColumnNumber('fee', 'web.profile.applications_fee');
 
-        $grid->addColumnText('variable_symbol', 'web.profile.seminar.applications.variable_symbol', 'variableSymbolText');
+        $grid->addColumnText('variable_symbol', 'web.profile.applications_variable_symbol', 'variableSymbolText');
 
-        $grid->addColumnDateTime('maturityDate', 'web.profile.seminar.applications.maturity_date')
+        $grid->addColumnDateTime('maturityDate', 'web.profile.applications_maturity_date')
             ->setFormat(Helpers::DATE_FORMAT);
 
-        $grid->addColumnText('state', 'web.profile.seminar.applications.state')
+        $grid->addColumnText('state', 'web.profile.applications_state')
             ->setRenderer(fn (Application $row) => $this->applicationService->getStateText($row));
 
         if ($explicitSubeventsExists) {
@@ -132,9 +127,9 @@ class ApplicationsGridControl extends Control
                     $options = $this->subeventService->getSubeventsOptionsWithCapacity(true, true, true, false, $this->user);
                     $container->addMultiSelect('subevents', '', $options)
                         ->setHtmlAttribute('class', 'datagrid-multiselect')
-                        ->addRule(Form::FILLED, 'web.profile.seminar.applications.subevents_empty');
+                        ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
                 };
-                $grid->getInlineAdd()->setText($this->translator->translate('web.profile.seminar.applications.add_subevents'));
+                $grid->getInlineAdd()->setText($this->translator->translate('web.profile.applications_add_subevents'));
                 $grid->getInlineAdd()->onSubmit[] = [$this, 'add'];
             }
 
@@ -142,9 +137,9 @@ class ApplicationsGridControl extends Control
                 $options = $this->subeventService->getSubeventsOptionsWithCapacity(true, true, false, true, $this->user);
                 $container->addMultiSelect('subevents', '', $options)
                     ->setHtmlAttribute('class', 'datagrid-multiselect')
-                    ->addRule(Form::FILLED, 'web.profile.seminar.applications.subevents_empty');
+                    ->addRule(Form::FILLED, 'web.profile.applications_subevents_empty');
             };
-            $grid->getInlineEdit()->setText($this->translator->translate('web.profile.seminar.applications.edit'));
+            $grid->getInlineEdit()->setText($this->translator->translate('web.profile.applications_edit'));
             $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, SubeventsApplication $item): void {
                 $container->setDefaults([
                     'subevents' => $this->subeventRepository->findSubeventsIds($item->getSubevents()),
@@ -154,24 +149,24 @@ class ApplicationsGridControl extends Control
             $grid->allowRowsInlineEdit(fn (Application $item) => $this->applicationService->isAllowedEditApplication($item));
         }
 
-        $grid->addAction('generatePaymentProofBank', 'web.profile.seminar.applications.download_payment_proof');
+        $grid->addAction('generatePaymentProofBank', 'web.profile.applications_download_payment_proof');
         $grid->allowRowsAction('generatePaymentProofBank', static fn (Application $item) => $item->getState() === ApplicationState::PAID
             && $item->getPaymentMethod() === PaymentType::BANK
             && $item->getPaymentDate());
 
         if ($this->user->getNotCanceledSubeventsApplications()->count() > 1) {
-            $grid->addAction('cancelApplication', 'web.profile.seminar.applications.cancel_application')
+            $grid->addAction('cancelApplication', 'web.profile.applications_cancel_application')
                 ->addAttributes([
                     'data-toggle' => 'confirmation',
-                    'data-content' => $this->translator->translate('web.profile.seminar.applications.cancel_application_confirm'),
+                    'data-content' => $this->translator->translate('web.profile.applications_cancel_application_confirm'),
                 ])->setClass('btn btn-xs btn-danger');
             $grid->allowRowsAction('cancelApplication', fn (Application $item) => $this->applicationService->isAllowedEditApplication($item));
         }
 
         $grid->setItemsDetail()
             ->setRenderCondition(static fn (Application $item) => $item->isWaitingForPayment())
-            ->setText($this->translator->translate('web.profile.seminar.applications.pay'))
-            ->setIcon('money-bill-1')
+            ->setText($this->translator->translate('web.profile.applications_pay'))
+            ->setIcon('money')
             ->setClass('btn btn-xs btn-primary ajax')
             ->setTemplateParameters([
                 'account' => $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER)),
@@ -205,7 +200,7 @@ class ApplicationsGridControl extends Control
         $p = $this->getPresenter();
 
         if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
-            $p->flashMessage('web.profile.seminar.applications.subevents_capacity_occupied', 'danger');
+            $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
             $p->redrawControl('flashes');
 
             return;
@@ -214,7 +209,7 @@ class ApplicationsGridControl extends Control
         foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
             if (! $this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
                 $message = $this->translator->translate(
-                    'web.profile.seminar.applications.incompatible_subevents_selected',
+                    'web.profile.applications_incompatible_subevents_selected',
                     null,
                     ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()],
                 );
@@ -226,7 +221,7 @@ class ApplicationsGridControl extends Control
 
             if (! $this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
                 $message = $this->translator->translate(
-                    'web.profile.seminar.applications.required_subevents_not_selected',
+                    'web.profile.applications_required_subevents_not_selected',
                     null,
                     ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()],
                 );
@@ -239,7 +234,7 @@ class ApplicationsGridControl extends Control
 
         $this->applicationService->addSubeventsApplication($this->user, $selectedSubevents, $this->user);
 
-        $p->flashMessage('web.profile.seminar.applications.add_subevents_successful', 'success');
+        $p->flashMessage('web.profile.applications_add_subevents_successful', 'success');
         $p->redrawControl('flashes');
     }
 
@@ -269,7 +264,7 @@ class ApplicationsGridControl extends Control
             $p = $this->getPresenter();
 
             if (! $this->validators->validateSubeventsCapacities($selectedSubevents, $this->user)) {
-                $p->flashMessage('web.profile.seminar.applications.subevents_capacity_occupied', 'danger');
+                $p->flashMessage('web.profile.applications_subevents_capacity_occupied', 'danger');
                 $p->redrawControl('flashes');
 
                 return;
@@ -278,7 +273,7 @@ class ApplicationsGridControl extends Control
             foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
                 if (! $this->validators->validateSubeventsIncompatible($selectedAndUsersSubevents, $subevent)) {
                     $message = $this->translator->translate(
-                        'web.profile.seminar.applications.incompatible_subevents_selected',
+                        'web.profile.applications_incompatible_subevents_selected',
                         null,
                         ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()],
                     );
@@ -290,7 +285,7 @@ class ApplicationsGridControl extends Control
 
                 if (! $this->validators->validateSubeventsRequired($selectedAndUsersSubevents, $subevent)) {
                     $message = $this->translator->translate(
-                        'web.profile.seminar.applications.required_subevents_not_selected',
+                        'web.profile.applications_required_subevents_not_selected',
                         null,
                         ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()],
                     );
@@ -303,7 +298,7 @@ class ApplicationsGridControl extends Control
 
             $this->applicationService->updateSubeventsApplication($application, $selectedSubevents, $this->user);
 
-            $p->flashMessage('web.profile.seminar.applications.edit_successful', 'success');
+            $p->flashMessage('web.profile.applications_edit_successful', 'success');
             $p->redrawControl('flashes');
         }
     }
@@ -333,7 +328,7 @@ class ApplicationsGridControl extends Control
 
         if ($application instanceof SubeventsApplication && $this->applicationService->isAllowedEditApplication($application)) {
             $this->applicationService->cancelSubeventsApplication($application, ApplicationState::CANCELED, $application->getUser());
-            $p->flashMessage('web.profile.seminar.applications.application_canceled', 'success');
+            $p->flashMessage('web.profile.applications_application_canceled', 'success');
         }
 
         $p->redirect('this');

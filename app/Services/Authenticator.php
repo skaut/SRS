@@ -9,6 +9,7 @@ use App\Model\Acl\Role;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use DateTimeImmutable;
+use Doctrine\ORM\ORMException;
 use Exception;
 use Nette;
 use Nette\Caching\Cache;
@@ -29,10 +30,10 @@ class Authenticator implements Nette\Security\Authenticator
     private Cache $userRolesCache;
 
     public function __construct(
-        private readonly UserRepository $userRepository,
-        private readonly RoleRepository $roleRepository,
+        private UserRepository $userRepository,
+        private RoleRepository $roleRepository,
         protected SkautIsService $skautIsService,
-        private readonly FilesService $filesService,
+        private FilesService $filesService,
         Storage $storage,
     ) {
         $this->userRolesCache = new Cache($storage, 'UserRoles');
@@ -41,6 +42,7 @@ class Authenticator implements Nette\Security\Authenticator
     /**
      * Autentizuje uživatele a případně vytvoří nového.
      *
+     * @throws ORMException
      * @throws Exception
      */
     public function authenticate(string $user, string $password): SimpleIdentity
@@ -133,13 +135,13 @@ class Authenticator implements Nette\Security\Authenticator
      */
     public function updateRoles(NS\User $user, Role|null $testedRole = null): void
     {
-        $dbUser = $this->userRepository->findById($user->id);
+        $dbuser = $this->userRepository->findById($user->id);
 
         $netteRoles = [];
 
         if (! $testedRole) {
-            if ($dbUser->isApproved()) {
-                foreach ($dbUser->getRoles() as $role) {
+            if ($dbuser->isApproved()) {
+                foreach ($dbuser->getRoles() as $role) {
                     $netteRoles[$role->getId()] = $role->getName();
                 }
             } else {

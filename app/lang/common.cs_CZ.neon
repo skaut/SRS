@@ -46,7 +46,6 @@ content:
         organizer: "Pořadatel"
         contact_form: "Kontaktní formulář"
         slideshow: "Slideshow"
-        ticket: "Vstupenka"
 
     default_heading:
         text: ""
@@ -65,7 +64,6 @@ content:
         organizer: "Pořadatel"
         contact_form: "Kontaktní formulář"
         slideshow: ""
-        ticket: "Vstupenka"
 
 area:
     main: "Hlavní oblast"

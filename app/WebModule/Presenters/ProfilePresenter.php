@@ -6,7 +6,6 @@ namespace App\WebModule\Presenters;
 
 use App\Model\Enums\PaymentType;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
-use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
@@ -14,10 +13,9 @@ use App\Model\User\Queries\UserAttendsProgramsQuery;
 use App\Services\ApplicationService;
 use App\Services\Authenticator;
 use App\Services\ExcelExportService;
+use App\Services\IMailService;
 use App\WebModule\Components\ApplicationsGridControl;
 use App\WebModule\Components\IApplicationsGridControlFactory;
-use App\WebModule\Components\ITicketControlFactory;
-use App\WebModule\Components\TicketControl;
 use App\WebModule\Forms\AdditionalInformationFormFactory;
 use App\WebModule\Forms\PersonalDetailsFormFactory;
 use App\WebModule\Forms\RolesFormFactory;
@@ -46,13 +44,13 @@ class ProfilePresenter extends WebBasePresenter
     public IApplicationsGridControlFactory $applicationsGridControlFactory;
 
     #[Inject]
-    public ITicketControlFactory $ticketControlFactory;
-
-    #[Inject]
     public ExcelExportService $excelExportService;
 
     #[Inject]
     public SubeventRepository $subeventRepository;
+
+    #[Inject]
+    public IMailService $mailService;
 
     #[Inject]
     public ApplicationService $applicationService;
@@ -83,9 +81,8 @@ class ProfilePresenter extends WebBasePresenter
         $this->template->pageName                  = $this->translator->translate('web.profile.title');
         $this->template->paymentMethodBank         = PaymentType::BANK;
         $this->template->isAllowedEditCustomInputs = $this->applicationService->isAllowedEditCustomInputs();
-        $this->template->userPrograms              = $this->queryBus->handle(new UserAttendsProgramsQuery($this->dbUser));
+        $this->template->userPrograms              = $this->queryBus->handle(new UserAttendsProgramsQuery($this->dbuser));
         $this->template->accountNumber             = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
-        $this->template->ticketsActive             = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM)) !== null;
     }
 
     /**
@@ -96,36 +93,33 @@ class ProfilePresenter extends WebBasePresenter
      */
     public function actionExportSchedule(): void
     {
-        $response = $this->excelExportService->exportUserSchedule($this->dbUser, 'harmonogram.xlsx');
+        $user     = $this->userRepository->findById($this->user->id);
+        $response = $this->excelExportService->exportUserSchedule($user, 'harmonogram.xlsx');
         $this->sendResponse($response);
     }
 
     protected function createComponentPersonalDetailsForm(): Form
     {
-        $form = $this->personalDetailsFormFactory->create($this->dbUser);
+        $form = $this->personalDetailsFormFactory->create($this->user->id);
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            $this->flashMessage('web.profile.personal_details.update_successful', 'success');
+            $this->flashMessage('web.profile.personal_details_update_successful', 'success');
             $this->redirect('this#personal-details');
         };
 
         $this->personalDetailsFormFactory->onSkautIsError[] = function (): void {
-            $this->flashMessage('web.profile.personal_details.synchronization_failed', 'danger');
+            $this->flashMessage('web.profile.personal_details_synchronization_failed', 'danger');
         };
 
         return $form;
     }
 
-    /**
-     * @throws Throwable
-     * @throws SettingsItemNotFoundException
-     */
     protected function createComponentAdditionalInformationForm(): Form
     {
-        $form = $this->additionalInformationFormFactory->create($this->dbUser);
+        $form = $this->additionalInformationFormFactory->create($this->user->id);
 
         $form->onSuccess[] = function (): void {
-            $this->flashMessage('web.profile.additional_information.update_successfull', 'success');
+            $this->flashMessage('web.profile.additional_information_update_successfull', 'success');
             $this->redirect('this#additional-information');
         };
 
@@ -138,13 +132,15 @@ class ProfilePresenter extends WebBasePresenter
      */
     protected function createComponentRolesForm(): Form
     {
-        $form = $this->rolesFormFactory->create($this->dbUser);
+        $form = $this->rolesFormFactory->create($this->user->id);
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() == $form['submit']) {
-                $this->flashMessage('web.profile.roles.roles_changed', 'success');
-            } elseif ($form->isSubmitted() == $form['cancelRegistration']) {
-                $this->flashMessage('web.profile.roles.registration_canceled', 'success');
+            if ($form->isSubmitted() === $form['submit']) {
+                $this->flashMessage('web.profile.roles_changed', 'success');
+            } elseif ($form->isSubmitted() === $form['cancelRegistration']) {
+                $this->flashMessage('web.profile.registration_canceled', 'success');
+            } elseif ($form->isSubmitted() === $form['downloadTicket']) {
+                $this->redirect(':Export:Ticket:pdf');
             }
 
             $this->authenticator->updateRoles($this->user);
@@ -157,10 +153,5 @@ class ProfilePresenter extends WebBasePresenter
     protected function createComponentApplicationsGrid(): ApplicationsGridControl
     {
         return $this->applicationsGridControlFactory->create();
-    }
-
-    protected function createComponentTicket(): TicketControl
-    {
-        return $this->ticketControlFactory->create();
     }
 }

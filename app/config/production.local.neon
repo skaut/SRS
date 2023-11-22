@@ -20,11 +20,6 @@ mail:
     password: "__CONFIG_MAIL_PASSWORD__"
     secure: __CONFIG_MAIL_SECURE__
 
-mailing:
-    mails: [
-        senderEmail: "__CONFIG_MAILING_SENDER_EMAIL__"
-    ]
-
 recaptcha:
     siteKey: "__CONFIG_RECAPTCHA_SITE_KEY__"
     secretKey: "__CONFIG_RECAPTCHA_SECRET_KEY__"

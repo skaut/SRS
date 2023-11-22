@@ -26,7 +26,6 @@ use App\Utils\Helpers;
 use App\Utils\Validators;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Exception;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\Checkbox;
@@ -48,7 +47,7 @@ class BlockFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private User $user;
+    private User|null $user = null;
 
     /**
      * Upravovaný programový blok.
@@ -61,15 +60,15 @@ class BlockFormFactory
     private bool $subeventsExists;
 
     public function __construct(
-        private readonly CommandBus $commandBus,
-        private readonly QueryBus $queryBus,
-        private readonly BaseFormFactory $baseFormFactory,
-        private readonly BlockRepository $blockRepository,
-        private readonly UserRepository $userRepository,
-        private readonly CategoryRepository $categoryRepository,
-        private readonly SubeventRepository $subeventRepository,
-        private readonly SubeventService $subeventService,
-        private readonly Validators $validators,
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private BaseFormFactory $baseFormFactory,
+        private BlockRepository $blockRepository,
+        private UserRepository $userRepository,
+        private CategoryRepository $categoryRepository,
+        private SubeventRepository $subeventRepository,
+        private SubeventService $subeventService,
+        private Validators $validators,
     ) {
     }
 
@@ -79,14 +78,16 @@ class BlockFormFactory
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function create(int $id, User $user): Form
+    public function create(int $id, int $userId): Form
     {
         $this->block = $this->blockRepository->findById($id);
-        $this->user  = $user;
+        $this->user  = $this->userRepository->findById($userId);
 
         $this->subeventsExists = $this->subeventRepository->explicitSubeventsExists();
 
         $form = $this->baseFormFactory->create();
+
+        $form->addHidden('id');
 
         $form->addText('name', 'admin.program.blocks.common.name')
             ->addRule(Form::FILLED, 'admin.program.blocks.form.name_empty');
@@ -172,8 +173,9 @@ class BlockFormFactory
             $nameText->addRule(Form::IS_NOT_IN, 'admin.program.blocks.form.name_exists', $this->blockRepository->findOthersNames($id));
 
             $form->setDefaults([
+                'id' => $id,
                 'name' => $this->block->getName(),
-                'category' => $this->block->getCategory()?->getId(),
+                'category' => $this->block->getCategory() ? $this->block->getCategory()->getId() : null,
                 'lectors' => Helpers::getIds($this->block->getLectors()),
                 'duration' => $this->block->getDuration(),
                 'capacity' => $this->block->getCapacity(),
@@ -187,7 +189,7 @@ class BlockFormFactory
 
             if ($this->subeventsExists) {
                 $form->setDefaults([
-                    'subevent' => $this->block->getSubevent()?->getId(),
+                    'subevent' => $this->block->getSubevent() ? $this->block->getSubevent()->getId() : null,
                 ]);
             }
         } else {
@@ -213,7 +215,7 @@ class BlockFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() == $form['cancel']) {
+        if ($form->isSubmitted() === $form['cancel']) {
             $form->getPresenter()->redirect('Blocks:default');
         }
 
@@ -250,6 +252,9 @@ class BlockFormFactory
             $this->block->setSubevent($subevent);
             $this->block->setCategory($category);
             $this->block->setLectors($lectors);
+            $this->block->setPerex($values->perex);
+            $this->block->setDescription($values->description);
+            $this->block->setTools($values->tools);
         } else {
             $blockOld = clone $this->block;
 
@@ -261,18 +266,17 @@ class BlockFormFactory
             $this->block->setCapacity($capacity);
             $this->block->setAlternatesAllowed($alternatesAllowed);
             $this->block->setMandatory($mandatory);
+            $this->block->setPerex($values->perex);
+            $this->block->setDescription($values->description);
+            $this->block->setTools($values->tools);
         }
-
-        $this->block->setPerex($values->perex);
-        $this->block->setDescription($values->description);
-        $this->block->setTools($values->tools);
 
         try {
             $this->commandBus->handle(new SaveBlock($this->block, $blockOld));
 
             $form->getPresenter()->flashMessage('admin.program.blocks.message.save_success', 'success');
 
-            if ($form->isSubmitted() == $form['submitAndContinue']) {
+            if ($form->isSubmitted() === $form['submitAndContinue']) {
                 $form->getPresenter()->redirect('Blocks:edit', ['id' => $this->block->getId()]);
             } else {
                 $form->getPresenter()->redirect('Blocks:default');
@@ -290,8 +294,6 @@ class BlockFormFactory
      * Ověří, zda může být program automaticky přihlašovaný.
      *
      * @param string[]|int[] $args
-     *
-     * @throws Exception
      */
     public function validateAutoRegistered(Checkbox $field, array $args): bool
     {

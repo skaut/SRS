@@ -11,7 +11,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class UserByIdQueryHandler implements MessageHandlerInterface
 {
-    public function __construct(private readonly UserRepository $userRepository)
+    public function __construct(private UserRepository $userRepository)
     {
     }
 

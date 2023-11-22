@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace App\AdminModule\PaymentsModule\Forms;
 
 use App\AdminModule\Forms\BaseFormFactory;
-use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Application\Repositories\ApplicationRepository;
 use App\Model\Payment\Payment;
 use App\Model\Payment\Repositories\PaymentRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\ApplicationService;
 use Nette;
 use Nette\Application\UI\Form;
 use Nextras\FormComponents\Controls\DateControl;
 use stdClass;
 use Throwable;
-
-use function assert;
 
 /**
  * Formulář pro úpravu platby.
@@ -31,10 +29,11 @@ class EditPaymentFormFactory
     private Payment|null $payment = null;
 
     public function __construct(
-        private readonly BaseFormFactory $baseFormFactory,
-        private readonly PaymentRepository $paymentRepository,
-        private readonly ApplicationRepository $applicationRepository,
-        private readonly ApplicationService $applicationService,
+        private BaseFormFactory $baseFormFactory,
+        private PaymentRepository $paymentRepository,
+        private ApplicationRepository $applicationRepository,
+        private UserRepository $userRepository,
+        private ApplicationService $applicationService,
     ) {
     }
 
@@ -46,6 +45,8 @@ class EditPaymentFormFactory
         $this->payment = $this->paymentRepository->findById($id);
 
         $form = $this->baseFormFactory->create();
+
+        $form->addHidden('id');
 
         $inputDate = new DateControl('admin.payments.payments.date');
         $form->addComponent($inputDate, 'date');
@@ -87,6 +88,7 @@ class EditPaymentFormFactory
         );
 
         $form->setDefaults([
+            'id' => $id,
             'date' => $this->payment->getDate(),
             'amount' => $this->payment->getAmount(),
             'variableSymbol' => $this->payment->getVariableSymbol(),
@@ -105,13 +107,12 @@ class EditPaymentFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() != $form['cancel']) {
-            $presenter = $form->getPresenter();
-            assert($presenter instanceof AdminBasePresenter);
+        if ($form->isSubmitted() !== $form['cancel']) {
+            $loggedUser = $this->userRepository->findById($form->getPresenter()->user->id);
 
             $pairedApplications = $this->applicationRepository->findApplicationsByIds($values->pairedApplications);
 
-            $this->applicationService->updatePayment($this->payment, $values->date, $values->amount, $values->variableSymbol, $pairedApplications, $presenter->getDbUser());
+            $this->applicationService->updatePayment($this->payment, $values->date, $values->amount, $values->variableSymbol, $pairedApplications, $loggedUser);
         }
     }
 }

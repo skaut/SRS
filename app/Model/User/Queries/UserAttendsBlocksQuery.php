@@ -8,7 +8,7 @@ use App\Model\User\User;
 
 class UserAttendsBlocksQuery
 {
-    public function __construct(private readonly User $user)
+    public function __construct(private User $user)
     {
     }
 

@@ -6,7 +6,7 @@ namespace App\Model\Settings\Queries;
 
 class SettingBoolValueQuery
 {
-    public function __construct(private readonly string $item)
+    public function __construct(private string $item)
     {
     }
 

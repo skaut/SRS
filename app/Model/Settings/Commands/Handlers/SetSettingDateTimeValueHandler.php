@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SetSettingDateTimeValueHandler implements MessageHandlerInterface
 {
-    public function __construct(private readonly SettingsRepository $settingsRepository)
+    public function __construct(private SettingsRepository $settingsRepository)
     {
     }
 
@@ -24,7 +24,7 @@ class SetSettingDateTimeValueHandler implements MessageHandlerInterface
         if ($value === null) {
             $setting->setValue(null);
         } else {
-            $setting->setValue($value->format(DateTimeImmutable::ATOM));
+            $setting->setValue($value->format(DateTimeImmutable::ISO8601));
         }
 
         $this->settingsRepository->save($setting);

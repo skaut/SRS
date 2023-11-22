@@ -7,7 +7,7 @@
         <h3>{_admin.users.users_detail_personal_details}</h3>
         <div class="card card-body bg-light pb-1 mb-3">
             {if !$editPersonalDetails}
-                <div class="form-group row" n:if="$detailUser->hasPhoto()">
+                <div class="form-group row" n:if="$detailUser->getPhoto()">
                     <div class="col-3">{_admin.users.users_photo}</div>
                     <div class="col-9"><img src="{$detailUser->getPhoto()}"/></div>
                 </div>
@@ -182,12 +182,12 @@
                 <tr n:foreach="$detailUserPrograms as $program">
                     <td class="text-right">
                         {var $startDay = $program->getStart()->format('N')}
-                        {_"common.day.$startDay"}
+                        {_common.day.$startDay}
                         {$program->getStart()|date:"j. n. G:i"}
                     </td>
                     <td class="text-right">
                         {var $endDay = $program->getEnd()->format('N')}
-                        {_"common.day.$endDay"}
+                        {_common.day.$endDay}
                         {$program->getEnd()|date:"j. n. G:i"}
                     </td>
                     <td>{$program->getBlock()->getName()}</td>

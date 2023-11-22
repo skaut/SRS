@@ -74,27 +74,27 @@ class ApplicationFormFactory
     /**
      * Přihlášený uživatel.
      */
-    private User $user;
+    private User|null $user = null;
 
     /** @var callable[] */
     public array $onSkautIsError = [];
 
     public function __construct(
-        private readonly BaseFormFactory $baseFormFactory,
-        private readonly QueryBus $queryBus,
-        private readonly EntityManagerInterface $em,
-        private readonly UserRepository $userRepository,
-        private readonly RoleRepository $roleRepository,
-        private readonly CustomInputRepository $customInputRepository,
-        private readonly CustomInputValueRepository $customInputValueRepository,
-        private readonly SkautIsService $skautIsService,
-        private readonly SubeventRepository $subeventRepository,
-        private readonly AclService $aclService,
-        private readonly ApplicationService $applicationService,
-        private readonly Validators $validators,
-        private readonly FilesService $filesService,
-        private readonly SubeventService $subeventService,
-        private readonly Translator $translator,
+        private BaseFormFactory $baseFormFactory,
+        private QueryBus $queryBus,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository,
+        private RoleRepository $roleRepository,
+        private CustomInputRepository $customInputRepository,
+        private CustomInputValueRepository $customInputValueRepository,
+        private SkautIsService $skautIsService,
+        private SubeventRepository $subeventRepository,
+        private AclService $aclService,
+        private ApplicationService $applicationService,
+        private Validators $validators,
+        private FilesService $filesService,
+        private SubeventService $subeventService,
+        private Translator $translator,
     ) {
     }
 
@@ -104,11 +104,13 @@ class ApplicationFormFactory
      * @throws NonUniqueResultException
      * @throws Throwable
      */
-    public function create(User $user): Form
+    public function create(int $id): Form
     {
-        $this->user = $user;
+        $this->user = $this->userRepository->findById($id);
 
         $form = $this->baseFormFactory->create();
+
+        $form->addHidden('id');
 
         $inputSex = $form->addRadioList('sex', 'web.application_content.sex', Sex::getSexOptions());
 
@@ -164,6 +166,7 @@ class ApplicationFormFactory
         $form->addSubmit('submit', 'web.application_content.register');
 
         $form->setDefaults([
+            'id' => $id,
             'sex' => $this->user->getSex(),
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),

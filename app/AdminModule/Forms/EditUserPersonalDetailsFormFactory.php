@@ -7,7 +7,7 @@ namespace App\AdminModule\Forms;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\FilesService;
-use JsonException;
+use Doctrine\ORM\ORMException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\ImageException;
@@ -35,16 +35,14 @@ class EditUserPersonalDetailsFormFactory
     private User|null $user = null;
 
     public function __construct(
-        private readonly BaseFormFactory $baseFormFactory,
-        private readonly UserRepository $userRepository,
-        private readonly FilesService $filesService,
+        private BaseFormFactory $baseFormFactory,
+        private UserRepository $userRepository,
+        private FilesService $filesService,
     ) {
     }
 
     /**
      * Vytvoří formulář.
-     *
-     * @throws JsonException
      */
     public function create(int $id): Form
     {
@@ -52,13 +50,15 @@ class EditUserPersonalDetailsFormFactory
 
         $form = $this->baseFormFactory->create();
 
+        $form->addHidden('id');
+
         $photoUpload = $form->addUpload('photo', 'admin.users.users_photo');
         $photoUpload->setHtmlAttribute('accept', 'image/*')
             ->setHtmlAttribute('data-show-preview', 'true')
             ->addCondition(Form::FILLED)
             ->addRule(Form::IMAGE, 'admin.users.users_photo_format');
 
-        if ($this->user->hasPhoto()) {
+        if ($this->user->getPhoto() !== null) {
             $photoUpload->setHtmlAttribute('data-delete-url', '?do=removePhoto')
                 ->setHtmlAttribute('data-initial-preview', json_encode([$this->user->getPhoto()], JSON_THROW_ON_ERROR))
                 ->setHtmlAttribute('data-initial-preview-show-delete', 'true')
@@ -105,6 +105,7 @@ class EditUserPersonalDetailsFormFactory
             ->setHtmlAttribute('class', 'btn btn-warning');
 
         $form->setDefaults([
+            'id' => $id,
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),
             'nickName' => $this->user->getNickName(),
@@ -127,11 +128,12 @@ class EditUserPersonalDetailsFormFactory
      * Zpracuje formulář.
      *
      * @throws Nette\Utils\UnknownImageFileException
+     * @throws ORMException
      * @throws ImageException
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        if ($form->isSubmitted() == $form['cancel']) {
+        if ($form->isSubmitted() === $form['cancel']) {
             return;
         }
 

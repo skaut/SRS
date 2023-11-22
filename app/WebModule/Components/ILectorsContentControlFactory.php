@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\WebModule\Components;
 
 /**
- * Factory komponenty obsahu s přehledem lektorů.
+ * Factory komponenty s přehledem lektorů.
  */
 interface ILectorsContentControlFactory
 {

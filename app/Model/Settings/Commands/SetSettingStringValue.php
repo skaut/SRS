@@ -6,7 +6,7 @@ namespace App\Model\Settings\Commands;
 
 class SetSettingStringValue
 {
-    public function __construct(private readonly string $item, private readonly string|null $value)
+    public function __construct(private string $item, private string|null $value)
     {
     }
 

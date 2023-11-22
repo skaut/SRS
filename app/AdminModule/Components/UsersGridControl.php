@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Components;
 
-use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\CustomInput\CustomCheckbox;
@@ -36,6 +35,7 @@ use App\Services\UserService;
 use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
 use InvalidArgumentException;
@@ -51,7 +51,6 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
-use function assert;
 use function basename;
 
 /**
@@ -62,20 +61,20 @@ class UsersGridControl extends Control
     private SessionSection $sessionSection;
 
     public function __construct(
-        private readonly QueryBus $queryBus,
-        private readonly Translator $translator,
-        private readonly EntityManagerInterface $em,
-        private readonly UserRepository $userRepository,
-        private readonly CustomInputRepository $customInputRepository,
-        private readonly RoleRepository $roleRepository,
-        private readonly ExcelExportService $excelExportService,
-        private readonly Session $session,
-        private readonly AclService $aclService,
-        private readonly ApplicationService $applicationService,
-        private readonly UserService $userService,
-        private readonly SkautIsEventEducationService $skautIsEventEducationService,
-        private readonly SkautIsEventGeneralService $skautIsEventGeneralService,
-        private readonly SubeventService $subeventService,
+        private QueryBus $queryBus,
+        private Translator $translator,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository,
+        private CustomInputRepository $customInputRepository,
+        private RoleRepository $roleRepository,
+        private ExcelExportService $excelExportService,
+        private Session $session,
+        private AclService $aclService,
+        private ApplicationService $applicationService,
+        private UserService $userService,
+        private SkautIsEventEducationService $skautIsEventEducationService,
+        private SkautIsEventGeneralService $skautIsEventGeneralService,
+        private SubeventService $subeventService,
     ) {
         $this->sessionSection = $session->getSection('srs');
     }
@@ -450,6 +449,7 @@ class UsersGridControl extends Control
     /**
      * Změní stav uživatele.
      *
+     * @throws ORMException
      * @throws AbortException
      */
     public function changeApproved(string $id, string $approved): void
@@ -472,6 +472,7 @@ class UsersGridControl extends Control
     /**
      * Změní účast uživatele na semináři.
      *
+     * @throws ORMException
      * @throws AbortException
      */
     public function changeAttended(string $id, string $attended): void
@@ -528,7 +529,6 @@ class UsersGridControl extends Control
         $selectedRoles = $this->roleRepository->findRolesByIds($value);
 
         $p = $this->getPresenter();
-        assert($p instanceof AdminBasePresenter);
 
         // neni vybrana zadna role
         if ($selectedRoles->isEmpty()) {
@@ -566,7 +566,7 @@ class UsersGridControl extends Control
             return;
         }
 
-        $loggedUser = $p->getDbUser();
+        $loggedUser = $this->userRepository->findById($p->getUser()->id);
 
         $this->em->wrapInTransaction(function () use ($selectedRoles, $users, $loggedUser): void {
             foreach ($users as $user) {
@@ -613,9 +613,8 @@ class UsersGridControl extends Control
         $users = $this->userRepository->findUsersByIds($ids);
 
         $p = $this->getPresenter();
-        assert($p instanceof AdminBasePresenter);
 
-        $loggedUser = $p->getDbUser();
+        $loggedUser = $this->userRepository->findById($p->getUser()->id);
 
         $this->em->wrapInTransaction(function () use ($users, $paymentMethod, $loggedUser): void {
             foreach ($users as $user) {
@@ -873,7 +872,6 @@ class UsersGridControl extends Control
         return $options;
     }
 
-    /** @throws AbortException */
     private function reload(): void
     {
         $p = $this->getPresenter();

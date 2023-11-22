@@ -49,7 +49,7 @@ class SubeventsPresenter extends ConfigurationBasePresenter
         $form = $this->subeventFormFactory->create((int) $this->getParameter('id'));
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() != $form['cancel']) {
+            if ($form->isSubmitted() !== $form['cancel']) {
                 $this->flashMessage('admin.configuration.subevents_saved', 'success');
             }
 

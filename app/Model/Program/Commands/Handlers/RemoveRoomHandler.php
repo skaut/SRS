@@ -15,9 +15,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class RemoveRoomHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private readonly CommandBus $commandBus,
-        private readonly EntityManagerInterface $em,
-        private readonly RoomRepository $roomRepository,
+        private CommandBus $commandBus,
+        private EntityManagerInterface $em,
+        private RoomRepository $roomRepository,
     ) {
     }
 

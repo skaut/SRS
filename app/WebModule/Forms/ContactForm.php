@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace App\WebModule\Forms;
 
-use App\Model\Mailing\Commands\CreateTemplateMail;
 use App\Model\Mailing\Template;
 use App\Model\Mailing\TemplateVariable;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingArrayValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
+use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Services\CommandBus;
+use App\Services\IMailService;
 use App\Services\QueryBus;
-use App\WebModule\Presenters\WebBasePresenter;
 use Contributte\ReCaptcha\Forms\ReCaptchaField;
 use Contributte\ReCaptcha\ReCaptchaProvider;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,7 +23,6 @@ use stdClass;
 use Throwable;
 use Ublaboo\Mailing\Exception\MailingMailCreationException;
 
-use function assert;
 use function nl2br;
 use function str_replace;
 
@@ -46,10 +44,11 @@ class ContactForm extends UI\Control
     public array $onSave = [];
 
     public function __construct(
-        private readonly BaseFormFactory $baseFormFactory,
-        private readonly CommandBus $commandBus,
-        private readonly QueryBus $queryBus,
-        private readonly ReCaptchaProvider $recaptchaProvider,
+        private BaseFormFactory $baseFormFactory,
+        private QueryBus $queryBus,
+        private UserRepository $userRepository,
+        private ReCaptchaProvider $recaptchaProvider,
+        private IMailService $mailService,
     ) {
     }
 
@@ -67,10 +66,7 @@ class ContactForm extends UI\Control
      */
     public function createComponentForm(): Form
     {
-        $presenter = $this->getPresenter();
-        assert($presenter instanceof WebBasePresenter);
-
-        $this->user = $presenter->getDbUser();
+        $this->user = $this->userRepository->findById($this->presenter->user->getId());
 
         $form = $this->baseFormFactory->create();
 
@@ -140,7 +136,7 @@ class ContactForm extends UI\Control
             $recipientsEmails->add($recipient);
         }
 
-        $this->commandBus->handle(new CreateTemplateMail(
+        $this->mailService->sendMailFromTemplate(
             $recipientsUsers,
             $recipientsEmails,
             Template::CONTACT_FORM,
@@ -150,7 +146,7 @@ class ContactForm extends UI\Control
                 TemplateVariable::SENDER_EMAIL => $senderEmail,
                 TemplateVariable::MESSAGE => str_replace(["\n", "\r"], '', nl2br($values->message, false)),
             ],
-        ));
+        );
 
         $this->onSave();
     }

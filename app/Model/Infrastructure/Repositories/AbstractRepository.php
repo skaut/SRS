@@ -16,7 +16,7 @@ use function assert;
 class AbstractRepository
 {
     /** @param class-string $className */
-    public function __construct(protected EntityManagerInterface $em, private readonly string $className)
+    public function __construct(protected EntityManagerInterface $em, private string $className)
     {
     }
 

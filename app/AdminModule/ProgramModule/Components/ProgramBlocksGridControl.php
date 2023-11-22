@@ -46,16 +46,16 @@ class ProgramBlocksGridControl extends Control
     private SessionSection $sessionSection;
 
     public function __construct(
-        private readonly CommandBus $commandBus,
-        private readonly QueryBus $queryBus,
-        private readonly Translator $translator,
-        private readonly BlockRepository $blockRepository,
-        private readonly UserRepository $userRepository,
-        private readonly CategoryRepository $categoryRepository,
-        private readonly ExcelExportService $excelExportService,
-        private readonly Validators $validators,
-        private readonly SubeventService $subeventService,
-        private readonly Session $session,
+        private CommandBus $commandBus,
+        private QueryBus $queryBus,
+        private Translator $translator,
+        private BlockRepository $blockRepository,
+        private UserRepository $userRepository,
+        private CategoryRepository $categoryRepository,
+        private ExcelExportService $excelExportService,
+        private Validators $validators,
+        private SubeventService $subeventService,
+        private Session $session,
     ) {
         $this->sessionSection = $session->getSection('srs');
     }
@@ -152,8 +152,8 @@ class ProgramBlocksGridControl extends Control
             ->setRenderer(static fn (Block $row) => $row->getProgramsCount());
 
         if (
-            ($this->getPresenter()->getUser()->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
-                $this->getPresenter()->getUser()->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
+            ($this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_ALL_PROGRAMS) ||
+                $this->getPresenter()->user->isAllowed(SrsResource::PROGRAM, Permission::MANAGE_OWN_PROGRAMS)) &&
             $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_ADD_BLOCK))
         ) {
             $grid->addToolbarButton('Blocks:add')
@@ -194,9 +194,8 @@ class ProgramBlocksGridControl extends Control
         $block = $this->blockRepository->findById($id);
 
         $p = $this->getPresenter();
-        assert($p instanceof AdminBasePresenter);
 
-        if (! $p->getDbUser()->isAllowedModifyBlock($block)) {
+        if (! $this->userRepository->findById($this->getPresenter()->getUser()->getId())->isAllowedModifyBlock($block)) {
             $p->flashMessage('admin.program.blocks.message.delete_not_allowed', 'danger');
             $p->redirect('this');
         }
@@ -211,7 +210,6 @@ class ProgramBlocksGridControl extends Control
      * Změní povinnost bloku.
      *
      * @throws AbortException
-     * @throws Exception
      */
     public function changeMandatory(string $id, string $mandatory): void
     {
@@ -281,6 +279,6 @@ class ProgramBlocksGridControl extends Control
         $presenter = $this->getPresenter();
         assert($presenter instanceof AdminBasePresenter);
 
-        return $presenter->dbUser->isAllowedModifyBlock($block);
+        return $presenter->dbuser->isAllowedModifyBlock($block);
     }
 }
