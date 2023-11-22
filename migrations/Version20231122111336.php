@@ -7,7 +7,7 @@ namespace Migrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-final class Version20231122111334 extends AbstractMigration
+final class Version20231122111336 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -23,9 +23,10 @@ final class Version20231122111334 extends AbstractMigration
         $this->addSql('INSERT INTO `settings` (`item`, `value`) VALUES (\'group_fill_term\', \'2023-10-20\')');
         $this->addSql('INSERT INTO `settings` (`item`, `value`) VALUES (\'group_max_members\', \'11\')');
         $this->addSql('INSERT INTO `settings` (`item`, `value`) VALUES (\'group_min_members\', \'5\')');
+        $this->addSql('INSERT INTO `resource` (`id`,`name`) VALUES (9, \'groups\')');
         $this->addSql('INSERT INTO `permission` (`id`, `resource_id`, `name`) VALUES (15, 9, \'manage\')');
-        $this->addSql('INSERT INTO `resource` (`name`) VALUES (\'groups\')');
         $this->addSql('INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES (8, 15)');
+        $this->addSql('INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES (7, 15)');
         $this->addSql('INSERT INTO `status` (`name`) VALUES (\'čeká na naplnění\')');
         $this->addSql('INSERT INTO `status` (`name`) VALUES (\'čeká na zaplacení\')');
         $this->addSql('INSERT INTO `status` (`name`) VALUES (\'zaplacená\')');
