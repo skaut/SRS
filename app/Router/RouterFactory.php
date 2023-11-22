@@ -65,6 +65,13 @@ final class RouterFactory
             'id' => null,
         ]);
 
+        $router->addRoute('admin/groups/<presenter>/<action>[/<id>]', [
+            'module' => 'Admin:Groups',
+            'presenter' => 'Auto',
+            'action' => 'default',
+            'id' => null,
+        ]);
+
         $router->addRoute('admin/configuration/<presenter>/<action>[/<id>]', [
             'module' => 'Admin:Configuration',
             'presenter' => 'Seminar',
