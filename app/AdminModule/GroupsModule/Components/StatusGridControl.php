@@ -29,7 +29,7 @@ use function assert;
  */
 class StatusGridControl extends Control
 {
-    public function __construct(private CommandBus $commandBus, private Translator $translator, private StatusRepository $statusRepository, private RoleRepository $roleRepository, private AclService $aclService)
+    public function __construct(private CommandBus $commandBus, private Translator $translator, private StatusRepository $statusRepository)
     {
     }
 
@@ -94,7 +94,7 @@ class StatusGridControl extends Control
      */
     public function add(stdClass $values): void
     {
-        $status = new Status($values->name);
+        $status = new Status();
 
         $this->commandBus->handle(new SaveStatus($status));
 
@@ -132,12 +132,8 @@ class StatusGridControl extends Control
 
         $p = $this->getPresenter();
 
-        if ($status->getBlocks()->isEmpty()) {
-            $this->commandBus->handle(new RemoveStatus($status));
-            $p->flashMessage('admin.groups.status.message.delete_success', 'success');
-        } else {
-            $p->flashMessage('admin.groups.status.message.delete_failed', 'danger');
-        }
+        $this->commandBus->handle(new RemoveStatus($status));
+        $p->flashMessage('admin.groups.status.message.delete_success', 'success');
 
         $p->redirect('this');
     }

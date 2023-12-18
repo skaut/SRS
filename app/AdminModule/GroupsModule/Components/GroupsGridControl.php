@@ -10,14 +10,11 @@ use App\Model\Group\Group;
 use App\Model\Group\Repositories\GroupRepository;
 use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
-use App\Services\ExcelExportService;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\TextInput;
-use Nette\Http\Session;
-use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
@@ -30,15 +27,11 @@ use function assert;
  */
 class GroupsGridControl extends Control
 {
-    private SessionSection $sessionSection;
-
     public function __construct(
         private CommandBus $commandBus,
         private Translator $translator,
         private GroupRepository $groupRepository,
         private readonly UserRepository $userRepository,
-        private ExcelExportService $excelExportService,
-        private Session $session,
     ) {
         $this->sessionSection = $session->getSection('srs');
     }
@@ -113,7 +106,7 @@ class GroupsGridControl extends Control
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Group $item): void {
             $nameText = $container['name'];
             assert($nameText instanceof TextInput);
-            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.groups.column.name_exists', $this->groupRepository->findOthersNames($item->getId()));
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.groups.column.name_exists', $this->groupRepository->findAll());
 
             $container->setDefaults([
                 'name' => $item->getName(),
