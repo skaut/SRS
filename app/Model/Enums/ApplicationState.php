@@ -30,4 +30,9 @@ class ApplicationState
      * Zaplaceno (zdarma).
      */
     public const PAID_FREE = 'paid_free';
+
+    /**
+     * Ceka na naplneni.
+     */
+    public const WAITING_FOR_FILLING = 'waiting_for_filling';
 }

@@ -47,6 +47,22 @@ class GroupRepository extends AbstractRepository
 
     /**
      * Vrací uživatele podle id.
+     */
+    public function findByCode(int|null $code): Group|null
+    {
+        return $this->getRepository()->findOneBy(['code' => $code]);
+    }
+
+    /**
+     * Vrací uživatele podle id.
+     */
+    public function findByLeaderId(int|null $leaderId): Group|null
+    {
+        return $this->getRepository()->findOneBy(['leaderId' => $leaderId]);
+    }
+
+    /**
+     * Vrací uživatele podle id.
      *
      * @param int[] $ids
      *
@@ -134,19 +150,12 @@ class GroupRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní externího uživatele.
+     * Odstraní skupinu.
      */
     public function remove(Group $group): void
     {
-        foreach ($user->getCustomInputValues() as $customInputValue) {
-            $this->em->remove($customInputValue);
-        }
-
-        foreach ($user->getApplications() as $application) {
-            $this->em->remove($application);
-        }
-
-        $this->em->remove($user);
+ 
+        $this->em->remove($group);
         $this->em->flush();
     }
 

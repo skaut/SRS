@@ -99,6 +99,20 @@ class UserRepository extends AbstractRepository
     }
 
     /**
+     * Vrací schválené uživatele v roli.
+     *
+     * @return User[]
+     */
+    public function findAllInGroup(int $groupId): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.groupId = :groupId')
+            ->setParameter('groupId', $groupId)
+            ->orderBy('u.lastName')
+            ->getQuery()->execute();
+    }
+    
+    /**
      * Vrací schválené uživatele v rolích.
      *
      * @param int[] $rolesIds

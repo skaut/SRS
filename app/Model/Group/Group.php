@@ -29,7 +29,7 @@ use function implode;
  * Entita uživatele.
  */
 #[ORM\Entity]
-#[ORM\Table(name: 'group')]
+#[ORM\Table(name: 'user_group')]
 class Group
 {
 
@@ -65,8 +65,8 @@ class Group
     /**
      * Status
      */
-    #[ORM\Column(type: 'integer')]
-    protected int|null $groupStatusId = null;
+    #[ORM\Column(type: 'string')]
+    protected string|null $groupStatus = null;
 
     /**
      * Pocet mist
@@ -85,6 +85,12 @@ class Group
      */
     #[ORM\Column(type: 'text', nullable: true)]
     protected string|null $note = null;
+
+    /**
+     * Kod
+     */
+    #[ORM\Column(type: 'string')]
+    protected string|null $code = null;
 
     public function __construct()
     {
@@ -141,14 +147,14 @@ class Group
         $this->createDate = $createDate;
     }
 
-    public function getGroupStatusId(): int|null
+    public function getGroupStatus(): string|null
     {
-        return $this->groupStatusId;
+        return $this->groupStatus;
     }
 
-    public function setGroupStatusId(int|null $groupStatusId): void
+    public function setGroupStatus(string|null $groupStatus): void
     {
-        $this->groupStatusId = $groupStatusId;
+        $this->groupStatus = $groupStatus;
     }
     
     public function getPlaces(): string|null
@@ -181,6 +187,15 @@ class Group
         $this->note = $note;
     }
 
+    public function getCode(): string|null
+    {
+        return $this->code;
+    }
+
+    public function setCode(string|null $code): void
+    {
+        $this->code = $code;
+    }
     
 
 }

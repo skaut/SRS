@@ -645,6 +645,11 @@ groups:
 
         column:
             name: "Název"
+            group_status: "Status"
+            leader_name: "Jméno vedoucího"
+            leader_email: "Email vedoucího"
+            places: "Počet míst"
+            price: "Cena"
 
 configuration:
     menu:
