@@ -4,20 +4,16 @@ declare(strict_types=1);
 
 namespace App\Model\Group\Repositories;
 
-use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
+use App\Model\Group\Group;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
-use App\Model\Group\Group;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-
-use function count;
 
 /**
  * Třída spravující uživatele.
@@ -43,6 +39,22 @@ class GroupRepository extends AbstractRepository
     public function findById(int|null $id): Group|null
     {
         return $this->getRepository()->findOneBy(['id' => $id]);
+    }
+
+    /**
+     * Vrací uživatele podle id.
+     */
+    public function findByCode(int|null $code): Group|null
+    {
+        return $this->getRepository()->findOneBy(['code' => $code]);
+    }
+
+    /**
+     * Vrací uživatele podle id.
+     */
+    public function findByLeaderId(int|null $leaderId): Group|null
+    {
+        return $this->getRepository()->findOneBy(['leaderId' => $leaderId]);
     }
 
     /**
@@ -101,7 +113,6 @@ class GroupRepository extends AbstractRepository
         return new ArrayCollection($result);
     }
 
-
     /**
      * Vrací uživatele jako možnosti pro select.
      *
@@ -123,7 +134,6 @@ class GroupRepository extends AbstractRepository
         return $options;
     }
 
-
     /**
      * Uloží uživatele.
      */
@@ -134,19 +144,11 @@ class GroupRepository extends AbstractRepository
     }
 
     /**
-     * Odstraní externího uživatele.
+     * Odstraní skupinu.
      */
     public function remove(Group $group): void
     {
-        foreach ($user->getCustomInputValues() as $customInputValue) {
-            $this->em->remove($customInputValue);
-        }
-
-        foreach ($user->getApplications() as $application) {
-            $this->em->remove($application);
-        }
-
-        $this->em->remove($user);
+        $this->em->remove($group);
         $this->em->flush();
     }
 

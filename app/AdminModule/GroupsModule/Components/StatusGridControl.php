@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\AdminModule\GroupsModule\Components;
 
 use App\Model\Acl\Repositories\RoleRepository;
-use App\Model\Acl\Role;
-use App\Model\Group\Status;
 use App\Model\Group\Commands\RemoveStatus;
 use App\Model\Group\Commands\SaveStatus;
 use App\Model\Group\Repositories\StatusRepository;
+use App\Model\Group\Status;
 use App\Services\AclService;
 use App\Services\CommandBus;
 use Nette\Application\AbortException;
@@ -30,7 +29,7 @@ use function assert;
  */
 class StatusGridControl extends Control
 {
-    public function __construct(private CommandBus $commandBus, private Translator $translator, private StatusRepository $statusRepository, private RoleRepository $roleRepository, private AclService $aclService)
+    public function __construct(private CommandBus $commandBus, private Translator $translator, private StatusRepository $statusRepository)
     {
     }
 
@@ -62,14 +61,12 @@ class StatusGridControl extends Control
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.groups.status.column.name_empty')
                 ->addRule(Form::IS_NOT_IN, 'admin.groups.status.column.name_exists', $this->statusRepository->findAllNames());
-
         };
         $grid->getInlineAdd()->onSubmit[]                       = [$this, 'add'];
 
         $grid->addInlineEdit()->onControlAdd[]  = static function (Container $container): void {
             $container->addText('name', '')
                 ->addRule(Form::FILLED, 'admin.groups.status.column.name_empty');
-
         };
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Status $item): void {
             $nameText = $container['name'];
@@ -97,8 +94,7 @@ class StatusGridControl extends Control
      */
     public function add(stdClass $values): void
     {
-        $status = new Status($values->name);
-
+        $status = new Status();
 
         $this->commandBus->handle(new SaveStatus($status));
 
@@ -136,12 +132,8 @@ class StatusGridControl extends Control
 
         $p = $this->getPresenter();
 
-        if ($status->getBlocks()->isEmpty()) {
-            $this->commandBus->handle(new RemoveStatus($status));
-            $p->flashMessage('admin.groups.status.message.delete_success', 'success');
-        } else {
-            $p->flashMessage('admin.groups.status.message.delete_failed', 'danger');
-        }
+        $this->commandBus->handle(new RemoveStatus($status));
+        $p->flashMessage('admin.groups.status.message.delete_success', 'success');
 
         $p->redirect('this');
     }

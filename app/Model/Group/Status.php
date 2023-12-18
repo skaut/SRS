@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Group;
 
-use App\Model\Acl\Role;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
-use function implode;
 
 /**
  * Entita kategorie programového bloku.
@@ -29,7 +24,6 @@ class Status
     #[ORM\Column(type: 'string', unique: true)]
     protected string $name;
 
-
     public function getId(): int|null
     {
         return $this->id;
@@ -44,6 +38,4 @@ class Status
     {
         $this->name = $name;
     }
-
-
 }

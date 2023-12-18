@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\GroupsModule\Presenters;
 
-use App\AdminModule\GroupsModule\Components\IGroupsGridControlFactory;
 use App\AdminModule\GroupsModule\Components\GroupsGridControl;
+use App\AdminModule\GroupsModule\Components\IGroupsGridControlFactory;
 use App\Model\Acl\Permission;
 use App\Model\Group\Repositories\GroupRepository;
 use Nette\Application\AbortException;
@@ -21,7 +21,6 @@ class GroupsPresenter extends GroupsBasePresenter
 
     #[Inject]
     public IGroupsGridControlFactory $groupsGridControlFactory;
-
 
     /** @throws AbortException */
     public function startup(): void

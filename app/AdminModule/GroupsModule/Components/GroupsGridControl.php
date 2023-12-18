@@ -6,18 +6,15 @@ namespace App\AdminModule\GroupsModule\Components;
 
 use App\Model\Group\Commands\RemoveGroup;
 use App\Model\Group\Commands\SaveGroup;
-use App\Model\Group\Repositories\GroupRepository;
 use App\Model\Group\Group;
+use App\Model\Group\Repositories\GroupRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
-use App\Services\ExcelExportService;
-use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\TextInput;
-use Nette\Http\Session;
-use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
@@ -30,14 +27,11 @@ use function assert;
  */
 class GroupsGridControl extends Control
 {
-    private SessionSection $sessionSection;
-
     public function __construct(
         private CommandBus $commandBus,
         private Translator $translator,
         private GroupRepository $groupRepository,
-        private ExcelExportService $excelExportService,
-        private Session $session,
+        private readonly UserRepository $userRepository,
     ) {
         $this->sessionSection = $session->getSection('srs');
     }
@@ -64,12 +58,31 @@ class GroupsGridControl extends Control
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(false);
 
+        $grid->addColumnText('name', 'admin.groups.group.column.name');
 
-        $grid->addColumnText('name', 'admin.program.groups.column.name');
+        $grid->addColumnText('group_status', 'admin.groups.group.column.group_status');
 
-        $grid->addColumnText('leader_email', 'admin.program.groups.column.name');
-        $grid->addColumnText('places', 'admin.program.groups.column.name');
-        $grid->addColumnText('price', 'admin.program.groups.column.name');
+        $grid->addColumnText('leader_id', 'admin.groups.group.column.leader_name')
+            ->setRenderer(function (Group $row) {
+                    $user = $this->userRepository->findById($row->getLeaderId());
+
+                    return $user->getFirstName() . ' ' . $user->getLastName();
+            })
+/*
+            ->setRenderer(static fn (Group $row) => Html::el('span')
+                ->setText(
+                        $user = $this->userRepository->findById((int) $id);
+                        $this->userService->setApproved($user, (bool) $approved);
+                        $row->getEmail();
+                        )
+                   )
+*/
+            ->setFilterText();
+
+        $grid->addColumnText('leader_email', 'admin.groups.group.column.leader_email');
+        $grid->addColumnText('places', 'admin.groups.group.column.places');
+
+        $grid->addColumnText('price', 'admin.groups.group.column.price');
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container): void {
             $container->addText('name', '')
@@ -93,7 +106,7 @@ class GroupsGridControl extends Control
         $grid->getInlineEdit()->onSetDefaults[] = function (Container $container, Group $item): void {
             $nameText = $container['name'];
             assert($nameText instanceof TextInput);
-            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.groups.column.name_exists', $this->groupRepository->findOthersNames($item->getId()));
+            $nameText->addRule(Form::IS_NOT_IN, 'admin.program.groups.column.name_exists', $this->groupRepository->findAll());
 
             $container->setDefaults([
                 'name' => $item->getName(),
@@ -161,6 +174,4 @@ class GroupsGridControl extends Control
         $p->flashMessage('admin.program.groups.message.delete_success', 'success');
         $p->redirect('this');
     }
-
-
 }

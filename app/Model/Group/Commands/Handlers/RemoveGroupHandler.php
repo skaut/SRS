@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\Group\Commands\Handlers;
 
 use App\Model\Group\Commands\RemoveGroup;
-use App\Model\Group\Commands\SaveGroup;
 use App\Model\Group\Repositories\GroupRepository;
 use App\Services\CommandBus;
 use Doctrine\ORM\EntityManager;

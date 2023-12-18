@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Group\Repositories;
 
-use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Group\Status;
+use App\Model\Infrastructure\Repositories\AbstractRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;

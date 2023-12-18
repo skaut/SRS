@@ -218,17 +218,17 @@ class Settings
      * Skupina - minimalni pocet clenu
      */
     public const GROUP_MIN_MEMBERS = 'group_min_members';
-    
+
     /**
      * Skupina - maximalni pocet clenu
      */
     public const GROUP_MAX_MEMBERS = 'group_max_members';
-    
+
     /**
      * Skupina - termin pro naplneni skupiny
      */
     public const GROUP_FILL_TERM = 'group_fill_term';
-    
+
     /**
      * Název položky nastavení.
      */

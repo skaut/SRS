@@ -4,35 +4,17 @@ declare(strict_types=1);
 
 namespace App\Model\Group;
 
-use App\Model\Acl\Permission;
-use App\Model\Acl\Role;
-use App\Model\Acl\SrsResource;
-use App\Model\Application\Application;
-use App\Model\Application\RolesApplication;
-use App\Model\Application\SubeventsApplication;
-use App\Model\CustomInput\CustomInput;
-use App\Model\CustomInput\CustomInputValue;
-use App\Model\Enums\ApplicationState;
-use App\Model\Program\Block;
-use App\Model\Program\Program;
-use App\Model\Program\ProgramApplication;
-use App\Model\Structure\Subevent;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-
-use function implode;
 
 /**
  * Entita uživatele.
  */
 #[ORM\Entity]
-#[ORM\Table(name: 'group')]
+#[ORM\Table(name: 'user_group')]
 class Group
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
@@ -65,8 +47,8 @@ class Group
     /**
      * Status
      */
-    #[ORM\Column(type: 'integer')]
-    protected int|null $groupStatusId = null;
+    #[ORM\Column(type: 'string')]
+    protected string|null $groupStatus = null;
 
     /**
      * Pocet mist
@@ -85,6 +67,12 @@ class Group
      */
     #[ORM\Column(type: 'text', nullable: true)]
     protected string|null $note = null;
+
+    /**
+     * Kod
+     */
+    #[ORM\Column(type: 'string')]
+    protected string|null $code = null;
 
     public function __construct()
     {
@@ -141,16 +129,16 @@ class Group
         $this->createDate = $createDate;
     }
 
-    public function getGroupStatusId(): int|null
+    public function getGroupStatus(): string|null
     {
-        return $this->groupStatusId;
+        return $this->groupStatus;
     }
 
-    public function setGroupStatusId(int|null $groupStatusId): void
+    public function setGroupStatus(string|null $groupStatus): void
     {
-        $this->groupStatusId = $groupStatusId;
+        $this->groupStatus = $groupStatus;
     }
-    
+
     public function getPlaces(): string|null
     {
         return $this->places;
@@ -170,7 +158,7 @@ class Group
     {
         $this->price = $price;
     }
-    
+
     public function getNote(): string|null
     {
         return $this->note;
@@ -181,6 +169,13 @@ class Group
         $this->note = $note;
     }
 
-    
+    public function getCode(): string|null
+    {
+        return $this->code;
+    }
 
+    public function setCode(string|null $code): void
+    {
+        $this->code = $code;
+    }
 }
