@@ -22,6 +22,9 @@ use Nette\Localization\Translator;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use App\Model\User\Repositories\UserRepository;
+use App\Model\User\User;
+
 
 use function assert;
 
@@ -36,6 +39,7 @@ class GroupsGridControl extends Control
         private CommandBus $commandBus,
         private Translator $translator,
         private GroupRepository $groupRepository,
+        private readonly UserRepository $userRepository,
         private ExcelExportService $excelExportService,
         private Session $session,
     ) {
@@ -65,11 +69,31 @@ class GroupsGridControl extends Control
         $grid->setPagination(false);
 
 
-        $grid->addColumnText('name', 'admin.program.groups.column.name');
+        $grid->addColumnText('name', 'admin.groups.group.column.name');
+        
+        $grid->addColumnText('group_status', 'admin.groups.group.column.group_status');
+        
+        
+        $grid->addColumnText('leader_id', 'admin.groups.group.column.leader_name')
+            ->setRenderer(function (Group $row) {
+                    $user = $this->userRepository->findById($row->getLeaderId());
+                    return $user->getFirstName().' '.$user->getLastName();
+            })
+/*
+            ->setRenderer(static fn (Group $row) => Html::el('span')
+                ->setText(
+                        $user = $this->userRepository->findById((int) $id);
+                        $this->userService->setApproved($user, (bool) $approved);
+                        $row->getEmail();
+                        )
+                   )
+*/
+            ->setFilterText();
 
-        $grid->addColumnText('leader_email', 'admin.program.groups.column.name');
-        $grid->addColumnText('places', 'admin.program.groups.column.name');
-        $grid->addColumnText('price', 'admin.program.groups.column.name');
+        $grid->addColumnText('leader_email', 'admin.groups.group.column.leader_email');
+        $grid->addColumnText('places', 'admin.groups.group.column.places');
+        
+        $grid->addColumnText('price', 'admin.groups.group.column.price');
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container): void {
             $container->addText('name', '')

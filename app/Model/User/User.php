@@ -17,6 +17,7 @@ use App\Model\Program\Block;
 use App\Model\Program\Program;
 use App\Model\Program\ProgramApplication;
 use App\Model\Structure\Subevent;
+use App\Model\Group;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -299,6 +300,12 @@ class User
      */
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected DateTimeImmutable|null $photoUpdate = null;
+
+    /**
+     * Id skupiny.
+     */
+    #[ORM\Column(name: 'group_id',type: 'integer', nullable: true)]
+    protected int|null $groupId = null;
 
     public function __construct()
     {
@@ -604,6 +611,17 @@ class User
     {
         $this->phone = $phone;
     }
+    
+    public function getGroupId(): int|null
+    {
+        return $this->groupId;
+    }
+
+    public function setGroupId(int|null $groupId): void
+    {
+        $this->groupId = $groupId;
+    }
+
 
     /**
      * Vrátí adresu uživatele.
