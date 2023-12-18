@@ -7,26 +7,15 @@ namespace App\WebModule\Components;
 use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
-use App\Model\CustomInput\CustomCheckbox;
-use App\Model\CustomInput\CustomCheckboxValue;
-use App\Model\CustomInput\CustomDate;
-use App\Model\CustomInput\CustomDateTime;
-use App\Model\CustomInput\CustomFileValue;
-use App\Model\CustomInput\CustomMultiSelect;
-use App\Model\CustomInput\CustomSelect;
-use App\Model\CustomInput\CustomText;
-use App\Model\CustomInput\CustomTextValue;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
-use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\Enums\SkautIsEventType;
+use App\Model\Group\Repositories\GroupRepository;
 use App\Model\Settings\Queries\SettingIntValueQuery;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\Group\Repositories\GroupRepository;
-use App\Model\Group\Group;
 use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
@@ -35,7 +24,6 @@ use App\Services\SkautIsEventEducationService;
 use App\Services\SkautIsEventGeneralService;
 use App\Services\SubeventService;
 use App\Services\UserService;
-use App\Utils\Helpers;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -54,7 +42,6 @@ use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 use function assert;
-use function basename;
 
 /**
  * Komponenta pro správu rolí.
@@ -103,8 +90,8 @@ class GroupUsersGridControl extends Control
     public function createComponentGroupUsersGrid(string $name): DataGrid
     {
         $this->user = $this->getPresenter()->getDbUser();
-        $groupId = $this->user->getGroupId();
-        
+        $groupId    = $this->user->getGroupId();
+
         $grid = new DataGrid($this, $name);
         $grid->setTranslator($this->translator);
         $grid->setDataSource($this->userRepository->createQueryBuilder('u')
@@ -115,7 +102,6 @@ class GroupUsersGridControl extends Control
         $grid->setItemsPerPageList([25, 50, 100, 250, 500]);
         $grid->setStrictSessionFilterValues(false);
 
- 
         $grid->addColumnText('displayName', 'admin.users.users_name')
             ->setSortable()
             ->setFilterText();
@@ -131,7 +117,6 @@ class GroupUsersGridControl extends Control
                     ->andWhere('uR.id IN (:rids)')
                     ->setParameter('rids', (array) $values);
             });
-
 
         $columnApproved  = $grid->addColumnStatus('approved', 'admin.users.users_approved');
         $columnApproved
@@ -198,7 +183,6 @@ class GroupUsersGridControl extends Control
             ]);
 //        $grid->allowRowsAction('delete', static fn (User $item) => $item->isExternalLector());
 
-
         return $grid;
     }
 
@@ -210,18 +194,18 @@ class GroupUsersGridControl extends Control
     public function handleDelete(int $id): void
     {
         $p = $this->getPresenter();
-        
-        $removeUser = $this->userRepository->findById($id);
+
+        $removeUser  = $this->userRepository->findById($id);
         $userGroupId = $removeUser->setGroupId(0);
         $this->userRepository->save($removeUser);
-        
-        if($user->isInRole($this->roleRepository->findBySystemName(Role::GROUP_MEMBER)->getName())){
+
+        if ($user->isInRole($this->roleRepository->findBySystemName(Role::GROUP_MEMBER)->getName())) {
             $userRoleUnregistered = $this->roleRepository->findById(2);
             $removeUser->addRole($userRoleUnregistered);
             $userRoleMember = $this->roleRepository->findById(10);
             $removeUser->removeRole($userRoleMember);
         }
-        
+
         $p->flashMessage('admin.users.users_deleted', 'success');
         $p->redirect('this');
     }

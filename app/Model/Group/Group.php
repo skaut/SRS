@@ -4,26 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\Group;
 
-use App\Model\Acl\Permission;
-use App\Model\Acl\Role;
-use App\Model\Acl\SrsResource;
-use App\Model\Application\Application;
-use App\Model\Application\RolesApplication;
-use App\Model\Application\SubeventsApplication;
-use App\Model\CustomInput\CustomInput;
-use App\Model\CustomInput\CustomInputValue;
-use App\Model\Enums\ApplicationState;
-use App\Model\Program\Block;
-use App\Model\Program\Program;
-use App\Model\Program\ProgramApplication;
-use App\Model\Structure\Subevent;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-
-use function implode;
 
 /**
  * Entita uživatele.
@@ -32,7 +15,6 @@ use function implode;
 #[ORM\Table(name: 'user_group')]
 class Group
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
@@ -156,7 +138,7 @@ class Group
     {
         $this->groupStatus = $groupStatus;
     }
-    
+
     public function getPlaces(): string|null
     {
         return $this->places;
@@ -176,7 +158,7 @@ class Group
     {
         $this->price = $price;
     }
-    
+
     public function getNote(): string|null
     {
         return $this->note;
@@ -196,6 +178,4 @@ class Group
     {
         $this->code = $code;
     }
-    
-
 }

@@ -111,7 +111,7 @@ class UserRepository extends AbstractRepository
             ->orderBy('u.lastName')
             ->getQuery()->execute();
     }
-    
+
     /**
      * Vrací schválené uživatele v rolích.
      *

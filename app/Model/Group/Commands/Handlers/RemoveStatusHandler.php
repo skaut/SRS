@@ -24,7 +24,6 @@ class RemoveStatusHandler implements MessageHandlerInterface
         $this->em->wrapInTransaction(function () use ($command): void {
             $status = $command->getStatus();
 
-
             $this->statusRepository->remove($status);
         });
     }
