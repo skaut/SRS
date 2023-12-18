@@ -50,7 +50,9 @@ use Ublaboo\Mailing\Exception\MailingMailCreationException;
 use Yasumi\Yasumi;
 
 use function abs;
+use function count;
 use function implode;
+use function intval;
 use function str_pad;
 use function strval;
 
@@ -96,7 +98,7 @@ class ApplicationGroupService
         User $createdBy,
         bool $approve = false,
     ): void {
-        $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
+        $rolesApplication = $this->createRolesApplication($user, $roles, $createdBy, $approve);
 
         $this->eventBus->handle(new ApplicationUpdatedEvent($user));
         $this->updateUserPaymentInfo($user);
@@ -158,8 +160,7 @@ class ApplicationGroupService
         Group $group,
         bool $approve = false,
     ): void {
-        
-        $rolesApplication     = $this->createRolesApplication($user, $roleId, $createdBy, $group, $approve);
+        $rolesApplication = $this->createRolesApplication($user, $roleId, $createdBy, $group, $approve);
 
         $this->eventBus->handle(new ApplicationUpdatedEvent($user));
         $this->updateUserPaymentInfo($user);
@@ -858,14 +859,14 @@ class ApplicationGroupService
 //        $user->setRoles($roles);
         $user->setRolesApplicationDate(new DateTimeImmutable());
         $this->userRepository->save($user);
-        
-        $groupUsersArr = $this->userRepository->findAllInGroup(intval($groupId));
+
+        $groupUsersArr   = $this->userRepository->findAllInGroup(intval($groupId));
         $groupUsersCount = count($groupUsersArr);
-        
+
         $userRoleLeader = $this->roleRepository->findById(9);
-        $roleFee = $userRoleLeader->getFee();
-        
-        $totalGroupFee = $groupUsersCount*$roleFee;
+        $roleFee        = $userRoleLeader->getFee();
+
+        $totalGroupFee = $groupUsersCount * $roleFee;
 /*
         if ($user->getRolesApplication() != null) {
             throw new InvalidArgumentException('User is already registered.');

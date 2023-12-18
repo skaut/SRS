@@ -4,20 +4,16 @@ declare(strict_types=1);
 
 namespace App\Model\Group\Repositories;
 
-use App\Model\Acl\Role;
 use App\Model\Enums\ApplicationState;
+use App\Model\Group\Group;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
 use App\Model\Program\Program;
-use App\Model\Group\Group;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-
-use function count;
 
 /**
  * Třída spravující uživatele.
@@ -117,7 +113,6 @@ class GroupRepository extends AbstractRepository
         return new ArrayCollection($result);
     }
 
-
     /**
      * Vrací uživatele jako možnosti pro select.
      *
@@ -139,7 +134,6 @@ class GroupRepository extends AbstractRepository
         return $options;
     }
 
-
     /**
      * Uloží uživatele.
      */
@@ -154,7 +148,6 @@ class GroupRepository extends AbstractRepository
      */
     public function remove(Group $group): void
     {
- 
         $this->em->remove($group);
         $this->em->flush();
     }

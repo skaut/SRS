@@ -6,11 +6,11 @@ namespace App\AdminModule\GroupsModule\Components;
 
 use App\Model\Group\Commands\RemoveGroup;
 use App\Model\Group\Commands\SaveGroup;
-use App\Model\Group\Repositories\GroupRepository;
 use App\Model\Group\Group;
+use App\Model\Group\Repositories\GroupRepository;
+use App\Model\User\Repositories\UserRepository;
 use App\Services\CommandBus;
 use App\Services\ExcelExportService;
-use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -22,9 +22,6 @@ use Nette\Localization\Translator;
 use stdClass;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
-use App\Model\User\Repositories\UserRepository;
-use App\Model\User\User;
-
 
 use function assert;
 
@@ -68,16 +65,15 @@ class GroupsGridControl extends Control
         $grid->setDefaultSort(['name' => 'ASC']);
         $grid->setPagination(false);
 
-
         $grid->addColumnText('name', 'admin.groups.group.column.name');
-        
+
         $grid->addColumnText('group_status', 'admin.groups.group.column.group_status');
-        
-        
+
         $grid->addColumnText('leader_id', 'admin.groups.group.column.leader_name')
             ->setRenderer(function (Group $row) {
                     $user = $this->userRepository->findById($row->getLeaderId());
-                    return $user->getFirstName().' '.$user->getLastName();
+
+                    return $user->getFirstName() . ' ' . $user->getLastName();
             })
 /*
             ->setRenderer(static fn (Group $row) => Html::el('span')
@@ -92,7 +88,7 @@ class GroupsGridControl extends Control
 
         $grid->addColumnText('leader_email', 'admin.groups.group.column.leader_email');
         $grid->addColumnText('places', 'admin.groups.group.column.places');
-        
+
         $grid->addColumnText('price', 'admin.groups.group.column.price');
 
         $grid->addInlineAdd()->setPositionTop()->onControlAdd[] = function (Container $container): void {
@@ -185,6 +181,4 @@ class GroupsGridControl extends Control
         $p->flashMessage('admin.program.groups.message.delete_success', 'success');
         $p->redirect('this');
     }
-
-
 }

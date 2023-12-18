@@ -44,7 +44,7 @@ class GroupFormFactory
     public function create(): Form
     {
         $form = $this->baseFormFactory->create();
- 
+
         $renderer = $form->getRenderer();
         assert($renderer instanceof Bs4FormRenderer);
         $renderer->wrappers['control']['container'] = 'div class="col-7"';
@@ -59,8 +59,6 @@ class GroupFormFactory
         $groupFillTerm = new DateControl('admin.configuration.group_fill_term');
         $groupFillTerm->addRule(Form::FILLED, 'admin.configuration.group_fill_term_empty');
         $form->addComponent($groupFillTerm, 'groupFillTerm');
-
-
 
         $form->addSubmit('submit', 'admin.common.save');
 

@@ -7,22 +7,17 @@ namespace App\WebModule\Forms;
 use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\CustomInput\CustomCheckbox;
-use App\Model\CustomInput\CustomCheckboxValue;
 use App\Model\CustomInput\CustomDate;
 use App\Model\CustomInput\CustomDateTime;
-use App\Model\CustomInput\CustomDateTimeValue;
-use App\Model\CustomInput\CustomDateValue;
 use App\Model\CustomInput\CustomFile;
-use App\Model\CustomInput\CustomFileValue;
 use App\Model\CustomInput\CustomMultiSelect;
-use App\Model\CustomInput\CustomMultiSelectValue;
 use App\Model\CustomInput\CustomSelect;
-use App\Model\CustomInput\CustomSelectValue;
 use App\Model\CustomInput\CustomText;
-use App\Model\CustomInput\CustomTextValue;
 use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\CustomInput\Repositories\CustomInputValueRepository;
 use App\Model\Enums\Sex;
+use App\Model\Group\Group;
+use App\Model\Group\Repositories\GroupRepository;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
@@ -30,8 +25,6 @@ use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
-use App\Model\Group\Repositories\GroupRepository;
-use App\Model\Group\Group;
 use App\Services\AclService;
 use App\Services\ApplicationGroupService;
 use App\Services\FilesService;
@@ -40,7 +33,6 @@ use App\Services\SkautIsService;
 use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -48,7 +40,6 @@ use InvalidArgumentException;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\MultiSelectBox;
-use Nette\Http\FileUpload;
 use Nette\Localization\Translator;
 use Nextras\FormComponents\Controls\DateControl;
 use Nextras\FormComponents\Controls\DateTimeControl;
@@ -63,8 +54,7 @@ use function assert;
 use function count;
 use function in_array;
 use function property_exists;
-
-use const UPLOAD_ERR_OK;
+use function time;
 
 /**
  * Formulář přihlášky.
@@ -154,16 +144,16 @@ class ApplicationGroupFormFactory
 
         $form->addText('state', 'web.application_content.state')
             ->addRule(Form::FILLED, 'web.application_content.state_empty');
-        
+
         $form->addSelect('roles', 'web.application_content.roles', [9 => 'Vedoucí skupiny', 10 => 'Člen skupiny'])
             ->addCondition($form::EQUAL, 9)
                 ->toggle('group-name')
                 ->toggle('group-members-count')
             ->elseCondition($form::EQUAL, 10)
                 ->toggle('group-code')
-            
+
             ->addRule(Form::FILLED, 'web.application_content.custom_input_empty');
-        
+
         $form->addText('groupName', 'groupName')
             ->setOption('id', 'group-name')
             ->addCondition(Form::FILLED);
@@ -246,41 +236,40 @@ class ApplicationGroupFormFactory
             } else {
                 $roles = $this->roleRepository->findFilteredRoles(true, false, false);
             }
-*/            
+*/
             //group akce
-            switch ($values->roles){
+            switch ($values->roles) {
                 //vedouci skupiny
                 case 9:
-                    if ((property_exists($values, 'groupName')) && (property_exists($values, 'groupMembersCount'))) {
+                    if (property_exists($values, 'groupName') && (property_exists($values, 'groupMembersCount'))) {
                         $group = new Group();
-                        
+
                         $group->setName($values->groupName);
                         $group->setLeaderId($this->user->getId());
                         $group->setLeaderEmail($this->user->getEmail());
                         $group->setPlaces($values->groupMembersCount);
                         $group->setGroupStatus('waiting_for_filling');
-                        
+
                         $this->groupRepository->save($group);
-                        
-                        $groupGeneratedCode = $group->getId().time();
+
+                        $groupGeneratedCode = $group->getId() . time();
                         $group->setCode($groupGeneratedCode);
-                        
+
                         $this->groupRepository->save($group);
-                        
+
                         $this->user->setGroupId($group->getId());
-                        
+
                         $userRole = $this->roleRepository->findById($values->roles);
                         $this->user->addRole($userRole);
-                        
                     }
-                break;
-                
+
+                    break;
+
                 //clen skupiny
                 case 10:
                     if (property_exists($values, 'groupCode')) {
-                    
                         $group = $this->groupRepository->findByCode($values->groupCode);
-                        if (!$group){
+                        if (! $group) {
                             throw new InvalidArgumentException('Invalid code.');
                         }
 
@@ -289,9 +278,9 @@ class ApplicationGroupFormFactory
                         $this->user->addRole($userRole);
                     }
 
-                break;
-            
+                    break;
             }
+
 /*
             // vlastni pole
             foreach ($this->customInputRepository->findByRolesOrderedByPosition($roles) as $customInput) {
