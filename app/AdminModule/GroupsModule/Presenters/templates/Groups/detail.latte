@@ -1,0 +1,6 @@
+{block main}
+    <h2>{_admin.program.groups.detail.heading, ['name' => $room->getName()]}</h2>
+
+    <h3>{_admin.program.groups.schedule.heading}</h3>
+    {control groupscheduleGrid}
+{/block}

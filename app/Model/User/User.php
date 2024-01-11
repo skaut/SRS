@@ -300,6 +300,12 @@ class User
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected DateTimeImmutable|null $photoUpdate = null;
 
+    /**
+     * Id skupiny.
+     */
+    #[ORM\Column(name: 'group_id', type: 'integer', nullable: true)]
+    protected int|null $groupId = null;
+
     public function __construct()
     {
         $this->applications                 = new ArrayCollection();
@@ -603,6 +609,16 @@ class User
     public function setPhone(string|null $phone): void
     {
         $this->phone = $phone;
+    }
+
+    public function getGroupId(): int|null
+    {
+        return $this->groupId;
+    }
+
+    public function setGroupId(int|null $groupId): void
+    {
+        $this->groupId = $groupId;
     }
 
     /**

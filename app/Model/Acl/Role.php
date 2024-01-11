@@ -63,6 +63,21 @@ class Role
     public const ADMIN = 'admin';
 
     /**
+     * Role uživatele nepřihlášeného na seminář.
+     */
+    public const GROUP_NONREGISTERED = 'group_nonregistered';
+
+    /**
+     * Role organizátora.
+     */
+    public const GROUP_LEADER = 'group_leader';
+
+    /**
+     * Role administrátora.
+     */
+    public const GROUP_MEMBER = 'group_member';
+
+    /**
      * Role, která je uživateli nastavena při testování jiné role.
      */
     public const TEST = 'test';
@@ -77,6 +92,9 @@ class Role
         self::LECTOR,
         self::ORGANIZER,
         self::ADMIN,
+        self::GROUP_LEADER,
+        self::GROUP_MEMBER,
+        self::GROUP_NONREGISTERED,
     ];
     #[ORM\Id]
     #[ORM\GeneratedValue]
