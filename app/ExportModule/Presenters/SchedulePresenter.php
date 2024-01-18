@@ -41,8 +41,8 @@ class SchedulePresenter extends ExportBasePresenter
         $userPrograms = $this->queryBus->handle(new UserAttendsProgramsQuery($user));
 
         foreach ($userPrograms as $program) {
-            $start = new DateTime($program->getStart(), false);
-            $end   = new DateTime($program->getEnd(), false);
+            $start = new DateTime($program->getStart(), true);
+            $end   = new DateTime($program->getEnd(), true);
 
             $event = new Event();
             $event->setSummary($program->getBlock()->getName())
