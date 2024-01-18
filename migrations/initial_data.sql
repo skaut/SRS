@@ -118,7 +118,7 @@ INSERT INTO `settings` (`item`, `value`) VALUES
   ('seminar_to_date', CURDATE() + INTERVAL 2 DAY),
   ('skautis_event_id', NULL),
   ('skautis_event_name', NULL),
-  ('variable_symbol_code', '');
+  ('variable_symbol_code', '00000');
 
 INSERT INTO `text_content` (`id`, `text`) VALUES
   (1, '<p>Obsah této stránky můžete změnit v administraci v sekci Web.</p>');

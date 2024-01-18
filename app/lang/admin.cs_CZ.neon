@@ -723,7 +723,7 @@ configuration:
             account_number_empty: "Zadejte číslo účtu."
             account_number_format: "Zadejte číslo účtu ve správném formátu."
             variable_symbol_code: "Předvolba variabilního symbolu"
-            variable_symbol_code_format: "Zadejte 0-4 číslice."
+            variable_symbol_code_format: "Zadejte 5 číslic."
             maturity_type: "Způsob výpočtu splatnosti"
             maturity_date: "Datum splatnosti"
             maturity_days: "Počet dní splatnosti"

@@ -105,7 +105,7 @@ class Settings
     public const ACCOUNT_NUMBER = 'account_number';
 
     /**
-     * Předvolba variabilního symbolu. 0-4 číslice před generovaným variabilním symbolem.
+     * Předvolba variabilního symbolu. 5 číslic před generovaným variabilním symbolem.
      */
     public const VARIABLE_SYMBOL_CODE = 'variable_symbol_code';
 
