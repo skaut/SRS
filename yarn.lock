@@ -155,13 +155,6 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.23.3.tgz#0ce0be31a4ca4f1884b5786057cadcb6c3be58f9"
   integrity sha512-uVsWNvlVsIninV2prNz/3lHCb+5CJ+e+IUBfbjToAHODtfGYLfCFuY4AU7TskI+dAKk+njsPiBjq1gKTvZOBaw==
 
-"@babel/runtime@^7.18.3":
-  version "7.23.1"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.1.tgz#72741dc4d413338a91dcb044a86f3c0bc402646d"
-  integrity sha512-hC2v6p8ZSI/W0HUzh3V8C5g+NwSKzKPtJwSpTjwl0o297GP9+ZLQSkdvHz46CM3LqyoXxq+5G9komY+eSqSO0g==
-  dependencies:
-    regenerator-runtime "^0.14.0"
-
 "@babel/template@^7.22.15":
   version "7.22.15"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.22.15.tgz#09576efc3830f0430f4548ef971dde1350ef2f38"
@@ -1307,12 +1300,10 @@ ms@2.1.2:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-naja@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/naja/-/naja-2.5.0.tgz#32aa6280f237a5d42a7fcb8cbebc3d339d56d4e8"
-  integrity sha512-SmGR5VVVtF7jF6EPRkPx+cuhzsxDvKKbs+XO8RO2/2En2l2PBe9LglwFBbYIWMLxeGuYl5wGt2MQvkUjjVaagg==
-  dependencies:
-    "@babel/runtime" "^7.18.3"
+naja@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/naja/-/naja-2.6.1.tgz#cb25cb0464b6b7722d9613049ae8e4769e6ca482"
+  integrity sha512-xLZPRJeOr6R3Zr5epRDSIzNzsb0RJ9T6LWhcNQbbarMLXQX+O26o1SEENsJ1NWFJfbJe1dWtv+iEiSShSHQZfA==
 
 nanoid@^3.3.6:
   version "3.3.6"
@@ -1537,11 +1528,6 @@ rechoir@^0.7.0:
   integrity sha512-/njmZ8s1wVeR6pjTZ+0nCnv8SpZNRMT2D1RLOJQESlYFDBvwpTA4KWJpZ+sBJ4+vhjILRcK7JIFdGCdxEAAitg==
   dependencies:
     resolve "^1.9.0"
-
-regenerator-runtime@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.14.0.tgz#5e19d68eb12d486f797e15a3c6a918f7cec5eb45"
-  integrity sha512-srw17NI0TUWHuGa5CFGGmhfNIeja30WMBfbslPNhf6JrqQlLN5gcrvig1oqPxiVaXb0oW0XRKtH6Nngs5lKCIA==
 
 require-from-string@^2.0.2:
   version "2.0.2"
