@@ -37,7 +37,7 @@
         "contributte/translation": "^2.0",
 
         "nettrine/orm": "^0.8",
-        "nettrine/migrations": "^0.7",
+        "nettrine/migrations": "^0.8",
         "beberlei/doctrineextensions": "^1.3",
         "dg/mysql-dump": "^1.5",
 
