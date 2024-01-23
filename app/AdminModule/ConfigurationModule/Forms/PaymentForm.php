@@ -72,7 +72,7 @@ class PaymentForm extends UI\Control
 
         $form->addText('variableSymbolCode', 'admin.configuration.payment.payment.variable_symbol_code')
             ->addCondition(Form::FILLED)
-            ->addRule(Form::PATTERN, 'admin.configuration.payment.payment.variable_symbol_code_format', '^\d{0,4}$');
+            ->addRule(Form::PATTERN, 'admin.configuration.payment.payment.variable_symbol_code_format', '^\d{5}$');
 
         $maturityTypeSelect = $form->addSelect('maturityType', 'admin.configuration.payment.payment.maturity_type', $this->prepareMaturityTypeOptions());
         $maturityTypeSelect->addCondition($form::EQUAL, MaturityType::DATE)
