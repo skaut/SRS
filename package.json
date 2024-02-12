@@ -12,7 +12,7 @@
     "@fullcalendar/list": "^6.1.10",
     "@fullcalendar/resource": "^6.1.9",
     "@fullcalendar/resource-timeline": "^6.1.9",
-    "@fullcalendar/timegrid": "^6.1.9",
+    "@fullcalendar/timegrid": "^6.1.10",
     "@fullcalendar/vue": "^6.1.9",
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.2",
