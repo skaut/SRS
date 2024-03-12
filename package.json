@@ -10,7 +10,7 @@
     "@fullcalendar/core": "^6.1.11",
     "@fullcalendar/interaction": "^6.1.9",
     "@fullcalendar/list": "^6.1.11",
-    "@fullcalendar/resource": "^6.1.9",
+    "@fullcalendar/resource": "^6.1.11",
     "@fullcalendar/resource-timeline": "^6.1.9",
     "@fullcalendar/timegrid": "^6.1.10",
     "@fullcalendar/vue": "^6.1.9",
