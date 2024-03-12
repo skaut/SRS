@@ -17,7 +17,7 @@ jobs:
     container:
       image: skaut/lebeda:8.1
     steps:
-      - uses: actions/v3
+      - uses: actions/checkout@v4
       # Copy & paste from https://github.com/actions/cache/blob/master/examples.md#php---composer
       - name: Get composer cache
         id: composer-cache
