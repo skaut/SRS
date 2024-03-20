@@ -19,7 +19,7 @@
     "bootstrap": "^4.6.2",
     "bootstrap-confirmation2": "^4.2.1",
     "bootstrap-datetime-picker": "^2.4.4",
-    "bootstrap-fileinput": "^5.2.8",
+    "bootstrap-fileinput": "^5.5.3",
     "bootstrap-select": "^1.13.18",
     "global": "^4.4.0",
     "happy-inputs": "^2.1.0",
