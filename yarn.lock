@@ -269,10 +269,10 @@
     "@fullcalendar/premium-common" "~6.1.9"
     "@fullcalendar/scrollgrid" "~6.1.9"
 
-"@fullcalendar/vue@^6.1.9":
-  version "6.1.9"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/vue/-/vue-6.1.9.tgz#88ccae9284ce34b0852c8ede45c95e3e5563790a"
-  integrity sha512-cJet86Zq0MhAn+VNO6QByZOmv4P8vgfkQJC9PkgMZAzLnVHMQGPgEpV492i5BGEXeLelmaAhynZvLv15C4XbPQ==
+"@fullcalendar/vue@^6.1.11":
+  version "6.1.11"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/vue/-/vue-6.1.11.tgz#477adfaa49d19b9cdbc157e05b9e35195e615d6e"
+  integrity sha512-Vb8GxKDErp7+cDyD/6F2nlCs4iHyfhpoQ2JUx60bjXHcx1RqgENdFCfSvfHEMc2Gbrg72TzI9CpITEGDZ8SUng==
 
 "@jridgewell/gen-mapping@^0.3.0", "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"
