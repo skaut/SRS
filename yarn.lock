@@ -669,10 +669,10 @@ bootstrap-datetime-picker@^2.4.4:
   resolved "https://registry.yarnpkg.com/bootstrap-datetime-picker/-/bootstrap-datetime-picker-2.4.4.tgz#b7cfe843a3c6d221c03293c9a464a4cc35d73968"
   integrity sha512-TTknlrqoJ7DcJJpkmvg+TneUiWNG65gfjHYbTM5MpJ60DGWmcQJWN7+6eU78WvqxE6Dz/yKmeyLDEzzWVgw43A==
 
-bootstrap-fileinput@^5.5.3:
-  version "5.5.3"
-  resolved "https://registry.yarnpkg.com/bootstrap-fileinput/-/bootstrap-fileinput-5.5.3.tgz#f7977ae5ae7ac6d9950c72875aa810636a25c0d9"
-  integrity sha512-GJexTYK8dA7wVE0jU6cVZ2Y4UmSZ6RL9163mRjyt6XBr8yFM7W8AYzOXGgbrZ8DwYIOR/ScE1dZOfU+fHxGLVQ==
+bootstrap-fileinput@^5.5.4:
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/bootstrap-fileinput/-/bootstrap-fileinput-5.5.4.tgz#0912cc0c3897fc3c12b60202ed1ccabf5907a729"
+  integrity sha512-GixhM6PzfIzzAPLAP73O6EZCpOTGzka1kEBiS+AfviF+kfZQWBQEl8V4/Keto2kB570/yZtmi6/n/PbD5nvD2A==
   dependencies:
     bootstrap ">= 3.4.1"
     jquery ">= 1.9.0"
