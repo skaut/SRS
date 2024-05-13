@@ -1747,10 +1747,10 @@ tinymce-i18n@^24.3.11:
   resolved "https://registry.yarnpkg.com/tinymce-i18n/-/tinymce-i18n-24.3.11.tgz#499c1c9118dc3d79f294182c0de9da8123c1c7ce"
   integrity sha512-FH2TSbFwGi2sBejiwT5j+YPlCZ/UDtiWlh/IhcjfExEnYq10eZthTe8n1upk4zl6ICNOr9d37RHkAysM5d8ceg==
 
-tinymce@^6.8.3:
-  version "6.8.3"
-  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-6.8.3.tgz#0025a4aaa4c24dc2a3e32e83dfda705d196fd802"
-  integrity sha512-3fCHKAeqT+xNwBVESf6iDbDV0VNwZNmfrkx9c/6Gz5iB8piMfaO6s7FvoiTrj1hf1gVbfyLTnz1DooI6DhgINQ==
+tinymce@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-7.1.0.tgz#89d4896163daabdf3dfb11ae75526ac70c50df63"
+  integrity sha512-KP5X9P7CIvaafu0XLiMidFWhjyYiOWcfY9hj/YbQSu9LcrZv7XXnXgb5Fgw7dA12lg7hqdTiRva+NKxoXaAbIA==
 
 to-fast-properties@^2.0.0:
   version "2.0.0"
