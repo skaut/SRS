@@ -2,9 +2,9 @@ name: test
 
 on:
   push:
-    branches: [master]
+    branches: [master,obrok/master]
   pull_request:
-    branches: [master]
+    branches: [master,obrok/master]
 
 concurrency:
   group: test-${{ github.ref }}

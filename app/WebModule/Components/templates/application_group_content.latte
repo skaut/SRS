@@ -1,0 +1,145 @@
+<div class="clearfix"></div>
+
+<div class="application-content">
+
+    {if $guestRole}
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-warning alert-forever">
+                    {_web.application_content.login_required_begin}
+                    <a href="{plink :Auth:login, 'backlink' => $backlink}">{_web.application_content.login_required_link}</a>{_web.application_content.login_required_end}
+                </div>
+            </div>
+        </div>
+    
+    {elseif $groupLeaderRole}
+            <div class="row">
+                <div class="col">
+                    <div class="alert alert-info alert-forever">
+                        {_web.application_content.approved_registration, ['roles' => $dbUser->getRolesText()]}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card card-body bg-light pb-1">
+                        <div>
+                            <b>Název skupiny:</b>&nbsp;{$group->getName()}
+                        </div>
+                        <div>
+                            <b>Status:</b>&nbsp;{$group->getGroupStatus()}
+                        </div>
+                        <div>
+                            <b>Max pocet mist:</b>&nbsp;{$group->getPlaces()}
+                        </div>
+                        <div>
+                            <b>Kod:</b>&nbsp;{$group->getCode()}
+                        </div>
+                        <div>
+                            <b>Pocet clenu:</b>&nbsp;{$groupUsersCount}
+                        </div>
+                        <div>
+                            <b>Pocet volnych mist:</b>&nbsp;{($group->getPlaces())-$groupUsersCount}
+                        </div>
+                        <div>
+                            <a n:href="closeGroup! id=> $dbUser->getId()" class="btn btn-sm btn-secondary">
+                                <span class="fa fa-right-to-bracket"></span>
+                                Uzavřít skupinu
+                            </a>
+                        </div>
+                        <div>
+                            <a n:href="RemoveGroup! id=> $group->getId()" class="btn btn-sm btn-secondary">
+                                <span class="fa fa-right-to-bracket"></span>
+                                Zrušit skupinu
+                            </a>
+                        </div>                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    {control groupUsersGrid}
+                </div>
+            </div>
+    {elseif $groupMemberRole}
+            <div class="row">
+                <div class="col">
+                    <div class="alert alert-info alert-forever">
+                        {_web.application_content.approved_registration, ['roles' => $dbUser->getRolesText()]}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card card-body bg-light pb-1">
+                        <div>
+                            <b>Název skupiny:</b>&nbsp;{$group->getName()}
+                        </div>
+                        <div>
+                            <b>Status:</b>&nbsp;{$group->getGroupStatus()}
+                        </div>
+                        <div>
+                            <b>Vedoucí:</b>&nbsp;{$groupLeaderName}
+                        </div>
+                        <div>
+                            <b>Email vedoucího:</b>&nbsp;{$group->getLeaderEmail()}
+                        </div>
+                        <div>
+                            <a n:href="RemoveUserFromGroup! id=> $dbUser->getId()" class="btn btn-sm btn-secondary">
+                                <span class="fa fa-right-to-bracket"></span>
+                                Odhlásit ze skupiny
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    {elseif $nonregisteredRole}
+        {if $noRegisterableRole}
+            <div class="row">
+                <div class="col">
+                    <div class="alert alert-info alert-forever">
+                        {if $registrationStart && $registrationEnd}
+                            {_web.application_content.no_registerable_role_start_end, ['start' => $registrationStart->format('j. n. Y H:i'), 'end' => $registrationEnd->format('j. n. Y H:i')]}
+                        {elseif $registrationStart}
+                            {_web.application_content.no_registerable_role_start, ['start' => $registrationStart->format('j. n. Y H:i')]}
+                        {elseif $registrationEnd}
+                            {_web.application_content.no_registerable_role_end, ['end' => $registrationEnd->format('j. n. Y H:i')]}
+                        {else}
+                            {_web.application_content.no_registerable_role}
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        {else}
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="card card-body bg-light pb-1">
+                        {control applicationGroupForm}
+                    </div>
+                </div>
+            </div>
+        {/if}
+    {else}
+        {if $unapprovedRole}
+            <div class="row">
+                <div class="col">
+                    <div class="alert alert-warning alert-forever">
+                        {_web.application_content.unapproved_registration, ['roles' => $dbUser->getRolesText()]}
+                    </div>
+                </div>
+            </div>
+        {else}
+            <div class="row">
+                <div class="col">
+                    <div class="alert alert-info alert-forever">
+                        {_web.application_content.approved_registration, ['roles' => $dbUser->getRolesText()]}
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    {control applicationsGrid}
+                </div>
+            </div>
+        {/if}
+    {/if}
+</div>

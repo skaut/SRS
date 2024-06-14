@@ -42,6 +42,12 @@
                 <a class="nav-link" href="{plink :Admin:Mailing:Templates:default}">{_admin.menu.mailing}</a>
             </li>
 
+             <li n:if="$user->isAllowed($resourceGroups, $permissionManage)"
+                    n:class="nav-item, $presenter->isLinkCurrent(':Admin:Groups:Groups:*')
+                    || $presenter->isLinkCurrent(':Admin:Groups:Status:*') ? active">
+                <a class="nav-link" href="{plink :Admin:Groups:Status:default}">{_admin.menu.groups}</a>
+            </li>
+
             <li n:if="$user->isAllowed($resourceConfiguration, $permissionManage)"
                     n:class="nav-item, $presenter->isLinkCurrent(':Admin:Configuration:Application:*')
                     || $presenter->isLinkCurrent(':Admin:Configuration:Mailing:*')
