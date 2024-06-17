@@ -3504,16 +3504,16 @@
         },
         {
             "name": "mpdf/qrcode",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpdf/qrcode.git",
-                "reference": "0c09fce8b28707611c3febdd1ca424d40f172184"
+                "reference": "5320c512776aa3c199bd8be8f707ec83d9779d85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpdf/qrcode/zipball/0c09fce8b28707611c3febdd1ca424d40f172184",
-                "reference": "0c09fce8b28707611c3febdd1ca424d40f172184",
+                "url": "https://api.github.com/repos/mpdf/qrcode/zipball/5320c512776aa3c199bd8be8f707ec83d9779d85",
+                "reference": "5320c512776aa3c199bd8be8f707ec83d9779d85",
                 "shasum": ""
             },
             "require": {
@@ -3560,7 +3560,7 @@
             ],
             "support": {
                 "issues": "https://github.com/mpdf/qrcode/issues",
-                "source": "https://github.com/mpdf/qrcode/tree/v1.2.0"
+                "source": "https://github.com/mpdf/qrcode/tree/v1.2.1"
             },
             "funding": [
                 {
@@ -3568,7 +3568,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2022-01-11T09:42:41+00:00"
+            "time": "2024-06-04T13:40:39+00:00"
         },
         {
             "name": "myclabs/deep-copy",
