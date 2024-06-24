@@ -65,7 +65,7 @@
         "pear/numbers_words": "^0.18",
         "azuyalabs/yasumi": "^2.6",
 
-        "mhujer/fio-api-php": "^4.1",
+        "mhujer/fio-api-php": "^5.0",
         "composer/ca-bundle": "^1.3"
     },
 
