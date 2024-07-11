@@ -11,7 +11,7 @@
             stop: function (event, ui) {
                 $('.tinymce').each(function () {
                     tinymce.EditorManager.execCommand('mceRemoveEditor', false, $(this).attr('id'));
-                    tinymce.EditorManager.execCommand('mceAddEditor', false, $(this).attr('id'));
+                    tinymce.EditorManager.execCommand('mceAddEditor', false, { id: $(this).attr('id'), options: {} });
                 });
 
                 var sorted = $("#contents").sortable("toArray");
