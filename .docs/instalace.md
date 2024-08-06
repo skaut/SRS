@@ -8,7 +8,7 @@ Aplikace vyžaduje:
 - Yarn
 
 ## Docker
-Pro lokální vývoj je připraven Docker image a konfigurace pro **docker-compose**.
+Pro lokální vývoj je připraven Docker image a konfigurace pro **docker compose**.
 
 Před prvním spuštěním je třeba vytvořit docker volume pro databázi pomocí:
 
@@ -19,13 +19,13 @@ docker volume create srs_mysql
 Kontejner je možné spustit z root adresáře projektu pomocí:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Zastavení kontejneru je možné pomocí:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 
