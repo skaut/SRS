@@ -1,69 +1,69 @@
 networks:
-    main:
+  main:
 
 volumes:
-    mysql:
-    www:
+  mysql:
+  www:
 
 x-app-base:
   &app-base
-    container_name: srs.app
-    image: skaut/lebeda:8.1
-    volumes:
-        - www:/var/www
-        - .:/var/www/html
-    environment:
-        DEVELOPMENT_MACHINE: 'true'
-    networks:
-        main:
-            aliases:
-                - srs.loc
+  container_name: srs.app
+  image: skaut/lebeda:8.1
+  volumes:
+    - www:/var/www
+    - .:/var/www/html
+  environment:
+    DEVELOPMENT_MACHINE: 'true'
+  networks:
+    main:
+      aliases:
+        - srs.loc
 
 services:
-    app:
-        <<: *app-base
-        depends_on:
-            - mysql
+  app:
+    <<: *app-base
+    depends_on:
+      - mysql
 
-    app-test:
-        <<: *app-base
-        depends_on:
-            - mysql-test
+  app-test:
+    <<: *app-base
+    depends_on:
+      - mysql-test
 
-    mysql:
-        container_name: srs.mysql
-        image: mysql:8.0
-        volumes:
-            - mysql:/var/lib/mysql
-        environment:
-            MYSQL_ROOT_PASSWORD: 'root'
-            MYSQL_DATABASE: srs
-            TZ: Europe/Paris
-        networks:
-            main:
-                aliases:
-                    - mysql
+  mysql:
+    container_name: srs.mysql
+    image: mysql:8.0
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: srs
+      TZ: Europe/Paris
+    networks:
+      main:
+        aliases:
+          - mysql
 
-    mysql-test:
-        container_name: srs.mysql-test
-        image: mysql:8.0
-        environment:
-            MYSQL_ROOT_PASSWORD: 'root'
-            MYSQL_DATABASE: srs
-            TZ: Europe/Paris
-        networks:
-            main:
-                aliases:
-                    - mysql-test
+  mysql-test:
+    container_name: srs.mysql-test
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: srs
+      TZ: Europe/Paris
+    networks:
+      main:
+        aliases:
+          - mysql-test
 
-    smtp:
-        container_name: srs.smtp
-        image: tophfr/mailcatcher
-        environment:
-            SMTP_HOST: smtp-srs.loc
-        networks:
-            main:
-                aliases:
-                - smtp-srs.loc
-        ports:
-            - 1080:80
+  smtp:
+    container_name: srs.smtp
+    image: tophfr/mailcatcher
+    environment:
+      SMTP_HOST: smtp-srs.loc
+    networks:
+      main:
+        aliases:
+          - smtp-srs.loc
+    ports:
+      - 1080:80
