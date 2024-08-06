@@ -86,9 +86,8 @@ jobs:
           path: .
       - name: Extract workdir
         run: tar -xzpf workdir.tar.gz
-      - name: Start application containers
-        run: docker compose up -d mysql-test
-      - run: docker compose run -T -u www-data app phing tests-integration
+      - name: Run tests
+        run: docker compose run -T -u www-data app-test phing tests-integration
 
   code-coverage:
     name: "Code coverage"
@@ -103,10 +102,8 @@ jobs:
           path: .
       - name: Extract workdir
         run: tar -xzpf workdir.tar.gz
-      - name: Start application containers
-        run: docker compose up -d mysql-test
       - name: Run tests with coverage
-        run: docker compose run -T -u www-data app phing tests-with-coverage
+        run: docker compose run -T -u www-data app-test phing tests-with-coverage
       - name: Upload code coverage
         uses: codecov/codecov-action@v1
         with:

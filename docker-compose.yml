@@ -1,20 +1,34 @@
-version: '3.4'
+networks:
+    main:
+
+volumes:
+    mysql:
+    www:
+
+x-app-base:
+  &app-base
+    container_name: srs.app
+    image: skaut/lebeda:8.1
+    volumes:
+        - www:/var/www
+        - .:/var/www/html
+    environment:
+        DEVELOPMENT_MACHINE: 'true'
+    networks:
+        main:
+            aliases:
+                - srs.loc
 
 services:
     app:
-        container_name: srs.app
-        image: skaut/lebeda:8.1
-        volumes:
-            - www:/var/www
-            - .:/var/www/html
+        <<: *app-base
         depends_on:
             - mysql
-        environment:
-            DEVELOPMENT_MACHINE: 'true'
-        networks:
-            main:
-                aliases:
-                    - srs.loc
+
+    app-test:
+        <<: *app-base
+        depends_on:
+            - mysql-test
 
     mysql:
         container_name: srs.mysql
@@ -53,10 +67,3 @@ services:
                 - smtp-srs.loc
         ports:
             - 1080:80
-
-volumes:
-    mysql:
-    www:
-
-networks:
-    main:
