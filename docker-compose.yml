@@ -23,12 +23,14 @@ services:
   app:
     <<: *app-base
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
 
   app-test:
     <<: *app-base
     depends_on:
-      - mysql-test
+      mysql-test:
+        condition: service_healthy
 
   mysql:
     container_name: srs.mysql
@@ -39,6 +41,10 @@ services:
       MYSQL_ROOT_PASSWORD: 'root'
       MYSQL_DATABASE: srs
       TZ: Europe/Paris
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
     networks:
       main:
         aliases:
@@ -51,6 +57,10 @@ services:
       MYSQL_ROOT_PASSWORD: 'root'
       MYSQL_DATABASE: srs
       TZ: Europe/Paris
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
     networks:
       main:
         aliases:
