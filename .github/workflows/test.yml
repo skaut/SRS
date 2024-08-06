@@ -46,7 +46,7 @@ jobs:
       - run: composer install
       - run: yarn install
       - run: yarn build
-      - name: Remove development docker-compose override
+      - name: Remove development docker compose override
         run: rm docker-compose.override.yml
       - name: Fix permissions
         run: chown 1000:1000 . -R && chmod 777 . -R
@@ -87,8 +87,8 @@ jobs:
       - name: Extract workdir
         run: tar -xzpf workdir.tar.gz
       - name: Start application containers
-        run: docker-compose up -d mysql-test
-      - run: docker-compose run -T -u www-data app phing tests-integration
+        run: docker compose up -d mysql-test
+      - run: docker compose run -T -u www-data app phing tests-integration
 
   code-coverage:
     name: "Code coverage"
@@ -104,9 +104,9 @@ jobs:
       - name: Extract workdir
         run: tar -xzpf workdir.tar.gz
       - name: Start application containers
-        run: docker-compose up -d mysql-test
+        run: docker compose up -d mysql-test
       - name: Run tests with coverage
-        run: docker-compose run -T -u www-data app phing tests-with-coverage
+        run: docker compose run -T -u www-data app phing tests-with-coverage
       - name: Upload code coverage
         uses: codecov/codecov-action@v1
         with:
