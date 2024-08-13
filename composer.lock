@@ -9846,16 +9846,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.11.9",
+            "version": "1.11.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "e370bcddadaede0c1716338b262346f40d296f82"
+                "reference": "640410b32995914bde3eed26fa89552f9c2c082f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e370bcddadaede0c1716338b262346f40d296f82",
-                "reference": "e370bcddadaede0c1716338b262346f40d296f82",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/640410b32995914bde3eed26fa89552f9c2c082f",
+                "reference": "640410b32995914bde3eed26fa89552f9c2c082f",
                 "shasum": ""
             },
             "require": {
@@ -9900,7 +9900,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-08-01T16:25:18+00:00"
+            "time": "2024-08-08T09:02:50+00:00"
         },
         {
             "name": "phpstan/phpstan-doctrine",
@@ -9976,21 +9976,21 @@
         },
         {
             "name": "phpstan/phpstan-nette",
-            "version": "1.3.5",
+            "version": "1.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-nette.git",
-                "reference": "30650e627dad1f3a72b44eb4e45501a446a4a04d"
+                "reference": "ea836536487f46d10bb17b0245d6d6c0f332793d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/30650e627dad1f3a72b44eb4e45501a446a4a04d",
-                "reference": "30650e627dad1f3a72b44eb4e45501a446a4a04d",
+                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/ea836536487f46d10bb17b0245d6d6c0f332793d",
+                "reference": "ea836536487f46d10bb17b0245d6d6c0f332793d",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.11.9"
+                "phpstan/phpstan": "^1.11.10"
             },
             "conflict": {
                 "nette/application": "<2.3.0",
@@ -10031,9 +10031,9 @@
             "description": "Nette Framework class reflection extension for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-nette/issues",
-                "source": "https://github.com/phpstan/phpstan-nette/tree/1.3.5"
+                "source": "https://github.com/phpstan/phpstan-nette/tree/1.3.6"
             },
-            "time": "2024-08-01T21:42:43+00:00"
+            "time": "2024-08-08T08:27:49+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
