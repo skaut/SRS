@@ -5,7 +5,7 @@
     "watch": "webpack --watch --config webpack.dev.js"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.5.2",
+    "@fortawesome/fontawesome-free": "^6.6.0",
     "@fullcalendar/bootstrap": "^6.1.9",
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.14",
