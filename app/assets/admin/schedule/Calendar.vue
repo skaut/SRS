@@ -89,7 +89,7 @@
             </div>
         </div>
 
-        <FullCalendar id="calendar" style="visibility: hidden" ref="fullCalendar" :options="calendarOptions"/>
+        <FullCalendar id="calendar" v-show="config" ref="fullCalendar" :options="calendarOptions"/>
     </div>
 </template>
 
