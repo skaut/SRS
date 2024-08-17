@@ -187,9 +187,6 @@
                     opacity: 1.0
                 }, ALERT_DURATION).slideUp(ALERT_ANIMATION);
             },
-            config: function () {
-                $('#calendar').css('visibility', 'visible');
-            }
         },
         methods: {
             ...mapActions(['loadData', 'addProgram', 'updateProgram', 'updateProgramRoom', 'removeProgram']),

@@ -250,7 +250,6 @@
                 if (!localStorage.getItem('fcInitialView')) {
                     this.handleChangeView(this.config.initial_view, false);
                 }
-                $('#calendar').css('visibility', 'visible');
             }
         },
         methods: {
