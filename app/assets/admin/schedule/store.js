@@ -205,6 +205,7 @@ export default new Vuex.Store({
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
                     info.event.setProp('id', responseObject.program.id);
+                    info.event.setExtendedProp('id', responseObject.program.id); // todo: odstranit workaround po oprave bugu (https://github.com/fullcalendar/fullcalendar/issues/4730)
                     commit('incrementProgramsCount', info.event.extendedProps.block.id);
                     commit('setMessage', {type: responseObject.status, text: responseObject.message});
                 }).catch(error => {
@@ -221,7 +222,7 @@ export default new Vuex.Store({
         updateProgram({commit}, info) {
             commit('incrementLoading');
             const data = {
-                id: info.event.id,
+                id: info.event.id !== '' ? info.event.id : info.event.extendedProps.id, // todo: odstranit workaround po oprave bugu (https://github.com/fullcalendar/fullcalendar/issues/4730)
                 block_id: info.event.extendedProps.block.id,
                 room_id: info.event.getResources()[0].id !== '0' ? info.event.getResources()[0].id : null,
                 start: info.event.start.toISOString()
@@ -247,7 +248,7 @@ export default new Vuex.Store({
         updateProgramRoom({commit}, info) {
             commit('incrementLoading');
             const data = {
-                id: info.event.id,
+                id: info.event.id !== '' ? info.event.id : info.event.extendedProps.id, // todo: odstranit workaround po oprave bugu (https://github.com/fullcalendar/fullcalendar/issues/4730)
                 block_id: info.event.extendedProps.block.id,
                 room_id: info.resourceId !== '0' ? info.resourceId : null,
                 start: info.event.start.toISOString()
@@ -270,7 +271,7 @@ export default new Vuex.Store({
          */
         removeProgram({commit, state}, info) {
             commit('incrementLoading');
-            Vue.axios.delete('remove-program/' + info.event.id)
+            Vue.axios.delete('remove-program/' + (info.event.id !== '' ? info.event.id : info.event.extendedProps.id)) // todo: odstranit workaround po oprave bugu (https://github.com/fullcalendar/fullcalendar/issues/4730)
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
                     info.event.remove();
