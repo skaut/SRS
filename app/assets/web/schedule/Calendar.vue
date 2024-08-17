@@ -133,7 +133,7 @@
             </div>
         </div>
 
-        <FullCalendar id="calendar" style="visibility: hidden" ref="fullCalendar" :options="calendarOptions"/>
+        <FullCalendar id="calendar" v-show="config" ref="fullCalendar" :options="calendarOptions"/>
     </div>
 </template>
 
@@ -250,7 +250,6 @@
                 if (!localStorage.getItem('fcInitialView')) {
                     this.handleChangeView(this.config.initial_view, false);
                 }
-                $('#calendar').css('visibility', 'visible');
             }
         },
         methods: {

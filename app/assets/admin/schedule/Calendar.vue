@@ -89,7 +89,7 @@
             </div>
         </div>
 
-        <FullCalendar id="calendar" style="visibility: hidden" ref="fullCalendar" :options="calendarOptions"/>
+        <FullCalendar id="calendar" v-show="config" ref="fullCalendar" :options="calendarOptions"/>
     </div>
 </template>
 
@@ -187,9 +187,6 @@
                     opacity: 1.0
                 }, ALERT_DURATION).slideUp(ALERT_ANIMATION);
             },
-            config: function () {
-                $('#calendar').css('visibility', 'visible');
-            }
         },
         methods: {
             ...mapActions(['loadData', 'addProgram', 'updateProgram', 'updateProgramRoom', 'removeProgram']),
