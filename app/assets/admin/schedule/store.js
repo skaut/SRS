@@ -1,19 +1,15 @@
 'use strict';
 
-import Vue from 'vue';
-import Vuex, {createStore} from 'vuex';
+import {createStore} from 'vuex';
 import axios from 'axios';
-import VueAxios from 'vue-axios'
 
 const COLOR_VOLUNTARY = '#0077F7';
 const COLOR_MANDATORY = '#D53343';
 const COLOR_AUTO_REGISTERED = '#F7BB07';
 
-Vue.use(Vuex);
-Vue.use(VueAxios, axios);
-Vue.axios.defaults.baseURL = window.location.origin + '/api/schedule/';
+axios.defaults.baseURL = window.location.origin + '/api/schedule/';
 
-const store = createStore({
+export const store = createStore({
     state: {
         config: {
             seminar_from_date: '2000-01-01',
@@ -94,7 +90,7 @@ const store = createStore({
          */
         loadData({commit}) {
             commit('incrementLoading');
-            Vue.axios.get('get-calendar-config')
+            axios.get('get-calendar-config')
                 .then(response => {
                     const config = JSON.parse(response.data);
                     commit('setConfig', config);
@@ -106,9 +102,9 @@ const store = createStore({
 
             commit('incrementLoading');
             axios.all([
-                Vue.axios.get('get-blocks'),
-                Vue.axios.get('get-rooms'),
-                Vue.axios.get('get-programs-admin')
+                axios.get('get-blocks'),
+                axios.get('get-rooms'),
+                axios.get('get-programs-admin')
             ]).then(axios.spread((blocksResponse, roomsResponse, programsResponse) => {
                 const blocks = Array.prototype.slice.call(JSON.parse(blocksResponse.data))
                     .map(function(block) {
@@ -201,7 +197,7 @@ const store = createStore({
                 room_id: info.event.resourceId && info.event.resourceId !== '0' ? info.event.resourceId : null,
                 start: info.event.start.toISOString()
             };
-            Vue.axios.put('save-program', data)
+            axios.put('save-program', data)
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
                     info.event.setProp('id', responseObject.program.id);
@@ -227,7 +223,7 @@ const store = createStore({
                 room_id: info.event.getResources()[0].id !== '0' ? info.event.getResources()[0].id : null,
                 start: info.event.start.toISOString()
             };
-            Vue.axios.put('save-program', data)
+            axios.put('save-program', data)
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
                     commit('setEventTime', {eventId: info.event.id, start: responseObject.program.start, end: responseObject.program.end});
@@ -253,7 +249,7 @@ const store = createStore({
                 room_id: info.resourceId !== '0' ? info.resourceId : null,
                 start: info.event.start.toISOString()
             };
-            Vue.axios.put('save-program', data)
+            axios.put('save-program', data)
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
                     info.event.setResources([String(responseObject.program.room_id || 0)]);
@@ -271,7 +267,7 @@ const store = createStore({
          */
         removeProgram({commit, state}, info) {
             commit('incrementLoading');
-            Vue.axios.delete('remove-program/' + (info.event.id !== '' ? info.event.id : info.event.extendedProps.id)) // todo: odstranit workaround po oprave bugu (https://github.com/fullcalendar/fullcalendar/issues/4730)
+            axios.delete('remove-program/' + (info.event.id !== '' ? info.event.id : info.event.extendedProps.id)) // todo: odstranit workaround po oprave bugu (https://github.com/fullcalendar/fullcalendar/issues/4730)
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
                     info.event.remove();

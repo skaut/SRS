@@ -1,9 +1,7 @@
 'use strict';
 
-import Vue from 'vue';
-import Vuex, {createStore} from 'vuex';
+import {createStore} from 'vuex';
 import axios from 'axios';
-import VueAxios from 'vue-axios'
 
 var COLOR_VOLUNTARY = '#0077F7';
 var COLOR_MANDATORY = '#D53343';
@@ -11,11 +9,9 @@ var COLOR_ATTENDS = '#27A243';
 var COLOR_ALTERNATES = '#F7BB07';
 var COLOR_BLOCKED = '#6C757D';
 
-Vue.use(Vuex);
-Vue.use(VueAxios, axios);
-Vue.axios.defaults.baseURL = window.location.origin + '/api/schedule/';
+axios.defaults.baseURL = window.location.origin + '/api/schedule/';
 
-const store = createStore({
+export const store = createStore({
     state: {
         config: {
             seminar_from_date: '2000-01-01',
@@ -103,7 +99,7 @@ const store = createStore({
          */
         loadData({commit}) {
             commit('incrementLoading');
-            Vue.axios.get('get-calendar-config')
+            axios.get('get-calendar-config')
                 .then(response => {
                     const config = JSON.parse(response.data);
                     commit('setConfig', config);
@@ -115,9 +111,9 @@ const store = createStore({
 
             commit('incrementLoading');
             axios.all([
-                Vue.axios.get('get-blocks'),
-                Vue.axios.get('get-rooms'),
-                Vue.axios.get('get-programs-web')
+                axios.get('get-blocks'),
+                axios.get('get-rooms'),
+                axios.get('get-programs-web')
             ]).then(axios.spread((blocksResponse, roomsResponse, programsResponse) => {
                 const blocks = Array.prototype.slice.call(JSON.parse(blocksResponse.data))
                     .map(function(block) {
@@ -213,7 +209,7 @@ const store = createStore({
          */
         attendProgram({commit, state}, info) {
             commit('incrementLoading');
-            Vue.axios.put('attend-program/' + info.event.id)
+            axios.put('attend-program/' + info.event.id)
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
 
@@ -260,7 +256,7 @@ const store = createStore({
          */
         unattendProgram({commit, state}, info) {
             commit('incrementLoading');
-            Vue.axios.delete('unattend-program/' + info.event.id)
+            axios.delete('unattend-program/' + info.event.id)
                 .then(response => {
                     const responseObject = JSON.parse(response.data);
 
