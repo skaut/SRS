@@ -1,7 +1,7 @@
 'use strict';
 
 import Vue from 'vue';
-import Vuex from 'vuex';
+import Vuex, {createStore} from 'vuex';
 import axios from 'axios';
 import VueAxios from 'vue-axios'
 
@@ -13,7 +13,7 @@ Vue.use(Vuex);
 Vue.use(VueAxios, axios);
 Vue.axios.defaults.baseURL = window.location.origin + '/api/schedule/';
 
-export default new Vuex.Store({
+const store = createStore({
     state: {
         config: {
             seminar_from_date: '2000-01-01',
