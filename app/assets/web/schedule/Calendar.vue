@@ -140,7 +140,7 @@
 <script>
     'use strict';
 
-    import FullCalendar from '@fullcalendar/vue'
+    import FullCalendar from '@fullcalendar/vue3'
     import csLocale from '@fullcalendar/core/locales/cs';
     import timeGridPlugin from '@fullcalendar/timegrid'
     import resourceTimelinePlugin from '@fullcalendar/resource-timeline'

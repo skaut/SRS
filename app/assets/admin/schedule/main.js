@@ -1,12 +1,12 @@
 'use strict';
 
-import Vue from 'vue';
+import {createApp} from 'vue';
 import Calendar from './Calendar.vue';
 import BlocksList from './BlocksList.vue';
 import store from './store'
 
 if(document.getElementById("calendar")) {
-    new Vue({
+    const calendarApp = createApp({
         el: '#calendar',
         store,
         render: h => h(Calendar),
@@ -14,7 +14,7 @@ if(document.getElementById("calendar")) {
 }
 
 if(document.getElementById("blocks-list")) {
-    new Vue({
+    const blocksListApp = createApp({
         el: '#blocks-list',
         store,
         render: h => h(BlocksList),
