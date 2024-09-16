@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\WebModule\Presenters;
 
 use App\WebModule\Components\ApplicationContentControl;
+use App\WebModule\Components\ApplicationGroupContentControl;
 use App\WebModule\Components\BlocksContentControl;
 use App\WebModule\Components\CapacitiesContentControl;
 use App\WebModule\Components\ContactFormContentControl;
@@ -12,6 +13,7 @@ use App\WebModule\Components\DocumentContentControl;
 use App\WebModule\Components\FaqContentControl;
 use App\WebModule\Components\HtmlContentControl;
 use App\WebModule\Components\IApplicationContentControlFactory;
+use App\WebModule\Components\IApplicationGroupContentControlFactory;
 use App\WebModule\Components\IBlocksContentControlFactory;
 use App\WebModule\Components\ICapacitiesContentControlFactory;
 use App\WebModule\Components\IContactFormContentControlFactory;
@@ -49,6 +51,9 @@ class PagePresenter extends WebBasePresenter
 {
     #[Inject]
     public IApplicationContentControlFactory $applicationContentControlFactory;
+
+    #[Inject]
+    public IApplicationGroupContentControlFactory $applicationGroupContentControlFactory;
 
     #[Inject]
     public IBlocksContentControlFactory $blocksContentControlFactory;
@@ -135,6 +140,11 @@ class PagePresenter extends WebBasePresenter
     protected function createComponentApplicationContent(): ApplicationContentControl
     {
         return $this->applicationContentControlFactory->create();
+    }
+
+    protected function createComponentApplicationGroupContent(): ApplicationGroupContentControl
+    {
+        return $this->applicationGroupContentControlFactory->create();
     }
 
     protected function createComponentBlocksContent(): BlocksContentControl
