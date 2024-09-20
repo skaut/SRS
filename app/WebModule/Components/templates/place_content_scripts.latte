@@ -1,39 +1,71 @@
-<script src="https://api.mapy.cz/loader.js"></script>
-<script>Loader.load()</script>
+<script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
 
 <script>
-    var m = new SMap(JAK.gel("m"), SMap.Coords.fromWGS84(14.41790, 50.12655), 13);
-    m.addDefaultLayer(SMap.DEF_BASE).enable();
-    m.addDefaultControls();
+    const API_KEY = 'ZtO7KYJferwatqCDOQeOTGJSssbdRjte2oHS1oXQb50';
 
-    var markers = [];
-    var coords = [];
+    const map = L.map('map').setView([49.8729317, 14.8981184], 16);
 
-    {foreach $points as $point}
-    var gps = SMap.Coords.fromWGS84({$point->getGpsLon()}, {$point->getGpsLat()});
+    L.tileLayer("https://api.mapy.cz/v1/maptiles/basic/256/{" + "z}/{" + "x}/{" + "y}?apikey=" + API_KEY, {
+        minZoom: 0,
+        maxZoom: 19,
+        attribution: '<a href="https://api.mapy.cz/copyright" target="_blank">&copy; Seznam.cz a.s. a další</a>',
+    }).addTo(map);
 
-    var options = {
-        title: {$point->getName()}
-    }
-    var marker = new SMap.Marker(gps, "", options);
+    const LogoControl = L.Control.extend({
+        options: {
+            position: 'bottomleft',
+        },
 
-    var card = new SMap.Card();
-    card.getHeader().innerHTML = "<strong>" + {$point->getName()} + "</strong>";
-    card.getHeader().style = "font-size: 18px"
-    card.getBody().innerHTML = "<strong>GPS:</strong> {$point->getGpsLat()|round:7}N, {$point->getGpsLon()|round:7}E";
-    card.getFooter().style = "display: none";
-    card.getContainer().style.padding = "0";
-    marker.decorate(SMap.Marker.Feature.Card, card);
+        onAdd: function (map) {
+            const container = L.DomUtil.create('div');
+            const link = L.DomUtil.create('a', '', container);
 
-    coords.push(gps);
-    markers.push(marker);
-    {/foreach}
+            link.setAttribute('href', 'http://mapy.cz/');
+            link.setAttribute('target', '_blank');
+            link.innerHTML = '<img src="https://api.mapy.cz/img/api/logo.svg" />';
+            L.DomEvent.disableClickPropagation(link);
 
-    var layer = new SMap.Layer.Marker();
-    m.addLayer(layer);
-    layer.addMarker(markers);
-    layer.enable();
+            return container;
+        },
+    });
 
-    var center = m.computeCenterZoom(coords, false);
-    m.setCenterZoom(center[0], center[1]);
+    new LogoControl().addTo(map);
+
+
+
+
+    {*var m = new SMap(JAK.gel("m"), SMap.Coords.fromWGS84(14.41790, 50.12655), 13);*}
+    {*m.addDefaultLayer(SMap.DEF_BASE).enable();*}
+    {*m.addDefaultControls();*}
+
+    {*var markers = [];*}
+    {*var coords = [];*}
+
+    {*{foreach $points as $point}*}
+    {*var gps = SMap.Coords.fromWGS84({$point->getGpsLon()}, {$point->getGpsLat()});*}
+
+    {*var options = {*}
+    {*    title: {$point->getName()}*}
+    {*}*}
+    {*var marker = new SMap.Marker(gps, "", options);*}
+
+    {*var card = new SMap.Card();*}
+    {*card.getHeader().innerHTML = "<strong>" + {$point->getName()} + "</strong>";*}
+    {*card.getHeader().style = "font-size: 18px"*}
+    {*card.getBody().innerHTML = "<strong>GPS:</strong> {$point->getGpsLat()|round:7}N, {$point->getGpsLon()|round:7}E";*}
+    {*card.getFooter().style = "display: none";*}
+    {*card.getContainer().style.padding = "0";*}
+    {*marker.decorate(SMap.Marker.Feature.Card, card);*}
+
+    {*coords.push(gps);*}
+    {*markers.push(marker);*}
+    {*{/foreach}*}
+
+    {*var layer = new SMap.Layer.Marker();*}
+    {*m.addLayer(layer);*}
+    {*layer.addMarker(markers);*}
+    {*layer.enable();*}
+
+    {*var center = m.computeCenterZoom(coords, false);*}
+    {*m.setCenterZoom(center[0], center[1]);*}
 </script>
