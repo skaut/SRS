@@ -7,7 +7,6 @@ volumes:
 
 x-app-base:
   &app-base
-  container_name: srs.app
   image: skaut/lebeda:8.1
   volumes:
     - www:/var/www
@@ -22,12 +21,14 @@ x-app-base:
 services:
   app:
     <<: *app-base
+    container_name: srs.app
     depends_on:
       mysql:
         condition: service_healthy
 
   app-test:
     <<: *app-base
+    container_name: srs.app-test
     depends_on:
       mysql-test:
         condition: service_healthy
