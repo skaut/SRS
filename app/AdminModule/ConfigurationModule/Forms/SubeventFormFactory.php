@@ -176,8 +176,6 @@ class SubeventFormFactory
         $incompatibleSubevents = $this->subeventRepository->findSubeventsByIds($args[0]);
         $requiredSubevents     = $this->subeventRepository->findSubeventsByIds($args[1]);
 
-        $this->em->getConnection()->beginTransaction();
-
         if ($this->subevent) {
             $editedSubevent = $this->subevent;
         } else {
@@ -204,7 +202,9 @@ class SubeventFormFactory
             }
         }
 
-        $this->em->getConnection()->rollBack();
+        if (! $this->subevent) {
+            $this->subeventRepository->remove($editedSubevent);
+        }
 
         return $valid;
     }
