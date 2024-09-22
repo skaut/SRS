@@ -16,6 +16,7 @@ use Nette\Forms\Controls\MultiSelectBox;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 
+use Tracy\Debugger;
 use function md5;
 use function mt_rand;
 use function uniqid;
@@ -145,21 +146,26 @@ class SubeventFormFactory
             return;
         }
 
-        if (! $this->subevent) {
-            $this->subevent = new Subevent();
-        }
+        $this->em->wrapInTransaction(function () use ($values): void {
+            if (!$this->subevent) {
+                $this->subevent = new Subevent();
+            }
 
-        $capacity = $values->capacity !== '' ? $values->capacity : null;
+            $capacity = $values->capacity !== '' ? $values->capacity : null;
 
-        $this->subevent->setName($values->name);
-        $this->subevent->setRegisterableFrom($values->registerableFrom);
-        $this->subevent->setRegisterableTo($values->registerableTo);
-        $this->subevent->setCapacity($capacity);
-        $this->subevent->setFee($values->fee);
-        $this->subevent->setIncompatibleSubevents($this->subeventRepository->findSubeventsByIds($values->incompatibleSubevents));
-        $this->subevent->setRequiredSubevents($this->subeventRepository->findSubeventsByIds($values->requiredSubevents));
+            $this->subevent->setName($values->name);
+            $this->subevent->setRegisterableFrom($values->registerableFrom);
+            $this->subevent->setRegisterableTo($values->registerableTo);
+            $this->subevent->setCapacity($capacity);
+            $this->subevent->setFee($values->fee);
+            $this->subevent->setIncompatibleSubevents($this->subeventRepository->findSubeventsByIds($values->incompatibleSubevents));
+            $this->subevent->setRequiredSubevents($this->subeventRepository->findSubeventsByIds($values->requiredSubevents));
 
-        $this->subeventRepository->save($this->subevent);
+            Debugger::log($this->subevent->getIncompatibleSubeventsText());
+            Debugger::log($this->subevent->getRequiredSubeventsTransitiveText());
+
+            $this->subeventRepository->save($this->subevent);
+        });
     }
 
     /**
@@ -201,8 +207,6 @@ class SubeventFormFactory
                 break;
             }
         }
-
-        $this->subeventRepository->save($editedSubevent);
 
         $this->em->getConnection()->rollBack();
 
