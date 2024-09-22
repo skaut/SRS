@@ -202,7 +202,7 @@ class UsersGridControl extends Control
                 fn (User $row) => Html::el('span')
                     ->class('text-danger')
                     ->setText($this->userService->getMembershipText($row)),
-                static fn (User $row) => $row->getUnit() === null
+                static fn (User $row) => $row->getUnit() === null,
             )
             ->setSortable()
             ->setSortableCallback(static function (QueryBuilder $qb, array $sort): void {

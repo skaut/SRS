@@ -146,7 +146,7 @@ class SubeventFormFactory
         }
 
         $this->em->wrapInTransaction(function () use ($values): void {
-            if (!$this->subevent) {
+            if (! $this->subevent) {
                 $this->subevent = new Subevent();
             }
 

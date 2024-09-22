@@ -62,7 +62,7 @@ class CustomInputsGridControl extends Control
         $grid->addColumnText('roles', 'admin.configuration.custom_inputs_roles', 'rolesText')
             ->setRendererOnCondition(
                 fn () => $this->translator->translate('admin.configuration.custom_inputs_roles_all'),
-                fn (CustomInput $input) => count($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])) === $input->getRoles()->count()
+                fn (CustomInput $input) => count($this->aclService->getRolesWithoutRolesOptions([Role::GUEST, Role::UNAPPROVED, Role::NONREGISTERED])) === $input->getRoles()->count(),
             );
 
         $grid->addColumnText('type', 'admin.configuration.custom_inputs_type')

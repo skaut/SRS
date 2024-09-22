@@ -82,7 +82,7 @@ class PagesGridControl extends Control
         $grid->addColumnText('roles', 'admin.cms.pages.column.roles', 'rolesText')
             ->setRendererOnCondition(
                 fn () => $this->translator->translate('admin.cms.pages.column.roles_all'),
-                fn (Page $page) => count($this->roleRepository->findAll()) === $page->getRoles()->count()
+                fn (Page $page) => count($this->roleRepository->findAll()) === $page->getRoles()->count(),
             );
 
         $rolesOptions  = $this->aclService->getRolesWithoutRolesOptions([]);
@@ -149,7 +149,7 @@ class PagesGridControl extends Control
             ]);
         $grid->allowRowsAction(
             'delete',
-            static fn (Page $item) => $item->getSlug() !== '/'
+            static fn (Page $item) => $item->getSlug() !== '/',
         );
 
         return $grid;
