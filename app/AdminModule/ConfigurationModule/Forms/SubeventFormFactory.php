@@ -16,7 +16,6 @@ use Nette\Forms\Controls\MultiSelectBox;
 use Nextras\FormComponents\Controls\DateTimeControl;
 use stdClass;
 
-use Tracy\Debugger;
 use function md5;
 use function mt_rand;
 use function uniqid;
@@ -160,9 +159,6 @@ class SubeventFormFactory
             $this->subevent->setFee($values->fee);
             $this->subevent->setIncompatibleSubevents($this->subeventRepository->findSubeventsByIds($values->incompatibleSubevents));
             $this->subevent->setRequiredSubevents($this->subeventRepository->findSubeventsByIds($values->requiredSubevents));
-
-            Debugger::log($this->subevent->getIncompatibleSubeventsText());
-            Debugger::log($this->subevent->getRequiredSubeventsTransitiveText());
 
             $this->subeventRepository->save($this->subevent);
         });
