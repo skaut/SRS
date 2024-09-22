@@ -268,8 +268,6 @@ class EditRoleFormFactory
         $incompatibleRoles = $this->roleRepository->findRolesByIds($args[0]);
         $requiredRoles     = $this->roleRepository->findRolesByIds($args[1]);
 
-        $this->em->getConnection()->beginTransaction();
-
         $this->role->setIncompatibleRoles($incompatibleRoles);
         $this->role->setRequiredRoles($requiredRoles);
 
@@ -287,8 +285,6 @@ class EditRoleFormFactory
                 break;
             }
         }
-
-        $this->em->getConnection()->rollBack();
 
         return $valid;
     }

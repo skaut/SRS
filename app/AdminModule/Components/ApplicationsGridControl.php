@@ -170,7 +170,7 @@ class ApplicationsGridControl extends Control
             'generatePaymentProofCash',
             static fn (Application $item) => $item->getState() === ApplicationState::PAID
                 && $item->getPaymentMethod() === PaymentType::CASH
-                && $item->getPaymentDate()
+                && $item->getPaymentDate(),
         );
 
         $grid->addAction('generatePaymentProofBank', 'admin.users.users_applications_download_payment_proof_bank');
@@ -178,7 +178,7 @@ class ApplicationsGridControl extends Control
             'generatePaymentProofBank',
             static fn (Application $item) => $item->getState() === ApplicationState::PAID
                 && $item->getPaymentMethod() === PaymentType::BANK
-                && $item->getPaymentDate()
+                && $item->getPaymentDate(),
         );
 
         if ($this->user->getNotCanceledSubeventsApplications()->count() > 1) {
@@ -190,7 +190,7 @@ class ApplicationsGridControl extends Control
             $grid->allowRowsAction(
                 'cancelApplication',
                 static fn (Application $application) => $application instanceof SubeventsApplication &&
-                    ! $application->isCanceled()
+                    ! $application->isCanceled(),
             );
         }
 

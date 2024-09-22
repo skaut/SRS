@@ -145,21 +145,23 @@ class SubeventFormFactory
             return;
         }
 
-        if (! $this->subevent) {
-            $this->subevent = new Subevent();
-        }
+        $this->em->wrapInTransaction(function () use ($values): void {
+            if (! $this->subevent) {
+                $this->subevent = new Subevent();
+            }
 
-        $capacity = $values->capacity !== '' ? $values->capacity : null;
+            $capacity = $values->capacity !== '' ? $values->capacity : null;
 
-        $this->subevent->setName($values->name);
-        $this->subevent->setRegisterableFrom($values->registerableFrom);
-        $this->subevent->setRegisterableTo($values->registerableTo);
-        $this->subevent->setCapacity($capacity);
-        $this->subevent->setFee($values->fee);
-        $this->subevent->setIncompatibleSubevents($this->subeventRepository->findSubeventsByIds($values->incompatibleSubevents));
-        $this->subevent->setRequiredSubevents($this->subeventRepository->findSubeventsByIds($values->requiredSubevents));
+            $this->subevent->setName($values->name);
+            $this->subevent->setRegisterableFrom($values->registerableFrom);
+            $this->subevent->setRegisterableTo($values->registerableTo);
+            $this->subevent->setCapacity($capacity);
+            $this->subevent->setFee($values->fee);
+            $this->subevent->setIncompatibleSubevents($this->subeventRepository->findSubeventsByIds($values->incompatibleSubevents));
+            $this->subevent->setRequiredSubevents($this->subeventRepository->findSubeventsByIds($values->requiredSubevents));
 
-        $this->subeventRepository->save($this->subevent);
+            $this->subeventRepository->save($this->subevent);
+        });
     }
 
     /**
@@ -173,8 +175,6 @@ class SubeventFormFactory
     {
         $incompatibleSubevents = $this->subeventRepository->findSubeventsByIds($args[0]);
         $requiredSubevents     = $this->subeventRepository->findSubeventsByIds($args[1]);
-
-        $this->em->getConnection()->beginTransaction();
 
         if ($this->subevent) {
             $editedSubevent = $this->subevent;
@@ -202,9 +202,9 @@ class SubeventFormFactory
             }
         }
 
-        $this->subeventRepository->save($editedSubevent);
-
-        $this->em->getConnection()->rollBack();
+        if (! $this->subevent) {
+            $this->subeventRepository->remove($editedSubevent);
+        }
 
         return $valid;
     }

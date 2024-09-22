@@ -188,14 +188,14 @@ class ApplicationService
 
                 if (
                     $roles->forAll(
-                        static fn (int $key, Role $role) => $role->isApprovedAfterRegistration()
+                        static fn (int $key, Role $role) => $role->isApprovedAfterRegistration(),
                     )
                 ) {
                     $user->setApproved(true);
                 } elseif (
                     ! $approve
                     && $roles->exists(
-                        static fn (int $key, Role $role) => ! $role->isApprovedAfterRegistration() && ! $rolesOld->contains($role)
+                        static fn (int $key, Role $role) => ! $role->isApprovedAfterRegistration() && ! $rolesOld->contains($role),
                     )
                 ) {
                     $user->setApproved(false);
@@ -803,7 +803,7 @@ class ApplicationService
 
         if (
             ! $approve && $roles->exists(
-                static fn (int $key, Role $role) => ! $role->isApprovedAfterRegistration()
+                static fn (int $key, Role $role) => ! $role->isApprovedAfterRegistration(),
             )
         ) {
             $user->setApproved(false);
