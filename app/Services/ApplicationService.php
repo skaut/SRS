@@ -726,7 +726,7 @@ class ApplicationService
      */
     public function isAllowedEditRegistration(User $user): bool
     {
-        return ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))
+        return ! $user->isInRoleWithSystemName(Role::NONREGISTERED)
             && ! $user->hasPaidAnyApplication()
             && $this->queryBus->handle(
                 new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO),
@@ -757,9 +757,7 @@ class ApplicationService
      */
     public function isAllowedAddApplication(User $user): bool
     {
-        return ! $user->isInRole(
-            $this->roleRepository->findBySystemName(Role::NONREGISTERED),
-        )
+        return ! $user->isInRoleWithSystemName(Role::NONREGISTERED)
             && $user->hasPaidEveryApplication()
             && $this->queryBus->handle(
                 new SettingBoolValueQuery(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT),
@@ -793,7 +791,7 @@ class ApplicationService
      */
     private function createRolesApplication(User $user, Collection $roles, User $createdBy, bool $approve = false): RolesApplication
     {
-        if (! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
+        if (! $user->isInRoleWithSystemName(Role::NONREGISTERED)) {
             throw new InvalidArgumentException('User is already registered.');
         }
 
