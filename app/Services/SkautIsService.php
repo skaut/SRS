@@ -216,12 +216,13 @@ class SkautIsService
         $membershipsArray = $memberships->MembershipAllOutput instanceof stdClass ? [$memberships->MembershipAllOutput] : $memberships->MembershipAllOutput;
 
         foreach ($membershipsArray as $membership) {
-            if ($membership->ID_MembershipType === "radne") {
+            if ($membership->ID_MembershipType === 'radne') {
                 return $membership;
             }
         }
+
         foreach ($membershipsArray as $membership) {
-            if ($membership->ID_MembershipType === "cestne") {
+            if ($membership->ID_MembershipType === 'cestne') {
                 return $membership;
             }
         }
