@@ -69,9 +69,15 @@ class AclService
         return $names;
     }
 
-    public function findRoleNameBySystemName($name): string
+    public function findRoleNameBySystemName($systemName): string
     {
-        return $this->roleNameBySystemNameCache->load($name, $this->roleRepository->findBySystemName($name)->getName());
+        $name = $this->roleNameBySystemNameCache->load($systemName);
+        if ($name === null) {
+            $name = $this->roleRepository->findBySystemName($systemName)->getName();
+            $this->roleNameBySystemNameCache->save($systemName, $name);
+        }
+
+        return $name;
     }
 
     /**

@@ -670,6 +670,14 @@ class User
     }
 
     /**
+     * Je uživatel v roli podle systémového názvu?
+     */
+    public function isInRoleWithSystemName(string $name): bool
+    {
+        return $this->roles->exists(static fn (int $key, Role $role) => $role->getSystemName() === $name);
+    }
+
+    /**
      * Vrací, zda má uživatel nějakou roli, která nemá cenu podle podakcí.
      */
     public function hasFixedFeeRole(): bool

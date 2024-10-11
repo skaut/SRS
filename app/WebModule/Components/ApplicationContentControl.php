@@ -69,14 +69,14 @@ class ApplicationContentControl extends BaseContentControl
             $dbUser              = $presenter->getDbUser();
             $userHasFixedFeeRole = $dbUser->hasFixedFeeRole();
 
-            $template->unapprovedRole      = $user->isInRole($this->aclService->findRoleNameBySystemName(Role::UNAPPROVED));
-            $template->nonregisteredRole   = $user->isInRole($this->aclService->findRoleNameBySystemName(Role::NONREGISTERED));
-            $template->noRegisterableRole  = $this->roleRepository->findFilteredRoles(true, false, false)->isEmpty();
-            $template->registrationStart   = $this->roleRepository->getRegistrationStart();
-            $template->registrationEnd     = $this->roleRepository->getRegistrationEnd();
-            $template->bankAccount         = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
-            $template->dbUser              = $dbUser;
-            $template->userHasFixedFeeRole = $userHasFixedFeeRole;
+            $template->isInUnapprovedRole    = $user->isInRole($this->aclService->findRoleNameBySystemName(Role::UNAPPROVED));
+            $template->isInNonregisteredRole = $user->isInRole($this->aclService->findRoleNameBySystemName(Role::NONREGISTERED));
+            $template->noRegisterableRole    = $this->roleRepository->findFilteredRoles(true, false, false)->isEmpty();
+            $template->registrationStart     = $this->roleRepository->getRegistrationStart();
+            $template->registrationEnd       = $this->roleRepository->getRegistrationEnd();
+            $template->bankAccount           = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
+            $template->dbUser                = $dbUser;
+            $template->userHasFixedFeeRole   = $userHasFixedFeeRole;
 
             $template->usersApplications = $explicitSubeventsExists && $userHasFixedFeeRole
                 ? $dbUser->getNotCanceledApplications()
