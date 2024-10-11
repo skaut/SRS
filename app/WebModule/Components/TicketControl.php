@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\WebModule\Components;
 
-use App\Model\Acl\Repositories\RoleRepository;
 use App\Model\Acl\Role;
 use App\Model\Settings\Queries\SettingDateTimeValueQuery;
 use App\Model\Settings\Settings;
+use App\Services\AclService;
 use App\Services\QueryBus;
 use App\WebModule\Presenters\WebBasePresenter;
 use DateTimeImmutable;
@@ -24,7 +24,7 @@ use function strval;
  */
 class TicketControl extends Control
 {
-    public function __construct(private readonly QueryBus $queryBus, private readonly RoleRepository $roleRepository)
+    public function __construct(private readonly QueryBus $queryBus, private readonly AclService $aclService)
     {
     }
 
@@ -44,8 +44,8 @@ class TicketControl extends Control
             $ticketDownloadFrom         = $this->queryBus->handle(new SettingDateTimeValueQuery(Settings::TICKETS_FROM));
             $template->ticketsAvailable = $ticketDownloadFrom !== null && $ticketDownloadFrom <= new DateTimeImmutable();
 
-            $template->registeredAndPaid = ! $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName())
-                && ! $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName())
+            $template->registeredAndPaid = ! $user->isInRole($this->aclService->findRoleNameBySystemName(Role::UNAPPROVED))
+                && ! $user->isInRole($this->aclService->findRoleNameBySystemName(Role::NONREGISTERED))
                 && $presenter->getDbUser()->hasPaidEveryApplication();
 
             $template->qr = $this->generateQr($this->presenter->getUser()->getId());

@@ -19,6 +19,7 @@ use App\Model\CustomInput\Repositories\CustomInputRepository;
 use App\Model\Enums\ApplicationState;
 use App\Model\Enums\PaymentType;
 use App\Model\User\Queries\UserAttendsProgramsQuery;
+use App\Services\AclService;
 use App\Services\ApplicationService;
 use App\Services\ExcelExportService;
 use JsonException;
@@ -57,6 +58,9 @@ class UsersPresenter extends AdminBasePresenter
     public CustomInputRepository $customInputRepository;
 
     #[Inject]
+    public AclService $aclService;
+
+    #[Inject]
     public ApplicationService $applicationService;
 
     /** @throws AbortException */
@@ -83,8 +87,8 @@ class UsersPresenter extends AdminBasePresenter
         $this->template->customInputTypeCheckbox = CustomInput::CHECKBOX;
         $this->template->customInputTypeFile     = CustomInput::FILE;
 
-        $this->template->roleAdminName     = $this->roleRepository->findBySystemName(Role::ADMIN)->getName();
-        $this->template->roleOrganizerName = $this->roleRepository->findBySystemName(Role::ORGANIZER)->getName();
+        $this->template->roleAdminName     = $this->aclService->findRoleNameBySystemName(Role::ADMIN);
+        $this->template->roleOrganizerName = $this->aclService->findRoleNameBySystemName(Role::ORGANIZER);
 
         $this->template->paymentMethodCash = PaymentType::CASH;
         $this->template->paymentMethodBank = PaymentType::BANK;

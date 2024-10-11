@@ -12,6 +12,7 @@ use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
+use App\Services\AclService;
 use App\Services\Authenticator;
 use App\Services\QueryBus;
 use App\WebModule\Forms\ApplicationFormFactory;
@@ -32,6 +33,7 @@ class ApplicationContentControl extends BaseContentControl
         private readonly QueryBus $queryBus,
         private readonly ApplicationFormFactory $applicationFormFactory,
         private readonly Authenticator $authenticator,
+        private readonly AclService $aclService,
         private readonly RoleRepository $roleRepository,
         private readonly SubeventRepository $subeventRepository,
         public IApplicationsGridControlFactory $applicationsGridControlFactory,
@@ -58,7 +60,7 @@ class ApplicationContentControl extends BaseContentControl
         $template->backlink = $presenter->getHttpRequest()->getUrl()->getPath();
 
         $user                = $presenter->getUser();
-        $template->guestRole = $user->isInRole($this->roleRepository->findBySystemName(Role::GUEST)->getName());
+        $template->guestRole = $user->isInRole($this->aclService->findRoleNameBySystemName(Role::GUEST));
         $template->testRole  = Role::TEST;
 
         $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
@@ -67,8 +69,8 @@ class ApplicationContentControl extends BaseContentControl
             $dbUser              = $presenter->getDbUser();
             $userHasFixedFeeRole = $dbUser->hasFixedFeeRole();
 
-            $template->unapprovedRole      = $user->isInRole($this->roleRepository->findBySystemName(Role::UNAPPROVED)->getName());
-            $template->nonregisteredRole   = $user->isInRole($this->roleRepository->findBySystemName(Role::NONREGISTERED)->getName());
+            $template->unapprovedRole      = $user->isInRole($this->aclService->findRoleNameBySystemName(Role::UNAPPROVED));
+            $template->nonregisteredRole   = $user->isInRole($this->aclService->findRoleNameBySystemName(Role::NONREGISTERED));
             $template->noRegisterableRole  = $this->roleRepository->findFilteredRoles(true, false, false)->isEmpty();
             $template->registrationStart   = $this->roleRepository->getRegistrationStart();
             $template->registrationEnd     = $this->roleRepository->getRegistrationEnd();

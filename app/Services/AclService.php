@@ -28,6 +28,8 @@ class AclService
 
     private Cache $roleNamesCache;
 
+    private Cache $roleNameBySystemNameCache;
+
     private Cache $permissionNamesCache;
 
     private Cache $resourceNamesCache;
@@ -39,9 +41,10 @@ class AclService
         private readonly Translator $translator,
         Storage $storage,
     ) {
-        $this->roleNamesCache       = new Cache($storage, 'RoleNames');
-        $this->permissionNamesCache = new Cache($storage, 'PermissionNames');
-        $this->resourceNamesCache   = new Cache($storage, 'ResourceNames');
+        $this->roleNamesCache            = new Cache($storage, 'RoleNames');
+        $this->roleNameBySystemNameCache = new Cache($storage, 'RoleNamesBySystemName');
+        $this->permissionNamesCache      = new Cache($storage, 'PermissionNames');
+        $this->resourceNamesCache        = new Cache($storage, 'ResourceNames');
     }
 
     /**
@@ -66,6 +69,11 @@ class AclService
         return $names;
     }
 
+    public function findRoleNameBySystemName($name): string
+    {
+        return $this->roleNameBySystemNameCache->load($name, $this->roleRepository->findBySystemName($name)->getName());
+    }
+
     /**
      * Uloží roli.
      */
@@ -73,6 +81,7 @@ class AclService
     {
         $this->roleRepository->save($role);
         $this->roleNamesCache->clean([Cache::Namespaces => ['RoleNames']]);
+        $this->roleNameBySystemNameCache->clean([Cache::Namespaces => ['RoleNamesBySystemName']]);
         $this->permissionNamesCache->clean([Cache::Namespaces => ['PermissionNames']]);
     }
 
@@ -83,6 +92,7 @@ class AclService
     {
         $this->roleRepository->remove($role);
         $this->roleNamesCache->clean([Cache::Namespaces => ['RoleNames']]);
+        $this->roleNameBySystemNameCache->clean([Cache::Namespaces => ['RoleNamesBySystemName']]);
     }
 
     /**
