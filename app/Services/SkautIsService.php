@@ -43,12 +43,12 @@ class SkautIsService
     }
 
     /**
-     * Vrátí stav přihlášení uživatele, každých 5 minut obnoví přihlášení.
+     * Vrátí stav přihlášení uživatele, každých 15 minut obnoví přihlášení.
      */
     public function isLoggedIn(): bool
     {
         $logoutTime = clone($this->skautIs->getUser()->getLogoutDate());
-        $hardCheck  = $logoutTime->diff(new DateTimeImmutable())->i < 25; // pokud od posledniho obnoveni prihlaseni ubehlo 5 minut
+        $hardCheck  = $logoutTime->diff(new DateTimeImmutable())->i < 15; // pokud od posledniho obnoveni prihlaseni ubehlo 15 minut
 
         return $this->skautIs->getUser()->isLoggedIn($hardCheck);
     }
@@ -203,27 +203,31 @@ class SkautIsService
      */
     public function getValidMembership(int $personId): stdClass|null
     {
-        $membership = $this->skautIs->org->MembershipAllPerson([
+        $memberships = $this->skautIs->org->MembershipAllPerson([
             'ID_Login' => $this->skautIs->getUser()->getLoginId(),
             'ID_Person' => $personId,
-            'ID_MembershipType' => 'radne',
             'IsValid' => true,
         ]);
 
-        if (empty($membership)) {
-            $membership = $this->skautIs->org->MembershipAllPerson([
-                'ID_Login' => $this->skautIs->getUser()->getLoginId(),
-                'ID_Person' => $personId,
-                'ID_MembershipType' => 'cestne',
-                'IsValid' => true,
-            ]);
+        if (empty($memberships)) {
+            return null;
+        }
 
-            if (empty($membership)) {
-                return null;
+        $membershipsArray = $memberships->MembershipAllOutput instanceof stdClass ? [$memberships->MembershipAllOutput] : $memberships->MembershipAllOutput;
+
+        foreach ($membershipsArray as $membership) {
+            if ($membership->ID_MembershipType === 'radne') {
+                return $membership;
             }
         }
 
-        return $membership->MembershipAllOutput;
+        foreach ($membershipsArray as $membership) {
+            if ($membership->ID_MembershipType === 'cestne') {
+                return $membership;
+            }
+        }
+
+        return null;
     }
 
     /**
