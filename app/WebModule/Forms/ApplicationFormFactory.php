@@ -44,6 +44,8 @@ use Doctrine\ORM\NoResultException;
 use InvalidArgumentException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Caching\Cache;
+use Nette\Caching\Storage;
 use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Http\FileUpload;
 use Nette\Localization\Translator;
@@ -58,6 +60,7 @@ use Tracy\ILogger;
 use function array_keys;
 use function assert;
 use function count;
+use function implode;
 use function in_array;
 use function property_exists;
 
@@ -78,6 +81,14 @@ class ApplicationFormFactory
     /** @var callable[] */
     public array $onSkautIsError = [];
 
+    private Cache $incompatibleRolesCache;
+
+    private Cache $requiredRolesCache;
+
+    private Cache $incompatibleSubeventsCache;
+
+    private Cache $requiredSubeventsCache;
+
     public function __construct(
         private readonly BaseFormFactory $baseFormFactory,
         private readonly QueryBus $queryBus,
@@ -93,7 +104,12 @@ class ApplicationFormFactory
         private readonly FilesService $filesService,
         private readonly SubeventService $subeventService,
         private readonly Translator $translator,
+        Storage $storage,
     ) {
+        $this->incompatibleRolesCache     = new Cache($storage, 'IncompatibleRoles');
+        $this->requiredRolesCache         = new Cache($storage, 'RequiredRoles');
+        $this->incompatibleSubeventsCache = new Cache($storage, 'IncompatibleSubevents');
+        $this->requiredSubeventsCache     = new Cache($storage, 'RequiredSubevents');
     }
 
     /**
@@ -136,19 +152,26 @@ class ApplicationFormFactory
         $form->addText('phone', 'web.application_content.phone')
             ->setDisabled();
 
-        $form->addText('street', 'web.application_content.street')
+        $inputStreet = $form->addText('street', 'web.application_content.street')
             ->addRule(Form::FILLED, 'web.application_content.street_empty')
             ->addRule(Form::PATTERN, 'web.application_content.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
 
-        $form->addText('city', 'web.application_content.city')
+        $inputCity = $form->addText('city', 'web.application_content.city')
             ->addRule(Form::FILLED, 'web.application_content.city_empty');
 
-        $form->addText('postcode', 'web.application_content.postcode')
+        $inputPostcode = $form->addText('postcode', 'web.application_content.postcode')
             ->addRule(Form::FILLED, 'web.application_content.postcode_empty')
             ->addRule(Form::PATTERN, 'web.application_content.postcode_format', '^\d{3} ?\d{2}$');
 
-        $form->addText('state', 'web.application_content.state')
+        $inputState = $form->addText('state', 'web.application_content.state')
             ->addRule(Form::FILLED, 'web.application_content.state_empty');
+
+        if ($this->user->isMember()) {
+            $inputStreet->setDisabled();
+            $inputCity->setDisabled();
+            $inputPostcode->setDisabled();
+            $inputState->setDisabled();
+        }
 
         $this->addRolesSelect($form);
 
@@ -208,10 +231,21 @@ class ApplicationFormFactory
                 $this->user->setBirthdate($values->birthdate);
             }
 
-            $this->user->setStreet($values->street);
-            $this->user->setCity($values->city);
-            $this->user->setPostcode($values->postcode);
-            $this->user->setState($values->state);
+            if (property_exists($values, 'street')) {
+                $this->user->setStreet($values->street);
+            }
+
+            if (property_exists($values, 'city')) {
+                $this->user->setCity($values->city);
+            }
+
+            if (property_exists($values, 'postcode')) {
+                $this->user->setPostcode($values->postcode);
+            }
+
+            if (property_exists($values, 'state')) {
+                $this->user->setState($values->state);
+            }
 
             // role
             if (property_exists($values, 'roles')) {
@@ -387,25 +421,33 @@ class ApplicationFormFactory
 
         // generovani chybovych hlasek pro vsechny kombinace podakci
         foreach ($this->subeventRepository->findFilteredSubevents(true, false, false, false) as $subevent) {
-            if (! $subevent->getIncompatibleSubevents()->isEmpty()) {
+            $incompatibleSubeventsNames = $this->incompatibleSubeventsCache->load($subevent->getId(), static function () use ($subevent) {
+                return $subevent->getIncompatibleSubevents()->map(static fn (Subevent $subevent) => $subevent->getName())->toArray();
+            }, [Cache::Expire => '5 minutes']);
+
+            if (! empty($incompatibleSubeventsNames)) {
                 $subeventsSelect->addRule(
                     [$this, 'validateSubeventsIncompatible'],
                     $this->translator->translate(
                         'web.application_content.incompatible_subevents_selected',
                         null,
-                        ['subevent' => $subevent->getName(), 'incompatibleSubevents' => $subevent->getIncompatibleSubeventsText()],
+                        ['subevent' => $subevent->getName(), 'incompatibleSubevents' => implode(', ', $incompatibleSubeventsNames)],
                     ),
                     [$subevent],
                 );
             }
 
-            if (! $subevent->getRequiredSubeventsTransitive()->isEmpty()) {
+            $requiredSubeventsTransitiveNames = $this->requiredSubeventsCache->load($subevent->getId(), static function () use ($subevent) {
+                return $subevent->getRequiredSubeventsTransitive()->map(static fn (Subevent $subevent) => $subevent->getName())->toArray();
+            }, [Cache::Expire => '5 minutes']);
+
+            if (! empty($requiredSubeventsTransitiveNames)) {
                 $subeventsSelect->addRule(
                     [$this, 'validateSubeventsRequired'],
                     $this->translator->translate(
                         'web.application_content.required_subevents_not_selected',
                         null,
-                        ['subevent' => $subevent->getName(), 'requiredSubevents' => $subevent->getRequiredSubeventsTransitiveText()],
+                        ['subevent' => $subevent->getName(), 'requiredSubevents' => implode(', ', $requiredSubeventsTransitiveNames)],
                     ),
                     [$subevent],
                 );
@@ -437,25 +479,33 @@ class ApplicationFormFactory
 
         // generovani chybovych hlasek pro vsechny kombinace roli
         foreach ($this->roleRepository->findFilteredRoles(true, false, true, $this->user) as $role) {
-            if (! $role->getIncompatibleRoles()->isEmpty()) {
+            $incompatibleRolesNames = $this->incompatibleRolesCache->load($role->getId(), static function () use ($role) {
+                return $role->getIncompatibleRoles()->map(static fn (Role $role) => $role->getName())->toArray();
+            }, [Cache::Expire => '5 minutes']);
+
+            if (! empty($incompatibleRolesNames)) {
                 $rolesSelect->addRule(
                     [$this, 'validateRolesIncompatible'],
                     $this->translator->translate(
                         'web.application_content.incompatible_roles_selected',
                         null,
-                        ['role' => $role->getName(), 'incompatibleRoles' => $role->getIncompatibleRolesText()],
+                        ['role' => $role->getName(), 'incompatibleRoles' => implode(', ', $incompatibleRolesNames)],
                     ),
                     [$role],
                 );
             }
 
-            if (! $role->getRequiredRolesTransitive()->isEmpty()) {
+            $requiredRolesTransitiveNames = $this->requiredRolesCache->load($role->getId(), static function () use ($role) {
+                return $role->getRequiredRolesTransitive()->map(static fn (Role $role) => $role->getName())->toArray();
+            }, [Cache::Expire => '5 minutes']);
+
+            if (! empty($requiredRolesTransitiveNames)) {
                 $rolesSelect->addRule(
                     [$this, 'validateRolesRequired'],
                     $this->translator->translate(
                         'web.application_content.required_roles_not_selected',
                         null,
-                        ['role' => $role->getName(), 'requiredRoles' => $role->getRequiredRolesTransitiveText()],
+                        ['role' => $role->getName(), 'requiredRoles' => implode(', ', $requiredRolesTransitiveNames)],
                     ),
                     [$role],
                 );

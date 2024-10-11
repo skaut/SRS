@@ -16,7 +16,7 @@
                 </div>
             </div>
         </div>
-    {elseif $nonregisteredRole}
+    {elseif $isInNonregisteredRole}
         {if $noRegisterableRole}
             <div class="row">
                 <div class="col">
@@ -43,7 +43,7 @@
             </div>
         {/if}
     {else}
-        {if $unapprovedRole}
+        {if $isInUnapprovedRole}
             <div class="row">
                 <div class="col">
                     <div class="alert alert-warning alert-forever">
