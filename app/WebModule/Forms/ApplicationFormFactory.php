@@ -28,7 +28,6 @@ use App\Model\Settings\Queries\SettingStringValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
-use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\AclService;
 use App\Services\ApplicationService;
@@ -83,7 +82,6 @@ class ApplicationFormFactory
         private readonly BaseFormFactory $baseFormFactory,
         private readonly QueryBus $queryBus,
         private readonly EntityManagerInterface $em,
-        private readonly UserRepository $userRepository,
         private readonly RoleRepository $roleRepository,
         private readonly CustomInputRepository $customInputRepository,
         private readonly CustomInputValueRepository $customInputValueRepository,
