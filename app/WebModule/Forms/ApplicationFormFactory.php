@@ -152,19 +152,26 @@ class ApplicationFormFactory
         $form->addText('phone', 'web.application_content.phone')
             ->setDisabled();
 
-        $form->addText('street', 'web.application_content.street')
+        $inputStreet = $form->addText('street', 'web.application_content.street')
             ->addRule(Form::FILLED, 'web.application_content.street_empty')
             ->addRule(Form::PATTERN, 'web.application_content.street_format', '^(.*[^0-9]+) (([1-9][0-9]*)/)?([1-9][0-9]*[a-cA-C]?)$');
 
-        $form->addText('city', 'web.application_content.city')
+        $inputCity = $form->addText('city', 'web.application_content.city')
             ->addRule(Form::FILLED, 'web.application_content.city_empty');
 
-        $form->addText('postcode', 'web.application_content.postcode')
+        $inputPostcode = $form->addText('postcode', 'web.application_content.postcode')
             ->addRule(Form::FILLED, 'web.application_content.postcode_empty')
             ->addRule(Form::PATTERN, 'web.application_content.postcode_format', '^\d{3} ?\d{2}$');
 
-        $form->addText('state', 'web.application_content.state')
+        $inputState = $form->addText('state', 'web.application_content.state')
             ->addRule(Form::FILLED, 'web.application_content.state_empty');
+
+        if ($this->user->isMember()) {
+            $inputStreet->setDisabled();
+            $inputCity->setDisabled();
+            $inputPostcode->setDisabled();
+            $inputState->setDisabled();
+        }
 
         $this->addRolesSelect($form);
 
@@ -224,10 +231,21 @@ class ApplicationFormFactory
                 $this->user->setBirthdate($values->birthdate);
             }
 
-            $this->user->setStreet($values->street);
-            $this->user->setCity($values->city);
-            $this->user->setPostcode($values->postcode);
-            $this->user->setState($values->state);
+            if (property_exists($values, 'street')) {
+                $this->user->setStreet($values->street);
+            }
+
+            if (property_exists($values, 'city')) {
+                $this->user->setCity($values->city);
+            }
+
+            if (property_exists($values, 'postcode')) {
+                $this->user->setPostcode($values->postcode);
+            }
+
+            if (property_exists($values, 'state')) {
+                $this->user->setState($values->state);
+            }
 
             // role
             if (property_exists($values, 'roles')) {
