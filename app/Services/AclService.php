@@ -56,28 +56,21 @@ class AclService
      */
     public function findAllRoleNames(): array
     {
-        $names = $this->roleNamesCache->load(null);
-        if ($names === null) {
+        return $this->roleNamesCache->load(null, function () {
             $names = $this->roleRepository->createQueryBuilder('r')
-                    ->select('r.name')
-                    ->getQuery()
-                    ->getScalarResult();
-            $names = array_map('current', $names);
-            $this->roleNamesCache->save(null, $names);
-        }
+                ->select('r.name')
+                ->getQuery()
+                ->getScalarResult();
 
-        return $names;
+            return array_map('current', $names);
+        });
     }
 
     public function findRoleNameBySystemName(string $systemName): string
     {
-        $name = $this->roleNameBySystemNameCache->load($systemName);
-        if ($name === null) {
-            $name = $this->roleRepository->findBySystemName($systemName)->getName();
-            $this->roleNameBySystemNameCache->save($systemName, $name);
-        }
-
-        return $name;
+        return $this->roleNameBySystemNameCache->load($systemName, function () use ($systemName) {
+            return $this->roleRepository->findBySystemName($systemName)->getName();
+        });
     }
 
     /**
@@ -266,16 +259,14 @@ class AclService
      */
     public function findAllPermissionNames(): Collection
     {
-        $names = $this->permissionNamesCache->load(null);
-        if ($names === null) {
-            $names = $this->permissionRepository->createQueryBuilder('p')
-                ->select('p.name')
-                ->addSelect('role.name AS roleName')->join('p.roles', 'role')
-                ->addSelect('resource.name AS resourceName')->join('p.resource', 'resource')
-                ->getQuery()
-                ->getResult();
-            $this->permissionNamesCache->save(null, $names);
-        }
+        $names = $this->permissionNamesCache->load(null, function () {
+            return $this->permissionRepository->createQueryBuilder('p')
+            ->select('p.name')
+            ->addSelect('role.name AS roleName')->join('p.roles', 'role')
+            ->addSelect('resource.name AS resourceName')->join('p.resource', 'resource')
+            ->getQuery()
+            ->getResult();
+        });
 
         return new ArrayCollection($names);
     }
@@ -289,16 +280,13 @@ class AclService
      */
     public function findAllResourceNames(): array
     {
-        $names = $this->resourceNamesCache->load(null);
-        if ($names === null) {
+        return $this->resourceNamesCache->load(null, function () {
             $names = $this->resourceRepository->createQueryBuilder('r')
                 ->select('r.name')
                 ->getQuery()
                 ->getScalarResult();
-            $names = array_map('current', $names);
-            $this->resourceNamesCache->save(null, $names);
-        }
 
-        return $names;
+            return array_map('current', $names);
+        });
     }
 }
