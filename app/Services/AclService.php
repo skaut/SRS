@@ -69,7 +69,7 @@ class AclService
         return $names;
     }
 
-    public function findRoleNameBySystemName($systemName): string
+    public function findRoleNameBySystemName(string $systemName): string
     {
         $name = $this->roleNameBySystemNameCache->load($systemName);
         if ($name === null) {
