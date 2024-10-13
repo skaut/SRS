@@ -11,6 +11,7 @@ use App\AdminModule\Components\UsersGridControl;
 use App\AdminModule\Forms\AddLectorFormFactory;
 use App\AdminModule\Forms\EditUserPersonalDetailsFormFactory;
 use App\AdminModule\Forms\EditUserSeminarFormFactory;
+use App\AdminModule\Forms\EditUserTransferFormFactory;
 use App\Model\Acl\Permission;
 use App\Model\Acl\Role;
 use App\Model\Acl\SrsResource;
@@ -49,6 +50,9 @@ class UsersPresenter extends AdminBasePresenter
     public EditUserSeminarFormFactory $editUserSeminarFormFactory;
 
     #[Inject]
+    public EditUserTransferFormFactory $editUserTransferFormFactory;
+
+    #[Inject]
     public IApplicationsGridControlFactory $applicationsGridControlFactory;
 
     #[Inject]
@@ -73,7 +77,6 @@ class UsersPresenter extends AdminBasePresenter
         $this->template->results             = [];
         $this->template->editPersonalDetails = false;
         $this->template->editSeminar         = false;
-        $this->template->editPayment         = false;
     }
 
     public function renderDetail(int $id): void
@@ -129,22 +132,6 @@ class UsersPresenter extends AdminBasePresenter
     public function handleEditSeminar(): void
     {
         $this->template->editSeminar = true;
-
-        if ($this->isAjax()) {
-            $this->redrawControl('userDetail');
-        } else {
-            $this->redirect('this');
-        }
-    }
-
-    /**
-     * Zobrazí formulář pro editaci údajů o platbě uživatele.
-     *
-     * @throws AbortException
-     */
-    public function handleEditPayment(): void
-    {
-        $this->template->editPayment = true;
 
         if ($this->isAjax()) {
             $this->redrawControl('userDetail');
@@ -223,6 +210,30 @@ class UsersPresenter extends AdminBasePresenter
 
             $this->redirect('this');
         };
+
+        $form->onSuccess[] = function (Form $form, stdClass $values): void {
+            if ($form->isSubmitted() != $form['cancel']) {
+                $this->flashMessage('admin.users.users_saved', 'success');
+            }
+
+            $this->redirect('this');
+        };
+
+        return $form;
+    }
+
+    /** @throws JsonException */
+    protected function createComponentEditUserTransferForm(): Form
+    {
+        $form = $this->editUserTransferFormFactory->create((int) $this->getParameter('id'));
+
+//        $form->onError[] = function (Form $form): void {
+//            foreach ($form->errors as $error) {
+//                $this->flashMessage($error, 'danger');
+//            }
+//
+//            $this->redirect('this');
+//        };
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
             if ($form->isSubmitted() != $form['cancel']) {
