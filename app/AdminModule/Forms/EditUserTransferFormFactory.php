@@ -61,6 +61,15 @@ class EditUserTransferFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
+        $targetUser = $this->userRepository->findById($values->targetUser);
+
+        $userRoles = $this->user->getRoles();
+        $targetUserRoles = $targetUser->getRoles();
+
+        $userSubevents = $this->user->getSubevents();
+        $targetUserSubevents = $this->user->getSubevents();
+
+
 //        $this->user->setFirstName($values->firstName);
 //        $this->user->setLastName($values->lastName);
 //        $this->user->setNickName($values->nickName);
