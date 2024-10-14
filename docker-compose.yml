@@ -7,7 +7,7 @@ volumes:
 
 x-app-base:
   &app-base
-  image: skaut/lebeda:8.1
+  image: skaut/lebeda:8.3
   volumes:
     - www:/var/www
     - .:/var/www/html

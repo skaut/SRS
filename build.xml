@@ -2,19 +2,36 @@
 <project name="SRS" basedir="." default="main">
     <property name="tempDir" value="temp"/>
     <target name="main" description="Runs tests and prepares deployable tarball">
-        <exec command="composer install" passthru="true"/>
+        <exec executable="composer" passthru="true">
+            <arg value="install"/>
+        </exec>
+
         <phingcall target="static-analysis"/>
         <phingcall target="coding-standard"/>
-        <exec command="php www/index.php orm:validate-schema --skip-sync"/>
+
+        <exec executable="php">
+            <arg value="www/index.php"/>
+            <arg value="orm:validate-schema"/>
+            <arg value="--skip-sync"/>
+        </exec>
+
         <phingcall target="tests"/>
     </target>
 
     <target name="prepare-tarball" description="Prepares deployable tarball with everything built">
-        <exec command="git rev-parse --short HEAD" outputProperty="build.hash"/>
+        <exec executable="git" outputProperty="build.hash">
+            <arg value="rev-parse"/>
+            <arg value="--short HEAD"/>
+        </exec>
+
         <property name="build.dir" value="${tempDir}/builds/${build.hash}"/>
 
-        <exec command="yarn install" passthru="true"/>
-        <exec command="yarn build" passthru="true"/>
+        <exec executable="yarn" passthru="true">
+            <arg value="install"/>
+        </exec>
+        <exec executable="yarn" passthru="true">
+            <arg value="build"/>
+        </exec>
 
         <delete dir="${build.dir}"/>
         <mkdir dir="${build.dir}"/>
@@ -58,12 +75,14 @@
             </filterchain>
         </copy>
 
-        <exec command="composer --working-dir=${build.dir} install
-                        --no-interaction
-                        --optimize-autoloader
-                        --classmap-authoritative
-                        --no-dev"
-              passthru="true"/>
+        <exec executable="composer" passthru="true">
+            <arg value="--working-dir=${build.dir}"/>
+            <arg value="install"/>
+            <arg value="--no-interaction"/>
+            <arg value="--optimize-autoloader"/>
+            <arg value="--classmap-authoritative"/>
+            <arg value="--no-dev"/>
+        </exec>
 
         <delete>
             <fileset dir="${build.dir}">
@@ -91,14 +110,21 @@
     <target name="deploy:ssh">
         <echo message="${comment}..."/>
         <echo message="${command}"/>
-        <exec command="ssh ${deploy.ssh.target} -p ${deploy.ssh.port} '${command}'" passthru="true" checkreturn="true"/>
+        <exec executable="ssh" passthru="true" checkreturn="true">
+            <arg value="${deploy.ssh.target}"/>
+            <arg value="-p ${deploy.ssh.port}"/>
+            <arg value="'${command}'"/>
+        </exec>
     </target>
 
     <target name="deploy:copy-tarball">
-        <property name="command" value="scp -P ${port} ${file} '${target}:${toDirectory}'"/>
+        <property name="command" value="scp"/>
+        <property name="args" value="-P ${port} ${file} '${target}:${toDirectory}'"/>
         <echo message="Copying files to ${deploy.ssh.target}"/>
-        <echo message="${command}"/>
-        <exec command="${command}" passthru="true" checkreturn="true"/>
+        <echo message="${command} ${args}"/>
+        <exec executable="${command}" passthru="true" checkreturn="true">
+            <arg value="${args}"/>
+        </exec>
     </target>
 
     <target name="deploy:cleanup">
@@ -121,7 +147,10 @@
         <property environment="env"/>
         <property name="deploy.workDir" refid="env.DEPLOY_DIRECTORY"/>
         <property name="deploy.releasesDir" value="${deploy.workDir}/releases"/>
-        <exec command="git rev-parse --short HEAD" outputProperty="build.hash"/>
+        <exec executable="git" outputProperty="build.hash">
+            <arg value="rev-parse"/>
+            <arg value="--short HEAD"/>
+        </exec>
         <property name="deploy.lebeda" refid="env.DEPLOY_LEBEDA"/>
         <property name="deploy.ssh.host" refid="env.DEPLOY_SSH_HOST"/>
         <property name="deploy.ssh.username" refid="env.DEPLOY_SSH_USERNAME"/>
@@ -244,15 +273,24 @@
     </target>
 
     <target name="tests-unit">
-        <exec command="vendor/bin/codecept run unit" passthru="true" checkreturn="true"/>
+        <exec executable="vendor/bin/codecept" passthru="true" checkreturn="true">
+            <arg value="run"/>
+            <arg value="unit"/>
+        </exec>
     </target>
 
     <target name="tests-integration">
-        <exec command="vendor/bin/codecept run integration" passthru="true" checkreturn="true"/>
+        <exec executable="vendor/bin/codecept" passthru="true" checkreturn="true">
+            <arg value="run"/>
+            <arg value="integration"/>
+        </exec>
     </target>
 
     <target name="tests-performance">
-        <exec command="vendor/bin/codecept run performance" passthru="true" checkreturn="true"/>
+        <exec executable="vendor/bin/codecept" passthru="true" checkreturn="true">
+            <arg value="run"/>
+            <arg value="performance"/>
+        </exec>
     </target>
 
     <target name="tests">
@@ -261,16 +299,29 @@
     </target>
 
     <target name="tests-with-coverage">
-        <exec command="php -d zend_extension=xdebug.so -d xdebug.mode=coverage vendor/bin/codecept run unit,integration --coverage-xml"
-              passthru="true" checkreturn="true"/>
+        <exec executable="php" passthru="true" checkreturn="true">
+            <arg value="-d zend_extension=xdebug.so"/>
+            <arg value="-d xdebug.mode=coverage"/>
+            <arg value="vendor/bin/codecept"/>
+            <arg value="run"/>
+            <arg value="unit,integration"/>
+            <arg value="--coverage-xml"/>
+        </exec>
     </target>
 
     <target name="static-analysis">
-        <exec command="php -d memory_limit=1024M vendor/bin/phpstan analyse -l 6 -c phpstan.neon app --no-progress"
-              passthru="true" checkreturn="true"/>
+        <exec executable="php" passthru="true" checkreturn="true">
+            <arg value="-d memory_limit=1024M"/>
+            <arg value="vendor/bin/phpstan"/>
+            <arg value="analyse"/>
+            <arg value="-l6"/>
+            <arg value="-cphpstan.neon"/>
+            <arg value="app"/>
+            <arg value="--no-progress"/>
+        </exec>
     </target>
 
     <target name="coding-standard">
-        <exec command="vendor/bin/phpcs" passthru="true" checkreturn="true"/>
+        <exec executable="vendor/bin/phpcs" passthru="true" checkreturn="true"/>
     </target>
 </project>
