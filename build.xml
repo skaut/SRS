@@ -314,8 +314,8 @@
             <arg value="-d memory_limit=1024M"/>
             <arg value="vendor/bin/phpstan"/>
             <arg value="analyse"/>
-            <arg value="-l 6"/>
-            <arg value="-c phpstan.neon"/>
+            <arg value="-l6"/>
+            <arg value="-cphpstan.neon"/>
             <arg value="app"/>
             <arg value="--no-progress"/>
         </exec>
