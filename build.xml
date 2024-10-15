@@ -263,8 +263,8 @@
 
     <target name="deploy:app-command">
         <condition property="phpCommand"
-                   value="php81-cli &quot;${deploy.release}/www/console.php ${command}&quot;"
-                   else="php8.1 ${deploy.release}/www/console.php ${command}">
+                   value="php83-cli &quot;${deploy.release}/www/console.php ${command}&quot;"
+                   else="php8.3 ${deploy.release}/www/console.php ${command}">
             <equals arg1="${deploy.lebeda}" arg2="true"/>
         </condition>
         <phingcall target="deploy:ssh">
