@@ -70,4 +70,5 @@ jobs:
       - name: Setup SSH key and deploy
         run: |
           apt-get -y install libssh2-1-dev
+          pecl install pecl.php.net/ssh2-1.4.1
           phing deploy
