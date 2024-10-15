@@ -122,7 +122,7 @@
         <exec executable="scp" passthru="true" checkreturn="true">
             <arg value="-P ${deploy.ssh.port}"/>
             <arg value="${file}"/>
-            <arg value="'${target}:${toDirectory}'"/>
+            <arg value="${target}:'${toDirectory}'"/>
         </exec>
     </target>
 
