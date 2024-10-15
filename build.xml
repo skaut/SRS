@@ -119,11 +119,11 @@
 
     <target name="deploy:copy-tarball">
         <property name="command" value="scp"/>
-        <property name="args" value="-P ${port} ${file} '${target}:${toDirectory}'"/>
         <echo message="Copying files to ${deploy.ssh.target}"/>
-        <echo message="${command} ${args}"/>
         <exec executable="${command}" passthru="true" checkreturn="true">
-            <arg value="${args}"/>
+            <arg value="-P ${deploy.ssh.port}"/>
+            <arg value="${file}"/>
+            <arg value="'${target}:${toDirectory}'"/>
         </exec>
     </target>
 
@@ -171,7 +171,6 @@
 
         <phingcall target="deploy:copy-tarball">
             <property name="target" value="${deploy.ssh.target}"/>
-            <property name="port" value="${deploy.ssh.port}"/>
             <property name="file" value="${tempDir}/builds/${deploy.releaseHash}.tar.gz"/>
             <property name="toDirectory" value="${deploy.releasesDir}"/>
         </phingcall>
