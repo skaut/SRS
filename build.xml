@@ -118,12 +118,11 @@
     </target>
 
     <target name="deploy:copy-tarball">
-        <property name="command" value="scp"/>
         <echo message="Copying files to ${deploy.ssh.target}"/>
-        <exec executable="${command}" passthru="true" checkreturn="true">
+        <exec executable="scp" passthru="true" checkreturn="true">
             <arg value="-P ${deploy.ssh.port}"/>
             <arg value="${file}"/>
-            <arg value="${target}:${toDirectory}"/>
+            <arg value="'${target}:${toDirectory}'"/>
         </exec>
     </target>
 
@@ -166,13 +165,13 @@
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Creating releases directory if not exists"/>
-            <property name="command" value="mkdir -p '${deploy.releasesDir}'"/>
+            <property name="command" value="mkdir -p ${deploy.releasesDir}"/>
         </phingcall>
 
         <phingcall target="deploy:copy-tarball">
             <property name="target" value="${deploy.ssh.target}"/>
             <property name="file" value="${tempDir}/builds/${deploy.releaseHash}.tar.gz"/>
-            <property name="toDirectory" value="'${deploy.releasesDir}'"/>
+            <property name="toDirectory" value="${deploy.releasesDir}"/>
         </phingcall>
 
         <property name="tarball" value="${deploy.release}.tar.gz"/>
