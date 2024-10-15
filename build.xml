@@ -115,19 +115,14 @@
     </target>
 
     <target name="deploy:copy-tarball">
-        <property name="command" value="scp"/>
-        <property name="args" value="-P ${port} ${file} '${target}:${toDirectory}'"/>
-        <echo message="Copying files to ${deploy.ssh.target}"/>
-        <echo message="${command} ${args}"/>
-        <exec executable="${command}" passthru="true" checkreturn="true">
-            <arg value="${args}"/>
-        </exec>
+        <echo message="Copying ${file} to ${toDirectory}"/>
+        <scp host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" file="${file}" todir="{toDirectory}"/>
     </target>
 
     <target name="deploy:cleanup">
         <echo message="Getting previous releases"/>
 
-        <property name="command" value="echo $(ssh -p ${deploy.ssh.port} ${deploy.ssh.target} 'ls ${deploy.releasesDir}' | grep -v '^${deploy.releaseHash}$')"/>
+        <property name="command" value="echo $(ssh -p ${deploy.ssh.port} ${deploy.ssh.username}@${deploy.ssh.host} 'ls ${deploy.releasesDir}' | grep -v '^${deploy.releaseHash}$')"/>
         <echo message="${command}"/>
         <exec outputProperty="previousReleases" command="${command}" checkreturn="true"/>
 
@@ -153,7 +148,6 @@
         <property name="deploy.ssh.port" refid="env.DEPLOY_SSH_PORT"/>
         <property name="deploy.ssh.username" refid="env.DEPLOY_SSH_USERNAME"/>
         <property name="deploy.ssh.key" refid="env.DEPLOY_SSH_KEY"/>
-        <property name="deploy.ssh.target" value="${deploy.ssh.username}@${deploy.ssh.host}"/>
         <property name="deploy.releaseHash" value="${DSTAMP}-${TSTAMP}-${build.hash}"/>
         <property name="deploy.release" value="${deploy.releasesDir}/${deploy.releaseHash}"/>
 
@@ -168,8 +162,6 @@
         </phingcall>
 
         <phingcall target="deploy:copy-tarball">
-            <property name="target" value="${deploy.ssh.target}"/>
-            <property name="port" value="${deploy.ssh.port}"/>
             <property name="file" value="${tempDir}/builds/${deploy.releaseHash}.tar.gz"/>
             <property name="toDirectory" value="${deploy.releasesDir}"/>
         </phingcall>
