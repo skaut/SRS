@@ -67,8 +67,9 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: Setup SSH key and deploy
+      - name: Setup SSH2
         run: |
           apt-get -y install libssh2-1-dev
           pecl install pecl.php.net/ssh2-1.4.1
-          phing deploy
+      - name: Deploy
+        run: phing deploy
