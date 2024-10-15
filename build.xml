@@ -111,9 +111,7 @@
         <echo message="${comment}..."/>
         <echo message="${command}"/>
         <exec executable="ssh" passthru="true" checkreturn="true" escape="false">
-            <arg value="${deploy.ssh.target}"/>
-            <arg value="-p ${deploy.ssh.port}"/>
-            <arg value="'${command}'"/>
+            <arg line="${deploy.ssh.target} -p ${deploy.ssh.port} '${command}'"/>
         </exec>
     </target>
 
