@@ -107,11 +107,11 @@
         <delete dir="${build.dir}"/>
     </target>
 
-    <target name="deploy:ssh" >
+    <target name="deploy:ssh">
         <echo message="${comment}..."/>
         <echo message="${command}"/>
         <ssh host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa"
-             pubkeyfile="id_rsa.pub" command="${command}" property="${property}"/>
+             pubkeyfile="id_rsa.pub" command="${command}"/>
     </target>
 
     <target name="deploy:copy-tarball">
@@ -121,11 +121,8 @@
     </target>
 
     <target name="deploy:cleanup">
-        <phingcall target="deploy:ssh">
-            <property name="comment" value="Listing release dir files"/>
-            <property name="command" value="ls ${deploy.releasesDir}"/>
-            <property name="property" value="allReleases"/>
-        </phingcall>
+        <ssh host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa"
+             pubkeyfile="id_rsa.pub" command="${command}" property="allReleases"/>
 
         <echo message="${allReleases}"/>
 
