@@ -121,13 +121,13 @@
     </target>
 
     <target name="deploy:cleanup">
-        <echo message="Getting previous releases"/>
-
         <phingcall target="deploy:ssh">
             <property name="comment" value="Listing release dir files"/>
             <property name="command" value="ls ${deploy.releasesDir}"/>
             <property name="property" value="allReleases"/>
         </phingcall>
+
+        <echo message="${allReleases}"/>
 
         <exec executable="bash" outputProperty="previousReleases" checkreturn="true">
             <arg line='echo "${allReleases}" | grep -v "^${deploy.releaseHash}$"'/>
