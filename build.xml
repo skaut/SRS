@@ -110,19 +110,21 @@
     <target name="deploy:ssh">
         <echo message="${comment}..."/>
         <echo message="${command}"/>
-        <ssh host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa" pubkeyfile="id_rsa.pub"
-             command="${command}"/>
+        <ssh host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa"
+             pubkeyfile="id_rsa.pub" command="${command}"/>
     </target>
 
     <target name="deploy:copy-tarball">
         <echo message="Copying ${file} to ${toDirectory}"/>
-        <scp host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" file="${file}" todir="{toDirectory}"/>
+        <scp host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa"
+             pubkeyfile="id_rsa.pub" file="${file}" todir="{toDirectory}"/>
     </target>
 
     <target name="deploy:cleanup">
         <echo message="Getting previous releases"/>
 
-        <property name="command" value="echo $(ssh -p ${deploy.ssh.port} ${deploy.ssh.username}@${deploy.ssh.host} 'ls ${deploy.releasesDir}' | grep -v '^${deploy.releaseHash}$')"/>
+        <property name="command"
+                  value="echo $(ssh -p ${deploy.ssh.port} ${deploy.ssh.username}@${deploy.ssh.host} 'ls ${deploy.releasesDir}' | grep -v '^${deploy.releaseHash}$')"/>
         <echo message="${command}"/>
         <exec outputProperty="previousReleases" command="${command}" checkreturn="true"/>
 
