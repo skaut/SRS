@@ -110,7 +110,7 @@
     <target name="deploy:ssh">
         <echo message="${comment}..."/>
         <echo message="${command}"/>
-        <ssh host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}"
+        <ssh host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="sshkey.priv"
              command="${command}"/>
     </target>
 
