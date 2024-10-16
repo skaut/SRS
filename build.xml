@@ -107,12 +107,11 @@
         <delete dir="${build.dir}"/>
     </target>
 
-    <target name="deploy:ssh">
+    <target name="deploy:ssh" >
         <echo message="${comment}..."/>
         <echo message="${command}"/>
         <ssh host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa"
              pubkeyfile="id_rsa.pub" command="${command}" property="${property}"/>
-        <echo message="${allReleases}"/>
     </target>
 
     <target name="deploy:copy-tarball">
