@@ -121,6 +121,8 @@
     </target>
 
     <target name="deploy:cleanup">
+        <property name="allReleases" value="def"/>
+
         <ssh host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa"
              pubkeyfile="id_rsa.pub" command="${command}" property="allReleases"/>
 
