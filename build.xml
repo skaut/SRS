@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="SRS" basedir="." default="main">
     <property name="tempDir" value="temp"/>
+
     <target name="main" description="Runs tests and prepares deployable tarball">
         <exec executable="composer" passthru="true">
             <arg value="install"/>
@@ -20,8 +21,7 @@
 
     <target name="prepare-tarball" description="Prepares deployable tarball with everything built">
         <exec executable="git" outputProperty="build.hash">
-            <arg value="rev-parse"/>
-            <arg value="--short HEAD"/>
+            <arg line="rev-parse --short HEAD"/>
         </exec>
 
         <property name="build.dir" value="${tempDir}/builds/${build.hash}"/>
@@ -111,7 +111,7 @@
         <echo message="${comment}..."/>
         <echo message="${command}"/>
         <ssh host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa"
-             pubkeyfile="id_rsa.pub" command="${command}"/>
+             pubkeyfile="id_rsa.pub" command="${command}" property="${property}"/>
     </target>
 
     <target name="deploy:copy-tarball">
@@ -123,10 +123,15 @@
     <target name="deploy:cleanup">
         <echo message="Getting previous releases"/>
 
-        <property name="command"
-                  value="echo $(ssh -p ${deploy.ssh.port} ${deploy.ssh.username}@${deploy.ssh.host} 'ls ${deploy.releasesDir}' | grep -v '^${deploy.releaseHash}$')"/>
-        <echo message="${command}"/>
-        <exec outputProperty="previousReleases" command="${command}" checkreturn="true"/>
+        <phingcall target="deploy:ssh">
+            <property name="comment" value="Listing release dir files"/>
+            <property name="command" value="ls ${deploy.releasesDir}"/>
+            <property name="property" value="allReleases"/>
+        </phingcall>
+
+        <exec executable="bash" outputProperty="previousReleases" checkreturn="true">
+            <arg line='echo "${allReleases}" | grep -v "^${deploy.releaseHash}$"'/>
+        </exec>
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Deleting files"/>
@@ -140,18 +145,19 @@
         <!-- Prepare variables -->
         <property environment="env"/>
         <property name="deploy.workDir" refid="env.DEPLOY_DIRECTORY"/>
-        <property name="deploy.releasesDir" value="${deploy.workDir}/releases"/>
-        <exec executable="git" outputProperty="build.hash">
-            <arg value="rev-parse"/>
-            <arg value="--short HEAD"/>
-        </exec>
         <property name="deploy.lebeda" refid="env.DEPLOY_LEBEDA"/>
         <property name="deploy.ssh.host" refid="env.DEPLOY_SSH_HOST"/>
         <property name="deploy.ssh.port" refid="env.DEPLOY_SSH_PORT"/>
         <property name="deploy.ssh.username" refid="env.DEPLOY_SSH_USERNAME"/>
         <property name="deploy.ssh.key" refid="env.DEPLOY_SSH_KEY"/>
+
+        <exec executable="git" outputProperty="build.hash">
+            <arg line="rev-parse --short HEAD"/>
+        </exec>
+        <property name="deploy.releasesDir" value="${deploy.workDir}/releases"/>
         <property name="deploy.releaseHash" value="${DSTAMP}-${TSTAMP}-${build.hash}"/>
         <property name="deploy.release" value="${deploy.releasesDir}/${deploy.releaseHash}"/>
+        <property name="tarball" value="${deploy.release}.tar.gz"/>
 
         <!-- Build tarball -->
         <phingcall target="prepare-tarball">
@@ -167,8 +173,6 @@
             <property name="file" value="${tempDir}/builds/${deploy.releaseHash}.tar.gz"/>
             <property name="toDirectory" value="${deploy.releasesDir}"/>
         </phingcall>
-
-        <property name="tarball" value="${deploy.release}.tar.gz"/>
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Extracting tarball to release directory"/>
@@ -257,8 +261,8 @@
 
     <target name="deploy:app-command">
         <condition property="phpCommand"
-                   value="php81-cli &quot;${deploy.release}/www/console.php ${command}&quot;"
-                   else="php8.1 ${deploy.release}/www/console.php ${command}">
+                   value="php83-cli &quot;${deploy.release}/www/console.php ${command}&quot;"
+                   else="php8.3 ${deploy.release}/www/console.php ${command}">
             <equals arg1="${deploy.lebeda}" arg2="true"/>
         </condition>
         <phingcall target="deploy:ssh">
