@@ -117,7 +117,7 @@
     <target name="deploy:copy-tarball">
         <echo message="Copying ${file} to ${toDirectory}"/>
         <scp host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa"
-             pubkeyfile="id_rsa.pub" file="${file}" todir="{toDirectory}"/>
+             pubkeyfile="id_rsa.pub" file="${file}" todir="${toDirectory}"/>
     </target>
 
     <target name="deploy:cleanup">
