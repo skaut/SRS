@@ -3,8 +3,6 @@ name: deploy-dev
 on:
   push:
     branches: [master]
-  pull_request:
-    branches: [master]
 
 concurrency:
   group: environment-dev
