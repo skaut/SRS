@@ -125,6 +125,7 @@
              pubkeyfile="id_rsa.pub" command="ls ${deploy.releasesDir}" property="allReleases"/>
 
         <exec executable="bash" outputProperty="previousReleases" checkreturn="true">
+            <arg value="-c"/>
             <arg line='echo "${allReleases}" | grep -v "^${deploy.releaseHash}$"'/>
         </exec>
 
@@ -144,7 +145,6 @@
         <property name="deploy.ssh.host" refid="env.DEPLOY_SSH_HOST"/>
         <property name="deploy.ssh.port" refid="env.DEPLOY_SSH_PORT"/>
         <property name="deploy.ssh.username" refid="env.DEPLOY_SSH_USERNAME"/>
-        <property name="deploy.ssh.key" refid="env.DEPLOY_SSH_KEY"/>
 
         <exec executable="git" outputProperty="build.hash">
             <arg line="rev-parse --short HEAD"/>
