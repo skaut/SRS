@@ -124,8 +124,6 @@
         <ssh host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa"
              pubkeyfile="id_rsa.pub" command="ls ${deploy.releasesDir}" property="allReleases"/>
 
-        <echo message="${allReleases}"/>
-
         <exec executable="bash" outputProperty="previousReleases" checkreturn="true">
             <arg line='echo "${allReleases}" | grep -v "^${deploy.releaseHash}$"'/>
         </exec>
