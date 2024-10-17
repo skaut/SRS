@@ -126,7 +126,7 @@
 
         <exec executable="bash" outputProperty="previousReleases" checkreturn="true">
             <arg value="-c"/>
-            <arg line='"echo &apos;${allReleases}&apos; | grep -v &apos;^${deploy.releaseHash}$&apos;"'/>
+            <arg line='"echo &apos;${allReleases}&apos; | grep -v &apos;^${deploy.releaseHash}$&apos;" | tr "\n" " "'/>
         </exec>
 
         <phingcall target="deploy:ssh">
