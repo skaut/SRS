@@ -26,16 +26,16 @@ jobs:
       CONFIG_MAIL_HOST: ${{ secrets.CONFIG_MAIL_HOST }}
       CONFIG_MAIL_PASSWORD: ${{ secrets.CONFIG_MAIL_PASSWORD }}
       CONFIG_MAIL_PORT: ${{ secrets.CONFIG_MAIL_PORT }}
-      CONFIG_MAIL_SECURE: ${{ secrets.CONFIG_MAIL_SECURE }}
+      CONFIG_MAIL_SECURE: ${{ vars.CONFIG_MAIL_SECURE }}
       CONFIG_MAIL_SMTP: ${{ secrets.CONFIG_MAIL_SMTP }}
       CONFIG_MAIL_USERNAME: ${{ secrets.CONFIG_MAIL_USERNAME }}
       CONFIG_MAILING_SENDER_EMAIL: ${{ secrets.CONFIG_MAILING_SENDER_EMAIL }}
       CONFIG_SKAUTIS_APPLICATION_ID: ${{ secrets.CONFIG_SKAUTIS_APPLICATION_ID }}
-      CONFIG_SKAUTIS_TEST_MODE: ${{ secrets.CONFIG_SKAUTIS_TEST_MODE }}
+      CONFIG_SKAUTIS_TEST_MODE: ${{ vars.CONFIG_SKAUTIS_TEST_MODE }}
       CONFIG_RECAPTCHA_SITE_KEY: ${{ secrets.CONFIG_RECAPTCHA_SITE_KEY }}
       CONFIG_RECAPTCHA_SECRET_KEY: ${{ secrets.CONFIG_RECAPTCHA_SECRET_KEY }}
-      DEPLOY_DIRECTORY: ${{ secrets.DEPLOY_DIRECTORY }}
-      DEPLOY_LEBEDA: ${{ secrets.DEPLOY_LEBEDA }}
+      DEPLOY_DIRECTORY: ${{ vars.DEPLOY_DIRECTORY }}
+      DEPLOY_LEBEDA: ${{ vars.DEPLOY_LEBEDA }}
       DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
       DEPLOY_SSH_IP: ${{ secrets.DEPLOY_SSH_IP }}
       DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
@@ -69,10 +69,13 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: Setup SSH key and deploy
+      - name: Setup SSH2
         run: |
-          mkdir -p /root/.ssh
-          ssh-keyscan -H "${DEPLOY_SSH_HOST}","${DEPLOY_SSH_IP}" >> /root/.ssh/known_hosts
-          eval `ssh-agent -s`
-          echo "${DEPLOY_SSH_KEY}" | tr -d '\r' | ssh-add -
-          phing deploy
+          apt-get -y install libssh2-1-dev
+          pecl install pecl.php.net/ssh2-1.4.1
+          echo extension=ssh2.so > /usr/local/etc/php/conf.d/ssh2.ini
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > id_rsa
+          chmod 600 id_rsa
+          ssh-keygen -f id_rsa -y > id_rsa.pub
+      - name: Deploy
+        run: phing deploy

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="SRS" basedir="." default="main">
     <property name="tempDir" value="temp"/>
+
     <target name="main" description="Runs tests and prepares deployable tarball">
         <exec executable="composer" passthru="true">
             <arg value="install"/>
@@ -20,8 +21,7 @@
 
     <target name="prepare-tarball" description="Prepares deployable tarball with everything built">
         <exec executable="git" outputProperty="build.hash">
-            <arg value="rev-parse"/>
-            <arg value="--short HEAD"/>
+            <arg line="rev-parse --short HEAD"/>
         </exec>
 
         <property name="build.dir" value="${tempDir}/builds/${build.hash}"/>
@@ -104,35 +104,30 @@
             </fileset>
         </tar>
 
-        <delete dir="${build.dir}" />
+        <delete dir="${build.dir}"/>
     </target>
 
     <target name="deploy:ssh">
         <echo message="${comment}..."/>
         <echo message="${command}"/>
-        <exec executable="ssh" passthru="true" checkreturn="true">
-            <arg value="${deploy.ssh.target}"/>
-            <arg value="-p ${deploy.ssh.port}"/>
-            <arg value="'${command}'"/>
-        </exec>
+        <ssh host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa"
+             pubkeyfile="id_rsa.pub" command="${command}"/>
     </target>
 
     <target name="deploy:copy-tarball">
-        <property name="command" value="scp"/>
-        <property name="args" value="-P ${port} ${file} '${target}:${toDirectory}'"/>
-        <echo message="Copying files to ${deploy.ssh.target}"/>
-        <echo message="${command} ${args}"/>
-        <exec executable="${command}" passthru="true" checkreturn="true">
-            <arg value="${args}"/>
-        </exec>
+        <echo message="Copying ${file} to ${toDirectory}"/>
+        <scp host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa"
+             pubkeyfile="id_rsa.pub" file="${file}" todir="${toDirectory}"/>
     </target>
 
     <target name="deploy:cleanup">
-        <echo message="Getting previous releases"/>
+        <ssh host="${deploy.ssh.host}" port="${deploy.ssh.port}" username="${deploy.ssh.username}" privkeyfile="id_rsa"
+             pubkeyfile="id_rsa.pub" command="ls ${deploy.releasesDir}" property="allReleases"/>
 
-        <property name="command" value="echo $(ssh -p ${deploy.ssh.port} ${deploy.ssh.target} 'ls ${deploy.releasesDir}' | grep -v '^${deploy.releaseHash}$')"/>
-        <echo message="${command}"/>
-        <exec outputProperty="previousReleases" command="${command}" checkreturn="true"/>
+        <exec executable="bash" outputProperty="previousReleases" checkreturn="true">
+            <arg value="-c"/>
+            <arg line='"echo &apos;${allReleases}&apos; | grep -v &apos;^${deploy.releaseHash}$&apos; | tr &apos;\n&apos; &apos; &apos;"'/>
+        </exec>
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Deleting files"/>
@@ -146,18 +141,18 @@
         <!-- Prepare variables -->
         <property environment="env"/>
         <property name="deploy.workDir" refid="env.DEPLOY_DIRECTORY"/>
-        <property name="deploy.releasesDir" value="${deploy.workDir}/releases"/>
-        <exec executable="git" outputProperty="build.hash">
-            <arg value="rev-parse"/>
-            <arg value="--short HEAD"/>
-        </exec>
         <property name="deploy.lebeda" refid="env.DEPLOY_LEBEDA"/>
         <property name="deploy.ssh.host" refid="env.DEPLOY_SSH_HOST"/>
-        <property name="deploy.ssh.username" refid="env.DEPLOY_SSH_USERNAME"/>
         <property name="deploy.ssh.port" refid="env.DEPLOY_SSH_PORT"/>
-        <property name="deploy.ssh.target" value="${deploy.ssh.username}@${deploy.ssh.host}"/>
+        <property name="deploy.ssh.username" refid="env.DEPLOY_SSH_USERNAME"/>
+
+        <exec executable="git" outputProperty="build.hash">
+            <arg line="rev-parse --short HEAD"/>
+        </exec>
+        <property name="deploy.releasesDir" value="${deploy.workDir}/releases"/>
         <property name="deploy.releaseHash" value="${DSTAMP}-${TSTAMP}-${build.hash}"/>
         <property name="deploy.release" value="${deploy.releasesDir}/${deploy.releaseHash}"/>
+        <property name="tarball" value="${deploy.release}.tar.gz"/>
 
         <!-- Build tarball -->
         <phingcall target="prepare-tarball">
@@ -170,13 +165,9 @@
         </phingcall>
 
         <phingcall target="deploy:copy-tarball">
-            <property name="target" value="${deploy.ssh.target}"/>
-            <property name="port" value="${deploy.ssh.port}"/>
             <property name="file" value="${tempDir}/builds/${deploy.releaseHash}.tar.gz"/>
             <property name="toDirectory" value="${deploy.releasesDir}"/>
         </phingcall>
-
-        <property name="tarball" value="${deploy.release}.tar.gz"/>
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Extracting tarball to release directory"/>
@@ -190,7 +181,8 @@
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Copying custom CSS"/>
-            <property name="command" value="cp ${deploy.workDir}/www/css/web/style.css ${deploy.release}/www/css/web || true"/>
+            <property name="command"
+                      value="cp ${deploy.workDir}/www/css/web/style.css ${deploy.release}/www/css/web || true"/>
         </phingcall>
 
         <phingcall target="deploy:ssh">
@@ -255,7 +247,8 @@
 
         <phingcall target="deploy:ssh">
             <property name="comment" value="Swapping release to ${deploy.releaseHash}"/>
-            <property name="command" value="rm -rf ${deploy.workDir}/www &amp;&amp; ln -s ${deploy.release}/www ${deploy.workDir}/www"/>
+            <property name="command"
+                      value="rm -rf ${deploy.workDir}/www &amp;&amp; ln -s ${deploy.release}/www ${deploy.workDir}/www"/>
         </phingcall>
 
         <phingcall target="deploy:cleanup"/>
@@ -263,8 +256,8 @@
 
     <target name="deploy:app-command">
         <condition property="phpCommand"
-                   value="php81-cli &quot;${deploy.release}/www/console.php ${command}&quot;"
-                   else="php8.1 ${deploy.release}/www/console.php ${command}">
+                   value="php83-cli &quot;${deploy.release}/www/console.php ${command}&quot;"
+                   else="php8.3 ${deploy.release}/www/console.php ${command}">
             <equals arg1="${deploy.lebeda}" arg2="true"/>
         </condition>
         <phingcall target="deploy:ssh">
@@ -310,15 +303,8 @@
     </target>
 
     <target name="static-analysis">
-        <exec executable="php" passthru="true" checkreturn="true">
-            <arg value="-d memory_limit=1024M"/>
-            <arg value="vendor/bin/phpstan"/>
-            <arg value="analyse"/>
-            <arg value="-l6"/>
-            <arg value="-cphpstan.neon"/>
-            <arg value="app"/>
-            <arg value="--no-progress"/>
-        </exec>
+        <phpstan executable="vendor/bin/phpstan" command="analyse" passthru="true" checkReturn="true" paths="app"
+                 configuration="phpstan.neon" level="6" noProgress="true" memoryLimit="1024M"/>
     </target>
 
     <target name="coding-standard">
