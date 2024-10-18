@@ -71,7 +71,7 @@ jobs:
           apt-get -y install libssh2-1-dev
           pecl install pecl.php.net/ssh2-1.4.1
           echo extension=ssh2.so > /usr/local/etc/php/conf.d/ssh2.ini
-          echo "${{ secrets.DEPLOY_SSH_KEY }}" > id_rsa
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" | tr -d '\r' > id_rsa
           chmod 600 id_rsa
           ssh-keygen -f id_rsa -y > id_rsa.pub
       - name: Deploy
