@@ -1670,10 +1670,10 @@ terser@^5.26.0:
     commander "^2.20.0"
     source-map-support "~0.5.20"
 
-tinymce-i18n@^24.10.7:
-  version "24.10.7"
-  resolved "https://registry.yarnpkg.com/tinymce-i18n/-/tinymce-i18n-24.10.7.tgz#923bf088400036ac65e67ab4ea648a06ac784fe2"
-  integrity sha512-svVaW78Cop0Lrw2fCPe2BgWZndAoxxiafkij46/TdOQb09d3e+dwtQrVgILWSmZJDBoZby4SNxmJMhgu9GKOlg==
+tinymce-i18n@^24.10.28:
+  version "24.10.28"
+  resolved "https://registry.yarnpkg.com/tinymce-i18n/-/tinymce-i18n-24.10.28.tgz#f865b2306464cca2ac6705ee1550bfb7d70a6512"
+  integrity sha512-n2CQQQC4xgBBTLortrgkP0aMkPtLwmeFEu/Eu68ZckOqyNC4gbtgpR+Ss2tNc6qCfQAawdUKha/NElOBkKRHYQ==
 
 tinymce@^5.10.9:
   version "5.10.9"
