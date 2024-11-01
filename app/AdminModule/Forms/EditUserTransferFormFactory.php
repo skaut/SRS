@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
+use App\Model\Acl\Role;
+use App\Model\Application\Application;
+use App\Model\Enums\ApplicationState;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
 use Contributte\Translation\Translator;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\ImageException;
@@ -66,9 +71,40 @@ class EditUserTransferFormFactory
         $userRoles = $this->user->getRoles();
         $targetUserRoles = $targetUser->getRoles();
 
+        $targetRoles = new ArrayCollection();
+        foreach ($userRoles as $role) {
+            if (!$targetRoles->contains($role)) {
+                $targetRoles->add($role);
+            }
+        }
+        foreach ($targetUserRoles as $role) {
+            if (!$targetRoles->contains($role) && $role->getSystemName() !== Role::NONREGISTERED) {
+                $targetRoles->add($role);
+            }
+        }
+
         $userSubevents = $this->user->getSubevents();
         $targetUserSubevents = $this->user->getSubevents();
 
+        $targetSubevents = new ArrayCollection();
+        foreach ($userSubevents as $subevent) {
+            if (!$targetSubevents->contains($subevent)) {
+                $targetSubevents->add($subevent);
+            }
+        }
+        foreach ($targetUserSubevents as $subevent) {
+            if (!$targetSubevents->contains($subevent)) {
+                $targetSubevents->add($subevent);
+            }
+        }
+
+        $loggedUser = $form->getPresenter()->getDbUser();
+
+        $this->applicationService->cancelRegistration($this->user, ApplicationState::CANCELED_TRANSFERED, $loggedUser);
+        $this->applicationService->updateRoles($targetUser, $targetRoles, $form->getPresenter()->getDbUser(), $loggedUser);
+        $this->applicationService->addSubeventsApplication($targetUser, $targetSubevents, $loggedUser);
+
+        // todo: pridani platby za vsechny role a podakce (i ty ktere uz mel)
 
 //        $this->user->setFirstName($values->firstName);
 //        $this->user->setLastName($values->lastName);
