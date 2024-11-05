@@ -9558,20 +9558,20 @@
         },
         {
             "name": "nette/tester",
-            "version": "v2.5.3",
+            "version": "v2.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tester.git",
-                "reference": "ee0a4b8402a8c1831db547ec0a56d18196906b51"
+                "reference": "c11863785779e87b40adebf150364f2e5938c111"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tester/zipball/ee0a4b8402a8c1831db547ec0a56d18196906b51",
-                "reference": "ee0a4b8402a8c1831db547ec0a56d18196906b51",
+                "url": "https://api.github.com/repos/nette/tester/zipball/c11863785779e87b40adebf150364f2e5938c111",
+                "reference": "c11863785779e87b40adebf150364f2e5938c111",
                 "shasum": ""
             },
             "require": {
-                "php": "8.0 - 8.3"
+                "php": "8.0 - 8.4"
             },
             "require-dev": {
                 "ext-simplexml": "*",
@@ -9627,9 +9627,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/tester/issues",
-                "source": "https://github.com/nette/tester/tree/v2.5.3"
+                "source": "https://github.com/nette/tester/tree/v2.5.4"
             },
-            "time": "2024-06-18T18:44:12+00:00"
+            "time": "2024-10-23T23:57:10+00:00"
         },
         {
             "name": "nextras/mail-panel",
