@@ -809,11 +809,11 @@ class User
      *
      * @return Collection<int, Application>
      */
-    public function getPaidAndFreeApplications(): Collection
+    public function getPaidAndTransferedAndFreeApplications(): Collection
     {
         return $this->applications->filter(static fn (Application $application) => $application->getValidTo() === null && (
-                $application->getState() === ApplicationState::PAID_FREE ||
                 $application->getState() === ApplicationState::PAID ||
+                $application->getState() === ApplicationState::PAID_FREE ||
                 $application->getState() === ApplicationState::PAID_TRANSFERED
             ));
     }
@@ -1105,7 +1105,7 @@ class User
     {
         $subevents = new ArrayCollection();
 
-        foreach ($this->getPaidAndFreeApplications() as $application) {
+        foreach ($this->getPaidAndTransferedAndFreeApplications() as $application) {
             if ($application instanceof SubeventsApplication) {
                 foreach ($application->getSubevents() as $subevent) {
                     $subevents->add($subevent);
@@ -1121,7 +1121,7 @@ class User
      */
     public function hasPaidSubevent(Subevent $subevent): bool
     {
-        foreach ($this->getPaidAndFreeApplications() as $application) {
+        foreach ($this->getPaidAndTransferedAndFreeApplications() as $application) {
             if ($application instanceof SubeventsApplication && $application->getSubevents()->contains($subevent)) {
                 return true;
             }
