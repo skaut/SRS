@@ -116,9 +116,11 @@ skautis_event_insert_type:
 application_state:
     waiting_for_payment: "Čeká na platbu"
     canceled_not_paid: "Zrušeno (nezaplaceno)"
+    canceled_transfered: "Zrušeno (převedeno)"
     canceled: "Zrušeno"
     paid: "Zaplaceno"
     paid_free: "Zaplaceno (zdarma)"
+    paid_transfered: "Zaplaceno (převedeno)"
 
 calendar_view:
     timeGridSeminar: "Na výšku"

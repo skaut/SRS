@@ -96,7 +96,7 @@ class TicketsPresenter extends ApiBasePresenter
         $subevents   = [];
         $hasSubevent = false;
 
-        foreach ($user->getPaidAndFreeApplications() as $application) {
+        foreach ($user->getPaidAndTransferedAndFreeApplications() as $application) {
             if ($application instanceof RolesApplication) {
                 foreach ($application->getRoles() as $r) {
                     $roles[] = $r->getName();

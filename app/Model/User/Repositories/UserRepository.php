@@ -131,7 +131,7 @@ class UserRepository extends AbstractRepository
             ->where('a.validTo IS NULL')
             ->andWhere('a.state IN (:states)')
             ->andWhere('s.id IN (:ids)')
-            ->setParameter('states', [ApplicationState::PAID, ApplicationState::PAID_FREE, ApplicationState::WAITING_FOR_PAYMENT])
+            ->setParameter('states', [ApplicationState::PAID, ApplicationState::PAID_FREE, ApplicationState::PAID_TRANSFERED, ApplicationState::WAITING_FOR_PAYMENT])
             ->setParameter('ids', $subeventsIds)
             ->getQuery()
             ->getResult();
@@ -213,7 +213,7 @@ class UserRepository extends AbstractRepository
      *
      * @return string[]
      */
-    public function getUsersOptions(): array
+    public function getUsersOptions(bool $empty = false): array
     {
         $users = $this->createQueryBuilder('u')
             ->select('u.id, u.displayName')
@@ -222,6 +222,11 @@ class UserRepository extends AbstractRepository
             ->getResult();
 
         $options = [];
+
+        if ($empty) {
+            $options[0] = '';
+        }
+
         foreach ($users as $user) {
             $options[$user['id']] = $user['displayName'];
         }

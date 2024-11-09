@@ -162,7 +162,7 @@ class ApplicationService
      * @throws Throwable
      * @throws MailingMailCreationException
      */
-    public function updateRoles(User $user, Collection $roles, User|null $createdBy, bool $approve = false): void
+    public function updateRoles(User $user, Collection $roles, User|null $createdBy, bool $approve = false, bool $transfered = false): void
     {
         $rolesOld = clone $user->getRoles();
 
@@ -170,16 +170,18 @@ class ApplicationService
             return;
         }
 
-        $this->em->wrapInTransaction(function () use ($user, $roles, $createdBy, $approve, $rolesOld): void {
+        $this->em->wrapInTransaction(function () use ($user, $roles, $createdBy, $approve, $transfered, $rolesOld): void {
             if ($rolesOld->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
                 $this->createRolesApplication($user, $roles, $createdBy, $approve);
-                $this->createSubeventsApplication(
-                    $user,
-                    new ArrayCollection(
-                        [$this->subeventRepository->findImplicit()],
-                    ),
-                    $createdBy,
-                );
+                if (! $transfered) {
+                    $this->createSubeventsApplication(
+                        $user,
+                        new ArrayCollection(
+                            [$this->subeventRepository->findImplicit()],
+                        ),
+                        $createdBy,
+                    );
+                }
             } else {
                 $this->incrementRolesOccupancy($roles);
 
@@ -206,10 +208,12 @@ class ApplicationService
                         $newApplication = clone $application;
                         $newApplication->setRoles($roles);
                         $newApplication->setFee($this->countRolesFee($roles));
-                        $newApplication->setState($this->getApplicationState($newApplication));
+                        $newApplication->setState($this->getApplicationState($newApplication, $transfered));
                         $newApplication->setCreatedBy($createdBy);
                         $newApplication->setValidFrom(new DateTimeImmutable());
                         $this->applicationRepository->save($newApplication);
+
+                        $user->addApplication($newApplication);
 
                         $application->setValidTo(new DateTimeImmutable());
                         $this->applicationRepository->save($application);
@@ -223,6 +227,8 @@ class ApplicationService
                             $newApplication->setCreatedBy($createdBy);
                             $newApplication->setValidFrom(new DateTimeImmutable());
                             $this->applicationRepository->save($newApplication);
+
+                            $user->addApplication($newApplication);
 
                             $application->setValidTo(new DateTimeImmutable());
                             $this->applicationRepository->save($application);
@@ -338,13 +344,10 @@ class ApplicationService
      *
      * @throws Throwable
      */
-    public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy): void
+    public function addSubeventsApplication(User $user, Collection $subevents, User $createdBy, bool $transfered = false): void
     {
-        $this->em->wrapInTransaction(function () use ($user, $subevents, $createdBy): void {
-            $this->incrementSubeventsOccupancy($subevents);
-
-            $this->createSubeventsApplication($user, $subevents, $createdBy);
-
+        $this->em->wrapInTransaction(function () use ($user, $subevents, $createdBy, $transfered): void {
+            $this->createSubeventsApplication($user, $subevents, $createdBy, $transfered);
             $this->eventBus->handle(new ApplicationUpdatedEvent($user));
             $this->updateUserPaymentInfo($user);
         });
@@ -567,12 +570,14 @@ class ApplicationService
             if ($pairedApplication) {
                 if (
                     $pairedApplication->getState() === ApplicationState::PAID ||
-                    $pairedApplication->getState() === ApplicationState::PAID_FREE
+                    $pairedApplication->getState() === ApplicationState::PAID_FREE ||
+                    $pairedApplication->getState() === ApplicationState::PAID_TRANSFERED
                 ) {
                     $payment->setState(PaymentState::NOT_PAIRED_PAID);
                 } elseif (
                     $pairedApplication->getState() === ApplicationState::CANCELED ||
-                    $pairedApplication->getState() === ApplicationState::CANCELED_NOT_PAID
+                    $pairedApplication->getState() === ApplicationState::CANCELED_NOT_PAID ||
+                    $pairedApplication->getState() === ApplicationState::CANCELED_TRANSFERED
                 ) {
                     $payment->setState(PaymentState::NOT_PAIRED_CANCELED);
                 } elseif (abs($pairedApplication->getFee() - $amount) >= 0.01) {
@@ -726,7 +731,7 @@ class ApplicationService
      */
     public function isAllowedEditRegistration(User $user): bool
     {
-        return ! $user->isInRoleWithSystemName(Role::NONREGISTERED)
+        return $user->isRegistered()
             && ! $user->hasPaidAnyApplication()
             && $this->queryBus->handle(
                 new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO),
@@ -757,7 +762,7 @@ class ApplicationService
      */
     public function isAllowedAddApplication(User $user): bool
     {
-        return ! $user->isInRoleWithSystemName(Role::NONREGISTERED)
+        return $user->isRegistered()
             && $user->hasPaidEveryApplication()
             && $this->queryBus->handle(
                 new SettingBoolValueQuery(Settings::IS_ALLOWED_ADD_SUBEVENTS_AFTER_PAYMENT),
@@ -766,6 +771,83 @@ class ApplicationService
                 new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO),
             ) >= (new DateTimeImmutable())
                 ->setTime(0, 0);
+    }
+
+    /**
+     * Převede registraci (role i podakce) na nového uživatele.
+     *
+     * Duplicitní role a podakce budou uvolněny. Nekompatibilní role nebo podakce nebudou přidány.
+     */
+    public function transferRegistration(User $sourceUser, User $targetUser, User $createdBy): void
+    {
+        $this->em->wrapInTransaction(function () use ($sourceUser, $targetUser, $createdBy): void {
+            $sourceUserRoles = $sourceUser->getRoles();
+            $targetUserRoles = $targetUser->getRoles();
+
+            // přidání všech rolí od zdrojového uživatele (kromě rolí nekompatibilních s jeho stávajícími)
+            /** @var ArrayCollection<int, Role> $targetRoles */
+            $targetRoles = new ArrayCollection();
+            foreach ($sourceUserRoles as $role) {
+                if (! $targetRoles->contains($role)) {
+                    foreach ($role->getIncompatibleRoles() as $incompatibleRole) {
+                        if ($targetUserRoles->contains($incompatibleRole)) {
+                            continue 2;
+                        }
+                    }
+
+                    $targetRoles->add($role);
+                }
+            }
+
+            // přidání zaplacených rolí cílového uživatele
+            if ($targetUser->isRegistered() && $targetUser->hasPaidRolesApplication()) {
+                foreach ($targetUserRoles as $role) {
+                    if (! $targetRoles->contains($role)) {
+                        $targetRoles->add($role);
+                    }
+                }
+            }
+
+            $sourceUserPaidSubevents = $sourceUser->getPaidSubevents();
+            $targetUserPaidSubevents = $targetUser->getPaidSubevents();
+
+            // přidání zaplacených podakcí od zdrojového uživatele (kromě podakcí nekompatibilních s jeho stávajícími)
+            /** @var ArrayCollection<int, Subevent> $targetSubevents */
+            $targetSubevents = new ArrayCollection();
+            foreach ($sourceUserPaidSubevents as $subevent) {
+                if (! $targetSubevents->contains($subevent)) {
+                    foreach ($subevent->getIncompatibleSubevents() as $incompatibleSubevent) {
+                        if ($targetUserPaidSubevents->contains($incompatibleSubevent)) {
+                            continue 2;
+                        }
+                    }
+
+                    $targetSubevents->add($subevent);
+                }
+            }
+
+            // odebrání podakcí, které už cílový uživatel má, ale budou mu přidány převodem
+            foreach ($targetUser->getNotCanceledSubeventsApplications() as $application) {
+                $remainingSubevents = new ArrayCollection();
+
+                foreach ($application->getSubevents() as $subevent) {
+                    if (! $targetSubevents->contains($subevent)) {
+                        $remainingSubevents->add($subevent);
+                    }
+                }
+
+                if ($remainingSubevents->isEmpty()) {
+                    $this->cancelSubeventsApplication($application, ApplicationState::CANCELED, $createdBy);
+                } else {
+                    $this->updateSubeventsApplication($application, $remainingSubevents, $createdBy);
+                }
+            }
+
+            $this->updateRoles($targetUser, $targetRoles, $createdBy, false, true);
+            $this->addSubeventsApplication($targetUser, $targetSubevents, $createdBy, true);
+
+            $this->cancelRegistration($sourceUser, ApplicationState::CANCELED_TRANSFERED, $createdBy);
+        });
     }
 
     /**
@@ -778,7 +860,7 @@ class ApplicationService
         return $this->queryBus->handle(
             new SettingDateValueQuery(Settings::EDIT_CUSTOM_INPUTS_TO),
         ) >= (new DateTimeImmutable())
-            ->setTime(0, 0);
+                ->setTime(0, 0);
     }
 
     /**
@@ -791,7 +873,7 @@ class ApplicationService
      */
     private function createRolesApplication(User $user, Collection $roles, User $createdBy, bool $approve = false): RolesApplication
     {
-        if (! $user->isInRoleWithSystemName(Role::NONREGISTERED)) {
+        if ($user->isRegistered()) {
             throw new InvalidArgumentException('User is already registered.');
         }
 
@@ -844,6 +926,7 @@ class ApplicationService
         User $user,
         Collection $subevents,
         User $createdBy,
+        bool $transfered = false,
     ): SubeventsApplication {
         $this->incrementSubeventsOccupancy($subevents);
 
@@ -852,7 +935,7 @@ class ApplicationService
         $application->setApplicationDate(new DateTimeImmutable());
         $application->setFee($this->countSubeventsFee($user->getRoles(), $subevents));
         $application->setMaturityDate($this->countMaturityDate());
-        $application->setState($this->getApplicationState($application));
+        $application->setState($this->getApplicationState($application, $transfered));
         $application->setCreatedBy($createdBy);
         $application->setValidFrom(new DateTimeImmutable());
         $application->setVariableSymbol($this->generateVariableSymbol());
@@ -971,7 +1054,7 @@ class ApplicationService
     /**
      * Určí stav přihlášky.
      */
-    private function getApplicationState(Application $application): string
+    private function getApplicationState(Application $application, bool $transfered = false): string
     {
         if ($application->getState() === ApplicationState::CANCELED) {
             return ApplicationState::CANCELED;
@@ -979,6 +1062,14 @@ class ApplicationService
 
         if ($application->getState() === ApplicationState::CANCELED_NOT_PAID) {
             return ApplicationState::CANCELED_NOT_PAID;
+        }
+
+        if ($application->getState() === ApplicationState::CANCELED_TRANSFERED) {
+            return ApplicationState::CANCELED_TRANSFERED;
+        }
+
+        if ($transfered || $application->getState() === ApplicationState::PAID_TRANSFERED) {
+            return ApplicationState::PAID_TRANSFERED;
         }
 
         if ($application->getFee() === 0) {
