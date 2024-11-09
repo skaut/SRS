@@ -767,6 +767,9 @@ class ApplicationService
                 ->setTime(0, 0);
     }
 
+    /**
+     * Převede registraci (role i podakce) na nového uživatele. Duplicitní role a podakce budou uvolněny.
+     */
     public function transferRegistration(User $sourceUser, User $targetUser, User $createdBy): void
     {
         $this->em->wrapInTransaction(function () use ($sourceUser, $targetUser, $createdBy): void {
@@ -774,9 +777,12 @@ class ApplicationService
             $targetUserRoles = $targetUser->getRoles();
 
             // přidání všech rolí zdrojového uživatele
+            /** @var ArrayCollection<int, Role> $targetRoles */
             $targetRoles = new ArrayCollection();
             foreach ($sourceUserRoles as $role) {
-                $targetRoles->add($role);
+                if (! $targetRoles->contains($role)) {
+                    $targetRoles->add($role);
+                }
             }
 
             // přidání zaplacených rolí (kromě role neregistrovaný) cílového uživatele
@@ -791,9 +797,12 @@ class ApplicationService
             $sourceUserPaidSubevents = $sourceUser->getPaidSubevents();
 
             // přidání zaplacených podakcí zdrojového uživatele
+            /** @var ArrayCollection<int, Subevent> $targetSubevents */
             $targetSubevents = new ArrayCollection();
             foreach ($sourceUserPaidSubevents as $subevent) {
-                $targetSubevents->add($subevent);
+                if (! $targetSubevents->contains($subevent)) {
+                    $targetSubevents->add($subevent);
+                }
             }
 
             // odebrání podakcí, které už cílový uživatel má, ale budou mu přidány převodem
