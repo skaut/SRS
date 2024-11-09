@@ -776,9 +776,7 @@ class ApplicationService
             // přidání všech rolí zdrojového uživatele
             $targetRoles = new ArrayCollection();
             foreach ($sourceUserRoles as $role) {
-                if (! $targetRoles->contains($role)) {
-                    $targetRoles->add($role);
-                }
+                $targetRoles->add($role);
             }
 
             // přidání zaplacených rolí (kromě role neregistrovaný) cílového uživatele
@@ -795,9 +793,7 @@ class ApplicationService
             // přidání zaplacených podakcí zdrojového uživatele
             $targetSubevents = new ArrayCollection();
             foreach ($sourceUserPaidSubevents as $subevent) {
-                if (! $targetSubevents->contains($subevent)) {
-                    $targetSubevents->add($subevent);
-                }
+                $targetSubevents->add($subevent);
             }
 
             // odebrání podakcí, které už cílový uživatel má, ale budou mu přidány převodem
