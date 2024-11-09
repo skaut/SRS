@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
-use App\Model\Acl\Role;
-use App\Model\Application\Application;
-use App\Model\Enums\ApplicationState;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
 use Contributte\Translation\Translator;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\ImageException;

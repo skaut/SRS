@@ -64,49 +64,47 @@ class ApplicationService
     use Nette\SmartObject;
 
     public function __construct(
-        private readonly CommandBus               $commandBus,
-        private readonly QueryBus                 $queryBus,
-        private readonly EntityManagerInterface   $em,
-        private readonly ApplicationRepository    $applicationRepository,
-        private readonly UserRepository           $userRepository,
-        private readonly AclService               $aclService,
-        private readonly RoleRepository           $roleRepository,
-        private readonly SubeventRepository       $subeventRepository,
-        private readonly DiscountService          $discountService,
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
+        private readonly EntityManagerInterface $em,
+        private readonly ApplicationRepository $applicationRepository,
+        private readonly UserRepository $userRepository,
+        private readonly AclService $aclService,
+        private readonly RoleRepository $roleRepository,
+        private readonly SubeventRepository $subeventRepository,
+        private readonly DiscountService $discountService,
         private readonly VariableSymbolRepository $variableSymbolRepository,
-        private readonly UserService              $userService,
-        private readonly Translator               $translator,
-        private readonly PaymentRepository        $paymentRepository,
-        private readonly IncomeProofRepository    $incomeProofRepository,
-        private readonly EventBus                 $eventBus,
-    )
-    {
+        private readonly UserService $userService,
+        private readonly Translator $translator,
+        private readonly PaymentRepository $paymentRepository,
+        private readonly IncomeProofRepository $incomeProofRepository,
+        private readonly EventBus $eventBus,
+    ) {
     }
 
     /**
      * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci).
      *
-     * @param Collection<int, Role> $roles
+     * @param Collection<int, Role>     $roles
      * @param Collection<int, Subevent> $subevents
      *
      * @throws Throwable
      */
     public function register(
-        User       $user,
+        User $user,
         Collection $roles,
         Collection $subevents,
-        User       $createdBy,
-        bool       $approve = false,
-    ): void
-    {
-        $rolesApplication = $this->createRolesApplication($user, $roles, $createdBy, $approve);
+        User $createdBy,
+        bool $approve = false,
+    ): void {
+        $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
         $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
 
         $this->eventBus->handle(new ApplicationUpdatedEvent($user));
         $this->updateUserPaymentInfo($user);
 
-        $applicatonMaturity = '-';
-        $applicationFee = '0';
+        $applicatonMaturity        = '-';
+        $applicationFee            = '0';
         $applicationVariableSymbol = '-';
 
         if ($rolesApplication->getFee() > 0 && $subeventsApplication->getFee() > 0) {
@@ -114,21 +112,21 @@ class ApplicationService
                 $applicatonMaturity = $rolesApplication->getMaturityDateText();
             }
 
-            $applicationFee = $rolesApplication->getFee() . ', ' . $subeventsApplication->getFee();
+            $applicationFee            = $rolesApplication->getFee() . ', ' . $subeventsApplication->getFee();
             $applicationVariableSymbol = $rolesApplication->getVariableSymbolText() . ', ' . $subeventsApplication->getVariableSymbolText();
         } elseif ($rolesApplication->getFee() > 0) {
             if ($rolesApplication->getMaturityDate()) {
                 $applicatonMaturity = $rolesApplication->getMaturityDateText();
             }
 
-            $applicationFee = $rolesApplication->getFee();
+            $applicationFee            = $rolesApplication->getFee();
             $applicationVariableSymbol = $rolesApplication->getVariableSymbolText();
         } elseif ($subeventsApplication->getFee() > 0) {
             if ($subeventsApplication->getMaturityDate()) {
                 $applicatonMaturity = $subeventsApplication->getMaturityDateText();
             }
 
-            $applicationFee = $subeventsApplication->getFee();
+            $applicationFee            = $subeventsApplication->getFee();
             $applicationVariableSymbol = $subeventsApplication->getVariableSymbolText();
         }
 
@@ -190,14 +188,14 @@ class ApplicationService
 
                 if (
                     $roles->forAll(
-                        static fn(int $key, Role $role) => $role->isApprovedAfterRegistration(),
+                        static fn (int $key, Role $role) => $role->isApprovedAfterRegistration(),
                     )
                 ) {
                     $user->setApproved(true);
                 } elseif (
-                    !$approve
+                    ! $approve
                     && $roles->exists(
-                        static fn(int $key, Role $role) => !$role->isApprovedAfterRegistration() && !$rolesOld->contains($role),
+                        static fn (int $key, Role $role) => ! $role->isApprovedAfterRegistration() && ! $rolesOld->contains($role),
                     )
                 ) {
                     $user->setApproved(false);
@@ -249,7 +247,7 @@ class ApplicationService
             Template::ROLES_CHANGED,
             [
                 TemplateVariable::SEMINAR_NAME => $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME)),
-                TemplateVariable::USERS_ROLES => implode(', ', $roles->map(static fn(Role $role) => $role->getName())->toArray()),
+                TemplateVariable::USERS_ROLES => implode(', ', $roles->map(static fn (Role $role) => $role->getName())->toArray()),
             ],
         ));
     }
@@ -374,7 +372,7 @@ class ApplicationService
      */
     public function updateSubeventsApplication(SubeventsApplication $application, Collection $subevents, User $createdBy): void
     {
-        if (!$application->isValid()) {
+        if (! $application->isValid()) {
             return;
         }
 
@@ -430,7 +428,7 @@ class ApplicationService
      */
     public function cancelSubeventsApplication(SubeventsApplication $application, string $state, User|null $createdBy): void
     {
-        if (!$application->isValid()) {
+        if (! $application->isValid()) {
             return;
         }
 
@@ -482,16 +480,15 @@ class ApplicationService
      * @throws Throwable
      */
     public function updateApplicationPayment(
-        Application            $application,
-        string|null            $paymentMethod,
+        Application $application,
+        string|null $paymentMethod,
         DateTimeImmutable|null $paymentDate,
         DateTimeImmutable|null $maturityDate,
-        User|null              $createdBy,
-    ): void
-    {
+        User|null $createdBy,
+    ): void {
         $oldPaymentMethod = $application->getPaymentMethod();
-        $oldPaymentDate = $application->getPaymentDate();
-        $oldMaturityDate = $application->getMaturityDate();
+        $oldPaymentDate   = $application->getPaymentDate();
+        $oldMaturityDate  = $application->getMaturityDate();
 
         // pokud neni zmena, nic se neprovede
         if ($paymentMethod === $oldPaymentMethod && $paymentDate == $oldPaymentDate && $maturityDate == $oldMaturityDate) {
@@ -543,15 +540,14 @@ class ApplicationService
      */
     public function createPayment(
         DateTimeImmutable $date,
-        float             $amount,
-        string|null       $variableSymbol,
-        string|null       $transactionId,
-        string|null       $accountNumber,
-        string|null       $accountName,
-        string|null       $message,
-        User|null         $createdBy = null,
-    ): void
-    {
+        float $amount,
+        string|null $variableSymbol,
+        string|null $transactionId,
+        string|null $accountNumber,
+        string|null $accountName,
+        string|null $message,
+        User|null $createdBy = null,
+    ): void {
         $this->em->wrapInTransaction(function () use ($date, $amount, $variableSymbol, $transactionId, $accountNumber, $accountName, $message, $createdBy): void {
             $payment = new Payment();
 
@@ -600,11 +596,10 @@ class ApplicationService
      */
     public function createPaymentManual(
         DateTimeImmutable $date,
-        float             $amount,
-        string            $variableSymbol,
-        User              $createdBy,
-    ): void
-    {
+        float $amount,
+        string $variableSymbol,
+        User $createdBy,
+    ): void {
         $this->createPayment($date, $amount, $variableSymbol, null, null, null, null, $createdBy);
     }
 
@@ -616,14 +611,13 @@ class ApplicationService
      * @throws Throwable
      */
     public function updatePayment(
-        Payment                $payment,
+        Payment $payment,
         DateTimeImmutable|null $date,
-        float|null             $amount,
-        string|null            $variableSymbol,
-        Collection             $pairedApplications,
-        User                   $createdBy,
-    ): void
-    {
+        float|null $amount,
+        string|null $variableSymbol,
+        Collection $pairedApplications,
+        User $createdBy,
+    ): void {
         $this->em->wrapInTransaction(function () use ($payment, $date, $amount, $variableSymbol, $pairedApplications, $createdBy): void {
             if ($date !== null) {
                 $payment->setDate($date);
@@ -643,7 +637,7 @@ class ApplicationService
             $pairedApplicationsModified = false;
 
             foreach ($oldPairedApplications as $pairedApplication) {
-                if (!$newPairedApplications->contains($pairedApplication)) {
+                if (! $newPairedApplications->contains($pairedApplication)) {
                     $pairedApplication->setPayment(null);
                     $this->updateApplicationPayment($pairedApplication, null, null, $pairedApplication->getMaturityDate(), $createdBy);
                     $pairedApplicationsModified = true;
@@ -651,7 +645,7 @@ class ApplicationService
             }
 
             foreach ($newPairedApplications as $pairedApplication) {
-                if (!$oldPairedApplications->contains($pairedApplication)) {
+                if (! $oldPairedApplications->contains($pairedApplication)) {
                     $pairedApplication->setPayment($payment);
                     $this->updateApplicationPayment($pairedApplication, PaymentType::BANK, $payment->getDate(), $pairedApplication->getMaturityDate(), $createdBy);
                     $pairedApplicationsModified = true;
@@ -732,7 +726,7 @@ class ApplicationService
     public function isAllowedEditRegistration(User $user): bool
     {
         return $user->isRegistered()
-            && !$user->hasPaidAnyApplication()
+            && ! $user->hasPaidAnyApplication()
             && $this->queryBus->handle(
                 new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO),
             ) >= (new DateTimeImmutable())
@@ -747,7 +741,7 @@ class ApplicationService
     public function isAllowedEditApplication(Application $application): bool
     {
         return $application instanceof SubeventsApplication
-            && !$application->isCanceled()
+            && ! $application->isCanceled()
             && $application->getState() !== ApplicationState::PAID
             && $this->queryBus->handle(
                 new SettingDateValueQuery(Settings::EDIT_REGISTRATION_TO),
@@ -782,7 +776,7 @@ class ApplicationService
             // přidání všech rolí zdrojového uživatele
             $targetRoles = new ArrayCollection();
             foreach ($sourceUserRoles as $role) {
-                if (!$targetRoles->contains($role)) {
+                if (! $targetRoles->contains($role)) {
                     $targetRoles->add($role);
                 }
             }
@@ -790,7 +784,7 @@ class ApplicationService
             // přidání zaplacených rolí (kromě role neregistrovaný) cílového uživatele
             if ($targetUser->hasPaidRolesApplication()) {
                 foreach ($targetUserRoles as $role) {
-                    if (!$targetRoles->contains($role) && $role->getSystemName() !== Role::NONREGISTERED) {
+                    if (! $targetRoles->contains($role) && $role->getSystemName() !== Role::NONREGISTERED) {
                         $targetRoles->add($role);
                     }
                 }
@@ -801,7 +795,7 @@ class ApplicationService
             // přidání zaplacených podakcí zdrojového uživatele
             $targetSubevents = new ArrayCollection();
             foreach ($sourceUserPaidSubevents as $subevent) {
-                if (!$targetSubevents->contains($subevent)) {
+                if (! $targetSubevents->contains($subevent)) {
                     $targetSubevents->add($subevent);
                 }
             }
@@ -811,7 +805,7 @@ class ApplicationService
                 $remainingSubevents = new ArrayCollection();
 
                 foreach ($application->getSubevents() as $subevent) {
-                    if (!$targetSubevents->contains($subevent)) {
+                    if (! $targetSubevents->contains($subevent)) {
                         $remainingSubevents->add($subevent);
                     }
                 }
@@ -838,8 +832,8 @@ class ApplicationService
     public function isAllowedEditCustomInputs(): bool
     {
         return $this->queryBus->handle(
-                new SettingDateValueQuery(Settings::EDIT_CUSTOM_INPUTS_TO),
-            ) >= (new DateTimeImmutable())
+            new SettingDateValueQuery(Settings::EDIT_CUSTOM_INPUTS_TO),
+        ) >= (new DateTimeImmutable())
                 ->setTime(0, 0);
     }
 
@@ -862,8 +856,8 @@ class ApplicationService
         $user->setApproved(true);
 
         if (
-            !$approve && $roles->exists(
-                static fn(int $key, Role $role) => !$role->isApprovedAfterRegistration(),
+            ! $approve && $roles->exists(
+                static fn (int $key, Role $role) => ! $role->isApprovedAfterRegistration(),
             )
         ) {
             $user->setApproved(false);
@@ -903,12 +897,11 @@ class ApplicationService
      * @throws Throwable
      */
     private function createSubeventsApplication(
-        User       $user,
+        User $user,
         Collection $subevents,
-        User       $createdBy,
-        bool       $transfered = false
-    ): SubeventsApplication
-    {
+        User $createdBy,
+        bool $transfered = false,
+    ): SubeventsApplication {
         $this->incrementSubeventsOccupancy($subevents);
 
         $application = new SubeventsApplication($user);
@@ -952,9 +945,9 @@ class ApplicationService
     private function countMaturityDate(): DateTimeImmutable|null
     {
         switch (
-        $this->queryBus->handle(
-            new SettingStringValueQuery(Settings::MATURITY_TYPE),
-        )
+            $this->queryBus->handle(
+                new SettingStringValueQuery(Settings::MATURITY_TYPE),
+            )
         ) {
             case MaturityType::DATE:
                 return $this->queryBus->handle(new SettingDateValueQuery(Settings::MATURITY_DATE));
@@ -964,11 +957,11 @@ class ApplicationService
 
             case MaturityType::WORK_DAYS:
                 $workDays = $this->queryBus->handle(new SettingIntValueQuery(Settings::MATURITY_WORK_DAYS));
-                $date = new DateTimeImmutable();
+                $date     = new DateTimeImmutable();
 
                 for ($i = 0; $i < $workDays;) {
-                    $date = $date->modify('+1 days');
-                    $holidays = Yasumi::create('CzechRepublic', (int)$date->format('Y'));
+                    $date     = $date->modify('+1 days');
+                    $holidays = Yasumi::create('CzechRepublic', (int) $date->format('Y'));
 
                     if ($holidays->isWorkingDay($date)) {
                         $i++;
@@ -1004,7 +997,7 @@ class ApplicationService
     /**
      * Vypočítá poplatek za podakce přihlášky.
      *
-     * @param Collection<int, Role> $roles
+     * @param Collection<int, Role>     $roles
      * @param Collection<int, Subevent> $subevents
      */
     private function countSubeventsFee(Collection $roles, Collection $subevents): int

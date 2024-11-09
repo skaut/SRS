@@ -53,7 +53,7 @@ class SkautIsService
 
         try {
             return $this->skautIs->getUser()->isLoggedIn($hardCheck);
-        } catch (AuthenticationException $e) {
+        } catch (AuthenticationException) {
             return false;
         }
     }
