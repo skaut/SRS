@@ -14,6 +14,8 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ImageException;
 use stdClass;
 
+use function assert;
+
 /**
  * Formulář pro předání registrace jinému uživateli.
  */
