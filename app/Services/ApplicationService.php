@@ -173,13 +173,15 @@ class ApplicationService
         $this->em->wrapInTransaction(function () use ($user, $roles, $createdBy, $approve, $transfered, $rolesOld): void {
             if ($rolesOld->contains($this->roleRepository->findBySystemName(Role::NONREGISTERED))) {
                 $this->createRolesApplication($user, $roles, $createdBy, $approve);
-                $this->createSubeventsApplication(
-                    $user,
-                    new ArrayCollection(
-                        [$this->subeventRepository->findImplicit()],
-                    ),
-                    $createdBy,
-                );
+                if (! $transfered) {
+                    $this->createSubeventsApplication(
+                        $user,
+                        new ArrayCollection(
+                            [$this->subeventRepository->findImplicit()],
+                        ),
+                        $createdBy,
+                    );
+                }
             } else {
                 $this->incrementRolesOccupancy($roles);
 
@@ -211,6 +213,8 @@ class ApplicationService
                         $newApplication->setValidFrom(new DateTimeImmutable());
                         $this->applicationRepository->save($newApplication);
 
+                        $user->addApplication($newApplication);
+
                         $application->setValidTo(new DateTimeImmutable());
                         $this->applicationRepository->save($application);
                     } else {
@@ -223,6 +227,8 @@ class ApplicationService
                             $newApplication->setCreatedBy($createdBy);
                             $newApplication->setValidFrom(new DateTimeImmutable());
                             $this->applicationRepository->save($newApplication);
+
+                            $user->addApplication($newApplication);
 
                             $application->setValidTo(new DateTimeImmutable());
                             $this->applicationRepository->save($application);
@@ -768,7 +774,9 @@ class ApplicationService
     }
 
     /**
-     * Převede registraci (role i podakce) na nového uživatele. Duplicitní role a podakce budou uvolněny.
+     * Převede registraci (role i podakce) na nového uživatele.
+     *
+     * Duplicitní role a podakce budou uvolněny. Nekompatibilní role nebo podakce nebudou přidány.
      */
     public function transferRegistration(User $sourceUser, User $targetUser, User $createdBy): void
     {
@@ -776,31 +784,44 @@ class ApplicationService
             $sourceUserRoles = $sourceUser->getRoles();
             $targetUserRoles = $targetUser->getRoles();
 
-            // přidání všech rolí zdrojového uživatele
+            // přidání všech rolí od zdrojového uživatele (kromě rolí nekompatibilních s jeho stávajícími)
             /** @var ArrayCollection<int, Role> $targetRoles */
             $targetRoles = new ArrayCollection();
             foreach ($sourceUserRoles as $role) {
                 if (! $targetRoles->contains($role)) {
+                    foreach ($role->getIncompatibleRoles() as $incompatibleRole) {
+                        if ($targetUserRoles->contains($incompatibleRole)) {
+                            continue 2;
+                        }
+                    }
+
                     $targetRoles->add($role);
                 }
             }
 
-            // přidání zaplacených rolí (kromě role neregistrovaný) cílového uživatele
-            if ($targetUser->hasPaidRolesApplication()) {
+            // přidání zaplacených rolí cílového uživatele
+            if ($targetUser->isRegistered() && $targetUser->hasPaidRolesApplication()) {
                 foreach ($targetUserRoles as $role) {
-                    if (! $targetRoles->contains($role) && $role->getSystemName() !== Role::NONREGISTERED) {
+                    if (! $targetRoles->contains($role)) {
                         $targetRoles->add($role);
                     }
                 }
             }
 
             $sourceUserPaidSubevents = $sourceUser->getPaidSubevents();
+            $targetUserPaidSubevents = $targetUser->getPaidSubevents();
 
-            // přidání zaplacených podakcí zdrojového uživatele
+            // přidání zaplacených podakcí od zdrojového uživatele (kromě podakcí nekompatibilních s jeho stávajícími)
             /** @var ArrayCollection<int, Subevent> $targetSubevents */
             $targetSubevents = new ArrayCollection();
             foreach ($sourceUserPaidSubevents as $subevent) {
                 if (! $targetSubevents->contains($subevent)) {
+                    foreach ($subevent->getIncompatibleSubevents() as $incompatibleSubevent) {
+                        if ($targetUserPaidSubevents->contains($incompatibleSubevent)) {
+                            continue 2;
+                        }
+                    }
+
                     $targetSubevents->add($subevent);
                 }
             }
@@ -822,8 +843,8 @@ class ApplicationService
                 }
             }
 
-            $this->addSubeventsApplication($targetUser, $targetSubevents, $createdBy, true);
             $this->updateRoles($targetUser, $targetRoles, $createdBy, false, true);
+            $this->addSubeventsApplication($targetUser, $targetSubevents, $createdBy, true);
 
             $this->cancelRegistration($sourceUser, ApplicationState::CANCELED_TRANSFERED, $createdBy);
         });

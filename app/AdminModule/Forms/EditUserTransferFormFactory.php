@@ -48,7 +48,7 @@ class EditUserTransferFormFactory
             ->setHtmlAttribute('data-live-search', 'true');
 
         $form->addSubmit('submit', 'admin.users.users_transfer')
-            ->setDisabled(! $this->user->isRegistered())
+            ->setDisabled(! $this->user->isRegistered() || ! $this->user->hasPaidAnyApplication())
             ->setHtmlAttribute('class', 'btn btn-danger')
             ->setHtmlAttribute('data-toggle', 'confirmation')
             ->setHtmlAttribute('data-content', $this->translator->translate('admin.users.users_transfer_confirm'));

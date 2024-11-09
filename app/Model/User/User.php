@@ -789,7 +789,7 @@ class User
     }
 
     /**
-     * Vrácí zaplacené přihlášky.
+     * Vrací zaplacené přihlášky.
      *
      * @return Collection<int, Application>
      */
