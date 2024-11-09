@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Forms;
 
+use App\AdminModule\Presenters\AdminBasePresenter;
 use App\Model\User\Repositories\UserRepository;
 use App\Model\User\User;
 use App\Services\ApplicationService;
@@ -63,8 +64,12 @@ class EditUserTransferFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
+        $presenter = $form->getPresenter();
+        assert($presenter instanceof AdminBasePresenter);
+
+        $loggedUser = $presenter->getDbUser();
+
         $targetUser = $this->userRepository->findById($values->targetUser);
-        $loggedUser = $form->getPresenter()->getDbUser();
 
         $this->applicationService->transferRegistration($this->user, $targetUser, $loggedUser);
     }
