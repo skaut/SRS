@@ -677,6 +677,11 @@ class User
         return $this->roles->exists(static fn (int $key, Role $role) => $role->getSystemName() === $name);
     }
 
+    public function isRegistered(): bool
+    {
+        return ! $this->isInRoleWithSystemName(Role::NONREGISTERED);
+    }
+
     /**
      * Vrací, zda má uživatel nějakou roli, která nemá cenu podle podakcí.
      */
@@ -808,7 +813,9 @@ class User
     {
         return $this->applications->filter(static fn (Application $application) => $application->getValidTo() === null && (
                 $application->getState() === ApplicationState::PAID_FREE ||
-                $application->getState() === ApplicationState::PAID));
+                $application->getState() === ApplicationState::PAID ||
+                $application->getState() === ApplicationState::PAID_TRANSFERED
+            ));
     }
 
     /**
@@ -1087,6 +1094,26 @@ class User
     public function hasSubevent(Subevent $subevent): bool
     {
         return $this->getSubevents()->contains($subevent);
+    }
+
+    /**
+     * Vrací zaplacné podakce uživatele.
+     *
+     * @return Collection<int, Subevent>
+     */
+    public function getPaidSubevents(): Collection
+    {
+        $subevents = new ArrayCollection();
+
+        foreach ($this->getPaidAndFreeApplications() as $application) {
+            if ($application instanceof SubeventsApplication) {
+                foreach ($application->getSubevents() as $subevent) {
+                    $subevents->add($subevent);
+                }
+            }
+        }
+
+        return $subevents;
     }
 
     /**

@@ -227,19 +227,8 @@ class UsersPresenter extends AdminBasePresenter
     {
         $form = $this->editUserTransferFormFactory->create((int) $this->getParameter('id'));
 
-//        $form->onError[] = function (Form $form): void {
-//            foreach ($form->errors as $error) {
-//                $this->flashMessage($error, 'danger');
-//            }
-//
-//            $this->redirect('this');
-//        };
-
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
-            if ($form->isSubmitted() != $form['cancel']) {
-                $this->flashMessage('admin.users.users_saved', 'success');
-            }
-
+            $this->flashMessage('admin.users.users_transfered', 'success');
             $this->redirect('this');
         };
 

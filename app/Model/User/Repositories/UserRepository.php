@@ -131,7 +131,7 @@ class UserRepository extends AbstractRepository
             ->where('a.validTo IS NULL')
             ->andWhere('a.state IN (:states)')
             ->andWhere('s.id IN (:ids)')
-            ->setParameter('states', [ApplicationState::PAID, ApplicationState::PAID_FREE, ApplicationState::WAITING_FOR_PAYMENT])
+            ->setParameter('states', [ApplicationState::PAID, ApplicationState::PAID_FREE, ApplicationState::PAID_TRANSFERED, ApplicationState::WAITING_FOR_PAYMENT])
             ->setParameter('ids', $subeventsIds)
             ->getQuery()
             ->getResult();
