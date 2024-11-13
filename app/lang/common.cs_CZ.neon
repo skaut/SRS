@@ -84,6 +84,7 @@ payment:
 payment_state:
     paired_auto: "Spárována (automaticky)"
     paired_manual: "Spárována (ručně)"
+    paired_canceled: "Spárována (přihláška zrušena)"
     not_paired_fee: "Nespárována (nesouhlasí částka)"
     not_paired_vs: "Nespárována (neexistuje variabilní symbol)"
     not_paired_canceled: "Nespárována (přihláška zrušena)"

@@ -811,11 +811,9 @@ class User
      */
     public function getPaidAndTransferedAndFreeApplications(): Collection
     {
-        return $this->applications->filter(static fn (Application $application) => $application->getValidTo() === null && (
-                $application->getState() === ApplicationState::PAID ||
-                $application->getState() === ApplicationState::PAID_FREE ||
-                $application->getState() === ApplicationState::PAID_TRANSFERED
-            ));
+        return $this->applications->filter(
+            static fn (Application $application) => $application->getValidTo() === null && $application->isPaid(),
+        );
     }
 
     /**
