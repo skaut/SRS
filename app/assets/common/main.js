@@ -115,7 +115,8 @@ function initSelects() {
             actionsBox: true,
             iconBase: 'fa',
             tickIcon: 'fa-check',
-            style: 'btn-light'
+            style: 'btn-light',
+            windowPadding: [50, 0, 0, 0]
         });
 }
 

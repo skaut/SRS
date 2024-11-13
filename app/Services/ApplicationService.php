@@ -282,10 +282,8 @@ class ApplicationService
 
                 if ($newApplication->getPayment() !== null) {
                     if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
-                        $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
+                        $newApplication->getPayment()->setState(PaymentState::PAIRED_CANCELED);
                     }
-
-                    $newApplication->setPayment(null);
                 }
 
                 $this->applicationRepository->save($newApplication);
@@ -448,10 +446,8 @@ class ApplicationService
 
             if ($newApplication->getPayment() !== null) {
                 if ($newApplication->getPayment()->getPairedValidApplications()->count() === 1) {
-                    $newApplication->getPayment()->setState(PaymentState::NOT_PAIRED_CANCELED);
+                    $newApplication->getPayment()->setState(PaymentState::PAIRED_CANCELED);
                 }
-
-                $newApplication->setPayment(null);
             }
 
             $this->applicationRepository->save($newApplication);
@@ -568,17 +564,9 @@ class ApplicationService
             $pairedApplication = $this->applicationRepository->findValidByVariableSymbol($variableSymbol);
 
             if ($pairedApplication) {
-                if (
-                    $pairedApplication->getState() === ApplicationState::PAID ||
-                    $pairedApplication->getState() === ApplicationState::PAID_FREE ||
-                    $pairedApplication->getState() === ApplicationState::PAID_TRANSFERED
-                ) {
+                if ($pairedApplication->isPaid()) {
                     $payment->setState(PaymentState::NOT_PAIRED_PAID);
-                } elseif (
-                    $pairedApplication->getState() === ApplicationState::CANCELED ||
-                    $pairedApplication->getState() === ApplicationState::CANCELED_NOT_PAID ||
-                    $pairedApplication->getState() === ApplicationState::CANCELED_TRANSFERED
-                ) {
+                } elseif ($pairedApplication->isCanceled()) {
                     $payment->setState(PaymentState::NOT_PAIRED_CANCELED);
                 } elseif (abs($pairedApplication->getFee() - $amount) >= 0.01) {
                     $payment->setState(PaymentState::NOT_PAIRED_FEE);
@@ -812,39 +800,47 @@ class ApplicationService
             $targetUserPaidSubevents = $targetUser->getPaidSubevents();
 
             // přidání zaplacených podakcí od zdrojového uživatele (kromě podakcí nekompatibilních s jeho stávajícími)
-            /** @var ArrayCollection<int, Subevent> $targetSubevents */
-            $targetSubevents = new ArrayCollection();
+            /** @var ArrayCollection<int, Subevent> $addSubevents */
+            $addSubevents = new ArrayCollection();
             foreach ($sourceUserPaidSubevents as $subevent) {
-                if (! $targetSubevents->contains($subevent)) {
+                if (! $addSubevents->contains($subevent)) {
                     foreach ($subevent->getIncompatibleSubevents() as $incompatibleSubevent) {
                         if ($targetUserPaidSubevents->contains($incompatibleSubevent)) {
                             continue 2;
                         }
                     }
 
-                    $targetSubevents->add($subevent);
+                    $addSubevents->add($subevent);
                 }
             }
 
+            $addSubeventsFiltered = clone$addSubevents;
+
             // odebrání podakcí, které už cílový uživatel má, ale budou mu přidány převodem
             foreach ($targetUser->getNotCanceledSubeventsApplications() as $application) {
-                $remainingSubevents = new ArrayCollection();
-
-                foreach ($application->getSubevents() as $subevent) {
-                    if (! $targetSubevents->contains($subevent)) {
-                        $remainingSubevents->add($subevent);
+                if ($application->isPaid()) {
+                    foreach ($application->getSubevents() as $subevent) {
+                        $addSubeventsFiltered->removeElement($subevent);
                     }
-                }
-
-                if ($remainingSubevents->isEmpty()) {
-                    $this->cancelSubeventsApplication($application, ApplicationState::CANCELED, $createdBy);
                 } else {
-                    $this->updateSubeventsApplication($application, $remainingSubevents, $createdBy);
+                    $remainingApplicationSubevents = new ArrayCollection();
+
+                    foreach ($application->getSubevents() as $subevent) {
+                        if (! $addSubevents->contains($subevent)) {
+                            $remainingApplicationSubevents->add($subevent);
+                        }
+                    }
+
+                    if ($remainingApplicationSubevents->isEmpty()) {
+                        $this->cancelSubeventsApplication($application, ApplicationState::CANCELED, $createdBy);
+                    } else {
+                        $this->updateSubeventsApplication($application, $remainingApplicationSubevents, $createdBy);
+                    }
                 }
             }
 
             $this->updateRoles($targetUser, $targetRoles, $createdBy, false, true);
-            $this->addSubeventsApplication($targetUser, $targetSubevents, $createdBy, true);
+            $this->addSubeventsApplication($targetUser, $addSubeventsFiltered, $createdBy, true);
 
             $this->cancelRegistration($sourceUser, ApplicationState::CANCELED_TRANSFERED, $createdBy);
         });

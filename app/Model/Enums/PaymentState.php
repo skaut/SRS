@@ -17,6 +17,11 @@ class PaymentState
     public const PAIRED_MANUAL = 'paired_manual';
 
     /**
+     * Spárovaná přihláška byla zrušena.
+     */
+    public const PAIRED_CANCELED = 'paired_canceled';
+
+    /**
      * Nespárováno - nesouhlasí poplatek.
      */
     public const NOT_PAIRED_FEE = 'not_paired_fee';
@@ -45,6 +50,7 @@ class PaymentState
     public static array $states = [
         self::PAIRED_AUTO,
         self::PAIRED_MANUAL,
+        self::PAIRED_CANCELED,
         self::NOT_PAIRED_FEE,
         self::NOT_PAIRED_VS,
         self::NOT_PAIRED_CANCELED,

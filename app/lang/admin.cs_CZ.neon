@@ -479,7 +479,7 @@ users:
     users_edit_roles_occupied: "Všechna místa v některé roli jsou obsazena."
     users_edit_roles_nonregistered: "Roli \"Nepřihlášený\" není možné nastavit, použijte odhlášení ze semináře."
     users_transfer: "Převést registraci"
-    users_transfer_confirm: "Opravdu chcete registraci převést na nového uživatele?"
+    users_transfer_confirm: "Opravdu chcete registraci převést na nového uživatele?<br>Pokud cílový uživatel už má zaplacené některé z převáděných podakcí nebo nekompatibilní podakce, budou mu přidány jen ostatní a tyto budou uvolněny."
 
     users_applications_application_date: "Čas přihlášení"
     users_applications_roles: "Role"

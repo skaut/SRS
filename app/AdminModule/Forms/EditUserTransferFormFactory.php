@@ -51,7 +51,8 @@ class EditUserTransferFormFactory
             ->setDisabled(! $this->user->isRegistered() || ! $this->user->hasPaidAnyApplication())
             ->setHtmlAttribute('class', 'btn btn-danger')
             ->setHtmlAttribute('data-toggle', 'confirmation')
-            ->setHtmlAttribute('data-content', $this->translator->translate('admin.users.users_transfer_confirm'));
+            ->setHtmlAttribute('data-content', $this->translator->translate('admin.users.users_transfer_confirm'))
+            ->setHtmlAttribute('data-html', 'true');
 
         $form->onSuccess[] = [$this, 'processForm'];
 
