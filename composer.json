@@ -43,7 +43,7 @@
 
         "fmasa/messenger": "^2.1",
 
-        "nextras/form-components": "^1.1",
+        "nextras/form-components": "^2.0",
         "nextras/forms-rendering": "^1.1",
         "vojtys/nette-forms-gpspicker": "dev-master",
         "contributte/recaptcha": "^4.0",
