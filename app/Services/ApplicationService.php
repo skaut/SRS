@@ -813,7 +813,8 @@ class ApplicationService
                     $addSubevents->add($subevent);
                 }
             }
-            $addSubeventsFiltered = clone($addSubevents);
+
+            $addSubeventsFiltered = clone$addSubevents;
 
             // odebrání podakcí, které už cílový uživatel má, ale budou mu přidány převodem
             foreach ($targetUser->getNotCanceledSubeventsApplications() as $application) {
