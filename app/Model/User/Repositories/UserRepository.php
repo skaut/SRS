@@ -307,13 +307,14 @@ class UserRepository extends AbstractRepository
     public function blockAllowedQuery(Block $block, bool $paidOnly): QueryBuilder
     {
         $qb = $this->createQueryBuilder('u')
-            ->join('u.applications', 'sa', 'WITH', 'sa.validTo IS NULL AND sa.state != :stateCanceled AND sa.state != :stateCanceledNotPaid')
+            ->join('u.applications', 'sa', 'WITH', 'sa.validTo IS NULL AND sa.state != :stateCanceled AND sa.state != :stateCanceledNotPaid AND sa.state != :stateCanceledTransfered')
             ->join('sa.subevents', 's')
             ->where('u.approved = true')
             ->andWhere('s = :subevent')
             ->setParameter('subevent', $block->getSubevent())
             ->setParameter('stateCanceled', ApplicationState::CANCELED)
-            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID);
+            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID)
+            ->setParameter('stateCanceledTransfered', ApplicationState::CANCELED_TRANSFERED);
 
         if ($block->getCategory() !== null) {
             $qb = $qb->join('u.roles', 'r')
@@ -323,7 +324,7 @@ class UserRepository extends AbstractRepository
         }
 
         if ($paidOnly) {
-            $qb = $qb->join('u.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND ra.state != :stateWaitingForPayment')
+            $qb = $qb->join('u.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND sa.state != :stateCanceledTransfered AND ra.state != :stateWaitingForPayment')
                 ->join('ra.roles', 'rar')
                 ->andWhere('sa.state != :stateWaitingForPayment')
                 ->setParameter('stateWaitingForPayment', ApplicationState::WAITING_FOR_PAYMENT);
