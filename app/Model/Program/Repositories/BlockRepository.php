@@ -145,16 +145,17 @@ class BlockRepository extends AbstractRepository
             ->leftJoin('c.registerableRoles', 'r')
             ->leftJoin('r.users', 'u1')
             ->join('b.subevent', 's')
-            ->join('s.applications', 'sa', 'WITH', 'sa.validTo IS NULL AND sa.state != :stateCanceled AND sa.state != :stateCanceledNotPaid')
+            ->join('s.applications', 'sa', 'WITH', 'sa.validTo IS NULL AND sa.state != :stateCanceled AND sa.state != :stateCanceledNotPaid AND sa.state != :stateCanceledTransfered')
             ->join('sa.user', 'u2', 'WITH', 'u2.approved = TRUE')
             ->where('c IS NULL OR u1 = :user')
             ->andWhere('u2 = :user')
             ->setParameter('user', $user)
             ->setParameter('stateCanceled', ApplicationState::CANCELED)
-            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID);
+            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID)
+            ->setParameter('stateCanceledTransfered', ApplicationState::CANCELED_TRANSFERED);
 
         if ($paidOnly) {
-            $qb = $qb->join('u2.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND ra.state != :stateWaitingForPayment')
+            $qb = $qb->join('u2.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND sa.state != :stateCanceledTransfered AND ra.state != :stateWaitingForPayment')
                 ->join('ra.roles', 'rar')
                 ->andWhere('sa.state != :stateWaitingForPayment')
                 ->setParameter('stateWaitingForPayment', ApplicationState::WAITING_FOR_PAYMENT);
