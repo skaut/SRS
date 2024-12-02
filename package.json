@@ -15,7 +15,7 @@
     "@fullcalendar/timegrid": "^6.1.15",
     "@fullcalendar/vue": "^6.1.15",
     "@popperjs/core": "^2.11.8",
-    "axios": "^1.7.7",
+    "axios": "^1.7.8",
     "bootstrap": "^4.6.2",
     "bootstrap-confirmation2": "^4.2.1",
     "bootstrap-datetime-picker": "^2.4.4",
