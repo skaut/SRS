@@ -677,6 +677,11 @@ class User
         return $this->roles->exists(static fn (int $key, Role $role) => $role->getSystemName() === $name);
     }
 
+    public function isRegistered(): bool
+    {
+        return ! $this->isInRoleWithSystemName(Role::NONREGISTERED);
+    }
+
     /**
      * Vrací, zda má uživatel nějakou roli, která nemá cenu podle podakcí.
      */
@@ -784,7 +789,7 @@ class User
     }
 
     /**
-     * Vrácí zaplacené přihlášky.
+     * Vrací zaplacené přihlášky.
      *
      * @return Collection<int, Application>
      */
@@ -804,11 +809,11 @@ class User
      *
      * @return Collection<int, Application>
      */
-    public function getPaidAndFreeApplications(): Collection
+    public function getPaidAndTransferedAndFreeApplications(): Collection
     {
-        return $this->applications->filter(static fn (Application $application) => $application->getValidTo() === null && (
-                $application->getState() === ApplicationState::PAID_FREE ||
-                $application->getState() === ApplicationState::PAID));
+        return $this->applications->filter(
+            static fn (Application $application) => $application->getValidTo() === null && $application->isPaid(),
+        );
     }
 
     /**
@@ -1090,11 +1095,31 @@ class User
     }
 
     /**
+     * Vrací zaplacné podakce uživatele.
+     *
+     * @return Collection<int, Subevent>
+     */
+    public function getPaidSubevents(): Collection
+    {
+        $subevents = new ArrayCollection();
+
+        foreach ($this->getPaidAndTransferedAndFreeApplications() as $application) {
+            if ($application instanceof SubeventsApplication) {
+                foreach ($application->getSubevents() as $subevent) {
+                    $subevents->add($subevent);
+                }
+            }
+        }
+
+        return $subevents;
+    }
+
+    /**
      * Vrácí, zda má uživatel zaplacenou přihlášku s podakcí.
      */
     public function hasPaidSubevent(Subevent $subevent): bool
     {
-        foreach ($this->getPaidAndFreeApplications() as $application) {
+        foreach ($this->getPaidAndTransferedAndFreeApplications() as $application) {
             if ($application instanceof SubeventsApplication && $application->getSubevents()->contains($subevent)) {
                 return true;
             }

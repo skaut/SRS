@@ -89,8 +89,7 @@ abstract class WebBasePresenter extends BasePresenter
         $this->template->seminarName  = $this->queryBus->handle(new SettingStringValueQuery(Settings::SEMINAR_NAME));
         $this->template->trackingCode = $this->queryBus->handle(new SettingStringValueQuery(Settings::TRACKING_CODE));
 
-        $this->template->nonregisteredRole = Role::NONREGISTERED;
-        $this->template->testRole          = Role::TEST;
+        $this->template->testRole = Role::TEST;
 
         $this->template->adminAccess = $this->user->isAllowed(SrsResource::ADMIN, Permission::ACCESS);
 

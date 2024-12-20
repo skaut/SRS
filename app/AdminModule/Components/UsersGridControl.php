@@ -176,7 +176,7 @@ class UsersGridControl extends Control
                     ->andWhere('uA.validTo IS NULL')
                     ->andWhere('uA.state IN (:states)')
                     ->setParameter('sids', (array) $values)
-                    ->setParameter('states', [ApplicationState::PAID, ApplicationState::PAID_FREE, ApplicationState::WAITING_FOR_PAYMENT]);
+                    ->setParameter('states', [ApplicationState::PAID, ApplicationState::PAID_FREE, ApplicationState::PAID_TRANSFERED, ApplicationState::WAITING_FOR_PAYMENT]);
             });
 
         $columnApproved  = $grid->addColumnStatus('approved', 'admin.users.users_approved');

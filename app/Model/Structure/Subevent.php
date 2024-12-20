@@ -429,10 +429,10 @@ class Subevent
 //
 //        return $this->applications->matching($criteria)->count();
 
-        return $this->applications->filter(static fn (Application $application) => $application->getValidTo() === null && (
-            $application->getState() === ApplicationState::WAITING_FOR_PAYMENT ||
-            $application->getState() === ApplicationState::PAID_FREE ||
-            $application->getState() === ApplicationState::PAID))->count();
+        return $this->applications->filter(
+            static fn (Application $application) => $application->getValidTo() === null && (
+                $application->getState() === ApplicationState::WAITING_FOR_PAYMENT || $application->isPaid()),
+        )->count();
     }
 
     public function countUnoccupied(): int|null

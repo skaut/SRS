@@ -9,7 +9,7 @@ jobs:
     name: "Create release package"
     runs-on: ubuntu-22.04
     container:
-      image: skaut/lebeda:8.1
+      image: skaut/lebeda:8.3
     steps:
       - uses: actions/checkout@v4
       # Copy & paste from https://github.com/actions/cache/blob/master/examples.md#php---composer

@@ -21,7 +21,7 @@
                                 {_web.profile.seminar.attendance}
                             </div>
                             <div class="col-md-9 col-form-label">
-                                {if $dbUser->isInRoleWithSystemName($nonregisteredRole)}
+                                {if !$dbUser->isRegistered()}
                                     {_web.profile.seminar.nonregistered}
                                 {elseif !$dbUser->isApproved()}
                                     {_web.profile.seminar.unapproved}

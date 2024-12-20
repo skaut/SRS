@@ -382,12 +382,12 @@ abstract class Application
 
     public function isCanceled(): bool
     {
-        return $this->state === ApplicationState::CANCELED || $this->state === ApplicationState::CANCELED_NOT_PAID;
+        return $this->state === ApplicationState::CANCELED || $this->state === ApplicationState::CANCELED_NOT_PAID || $this->state === ApplicationState::CANCELED_TRANSFERED;
     }
 
     public function isPaid(): bool
     {
-        return $this->state === ApplicationState::PAID || $this->getState() === ApplicationState::PAID_FREE;
+        return $this->state === ApplicationState::PAID || $this->getState() === ApplicationState::PAID_FREE || $this->getState() === ApplicationState::PAID_TRANSFERED;
     }
 
     public function isWaitingForPayment(): bool

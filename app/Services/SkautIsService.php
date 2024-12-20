@@ -9,6 +9,7 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Skaut\Skautis\Skautis;
+use Skaut\Skautis\Wsdl\AuthenticationException;
 use stdClass;
 use Throwable;
 
@@ -50,7 +51,11 @@ class SkautIsService
         $logoutTime = clone($this->skautIs->getUser()->getLogoutDate());
         $hardCheck  = $logoutTime->diff(new DateTimeImmutable())->i < 15; // pokud od posledniho obnoveni prihlaseni ubehlo 15 minut
 
-        return $this->skautIs->getUser()->isLoggedIn($hardCheck);
+        try {
+            return $this->skautIs->getUser()->isLoggedIn($hardCheck);
+        } catch (AuthenticationException) {
+            return false;
+        }
     }
 
     /**
