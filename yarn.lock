@@ -1623,10 +1623,10 @@ tinymce-i18n@^24.12.9:
   resolved "https://registry.yarnpkg.com/tinymce-i18n/-/tinymce-i18n-24.12.9.tgz#1303caffa9c151073dfb628c9a3c224da781b29b"
   integrity sha512-G4FTRiyrHLL+YSGAWuuxGsEYvx4WONFpgRkOnVgB2AQbPpJcqyu4IabC2OWLqe9vAmcZs/kE1PJu32aj7qawSg==
 
-tinymce@^5.10.9:
-  version "5.10.9"
-  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-5.10.9.tgz#1dfacb3231c71a688d90ff44a0b3f2e91b3b9edf"
-  integrity sha512-5bkrors87X9LhYX2xq8GgPHrIgJYHl87YNs+kBcjQ5I3CiUgzo/vFcGvT3MZQ9QHsEeYMhYO6a5CLGGffR8hMg==
+tinymce@^7.6.0:
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-7.6.0.tgz#476069a3e98f46f3f6e7875ca878313d6b3345b9"
+  integrity sha512-kUrklnD7H8JbpSDEGRh51GKK6Mrf+pR9neSDzUHvXKV+2oRtMB7sqfAtEOnM0/WKdstwaX0qoNCZNo2H1Y0EFA==
 
 totalist@^3.0.0:
   version "3.0.1"
