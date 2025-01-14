@@ -1227,10 +1227,10 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-nette-forms@^3.5.2:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/nette-forms/-/nette-forms-3.5.2.tgz#23a632b97801234cc20f8a716aee5c78333f4bdd"
-  integrity sha512-9fRIyt7sMpyuSczfo5nS9q5gfBKnGeVW/1JorBtnNz6qGBhuw7Fzsn98ssBxnvR3AIBfRUYg0CF6Ieft23Duvw==
+nette-forms@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/nette-forms/-/nette-forms-3.5.3.tgz#960b00481986e4e2148b268164eddb3ff9c48324"
+  integrity sha512-NSyrwQjD788N9uLeaXG4Uff0MSl6xRJDYu0ncKkkDiJ0BVMtXZMZmUXXja6MlvUPKvKmwC8VIFUL0O7vL4/FzA==
 
 node-releases@^2.0.18:
   version "2.0.18"
