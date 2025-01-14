@@ -3716,16 +3716,16 @@
         },
         {
             "name": "nette/bootstrap",
-            "version": "v3.2.4",
+            "version": "v3.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/bootstrap.git",
-                "reference": "4876d25955b4164d714bc17c265f664f6594685b"
+                "reference": "91d08432cb33d6c08d58b215c769d04f20580624"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/bootstrap/zipball/4876d25955b4164d714bc17c265f664f6594685b",
-                "reference": "4876d25955b4164d714bc17c265f664f6594685b",
+                "url": "https://api.github.com/repos/nette/bootstrap/zipball/91d08432cb33d6c08d58b215c769d04f20580624",
+                "reference": "91d08432cb33d6c08d58b215c769d04f20580624",
                 "shasum": ""
             },
             "require": {
@@ -3791,9 +3791,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/bootstrap/issues",
-                "source": "https://github.com/nette/bootstrap/tree/v3.2.4"
+                "source": "https://github.com/nette/bootstrap/tree/v3.2.5"
             },
-            "time": "2024-06-18T22:13:57+00:00"
+            "time": "2024-11-14T00:49:46+00:00"
         },
         {
             "name": "nette/caching",
