@@ -79,6 +79,10 @@ class ApplicationsGridControl extends Control
         $presenter = $this->getPresenter();
         assert($presenter instanceof WebBasePresenter);
 
+        if (! $presenter->getUser()->isLoggedIn()) {
+            return;
+        }
+
         $this->user = $presenter->getDbUser();
 
         $explicitSubeventsExists = $this->subeventRepository->explicitSubeventsExists();
