@@ -75,7 +75,7 @@
         "codeception/codeception": "^4.2",
         "codeception/mockery-module": "^0.4",
         "contributte/codeception": "^1.3",
-        "doctrine/coding-standard": "^12.0",
+        "doctrine/coding-standard": "^13.0",
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-nette": "^1.2",
