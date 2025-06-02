@@ -1614,10 +1614,10 @@ tinymce-i18n@^25.5.12:
   resolved "https://registry.yarnpkg.com/tinymce-i18n/-/tinymce-i18n-25.5.12.tgz#732ecdc43f8fa1da185a6ba1d9ca9e8930de75e9"
   integrity sha512-4jwgRP+uqJTMmsW1DMI8V2jWNNB1geqQ50dUbfcqgunDSFCttyMMKWLGNSCDYI15uYzkJoy6RatBqPvGqL8pWQ==
 
-tinymce@^5.10.9:
-  version "5.10.9"
-  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-5.10.9.tgz#1dfacb3231c71a688d90ff44a0b3f2e91b3b9edf"
-  integrity sha512-5bkrors87X9LhYX2xq8GgPHrIgJYHl87YNs+kBcjQ5I3CiUgzo/vFcGvT3MZQ9QHsEeYMhYO6a5CLGGffR8hMg==
+tinymce@^7.9.1:
+  version "7.9.1"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-7.9.1.tgz#1b18bad9cb7a3b4b12e3e5a7f29fc7daad0713d7"
+  integrity sha512-zaOHwmiP1EqTeLRXAvVriDb00JYnfEjWGPdKEuac7MiZJ5aiDMZ4Unc98Gmajn+PBljOmO1GKV6G0KwWn3+k8A==
 
 totalist@^3.0.0:
   version "3.0.1"
