@@ -52,7 +52,7 @@
         "ublaboo/mailing": "^1.2",
 
         "jms/serializer": "^3.28",
-        "phpoffice/phpspreadsheet": "^3.6",
+        "phpoffice/phpspreadsheet": "^4.4",
         "contributte/pdf": "^7.0",
         "mpdf/qrcode": "^1.2",
         "dfridrich/qr-platba": "^2.0",
