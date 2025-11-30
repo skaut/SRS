@@ -72,8 +72,9 @@ class ApplicationContentControl extends BaseContentControl
             $template->isInUnapprovedRole    = $user->isInRole($this->aclService->findRoleNameBySystemName(Role::UNAPPROVED));
             $template->isInNonregisteredRole = $user->isInRole($this->aclService->findRoleNameBySystemName(Role::NONREGISTERED));
             $template->noRegisterableRole    = $this->roleRepository->findFilteredRoles(true, false, false)->isEmpty();
-            $template->registrationStart     = $this->roleRepository->getRegistrationStart();
-            $template->registrationEnd       = $this->roleRepository->getRegistrationEnd();
+            $registrationStartAndEnd         = $this->roleRepository->getRegistrationStartAndEnd();
+            $template->registrationStart     = $registrationStartAndEnd['start'];
+            $template->registrationEnd       = $registrationStartAndEnd['end'];
             $template->bankAccount           = $this->queryBus->handle(new SettingStringValueQuery(Settings::ACCOUNT_NUMBER));
             $template->dbUser                = $dbUser;
             $template->userHasFixedFeeRole   = $userHasFixedFeeRole;

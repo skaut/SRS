@@ -186,33 +186,17 @@ class RoleRepository extends AbstractRepository
     }
 
     /** @throws NonUniqueResultException */
-    public function getRegistrationStart(): DateTimeImmutable|null
+    public function getRegistrationStartAndEnd(): array
     {
         $result = $this->createQueryBuilder('r')
-            ->select('r.registerableFrom')
+            ->select('MIN(r.registerableFrom) AS regStart, MAX(r.registerableTo) AS regEnd')
             ->where('r.registerable = TRUE')
-            ->andWhere('r.registerableFrom IS NOT NULL')
-            ->orderBy('r.registerableFrom')
-            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
-
-        return $result ? $result['registerableFrom'] : null;
-    }
-
-    /** @throws NonUniqueResultException */
-    public function getRegistrationEnd(): DateTimeImmutable|null
-    {
-        $result = $this->createQueryBuilder('r')
-            ->select('r.registerableTo')
-            ->where('r.registerable = TRUE')
-            ->andWhere('r.registerableTo IS NOT NULL')
-            ->orderBy('r.registerableTo', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
-
-        return $result ? $result['registerableTo'] : null;
+        return [
+            'start' => $result ? $result['regStart'] : null,
+            'end' => $result ? $result['regEnd'] : null,
+        ];
     }
 
     /**
