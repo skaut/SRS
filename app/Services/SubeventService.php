@@ -70,14 +70,16 @@ class SubeventService
      */
     public function getSubeventsOptionsWithCapacity(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, User|null $user = null): array
     {
-        $subevents = $this->subeventRepository->findFilteredSubevents($explicitOnly, $registerableNowOnly, $notRegisteredOnly, $includeUsers, $user);
+        $subevents = $this->subeventRepository->findFilteredSubeventsWithOccupied($explicitOnly, $registerableNowOnly, $notRegisteredOnly, $includeUsers, $user);
 
         $options = [];
-        foreach ($subevents as $subevent) {
+        foreach ($subevents as $item) {
+            $subevent = $item['subevent'];
+            $occupied = $item['occupied'];
             if ($subevent->hasLimitedCapacity()) {
                 $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', null, [
                     'subevent' => $subevent->getName(),
-                    'occupied' => $subevent->countUsers(),
+                    'occupied' => $occupied,
                     'total' => $subevent->getCapacity(),
                 ]);
             } else {

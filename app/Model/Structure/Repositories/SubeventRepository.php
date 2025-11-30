@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Structure\Repositories;
 
+use App\Model\Enums\ApplicationState;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
@@ -111,6 +112,65 @@ class SubeventRepository extends AbstractRepository
     }
 
     /**
+     * Vrací podakce splňující podmínku seřazené podle názvu s informacemi o kapacitě.
+     *
+     * @return Collection<int, array{subevent: Subevent, occupied: int}>
+     */
+    public function findFilteredSubeventsWithOccupied(bool $explicitOnly, bool $registerableNowOnly, bool $notRegisteredOnly, bool $includeUsers, User|null $user = null): Collection
+    {
+        $applications_qb = $this->em->createQueryBuilder();
+        $applications_qb
+            ->select('COUNT(a.id)')
+            ->from('App\Model\Application\SubeventsApplication', 'a')
+            ->leftJoin('a.subevents', 'asu')
+            ->where('asu = s')
+            ->andWhere('a.validTo IS NULL')
+            ->andWhere($applications_qb->expr()->in('a.state', [
+                ApplicationState::WAITING_FOR_PAYMENT,
+                ApplicationState::PAID,
+                ApplicationState::PAID_FREE,
+            ]));
+
+        $qb = $this->createQueryBuilder('s');
+
+        $query = $qb
+            ->select('s AS subevent')
+            ->addSelect('(' . $applications_qb->getDQL() . ') AS occupied')
+            ->where('1 = 1');
+
+        if ($explicitOnly) {
+            $query = $query->andWhere($qb->expr()->eq('s.implicit', 'false'));
+        }
+
+        if ($registerableNowOnly) {
+            $query = $query
+                ->andWhere($qb->expr()->orX(
+                    $qb->expr()->lte('s.registerableFrom', 'CURRENT_TIMESTAMP()'),
+                    $qb->expr()->isNull('s.registerableFrom'),
+                ))
+                ->andWhere($qb->expr()->orX(
+                    $qb->expr()->gte('s.registerableTo', 'CURRENT_TIMESTAMP()'),
+                    $qb->expr()->isNull('s.registerableTo'),
+                ));
+        }
+
+        if ($notRegisteredOnly) {
+            $query = $query->andWhere('s not in (:users_subevents)')->setParameter('users_subevents', $user->getSubevents());
+        }
+
+        if ($includeUsers) {
+            $query = $query->orWhere('s in (:users_subevents)')->setParameter('users_subevents', $user->getSubevents());
+        }
+
+        $result = $query
+            ->orderBy('s.name')
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($result);
+    }
+
+    /**
      * Vrací názvy podakcí, kromě podakce se zadaným id.
      *
      * @return string[]
@@ -152,7 +212,7 @@ class SubeventRepository extends AbstractRepository
      */
     public function findSubeventsIds(Collection $subevents): array
     {
-        return array_map(static fn (Subevent $o) => $o->getId(), $subevents->toArray());
+        return array_map(static fn(Subevent $o) => $o->getId(), $subevents->toArray());
     }
 
     /**
