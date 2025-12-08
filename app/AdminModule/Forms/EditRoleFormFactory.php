@@ -196,7 +196,7 @@ class EditRoleFormFactory
             $this->role->setRegisterableTo($values->registerableTo);
             $this->role->setCapacity($capacity);
             $this->role->setApprovedAfterRegistration($values->approvedAfterRegistration);
-            $this->role->setMinimumAge($values->minimumAge);
+            $this->role->setMinimumAge((int) $values->minimumAge);
             $this->role->setPermissions($this->permissionRepository->findPermissionsByIds($values->permissions));
             $this->role->setPages($this->pageRepository->findPagesBySlugs($values->pages));
             $this->role->setRedirectAfterLogin($values->redirectAfterLogin);
