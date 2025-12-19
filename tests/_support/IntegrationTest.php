@@ -8,8 +8,6 @@ use Doctrine\ORM\Tools\SchemaTool;
 
 abstract class IntegrationTest extends Codeception\Test\Unit
 {
-    protected IntegrationTester $tester;
-
     /** @var ClassMetadata[] */
     private array $metadata;
 
@@ -25,18 +23,12 @@ abstract class IntegrationTest extends Codeception\Test\Unit
         return [];
     }
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->tester = new IntegrationTester();
-    }
-
     /**
      * @throws \Doctrine\ORM\Tools\ToolsException
      */
     protected function _before() : void
     {
-        $this->em         = $this->tester->grabService(EntityManagerInterface::class);
+        $this->em         = $this->getModule('IntegrationTester')->grabService(EntityManagerInterface::class);
         $this->metadata   = array_map([$this->em, 'getClassMetadata'], $this->getTestedEntities());
         $this->schemaTool = new SchemaTool($this->em);
         $this->schemaTool->dropSchema($this->metadata);
