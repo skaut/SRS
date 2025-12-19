@@ -71,10 +71,10 @@ final class SettingArrayValueQueryHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $this->getModule('IntegrationTester')->useConfigFiles([__DIR__ . '/SettingArrayValueQueryHandlerTest.neon']);
+        $tester->useConfigFiles([__DIR__ . '/SettingArrayValueQueryHandlerTest.neon']);
 
         parent::_before();
 
-        $this->settingsRepository = $this->getModule('IntegrationTester')->grabService(SettingsRepository::class);
+        $this->settingsRepository = $tester->grabService(SettingsRepository::class);
     }
 }

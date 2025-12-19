@@ -38,10 +38,11 @@ final class SaveRoomHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $this->getModule('IntegrationTester')->useConfigFiles([__DIR__ . '/SaveRoomHandlerTest.neon']);
+        $tester = new IntegrationTester($this->getScenario());
+        $tester->useConfigFiles([__DIR__ . '/SaveRoomHandlerTest.neon']);
 
         parent::_before();
 
-        $this->roomRepository = $this->getModule('IntegrationTester')->grabService(RoomRepository::class);
+        $this->roomRepository = $tester->grabService(RoomRepository::class);
     }
 }

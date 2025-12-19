@@ -28,7 +28,8 @@ abstract class IntegrationTest extends Codeception\Test\Unit
      */
     protected function _before() : void
     {
-        $this->em         = $this->getModule('IntegrationTester')->grabService(EntityManagerInterface::class);
+        $tester           = new IntegrationTester($this->getScenario());
+        $this->em         = $tester->grabService(EntityManagerInterface::class);
         $this->metadata   = array_map([$this->em, 'getClassMetadata'], $this->getTestedEntities());
         $this->schemaTool = new SchemaTool($this->em);
         $this->schemaTool->dropSchema($this->metadata);

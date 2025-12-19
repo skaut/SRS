@@ -72,14 +72,15 @@ final class CheckTicketHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $this->getModule('IntegrationTester')->useConfigFiles([__DIR__ . '/CheckTicketHandlerTest.neon']);
+        $tester = new IntegrationTester($this->getScenario());
+        $tester->useConfigFiles([__DIR__ . '/CheckTicketHandlerTest.neon']);
 
         parent::_before();
 
-        $this->ticketCheckRepository = $this->getModule('IntegrationTester')->grabService(TicketCheckRepository::class);
-        $this->userRepository        = $this->getModule('IntegrationTester')->grabService(UserRepository::class);
-        $this->roleRepository        = $this->getModule('IntegrationTester')->grabService(RoleRepository::class);
-        $this->subeventRepository    = $this->getModule('IntegrationTester')->grabService(SubeventRepository::class);
-        $this->applicationRepository = $this->getModule('IntegrationTester')->grabService(ApplicationRepository::class);
+        $this->ticketCheckRepository = $tester->grabService(TicketCheckRepository::class);
+        $this->userRepository        = $tester->grabService(UserRepository::class);
+        $this->roleRepository        = $tester->grabService(RoleRepository::class);
+        $this->subeventRepository    = $tester->grabService(SubeventRepository::class);
+        $this->applicationRepository = $tester->grabService(ApplicationRepository::class);
     }
 }

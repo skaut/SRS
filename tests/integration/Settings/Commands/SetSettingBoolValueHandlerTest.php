@@ -73,11 +73,11 @@ final class SetSettingBoolValueHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $this->getModule('IntegrationTester')->useConfigFiles([__DIR__ . '/SetSettingBoolValueHandlerTest.neon']);
+        $tester->useConfigFiles([__DIR__ . '/SetSettingBoolValueHandlerTest.neon']);
 
         parent::_before();
 
-        $this->settingsRepository = $this->getModule('IntegrationTester')->grabService(SettingsRepository::class);
+        $this->settingsRepository = $tester->grabService(SettingsRepository::class);
 
         $this->settingsRepository->save(new Settings(self::ITEM, null));
     }

@@ -69,10 +69,11 @@ final class SettingStringValueQueryHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $this->getModule('IntegrationTester')->useConfigFiles([__DIR__ . '/SettingStringValueQueryHandlerTest.neon']);
+        $tester = new IntegrationTester($this->getScenario());
+        $tester->useConfigFiles([__DIR__ . '/SettingStringValueQueryHandlerTest.neon']);
 
         parent::_before();
 
-        $this->settingsRepository = $this->getModule('IntegrationTester')->grabService(SettingsRepository::class);
+        $this->settingsRepository = $tester->grabService(SettingsRepository::class);
     }
 }
