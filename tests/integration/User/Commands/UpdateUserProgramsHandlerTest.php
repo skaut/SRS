@@ -32,7 +32,6 @@ use App\Model\User\User;
 use CommandHandlerTest;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
-use IntegrationTester;
 
 final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
 {
@@ -251,20 +250,19 @@ final class UpdateUserProgramsHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $tester = new IntegrationTester($this->getScenario());
-        $tester->useConfigFiles([__DIR__ . '/UpdateUserProgramsHandlerTest.neon']);
+        $this->tester->useConfigFiles([__DIR__ . '/UpdateUserProgramsHandlerTest.neon']);
 
         parent::_before();
 
-        $this->blockRepository       = $tester->grabService(BlockRepository::class);
-        $this->subeventRepository    = $tester->grabService(SubeventRepository::class);
-        $this->userRepository        = $tester->grabService(UserRepository::class);
-        $this->roleRepository        = $tester->grabService(RoleRepository::class);
-        $this->programRepository     = $tester->grabService(ProgramRepository::class);
-        $this->applicationRepository = $tester->grabService(ApplicationRepository::class);
-        $this->categoryRepository    = $tester->grabService(CategoryRepository::class);
-        $this->settingsRepository    = $tester->grabService(SettingsRepository::class);
-        $this->templateRepository    = $tester->grabService(TemplateRepository::class);
+        $this->blockRepository       = $this->tester->grabService(BlockRepository::class);
+        $this->subeventRepository    = $this->tester->grabService(SubeventRepository::class);
+        $this->userRepository        = $this->tester->grabService(UserRepository::class);
+        $this->roleRepository        = $this->tester->grabService(RoleRepository::class);
+        $this->programRepository     = $this->tester->grabService(ProgramRepository::class);
+        $this->applicationRepository = $this->tester->grabService(ApplicationRepository::class);
+        $this->categoryRepository    = $this->tester->grabService(CategoryRepository::class);
+        $this->settingsRepository    = $this->tester->grabService(SettingsRepository::class);
+        $this->templateRepository    = $this->tester->grabService(TemplateRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));

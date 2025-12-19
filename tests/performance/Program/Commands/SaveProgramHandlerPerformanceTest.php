@@ -88,16 +88,16 @@ final class SaveProgramHandlerPerformanceTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $tester->useConfigFiles([__DIR__ . '/SaveProgramHandlerPerformanceTest.neon']);
+        $this->tester->useConfigFiles([__DIR__ . '/SaveProgramHandlerPerformanceTest.neon']);
 
         parent::_before();
 
-        $this->blockRepository       = $tester->grabService(BlockRepository::class);
-        $this->subeventRepository    = $tester->grabService(SubeventRepository::class);
-        $this->userRepository        = $tester->grabService(UserRepository::class);
-        $this->roleRepository        = $tester->grabService(RoleRepository::class);
-        $this->applicationRepository = $tester->grabService(ApplicationRepository::class);
-        $this->settingsRepository    = $tester->grabService(SettingsRepository::class);
+        $this->blockRepository       = $this->tester->grabService(BlockRepository::class);
+        $this->subeventRepository    = $this->tester->grabService(SubeventRepository::class);
+        $this->userRepository        = $this->tester->grabService(UserRepository::class);
+        $this->roleRepository        = $this->tester->grabService(RoleRepository::class);
+        $this->applicationRepository = $this->tester->grabService(ApplicationRepository::class);
+        $this->settingsRepository    = $this->tester->grabService(SettingsRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));

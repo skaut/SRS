@@ -111,20 +111,19 @@ final class RemoveCategoryHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $tester = new IntegrationTester($this->getScenario());
-        $tester->useConfigFiles([__DIR__ . '/RemoveCategoryHandlerTest.neon']);
+        $this->tester->useConfigFiles([__DIR__ . '/RemoveCategoryHandlerTest.neon']);
 
         parent::_before();
 
-        $this->subeventRepository    = $tester->grabService(SubeventRepository::class);
-        $this->userRepository        = $tester->grabService(UserRepository::class);
-        $this->categoryRepository    = $tester->grabService(CategoryRepository::class);
-        $this->roleRepository        = $tester->grabService(RoleRepository::class);
-        $this->programRepository     = $tester->grabService(ProgramRepository::class);
-        $this->applicationRepository = $tester->grabService(ApplicationRepository::class);
-        $this->blockRepository       = $tester->grabService(BlockRepository::class);
-        $this->settingsRepository    = $tester->grabService(SettingsRepository::class);
-        $this->templateRepository    = $tester->grabService(TemplateRepository::class);
+        $this->subeventRepository    = $this->tester->grabService(SubeventRepository::class);
+        $this->userRepository        = $this->tester->grabService(UserRepository::class);
+        $this->categoryRepository    = $this->tester->grabService(CategoryRepository::class);
+        $this->roleRepository        = $this->tester->grabService(RoleRepository::class);
+        $this->programRepository     = $this->tester->grabService(ProgramRepository::class);
+        $this->applicationRepository = $this->tester->grabService(ApplicationRepository::class);
+        $this->blockRepository       = $this->tester->grabService(BlockRepository::class);
+        $this->settingsRepository    = $this->tester->grabService(SettingsRepository::class);
+        $this->templateRepository    = $this->tester->grabService(TemplateRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT, (string) false));
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));

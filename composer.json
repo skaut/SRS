@@ -72,9 +72,9 @@
     "require-dev": {
         "nette/tester": "^2.5",
         "nextras/mail-panel": "^2.6",
-        "codeception/codeception": "^5.3",
-        "codeception/mockery-module": "^0.5",
-        "contributte/codeception": "^1.4",
+        "codeception/codeception": "^4.2",
+        "codeception/mockery-module": "^0.4",
+        "contributte/codeception": "^1.3",
         "doctrine/coding-standard": "^12.0",
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan": "^1.10",

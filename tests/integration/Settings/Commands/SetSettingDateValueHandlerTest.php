@@ -74,11 +74,11 @@ final class SetSettingDateValueHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $tester->useConfigFiles([__DIR__ . '/SetSettingDateValueHandlerTest.neon']);
+        $this->tester->useConfigFiles([__DIR__ . '/SetSettingDateValueHandlerTest.neon']);
 
         parent::_before();
 
-        $this->settingsRepository = $tester->grabService(SettingsRepository::class);
+        $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);
 
         $this->settingsRepository->save(new Settings(self::ITEM, null));
     }

@@ -74,10 +74,10 @@ final class SettingDateTimeValueQueryHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $tester->useConfigFiles([__DIR__ . '/SettingDateTimeValueQueryHandlerTest.neon']);
+        $this->tester->useConfigFiles([__DIR__ . '/SettingDateTimeValueQueryHandlerTest.neon']);
 
         parent::_before();
 
-        $this->settingsRepository = $tester->grabService(SettingsRepository::class);
+        $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);
     }
 }

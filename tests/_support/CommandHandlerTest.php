@@ -14,8 +14,7 @@ abstract class CommandHandlerTest extends IntegrationTest
     protected function _before() : void
     {
         parent::_before();
-        $tester           = new IntegrationTester($this->getScenario());
-        $this->commandBus = $tester->grabService(CommandBus::class);
-        $this->queryBus   = $tester->grabService(QueryBus::class);
+        $this->commandBus = $this->tester->grabService(CommandBus::class);
+        $this->queryBus   = $this->tester->grabService(QueryBus::class);
     }
 }

@@ -69,10 +69,10 @@ final class SettingBoolValueQueryHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $tester->useConfigFiles([__DIR__ . '/SettingBoolValueQueryHandlerTest.neon']);
+        $this->tester->useConfigFiles([__DIR__ . '/SettingBoolValueQueryHandlerTest.neon']);
 
         parent::_before();
 
-        $this->settingsRepository = $tester->grabService(SettingsRepository::class);
+        $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);
     }
 }

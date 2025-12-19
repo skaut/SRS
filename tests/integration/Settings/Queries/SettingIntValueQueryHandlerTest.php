@@ -69,11 +69,10 @@ final class SettingIntValueQueryHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $tester = new IntegrationTester($this->getScenario());
-        $tester->useConfigFiles([__DIR__ . '/SettingIntValueQueryHandlerTest.neon']);
+        $this->tester->useConfigFiles([__DIR__ . '/SettingIntValueQueryHandlerTest.neon']);
 
         parent::_before();
 
-        $this->settingsRepository = $tester->grabService(SettingsRepository::class);
+        $this->settingsRepository = $this->tester->grabService(SettingsRepository::class);
     }
 }
