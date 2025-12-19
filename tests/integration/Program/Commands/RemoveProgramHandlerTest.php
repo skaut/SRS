@@ -105,19 +105,19 @@ final class RemoveProgramHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $this->tester->useConfigFiles([__DIR__ . '/RemoveProgramHandlerTest.neon']);
+        $this->getModule('IntegrationTester')->useConfigFiles([__DIR__ . '/RemoveProgramHandlerTest.neon']);
 
         parent::_before();
 
-        $this->subeventRepository           = $this->tester->grabService(SubeventRepository::class);
-        $this->userRepository               = $this->tester->grabService(UserRepository::class);
-        $this->roleRepository               = $this->tester->grabService(RoleRepository::class);
-        $this->programRepository            = $this->tester->grabService(ProgramRepository::class);
-        $this->applicationRepository        = $this->tester->grabService(ApplicationRepository::class);
-        $this->programApplicationRepository = $this->tester->grabService(ProgramApplicationRepository::class);
-        $this->blockRepository              = $this->tester->grabService(BlockRepository::class);
-        $this->settingsRepository           = $this->tester->grabService(SettingsRepository::class);
-        $this->templateRepository           = $this->tester->grabService(TemplateRepository::class);
+        $this->subeventRepository           = $this->getModule('IntegrationTester')->grabService(SubeventRepository::class);
+        $this->userRepository               = $this->getModule('IntegrationTester')->grabService(UserRepository::class);
+        $this->roleRepository               = $this->getModule('IntegrationTester')->grabService(RoleRepository::class);
+        $this->programRepository            = $this->getModule('IntegrationTester')->grabService(ProgramRepository::class);
+        $this->applicationRepository        = $this->getModule('IntegrationTester')->grabService(ApplicationRepository::class);
+        $this->programApplicationRepository = $this->getModule('IntegrationTester')->grabService(ProgramApplicationRepository::class);
+        $this->blockRepository              = $this->getModule('IntegrationTester')->grabService(BlockRepository::class);
+        $this->settingsRepository           = $this->getModule('IntegrationTester')->grabService(SettingsRepository::class);
+        $this->templateRepository           = $this->getModule('IntegrationTester')->grabService(TemplateRepository::class);
 
         $this->settingsRepository->save(new Settings(Settings::SEMINAR_NAME, 'test'));
 

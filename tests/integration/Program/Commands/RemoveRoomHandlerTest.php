@@ -68,13 +68,13 @@ final class RemoveRoomHandlerTest extends CommandHandlerTest
 
     protected function _before(): void
     {
-        $this->tester->useConfigFiles([__DIR__ . '/RemoveRoomHandlerTest.neon']);
+        $this->getModule('IntegrationTester')->useConfigFiles([__DIR__ . '/RemoveRoomHandlerTest.neon']);
 
         parent::_before();
 
-        $this->subeventRepository = $this->tester->grabService(SubeventRepository::class);
-        $this->roomRepository     = $this->tester->grabService(RoomRepository::class);
-        $this->programRepository  = $this->tester->grabService(ProgramRepository::class);
-        $this->blockRepository    = $this->tester->grabService(BlockRepository::class);
+        $this->subeventRepository = $this->getModule('IntegrationTester')->grabService(SubeventRepository::class);
+        $this->roomRepository     = $this->getModule('IntegrationTester')->grabService(RoomRepository::class);
+        $this->programRepository  = $this->getModule('IntegrationTester')->grabService(ProgramRepository::class);
+        $this->blockRepository    = $this->getModule('IntegrationTester')->grabService(BlockRepository::class);
     }
 }
