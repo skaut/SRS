@@ -33,6 +33,7 @@ class TicketCheckInfo
 
     /**
      * Role účastníka.
+     *
      * @var string[]
      */
     #[JMS\Type(values: 'array')]
@@ -40,6 +41,7 @@ class TicketCheckInfo
 
     /**
      * Podakce účastníka.
+     *
      * @var SubeventInfo[]
      */
     #[JMS\Type(values: 'array<App\ApiModule\Dto\Tickets\SubeventInfo>')]
@@ -51,6 +53,7 @@ class TicketCheckInfo
 
     /**
      * Seznam časů kontroly vstupenky.
+     *
      * @var DateTimeImmutable[]
      */
     #[JMS\Type(values: 'array<DateTimeImmutable>')]

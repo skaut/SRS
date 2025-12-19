@@ -170,6 +170,10 @@ class CustomInputFormFactory
     {
         $options = [];
         foreach (CustomInput::$types as $type) {
+            if ($type == CustomInput::MULTISELECT) {
+                continue;
+            }
+
             $options[$type] = 'admin.common.custom_' . $type;
         }
 
