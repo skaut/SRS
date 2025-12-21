@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "986437d88ed17f39bbdc138ec14074ce",
+    "content-hash": "9cfe60ca3c19e3fe7dfc860b75a88375",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -5345,16 +5345,16 @@
         },
         {
             "name": "nextras/form-components",
-            "version": "v2.0.0",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextras/form-components.git",
-                "reference": "b50849578f2a51e2a3c67983a24c90910f5cd79d"
+                "reference": "ad60fdefabf3d3f4ddcb53bf6978fba68d4542f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextras/form-components/zipball/b50849578f2a51e2a3c67983a24c90910f5cd79d",
-                "reference": "b50849578f2a51e2a3c67983a24c90910f5cd79d",
+                "url": "https://api.github.com/repos/nextras/form-components/zipball/ad60fdefabf3d3f4ddcb53bf6978fba68d4542f5",
+                "reference": "ad60fdefabf3d3f4ddcb53bf6978fba68d4542f5",
                 "shasum": ""
             },
             "require": {
@@ -5368,10 +5368,10 @@
                 "latte/latte": "~3.0",
                 "nette/bootstrap": "~3.0",
                 "nette/di": "~3.0",
-                "nette/robot-loader": "~3.0",
-                "nette/tester": "~2.1",
-                "phpstan/phpstan": "^1.12",
-                "phpstan/phpstan-nette": "^1.3",
+                "nette/robot-loader": "~3.0 || ~4.0",
+                "nette/tester": "dev-master",
+                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan-nette": "^2.0",
                 "tracy/tracy": "~2.5"
             },
             "type": "library",
@@ -5406,9 +5406,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nextras/form-components/issues",
-                "source": "https://github.com/nextras/form-components/tree/v2.0.0"
+                "source": "https://github.com/nextras/form-components/tree/v3.0.0"
             },
-            "time": "2024-11-04T22:52:44+00:00"
+            "time": "2025-11-30T11:50:28+00:00"
         },
         {
             "name": "nextras/forms-rendering",
