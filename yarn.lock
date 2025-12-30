@@ -178,10 +178,10 @@
   resolved "https://registry.yarnpkg.com/@fullcalendar/list/-/list-6.1.19.tgz#060bc8ee1895c172d28689475b8e567e166a9828"
   integrity sha512-knZHpAVF0LbzZpSJSUmLUUzF0XlU/MRGK+Py2s0/mP93bCtno1k2L3XPs/kzh528hSjehwLm89RgKTSfW1P6cA==
 
-"@fullcalendar/premium-common@~6.1.15":
-  version "6.1.15"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/premium-common/-/premium-common-6.1.15.tgz#66b0690aae4abb43e8476a007e812682703fee25"
-  integrity sha512-IwUHptHNzWDOgAsXLoBntGxmbfCKvUy6iYFMCP3F3ahbG58E0PJMYsXvgw+NaA7Cz4gcQoVHioGjIFgQqs3Keg==
+"@fullcalendar/premium-common@~6.1.15", "@fullcalendar/premium-common@~6.1.19":
+  version "6.1.20"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/premium-common/-/premium-common-6.1.20.tgz#92007ce764a9abdade65b9e997a5a5cf9be70342"
+  integrity sha512-rT+AitNnRyZuFEtYvsB1OJ2g1Bq2jmTR6qdn/dEU6LwkIj/4L499goLtMOena/JyJ31VBztdHrccX//36QrY3w==
 
 "@fullcalendar/resource-timeline@^6.1.15":
   version "6.1.15"
@@ -192,12 +192,12 @@
     "@fullcalendar/scrollgrid" "~6.1.15"
     "@fullcalendar/timeline" "~6.1.15"
 
-"@fullcalendar/resource@^6.1.15":
-  version "6.1.15"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/resource/-/resource-6.1.15.tgz#9c2943f07073c81f552493540a9653549882282c"
-  integrity sha512-s9Rz3HNDQWBYCG+V4wqg8x5+UTD5kC3S2poq+5zwbPeyWT8+FEILikQZIgfESX70Z4fn8bBlLJ04Jd/LijfqWw==
+"@fullcalendar/resource@^6.1.19":
+  version "6.1.19"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/resource/-/resource-6.1.19.tgz#fb3c3534d55648bce16916e58639271a517d39d8"
+  integrity sha512-br1ylX/aIOfd8m7Tzl2LpJBSI+N9Q6aS1qw7K9qnQjYXWQyHBlfLG6ZcPmmkjfaqTUJc8ARRbtNWj1ts5qOZgQ==
   dependencies:
-    "@fullcalendar/premium-common" "~6.1.15"
+    "@fullcalendar/premium-common" "~6.1.19"
 
 "@fullcalendar/scrollgrid@~6.1.15":
   version "6.1.15"
