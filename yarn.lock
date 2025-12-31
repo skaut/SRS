@@ -151,10 +151,10 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-6.7.2.tgz#8249de9b7e22fcb3ceb5e66090c30a1d5492b81a"
   integrity sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==
 
-"@fullcalendar/bootstrap@^6.1.15":
-  version "6.1.15"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.15.tgz#798219a0e01f97c1a361b7c3ec32ffb0e0239186"
-  integrity sha512-mlUmwtatxtMwWRrpDJgurBBE0L8aD3DFk24LqugSI5zhQIGp0fTm0QI7oiVczbyQKQCCi/nxl1aDNOCKES0xxw==
+"@fullcalendar/bootstrap@^6.1.19":
+  version "6.1.19"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.19.tgz#e0e721db09cb66216d0ce58040b7bcfa7a36d34e"
+  integrity sha512-yzhPXP3BKi9Lfp1C5okVNRTucFXYICeRigmisQrHnB408OHuz/D9ZXZGrzLrmpKT9Ok3rt7QuVKv0h8/wZpIPw==
 
 "@fullcalendar/core@^6.1.19":
   version "6.1.19"
