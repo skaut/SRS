@@ -13,6 +13,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use FioApi\Downloader;
 use FioApi\TransactionList;
+use GuzzleHttp\Client;
 use InvalidArgumentException;
 use Nette;
 use Throwable;
@@ -30,6 +31,7 @@ class BankService
         private readonly ApplicationService $applicationService,
         private readonly EntityManagerInterface $em,
         private readonly PaymentRepository $paymentRepository,
+        private readonly Client $fioApiClient,
     ) {
     }
 
@@ -44,7 +46,7 @@ class BankService
             throw new InvalidArgumentException('Token is not set.');
         }
 
-        $downloader      = new Downloader($token);
+        $downloader      = new Downloader($token, $this->fioApiClient);
         $transactionList = $downloader->downloadSince($from);
 
         $this->createPayments($transactionList);
