@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Repositories;
 
+use App\Model\Application\Application;
+use App\Model\Application\SubeventsApplication;
 use App\Model\Enums\ApplicationState;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Program\Block;
+use App\Model\Program\Category;
 use App\Model\Program\Exceptions\BlockCapacityInsufficientException;
 use App\Model\Program\Program;
 use App\Model\User\User;
@@ -140,25 +143,32 @@ class BlockRepository extends AbstractRepository
      */
     public function findUserAllowed(User $user, bool $paidOnly): Collection
     {
+        if (! $user->isApproved()) {
+            return new ArrayCollection();
+        }
+
+        $notAllowedStates = [ApplicationState::CANCELED, ApplicationState::CANCELED_NOT_PAID, ApplicationState::CANCELED_TRANSFERED];
+        if ($paidOnly) {
+            $notAllowedStates[] = ApplicationState::WAITING_FOR_PAYMENT;
+        }
+
         $qb = $this->createQueryBuilder('b')
-            ->leftJoin('b.category', 'c')
-            ->leftJoin('c.registerableRoles', 'r')
-            ->leftJoin('r.users', 'u1')
-            ->join('b.subevent', 's')
-            ->join('s.applications', 'sa', 'WITH', 'sa.validTo IS NULL AND sa.state != :stateCanceled AND sa.state != :stateCanceledNotPaid AND sa.state != :stateCanceledTransfered')
-            ->join('sa.user', 'u2', 'WITH', 'u2.approved = TRUE')
-            ->where('c IS NULL OR u1 = :user')
-            ->andWhere('u2 = :user')
+            ->where('b.category IS NULL OR EXISTS (
+                SELECT c.id FROM ' . Category::class . ' c JOIN c.registerableRoles r JOIN r.users u
+                WHERE c = b.category AND u = :user
+            )')
+            ->andWhere('EXISTS (
+                SELECT sa.id FROM ' . SubeventsApplication::class . ' sa JOIN sa.subevents s
+                WHERE s = b.subevent AND sa.user = :user AND sa.validTo IS NULL AND sa.state NOT IN (:notAllowedStates)
+            )')
             ->setParameter('user', $user)
-            ->setParameter('stateCanceled', ApplicationState::CANCELED)
-            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID)
-            ->setParameter('stateCanceledTransfered', ApplicationState::CANCELED_TRANSFERED);
+            ->setParameter('notAllowedStates', $notAllowedStates);
 
         if ($paidOnly) {
-            $qb = $qb->join('u2.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND sa.state != :stateCanceledTransfered AND ra.state != :stateWaitingForPayment')
-                ->join('ra.roles', 'rar')
-                ->andWhere('sa.state != :stateWaitingForPayment')
-                ->setParameter('stateWaitingForPayment', ApplicationState::WAITING_FOR_PAYMENT);
+            $qb->andWhere('EXISTS (
+                SELECT ra.id FROM ' . Application::class . ' ra JOIN ra.roles rar
+                WHERE ra.user = :user AND ra.validTo IS NULL AND ra.state NOT IN (:notAllowedStates)
+            )');
         }
 
         return new ArrayCollection($qb->getQuery()->getResult());
