@@ -96,11 +96,18 @@ class ApplicationService
         User $createdBy,
         bool $approve = false,
     ): void {
-        $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
-        $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
+        /** @var array{RolesApplication, SubeventsApplication} $applications */
+        $applications = $this->em->wrapInTransaction(function () use ($user, $roles, $subevents, $createdBy, $approve): array {
+            $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
+            $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
 
-        $this->eventBus->handle(new ApplicationUpdatedEvent($user));
-        $this->updateUserPaymentInfo($user);
+            $this->eventBus->handle(new ApplicationUpdatedEvent($user));
+            $this->updateUserPaymentInfo($user);
+
+            return [$rolesApplication, $subeventsApplication];
+        });
+
+        [$rolesApplication, $subeventsApplication] = $applications;
 
         $applicatonMaturity        = '-';
         $applicationFee            = '0';
