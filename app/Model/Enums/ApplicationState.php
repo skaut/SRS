@@ -40,4 +40,24 @@ class ApplicationState
      * Zaplaceno (převedeno od jiného účastníka)
      */
     public const PAID_TRANSFERED = 'paid_transfered';
+
+    /**
+     * Stavy zaplacené přihlášky.
+     */
+    public const PAID_STATES = [
+        self::PAID,
+        self::PAID_FREE,
+        self::PAID_TRANSFERED,
+    ];
+
+    /**
+     * Stavy nezrušené přihlášky, tedy doplněk ke CANCELED, CANCELED_NOT_PAID
+     * a CANCELED_TRANSFERED.
+     */
+    public const NOT_CANCELED_STATES = [
+        self::WAITING_FOR_PAYMENT,
+        self::PAID,
+        self::PAID_FREE,
+        self::PAID_TRANSFERED,
+    ];
 }

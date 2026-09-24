@@ -324,7 +324,8 @@ class UserRepository extends AbstractRepository
         }
 
         if ($paidOnly) {
-            $qb = $qb->join('u.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND sa.state != :stateCanceledTransfered AND ra.state != :stateWaitingForPayment')
+            // pozor: podmínka patří na ra, ne na sa - dřív tu byl překlep
+            $qb = $qb->join('u.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND ra.state != :stateCanceledTransfered AND ra.state != :stateWaitingForPayment')
                 ->join('ra.roles', 'rar')
                 ->andWhere('sa.state != :stateWaitingForPayment')
                 ->setParameter('stateWaitingForPayment', ApplicationState::WAITING_FOR_PAYMENT);
