@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\User\User;
+use App\Utils\Helpers;
 use Nette;
 use Nette\Localization\Translator;
 
@@ -72,12 +73,14 @@ class SubeventService
     {
         $subevents = $this->subeventRepository->findFilteredSubevents($explicitOnly, $registerableNowOnly, $notRegisteredOnly, $includeUsers, $user);
 
+        $usersCounts = $this->subeventRepository->countUsersInSubevents(Helpers::getIds($subevents));
+
         $options = [];
         foreach ($subevents as $subevent) {
             if ($subevent->hasLimitedCapacity()) {
                 $options[$subevent->getId()] = $this->translator->translate('web.common.subevent_option', null, [
                     'subevent' => $subevent->getName(),
-                    'occupied' => $subevent->countUsers(),
+                    'occupied' => $usersCounts[$subevent->getId()] ?? 0,
                     'total' => $subevent->getCapacity(),
                 ]);
             } else {
@@ -97,11 +100,13 @@ class SubeventService
     {
         $subevents = $this->subeventRepository->findFilteredSubevents(false, false, false, false);
 
+        $usersCounts = $this->subeventRepository->countUsersInSubevents(Helpers::getIds($subevents));
+
         $options = [];
         foreach ($subevents as $subevent) {
             $options[$subevent->getId()] = $this->translator->translate(
                 'admin.common.subevent_option',
-                $subevent->countUsers(),
+                $usersCounts[$subevent->getId()] ?? 0,
                 [
                     'subevent' => $subevent->getName(),
                 ],

@@ -98,9 +98,12 @@ class Role
     /**
      * Uživatelé v roli.
      *
+     * EXTRA_LAZY: countUsers() a isEmpty() se pak provedou jako COUNT dotaz místo načtení
+     * všech uživatelů role do paměti (u velkých akcí jde o tisíce entit).
+     *
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     protected Collection $users;
 
     /**
