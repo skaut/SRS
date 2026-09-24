@@ -40,6 +40,65 @@ class ProgramApplicationRepository extends AbstractRepository
         return $this->getRepository()->findOneBy(['user' => $user, 'program' => $program]);
     }
 
+    /**
+     * Vrací počty účastníků a náhradníků programů.
+     *
+     * @param int[] $programsIds
+     *
+     * @return array<int, array{attendees: int, alternates: int}> počty podle id programu
+     */
+    public function countAttendeesAndAlternates(array $programsIds): array
+    {
+        if ($programsIds === []) {
+            return [];
+        }
+
+        $result = $this->createQueryBuilder('pa')
+            ->select('IDENTITY(pa.program) AS programId, pa.alternate AS alternate, COUNT(pa.id) AS applicationsCount')
+            ->where('pa.program IN (:programsIds)')
+            ->groupBy('pa.program')
+            ->addGroupBy('pa.alternate')
+            ->setParameter('programsIds', $programsIds)
+            ->getQuery()
+            ->getResult();
+
+        $counts = [];
+        foreach ($programsIds as $programId) {
+            $counts[$programId] = ['attendees' => 0, 'alternates' => 0];
+        }
+
+        foreach ($result as $row) {
+            $programId = (int) $row['programId'];
+            $key       = $row['alternate'] ? 'alternates' : 'attendees';
+
+            $counts[$programId][$key] = (int) $row['applicationsCount'];
+        }
+
+        return $counts;
+    }
+
+    /**
+     * Vrací programy, na které je uživatel přihlášený.
+     *
+     * @return array<int, bool> příznak náhradníka podle id programu
+     */
+    public function findUserApplicationsAlternateFlags(User $user): array
+    {
+        $result = $this->createQueryBuilder('pa')
+            ->select('IDENTITY(pa.program) AS programId, pa.alternate AS alternate')
+            ->where('pa.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+
+        $flags = [];
+        foreach ($result as $row) {
+            $flags[(int) $row['programId']] = (bool) $row['alternate'];
+        }
+
+        return $flags;
+    }
+
     /** @throws Throwable */
     public function save(ProgramApplication $programApplication): void
     {

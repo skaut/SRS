@@ -92,6 +92,23 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
+     * Vrací id, blok, začátek a délku všech programů.
+     *
+     * Slouží k výpočtu překryvů a programů stejného bloku v paměti, aby se nemusel pro
+     * každý program zvlášť pouštět dotaz s DATE_ADD, který nedokáže využít index.
+     *
+     * @return array<int, array{id: int, blockId: int, start: DateTimeImmutable, duration: int}>
+     */
+    public function findAllTimings(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.id AS id, IDENTITY(p.block) AS blockId, p.start AS start, b.duration AS duration')
+            ->join('p.block', 'b')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Vrací programy se stejným blokem.
      *
      * @return Collection<int, Program>
