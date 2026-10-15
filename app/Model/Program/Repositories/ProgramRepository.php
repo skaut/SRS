@@ -14,7 +14,6 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 
 /**
  * Třída spravující programy.
@@ -106,47 +105,6 @@ class ProgramRepository extends AbstractRepository
             ->join('p.block', 'b')
             ->getQuery()
             ->getResult();
-    }
-
-    /**
-     * Vrací programy se stejným blokem.
-     *
-     * @return Collection<int, Program>
-     */
-    public function findSameBlockPrograms(Program $program): Collection
-    {
-        $result = $this->createQueryBuilder('p')
-            ->join('p.block', 'b')
-            ->where('p != :program')
-            ->andWhere('p.block = :block')
-            ->setParameter('program', $program)
-            ->setParameter('block', $program->getBlock())
-            ->getQuery()
-            ->getResult();
-
-        return new ArrayCollection($result);
-    }
-
-    /**
-     * Vrací programy překrývající se s programem.
-     *
-     * @return Collection<int, Program>
-     *
-     * @throws Exception
-     */
-    public function findOverlappingPrograms(Program $program): Collection
-    {
-        $result = $this->createQueryBuilder('p')
-            ->join('p.block', 'b')
-            ->where('p != :program')
-            ->andWhere("p.start < :end AND DATE_ADD(p.start, (b.duration * 60), 'second') > :start")
-            ->setParameter('program', $program)
-            ->setParameter('start', $program->getStart())
-            ->setParameter('end', $program->getEnd())
-            ->getQuery()
-            ->getResult();
-
-        return new ArrayCollection($result);
     }
 
     /**
