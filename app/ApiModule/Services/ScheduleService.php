@@ -27,6 +27,7 @@ use App\Model\Program\Program;
 use App\Model\Program\Queries\ProgramAlternatesQuery;
 use App\Model\Program\Queries\ProgramAttendeesQuery;
 use App\Model\Program\Repositories\BlockRepository;
+use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Program\Repositories\RoomRepository;
 use App\Model\Program\Room;
@@ -47,6 +48,7 @@ use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use DateInterval;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Exception;
 use Nette;
@@ -72,6 +74,7 @@ class ScheduleService
         private readonly UserRepository $userRepository,
         private readonly ProgramRepository $programRepository,
         private readonly BlockRepository $blockRepository,
+        private readonly ProgramApplicationRepository $programApplicationRepository,
         private readonly RoomRepository $roomRepository,
         private readonly CommandBus $commandBus,
         private readonly QueryBus $queryBus,
@@ -115,20 +118,26 @@ class ScheduleService
         $userAllowedPrograms              = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user, ! $registrationBeforePaymentAllowed));
         $userAllowedProgramsWithNotPaid   = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user, false));
 
+        // následující údaje se načítají hromadně, aby počet dotazů nerostl s počtem programů
+        $paidProgramsIds    = Helpers::getIds($userAllowedPrograms);
+        $programsIds        = Helpers::getIds($userAllowedProgramsWithNotPaid);
+        $applicationsCounts = $this->programApplicationRepository->countAttendeesAndAlternates($programsIds);
+        $userAlternateFlags = $this->programApplicationRepository->findUserApplicationsAlternateFlags($this->user);
+        $relatedPrograms    = $this->findRelatedPrograms();
+
         $programDetailDtos = [];
         foreach ($userAllowedProgramsWithNotPaid as $program) {
-            $programAttendees  = $this->queryBus->handle(new ProgramAttendeesQuery($program));
-            $programAlternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));
+            $programId = $program->getId();
 
             $programDetailDto = $this->convertProgramToProgramDetailDto($program);
-            $programDetailDto->setAttendeesCount($programAttendees->count());
-            $programDetailDto->setAlternatesCount($programAlternates->count());
-            $programDetailDto->setUserAttends($programAttendees->contains($this->user));
-            $programDetailDto->setUserAlternates($programAlternates->contains($this->user));
-            $programDetailDto->setSameBlockPrograms(Helpers::getIds($this->programRepository->findSameBlockPrograms($program)));
-            $programDetailDto->setOverlappingPrograms(Helpers::getIds($this->programRepository->findOverlappingPrograms($program)));
+            $programDetailDto->setAttendeesCount($applicationsCounts[$programId]['attendees']);
+            $programDetailDto->setAlternatesCount($applicationsCounts[$programId]['alternates']);
+            $programDetailDto->setUserAttends(isset($userAlternateFlags[$programId]) && ! $userAlternateFlags[$programId]);
+            $programDetailDto->setUserAlternates($userAlternateFlags[$programId] ?? false);
+            $programDetailDto->setSameBlockPrograms($relatedPrograms[$programId]['sameBlock']);
+            $programDetailDto->setOverlappingPrograms($relatedPrograms[$programId]['overlapping']);
             $programDetailDto->setBlocked(false);
-            $programDetailDto->setPaid($userAllowedPrograms->contains($program));
+            $programDetailDto->setPaid(in_array($programId, $paidProgramsIds, true));
             $programDetailDtos[] = $programDetailDto;
         }
 
@@ -446,6 +455,61 @@ class ScheduleService
 
             throw $e;
         }
+    }
+
+    /**
+     * Vrací pro každý program id programů stejného bloku a id časově se překrývajících programů.
+     *
+     * Počítá se v paměti z jednoho dotazu. Dřív se pro každý program pouštěly dva dotazy,
+     * z toho jeden s DATE_ADD nad p.start, který neumí využít index a procházel celou
+     * tabulku programů.
+     *
+     * @return array<int, array{sameBlock: int[], overlapping: int[]}>
+     */
+    private function findRelatedPrograms(): array
+    {
+        $timings = $this->programRepository->findAllTimings();
+
+        $related = [];
+        foreach ($timings as $timing) {
+            $related[$timing['id']] = ['sameBlock' => [], 'overlapping' => []];
+        }
+
+        foreach ($timings as $first) {
+            foreach ($timings as $second) {
+                if ($first['id'] === $second['id']) {
+                    continue;
+                }
+
+                if ($first['blockId'] === $second['blockId']) {
+                    $related[$first['id']]['sameBlock'][] = $second['id'];
+                }
+
+                if (! self::programsOverlap($first, $second)) {
+                    continue;
+                }
+
+                $related[$first['id']]['overlapping'][] = $second['id'];
+            }
+        }
+
+        return $related;
+    }
+
+    /**
+     * Překrývají se programy časově?
+     *
+     * @param array{id: int, blockId: int, start: DateTimeImmutable, duration: int} $first
+     * @param array{id: int, blockId: int, start: DateTimeImmutable, duration: int} $second
+     *
+     * @throws Exception
+     */
+    private static function programsOverlap(array $first, array $second): bool
+    {
+        $firstEnd  = $first['start']->add(new DateInterval('PT' . $first['duration'] . 'M'));
+        $secondEnd = $second['start']->add(new DateInterval('PT' . $second['duration'] . 'M'));
+
+        return $second['start'] < $firstEnd && $secondEnd > $first['start'];
     }
 
     /**

@@ -3,6 +3,7 @@ services:
 
     - App\Model\Program\Repositories\BlockRepository
     - App\Model\Program\Repositories\ProgramRepository
+    - App\Model\Program\Repositories\ProgramApplicationRepository
     - App\Model\Program\Repositories\RoomRepository
     - App\Model\Structure\Repositories\SubeventRepository
     - App\Model\User\Repositories\UserRepository
@@ -15,6 +16,10 @@ services:
         messenger.messageHandler:
         bus: queryBus
     - class: App\Model\User\Queries\Handlers\UserAllowedBlocksQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+    - class: App\Model\User\Queries\Handlers\UserAllowedProgramsQueryHandler
       tags:
         messenger.messageHandler:
         bus: queryBus

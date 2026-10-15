@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Repositories;
 
-use App\Model\Enums\ApplicationState;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
+use App\Model\Infrastructure\Repositories\RestrictsToUserAllowedBlocks;
 use App\Model\Program\Block;
 use App\Model\Program\Exceptions\BlockCapacityInsufficientException;
 use App\Model\Program\Program;
@@ -25,6 +25,8 @@ use function assert;
  */
 class BlockRepository extends AbstractRepository
 {
+    use RestrictsToUserAllowedBlocks;
+
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em, Block::class);
@@ -140,26 +142,9 @@ class BlockRepository extends AbstractRepository
      */
     public function findUserAllowed(User $user, bool $paidOnly): Collection
     {
-        $qb = $this->createQueryBuilder('b')
-            ->leftJoin('b.category', 'c')
-            ->leftJoin('c.registerableRoles', 'r')
-            ->leftJoin('r.users', 'u1')
-            ->join('b.subevent', 's')
-            ->join('s.applications', 'sa', 'WITH', 'sa.validTo IS NULL AND sa.state != :stateCanceled AND sa.state != :stateCanceledNotPaid AND sa.state != :stateCanceledTransfered')
-            ->join('sa.user', 'u2', 'WITH', 'u2.approved = TRUE')
-            ->where('c IS NULL OR u1 = :user')
-            ->andWhere('u2 = :user')
-            ->setParameter('user', $user)
-            ->setParameter('stateCanceled', ApplicationState::CANCELED)
-            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID)
-            ->setParameter('stateCanceledTransfered', ApplicationState::CANCELED_TRANSFERED);
+        $qb = $this->createQueryBuilder('b');
 
-        if ($paidOnly) {
-            $qb = $qb->join('u2.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND sa.state != :stateCanceledTransfered AND ra.state != :stateWaitingForPayment')
-                ->join('ra.roles', 'rar')
-                ->andWhere('sa.state != :stateWaitingForPayment')
-                ->setParameter('stateWaitingForPayment', ApplicationState::WAITING_FOR_PAYMENT);
-        }
+        $this->restrictToUserAllowedBlocks($qb, 'b', $user, $paidOnly);
 
         return new ArrayCollection($qb->getQuery()->getResult());
     }

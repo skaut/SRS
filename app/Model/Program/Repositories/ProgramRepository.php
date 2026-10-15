@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\Program\Repositories;
 
-use App\Model\Enums\ApplicationState;
 use App\Model\Enums\ProgramMandatoryType;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
+use App\Model\Infrastructure\Repositories\RestrictsToUserAllowedBlocks;
 use App\Model\Program\Category;
 use App\Model\Program\Program;
 use App\Model\User\User;
@@ -14,13 +14,14 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 
 /**
  * Třída spravující programy.
  */
 class ProgramRepository extends AbstractRepository
 {
+    use RestrictsToUserAllowedBlocks;
+
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em, Program::class);
@@ -82,69 +83,28 @@ class ProgramRepository extends AbstractRepository
     public function findUserAllowed(User $user, bool $paidOnly): Collection
     {
         $qb = $this->createQueryBuilder('p')
-            ->join('p.block', 'b')
-            ->leftJoin('b.category', 'c')
-            ->leftJoin('c.registerableRoles', 'r')
-            ->leftJoin('r.users', 'u1')
-            ->join('b.subevent', 's')
-            ->join('s.applications', 'sa', 'WITH', 'sa.validTo IS NULL AND sa.state != :stateCanceled AND sa.state != :stateCanceledNotPaid AND sa.state != :stateCanceledTransfered')
-            ->join('sa.user', 'u2', 'WITH', 'u2.approved = TRUE')
-            ->where('c IS NULL OR u1 = :user')
-            ->andWhere('u2 = :user')
-            ->setParameter('user', $user)
-            ->setParameter('stateCanceled', ApplicationState::CANCELED)
-            ->setParameter('stateCanceledNotPaid', ApplicationState::CANCELED_NOT_PAID)
-            ->setParameter('stateCanceledTransfered', ApplicationState::CANCELED_TRANSFERED);
+            ->join('p.block', 'b');
 
-        if ($paidOnly) {
-            $qb = $qb->join('u2.applications', 'ra', 'WITH', 'ra.validTo IS NULL AND ra.state != :stateCanceled AND ra.state != :stateCanceledNotPaid AND sa.state != :stateCanceledTransfered AND ra.state != :stateWaitingForPayment')
-                ->join('ra.roles', 'rar')
-                ->andWhere('sa.state != :stateWaitingForPayment')
-                ->setParameter('stateWaitingForPayment', ApplicationState::WAITING_FOR_PAYMENT);
-        }
+        $this->restrictToUserAllowedBlocks($qb, 'b', $user, $paidOnly);
 
         return new ArrayCollection($qb->getQuery()->getResult());
     }
 
     /**
-     * Vrací programy se stejným blokem.
+     * Vrací id, blok, začátek a délku všech programů.
      *
-     * @return Collection<int, Program>
+     * Slouží k výpočtu překryvů a programů stejného bloku v paměti, aby se nemusel pro
+     * každý program zvlášť pouštět dotaz s DATE_ADD, který nedokáže využít index.
+     *
+     * @return array<int, array{id: int, blockId: int, start: DateTimeImmutable, duration: int}>
      */
-    public function findSameBlockPrograms(Program $program): Collection
+    public function findAllTimings(): array
     {
-        $result = $this->createQueryBuilder('p')
+        return $this->createQueryBuilder('p')
+            ->select('p.id AS id, IDENTITY(p.block) AS blockId, p.start AS start, b.duration AS duration')
             ->join('p.block', 'b')
-            ->where('p != :program')
-            ->andWhere('p.block = :block')
-            ->setParameter('program', $program)
-            ->setParameter('block', $program->getBlock())
             ->getQuery()
             ->getResult();
-
-        return new ArrayCollection($result);
-    }
-
-    /**
-     * Vrací programy překrývající se s programem.
-     *
-     * @return Collection<int, Program>
-     *
-     * @throws Exception
-     */
-    public function findOverlappingPrograms(Program $program): Collection
-    {
-        $result = $this->createQueryBuilder('p')
-            ->join('p.block', 'b')
-            ->where('p != :program')
-            ->andWhere("p.start < :end AND DATE_ADD(p.start, (b.duration * 60), 'second') > :start")
-            ->setParameter('program', $program)
-            ->setParameter('start', $program->getStart())
-            ->setParameter('end', $program->getEnd())
-            ->getQuery()
-            ->getResult();
-
-        return new ArrayCollection($result);
     }
 
     /**
