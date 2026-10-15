@@ -84,6 +84,12 @@ class ApplicationService
     /**
      * Zaregistruje uživatele (vyplnění přihlášky / přidání role v administraci).
      *
+     * Zvýšení obsazenosti a vytvoření přihlášek běží v transakci, aby obsazenost nezůstala
+     * zvýšená bez odpovídající přihlášky. Oba současné call-sites (ApplicationFormFactory,
+     * InstallPresenter) už vlastní transakci mají - tam je tahle vnořená jen inkrementem
+     * čítače (savepointy zapnuté nejsou) a atomicitu zajišťuje vnější transakce. Zůstává
+     * kvůli případným dalším volajícím, kteří transakci nemají.
+     *
      * @param Collection<int, Role>     $roles
      * @param Collection<int, Subevent> $subevents
      *
