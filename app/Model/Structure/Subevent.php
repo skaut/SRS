@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Structure;
 
-use App\Model\Application\Application;
 use App\Model\Application\SubeventsApplication;
-use App\Model\Enums\ApplicationState;
 use App\Model\Program\Block;
 use App\Model\SkautIs\SkautIsCourse;
 use DateTimeImmutable;
@@ -412,37 +410,6 @@ class Subevent
             $this->applications->removeElement($application);
             $application->removeSubevent($this);
         }
-    }
-
-    public function countUsers(): int
-    {
-        // TODO: opravit
-//        $criteria = Criteria::create()
-//            ->where(Criteria::expr()->andX(
-//                Criteria::expr()->isNull('validTo'),
-//                Criteria::expr()->orX(
-//                    Criteria::expr()->eq('state', ApplicationState::WAITING_FOR_PAYMENT),
-//                    Criteria::expr()->eq('state', ApplicationState::PAID),
-//                    Criteria::expr()->eq('state', ApplicationState::PAID_FREE)
-//                )
-//            ));
-//
-//        return $this->applications->matching($criteria)->count();
-
-        return $this->applications->filter(
-            static fn (Application $application) => $application->getValidTo() === null && (
-                $application->getState() === ApplicationState::WAITING_FOR_PAYMENT || $application->isPaid()),
-        )->count();
-    }
-
-    public function countUnoccupied(): int|null
-    {
-        return $this->capacity ? $this->capacity - $this->countUsers() : null;
-    }
-
-    public function getOccupancyText(): string
-    {
-        return $this->capacity ? $this->countUsers() . '/' . $this->capacity : '' . $this->countUsers();
     }
 
     public function getRegisterableFrom(): DateTimeImmutable|null

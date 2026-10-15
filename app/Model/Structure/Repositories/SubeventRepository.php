@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Structure\Repositories;
 
+use App\Model\Enums\ApplicationState;
 use App\Model\Infrastructure\Repositories\AbstractRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
@@ -32,6 +33,50 @@ class SubeventRepository extends AbstractRepository
         $result = $this->getRepository()->findAll();
 
         return new ArrayCollection($result);
+    }
+
+    /**
+     * Vrací počty účastníků podakcí, tedy platných nezrušených přihlášek.
+     *
+     * @param int[] $subeventsIds
+     *
+     * @return array<int, int> počet účastníků podle id podakce
+     */
+    public function countUsersInSubevents(array $subeventsIds): array
+    {
+        if ($subeventsIds === []) {
+            return [];
+        }
+
+        $result = $this->createQueryBuilder('s')
+            ->select('s.id AS id, COUNT(a.id) AS usersCount')
+            ->leftJoin('s.applications', 'a', 'WITH', 'a.validTo IS NULL AND a.state IN (:states)')
+            ->where('s.id IN (:ids)')
+            ->groupBy('s.id')
+            ->setParameter('ids', $subeventsIds)
+            ->setParameter('states', [
+                ApplicationState::WAITING_FOR_PAYMENT,
+                ApplicationState::PAID,
+                ApplicationState::PAID_FREE,
+                ApplicationState::PAID_TRANSFERED,
+            ])
+            ->getQuery()
+            ->getResult();
+
+        $counts = [];
+        foreach ($result as $row) {
+            $counts[(int) $row['id']] = (int) $row['usersCount'];
+        }
+
+        return $counts;
+    }
+
+    /**
+     * Vrací počet účastníků podakce.
+     */
+    public function countUsersInSubevent(Subevent $subevent): int
+    {
+        return $this->countUsersInSubevents([$subevent->getId()])[$subevent->getId()] ?? 0;
     }
 
     /**
@@ -190,6 +235,12 @@ class SubeventRepository extends AbstractRepository
         $this->em->flush();
     }
 
+    /**
+     * Atomicky zvýší obsazenost podakce.
+     *
+     * Jde o UPDATE mimo EntityManager, předaná entita proto zůstává s původní hodnotou
+     * occupancy až do konce requestu.
+     */
     public function incrementOccupancy(Subevent $subevent): void
     {
         $this->em->createQuery('UPDATE App\Model\Structure\Subevent s SET s.occupancy = s.occupancy + 1 WHERE s.id = :sid')

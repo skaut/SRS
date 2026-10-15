@@ -47,6 +47,7 @@ use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use DateInterval;
+use Doctrine\Common\Collections\Collection;
 use Exception;
 use Nette;
 use Nette\Localization\Translator;
@@ -151,13 +152,20 @@ class ScheduleService
      * Vrací podrobnosti o programových blocích.
      *
      * @return BlockDetailDto[]
+     *
+     * @throws Throwable
      */
     public function getBlocks(): array
     {
+        // dotazy nezávisí na bloku, proto se provádí jen jednou pro celý seznam
+        $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
+        $userBlocks                       = $this->queryBus->handle(new UserAttendsBlocksQuery($this->user));
+        $userAllowedBlocks                = $this->queryBus->handle(new UserAllowedBlocksQuery($this->user, ! $registrationBeforePaymentAllowed));
+
         $blocks          = $this->blockRepository->findAll();
         $blockDetailDtos = [];
         foreach ($blocks as $block) {
-            $blockDetailDtos[] = $this->convertBlockToBlockDetailDto($block);
+            $blockDetailDtos[] = $this->convertBlockToBlockDetailDto($block, $userBlocks, $userAllowedBlocks);
         }
 
         return $blockDetailDtos;
@@ -460,13 +468,12 @@ class ScheduleService
 
     /**
      * Převede Block na BlockDetailDto.
+     *
+     * @param Collection<int, Block> $userBlocks
+     * @param Collection<int, Block> $userAllowedBlocks
      */
-    private function convertBlockToBlockDetailDto(Block $block): BlockDetailDto
+    private function convertBlockToBlockDetailDto(Block $block, Collection $userBlocks, Collection $userAllowedBlocks): BlockDetailDto
     {
-        $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
-        $userBlocks                       = $this->queryBus->handle(new UserAttendsBlocksQuery($this->user));
-        $userAllowedBlocks                = $this->queryBus->handle(new UserAllowedBlocksQuery($this->user, ! $registrationBeforePaymentAllowed));
-
         $blockDetailDto = new BlockDetailDto();
 
         $blockDetailDto->setId($block->getId());

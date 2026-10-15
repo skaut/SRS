@@ -69,7 +69,6 @@ class ApplicationService
         private readonly EntityManagerInterface $em,
         private readonly ApplicationRepository $applicationRepository,
         private readonly UserRepository $userRepository,
-        private readonly AclService $aclService,
         private readonly RoleRepository $roleRepository,
         private readonly SubeventRepository $subeventRepository,
         private readonly DiscountService $discountService,
@@ -97,11 +96,18 @@ class ApplicationService
         User $createdBy,
         bool $approve = false,
     ): void {
-        $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
-        $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
+        /** @var array{RolesApplication, SubeventsApplication} $applications */
+        $applications = $this->em->wrapInTransaction(function () use ($user, $roles, $subevents, $createdBy, $approve): array {
+            $rolesApplication     = $this->createRolesApplication($user, $roles, $createdBy, $approve);
+            $subeventsApplication = $this->createSubeventsApplication($user, $subevents, $createdBy);
 
-        $this->eventBus->handle(new ApplicationUpdatedEvent($user));
-        $this->updateUserPaymentInfo($user);
+            $this->eventBus->handle(new ApplicationUpdatedEvent($user));
+            $this->updateUserPaymentInfo($user);
+
+            return [$rolesApplication, $subeventsApplication];
+        });
+
+        [$rolesApplication, $subeventsApplication] = $applications;
 
         $applicatonMaturity        = '-';
         $applicationFee            = '0';
@@ -1082,13 +1088,15 @@ class ApplicationService
     /**
      * Zvýší obsazenost rolí.
      *
+     * incrementOccupancy provádí atomický UPDATE, uložení entity ani zneplatnění cache rolí
+     * tedy není potřeba - obsazenost není součástí cachovaných dat.
+     *
      * @param Collection<int, Role> $roles
      */
     private function incrementRolesOccupancy(Collection $roles): void
     {
         foreach ($roles as $role) {
             $this->roleRepository->incrementOccupancy($role);
-            $this->aclService->saveRole($role);
         }
     }
 
@@ -1101,7 +1109,6 @@ class ApplicationService
     {
         foreach ($roles as $role) {
             $this->roleRepository->decrementOccupancy($role);
-            $this->aclService->saveRole($role);
         }
     }
 
@@ -1114,7 +1121,6 @@ class ApplicationService
     {
         foreach ($subevents as $subevent) {
             $this->subeventRepository->incrementOccupancy($subevent);
-            $this->subeventRepository->save($subevent);
         }
     }
 
@@ -1127,7 +1133,6 @@ class ApplicationService
     {
         foreach ($subevents as $subevent) {
             $this->subeventRepository->decrementOccupancy($subevent);
-            $this->subeventRepository->save($subevent);
         }
     }
 

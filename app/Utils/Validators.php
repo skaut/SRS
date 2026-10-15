@@ -12,6 +12,7 @@ use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Exceptions\SettingsItemNotFoundException;
 use App\Model\Settings\Queries\SettingDateValueQuery;
 use App\Model\Settings\Settings;
+use App\Model\Structure\Repositories\SubeventRepository;
 use App\Model\Structure\Subevent;
 use App\Model\User\User;
 use App\Services\QueryBus;
@@ -32,6 +33,7 @@ class Validators
         private readonly QueryBus $queryBus,
         private readonly RoleRepository $roleRepository,
         private readonly ProgramRepository $programRepository,
+        private readonly SubeventRepository $subeventRepository,
     ) {
     }
 
@@ -151,8 +153,14 @@ class Validators
      */
     public function validateSubeventsCapacities(Collection $selectedSubevents, User $user): bool
     {
+        $usersCounts = $this->subeventRepository->countUsersInSubevents(Helpers::getIds($selectedSubevents));
+
         foreach ($selectedSubevents as $subevent) {
-            if ($subevent->hasLimitedCapacity() && ! $user->hasSubevent($subevent) && $subevent->countUnoccupied() < 1) {
+            if (! $subevent->hasLimitedCapacity() || $user->hasSubevent($subevent)) {
+                continue;
+            }
+
+            if ($subevent->getCapacity() - ($usersCounts[$subevent->getId()] ?? 0) < 1) {
                 return false;
             }
         }

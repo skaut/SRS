@@ -1,0 +1,27 @@
+services:
+    - App\ApiModule\Services\ScheduleService
+
+    - App\Model\Program\Repositories\BlockRepository
+    - App\Model\Program\Repositories\ProgramRepository
+    - App\Model\Program\Repositories\RoomRepository
+    - App\Model\Structure\Repositories\SubeventRepository
+    - App\Model\User\Repositories\UserRepository
+    - App\Model\Acl\Repositories\RoleRepository
+    - App\Model\Application\Repositories\ApplicationRepository
+    - App\Model\Settings\Repositories\SettingsRepository
+
+    - class: App\Model\User\Queries\Handlers\UserAttendsBlocksQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+    - class: App\Model\User\Queries\Handlers\UserAllowedBlocksQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+    - class: App\Model\Settings\Queries\Handlers\SettingBoolValueQueryHandler
+      tags:
+        messenger.messageHandler:
+        bus: queryBus
+
+includes:
+- ../config/common.neon

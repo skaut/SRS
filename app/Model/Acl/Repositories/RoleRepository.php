@@ -171,6 +171,12 @@ class RoleRepository extends AbstractRepository
         return new ArrayCollection($result);
     }
 
+    /**
+     * Atomicky zvýší obsazenost role.
+     *
+     * Jde o UPDATE mimo EntityManager, předaná entita proto zůstává s původní hodnotou
+     * occupancy až do konce requestu.
+     */
     public function incrementOccupancy(Role $role): void
     {
         $this->em->createQuery('UPDATE App\Model\Acl\Role r SET r.occupancy = r.occupancy + 1 WHERE r.id = :rid')

@@ -1,0 +1,8 @@
+services:
+    - App\Model\Structure\Repositories\SubeventRepository
+    - App\Model\User\Repositories\UserRepository
+    - App\Model\Acl\Repositories\RoleRepository
+    - App\Model\Application\Repositories\ApplicationRepository
+
+includes:
+- ../config/common.neon

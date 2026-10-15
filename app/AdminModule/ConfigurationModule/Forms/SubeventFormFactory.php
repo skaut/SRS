@@ -80,7 +80,7 @@ class SubeventFormFactory
             $capacityText
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::INTEGER, 'admin.configuration.subevents_capacity_format')
-                ->addRule(Form::MIN, 'admin.configuration.subevents_capacity_low', $this->subevent->countUsers());
+                ->addRule(Form::MIN, 'admin.configuration.subevents_capacity_low', $this->subeventRepository->countUsersInSubevent($this->subevent));
 
             $subeventsOptions = $this->subeventService->getSubeventsWithoutSubeventOptions($this->subevent->getId());
         } else {
