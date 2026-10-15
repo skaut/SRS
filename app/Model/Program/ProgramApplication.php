@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'program_application')]
+#[ORM\UniqueConstraint(name: 'program_application_user_program', columns: ['user_id', 'program_id'])]
 class ProgramApplication
 {
     #[ORM\Id]

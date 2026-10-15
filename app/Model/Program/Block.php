@@ -33,9 +33,12 @@ class Block
     /**
      * Programy v bloku.
      *
+     * EXTRA_LAZY: getProgramsCount() se provede jako COUNT dotaz místo načtení všech
+     * programů bloku do paměti.
+     *
      * @var Collection<int, Program>
      */
-    #[ORM\OneToMany(mappedBy: 'block', targetEntity: Program::class, cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'block', targetEntity: Program::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['start' => 'ASC'])]
     protected Collection $programs;
 

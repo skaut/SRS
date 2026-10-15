@@ -41,6 +41,22 @@ class BlockRepository extends AbstractRepository
     }
 
     /**
+     * Vrací všechny bloky včetně lektorů.
+     *
+     * Lektoři se dotahují jedním dotazem, aby se nenačítali lazy pro každý blok zvlášť.
+     *
+     * @return Block[]
+     */
+    public function findAllWithLectors(): array
+    {
+        return $this->createQueryBuilder('b')
+            ->addSelect('l')
+            ->leftJoin('b.lectors', 'l')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Vrací blok podle id.
      */
     public function findById(int|null $id): Block|null

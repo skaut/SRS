@@ -274,20 +274,22 @@ class Role
         return $this->users;
     }
 
+    /**
+     * Přidá uživatele do role.
+     *
+     * Kolekce users je inverzní strana vazby, Doctrine její změny při ukládání ignoruje -
+     * vazbu je proto potřeba nastavit jen na uživateli. Navíc by PersistentCollection::add()
+     * a removeElement() EXTRA_LAZY kolekci inicializovaly, tedy načetly všechny uživatele
+     * role do paměti.
+     */
     public function addUser(User $user): void
     {
-        if (! $this->users->contains($user)) {
-            $this->users->add($user);
-            $user->addRole($this);
-        }
+        $user->addRole($this);
     }
 
     public function removeUser(User $user): void
     {
-        if ($this->users->contains($user)) {
-            $this->users->removeElement($user);
-            $user->removeRole($this);
-        }
+        $user->removeRole($this);
     }
 
     /** @return Collection<int, Permission> */

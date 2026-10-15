@@ -7,11 +7,11 @@ namespace App\Model\User\Commands\Handlers;
 use App\Model\Program\Exceptions\UserNotAllowedProgramException;
 use App\Model\Program\ProgramApplication;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
+use App\Model\Program\Repositories\ProgramRepository;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
 use App\Model\User\Events\ProgramRegisteredEvent;
-use App\Model\User\Queries\UserAllowedProgramsQuery;
 use App\Services\EventBus;
 use App\Services\QueryBus;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,6 +24,7 @@ class RegisterProgramHandler implements MessageHandlerInterface
         private readonly EventBus $eventBus,
         private readonly EntityManagerInterface $em,
         private readonly ProgramApplicationRepository $programApplicationRepository,
+        private readonly ProgramRepository $programRepository,
     ) {
     }
 
@@ -31,7 +32,10 @@ class RegisterProgramHandler implements MessageHandlerInterface
     public function __invoke(RegisterProgram $command): void
     {
         $registrationBeforePaymentAllowed = $this->queryBus->handle(new SettingBoolValueQuery(Settings::IS_ALLOWED_REGISTER_PROGRAMS_BEFORE_PAYMENT));
-        if (! $this->queryBus->handle(new UserAllowedProgramsQuery($command->getUser(), ! $registrationBeforePaymentAllowed))->contains($command->getProgram())) {
+
+        // ptáme se jen na jeden program - načítat kvůli téhle kontrole všechny povolené
+        // programy je drahé zvlášť při hromadném zapisování povinných programů
+        if (! $this->programRepository->isUserAllowed($command->getUser(), $command->getProgram(), ! $registrationBeforePaymentAllowed)) {
             throw new UserNotAllowedProgramException();
         }
 

@@ -60,7 +60,7 @@ class SubeventsGridControl extends Control
 
         $grid->addColumnNumber('fee', 'admin.configuration.subevents_fee');
 
-        $usersCounts = $this->subeventRepository->countUsersInSubevents(Helpers::getIds($this->subeventRepository->findAll()));
+        $usersCounts = $this->subeventRepository->countUsersInSubevents();
 
         $grid->addColumnText('capacity', 'admin.configuration.subevents_occupancy')
             ->setRenderer(static function (Subevent $subevent) use ($usersCounts): string {

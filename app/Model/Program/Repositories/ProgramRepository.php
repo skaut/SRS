@@ -91,6 +91,45 @@ class ProgramRepository extends AbstractRepository
     }
 
     /**
+     * Může se uživatel přihlásit na program?
+     *
+     * Na rozdíl od findUserAllowed() nenačítá všechny povolené programy, ale ptá se na jeden.
+     */
+    public function isUserAllowed(User $user, Program $program, bool $paidOnly): bool
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('count(p)')
+            ->join('p.block', 'b')
+            ->where('p = :program')
+            ->setParameter('program', $program);
+
+        $this->restrictToUserAllowedBlocks($qb, 'b', $user, $paidOnly);
+
+        return $qb->getQuery()->getSingleScalarResult() !== 0;
+    }
+
+    /**
+     * Vrací počty programů v blocích.
+     *
+     * @return array<int, int> počet programů podle id bloku
+     */
+    public function countProgramsInBlocks(): array
+    {
+        $result = $this->createQueryBuilder('p')
+            ->select('IDENTITY(p.block) AS blockId, COUNT(p.id) AS programsCount')
+            ->groupBy('p.block')
+            ->getQuery()
+            ->getResult();
+
+        $counts = [];
+        foreach ($result as $row) {
+            $counts[(int) $row['blockId']] = (int) $row['programsCount'];
+        }
+
+        return $counts;
+    }
+
+    /**
      * Vrací id, blok, začátek a délku všech programů.
      *
      * Slouží k výpočtu překryvů a programů stejného bloku v paměti, aby se nemusel pro
