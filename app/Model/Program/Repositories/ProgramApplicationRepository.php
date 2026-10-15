@@ -121,6 +121,8 @@ class ProgramApplicationRepository extends AbstractRepository
 
             // Náhradnictví se kontroluje jen když by nová přihláška byla taky náhradnická.
             // Posun náhradníka na účastníka (po uvolnění kapacity) se tím nezablokuje.
+            // Zámek na řádku programu výš zajišťuje, že souběžné požadavky nemůžou projít
+            // kontrolou obě a založit tak dvě přihlášky na stejný program.
             if ($alternate && $this->userAlternatesSameProgram($user, $program)) {
                 throw new UserAlreadyAttendsProgramException();
             }
@@ -135,21 +137,19 @@ class ProgramApplicationRepository extends AbstractRepository
 
             $programApplication->setAlternate($alternate);
 
-            if (! $alternate) {
-                // Náhradnické přihlášky bloku se ruší dřív, než vznikne nová přihláška, jinak
-                // by Doctrine seřadila INSERT před DELETE a pro stejnou dvojici uživatel-program
-                // by krátce existovaly dva řádky (unikátní index by to odmítl).
-                foreach ($this->findByUserAlternateAndBlock($user, $program->getBlock()) as $pa) {
-                    $em->remove($pa);
-                }
+            $em->persist($programApplication);
 
-                $em->flush();
-
-                $program->setAttendeesCount($attendeesCount + 1);
-                $em->persist($program);
+            if ($alternate) {
+                return;
             }
 
-            $em->persist($programApplication);
+            $program->setAttendeesCount($attendeesCount + 1);
+            $em->persist($program);
+
+            // náhradnictví ve stejném bloku se přihlášením na program ruší
+            foreach ($this->findByUserAlternateAndBlock($user, $program->getBlock()) as $pa) {
+                $em->remove($pa);
+            }
         });
     }
 
