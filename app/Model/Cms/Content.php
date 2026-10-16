@@ -28,6 +28,7 @@ use function ucwords;
     'html_content' => HtmlContent::class,
     'faq_content' => FaqContent::class,
     'news_content' => NewsContent::class,
+    'place_content' => PlaceContent::class,
     'programs_content' => ProgramsContent::class,
     'image_content' => ImageContent::class,
     'users_content' => UsersContent::class,
