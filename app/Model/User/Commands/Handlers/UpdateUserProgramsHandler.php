@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\User\Commands\Handlers;
 
 use App\Model\Enums\ProgramMandatoryType;
-use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Settings\Queries\SettingBoolValueQuery;
 use App\Model\Settings\Settings;
 use App\Model\User\Commands\RegisterProgram;
@@ -24,7 +23,6 @@ class UpdateUserProgramsHandler implements MessageHandlerInterface
         private readonly QueryBus $queryBus,
         private readonly CommandBus $commandBus,
         private readonly EntityManagerInterface $em,
-        private readonly ProgramApplicationRepository $programApplicationRepository,
     ) {
     }
 
@@ -43,14 +41,9 @@ class UpdateUserProgramsHandler implements MessageHandlerInterface
                 }
             }
 
-            // Přihlášky včetně náhradnických. userPrograms obsahuje jen programy, kde je
-            // uživatel účastníkem, přihlašovat ho znovu na program, kde je náhradníkem,
-            // by skončilo výjimkou.
-            $userApplications = $this->programApplicationRepository->findUserApplicationsAlternateFlags($command->getUser());
-
             // přihlášení automaticky přihlašovaných programů, na které neměl před změnou nárok
             foreach ($userAllowedPrograms as $program) {
-                if ($program->getBlock()->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED && ! isset($userApplications[$program->getId()])) {
+                if ($program->getBlock()->getMandatory() === ProgramMandatoryType::AUTO_REGISTERED && ! $userPrograms->contains($program)) {
                     $this->commandBus->handle(new RegisterProgram($command->getUser(), $program));
                 }
             }
