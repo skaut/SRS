@@ -250,7 +250,9 @@ class ApplicationService
 
                 $this->userRepository->save($user);
 
-                $this->decrementRolesOccupancy($user->getRolesApplication()->getRoles());
+                // odečítají se původní role, ne role nové přihlášky - getRolesApplication()
+                // v tuhle chvíli vrací už tu nově vytvořenou platnou přihlášku
+                $this->decrementRolesOccupancy($rolesOld);
             }
 
             $this->eventBus->handle(new ApplicationUpdatedEvent($user));

@@ -38,6 +38,7 @@ use App\Services\SubeventService;
 use App\Utils\Helpers;
 use App\Utils\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -210,126 +211,149 @@ class ApplicationFormFactory
      */
     public function processForm(Form $form, stdClass $values): void
     {
-        $this->em->wrapInTransaction(function () use ($values): void {
-            if (property_exists($values, 'sex')) {
-                $this->user->setSex($values->sex);
+        // Údaje uživatele, role a podakce se připraví mimo transakci - entita uživatele se
+        // do databáze zapíše až při ukládání přihlášky. Díky tomu může být komunikace se
+        // skautIS také mimo transakci: SOAP volání by jinak po celou dobu drželo otevřenou
+        // transakci včetně zámků na řádcích rolí a podakcí, které bere ApplicationService.
+        $this->fillUserFromValues($values);
+
+        // role
+        if (property_exists($values, 'roles')) {
+            $roles = $this->roleRepository->findRolesByIds($values->roles);
+        } else {
+            $roles = $this->roleRepository->findFilteredRoles(true, false, false);
+        }
+
+        // podakce
+        $subevents = $this->subeventRepository->explicitSubeventsExists() && ! empty($values->subevents)
+            ? $this->subeventRepository->findSubeventsByIds($values->subevents)
+            : new ArrayCollection([$this->subeventRepository->findImplicit()]);
+
+        // aktualizace údajů ve skautIS, jen pokud nemá propojený účet
+        if (! $this->user->isMember()) {
+            try {
+                $this->skautIsService->updatePersonBasic(
+                    $this->user->getSkautISPersonId(),
+                    $this->user->getSex(),
+                    $this->user->getBirthdate(),
+                    $this->user->getFirstName(),
+                    $this->user->getLastName(),
+                    $this->user->getNickName(),
+                );
+
+                $this->skautIsService->updatePersonAddress(
+                    $this->user->getSkautISPersonId(),
+                    $this->user->getStreet(),
+                    $this->user->getCity(),
+                    $this->user->getPostcode(),
+                    $this->user->getState(),
+                );
+            } catch (WsdlException $ex) {
+                Debugger::log($ex, ILogger::WARNING);
+                $this->onSkautIsError();
             }
+        }
 
-            if (property_exists($values, 'firstName')) {
-                $this->user->setFirstName($values->firstName);
-            }
-
-            if (property_exists($values, 'lastName')) {
-                $this->user->setLastName($values->lastName);
-            }
-
-            if (property_exists($values, 'nickName')) {
-                $this->user->setNickName($values->nickName);
-            }
-
-            if (property_exists($values, 'birthdate')) {
-                $this->user->setBirthdate($values->birthdate);
-            }
-
-            if (property_exists($values, 'street')) {
-                $this->user->setStreet($values->street);
-            }
-
-            if (property_exists($values, 'city')) {
-                $this->user->setCity($values->city);
-            }
-
-            if (property_exists($values, 'postcode')) {
-                $this->user->setPostcode($values->postcode);
-            }
-
-            if (property_exists($values, 'state')) {
-                $this->user->setState($values->state);
-            }
-
-            // role
-            if (property_exists($values, 'roles')) {
-                $roles = $this->roleRepository->findRolesByIds($values->roles);
-            } else {
-                $roles = $this->roleRepository->findFilteredRoles(true, false, false);
-            }
-
-            // vlastni pole
-            foreach ($this->customInputRepository->findByRolesOrderedByPosition($roles) as $customInput) {
-                $customInputId    = 'custom' . $customInput->getId();
-                $customInputValue = $this->user->getCustomInputValue($customInput);
-
-                if ($customInput instanceof CustomText) {
-                    $customInputValue = $customInputValue ?: new CustomTextValue($customInput, $this->user);
-                    assert($customInputValue instanceof CustomTextValue);
-                    $customInputValue->setValue($values->$customInputId);
-                } elseif ($customInput instanceof CustomCheckbox) {
-                    $customInputValue = $customInputValue ?: new CustomCheckboxValue($customInput, $this->user);
-                    assert($customInputValue instanceof CustomCheckboxValue);
-                    $customInputValue->setValue($values->$customInputId);
-                } elseif ($customInput instanceof CustomSelect) {
-                    $customInputValue = $customInputValue ?: new CustomSelectValue($customInput, $this->user);
-                    assert($customInputValue instanceof CustomSelectValue);
-                    $customInputValue->setValue($values->$customInputId);
-                } elseif ($customInput instanceof CustomMultiSelect) {
-                    $customInputValue = $customInputValue ?: new CustomMultiSelectValue($customInput, $this->user);
-                    assert($customInputValue instanceof CustomMultiSelectValue);
-                    $customInputValue->setValue($values->$customInputId);
-                } elseif ($customInput instanceof CustomFile) {
-                    $customInputValue = $customInputValue ?: new CustomFileValue($customInput, $this->user);
-                    assert($customInputValue instanceof CustomFileValue);
-                    $file = $values->$customInputId;
-                    assert($file instanceof FileUpload);
-                    if ($file->getError() === UPLOAD_ERR_OK) {
-                        $path = $this->filesService->save($file, CustomFile::PATH, true, $file->name);
-                        $customInputValue->setValue($path);
-                    }
-                } elseif ($customInput instanceof CustomDate) {
-                    $customInputValue = $customInputValue ?: new CustomDateValue($customInput, $this->user);
-                    assert($customInputValue instanceof CustomDateValue);
-                    $customInputValue->setValue($values->$customInputId);
-                } elseif ($customInput instanceof CustomDateTime) {
-                    $customInputValue = $customInputValue ?: new CustomDateTimeValue($customInput, $this->user);
-                    assert($customInputValue instanceof CustomDateTimeValue);
-                    $customInputValue->setValue($values->$customInputId);
-                }
-
-                $this->customInputValueRepository->save($customInputValue);
-            }
-
-            // podakce
-            $subevents = $this->subeventRepository->explicitSubeventsExists() && ! empty($values->subevents)
-                ? $this->subeventRepository->findSubeventsByIds($values->subevents)
-                : new ArrayCollection([$this->subeventRepository->findImplicit()]);
-
-            // aktualizace údajů ve skautIS, jen pokud nemá propojený účet
-            if (! $this->user->isMember()) {
-                try {
-                    $this->skautIsService->updatePersonBasic(
-                        $this->user->getSkautISPersonId(),
-                        $this->user->getSex(),
-                        $this->user->getBirthdate(),
-                        $this->user->getFirstName(),
-                        $this->user->getLastName(),
-                        $this->user->getNickName(),
-                    );
-
-                    $this->skautIsService->updatePersonAddress(
-                        $this->user->getSkautISPersonId(),
-                        $this->user->getStreet(),
-                        $this->user->getCity(),
-                        $this->user->getPostcode(),
-                        $this->user->getState(),
-                    );
-                } catch (WsdlException $ex) {
-                    Debugger::log($ex, ILogger::WARNING);
-                    $this->onSkautIsError();
-                }
-            }
+        $this->em->wrapInTransaction(function () use ($values, $roles, $subevents): void {
+            $this->saveCustomInputValues($values, $roles);
 
             // vytvoreni prihlasky
             $this->applicationService->register($this->user, $roles, $subevents, $this->user);
         });
+    }
+
+    /**
+     * Přenese údaje z formuláře do entity uživatele.
+     */
+    private function fillUserFromValues(stdClass $values): void
+    {
+        if (property_exists($values, 'sex')) {
+            $this->user->setSex($values->sex);
+        }
+
+        if (property_exists($values, 'firstName')) {
+            $this->user->setFirstName($values->firstName);
+        }
+
+        if (property_exists($values, 'lastName')) {
+            $this->user->setLastName($values->lastName);
+        }
+
+        if (property_exists($values, 'nickName')) {
+            $this->user->setNickName($values->nickName);
+        }
+
+        if (property_exists($values, 'birthdate')) {
+            $this->user->setBirthdate($values->birthdate);
+        }
+
+        if (property_exists($values, 'street')) {
+            $this->user->setStreet($values->street);
+        }
+
+        if (property_exists($values, 'city')) {
+            $this->user->setCity($values->city);
+        }
+
+        if (property_exists($values, 'postcode')) {
+            $this->user->setPostcode($values->postcode);
+        }
+
+        if (property_exists($values, 'state')) {
+            $this->user->setState($values->state);
+        }
+    }
+
+    /**
+     * Uloží hodnoty vlastních polí přihlášky.
+     *
+     * @param Collection<int, Role> $roles
+     *
+     * @throws Throwable
+     */
+    private function saveCustomInputValues(stdClass $values, Collection $roles): void
+    {
+        foreach ($this->customInputRepository->findByRolesOrderedByPosition($roles) as $customInput) {
+            $customInputId    = 'custom' . $customInput->getId();
+            $customInputValue = $this->user->getCustomInputValue($customInput);
+
+            if ($customInput instanceof CustomText) {
+                $customInputValue = $customInputValue ?: new CustomTextValue($customInput, $this->user);
+                assert($customInputValue instanceof CustomTextValue);
+                $customInputValue->setValue($values->$customInputId);
+            } elseif ($customInput instanceof CustomCheckbox) {
+                $customInputValue = $customInputValue ?: new CustomCheckboxValue($customInput, $this->user);
+                assert($customInputValue instanceof CustomCheckboxValue);
+                $customInputValue->setValue($values->$customInputId);
+            } elseif ($customInput instanceof CustomSelect) {
+                $customInputValue = $customInputValue ?: new CustomSelectValue($customInput, $this->user);
+                assert($customInputValue instanceof CustomSelectValue);
+                $customInputValue->setValue($values->$customInputId);
+            } elseif ($customInput instanceof CustomMultiSelect) {
+                $customInputValue = $customInputValue ?: new CustomMultiSelectValue($customInput, $this->user);
+                assert($customInputValue instanceof CustomMultiSelectValue);
+                $customInputValue->setValue($values->$customInputId);
+            } elseif ($customInput instanceof CustomFile) {
+                $customInputValue = $customInputValue ?: new CustomFileValue($customInput, $this->user);
+                assert($customInputValue instanceof CustomFileValue);
+                $file = $values->$customInputId;
+                assert($file instanceof FileUpload);
+                if ($file->getError() === UPLOAD_ERR_OK) {
+                    $path = $this->filesService->save($file, CustomFile::PATH, true, $file->name);
+                    $customInputValue->setValue($path);
+                }
+            } elseif ($customInput instanceof CustomDate) {
+                $customInputValue = $customInputValue ?: new CustomDateValue($customInput, $this->user);
+                assert($customInputValue instanceof CustomDateValue);
+                $customInputValue->setValue($values->$customInputId);
+            } elseif ($customInput instanceof CustomDateTime) {
+                $customInputValue = $customInputValue ?: new CustomDateTimeValue($customInput, $this->user);
+                assert($customInputValue instanceof CustomDateTimeValue);
+                $customInputValue->setValue($values->$customInputId);
+            }
+
+            $this->customInputValueRepository->save($customInputValue);
+        }
     }
 
     /**

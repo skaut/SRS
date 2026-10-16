@@ -61,6 +61,8 @@ trait RestrictsToUserAllowedBlocks
             return;
         }
 
+        // JOIN na role je tu kvůli shodě s původním dotazem - vyžaduje, aby přihláška
+        // měla aspoň jednu roli. Jiné role než ty z přihlášky se nekontrolují.
         $qb->andWhere('EXISTS (
                 SELECT 1
                 FROM App\Model\Application\RolesApplication allowedRolesApplication

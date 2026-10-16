@@ -24,8 +24,6 @@ use App\Model\Program\Exceptions\UserAttendsConflictingProgramException;
 use App\Model\Program\Exceptions\UserNotAllowedProgramException;
 use App\Model\Program\Exceptions\UserNotAttendsProgramException;
 use App\Model\Program\Program;
-use App\Model\Program\Queries\ProgramAlternatesQuery;
-use App\Model\Program\Queries\ProgramAttendeesQuery;
 use App\Model\Program\Repositories\BlockRepository;
 use App\Model\Program\Repositories\ProgramApplicationRepository;
 use App\Model\Program\Repositories\ProgramRepository;
@@ -48,7 +46,6 @@ use App\Services\CommandBus;
 use App\Services\QueryBus;
 use App\Utils\Helpers;
 use DateInterval;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Exception;
 use Nette;
@@ -56,7 +53,8 @@ use Nette\Localization\Translator;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
-use function in_array;
+use function array_flip;
+use function array_merge;
 
 use const DATE_ATOM;
 
@@ -119,11 +117,11 @@ class ScheduleService
         $userAllowedProgramsWithNotPaid   = $this->queryBus->handle(new UserAllowedProgramsQuery($this->user, false));
 
         // následující údaje se načítají hromadně, aby počet dotazů nerostl s počtem programů
-        $paidProgramsIds    = Helpers::getIds($userAllowedPrograms);
         $programsIds        = Helpers::getIds($userAllowedProgramsWithNotPaid);
+        $paidProgramsIds    = array_flip(Helpers::getIds($userAllowedPrograms));
         $applicationsCounts = $this->programApplicationRepository->countAttendeesAndAlternates($programsIds);
         $userAlternateFlags = $this->programApplicationRepository->findUserApplicationsAlternateFlags($this->user);
-        $relatedPrograms    = $this->findRelatedPrograms();
+        $relatedPrograms    = $this->findRelatedPrograms($programsIds);
 
         $programDetailDtos = [];
         foreach ($userAllowedProgramsWithNotPaid as $program) {
@@ -137,20 +135,32 @@ class ScheduleService
             $programDetailDto->setSameBlockPrograms($relatedPrograms[$programId]['sameBlock']);
             $programDetailDto->setOverlappingPrograms($relatedPrograms[$programId]['overlapping']);
             $programDetailDto->setBlocked(false);
-            $programDetailDto->setPaid(in_array($programId, $paidProgramsIds, true));
+            $programDetailDto->setPaid(isset($paidProgramsIds[$programId]));
             $programDetailDtos[] = $programDetailDto;
         }
 
-        foreach ($programDetailDtos as $p1) {
-            foreach ($programDetailDtos as $p2) {
-                if ($p1->getId() !== $p2->getId()) {
-                    if (
-                        (($p1->getUserAttends() || $p1->getUserAlternates()) && in_array($p2->getId(), $p1->getOverlappingPrograms()))
-                        || ($p1->getUserAttends() && in_array($p2->getId(), $p1->getSameBlockPrograms()))
-                    ) {
-                        $p2->setBlocked(true);
-                    }
+        // blokované programy se počítají z dto indexovaných podle id, aby se nemuselo
+        // pro každou dvojici programů hledat v poli souvisejících programů
+        $dtosByProgramId = [];
+        foreach ($programDetailDtos as $programDetailDto) {
+            $dtosByProgramId[$programDetailDto->getId()] = $programDetailDto;
+        }
+
+        foreach ($programDetailDtos as $programDetailDto) {
+            if ($programDetailDto->getUserAttends()) {
+                $blockedIds = array_merge($programDetailDto->getOverlappingPrograms(), $programDetailDto->getSameBlockPrograms());
+            } elseif ($programDetailDto->getUserAlternates()) {
+                $blockedIds = $programDetailDto->getOverlappingPrograms();
+            } else {
+                continue;
+            }
+
+            foreach ($blockedIds as $blockedId) {
+                if ($blockedId === $programDetailDto->getId() || ! isset($dtosByProgramId[$blockedId])) {
+                    continue;
                 }
+
+                $dtosByProgramId[$blockedId]->setBlocked(true);
             }
         }
 
@@ -171,10 +181,19 @@ class ScheduleService
         $userBlocks                       = $this->queryBus->handle(new UserAttendsBlocksQuery($this->user));
         $userAllowedBlocks                = $this->queryBus->handle(new UserAllowedBlocksQuery($this->user, ! $registrationBeforePaymentAllowed));
 
-        $blocks          = $this->blockRepository->findAll();
+        // lektoři se dotahují jedním dotazem společně s bloky a počty programů taky,
+        // jinak by na každý blok vyšly dva dotazy navíc
+        $blocks         = $this->blockRepository->findAllWithLectors();
+        $programsCounts = $this->programRepository->countProgramsInBlocks();
+
         $blockDetailDtos = [];
         foreach ($blocks as $block) {
-            $blockDetailDtos[] = $this->convertBlockToBlockDetailDto($block, $userBlocks, $userAllowedBlocks);
+            $blockDetailDtos[] = $this->convertBlockToBlockDetailDto(
+                $block,
+                $userBlocks,
+                $userAllowedBlocks,
+                $programsCounts[$block->getId()] ?? 0,
+            );
         }
 
         return $blockDetailDtos;
@@ -374,16 +393,7 @@ class ScheduleService
             $responseDto->setMessage($this->translator->translate('api.schedule.program_registered'));
             $responseDto->setStatus('success');
 
-            $programAttendees  = $this->queryBus->handle(new ProgramAttendeesQuery($program));
-            $programAlternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));
-
-            $programDetailDto = $this->convertProgramToProgramDetailDto($program);
-            $programDetailDto->setAttendeesCount($programAttendees->count());
-            $programDetailDto->setAlternatesCount($programAlternates->count());
-            $programDetailDto->setUserAttends($programAttendees->contains($this->user));
-            $programDetailDto->setUserAlternates($programAlternates->contains($this->user));
-
-            $responseDto->setProgram($programDetailDto);
+            $responseDto->setProgram($this->convertProgramToProgramDetailDtoWithCounts($program));
 
             return $responseDto;
         } catch (HandlerFailedException $e) {
@@ -436,16 +446,7 @@ class ScheduleService
             $responseDto->setMessage($this->translator->translate('api.schedule.program_unregistered'));
             $responseDto->setStatus('success');
 
-            $programAttendees  = $this->queryBus->handle(new ProgramAttendeesQuery($program));
-            $programAlternates = $this->queryBus->handle(new ProgramAlternatesQuery($program));
-
-            $programDetailDto = $this->convertProgramToProgramDetailDto($program);
-            $programDetailDto->setAttendeesCount($programAttendees->count());
-            $programDetailDto->setAlternatesCount($programAlternates->count());
-            $programDetailDto->setUserAttends($programAttendees->contains($this->user));
-            $programDetailDto->setUserAlternates($programAlternates->contains($this->user));
-
-            $responseDto->setProgram($programDetailDto);
+            $responseDto->setProgram($this->convertProgramToProgramDetailDtoWithCounts($program));
 
             return $responseDto;
         } catch (HandlerFailedException $e) {
@@ -458,24 +459,43 @@ class ScheduleService
     }
 
     /**
-     * Vrací pro každý program id programů stejného bloku a id časově se překrývajících programů.
+     * Vrací pro zadané programy id programů stejného bloku a id časově se překrývajících programů.
      *
      * Počítá se v paměti z jednoho dotazu. Dřív se pro každý program pouštěly dva dotazy,
      * z toho jeden s DATE_ADD nad p.start, který neumí využít index a procházel celou
      * tabulku programů.
      *
+     * Začátky a konce se převádí na timestampy jednou předem - porovnávat DateTimeImmutable
+     * a počítat konec přes DateInterval by u n programů znamenalo řádově n^2 nových objektů.
+     *
+     * @param int[] $programsIds programy, pro které se vztahy počítají
+     *
      * @return array<int, array{sameBlock: int[], overlapping: int[]}>
      */
-    private function findRelatedPrograms(): array
+    private function findRelatedPrograms(array $programsIds): array
     {
-        $timings = $this->programRepository->findAllTimings();
+        $timings = [];
+        foreach ($this->programRepository->findAllTimings() as $timing) {
+            $start = $timing['start']->getTimestamp();
+
+            $timings[] = [
+                'id' => $timing['id'],
+                'blockId' => $timing['blockId'],
+                'start' => $start,
+                'end' => $start + $timing['duration'] * 60,
+            ];
+        }
 
         $related = [];
-        foreach ($timings as $timing) {
-            $related[$timing['id']] = ['sameBlock' => [], 'overlapping' => []];
+        foreach ($programsIds as $programId) {
+            $related[$programId] = ['sameBlock' => [], 'overlapping' => []];
         }
 
         foreach ($timings as $first) {
+            if (! isset($related[$first['id']])) {
+                continue;
+            }
+
             foreach ($timings as $second) {
                 if ($first['id'] === $second['id']) {
                     continue;
@@ -485,7 +505,7 @@ class ScheduleService
                     $related[$first['id']]['sameBlock'][] = $second['id'];
                 }
 
-                if (! self::programsOverlap($first, $second)) {
+                if ($second['start'] >= $first['end'] || $second['end'] <= $first['start']) {
                     continue;
                 }
 
@@ -497,19 +517,26 @@ class ScheduleService
     }
 
     /**
-     * Překrývají se programy časově?
+     * Převede Program na ProgramDetailDto včetně počtů přihlášených a stavu uživatele.
      *
-     * @param array{id: int, blockId: int, start: DateTimeImmutable, duration: int} $first
-     * @param array{id: int, blockId: int, start: DateTimeImmutable, duration: int} $second
+     * Počty se zjišťují agregačními dotazy, hydratovat kvůli nim všechny účastníky
+     * a náhradníky programu není potřeba.
      *
      * @throws Exception
      */
-    private static function programsOverlap(array $first, array $second): bool
+    private function convertProgramToProgramDetailDtoWithCounts(Program $program): ProgramDetailDto
     {
-        $firstEnd  = $first['start']->add(new DateInterval('PT' . $first['duration'] . 'M'));
-        $secondEnd = $second['start']->add(new DateInterval('PT' . $second['duration'] . 'M'));
+        $programId          = $program->getId();
+        $applicationsCounts = $this->programApplicationRepository->countAttendeesAndAlternates([$programId]);
+        $userApplication    = $this->programApplicationRepository->findByUserAndProgram($this->user, $program);
 
-        return $second['start'] < $firstEnd && $secondEnd > $first['start'];
+        $programDetailDto = $this->convertProgramToProgramDetailDto($program);
+        $programDetailDto->setAttendeesCount($applicationsCounts[$programId]['attendees']);
+        $programDetailDto->setAlternatesCount($applicationsCounts[$programId]['alternates']);
+        $programDetailDto->setUserAttends($userApplication !== null && ! $userApplication->isAlternate());
+        $programDetailDto->setUserAlternates($userApplication !== null && $userApplication->isAlternate());
+
+        return $programDetailDto;
     }
 
     /**
@@ -536,8 +563,12 @@ class ScheduleService
      * @param Collection<int, Block> $userBlocks
      * @param Collection<int, Block> $userAllowedBlocks
      */
-    private function convertBlockToBlockDetailDto(Block $block, Collection $userBlocks, Collection $userAllowedBlocks): BlockDetailDto
-    {
+    private function convertBlockToBlockDetailDto(
+        Block $block,
+        Collection $userBlocks,
+        Collection $userAllowedBlocks,
+        int $programsCount,
+    ): BlockDetailDto {
         $blockDetailDto = new BlockDetailDto();
 
         $blockDetailDto->setId($block->getId());
@@ -561,7 +592,7 @@ class ScheduleService
         );
         $blockDetailDto->setPerex($block->getPerex());
         $blockDetailDto->setDescription($block->getDescription());
-        $blockDetailDto->setProgramsCount($block->getProgramsCount());
+        $blockDetailDto->setProgramsCount($programsCount);
         $blockDetailDto->setUserAttends($userBlocks->contains($block));
         $blockDetailDto->setUserAllowed($userAllowedBlocks->contains($block));
 

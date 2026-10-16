@@ -172,12 +172,15 @@ class AclService
                 ->getResult();
         }
 
+        // počty uživatelů jedním dotazem, countUsers() na roli by jich udělalo tolik, kolik je rolí
+        $usersCounts = $this->roleRepository->countUsersInAllRoles();
+
         $options = [];
         foreach ($roles as $role) {
             if ($role->hasLimitedCapacity()) {
                 $options[$role->getId()] = $this->translator->translate('web.common.role_option', null, [
                     'role' => $role->getName(),
-                    'occupied' => $role->countUsers(),
+                    'occupied' => $usersCounts[$role->getId()] ?? 0,
                     'total' => $role->getCapacity(),
                 ]);
             } else {
@@ -211,11 +214,13 @@ class AclService
                 ->getResult();
         }
 
+        $usersCounts = $this->roleRepository->countUsersInAllRoles();
+
         $options = [];
         foreach ($roles as $role) {
             $options[$role->getId()] = $this->translator->translate(
                 'admin.common.role_option',
-                $role->countUsers(),
+                $usersCounts[$role->getId()] ?? 0,
                 [
                     'role' => $role->getName(),
                 ],
@@ -234,12 +239,15 @@ class AclService
     {
         $roles = $this->roleRepository->findFilteredRoles($registerableNowOnly, false, $includeUsers, $user);
 
+        // počty uživatelů jedním dotazem, countUsers() na roli by jich udělalo tolik, kolik je rolí
+        $usersCounts = $this->roleRepository->countUsersInAllRoles();
+
         $options = [];
         foreach ($roles as $role) {
             if ($role->hasLimitedCapacity()) {
                 $options[$role->getId()] = $this->translator->translate('web.common.role_option', null, [
                     'role' => $role->getName(),
-                    'occupied' => $role->countUsers(),
+                    'occupied' => $usersCounts[$role->getId()] ?? 0,
                     'total' => $role->getCapacity(),
                 ]);
             } else {

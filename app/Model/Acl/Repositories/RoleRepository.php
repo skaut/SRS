@@ -108,13 +108,35 @@ class RoleRepository extends AbstractRepository
     public function countUsersInRoles(array $rolesIds): array
     {
         return $this->createQueryBuilder('r')
-            ->select('r.name, r.capacity, COUNT(u.id) AS usersCount')
+            ->select('r.id, r.name, r.capacity, COUNT(u.id) AS usersCount')
             ->leftJoin('r.users', 'u')
             ->where('r.id IN (:ids)')->setParameter('ids', $rolesIds)
             ->groupBy('r.id')
             ->orderBy('r.name')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Vrací počty uživatelů všech rolí.
+     *
+     * @return array<int, int> počet uživatelů podle id role
+     */
+    public function countUsersInAllRoles(): array
+    {
+        $result = $this->createQueryBuilder('r')
+            ->select('r.id AS id, COUNT(u.id) AS usersCount')
+            ->leftJoin('r.users', 'u')
+            ->groupBy('r.id')
+            ->getQuery()
+            ->getResult();
+
+        $counts = [];
+        foreach ($result as $row) {
+            $counts[(int) $row['id']] = (int) $row['usersCount'];
+        }
+
+        return $counts;
     }
 
     /**

@@ -109,14 +109,21 @@ class ProgramApplicationRepository extends AbstractRepository
             $user           = $programApplication->getUser();
             $capacity       = $program->getBlockCapacity();
             $attendeesCount = $program->getAttendeesCount();
+            $alternate      = $capacity !== null && $attendeesCount >= $capacity;
 
-            if ($capacity !== null && $attendeesCount >= $capacity && ! $program->getBlock()->isAlternatesAllowed()) {
+            if ($alternate && ! $program->getBlock()->isAlternatesAllowed()) {
                 throw new ProgramCapacityOccupiedException();
-            } elseif ($capacity !== null && $attendeesCount >= $capacity) {
-                $programApplication->setAlternate(true);
             }
 
             if ($this->userAttendsSameProgram($user, $program)) {
+                throw new UserAlreadyAttendsProgramException();
+            }
+
+            // Náhradnictví se kontroluje jen když by nová přihláška byla taky náhradnická.
+            // Posun náhradníka na účastníka (po uvolnění kapacity) se tím nezablokuje.
+            // Zámek na řádku programu výš zajišťuje, že souběžné požadavky nemůžou projít
+            // kontrolou obě a založit tak dvě přihlášky na stejný program.
+            if ($alternate && $this->userAlternatesSameProgram($user, $program)) {
                 throw new UserAlreadyAttendsProgramException();
             }
 
@@ -128,15 +135,20 @@ class ProgramApplicationRepository extends AbstractRepository
                 throw new UserAttendsConflictingProgramException();
             }
 
-            $this->em->persist($programApplication);
+            $programApplication->setAlternate($alternate);
 
-            if (! $programApplication->isAlternate()) {
-                $program->setAttendeesCount($attendeesCount + 1);
-                $this->em->persist($program);
+            $em->persist($programApplication);
 
-                foreach ($this->findByUserAlternateAndBlock($user, $program->getBlock()) as $pa) {
-                    $this->em->remove($pa);
-                }
+            if ($alternate) {
+                return;
+            }
+
+            $program->setAttendeesCount($attendeesCount + 1);
+            $em->persist($program);
+
+            // náhradnictví ve stejném bloku se přihlášením na program ruší
+            foreach ($this->findByUserAlternateAndBlock($user, $program->getBlock()) as $pa) {
+                $em->remove($pa);
             }
         });
     }
@@ -185,6 +197,27 @@ class ProgramApplicationRepository extends AbstractRepository
             ->where('pa.user = :user')
             ->andWhere('pa.program = :program')
             ->andWhere('pa.alternate = false')
+            ->setParameter('user', $user)
+            ->setParameter('program', $program)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result !== 0;
+    }
+
+    /**
+     * Je uživatel na programu veden jako náhradník?
+     *
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    private function userAlternatesSameProgram(User $user, Program $program): bool
+    {
+        $result = $this->createQueryBuilder('pa')
+            ->select('count(pa)')
+            ->where('pa.user = :user')
+            ->andWhere('pa.program = :program')
+            ->andWhere('pa.alternate = true')
             ->setParameter('user', $user)
             ->setParameter('program', $program)
             ->getQuery()

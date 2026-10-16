@@ -38,33 +38,29 @@ class SubeventRepository extends AbstractRepository
     /**
      * Vrací počty účastníků podakcí, tedy platných nezrušených přihlášek.
      *
-     * @param int[] $subeventsIds
+     * @param int[]|null $subeventsIds id podakcí, null znamená všechny podakce
      *
      * @return array<int, int> počet účastníků podle id podakce
      */
-    public function countUsersInSubevents(array $subeventsIds): array
+    public function countUsersInSubevents(array|null $subeventsIds = null): array
     {
         if ($subeventsIds === []) {
             return [];
         }
 
-        $result = $this->createQueryBuilder('s')
+        $qb = $this->createQueryBuilder('s')
             ->select('s.id AS id, COUNT(a.id) AS usersCount')
             ->leftJoin('s.applications', 'a', 'WITH', 'a.validTo IS NULL AND a.state IN (:states)')
-            ->where('s.id IN (:ids)')
             ->groupBy('s.id')
-            ->setParameter('ids', $subeventsIds)
-            ->setParameter('states', [
-                ApplicationState::WAITING_FOR_PAYMENT,
-                ApplicationState::PAID,
-                ApplicationState::PAID_FREE,
-                ApplicationState::PAID_TRANSFERED,
-            ])
-            ->getQuery()
-            ->getResult();
+            ->setParameter('states', ApplicationState::NOT_CANCELED_STATES);
+
+        if ($subeventsIds !== null) {
+            $qb->where('s.id IN (:ids)')
+                ->setParameter('ids', $subeventsIds);
+        }
 
         $counts = [];
-        foreach ($result as $row) {
+        foreach ($qb->getQuery()->getResult() as $row) {
             $counts[(int) $row['id']] = (int) $row['usersCount'];
         }
 
