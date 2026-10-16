@@ -150,7 +150,6 @@ abstract class Content implements IContent
         self::PROGRAMS,
         self::CONTACT_FORM,
         self::FAQ,
-        self::PLACE,
         self::USERS,
         self::LECTORS,
         self::BLOCKS,
