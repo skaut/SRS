@@ -1009,20 +1009,20 @@
         },
         {
             "name": "dg/mysql-dump",
-            "version": "v1.6.0",
+            "version": "v1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/MySQL-dump.git",
-                "reference": "b83859026dc3651c6aa39376705fbfa57c0486c5"
+                "reference": "ad432452ec4c6cfca9093797e274897e59a14895"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/MySQL-dump/zipball/b83859026dc3651c6aa39376705fbfa57c0486c5",
-                "reference": "b83859026dc3651c6aa39376705fbfa57c0486c5",
+                "url": "https://api.github.com/repos/dg/MySQL-dump/zipball/ad432452ec4c6cfca9093797e274897e59a14895",
+                "reference": "ad432452ec4c6cfca9093797e274897e59a14895",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=8.2"
             },
             "type": "library",
             "autoload": {
@@ -1046,9 +1046,9 @@
                 "mysql"
             ],
             "support": {
-                "source": "https://github.com/dg/MySQL-dump/tree/v1.6.0"
+                "source": "https://github.com/dg/MySQL-dump/tree/v1.7.1"
             },
-            "time": "2024-09-16T04:30:48+00:00"
+            "time": "2026-07-31T08:22:04+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -13031,5 +13031,5 @@
         "ext-soap": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
