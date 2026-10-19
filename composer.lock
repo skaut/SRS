@@ -8589,16 +8589,16 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.11.0",
+            "version": "v2.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "eec57bcf2ff11d79f519a19da9d7ae1e2c63c42e"
+                "reference": "90d24872cd97202f79281aac7eb09c27ec48bf69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/eec57bcf2ff11d79f519a19da9d7ae1e2c63c42e",
-                "reference": "eec57bcf2ff11d79f519a19da9d7ae1e2c63c42e",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/90d24872cd97202f79281aac7eb09c27ec48bf69",
+                "reference": "90d24872cd97202f79281aac7eb09c27ec48bf69",
                 "shasum": ""
             },
             "require": {
@@ -8614,15 +8614,17 @@
                 "nette/di": "^3.0",
                 "nette/http": "^3.0",
                 "nette/mail": "^3.0 || ^4.0",
-                "nette/tester": "^2.2",
+                "nette/phpstan-rules": "^1.0",
+                "nette/tester": "^2.6",
                 "nette/utils": "^3.0 || ^4.0",
-                "phpstan/phpstan-nette": "^2.0@stable",
+                "phpstan/extension-installer": "^1.4@stable",
+                "phpstan/phpstan": "^2.1@stable",
                 "psr/log": "^1.0 || ^2.0 || ^3.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.11-dev"
+                    "dev-master": "2.12-dev"
                 }
             },
             "autoload": {
@@ -8661,9 +8663,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/tracy/issues",
-                "source": "https://github.com/nette/tracy/tree/v2.11.0"
+                "source": "https://github.com/nette/tracy/tree/v2.12.1"
             },
-            "time": "2025-10-31T00:12:50+00:00"
+            "time": "2026-08-18T10:56:11+00:00"
         },
         {
             "name": "ublaboo/datagrid",
@@ -9766,16 +9768,16 @@
         },
         {
             "name": "nextras/mail-panel",
-            "version": "v2.6.2",
+            "version": "v2.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextras/mail-panel.git",
-                "reference": "8aa23f2646afed715e0ce731ce13e45cce37fd73"
+                "reference": "2ae4d508507b35ffe4edca58a00dc30fb53505d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextras/mail-panel/zipball/8aa23f2646afed715e0ce731ce13e45cce37fd73",
-                "reference": "8aa23f2646afed715e0ce731ce13e45cce37fd73",
+                "url": "https://api.github.com/repos/nextras/mail-panel/zipball/2ae4d508507b35ffe4edca58a00dc30fb53505d1",
+                "reference": "2ae4d508507b35ffe4edca58a00dc30fb53505d1",
                 "shasum": ""
             },
             "require": {
@@ -9794,7 +9796,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6-dev"
+                    "dev-master": "2.7-dev"
                 }
             },
             "autoload": {
@@ -9831,9 +9833,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nextras/mail-panel/issues",
-                "source": "https://github.com/nextras/mail-panel/tree/v2.6.2"
+                "source": "https://github.com/nextras/mail-panel/tree/v2.7.1"
             },
-            "time": "2023-05-06T17:05:52+00:00"
+            "time": "2026-05-03T21:36:35+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -13031,5 +13033,5 @@
         "ext-soap": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
